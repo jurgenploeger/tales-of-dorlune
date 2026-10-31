@@ -389,10 +389,15 @@ final class GameCoordinator {
         Task {
             loadProgress = 1
             if remaining > 0 { try? await Task.sleep(for: .seconds(remaining)) }
-            // Carried by a Homeward Feather: you're not standing there yet when the card lifts.
-            let byFeather = arrivesByFeather
-            arrivesByFeather = false
-            if byFeather { mapScene.awaitFeatherArrival() }
+            // Carried by a Homeward Feather or a waystone: you're not standing there yet when the card lifts.
+            let arriving = arrivesBy
+            arrivesBy = nil
+            let byFeather = arriving == .feather
+            switch arriving {
+            case .feather: mapScene.awaitFeatherArrival()
+            case .waystone: mapScene.awaitWaystoneArrival()
+            case nil: break
+            }
             // A player's game waits a little longer under the card, for the lands round you to come in
             // too (`isSettled`, 3 seconds at most), and then holds that work while the clouds part, so
             // they part smoothly and onto a world that's all there (playtesting 2026-10-31: "it feels
@@ -419,9 +424,15 @@ final class GameCoordinator {
             }
             DebugLaunch.markReady()
             loadingMapName = nil
-            if byFeather {
+            switch arriving {
+            case .feather:
                 try? await Task.sleep(for: .milliseconds(250))
                 mapScene.featherArrive()
+            case .waystone:
+                // Once the clouds are thinning (`LoadingCurtain`), so you see yourself come out of the light.
+                try? await Task.sleep(for: .seconds(LoadingCurtain.landingTime + LoadingCurtain.clearingTime * 0.4))
+                mapScene.waystoneArrive()
+            case nil: break
             }
         }
     }
@@ -685,7 +696,18 @@ final class GameCoordinator {
             session.data.hero.mp -= cost(of: skill)
             carry(to: map, waystone: waystone, saying: L("A bridge of light carries you to {place}.", ["place": map.name]))
         case .waystone:
-            carry(to: map, waystone: waystone, saying: L("The waystone hums, and the world folds round you. You step out in {place}.", ["place": map.name]))
+            // Its light gathers round you and takes you (`WaystoneMagic`); you come out of it at the other
+            // stone (finishLoading). Playtesting 2026-10-31: "The waystone teleports need a different
+            // animation, more magical".
+            let line = L("The waystone hums, and the world folds round you. You step out in {place}.", ["place": map.name])
+            overlay = nil
+            SoundEffects.shared.play(.spellLight)
+            mapScene.waystoneAway { [weak self] in
+                guard let self else { return }
+                arrivesBy = .waystone
+                SoundEffects.shared.play(.whoosh, volume: 0.6)
+                carry(to: map, waystone: waystone, saying: line, sound: false)
+            }
         case .feather(let id):
             guard session.removeItem(id) else { return }
             let line = L("The wind carries you to {place}.", ["place": map.name])
@@ -695,14 +717,17 @@ final class GameCoordinator {
             SoundEffects.shared.play(.whoosh)
             mapScene.featherAway { [weak self] in
                 guard let self else { return }
-                arrivesByFeather = true
+                arrivesBy = .feather
                 carry(to: map, waystone: waystone, saying: line, sound: false)
             }
         }
     }
 
     /// Set while a Homeward Feather is carrying you: the next map brings you down in its light.
-    @ObservationIgnored private var arrivesByFeather = false
+    /// How you're arriving where you're going, when it isn't on foot: a Homeward Feather sets you down in
+    /// its light, a waystone brings you out of its own (`finishLoading`).
+    private enum Arrival { case feather, waystone }
+    @ObservationIgnored private var arrivesBy: Arrival?
 
     /// Off to a town's square, or to the `waystone` on `map`, wherever you are: the window closes
     /// and the map changes.

@@ -370,6 +370,10 @@ lair_morvane | newgame,level=130,map=secret_plain,at=-13_34,weather=clear,hour=1
 # The waystone (tools/prop_art.py, 0.9.6): asleep, faded, then woken by its quest.
 waystone_asleep | newgame,level=20,map=twilight_woods,at=15_5,weather=clear,hour=12 | 8
 waystone_awake  | newgame,level=20,map=twilight_woods,at=15_5,done=dusk_waystone,weather=clear,hour=12 | 8
+# A waystone's light taking you (0.9.26, WaystoneMagic): the ring of runes, the stone flaring and motes
+# rising, then the pillar as you turn to light.
+waystone_magic   | newgame,level=20,map=twilight_woods,at=15_5,done=dusk_waystone,weather=clear,hour=12,waystone=0.8 | 8
+waystone_vanish  | newgame,level=20,map=twilight_woods,at=15_5,done=dusk_waystone,weather=clear,hour=12,waystone=1.3 | 8
 lair_tide    | newgame,level=170,map=water_temple,at=-37_6,weather=clear,hour=12 | 8
 lair_emerald | newgame,level=200,map=emerald_road,at=29_-24,weather=clear,hour=12 | 8
 lair_rock    | newgame,level=90,map=sleepy_town,summit=0,weather=clear,hour=12 | 8
