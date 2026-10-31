@@ -194,11 +194,32 @@ BODIES = {race: [race] + [f"{race}_{g}" for g in ("male", "female") if (SPRITES 
 
 def neck(frame):
     """The row a figure's head ends on: its narrowest row from 6 to 19 below its top (the lowest
-    of them if two are as narrow), between the head and the shoulders."""
+    of them if two are as narrow), between the head and the shoulders; but where that's well under
+    its chin (4 rows or more below the head's skin, `chin`), the row under the chin. Leaning into a
+    step, a hero's narrowest row was at the belt: the head layer ran down to it and a bare-headed
+    armour lost its chest, the head floating over its legs (playtesting 2026-10-31: "There seems to
+    be a gap in the heads"). A dwarf's chin is low, so his narrowest row stays."""
     a = frame[..., 3] > 0.5
     top = np.nonzero(a.any(1))[0].min()
     widths = {y: int(a[y].sum()) for y in range(top + 6, min(top + 20, F))}
-    return min(widths, key=lambda y: (widths[y], -y))
+    narrowest = min(widths, key=lambda y: (widths[y], -y))
+    bottom = chin(frame)
+    return bottom + 1 if bottom is not None and narrowest > bottom + 3 else narrowest
+
+
+def chin(frame):
+    """The lowest row of a bare body's head: its skin (not its tunic) joined to the skin at its top,
+    the bald scalp, down through the face. None if it shows no skin."""
+    from scipy import ndimage
+    a = frame[..., 3] > 0.5
+    h, s, v = rgb2hsv(frame[..., :3])
+    skin = a & ((h <= 45) | (h >= 340)) & (s >= 0.12) & (s <= 0.75) & (v >= 0.45) & ~tunic(frame)
+    if not skin.any():
+        return None
+    parts, _ = ndimage.label(skin)
+    top = np.nonzero(skin.any(1))[0].min()
+    head = np.isin(parts, [p for p in np.unique(parts[top]) if p])
+    return int(np.nonzero(head.any(1))[0].max())
 
 
 def tunic(frame):
