@@ -98,7 +98,7 @@ nonisolated extension DyeDef {
         "hat_snow_cloak_dwarf": DyeMaterial(hue: [180, 250], minSaturation: 0.1, minValue: 0.2, saturation: 0.63, value: 0.61, light: 0.81),
         "hat_hide_hood_human": DyeMaterial(hue: [180, 260], minSaturation: 0.2, minValue: 0.2, saturation: 0.6, value: 0.55, light: 1.0),
         "hat_hide_hood_elf": DyeMaterial(hue: [180, 260], minSaturation: 0.2, minValue: 0.2, saturation: 0.6, value: 0.67, light: 0.91),
-        "hat_hide_hood_dwarf": DyeMaterial(hue: [180, 260], minSaturation: 0.2, minValue: 0.2, saturation: 0.6, value: 0.55, light: 0.94),
+        "hat_hide_hood_dwarf": DyeMaterial(hue: [180, 260], minSaturation: 0.2, minValue: 0.2, saturation: 0.59, value: 0.55, light: 0.94),
     ]
 
     /// Each sheet's and hat's trim, a layer of its own ("<sheet>_trim", tools/dye_art.py `TRIMS`): a
@@ -115,7 +115,7 @@ nonisolated extension DyeDef {
         "armor_dragon_mail_human": DyeMaterial(saturation: 0.69, value: 0.98, light: 0.98),
         "armor_dragon_mail_elf": DyeMaterial(saturation: 0.47, value: 0.97, light: 0.97),
         "armor_dragon_mail_dwarf": DyeMaterial(saturation: 0.63, value: 0.99, light: 0.99),
-        "armor_ranger_cloak_human": DyeMaterial(saturation: 0.58, value: 0.82, light: 0.91),
+        "armor_ranger_cloak_human": DyeMaterial(saturation: 0.47, value: 0.82, light: 0.91),
         "hat_mage_robe_human": DyeMaterial(saturation: 0.55, value: 0.85, light: 0.94),
         "hat_iron_plate_human": DyeMaterial(saturation: 0.87, value: 0.84, light: 0.84),
         "hat_iron_plate_elf": DyeMaterial(saturation: 0.79, value: 0.81, light: 0.97),
@@ -134,8 +134,8 @@ nonisolated extension DyeDef {
         "alloy_shortsword", "amber_whip", "armorbreaker_staff", "bamboo_staff", "beast_whip", "blossom_staff",
         "bronze_broadsword", "bronze_longsword", "brownwood_staff", "copper_sword", "cowhide_whip", "dragon_god_axe",
         "dragon_god_staff", "dragon_god_whip", "elder_staff", "ghost_staff", "golden_deer_whip", "goldleaf_axe",
-        "hand_axe", "heavy_rattan_staff", "ironcleaver_sword", "ironcrusher_staff", "light_war_axe",
-        "lightwood_staff", "luna_axe", "moonlight_sword", "novice_axe", "phantom_blade", "power_whip",
+        "hand_axe", "heavy_rattan_staff", "ironcleaver_sword", "ironcrusher_staff", "light_war_axe", "lightwood_staff",
+        "luna_axe", "moonlight_sword", "novice_axe", "phantom_blade", "power_whip", "purple_star_staff",
         "rattan_staff", "red_cypress_staff", "red_cypress_whip", "silver_inlaid_longsword", "silver_sword",
         "steel_sword", "strong_ox_whip", "tamer_whip", "teak_whip", "twin_blade_axe", "wooden_sword", "yew_staff"
     ]
