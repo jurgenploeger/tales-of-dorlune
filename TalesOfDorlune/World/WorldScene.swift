@@ -2126,6 +2126,27 @@ final class WorldScene: SKScene {
         static let length = flight + stagger * Double(count - 1)
     }
 
+    /// A waystone carrying you off (`WaystoneMagic.away`), its light from the stone you touched; then `done`.
+    func waystoneAway(then done: @escaping () -> Void) {
+        isInputLocked = true
+        player.path = []
+        player.setWalking(false)
+        player.idles = false
+        let stone = npcs.first { $0.def.id == session.nearbyNPC && $0.def.role == .waystone }?.node.position
+        WaystoneMagic.away(player, from: stone, in: world, then: done)
+    }
+
+    /// Before the map shows: the hero isn't here yet (`waystoneArrive` brings them out of the light).
+    func awaitWaystoneArrival() {
+        player.idles = false
+        WaystoneMagic.hold(player)
+    }
+
+    /// Arriving by waystone: out of the light in a ring of runes.
+    func waystoneArrive() {
+        WaystoneMagic.arrive(player, in: world) { [weak self] in self?.player.idles = true }
+    }
+
     /// A Homeward Feather taking you away: its arrival (`featherArrive`) played backward. A gust
     /// of feathers spirals up and in round you, the column of light shines up out of nothing, and
     /// you rise into it and fade, then `done` (the map changes).
@@ -2228,6 +2249,13 @@ final class WorldScene: SKScene {
     /// Debug launches (`invite=n`): the nearest friendly adventurers, brought over to stand by you.
     func summonAdventurersForDebug(_ count: Int) -> [Adventurer] {
         crowd?.summonForDebug(count, to: player.position) ?? []
+    }
+
+    /// Debug launches (`waystone=<t>`): a waystone's light taking you without going anywhere, the map
+    /// held still `held` seconds in so a screenshot catches it.
+    func waystoneAwayForDebug(held: Double) {
+        waystoneAway {}
+        run(.sequence([.wait(forDuration: held), .run { [weak self] in self?.isPaused = true }]))
     }
 
     /// Debug launches (`feather`): a Homeward Feather's lift without going anywhere, the map held

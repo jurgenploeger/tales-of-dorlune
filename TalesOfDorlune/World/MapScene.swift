@@ -25,6 +25,11 @@ protocol MapScene: SKScene {
     func featherAway(then done: @escaping () -> Void)
     func awaitFeatherArrival()
     func featherArrive()
+    /// A waystone carrying you off, then `done`; and bringing you out of its light where you arrive
+    /// (`WaystoneMagic`).
+    func waystoneAway(then done: @escaping () -> Void)
+    func awaitWaystoneArrival()
+    func waystoneArrive()
     /// Debug launches walking you about: no battles on the way.
     var holdsEncounters: Bool { get set }
 
@@ -34,6 +39,7 @@ protocol MapScene: SKScene {
     /// group travelling together, in line (`group`).
     func summonAdventurersForDebug(_ count: Int) -> [Adventurer]
     func featherAwayForDebug()
+    func waystoneAwayForDebug(held: Double)
     func sayForDebug(_ text: String)
     /// The hero turns that way (`facing=up`: their back to you, a cape's emblem showing).
     func turnForDebug(_ direction: Direction)

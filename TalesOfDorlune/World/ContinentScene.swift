@@ -772,6 +772,30 @@ final class ContinentScene: SKScene {
         static let light = UIColor(red: 1, green: 0.95, blue: 0.78, alpha: 1)
     }
 
+    /// A waystone carrying you off (`WaystoneMagic.away`), its light from the stone you touched; then `done`.
+    func waystoneAway(then done: @escaping () -> Void) {
+        isInputLocked = true
+        player.path = []
+        player.setWalking(false)
+        player.idles = false
+        // The stone you're touching: the one near enough to talk to, in this layer's points.
+        let stone = nearbyTalk.flatMap { near in
+            lands[near.land]?.stage.npcs.first { $0.def.id == near.npc && $0.def.role == .waystone }?.node
+        }.flatMap { node in node.parent.map { layer.convert(node.position, from: $0) } }
+        WaystoneMagic.away(player, from: stone, in: layer, then: done)
+    }
+
+    /// Before you're shown: you aren't there yet (`waystoneArrive` brings you out of the light).
+    func awaitWaystoneArrival() {
+        player.idles = false
+        WaystoneMagic.hold(player)
+    }
+
+    /// Arriving by waystone: out of the light in a ring of runes.
+    func waystoneArrive() {
+        WaystoneMagic.arrive(player, in: layer) { [weak self] in self?.player.idles = true }
+    }
+
     /// A Homeward Feather taking you away: feathers spiral up round you, the column of light shines,
     /// and you rise into it and fade; then `done`.
     func featherAway(then done: @escaping () -> Void) {
@@ -1198,6 +1222,13 @@ final class ContinentScene: SKScene {
     func summonAdventurersForDebug(_ count: Int) -> [Adventurer] {
         guard let here, let stage = lands[here.id]?.stage else { return [] }
         return stage.crowd?.summonForDebug(count, to: stage.local(player.position)) ?? []
+    }
+
+    /// Debug launches (`waystone=<t>`): a waystone's light taking you without going anywhere, the map
+    /// held still `held` seconds in so a screenshot catches it.
+    func waystoneAwayForDebug(held: Double) {
+        waystoneAway {}
+        run(.sequence([.wait(forDuration: held), .run { [weak self] in self?.isPaused = true }]))
     }
 
     /// Debug launches (`feather`): a Homeward Feather's lift without going anywhere, held part-way.
