@@ -124,6 +124,7 @@ import SpriteKit
 ///   landscape      lock the app to landscape
 ///   dark           Dark Mode, whatever the simulator or Settings say (light: Light Mode)
 ///   feather        once the map is up, a Homeward Feather's lift, held mid-rise (nothing is used up)
+///   waystone=<t>   once the map is up, a waystone's light taking you, held <t> seconds in (`WaystoneMagic`)
 ///   curtain        the loading screen (the logo over the sky and its bar), held at 41%;
 ///                  curtain=travel the card for travelling to another map (Genie Desert) instead
 ///   clean          no frame counter in the corner (App Store screenshots; tools/store_slides.py crops
@@ -940,6 +941,18 @@ enum DebugLaunch {
                     guard coordinator.isReady, coordinator.mapScene.view != nil else { continue }
                     try? await Task.sleep(for: .seconds(1))
                     coordinator.mapScene.featherAwayForDebug()
+                    return
+                }
+            }
+        }
+        // `waystone=<seconds>`: once the map is on screen, a waystone's light takes the hero, held that far in.
+        if let held = flags["waystone"].flatMap(Double.init) {
+            Task {
+                for _ in 0..<240 {
+                    try? await Task.sleep(for: .milliseconds(500))
+                    guard coordinator.isReady, coordinator.mapScene.view != nil else { continue }
+                    try? await Task.sleep(for: .seconds(1))
+                    coordinator.mapScene.waystoneAwayForDebug(held: held)
                     return
                 }
             }
