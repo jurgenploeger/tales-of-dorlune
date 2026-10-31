@@ -294,6 +294,12 @@ python3 tools/check_content.py
   A dye may give its shadows a colour of their own (items.json `shadowHue`, `shadowSaturation`, `shadowGain`):
   Golden's turn toward amber, Snow White's a cool blue grey, so a light dye's ramp keeps its depth.
 
+- **A bare-headed armour meets its head on every frame** (`tools/wear_art.py` `neck`, `bared`, `heads`): the
+  head layer and the sheet's cut both end at the body's neck, its narrowest row under the head, but never
+  4 rows or more under its chin (`chin`, the head's skin): leaning into a step, the narrowest row was the
+  belt, so the armour lost its chest and the head floated over its legs (playtesting 2026-10-31). Check
+  every walking frame, not just the standing one (`gear_preview.py`), and a dwarf, whose chin sits low.
+
 ### Working on it
 
 - Show the user before and after, side by side, at a size where the pixels show.
