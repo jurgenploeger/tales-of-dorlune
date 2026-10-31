@@ -11,10 +11,42 @@ struct SkillChoices: View {
 
     private static let columns = [GridItem(.adaptive(minimum: 62, maximum: 86), spacing: 8, alignment: .top)]
 
+    /// On the Level Up card: the grid and its hint scroll in this much room, and the skill tapped stays
+    /// under them, its Learn or raise button always in sight (playtesting 2026-10-31: "Because the button
+    /// is hidden I keep hitting the decide later button"). Nil: all of it in one column, as the Character
+    /// screen's scroll view holds it.
+    var gridHeight: CGFloat? = nil
+
     var body: some View {
         let learnable = session.learnableSkills
         let known = session.heroSkills
         let shown = selected.flatMap { id in (learnable + known).first { $0.id == id } } ?? learnable.first ?? known.first
+        VStack(alignment: .leading, spacing: 10) {
+            if let gridHeight {
+                ScrollView {
+                    grid(learnable: learnable, known: known, shown: shown)
+                        .padding(.top, 8)
+                }
+                .scrollBounceBehavior(.basedOnSize)
+                // As tall as the grid, up to `gridHeight`; less on a phone on its side, where it gives
+                // way first so the skill tapped and its button still show.
+                .frame(maxHeight: gridHeight)
+                .layoutPriority(-1)
+            } else {
+                grid(learnable: learnable, known: known, shown: shown)
+            }
+            if let shown {
+                SkillDetail(session: session, skill: shown, isNew: learnable.contains { $0.id == shown.id })
+                    .id(shown.id)
+                    .transition(.opacity)
+            }
+        }
+        .animation(.easeOut(duration: 0.15), value: shown?.id)
+    }
+
+    /// The tiles, new skills first, and under them how to reorder.
+    @ViewBuilder
+    private func grid(learnable: [SkillDef], known: [SkillDef], shown: SkillDef?) -> some View {
         VStack(alignment: .leading, spacing: 10) {
             LazyVGrid(columns: Self.columns, alignment: .leading, spacing: 10) {
                 ForEach(learnable) { skill in
@@ -43,13 +75,7 @@ struct SkillChoices: View {
                     .foregroundStyle(HUDStyle.dim)
                     .fixedSize(horizontal: false, vertical: true)
             }
-            if let shown {
-                SkillDetail(session: session, skill: shown, isNew: learnable.contains { $0.id == shown.id })
-                    .id(shown.id)
-                    .transition(.opacity)
-            }
         }
-        .animation(.easeOut(duration: 0.15), value: shown?.id)
     }
 
     @discardableResult
@@ -217,18 +243,15 @@ struct LevelUpCard: View {
                     .foregroundStyle(HUDStyle.cream)
                     .multilineTextAlignment(.center)
             }
-            ScrollView {
-                SkillChoices(session: session)
-                    .foregroundStyle(HUDStyle.cream)
-            }
-            .scrollBounceBehavior(.basedOnSize)
-            .frame(maxHeight: 260)
+            // The grid scrolls; the skill tapped stays in sight under it, Learn or raise on it.
+            SkillChoices(session: session, gridHeight: 210)
+                .foregroundStyle(HUDStyle.cream)
             Button(points > 0 ? L("Decide later") : L("Done"), action: onDone)
                 .buttonStyle(PixelButtonStyle(tint: points > 0 ? HUDStyle.cream : HUDStyle.gold))
         }
         .padding(20)
         .frame(maxWidth: 440)
-        // Hugs the list, which scrolls past 260 points, or sooner on a phone on its side.
+        // Hugs the list, whose grid scrolls past 210 points, the skill tapped under it.
         .fitHeight()
         .gameWindow()
         // Closing it is Decide later: unspent points wait in the Character menu.
