@@ -370,6 +370,9 @@ lair_morvane | newgame,level=130,map=secret_plain,at=-13_34,weather=clear,hour=1
 # The waystone (tools/prop_art.py, 0.9.6): asleep, faded, then woken by its quest.
 waystone_asleep | newgame,level=20,map=twilight_woods,at=15_5,weather=clear,hour=12 | 8
 waystone_awake  | newgame,level=20,map=twilight_woods,at=15_5,done=dusk_waystone,weather=clear,hour=12 | 8
+# Starfall Isle's, in the north meadow by Pip the Lamplighter (playtesting 2026-11-01): the island's
+# way home with no boat once its quest wakes it.
+waystone_starfall | newgame,level=140,map=starfall_isle,at=-6_-24,done=starfall_waystone,weather=clear,hour=12 | 10
 # A waystone's light taking you (0.9.26, WaystoneMagic): the ring of runes, the stone flaring and motes
 # rising, then the pillar as you turn to light.
 waystone_magic   | newgame,level=20,map=twilight_woods,at=15_5,done=dusk_waystone,weather=clear,hour=12,waystone=0.8 | 8
@@ -785,6 +788,9 @@ travel_pick    | newgame,map=sunny_meadow,travel | 6
 # A Waystone Shard (0.9.27): its own choice, the waystones you've woken; a feather's is towns alone. And
 # the shard in the bag.
 travel_shard   | newgame,level=40,map=sunny_meadow,travel=shard,done=dusk_waystone | 6
+# Touching a waystone: the other waystones woken and no towns (playtesting 2026-11-01: "You should only
+# be going between waystones"); the one you're by left out.
+travel_waystone | newgame,level=150,map=twilight_woods,travel=waystone,done=dusk_waystone+shiverdell_waystone+starfall_waystone | 6
 shard_bag      | newgame,menu=bag,bag=waystone_shard+waystone_shard+homeward_feather+potion,inspect=waystone_shard | 8
 # A stranger's card on a danger map: Befriend, Trade and Duel on one line, in English and in French (its longest words).
 card_duel    | newgame,level=45,class=fighter,map=wolf_lair,meet=1 | 10

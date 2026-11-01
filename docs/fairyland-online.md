@@ -479,12 +479,14 @@ capsule (H). Mining spots include Ilium, Kars Mountain and Siwa Oasis (H).
   (`WorldScene.Feather`, one timeline for both, since 0.4.7: playtesting 2026-10-12 asked for them to match). How FO itself moved players between towns isn't in any source reachable
   from a cloud session (2026-10-05); this is our own design.
 - Waystones (ours, since 0.7.63; playtesting 2026-10-22: "There should be quests that you can eventually
-  teleport to other keypoints in lands"): seven standing stones out in wild lands (NPC role `waystone`,
+  teleport to other keypoints in lands"): eight standing stones out in wild lands (NPC role `waystone`,
   maps.json), one each in the Twilight Woods, Shiverdell, Genie Desert, Dozywick, the Hidden Steppe,
-  Briarmere and the Emerald Road (levels 22 to 186). Each sleeps, faded, till a quest from someone in its
-  land is done (its `quest`: beat 8 or 10 of a local monster), then it's a stop for Bridge of Light and
-  Homeward Feathers as the towns are (`GameSession.travelDestinations`, after the towns), and touching it
-  takes you to any of them free (`GameCoordinator.Travel.waystone`). You arrive in front of it
+  Starfall Isle (since 0.9.35), Briarmere and the Emerald Road (levels 22 to 186). Each sleeps, faded, till
+  a quest from someone in its land is done (its `quest`: beat 8 or 10 of a local monster). Awake, touching
+  it takes you free to any other waystone you've woken, and only to them (playtesting 2026-11-01: "You
+  should only be going between waystones"); a Waystone Shard does the same from anywhere, and Bridge of
+  Light and Homeward Feathers go to towns alone (`GameSession.waystoneDestinations`,
+  `townDestinations`, `GameCoordinator.Travel`). You arrive in front of it
   (`WorldMap.waystoneArrival`). RuneScape's lodestones and fairy rings are the idea; FO had nothing like it
   that we know of. The stone's sprite is drawn in code (`tools/prop_art.py waystone`).
 - One continent (ours, since 0.5.0, asked for in playtesting 2026-10-13: "instead of the maps being

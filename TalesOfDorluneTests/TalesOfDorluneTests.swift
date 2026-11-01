@@ -688,9 +688,9 @@ struct ContentTests {
     }
 
     /// Glimmerbough, Starfall Isle's fairy village (playtesting 2026-10-16: "something worthy to do on
-    /// Starfall Isle"): a healer, a shop and quest givers with five quests (and three more for the
-    /// Glimmerdeep, the crystal cave under it), and a boss up on its mountain that drops a weapon for
-    /// every class you can choose.
+    /// Starfall Isle"): a healer, a shop and quest givers with five quests (three more for the
+    /// Glimmerdeep, the crystal cave under it, and one more since 0.9.35 to wake its waystone), and a
+    /// boss up on its mountain that drops a weapon for every class you can choose.
     @Test func glimmerboughHasSomethingForEveryone() throws {
         let isle = try #require(content.map("starfall_isle"))
         let npcs = isle.npcs ?? []
@@ -698,7 +698,8 @@ struct ContentTests {
             #expect(npcs.contains { $0.role == role }, "Starfall Isle has no \(role)")
         }
         let givers = Set(npcs.filter { $0.role == .quests }.map(\.id))
-        #expect(content.quests.filter { givers.contains($0.giver) }.count == 9)
+        #expect(content.quests.filter { givers.contains($0.giver) }.count == 10)
+        #expect(content.quests.contains { $0.id == "starfall_waystone" && givers.contains($0.giver) })
         let boss = try #require(npcs.first { $0.role == .boss }?.monster.flatMap(content.monster))
         let weapons = (boss.drops ?? []).compactMap { content.item($0.item) }.filter { $0.type == .weapon }
         for cls in content.classes where cls.id != "novice" {
@@ -3653,19 +3654,19 @@ struct RulesTests {
         let towns = content.maps.filter { $0.fence == true }.map(\.id)
         // In the first town with nowhere else visited, there's nowhere to go.
         session.data.mapID = content.startMap
-        #expect(session.travelDestinations.isEmpty)
+        #expect(session.townDestinations.isEmpty)
         // Out in the wild having been to them all: every town, the checkpoint first.
         let wild = try #require(content.maps.first { $0.fence != true && $0.encounters != nil })
         session.data.mapID = wild.id
         for town in towns { session.markVisited(town) }
         let home = try #require(towns.last)
         session.reachCheckpoint(try #require(content.map(home)))
-        #expect(session.travelDestinations.first == home)
-        #expect(Set(session.travelDestinations) == Set(towns))
+        #expect(session.townDestinations.first == home)
+        #expect(Set(session.townDestinations) == Set(towns))
         // In one of them: every other one.
         session.data.mapID = towns[0]
-        #expect(session.travelDestinations.count == towns.count - 1)
-        #expect(!session.travelDestinations.contains(towns[0]))
+        #expect(session.townDestinations.count == towns.count - 1)
+        #expect(!session.townDestinations.contains(towns[0]))
     }
 
     @Test func errandsAreCarriedToSomeoneElseAndBack() throws {
@@ -3729,26 +3730,23 @@ struct RulesTests {
         session.data.mapID = content.startMap
         // Asleep till their quests are done: nowhere to go yet.
         #expect(stones.allSatisfy { !session.isAwake($0) })
-        #expect(session.travelDestinations.isEmpty)
+        #expect(session.waystoneDestinations.isEmpty)
         for stone in stones {
             let quest = try #require(stone.quest)
             session.data.quests[quest] = QuestProgress(state: .completed, count: 1)
         }
-        // Awake, every one is somewhere to go, after the towns.
-        #expect(session.travelDestinations == stones.map(\.id))
+        // Awake, every one is somewhere to go.
+        #expect(session.waystoneDestinations == stones.map(\.id))
         // Standing in a waystone's land, that one's left out.
-        // (Any town you have been to is listed as well; this looks only at the waystones.)
         let first = try #require(stones.first)
         session.data.mapID = try #require(content.home(ofNPC: first.id)).id
-        let listed = session.travelDestinations.filter { id in stones.contains { $0.id == id } }
-        #expect(listed == stones.dropFirst().map(\.id))
-        // A feather or Bridge of Light goes to towns alone; a Waystone Shard to the waystones alone
-        // (playtesting 2026-11-01), and both from a waystone you touch.
+        // A feather or Bridge of Light goes to towns alone; a Waystone Shard, or a waystone you touch,
+        // to the waystones alone (playtesting 2026-11-01).
         #expect(session.townDestinations.allSatisfy { id in !stones.contains { $0.id == id } })
         #expect(session.waystoneDestinations == stones.dropFirst().map(\.id))
         #expect(GameCoordinator.Travel.feather(GameSession.featherID).places(in: session) == session.townDestinations)
         #expect(GameCoordinator.Travel.shard(GameSession.shardID).places(in: session) == session.waystoneDestinations)
-        #expect(GameCoordinator.Travel.waystone.places(in: session) == session.travelDestinations)
+        #expect(GameCoordinator.Travel.waystone.places(in: session) == session.waystoneDestinations)
         let shard = try #require(content.item(GameSession.shardID))
         #expect(shard.travel == true && shard.toWaystones == true && shard.type == .consumable)
         #expect(content.item(GameSession.featherID)?.toWaystones != true)
