@@ -7611,6 +7611,7 @@
           "stock": [
             "hi_potion",
             "hi_ether",
+            "mega_ether",
             "seal_stone",
             "heart_seal",
             "homeward_feather",
@@ -19322,6 +19323,8 @@
           "stock": [
             "hi_potion",
             "hi_ether",
+            "mega_ether",
+            "max_ether",
             "moon_seal",
             "heart_seal",
             "homeward_feather"

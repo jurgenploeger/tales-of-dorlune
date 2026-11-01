@@ -3140,13 +3140,15 @@ for _item in json.loads((ROOT / "content" / "items.json").read_text())["items"]:
 
 DRAWINGS = {name[5:]: fn for name, fn in globals().items() if name.startswith("draw_")}
 # Not drawn here: the Potion is a Retro Diffusion sprite (rd_pro__fantasy) and the Hi-Potion,
-# Ether and Hi-Ether are palette swaps of it (`derive` in art/assets.json).
+# Ether, Hi-Ether, Mega-Ether and Max-Ether are palette swaps of it (`derive` in art/assets.json).
 
 PROMPTS = {  # for a later Retro Diffusion upgrade (python3 tools/rd.py generate item_<id>)
     "potion": "round red healing potion bottle with a cork",
     "hi_potion": "big pink healing potion bottle with a gold star label",
     "ether": "blue mana potion in a cone flask with a cork",
     "hi_ether": "violet mana potion in a cone flask with a gold star",
+    "mega_ether": "cyan mana potion in a round flask with a cork",
+    "max_ether": "deep sapphire mana potion in a round flask with a cork",
     "seal_stone": "teal crystal sealing stone with a white spiral rune",
     "homeward_feather": "white feather with a golden quill and a soft glow",
     "waystone_shard": "a chip of blue-grey standing stone with a glowing cyan rune",
