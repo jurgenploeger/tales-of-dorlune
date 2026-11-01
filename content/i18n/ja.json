@@ -283,7 +283,7 @@
     "Checkpoint saved at {place}.": "{place}でチェックポイントをセーブした。",
     "the {map} entrance": "{map}の入り口",
     "{name} fainted and wakes up at {place}.": "{name}はたおれて、{place}で目をさました。",
-    "{names} wake up at {place}, a little bruised.": "{names}は{place}で目をさました。ちょっとアザだらけだ。",
+    "{names} wake up at {place}, fully rested.": "{names}は{place}で目をさました。すっかり元気だ。",
     "{names} waits for you where you fell.": "{names}はあなたがたおれた場所で待っている。",
     "{names} wait for you where you fell.": "{names}はあなたがたおれた場所で待っている。",
     "Your bag is full. Make room, then open the chest.": "バッグがいっぱい。空きを作ってから宝箱を開けよう。",

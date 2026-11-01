@@ -3696,8 +3696,10 @@ struct RulesTests {
 
         // You fall with Maple still standing: you wake up in town, and Maple waits where you fell.
         let lines = session.partWays(fainted: [], heroFainted: true)
-        #expect(lines == ["You wake up at \(town.name), a little bruised.", "Maple waits for you where you fell."])
+        #expect(lines == ["You wake up at \(town.name), fully rested.", "Maple waits for you where you fell."])
         #expect(session.data.mapID == town.id)
+        // Waking at the checkpoint rested: full HP and MP.
+        #expect(session.data.hero.hp == session.heroStats.hp && session.data.hero.mp == session.heroStats.mp)
         #expect(session.friends.first { $0.id == maple.id }?.waitingAt == Spot(mapID: meadow.id, position: [100, 50]))
         // Both are still in your party, but they don't fight until you come back for them.
         #expect(session.partyMembers.count == 2 && session.friendsAtYourSide.isEmpty)
@@ -3708,7 +3710,7 @@ struct RulesTests {
 
         // Falling together, a friend who saved where you did wakes up beside you.
         let together = session.partWays(fainted: [maple.id], heroFainted: true)
-        #expect(together.first == "You and Maple wake up at \(town.name), a little bruised.")
+        #expect(together.first == "You and Maple wake up at \(town.name), fully rested.")
         #expect(session.friendsAtYourSide.map(\.name) == ["Maple"])
     }
 

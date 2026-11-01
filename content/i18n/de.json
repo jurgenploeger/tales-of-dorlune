@@ -283,7 +283,7 @@
     "Checkpoint saved at {place}.": "Checkpoint gespeichert: {place}.",
     "the {map} entrance": "Eingang: {map}",
     "{name} fainted and wakes up at {place}.": "{name} ist ohnmächtig geworden und wacht auf in: {place}.",
-    "{names} wake up at {place}, a little bruised.": "{names} wachen etwas angeschlagen auf in: {place}.",
+    "{names} wake up at {place}, fully rested.": "{names} wachen ausgeruht auf in: {place}.",
     "{names} waits for you where you fell.": "{names} wartet dort auf dich, wo du gefallen bist.",
     "{names} wait for you where you fell.": "{names} warten dort auf dich, wo du gefallen bist.",
     "Your bag is full. Make room, then open the chest.": "Deine Tasche ist voll. Mach Platz und öffne dann die Truhe.",

@@ -678,7 +678,8 @@ three guilds (M): humans are balanced, elves lean to magic and dwarves to attack
 - HP and MP carry over from fight to fight (our decision, 2026-10-05, at the playtester's request), except
   that a new level fills them to the new maximums, the hero's and the companion's (asked for the same day,
   0.3.52). Otherwise potions, healing skills and the healer heal.
-  Friends in your party carry theirs over too (`Adventurer.hp`/`mp`); one who faints wakes at half.
+  Friends in your party carry theirs over too (`Adventurer.hp`/`mp`). Whoever faints (you, your
+  companions, a friend) wakes at the checkpoint with full HP and MP (asked for 2026-11-01; it had been half).
 - Frost Breath freezes: whoever it catches loses their next turn (`Ailment.freeze`, our decision, 2026-10-05).
 - Six equipment slots: weapon, armour, gloves, necklace, boots and accessory (rings, charms, bands). Gloves,
   necklace and boots are ours (2026-10-09, asked for in playtesting); FO's own slots aren't in any source
