@@ -1019,6 +1019,27 @@ final class BattleController {
         message = text
     }
 
+    /// Everyone one spell poisons, curses or freezes (with a curse's drops), at once: one line for
+    /// them all when there's more than one, "Poisoned: Rat, Bat and Slime" in the game's language
+    /// (`BattleScene.play`).
+    func applyAfflictions(_ events: [BattleEvent]) {
+        for event in events { apply(event) }
+        let struck: [(id: Int, effect: Ailment)] = events.compactMap { event in
+            if case .afflicted(let id, let effect, _) = event { return (id: id, effect: effect) }
+            return nil
+        }
+        guard struck.count > 1, let effect = struck.first?.effect, struck.allSatisfy({ $0.effect == effect }) else { return }
+        let names = struck.map { name($0.id) }
+        let list = ListFormatter()
+        list.locale = Localizer.shared.locale
+        let joined = list.string(from: names) ?? names.joined(separator: ", ")
+        message = switch effect {
+        case .poison: L("Poisoned: {names}", ["names": joined])
+        case .curse: L("Cursed: {names}", ["names": joined])
+        case .freeze: L("Frozen solid: {names}", ["names": joined])
+        }
+    }
+
     /// Everyone one blow knocked out, at once: one sound and one line for them all.
     func applyDefeats(_ ids: [Int]) {
         guard ids.count > 1 else {

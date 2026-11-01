@@ -187,6 +187,30 @@ def shine_existing():
 BARE_HEADED = {"chain_mail", "iron_plate", "dragon_mail", "mage_robe", "ranger_cloak", "snow_cloak", "hide_hood"}
 # Sheets drawn only for their hat: the body under it is the hero's own, so it isn't kept.
 HAT_ONLY = {"hide_hood"}
+# Sheets whose figure stands higher or lower than the race's own bodies, moved (dx, dy) in each
+# direction's frames (up, right, down, left) before the hat is cut, so its face lies over the
+# wearer's: Retro Diffusion's dwarf in a hood stood 7 to 9 pixels taller than the game's dwarves, its
+# face over their brows and theirs showing under it, two faces in a hood (playtesting 2026-11-01:
+# "some characters on this side have double face/eyes"). Moved down 5 (eyes on rows 26 to 28, as the
+# dwarves' are; the hood 2 to 4 pixels over the head, as on the humans and elves) and 1 forward
+# facing right.
+HAT_SHIFT = {"armor_hide_hood_dwarf": [(0, 5), (1, 5), (0, 5), (0, 5)]}
+
+
+def shifted(img, moves):
+    """A sheet with each direction's frames (rows: up, right, down, left) moved (dx, dy), what's
+    moved past a frame's edge dropped."""
+    out = np.zeros_like(img)
+    for row in range(img.shape[0] // F):
+        dx, dy = moves[row % len(moves)]
+        for col in range(img.shape[1] // F):
+            frame = img[row * F:(row + 1) * F, col * F:(col + 1) * F]
+            moved = np.zeros_like(frame)
+            ys, yd = (slice(0, F - dy), slice(dy, F)) if dy >= 0 else (slice(-dy, F), slice(0, F + dy))
+            xs, xd = (slice(0, F - dx), slice(dx, F)) if dx >= 0 else (slice(-dx, F), slice(0, F + dx))
+            moved[yd, xd] = frame[ys, xs]
+            out[row * F:(row + 1) * F, col * F:(col + 1) * F] = moved
+    return out
 # Heroes' bodies (tools/hero_layers.py), each race's: its own and its other gender's.
 BODIES = {race: [race] + [f"{race}_{g}" for g in ("male", "female") if (SPRITES / f"body_{race}_{g}.png").exists()]
           for race in RACES}
@@ -270,6 +294,8 @@ def armour():
         img = load(VARIANTS / source)
         kind = name[len("armor_"):name.rindex("_")]
         img = shine(material(img, **MATERIAL[kind]), kind)
+        if name in HAT_SHIFT:
+            img = shifted(img, HAT_SHIFT[name])
         if kind in BARE_HEADED:
             img, hat = bared(img, name[name.rindex("_") + 1:])
             save(hat, "hat_" + name[len("armor_"):])
