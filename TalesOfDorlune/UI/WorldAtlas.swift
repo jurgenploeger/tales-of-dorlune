@@ -871,6 +871,11 @@ struct MapCompass: View {
     var size: CGFloat = 72
     /// Small: the N alone, bigger, no E, S or W.
     var compact = false
+    /// How far out the letters sit, and how long each half of the needle is, in sizes: the small
+    /// one's N in from the rim with room round it (playtesting 2026-11-01: it touched the border),
+    /// its needle shorter to leave it room.
+    private var reach: CGFloat { compact ? 0.3 : 0.36 }
+    private var needle: CGFloat { compact ? 0.17 : 0.24 }
     /// How far the map under it is turned clockwise: its north points that way from straight up.
     var heading: Angle = .zero
     /// The map under it lies turned and squashed as the game's view is (a cave's, `CaveMap`).
@@ -894,13 +899,14 @@ struct MapCompass: View {
         ]
         ZStack {
             Circle()
-                .fill(RadialGradient(colors: [.white, Color(white: 0.9), Color(white: 0.74)], center: UnitPoint(x: 0.35, y: 0.3),
+                // White, shading only a little toward the rim (playtesting 2026-11-01: it read light grey).
+                .fill(RadialGradient(colors: [.white, .white, Color(white: 0.9)], center: UnitPoint(x: 0.35, y: 0.3),
                                      startRadius: 1, endRadius: size / 2))
                 .overlay(Circle().strokeBorder(HUDStyle.ink.opacity(0.55), lineWidth: max(1.5, size / 28)))
             // The needle: red to the north, slate to the south.
             VStack(spacing: 0) {
-                CompassTriangle().fill(Self.needleRed).frame(width: size * 0.16, height: size * 0.24)
-                CompassTriangle().fill(Color(white: 0.42)).frame(width: size * 0.16, height: size * 0.24).rotationEffect(.degrees(180))
+                CompassTriangle().fill(Self.needleRed).frame(width: size * 0.16, height: size * needle)
+                CompassTriangle().fill(Color(white: 0.42)).frame(width: size * 0.16, height: size * needle).rotationEffect(.degrees(180))
             }
             .shadow(color: .black.opacity(0.25), radius: 0, x: 1, y: 1)
             .rotationEffect(.degrees(north))
@@ -908,9 +914,9 @@ struct MapCompass: View {
             ForEach(points, id: \.label) { point in
                 let radians = point.angle * Double.pi / 180
                 Text(point.label)
-                    .font(HUDStyle.font(size * (compact ? 0.26 : point.main ? 0.2 : 0.15)))
+                    .font(HUDStyle.font(size * (compact ? 0.22 : point.main ? 0.2 : 0.15)))
                     .foregroundStyle(point.main ? Self.needleRed : HUDStyle.ink)
-                    .offset(x: CGFloat(sin(radians)) * size * 0.36, y: -CGFloat(cos(radians)) * size * 0.36)
+                    .offset(x: CGFloat(sin(radians)) * size * reach, y: -CGFloat(cos(radians)) * size * reach)
             }
         }
         .frame(width: size, height: size)
