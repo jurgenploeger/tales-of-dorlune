@@ -3665,6 +3665,19 @@ struct RulesTests {
         session.data.mapID = try #require(content.home(ofNPC: first.id)).id
         let listed = session.travelDestinations.filter { id in stones.contains { $0.id == id } }
         #expect(listed == stones.dropFirst().map(\.id))
+        // A feather or Bridge of Light goes to towns alone; a Waystone Shard to the waystones alone
+        // (playtesting 2026-11-01), and both from a waystone you touch.
+        #expect(session.townDestinations.allSatisfy { id in !stones.contains { $0.id == id } })
+        #expect(session.waystoneDestinations == stones.dropFirst().map(\.id))
+        #expect(GameCoordinator.Travel.feather(GameSession.featherID).places(in: session) == session.townDestinations)
+        #expect(GameCoordinator.Travel.shard(GameSession.shardID).places(in: session) == session.waystoneDestinations)
+        #expect(GameCoordinator.Travel.waystone.places(in: session) == session.travelDestinations)
+        let shard = try #require(content.item(GameSession.shardID))
+        #expect(shard.travel == true && shard.toWaystones == true && shard.type == .consumable)
+        #expect(content.item(GameSession.featherID)?.toWaystones != true)
+        // Dropped half as often as a feather, and by a boss one time in two.
+        #expect(GameSession.shardDropChance(boss: true, worth: 0) == 0.5)
+        #expect(GameSession.shardDropChance(boss: false, worth: 3) == GameSession.featherDropChance(boss: false, worth: 3) / 2)
     }
 
     @Test func botsAreTagged() {

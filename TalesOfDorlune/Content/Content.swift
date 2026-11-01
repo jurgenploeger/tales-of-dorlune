@@ -308,6 +308,9 @@ nonisolated struct ItemDef: Decodable, Identifiable, Sendable {
     /// Homeward Feathers: used from the bag outside battle, they carry you to your checkpoint like
     /// Bridge of Light, for any class.
     let travel: Bool?
+    /// A Waystone Shard: a travel item that carries you to a waystone you've woken, not a town
+    /// (playtesting 2026-11-01: "You shouldn't be able to use the feather item to go to a waystone").
+    let toWaystones: Bool?
     /// Companion toys (Fairyland Online's Pet Toys): given to a companion from the bag, they raise
     /// its `stats` for good, up to `GameSession.toysPerCompanion` toys each.
     let toy: Bool?

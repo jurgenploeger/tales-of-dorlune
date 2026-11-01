@@ -111,7 +111,8 @@ import SpriteKit
 ///   turn=<deg>     with worldmap: the map opens turned that far clockwise (its compass turned with it)
 ///   visited=a+b    those lands visited (`all`: every one), for the world map
 ///   far            the lands next door aren't built: past the borders, their world map pictures
-///   travel         every town visited, and the window for where a Homeward Feather takes you open
+///   travel         every town visited, and the window for where a Homeward Feather takes you open;
+///                  `travel=shard`, a Waystone Shard's (the waystones woken, with `done=`)
 ///   book           open the Monster Book, with the first 24 monsters already met
 ///   page=<monster> with book: open that monster's page
 ///   cards=n        the first n monsters' cards found (and those monsters met), for the Book
@@ -1109,7 +1110,8 @@ enum DebugLaunch {
         }
         if flags["travel"] != nil {
             for map in Content.shared.maps where map.fence == true { coordinator.session.markVisited(map.id) }
-            coordinator.open(.destinations(.feather("homeward_feather")))
+            // `travel=shard`: a Waystone Shard's choice, the waystones woken (with `done=`); else a feather's.
+            coordinator.open(.destinations(flags["travel"] == "shard" ? .shard(GameSession.shardID) : .feather(GameSession.featherID)))
         }
     }
 }

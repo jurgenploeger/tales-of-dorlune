@@ -756,6 +756,10 @@ bubble         | newgame,map=rainbow_city,say=Welcome traveller! | 6
 feather        | newgame,map=sunny_meadow,feather | 6
 # Where a Homeward Feather takes you, with every town visited: the checkpoint first.
 travel_pick    | newgame,map=sunny_meadow,travel | 6
+# A Waystone Shard (0.9.27): its own choice, the waystones you've woken; a feather's is towns alone. And
+# the shard in the bag.
+travel_shard   | newgame,level=40,map=sunny_meadow,travel=shard,done=dusk_waystone | 6
+shard_bag      | newgame,menu=bag,bag=waystone_shard+waystone_shard+homeward_feather+potion,inspect=waystone_shard | 8
 # A stranger's card on a danger map: Befriend, Trade and Duel on one line, in English and in French (its longest words).
 card_duel    | newgame,level=45,class=fighter,map=wolf_lair,meet=1 | 10
 card_duel_fr | newgame,level=45,class=fighter,map=wolf_lair,meet=1,lang=fr | 10

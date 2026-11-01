@@ -1355,6 +1355,11 @@ final class BattleController {
            content.item(GameSession.featherID) != nil, session.addItem(GameSession.featherID) {
             loot[GameSession.featherID, default: 0] += 1
         }
+        // And, half as often, a Waystone Shard for the way to a waystone (playtesting 2026-11-01).
+        if Double.random(in: 0..<1) < GameSession.shardDropChance(boss: bossBeaten, worth: worth),
+           content.item(GameSession.shardID) != nil, session.addItem(GameSession.shardID) {
+            loot[GameSession.shardID, default: 0] += 1
+        }
 
         // A hard fight (the strongest monster 5 or more levels over you, when the tougher theme
         // plays) or a boss now and then leaves a Seal Stone, a better one the harder it was.

@@ -5601,6 +5601,10 @@
       }
     },
     {
+      "id": "item_waystone_shard",
+      "kind": "item"
+    },
+    {
       "id": "item_homeward_feather",
       "kind": "item",
       "request": {

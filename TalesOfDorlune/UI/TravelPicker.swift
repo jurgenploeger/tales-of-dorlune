@@ -1,9 +1,9 @@
 import SwiftUI
 
-/// Where to, by Bridge of Light, a Homeward Feather or a waystone (`GameCoordinator.Travel`): every
-/// town you've been to but the one you're in, your checkpoint first, then the waystones you've woken
-/// (`GameSession.travelDestinations`). A tap goes there. Nothing's spent until then: closing the
-/// window keeps your MP or your feather.
+/// Where to, by Bridge of Light, a Homeward Feather, a Waystone Shard or a waystone
+/// (`GameCoordinator.Travel`, `places(in:)`): the towns you've been to but the one you're in, your
+/// checkpoint first, for the first two; the waystones you've woken for a shard; both from a waystone.
+/// A tap goes there. Nothing's spent until then: closing the window keeps your MP, feather or shard.
 struct TravelPicker: View {
     let session: GameSession
     let travel: GameCoordinator.Travel
@@ -20,7 +20,7 @@ struct TravelPicker: View {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 8) {
                         header
-                        ForEach(session.travelDestinations, id: \.self) { place in row(place) }
+                        ForEach(travel.places(in: session), id: \.self) { place in row(place) }
                     }
                     .padding(14)
                 }
@@ -43,7 +43,7 @@ struct TravelPicker: View {
                 let cost = GameSession.mpCost(of: skill, level: session.skillLevel(id))
                 means(icon: SkillIcon(skill: skill, size: 36), name: skill.name, cost: L("{cost} MP", ["cost": cost]))
             }
-        case .feather(let id):
+        case .feather(let id), .shard(let id):
             if let item = Content.shared.item(id) {
                 means(icon: ItemIcon(item: item, size: 36, count: session.count(of: id)), name: item.name, cost: L("One is used up."))
             }
