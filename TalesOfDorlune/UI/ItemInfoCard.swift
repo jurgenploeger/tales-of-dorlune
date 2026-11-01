@@ -270,15 +270,26 @@ struct ItemInfoCard: View {
         dropBlock ?? tradeBlock
     }
 
+    /// With more than one, Drop asks how many (`ItemDropWindow`); the only one goes straight to your
+    /// feet, where you can pick it back up (playtesting 2026-11-01: no window to pick an amount of one).
     private var dropButton: some View {
         let block = dropBlock
-        return Button { open(.drop) } label: {
+        let single = session.count(of: item.id) == 1
+        return Button {
+            if single {
+                guard session.drop(item.id, 1) else { return }
+                session.save()
+                onClose()
+            } else {
+                open(.drop)
+            }
+        } label: {
             Label(L("Drop"), icon: .arrowDown)
         }
         .buttonStyle(PixelButtonStyle())
         .disabled(block != nil)
         .opacity(block == nil ? 1 : 0.5)
-        .accessibilityHint(block ?? L("Choose how many to drop"))
+        .accessibilityHint(block ?? (single ? L("It lies where you stand for a while: yours to pick back up, then anyone's.") : L("Choose how many to drop")))
     }
 
     private var tradeButton: some View {
