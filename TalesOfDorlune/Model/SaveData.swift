@@ -94,6 +94,10 @@ nonisolated struct Pet: Codable, Equatable, Identifiable, Sendable {
     var toyStats: Stats?
     /// Your order of its skills, by id, as its battle row shows them (`GameSession.skills(of:)`).
     var skillOrder: [String]?
+    /// The skills you've chosen for it and how far you've raised each, a point a level as your
+    /// hero's (`GameSession.learnSkill(_:for:)`, since 0.9.51); nil, none yet.
+    var learnedSkills: [String]?
+    var skillLevels: [String: Int]?
 }
 
 nonisolated struct QuestProgress: Codable, Equatable, Sendable {
@@ -160,6 +164,9 @@ nonisolated struct SaveData: Codable, Sendable {
     /// Told, once, of the skill points earned from Hard and Elite quests already done when they began
     /// to give them (0.9.46, see `GameSession.rewardSkillPoints`).
     var skillPointRewardsTold: Bool?
+    /// Told, once, that companions choose their skills now, every point theirs to spend (0.9.51, see
+    /// `GameSession.announceCompanionSkillPointsIfNeeded`).
+    var companionSkillPointsTold: Bool?
     /// The hats that went with armour were handed out once (see `handOutArmourHatsIfNeeded`).
     var armourHatsGiven: Bool?
     /// Your order of the battle buttons (see `GameSession.battleButtons`).

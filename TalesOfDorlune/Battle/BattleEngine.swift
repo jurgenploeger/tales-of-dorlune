@@ -137,8 +137,8 @@ struct Combatant: Identifiable {
         skillLevels[id] ?? Self.naturalSkillLevel(for: level)
     }
 
-    /// Monsters grow into their skills with their own level, mastering them at 18 (your companions
-    /// on past it: `GameSession.companionSkillLevel`, set on them as they come into a fight).
+    /// Monsters grow into their skills with their own level, mastering them at 18 (your companions'
+    /// are the levels you've raised them to, set on them as they come into a fight).
     static func naturalSkillLevel(for level: Int) -> Int {
         min(GameSession.maxSkillLevel, 1 + level / 2)
     }

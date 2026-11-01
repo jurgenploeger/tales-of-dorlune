@@ -120,6 +120,7 @@ final class GameCoordinator {
         session.rescaleSkillLevelsIfNeeded()
         session.refundSkillsIfNeeded()
         session.announceSkillPointRewardsIfNeeded()
+        session.announceCompanionSkillPointsIfNeeded()
         session.retireRebirthsIfNeeded()
         session.handOutArmourHatsIfNeeded()
         session.handOutMissingStarterGifts()

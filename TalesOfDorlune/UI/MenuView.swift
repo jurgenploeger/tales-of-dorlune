@@ -1060,6 +1060,8 @@ private struct CompanionCard: View {
     /// The one you bring along, at the top: big, like the hero on the Character screen.
     var featured = false
     @State private var editing = false
+    /// On one of the others' cards: its skills open to choose (`SkillChoices`).
+    @State private var choosingSkills = false
 
     /// The gentlest potion in the bag that would wake a fainted companion.
     private var potion: ItemDef? {
@@ -1106,14 +1108,10 @@ private struct CompanionCard: View {
             VStack(alignment: .leading, spacing: 10) {
                 StatsPanel(level: L("Level {level}", ["level": pet.level]),
                            exp: pet.exp, expToNext: GameSession.expToNext(level: pet.level), hp: pet.hp, mp: pet.mp, stats: stats)
-                // Its skills in your order, to drag about: its battle row's.
-                if session.skills(of: pet).count > 1 {
-                    chips()
-                    Text(L("Hold a skill and drag it to reorder: in battle its row shows them in this order."))
-                        .font(HUDStyle.font(10))
-                        .foregroundStyle(HUDStyle.dim)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
+                // Its skills, to learn and raise for its points as your hero's are, and drag about
+                // into its battle row's order (playtesting 2026-11-01).
+                skillPoints()
+                SkillChoices(session: session, owner: pet.id)
             }
         }
     }
@@ -1196,6 +1194,17 @@ private struct CompanionCard: View {
         }
     }
 
+    /// Its skill points to spend, in gold (none: nothing shown).
+    @ViewBuilder
+    private func skillPoints() -> some View {
+        let points = session.unspentSkillPoints(of: pet)
+        if points > 0 {
+            Text(points == 1 ? L("1 skill point to spend") : L("{count} skill points to spend", ["count": points]))
+                .font(HUDStyle.font(11))
+                .foregroundStyle(HUDStyle.gold)
+        }
+    }
+
     /// What it can do in a fight, a chip each, in your order: held and dragged onto another, a chip
     /// takes its place (`GameSession.moveSkill(_:onto:of:)`).
     @ViewBuilder
@@ -1258,6 +1267,17 @@ private struct CompanionCard: View {
                     .foregroundStyle(HUDStyle.dim)
                 notes(stats: stats, isActive: isActive, hint: false)
                 chips()
+                skillPoints()
+                // Its skills open here to choose, as the one you bring along has them.
+                if !session.offeredSkills(of: pet).isEmpty {
+                    Button(choosingSkills ? L("Done") : L("Choose skills")) {
+                        withAnimation(.easeOut(duration: 0.2)) { choosingSkills.toggle() }
+                    }
+                    .buttonStyle(PixelButtonStyle(tint: session.unspentSkillPoints(of: pet) > 0 ? HUDStyle.gold : HUDStyle.cream, compact: true))
+                }
+                if choosingSkills {
+                    SkillChoices(session: session, owner: pet.id)
+                }
                 status(isActive: isActive)
                     .padding(.top, 2)
             }

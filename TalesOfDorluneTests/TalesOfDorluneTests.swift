@@ -1725,6 +1725,7 @@ struct RulesTests {
         let species = try #require(Content.shared.monsters.first { $0.skills.count >= 2 && $0.boss != true })
         let pet = try #require(session.makePet(species: species.id, level: 5))
         #expect(session.addPet(pet))
+        for id in species.skills { session.learnSkill(id, for: pet.id) }
         let kept = try #require(session.data.pets.first { $0.id == pet.id })
         let own = session.skills(of: kept).map(\.id)
         #expect(own == species.skills)
@@ -2920,29 +2921,51 @@ struct RulesTests {
         #expect(beast.count == 1 && Double(beast[0].amount) > alone)
     }
 
-    /// Companions learn as they grow (playtesting 2026-11-01, Phase 2): Boost at 30, their element's
-    /// skill at 60, Super Boost at 100 (Full Heal if they're of light), never one they already know;
-    /// and their skills grow past mastery, a level every four, to 50.
-    @Test func companionsLearnAsTheyGrowAndTheirSkillsKeepGrowing() throws {
+    /// Companions are offered more as they grow (playtesting 2026-11-01, Phase 2): Boost at 30, their
+    /// element's skill at 60, Super Boost at 100 (Full Heal if they're of light), never one they
+    /// already know. You choose what they learn and raise, a point a level, as your hero's (0.9.51).
+    @Test func companionsChooseTheirSkillsWithPoints() throws {
         let session = GameSession.newGame(name: "Test", raceID: "human")
         let jelly = try #require(session.content.monster("jelly"))
         var pet = try #require(session.makePet(species: "jelly", level: 29))
-        #expect(session.skills(of: pet).map(\.id) == jelly.skills)
+        #expect(session.offeredSkills(of: pet).map(\.id) == jelly.skills)
         pet.level = 30
-        #expect(session.skills(of: pet).map(\.id) == jelly.skills + ["boost"])
+        #expect(session.offeredSkills(of: pet).map(\.id) == jelly.skills + ["boost"])
         pet.level = 100
         let lessons = GameSession.companionLessons(element: jelly.element, level: 100)
         #expect(lessons.count == 3 && lessons.last == (jelly.element == .light ? "full_heal" : "super_boost"))
-        #expect(Set(session.skills(of: pet).map(\.id)) == Set(jelly.skills + lessons))
+        #expect(Set(session.offeredSkills(of: pet).map(\.id)) == Set(jelly.skills + lessons))
         // Light's lesson at 60 is Recovery, and at 100 Full Heal.
         #expect(GameSession.companionLessons(element: .light, level: 100) == ["boost", "recovery", "full_heal"])
         #expect(GameSession.companionLessons(element: .dark, level: 60) == ["boost", "curse"])
         for id in GameSession.elementLessons.values { #expect(session.content.skill(id) != nil) }
-        // Skill levels: as a monster's to mastery at 18, then a level every four, to 50.
-        #expect(GameSession.companionSkillLevel(1) == Combatant.naturalSkillLevel(for: 1))
-        #expect(GameSession.companionSkillLevel(18) == GameSession.maxSkillLevel)
-        #expect(GameSession.companionSkillLevel(58) == GameSession.maxSkillLevel + 10)
-        #expect(GameSession.companionSkillLevel(200) == GameSession.skillLevelCap)
+        // Nothing's learned till you choose: a point a level to spend, as your hero's.
+        pet.level = 10
+        #expect(session.addPet(pet, countsForQuests: false))
+        #expect(session.skills(of: pet).isEmpty && session.unspentSkillPoints(of: pet) == 9)
+        let first = try #require(jelly.skills.first)
+        session.learnSkill(first, for: pet.id)
+        session.upgradeSkill(first, for: pet.id)
+        session.learnSkill("not_a_skill", for: pet.id)
+        var kept = try #require(session.data.pets.first { $0.id == pet.id })
+        #expect(session.skills(of: kept).map(\.id) == [first])
+        #expect(session.skillLevel(first, of: kept) == 2 && session.unspentSkillPoints(of: kept) == 7)
+        // Out of points: nothing more is learned or raised.
+        session.spendSkillPointsEvenly(for: pet.id)
+        kept = try #require(session.data.pets.first { $0.id == pet.id })
+        #expect(session.unspentSkillPoints(of: kept) == 0)
+        let levels = session.skills(of: kept).map { session.skillLevel($0.id, of: kept) }
+        session.upgradeSkill(first, for: pet.id)
+        kept = try #require(session.data.pets.first { $0.id == pet.id })
+        #expect(session.skills(of: kept).map { session.skillLevel($0.id, of: kept) } == levels)
+        // The same calls for the hero (owner nil) and a companion (its id), as the grid uses them.
+        #expect(session.knownSkills(owner: pet.id).map(\.id) == session.skills(of: kept).map(\.id))
+        #expect(session.unspentSkillPoints(owner: nil) == session.unspentSkillPoints)
+        // An older save is told once; a new game never is.
+        session.data.companionSkillPointsTold = nil
+        session.announceCompanionSkillPointsIfNeeded()
+        #expect(session.data.companionSkillPointsTold == true)
+        #expect(GameSession.newGame(name: "New", raceID: "elf").data.companionSkillPointsTold == true)
     }
 
     /// Hard and Elite quests give a skill point (0.9.46), every boss's among them; easier ones and
