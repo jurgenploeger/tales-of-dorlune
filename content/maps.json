@@ -17582,7 +17582,7 @@
     {
       "id": "mysterious_cave",
       "name": "Whispering Hollow",
-      "width": 80,
+      "width": 160,
       "height": 60,
       "music": "cave",
       "crowd": {
@@ -17834,7 +17834,7 @@
         },
         {
           "edge": "south",
-          "to": "emerald_road"
+          "to": "emerald_road", "at": 70, "via": [[55, 0]]
         }
       ],
       "encounters": {

@@ -207,6 +207,9 @@ cave_in_downs   | newgame,level=12,map=slime_cave,from=northern_grassland | 8
 cave_in_valley  | newgame,level=30,map=rat_cavern,from=valley_of_fear | 8
 cave_in_lotus   | newgame,level=40,map=rat_cavern,from=lotus_land | 8
 cave_in_emerald | newgame,level=190,map=mysterious_cave,from=emerald_road | 8
+# The Whispering Hollow's map (playtesting 2026-11-01): twice as long, Moonglow's mouth on the west and
+# Emerald Road's at the far east end, the road running the length of it through the village.
+cave_hollow_map | newgame,level=176,map=mysterious_cave,from=moonglow,worldmap | 12
 # Deeper caves (playtesting 2026-10-18: "you should be able to go deeper in a cave, similar to
 # runescape", then "only the new land should have 2 deeper cave levels with the drake in the deepest"):
 # by the Glimmerdeep's ladder down, on each level under it by its stairs back up, and the drake at the bottom.
