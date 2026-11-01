@@ -972,9 +972,11 @@ final class StoryScene: SKScene {
             .wait(forDuration: detour.time + 0.5),
             // A monster jumps out: the screen flashes white twice, as on the map.
             .run { [weak self] in
-                self?.flash.run(.sequence([
-                    .fadeAlpha(to: 0.85, duration: 0.08), .fadeAlpha(to: 0, duration: 0.08),
-                    .fadeAlpha(to: 0.85, duration: 0.08), .fadeAlpha(to: 0, duration: 0.08),
+                guard let self else { return }
+                let peak = self.encounterFlashPeak
+                self.flash.run(.sequence([
+                    .fadeAlpha(to: peak, duration: 0.08), .fadeAlpha(to: 0, duration: 0.08),
+                    .fadeAlpha(to: peak, duration: 0.08), .fadeAlpha(to: 0, duration: 0.08),
                 ]))
             },
             .wait(forDuration: 0.34),

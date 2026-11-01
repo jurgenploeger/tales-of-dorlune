@@ -38,6 +38,7 @@ struct RootView: View {
     @State private var handingOff = false
     @Environment(\.scenePhase) private var scenePhase
     @AppStorage(GameSettings.appearanceKey) private var appearance = "system"
+    @Environment(\.colorScheme) private var colorScheme
 
     enum Opening {
         /// The loading screen, the game being built under it.
@@ -133,6 +134,8 @@ struct RootView: View {
             }
         }
         .onChange(of: appearance) { _, choice in Self.applyAppearance(choice) }
+        // For SpriteKit, which can't see SwiftUI's environment (`GameSettings.looksDark`).
+        .onChange(of: colorScheme, initial: true) { _, scheme in GameSettings.looksDark = scheme == .dark }
     }
 
     /// Settings → Appearance on every window: Light, Dark, or the phone's own look ("system").

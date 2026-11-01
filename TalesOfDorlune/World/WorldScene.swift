@@ -2612,10 +2612,11 @@ final class WorldScene: SKScene {
         flash.alpha = 0
         flash.zPosition = 50_000
         cam.addChild(flash)
+        let peak = encounterFlashPeak
         Task {
             await flash.run(.sequence([
-                .fadeAlpha(to: 0.85, duration: 0.08), .fadeAlpha(to: 0, duration: 0.08),
-                .fadeAlpha(to: 0.85, duration: 0.08), .fadeAlpha(to: 0, duration: 0.08),
+                .fadeAlpha(to: peak, duration: 0.08), .fadeAlpha(to: 0, duration: 0.08),
+                .fadeAlpha(to: peak, duration: 0.08), .fadeAlpha(to: 0, duration: 0.08),
             ]))
             flash.removeFromParent()
             onEncounter?(encounters, snapshot())
@@ -2728,5 +2729,13 @@ final class WorldScene: SKScene {
         let scale = (view?.contentScaleFactor ?? 1) / cam.xScale
         cam.position = CGPoint(x: (eased.x * scale).rounded() / scale, y: (eased.y * scale).rounded() / scale)
         focus.update(camera: cam.position, halfHeight: size.height / 2 * cam.yScale)
+    }
+}
+
+extension SKScene {
+    /// How white an encounter's double flash goes (the map's, the story's): softer in Dark Mode,
+    /// where a full white burst out of a dark screen was too bright (playtesting 2026-11-01).
+    var encounterFlashPeak: CGFloat {
+        GameSettings.looksDark ? 0.4 : 0.85
     }
 }

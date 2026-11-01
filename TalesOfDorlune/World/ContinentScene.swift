@@ -677,10 +677,11 @@ final class ContinentScene: SKScene {
         flash.alpha = 0
         flash.zPosition = 50_000
         cam.addChild(flash)
+        let peak = encounterFlashPeak
         Task {
             await flash.run(.sequence([
-                .fadeAlpha(to: 0.85, duration: 0.08), .fadeAlpha(to: 0, duration: 0.08),
-                .fadeAlpha(to: 0.85, duration: 0.08), .fadeAlpha(to: 0, duration: 0.08),
+                .fadeAlpha(to: peak, duration: 0.08), .fadeAlpha(to: 0, duration: 0.08),
+                .fadeAlpha(to: peak, duration: 0.08), .fadeAlpha(to: 0, duration: 0.08),
             ]))
             flash.removeFromParent()
             onEncounter?(encounters, battleBackdrop(hiding: nil))
