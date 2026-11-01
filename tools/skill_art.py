@@ -954,6 +954,149 @@ def draw_beast_impact(ic):
     ic.flare(0.5, 0.86, 0.3, G, rays=6, turn=0.0, strength=0.9)
 
 
+def droplet(ic, light, cx, cy, r, angle=math.pi / 2):
+    """A drop of water light falling along `angle` (down by default): round at its head, pointed behind."""
+    dx, dy = math.cos(angle), math.sin(angle)
+    nx, ny = -dy, dx
+    pts = [(cx - dx * r * 2.2, cy - dy * r * 2.2)] + \
+        [(cx + (dx * math.cos(t) + nx * math.sin(t)) * r, cy + (dy * math.cos(t) + ny * math.sin(t)) * r)
+         for t in np.linspace(-2.2, 2.2, 16)]
+    ic.body(ic.poly(pts, blur=0.002), light, cx - r * 0.3, cy - r * 0.3, r * 1.2, shadow=False)
+
+
+def draw_dancing_fountain(ic):
+    L = LIGHTS["water"]
+    W = LIGHTS["white"]
+    base = (0.5, 0.86)
+    # The pool it leaps from: a glow and its ripples.
+    ic.glow(0.5, 0.88, 0.42, L[0], 0.7, ry=0.12)
+    for k, r in enumerate((0.14, 0.26, 0.38)):
+        ic.add(L[2], ic.arc(0.5, 0.86, r, 200, 340, 0.018, blur=0.004) * (0.9 - k * 0.22))
+        ic.add(L[2], ic.arc(0.5, 0.86, r, 20, 160, 0.014, blur=0.004) * (0.6 - k * 0.15))
+    # Arcs leaping up and out on both sides, each falling away in drops.
+    for side in (-1, 1):
+        for (w, h, reach, drops) in ((0.17, 0.5, 0.86, ((0.92, 0.012), (1.04, 0.02))),
+                                     (0.3, 0.32, 0.8, ((0.88, 0.014), (1.0, 0.024)))):
+            def at(t):
+                return (base[0] + side * w * 2 * t, base[1] - 0.02 - h * 4 * t * (1 - t))
+            pts = [at(t) for t in np.linspace(0.0, reach, 22)]
+            ic.add(L[1], ic.line(pts, 0.07, blur=0.02) * 0.55)
+            ic.add(L[2], ic.line(pts, 0.032, blur=0.005) * 0.9)
+            ic.add(L[3], ic.line(pts[2:-3], 0.011, blur=0.002))
+            for t, r in drops:
+                x, y = at(t)
+                x2, y2 = at(t + 0.01)
+                droplet(ic, L, x, y, r, math.atan2(y2 - y, x2 - x))
+    # The jet in the middle, swaying as it dances, thick at its foot and thinning as it climbs.
+    jet = [(0.5 + 0.045 * math.sin(t * 7.0) * t, 0.86 - 0.66 * t) for t in np.linspace(0, 1, 30)]
+    n = len(jet) - 1
+    for colour, scale, alpha, blur, mode in ((L[1], 2.4, 0.55, 0.025, "add"), (L[0], 1.0, 0.9, 0.0, "over"),
+                                             (L[1], 0.66, 1.0, 0.0, "over"), (L[3], 0.26, 0.9, 0.0, "add")):
+        mask = np.zeros_like(ic.a)
+        for k in range(n):
+            mask = np.maximum(mask, ic.line(jet[k:k + 2], (0.075 - 0.04 * k / n) * scale, blur=blur or 0.002))
+        (ic.add if mode == "add" else ic.over)(colour, mask * alpha)
+    # Its crown: a burst of spray at the top.
+    top = jet[-1]
+    for a, r in ((-2.5, 0.016), (-0.64, 0.016), (-1.9, 0.012), (-1.24, 0.012)):
+        ic.add(L[2], ic.line([top, (top[0] + math.cos(a) * 0.1, top[1] + math.sin(a) * 0.08)], 0.014, blur=0.003) * 0.8)
+        droplet(ic, L, top[0] + math.cos(a) * 0.13, top[1] + math.sin(a) * 0.1 + 0.02, r, math.pi / 2)
+    ic.flare(top[0], top[1], 0.16, [L[1], L[2], W[2], W[3]], rays=4, strength=0.8)
+    ic.sparkle(0.16, 0.24, 0.035, L)
+    ic.sparkle(0.86, 0.3, 0.03, L)
+
+
+def draw_spiritual_lance(ic):
+    M = LIGHTS["metal"]
+    W = LIGHTS["white"]
+    S = [W[0], W[1], M[2], M[3]]                          # spirit light: silver turning gold-white
+    a = -math.pi / 4                                      # driving up and right
+    dx, dy = math.cos(a), math.sin(a)
+    nx, ny = -dy, dx
+    tip = (0.86, 0.14)
+
+    def along(d, off=0.0):
+        return (tip[0] - dx * d + nx * off, tip[1] - dy * d + ny * off)
+    ic.glow(0.5, 0.5, 0.42, M[0], 0.45)
+    ic.add(M[1], ic.line([along(0.1), along(0.95)], 0.2, blur=0.06) * 0.35)    # its aura
+    # The trail it leaves: a thin streak of light running back past its butt.
+    ic.add(S[1], ic.line([along(1.25), along(0.7)], 0.07, blur=0.02) * 0.55)
+    ic.add(W[3], ic.line([along(1.25), along(0.8)], 0.012, blur=0.003) * 0.8)
+    # Spirit wisps winding round the shaft.
+    for phase, colour in ((0.0, M[1]), (math.pi, W[2])):
+        pts = [along(d, 0.075 * math.sin(d * 13 + phase) * min(1.0, (1.0 - d) * 4)) for d in np.linspace(0.3, 1.0, 50)]
+        ic.add(colour, ic.line(pts, 0.022, blur=0.008) * 0.6)
+        ic.add(W[3], ic.line(pts, 0.007, blur=0.002) * 0.5)
+    # The shaft.
+    shaft = [along(0.3), along(0.92)]
+    ic.over(np.zeros(3), ic.line(shaft, 0.08, blur=0.02) * 0.4)
+    ic.add(M[1], ic.line(shaft, 0.08, blur=0.015) * 0.6)
+    ic.over(M[0], ic.line(shaft, 0.044))
+    ic.over(M[1], ic.line(shaft, 0.028))
+    ic.add(W[3], ic.line([along(0.32), along(0.88)], 0.01, blur=0.001) * 0.9)
+    # The head: a long leaf-shaped blade, its wings flaring at the foot.
+    blade = [tip, along(0.15, 0.085), along(0.3, 0.05), along(0.31, 0.12), along(0.37, 0.035), along(0.37, -0.035),
+             along(0.31, -0.12), along(0.3, -0.05), along(0.15, -0.085)]
+    mask = ic.poly(blade, blur=0.002)
+    ic.over(np.zeros(3), ic._soft(mask, 0.02) * 0.45)
+    ic.glow(*along(0.16), 0.2, S[1], 0.6)
+    ic.over(ic.linear(*along(0.15, 0.085), *along(0.15, -0.085), M[3], M[0]), mask)
+    ic.add(W[3], ic.line([along(0.03), along(0.33)], 0.014, blur=0.002) * 0.9)
+    ic.add(M[2], np.clip(mask - Icon._erode(mask, 3), 0, 1) * 0.6)
+    ic.flare(tip[0], tip[1], 0.26, S, rays=4, turn=a, strength=1.0)
+    for (x, y) in ((0.22, 0.2), (0.78, 0.72), (0.5, 0.86)):
+        ic.sparkle(x, y, 0.035, S, 0.8)
+
+
+def meteor(ic, light, cx, cy, r, angle, tail, rock=True):
+    """A meteor diving along `angle`: a flaming tail streaming behind it, its leading edge white-hot."""
+    deep, main, bright, core = light
+    dx, dy = math.cos(angle), math.sin(angle)
+    nx, ny = -dy, dx
+
+    def plume(width, length):
+        """Round at the head, tapering behind it in licks of flame to a point `length` back."""
+        front = [(cx + (dx * math.cos(t) + nx * math.sin(t)) * width, cy + (dy * math.cos(t) + ny * math.sin(t)) * width)
+                 for t in np.linspace(math.pi / 2, -math.pi / 2, 14)]
+        back = []
+        for s in np.linspace(0, 1, 16)[1:]:                # along the far side, then back up the near one
+            w = width * (1 - s) ** 1.3 * (1 + 0.12 * math.sin(s * 17))
+            back.append((cx - dx * length * s - nx * w, cy - dy * length * s - ny * w))
+        near = []
+        for s in np.linspace(0, 1, 16)[1:-1]:
+            w = width * (1 - s) ** 1.3 * (1 + 0.12 * math.sin(s * 17 + 2))
+            near.append((cx - dx * length * s + nx * w, cy - dy * length * s + ny * w))
+        return front + back + near[::-1]
+    ic.add(deep, ic.poly(plume(r * 1.9, tail * 1.05), blur=0.03) * 0.8)
+    ic.over(deep, ic.poly(plume(r * 1.45, tail), blur=0.008) * 0.95)
+    ic.over(main, ic.poly(plume(r * 1.2, tail * 0.8), blur=0.006))
+    ic.over(bright, ic.poly(plume(r * 0.95, tail * 0.55), blur=0.005))
+    ic.add(core, ic.poly(plume(r * 0.55, tail * 0.35), blur=0.004) * 0.9)
+    if rock:
+        # The rock in the fire: dark, molten cracks, lit white-hot on the side it dives into.
+        pts = [(cx + math.cos(t) * r * (0.82 + 0.12 * math.sin(t * 5 + 1)), cy + math.sin(t) * r * (0.82 + 0.12 * math.sin(t * 5 + 1)))
+               for t in np.linspace(0, 2 * math.pi, 18)[:-1]]
+        mask = ic.poly(pts, blur=0.003)
+        ic.over(ic.linear(cx + dx * r, cy + dy * r, cx - dx * r, cy - dy * r, rgb("#8a2a0a"), rgb("#2a0c06")), mask)
+        for (u, v, s) in ((-0.25, 0.3, 0.16), (-0.4, -0.25, 0.12), (0.05, -0.05, 0.1)):     # embers glowing in it
+            ic.add(main, ic.ellipse(cx + (dx * u + nx * v) * r, cy + (dy * u + ny * v) * r, r * s, blur=0.004) * mask)
+        ic.add(core, ic.arc(cx, cy, r * 0.86, math.degrees(angle) - 70, math.degrees(angle) + 70, r * 0.26, blur=0.006))
+    ic.glow(cx + dx * r * 0.6, cy + dy * r * 0.6, r * 0.9, core, 0.7)
+
+
+def draw_meteor_blast(ic):
+    L = LIGHTS["fire"]
+    a = math.radians(118)                                 # diving steeply down and to the left
+    ic.glow(0.3, 0.9, 0.46, L[0], 0.6, ry=0.14)          # the ground lit where it will strike
+    meteor(ic, L, 0.2, 0.36, 0.05, a, 0.3, rock=False)   # the smaller ones following it
+    meteor(ic, L, 0.76, 0.58, 0.045, a, 0.28, rock=False)
+    meteor(ic, L, 0.4, 0.68, 0.15, a, 0.8)
+    for (x, y, s) in ((0.6, 0.22, 0.02), (0.84, 0.36, 0.016), (0.68, 0.06, 0.018), (0.16, 0.6, 0.014)):
+        ic.glow(x, y, s * 2, L[1], 0.7)
+        ic.add(L[3], ic.ellipse(x, y, s * 0.5))
+    ic.flare(0.36, 0.77, 0.24, L, rays=4, turn=a, strength=0.8)
+
+
 def rgb_light(*hexes):
     return [rgb(h) for h in hexes]
 
