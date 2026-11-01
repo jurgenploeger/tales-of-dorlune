@@ -962,7 +962,7 @@ private struct SkillRow<Lead: View, Tail: View>: View {
                 .frame(maxWidth: .infinity)
                 .frame(height: 0)
                 .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { width = $0 }
-            row(size: layout.size, spacing: layout.spacing, shown: layout.shown, slides: layout.slides)
+            row(size: layout.size, spacing: layout.spacing, shown: layout.shown, slides: layout.slides, reach: layout.reach)
                 .frame(maxWidth: .infinity, alignment: .trailing)
         }
         .onChange(of: width > 0 ? layout.size : nil, initial: true) { _, size in
@@ -970,10 +970,12 @@ private struct SkillRow<Lead: View, Tail: View>: View {
         }
     }
 
-    private func filled(in width: CGFloat) -> (size: CGFloat, spacing: CGFloat, shown: Int, slides: Bool) {
+    /// `reach`: how far across the row reaches, its lead at the left end and the rest at the right
+    /// (0: as far as its buttons do).
+    private func filled(in width: CGFloat) -> (size: CGFloat, spacing: CGFloat, shown: Int, slides: Bool, reach: CGFloat) {
         // Not measured yet: as small as the row goes, its skills behind More (or sliding), so it
         // never starts out wider than the screen.
-        guard width > 0 else { return (CommandRow.narrowSize, CommandRow.narrowSpacing, overflowsToLead ? 0 : skills.count, !overflowsToLead) }
+        guard width > 0 else { return (CommandRow.narrowSize, CommandRow.narrowSpacing, overflowsToLead ? 0 : skills.count, !overflowsToLead, 0) }
         let gap = CommandRow.narrowSpacing
         // How big each of `count` buttons would be, the least gap between them.
         func fitted(_ count: Int) -> CGFloat { (width - CGFloat(count - 1) * gap) / CGFloat(count) }
@@ -982,13 +984,18 @@ private struct SkillRow<Lead: View, Tail: View>: View {
             while shown > 0, fitted(1 + shown + others) < CommandRow.narrowSize { shown -= 1 }
         }
         let count = 1 + shown + others
-        guard fitted(count) >= CommandRow.narrowSize else { return (CommandRow.narrowSize, gap, shown, true) }
+        guard fitted(count) >= CommandRow.narrowSize else { return (CommandRow.narrowSize, gap, shown, true, 0) }
         // The size asked for, if the row has room for it; spaced out to fill the rest.
         let size = matching.map { min($0, fitted(count)) } ?? min(Self.largest, fitted(count)).rounded(.down)
         let spread = count > 1 ? (width - CGFloat(count) * size) / CGFloat(count - 1) : 0
-        // At a size of its own the row spans the screen; at the hero's it closes up at the right.
-        let spacing = matching == nil ? spread : min(spread, CommandRow.spacing)
-        return (size, spacing, shown, false)
+        // At the hero's size (the companion's turn) it closes up at the right. At a size of its own
+        // it spans the screen; with room to spare even at the biggest size (few skills yet), More
+        // stays at the left end and the rest close up at the right, not strung out across it
+        // (playtesting 2026-11-01: "If not all skills are there yet, the attack buttons are right
+        // aligned with the more button always left aligned").
+        if matching != nil { return (size, min(spread, CommandRow.spacing), shown, false, 0) }
+        if spread > CommandRow.spacing { return (size, CommandRow.spacing, shown, false, width) }
+        return (size, spread, shown, false, 0)
     }
 
     /// On its side: the biggest of a few fixed sizes that fits, at the right.
@@ -1015,12 +1022,14 @@ private struct SkillRow<Lead: View, Tail: View>: View {
         }
     }
 
-    /// The row with the first `shown` skills in it, the rest handed to `lead`.
+    /// The row with the first `shown` skills in it, the rest handed to `lead`; `reach` across, if
+    /// that's wider than its buttons, `lead` at the left end and the rest at the right.
     @ViewBuilder
-    private func row(size: CGFloat, spacing: CGFloat, shown: Int, slides: Bool) -> some View {
+    private func row(size: CGFloat, spacing: CGFloat, shown: Int, slides: Bool, reach: CGFloat = 0) -> some View {
         let visible = Array(skills.prefix(shown))
         let count = 1 + visible.count + others
-        let short = least - (CGFloat(count) * size + CGFloat(count - 1) * spacing)
+        // Room left over, between `lead` and the rest (`least`, or `reach` from `filling`).
+        let short = max(least, reach) - (CGFloat(count) * size + CGFloat(count - 1) * spacing)
         HStack(alignment: .bottom, spacing: spacing) {
             lead(size, Array(skills.dropFirst(shown)))
                 // Over the rest of the row: More's panel opens across it.

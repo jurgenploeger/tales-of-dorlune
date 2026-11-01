@@ -525,8 +525,8 @@ final class WorldScene: SKScene {
             // the world.
             for hill in map.hills {
                 await breathe()
-                let sprites = await HillArt.sprites(for: hill, look: looks.look(for: hill), pause: { await self.breathe() })
-                raisedHills += sprites as [SKNode]
+                let drawn = await HillArt.drawn(for: hill, look: looks.look(for: hill), pause: { await self.breathe() })
+                raisedHills += (drawn?.sprites() ?? []) as [SKNode]
             }
         }
         // The shore sloping down to the sea and into the lakes (`WorldMap.shore`): the same ground
@@ -535,8 +535,8 @@ final class WorldScene: SKScene {
         if let shore = map.shore {
             await breathe()
             let look = HillLooks.shore(of: map, ground: tilePicture, variation: variationPicture, overlays: sunkDecks)
-            let sprites = await HillArt.sprites(for: shore, look: look, pause: { await self.breathe() })
-            raisedHills += sprites as [SKNode]
+            let drawn = await HillArt.drawn(for: shore, look: look, pause: { await self.breathe() })
+            raisedHills += (drawn?.sprites() ?? []) as [SKNode]
         }
         let ground = SKNode()
         ground.zPosition = -100_000
@@ -1572,7 +1572,7 @@ final class WorldScene: SKScene {
         let gx = Double(hill.height(atCells: x + e, y) - hill.height(atCells: x - e, y)) / (2 * e)
         let gy = Double(hill.height(atCells: x, y + e) - hill.height(atCells: x, y - e)) / (2 * e)
         let tile = Double(WorldMap.tileSize)
-        // The same light as the ground's (`HillArt.sprites`), crags and mountains in their deeper
+        // The same light as the ground's (`HillArt.drawn`), crags and mountains in their deeper
         // shade.
         let ambient = hill.isCrag || hill.hasMountain ? Self.cragShade : HillArt.ambient(rocky: map.rockiness)
         let spot = (node: node, hx: gx / tile / 0.866, hy: gy / tile / 0.866, ambient: ambient)
