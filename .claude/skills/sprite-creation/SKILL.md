@@ -147,8 +147,9 @@ check <ids> --new` for the first six (a palette swap scored in its own colours);
    outline the same weight, colours from the same families.
 9. **Every case, not one:** worn gear on all six bodies, four directions, every armour and every skin
    tone (`tools/gear_preview.py`, sprite-acceptance.md); a recolour on every base it's applied to.
-10. **Seen in the game** before calling it done: CI's screenshot of a scene that shows it. If CI
-    can't run, say plainly that it hasn't been seen in the game.
+10. **Seen in the game** before calling it done: a screenshot of a scene that shows it
+    (`tools/screenshots.sh` on a Mac; there's no CI for it since 2026-11-01). From a cloud session, say
+    plainly that it hasn't been seen in the game.
 
 The style bands are calibrated on RD's own art, and some of RD's sprites fall outside them. That's
 why `sprite_check.py check` only warns on existing art and fails on new art (`--new`). Never loosen a
