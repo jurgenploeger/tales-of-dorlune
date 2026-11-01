@@ -2945,6 +2945,32 @@ struct RulesTests {
         #expect(GameSession.companionSkillLevel(200) == GameSession.skillLevelCap)
     }
 
+    /// Hard and Elite quests give a skill point (0.9.46), every boss's among them; easier ones and
+    /// bosses beaten don't on their own. Worked out from the save, so what was done before counts.
+    @Test func hardQuestsGiveSkillPoints() {
+        let session = GameSession.newGame(name: "Test", raceID: "human")
+        session.data.hero.level = 30
+        let base = session.unspentSkillPoints
+        let content = Content.shared
+        let hard = content.quests.filter { session.givesSkillPoint($0) }
+        let easy = content.quests.filter { !session.givesSkillPoint($0) }
+        #expect(hard.count >= 16 && !easy.isEmpty)
+        // Every boss has a quest that gives one.
+        let bosses = Set(content.monsters.filter { $0.boss == true }.map(\.id))
+        #expect(bosses.isSubset(of: Set(hard.compactMap(\.objective.target))))
+        for quest in easy.prefix(10) { session.data.quests[quest.id] = QuestProgress(state: .completed, count: 1) }
+        session.data.defeatedBosses = ["rat_throne", "oak_grove"]
+        #expect(session.rewardSkillPoints == 0)
+        for quest in hard.prefix(3) { session.data.quests[quest.id] = QuestProgress(state: .completed, count: 1) }
+        #expect(session.rewardSkillPoints == 3)
+        #expect(session.unspentSkillPoints == base + 3)
+        // An older save is told once of what it had already earned; a new game never.
+        session.data.skillPointRewardsTold = nil
+        session.announceSkillPointRewardsIfNeeded()
+        #expect(session.data.skillPointRewardsTold == true)
+        #expect(GameSession.newGame(name: "New", raceID: "elf").data.skillPointRewardsTold == true)
+    }
+
     /// Once, every skill point back (0.9.43): what was learned and raised is cleared, so all the
     /// points the hero's level gives are free to spend again; a second time does nothing.
     @Test func skillPointsComeBackOnce() {

@@ -254,6 +254,7 @@
     "Rebirth is gone from Dorlune: you're back at level {level}, where your rebirth began.": "La renaissance a disparu de Dorlune : te voilà de retour au niveau {level}, là où ta renaissance avait commencé.",
     "Helmets and hoods are hats of their own now: yours are in your bag, or on your head.": "Les heaumes et les capuches sont désormais des chapeaux à part entière : les tiens sont dans ton sac, ou sur ta tête.",
     "New skills are here: all your skill points are back, to choose your skills again.": "De nouvelles compétences sont là : tous tes points de compétence te sont rendus pour choisir à nouveau.",
+    "Hard and Elite quests now give a skill point: {count} for those you've already done!": "Les quêtes difficiles et d'élite donnent maintenant un point de compétence : {count} pour celles déjà accomplies !",
     "The world grew bigger! You're now level {level}.": "Le monde s'est agrandi ! Tu es maintenant niveau {level}.",
     "No skills yet.\nSpend your skill point to learn {skill}.": "Aucune compétence pour l'instant.\nDépense ton point de compétence pour apprendre {skill}.",
     "No skills yet.\nYou can learn {skill} at level {level}.": "Aucune compétence pour l'instant.\nTu pourras apprendre {skill} au niveau {level}.",
@@ -303,6 +304,7 @@
     "You mixed {item}.": "Tu as mélangé : {item}.",
     "{monster} dropped {item}!": "{monster} a lâché : {item} !",
     "Quest complete: {quest}": "Quête terminée : {quest}",
+    "+1 skill point": "+1 point de compétence",
     "The ship from {from} to {map} is ready to sail!": "Le navire entre {from} et {map} est prêt à appareiller !",
     "The road from {from} to {map} is open!": "La route de {from} à {map} est ouverte !",
     "The waystone in {map} is awake! Touch it to travel.": "La pierre de passage de {map} est réveillée ! Touche-la pour voyager.",
@@ -3802,7 +3804,6 @@
     "Bounty Hunter": "Chasseur de primes",
     "Town Favourite": "Chouchou du village",
     "Faithful": "Fidèle",
-    "Old Friend": "Vieil ami",
-    "Leave": "Quitter"
+    "Old Friend": "Vieil ami"
   }
 }

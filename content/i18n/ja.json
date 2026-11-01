@@ -254,6 +254,7 @@
     "Rebirth is gone from Dorlune: you're back at level {level}, where your rebirth began.": "Dorluneから転生がなくなった。転生したときのレベル{level}にもどった。",
     "Helmets and hoods are hats of their own now: yours are in your bag, or on your head.": "かぶとやフードは、ぼうしとして別に身につけるようになりました。あなたのものは、かばんの中か頭の上にあります。",
     "New skills are here: all your skill points are back, to choose your skills again.": "新しいスキルが登場！スキルポイントがすべてもどったので、スキルを選びなおそう。",
+    "Hard and Elite quests now give a skill point: {count} for those you've already done!": "「むずかしい」と「エリート」のクエストでスキルポイントがもらえるようになりました：達成済みの分で{count}ポイント！",
     "The world grew bigger! You're now level {level}.": "世界が広がった！ レベル{level}になった。",
     "No skills yet.\nSpend your skill point to learn {skill}.": "スキルはまだありません。\nスキルポイントを使って{skill}をおぼえよう。",
     "No skills yet.\nYou can learn {skill} at level {level}.": "スキルはまだありません。\nレベル{level}で{skill}をおぼえられます。",
@@ -303,6 +304,7 @@
     "You mixed {item}.": "{item}を混ぜて作った。",
     "{monster} dropped {item}!": "{monster}は{item}を落とした！",
     "Quest complete: {quest}": "クエスト完了：{quest}",
+    "+1 skill point": "スキルポイント+1",
     "The ship from {from} to {map} is ready to sail!": "{from}から{map}への船が出せるようになった！",
     "The road from {from} to {map} is open!": "{from}から{map}への道がひらけた！",
     "The waystone in {map} is awake! Touch it to travel.": "{map}の道しるべの石が目覚めた!さわれば旅ができる。",
@@ -3802,7 +3804,6 @@
     "Bounty Hunter": "賞金かせぎ",
     "Town Favourite": "町の人気者",
     "Faithful": "常連さん",
-    "Old Friend": "古なじみ",
-    "Leave": "ぬける"
+    "Old Friend": "古なじみ"
   }
 }

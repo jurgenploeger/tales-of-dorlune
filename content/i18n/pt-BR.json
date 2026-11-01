@@ -254,6 +254,7 @@
     "Rebirth is gone from Dorlune: you're back at level {level}, where your rebirth began.": "Não existe mais renascimento em Dorlune: você está de volta ao nível {level}, o nível em que renasceu.",
     "Helmets and hoods are hats of their own now: yours are in your bag, or on your head.": "Elmos e capuzes agora são chapéus à parte: os seus estão na sua bolsa ou na sua cabeça.",
     "New skills are here: all your skill points are back, to choose your skills again.": "Chegaram habilidades novas! Todos os seus pontos de habilidade voltaram para você escolher de novo.",
+    "Hard and Elite quests now give a skill point: {count} for those you've already done!": "Missões difíceis e de elite agora dão um ponto de habilidade: {count} pelas que você já fez!",
     "The world grew bigger! You're now level {level}.": "O mundo ficou maior! Agora você está no nível {level}.",
     "No skills yet.\nSpend your skill point to learn {skill}.": "Nenhuma habilidade ainda.\nGaste seu ponto de habilidade para aprender {skill}.",
     "No skills yet.\nYou can learn {skill} at level {level}.": "Nenhuma habilidade ainda.\nVocê pode aprender {skill} no nível {level}.",
@@ -303,6 +304,7 @@
     "You mixed {item}.": "Você misturou {item}.",
     "{monster} dropped {item}!": "{monster} deixou cair {item}!",
     "Quest complete: {quest}": "Missão concluída: {quest}",
+    "+1 skill point": "+1 ponto de habilidade",
     "The ship from {from} to {map} is ready to sail!": "O navio de {from} para {map} está pronto para zarpar!",
     "The road from {from} to {map} is open!": "A estrada de {from} até {map} está aberta!",
     "The waystone in {map} is awake! Touch it to travel.": "A pedra de passagem de {map} despertou! Toque nela para viajar.",
@@ -3802,7 +3804,6 @@
     "Bounty Hunter": "Caçador de Recompensas",
     "Town Favourite": "Favorito da Cidade",
     "Faithful": "Fiel",
-    "Old Friend": "Velho Amigo",
-    "Leave": "Sair"
+    "Old Friend": "Velho Amigo"
   }
 }

@@ -252,6 +252,7 @@ final class GameSession {
         slotted.slot = UUID().uuidString   // every new game gets its own save
         slotted.skillLevelsDoubled = true  // already on the 10-step skill scale
         slotted.skillsRefunded = true      // nothing to give back: a new game has no skills yet
+        slotted.skillPointRewardsTold = true   // nothing done yet to be told of
         slotted.levelsRescaled = true      // and on the 200-level scale (a debug level isn't stretched)
         slotted.giftDay = GameSession.dayKey()  // the first daily gift is tomorrow's: today has the story and the tour
         slotted.bankStocked = true         // nothing to put in the bank: a new game starts with it
@@ -563,6 +564,18 @@ final class GameSession {
         save()
     }
 
+    /// Once, when Hard and Elite quests began to give skill points (0.9.46): what you'd already done
+    /// counts (`rewardSkillPoints` is worked out from the save), and a line in the chat says so.
+    func announceSkillPointRewardsIfNeeded() {
+        guard data.skillPointRewardsTold != true else { return }
+        data.skillPointRewardsTold = true
+        let earned = rewardSkillPoints
+        if earned > 0 {
+            post(L("Hard and Elite quests now give a skill point: {count} for those you've already done!", ["count": earned]), .reward)
+        }
+        save()
+    }
+
     func rescaleLevelsIfNeeded() {
         guard data.levelsRescaled != true else { return }
         data.levelsRescaled = true
@@ -759,11 +772,26 @@ final class GameSession {
             && (!learnableSkills.isEmpty || heroSkills.contains { skillLevel($0.id) < Self.skillLevelCap })
     }
 
-    /// One point per level gained. Learning costs one and each upgrade one; points in skills
-    /// your class no longer has come back.
+    /// One point per level gained, and those bosses and quests give (`rewardSkillPoints`). Learning
+    /// costs one and each upgrade one; points in skills your class no longer has come back.
     var unspentSkillPoints: Int {
         let spent = heroSkills.reduce(0) { $0 + skillLevel($1.id) }
-        return max(0, data.hero.level - 1 + (data.hero.bonusSkillPoints ?? 0) - spent)
+        return max(0, data.hero.level - 1 + (data.hero.bonusSkillPoints ?? 0) + rewardSkillPoints - spent)
+    }
+
+    /// Skill points besides the levels' (playtesting 2026-11-01, with more skills than points: "Skill
+    /// points as rewards from bosses or quests, but I already finished a lot of quests", then "Only
+    /// difficult quests and bosses that are meaningful should reward it"): one for each quest that's
+    /// hard in itself (`givesSkillPoint`), every boss's among them. Worked out from the save, so
+    /// those finished before they began to count count.
+    var rewardSkillPoints: Int {
+        content.quests.filter { givesSkillPoint($0) && hasCompleted($0.id) }.count
+    }
+
+    /// A quest rated Hard or Elite in itself (`baseDifficulty`, not how hard it is for you now, so it
+    /// pays the same whenever it's done): every boss's, the long hunts and the rarest finds.
+    func givesSkillPoint(_ quest: QuestDef) -> Bool {
+        baseDifficulty(of: quest) >= .hard
     }
 
     func learnSkill(_ id: String) {
@@ -2358,6 +2386,8 @@ final class GameSession {
             lines.append(L("+{exp} EXP", ["exp": pay.exp]))
             if gainHeroEXP(pay.exp) > 0 { lines.append(L("Level up! You're now level {level}.", ["level": data.hero.level])) }
         }
+        // A Hard or Elite quest, a skill point (`rewardSkillPoints`).
+        if givesSkillPoint(quest) { lines.append(L("+1 skill point")) }
         // What doesn't fit is left behind; a quest's treasure waits instead, and comes once there's
         // room (`deliverQuestTreasures`).
         for itemID in quest.reward.items ?? [] where addItem(itemID) {

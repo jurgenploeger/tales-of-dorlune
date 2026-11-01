@@ -873,6 +873,14 @@ No advanced classes.
   show wider (bigger magic circles, a second ring, more rays and motes, the milestone's name under the
   skill's), the ground shakes from Epic, the finale strikes twice from Mythic, and Legendary comes in every
   colour. Monsters' and friends' skills stop at mastery; since 0.9.39 your companions' grow on (Pets).
+  Since 0.9.46 a quest rated Hard or Elite in itself gives a skill point too (playtesting 2026-11-01, with the
+  late skills more than a level's points go round: "Skill points as rewards from bosses or quests, but I
+  already finished a lot of quests", then "Only difficult quests and bosses that are meaningful should reward
+  it"): 29 of the 169, every boss's quest among them, by `GameSession.baseDifficulty` (not how hard it is for
+  you now, so it pays whenever it's done; `givesSkillPoint`), its reward showing "+1 skill point". It's worked
+  out from the save (`rewardSkillPoints`), so those finished before count, which an older save is told once
+  (`announceSkillPointRewardsIfNeeded`). Whether FO gave skill points for quests isn't in any source
+  reachable from a cloud session.
 - Our Mage carries Recovery, Revive, Bless, Holy Glow and Guardianship, which FO gives the Acolyte of Light,
   and Curse (level 12) and Poison (level 25), the Acolyte of Dark's.
 - Like FO's Mage, whose list starts with Fireball, ours learns Fire Bolt on joining the guild at level 10
