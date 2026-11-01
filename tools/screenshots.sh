@@ -1,7 +1,7 @@
 #!/bin/bash
 # Launches the built app in a booted simulator once per scene and saves a screenshot of each
 # (and a video of the scenes with record=N).
-# macOS only (needs Xcode). Used by .github/workflows/screenshots.yml; also works locally:
+# macOS only (needs Xcode). Run it on a Mac (the CI workflow that ran it was removed on 2026-11-01):
 #
 #   tools/screenshots.sh <simulator-udid> <path/to/TalesOfDorlune.app> <out-dir> [scenes-file] [only-these,names]
 set -euo pipefail
