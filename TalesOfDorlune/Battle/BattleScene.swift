@@ -561,6 +561,38 @@ final class BattleScene: SKScene {
                 refreshBars()
                 continue
             }
+            // Everyone one spell poisons, curses or freezes takes it at once, a curse's drops with
+            // it, not a beat each (playtesting 2026-11-01: "If a group of monsters get poisoned, the
+            // animation shouldn't show one by one but for all of them at the same time").
+            var afflictions: [BattleEvent] = []
+            while index < events.count {
+                if case .afflicted = events[index] {
+                    afflictions.append(events[index])
+                } else if !afflictions.isEmpty, case .statsChanged = events[index] {
+                    afflictions.append(events[index])
+                } else {
+                    break
+                }
+                index += 1
+            }
+            if !afflictions.isEmpty {
+                controller.applyAfflictions(afflictions)
+                var lowered = false
+                for event in afflictions {
+                    switch event {
+                    case .afflicted(let id, let effect, _):
+                        if let actor = actors[id] { SkillEffects.afflicted(actor, effect: effect, in: stage) }
+                    case .statsChanged(let id, let changes, _):
+                        if let actor = actors[id] { SkillEffects.statChanges(changes, on: actor, in: stage) }
+                        lowered = true
+                    default:
+                        break
+                    }
+                }
+                await pause(lowered ? 0.75 : 0.55)
+                refreshBars()
+                continue
+            }
             // Everyone the ice holds shivers at once, and poison bites the whole field at once, with
             // whoever it finishes off falling together after.
             var frozen: [Int] = []
