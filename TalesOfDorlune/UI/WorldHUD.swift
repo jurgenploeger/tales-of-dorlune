@@ -823,6 +823,14 @@ private struct MinimapWindow: View {
         .clipShape(Circle())
         .overlay(Circle().strokeBorder(HUDStyle.bevel, lineWidth: 3))
         .shadow(color: .black.opacity(0.35), radius: 3, x: 0, y: 2)
+        // Which way north lies as you see the land (playtesting 2026-11-01): up and to the left, as
+        // the map under it is turned.
+        .overlay(alignment: .bottomLeading) {
+            MapCompass(size: 38, compact: true, isometric: true)
+                .offset(x: -4, y: 4)
+                .allowsHitTesting(false)
+                .accessibilityHidden(true)
+        }
         .contentShape(Circle())
         .onTapGesture(perform: onOpen)
         .accessibilityElement(children: .ignore)

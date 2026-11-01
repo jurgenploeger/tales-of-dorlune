@@ -693,6 +693,9 @@ quests_finder | newgame,level=127,done=hope_of_meadowbrook+jelly_trouble+new_fri
 worldmap     | newgame,worldmap                                    | 180
 # Who's where, in every land you've been to (playtesting 2026-10-21: the world map's badges).
 worldmap_badges | newgame,level=60,visited=all,worldmap               | 180
+# Turned as you see the land in the game (the compass's tap, playtesting 2026-11-01): north up and
+# to the left, east up and to the right.
+worldmap_seen | newgame,level=60,visited=all,worldmap,turn=-45       | 180
 # The world map on its side: its title and the time over the top, where you are along the bottom,
 # the pale compass (playtesting 2026-10-26).
 worldmap_night_land | newgame,worldmap,landscape,hour=22            | 180
