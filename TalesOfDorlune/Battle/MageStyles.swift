@@ -109,14 +109,14 @@ extension SkillEffects {
                 rock.position = CGPoint(x: landing.x - 120, y: max(top, landing.y + 260))
                 rock.zPosition = 18_700
                 rock.alpha = 0
-                let tail = trail(light, level: level, parent: parent)
-                rock.addChild(tail)
                 parent.addChild(rock)
                 let dive = SKAction.move(to: landing, duration: fall)
                 dive.timingMode = .easeIn
                 let wait = delay + (big ? 0 : 0.12 + Double(small) * 0.08)
-                rock.run(.sequence([.wait(forDuration: wait), .fadeIn(withDuration: 0.03), dive, .run {
-                    SkillEffects.settle(tail, in: parent)
+                let fadeIn = SKAction.fadeIn(withDuration: 0.03)
+                SkillEffects.fly(SkillEffects.trail(light, level: level, parent: parent), from: rock.position, after: wait,
+                                 flight: .sequence([.wait(forDuration: 0.03), dive]), z: rock.zPosition - 1, in: parent)
+                rock.run(.sequence([.wait(forDuration: wait), fadeIn, dive, .run {
                     let burst = SkillEffects.lightBall(light, size: size * 1.8)
                     burst.position = landing
                     burst.setScale(0.3)

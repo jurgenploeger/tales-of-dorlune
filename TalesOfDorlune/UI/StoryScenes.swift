@@ -1331,27 +1331,21 @@ final class StoryScene: SKScene {
         battleStage.addChild(ball)
         let travel = SKAction.move(to: target.center, duration: 0.3)
         travel.timingMode = .easeIn
+        // Its trail flies beside it, never moved between nodes (SkillEffects.fly).
+        SkillEffects.fly(SkillEffects.trail(.fire, level: 1, parent: battleStage), from: caster.center, after: 0.45,
+                         flight: travel, z: ball.zPosition - 1, in: battleStage)
+        ball.run(.repeatForever(.sequence([.scale(to: 1.12, duration: 0.05), .scale(to: 0.92, duration: 0.05)])), withKey: "flicker")
         ball.run(.sequence([
             .wait(forDuration: 0.45),
-            .run { [weak self, weak ball] in
-                guard let self, let ball else { return }
-                ball.alpha = 1
-                ball.run(.repeatForever(.sequence([.scale(to: 1.12, duration: 0.05), .scale(to: 0.92, duration: 0.05)])), withKey: "flicker")
-                ball.addChild(SkillEffects.trail(.fire, level: 1, parent: self.battleStage))
-            },
+            .fadeIn(withDuration: 0),
             travel,
-            .run { [weak self, weak ball] in
-                guard let self else { return }
-                for child in ball?.children ?? [] where child.children.contains(where: { $0 is SKEmitterNode }) {
-                    SkillEffects.settle(child, in: self.battleStage)
-                }
-                ball?.removeAllActions()
-                ball?.removeFromParent()
-                guard let target = self.actors[targetID] else { return }
+            .run { [weak self] in
+                guard let self, let target = self.actors[targetID] else { return }
                 SkillEffects.fireBlast(on: target, level: 1, in: self.battleStage)
                 self.impact(on: targetID, 31, hp: 0, weakSpot: true)
                 self.actors[0]?.setHealth(0.92, mana: 0.92)
             },
+            .removeFromParent(),
         ]))
         battleStage.run(.sequence([.wait(forDuration: 1.3), .run { [weak self] in self?.defeat(targetID) }]))
     }
