@@ -2919,6 +2919,31 @@ struct RulesTests {
         #expect(beast.count == 1 && Double(beast[0].amount) > alone)
     }
 
+    /// Companions learn as they grow (playtesting 2026-11-01, Phase 2): Boost at 30, their element's
+    /// skill at 60, Super Boost at 100 (Full Heal if they're of light), never one they already know;
+    /// and their skills grow past mastery, a level every four, to 50.
+    @Test func companionsLearnAsTheyGrowAndTheirSkillsKeepGrowing() throws {
+        let session = GameSession.newGame(name: "Test", raceID: "human")
+        let jelly = try #require(session.content.monster("jelly"))
+        var pet = try #require(session.makePet(species: "jelly", level: 29))
+        #expect(session.skills(of: pet).map(\.id) == jelly.skills)
+        pet.level = 30
+        #expect(session.skills(of: pet).map(\.id) == jelly.skills + ["boost"])
+        pet.level = 100
+        let lessons = GameSession.companionLessons(element: jelly.element, level: 100)
+        #expect(lessons.count == 3 && lessons.last == (jelly.element == .light ? "full_heal" : "super_boost"))
+        #expect(Set(session.skills(of: pet).map(\.id)) == Set(jelly.skills + lessons))
+        // Light's lesson at 60 is Recovery, and at 100 Full Heal.
+        #expect(GameSession.companionLessons(element: .light, level: 100) == ["boost", "recovery", "full_heal"])
+        #expect(GameSession.companionLessons(element: .dark, level: 60) == ["boost", "curse"])
+        for id in GameSession.elementLessons.values { #expect(session.content.skill(id) != nil) }
+        // Skill levels: as a monster's to mastery at 18, then a level every four, to 50.
+        #expect(GameSession.companionSkillLevel(1) == Combatant.naturalSkillLevel(for: 1))
+        #expect(GameSession.companionSkillLevel(18) == GameSession.maxSkillLevel)
+        #expect(GameSession.companionSkillLevel(58) == GameSession.maxSkillLevel + 10)
+        #expect(GameSession.companionSkillLevel(200) == GameSession.skillLevelCap)
+    }
+
     @Test func monstersPowerThemselvesUp() throws {
         let content = Content.shared
         let wolf = try #require(content.monster("werewolf"))

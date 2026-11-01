@@ -117,6 +117,9 @@ final class BattleController {
                 level: pet.level, element: species.element, stats: session.stats(of: pet),
                 hp: pet.hp, mp: pet.mp, skills: session.skills(of: pet).map(\.id), captureRate: 0
             )
+            // Its skills grow past mastery with its level (`GameSession.companionSkillLevel`).
+            let skillLevel = GameSession.companionSkillLevel(pet.level)
+            companion.skillLevels = Dictionary(uniqueKeysWithValues: companion.skills.map { ($0, skillLevel) })
             // It stands beside you, or right behind you when friends fight with you (BattleScene.arrange).
             companion.ownerID = hero.id
             party.append(companion)
@@ -1324,10 +1327,15 @@ final class BattleController {
                 lines.append(L("{name} needs rest: use a potion or visit a healer.", ["name": pet.name]))
             } else {
                 let share = Int((Double(exp) * (session.heroClass.petExpShare ?? 0.5)).rounded())
+                let knew = Set(session.skills(of: pet).map(\.id))
                 if session.gainPetEXP(petID, share) > 0, let updated = session.data.pets.first(where: { $0.id == petID }) {
                     let line = L("{name} grew to level {level}!", ["name": pet.name, "level": updated.level])
                     othersLevelled.append(LevelUp(name: pet.name, level: updated.level, line: line, fighterID: fighter.id))
                     lines.append(line)
+                    // And what it learned growing up (`GameSession.companionLessons`).
+                    for skill in session.skills(of: updated) where !knew.contains(skill.id) {
+                        lines.append(L("{name} learned {skill}!", ["name": pet.name, "skill": skill.name]))
+                    }
                 }
             }
         }
