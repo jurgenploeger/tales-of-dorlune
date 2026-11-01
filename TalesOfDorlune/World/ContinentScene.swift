@@ -190,6 +190,8 @@ final class ContinentScene: SKScene {
     private var nearbyTalk: (land: String, npc: String)?
     /// What happens once a Homeward Feather has lifted you away (`featherAway`).
     private var onFeatherGone: (() -> Void)?
+    /// The light a Homeward Feather lifted you into, till you've arrived (`awaitFeatherArrival`).
+    private var departure: SKNode?
     /// Your party's friends: walking behind you, or waiting where you left them (on a land that's
     /// laid out) until you walk up to them (`Adventurer.waitingAt`), with their companions.
     private struct Ally {
@@ -805,7 +807,11 @@ final class ContinentScene: SKScene {
         player.idles = false
         let column = featherColumn(over: player.position)
         column.alpha = 0
-        column.run(.sequence([.wait(forDuration: Feather.length - Feather.hold - Feather.fade), .fadeAlpha(to: 0.9, duration: Feather.fade)]))
+        // Gone once you are, under the loading card: the scene stays, and so did the light, where
+        // you'd left from (playtesting 2026-11-01). Taken down on arrival too.
+        column.run(.sequence([.wait(forDuration: Feather.length - Feather.hold - Feather.fade), .fadeAlpha(to: 0.9, duration: Feather.fade),
+                              .wait(forDuration: 4), .removeFromParent()]))
+        departure = column
         featherGust(around: player.position, backward: true)
         let lift = SKAction.moveBy(x: 0, y: Feather.height, duration: Feather.drop)
         lift.timingMode = .easeIn
@@ -822,6 +828,8 @@ final class ContinentScene: SKScene {
 
     /// Before you're shown: you aren't there yet (`featherArrive` brings you down).
     func awaitFeatherArrival() {
+        departure?.removeFromParent()
+        departure = nil
         player.idles = false
         player.alpha = 0
         player.sprite.position = CGPoint(x: 0, y: Feather.height)
