@@ -19345,6 +19345,7 @@
           "y": -30,
           "greeting": "Psst, down here! I'm Pip. I light Glimmerbough's lanterns, when the moths leave me any light."
         },
+        {"id": "starfall_isle_waystone", "name": "Waystone", "role": "waystone", "art": "waystone", "x": -6, "y": -26, "greeting": "An old standing stone carved with runes. Awake, they glow, and it can take you far away.", "quest": "starfall_waystone"},
         {
           "id": "fallen_star_hill",
           "name": "The Fallen Star",

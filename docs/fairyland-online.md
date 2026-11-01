@@ -479,12 +479,14 @@ capsule (H). Mining spots include Ilium, Kars Mountain and Siwa Oasis (H).
   (`WorldScene.Feather`, one timeline for both, since 0.4.7: playtesting 2026-10-12 asked for them to match). How FO itself moved players between towns isn't in any source reachable
   from a cloud session (2026-10-05); this is our own design.
 - Waystones (ours, since 0.7.63; playtesting 2026-10-22: "There should be quests that you can eventually
-  teleport to other keypoints in lands"): seven standing stones out in wild lands (NPC role `waystone`,
+  teleport to other keypoints in lands"): eight standing stones out in wild lands (NPC role `waystone`,
   maps.json), one each in the Twilight Woods, Shiverdell, Genie Desert, Dozywick, the Hidden Steppe,
-  Briarmere and the Emerald Road (levels 22 to 186). Each sleeps, faded, till a quest from someone in its
-  land is done (its `quest`: beat 8 or 10 of a local monster), then it's a stop for Bridge of Light and
-  Homeward Feathers as the towns are (`GameSession.travelDestinations`, after the towns), and touching it
-  takes you to any of them free (`GameCoordinator.Travel.waystone`). You arrive in front of it
+  Starfall Isle (since 0.9.35), Briarmere and the Emerald Road (levels 22 to 186). Each sleeps, faded, till
+  a quest from someone in its land is done (its `quest`: beat 8 or 10 of a local monster). Awake, touching
+  it takes you free to any other waystone you've woken, and only to them (playtesting 2026-11-01: "You
+  should only be going between waystones"); a Waystone Shard does the same from anywhere, and Bridge of
+  Light and Homeward Feathers go to towns alone (`GameSession.waystoneDestinations`,
+  `townDestinations`, `GameCoordinator.Travel`). You arrive in front of it
   (`WorldMap.waystoneArrival`). RuneScape's lodestones and fairy rings are the idea; FO had nothing like it
   that we know of. The stone's sprite is drawn in code (`tools/prop_art.py waystone`).
 - One continent (ours, since 0.5.0, asked for in playtesting 2026-10-13: "instead of the maps being
@@ -852,7 +854,16 @@ No advanced classes.
 - **Trader:** Dodge, Hide, Invisible, bribery and collection.
 
 **Us:**
-- 20 hero skills.
+- 32 hero skills. Since 0.9.37 (playtesting 2026-11-01: the Fighter had 5 and the Beast Tamer 6, their last at
+  level 40, the Mage 13) both learn more into the late game, named after FO's Warrior, Beast Master and pet
+  skills with our own effects (FO's aren't in any source reachable from a cloud session): the Fighter
+  Berserk (50, the monsters' own), Charge (65, through 40% of DEF), Rush (80, three blows at foes picked at
+  random), Impact (100, DEF −20%) and Double Combo (120, two blows on one foe); the Beast Tamer Boost (50),
+  Dodge Whip (65, a lash that raises your SPD), Beast Lore (80, every foe's DEF −15%), Super Boost (100,
+  ATK +40%), Full Heal (120, an ally back to full HP) and God of Beast Impact (150, your companion's ATK
+  joined to yours). Skills.json `hits`, `scatter`, `pierce`, `full` and `withCompanion` (BattleEngine), and
+  an attack's `raises` for its caster. Since 0.9.39 the Mage too, after FO's Mage list: Dancing Fountain (85,
+  water, splashing those beside), Spiritual Lance (105, metal, one foe) and Meteor Blast (140, fire, every foe).
 - Skill levels (ours): a skill point a level, one to learn a skill and one for each step up; ten steps to
   Mastered (×1.8 damage, ×1 when learned, a point of MP a step). Since 0.7.72 your hero's skills keep growing
   past it, to level 50 (playtesting 2026-10-23: "you should be able to continuously improve these skills,
@@ -861,7 +872,7 @@ No advanced classes.
   (`GameSession.skillRank`): Heroic at 20, Epic at 30, Mythic at 40, Legendary at 50. Each opens the mastered
   show wider (bigger magic circles, a second ring, more rays and motes, the milestone's name under the
   skill's), the ground shakes from Epic, the finale strikes twice from Mythic, and Legendary comes in every
-  colour. Monsters', companions' and friends' skills stop at mastery.
+  colour. Monsters' and friends' skills stop at mastery; since 0.9.39 your companions' grow on (Pets).
 - Our Mage carries Recovery, Revive, Bless, Holy Glow and Guardianship, which FO gives the Acolyte of Light,
   and Curse (level 12) and Poison (level 25), the Acolyte of Dark's.
 - Like FO's Mage, whose list starts with Fireball, ours learns Fire Bolt on joining the guild at level 10
@@ -975,7 +986,12 @@ Full Heal.
   for friends made before), and throws one at the monster most likely to hold once it's at 20% HP or less (40%
   for the last one standing), never at the one you're sealing. Their level and class set the odds; a catch is
   their companion from then on, and a stone is used up either way.
-- Companions grow as species base + growth × (level − 1) and have a fixed skill list.
+- Companions grow as species base + growth × (level − 1). Their kind's skills, and since 0.9.39 (playtesting
+  2026-11-01) what they learn growing up, as FO's pets did by species and element (`GameSession.companionLessons`):
+  Boost at 30, their element's skill at 60 (fire Ember, water Bubble, wood Vine Whip, earth Rock Throw, metal
+  Golden Spin, light Recovery, dark Curse) and Super Boost at 100 (Full Heal if they're of light, held to a
+  fifth of the HP like any monster's mending). Their skills grow past mastery too, a level every four from 18
+  to 50 at 178 (`companionSkillLevel`), where wild monsters' and friends' stop.
 - Each round, after your own choice, you pick your companion's: Attack, one of its skills, Guard, or Auto (it
   decides itself). It always obeys, since there's no intimacy. A Settings switch leaves it to fight on its own.
 - Toys (since 0.3.69, asked for in playtesting 2026-10-07: "more items that really add value and you want to

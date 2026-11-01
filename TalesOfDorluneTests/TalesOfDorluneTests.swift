@@ -688,9 +688,9 @@ struct ContentTests {
     }
 
     /// Glimmerbough, Starfall Isle's fairy village (playtesting 2026-10-16: "something worthy to do on
-    /// Starfall Isle"): a healer, a shop and quest givers with five quests (and three more for the
-    /// Glimmerdeep, the crystal cave under it), and a boss up on its mountain that drops a weapon for
-    /// every class you can choose.
+    /// Starfall Isle"): a healer, a shop and quest givers with five quests (three more for the
+    /// Glimmerdeep, the crystal cave under it, and one more since 0.9.35 to wake its waystone), and a
+    /// boss up on its mountain that drops a weapon for every class you can choose.
     @Test func glimmerboughHasSomethingForEveryone() throws {
         let isle = try #require(content.map("starfall_isle"))
         let npcs = isle.npcs ?? []
@@ -698,7 +698,8 @@ struct ContentTests {
             #expect(npcs.contains { $0.role == role }, "Starfall Isle has no \(role)")
         }
         let givers = Set(npcs.filter { $0.role == .quests }.map(\.id))
-        #expect(content.quests.filter { givers.contains($0.giver) }.count == 9)
+        #expect(content.quests.filter { givers.contains($0.giver) }.count == 10)
+        #expect(content.quests.contains { $0.id == "starfall_waystone" && givers.contains($0.giver) })
         let boss = try #require(npcs.first { $0.role == .boss }?.monster.flatMap(content.monster))
         let weapons = (boss.drops ?? []).compactMap { content.item($0.item) }.filter { $0.type == .weapon }
         for cls in content.classes where cls.id != "novice" {
@@ -2867,6 +2868,83 @@ struct RulesTests {
         #expect(engine.combatant(2)?.raised[.defense] != nil)
     }
 
+    /// The Fighter's and Beast Tamer's later skills (playtesting 2026-11-01): Double Combo's two blows
+    /// on one foe, Rush's three at foes picked at random, Dodge Whip's speed for its caster, Full
+    /// Heal all the way up, and God of Beast Impact with the companion's ATK behind it.
+    @Test func laterSkillsLandSeveralBlowsHealFullyAndBringTheCompanion() throws {
+        let content = Content.shared
+        let jelly = try #require(content.monster("jelly"))
+        let ids = ["double_combo", "rush", "dodge_whip", "full_heal", "beast_impact", "charge", "impact", "beast_lore", "super_boost"]
+        for id in ids { #expect(content.skill(id) != nil) }
+        let stats = Stats(hp: 500, mp: 900, attack: 30, defense: 40, magic: 20, speed: 50)
+        var hero = Combatant(id: 0, side: .party, source: .hero, name: "Hero", art: "player_walk", level: 150, element: .neutral,
+                             stats: stats, hp: 100, mp: 900, skills: ids, captureRate: 0)
+        hero.skillLevels = Dictionary(uniqueKeysWithValues: ids.map { ($0, 1) })
+        var pet = Combatant(id: 1, side: .party, source: .pet(UUID()), name: "Pet", art: jelly.art, level: 150, element: jelly.element,
+                            stats: Stats(hp: 500, mp: 0, attack: 300, defense: 40, magic: 0, speed: 1), hp: 500, mp: 0,
+                            skills: [], captureRate: 0)
+        pet.ownerID = 0
+        let foeStats = jelly.stats(at: 1)
+        let foes = [10, 11].map { id in
+            Combatant(id: id, side: .enemies, source: .wild("jelly"), name: "Jelly", art: jelly.art, level: 1, element: jelly.element,
+                      stats: foeStats, hp: 99_999, mp: 0, skills: [], captureRate: 0)
+        }
+        let engine = BattleEngine(party: [hero, pet], enemies: foes, content: content, seed: 5)
+        func heroSkill(_ id: String, at target: Int) -> (hits: [Hit], events: [BattleEvent]) {
+            let events = engine.resolveRound(heroAction: .skill(id, target: target), orders: [1: .defend])
+            for event in events {
+                if case .skill(0, let skill, _, let hits) = event, skill.id == id { return (hits, events) }
+            }
+            return ([], events)
+        }
+        // Full Heal: from 100 HP back to all 500.
+        let healed = heroSkill("full_heal", at: 0).hits
+        #expect(healed.map(\.amount) == [400])
+        // Double Combo: two blows, both on the foe chosen.
+        let combo = heroSkill("double_combo", at: 10).hits
+        #expect(combo.count == 2 && combo.allSatisfy { $0.target == 10 })
+        // Rush: three blows, the first at the foe chosen, the rest at any of them.
+        let rush = heroSkill("rush", at: 11).hits
+        #expect(rush.count == 3 && rush.first?.target == 11 && rush.allSatisfy { [10, 11].contains($0.target) })
+        // Dodge Whip: one blow, and the caster's SPD up 30%.
+        let whip = heroSkill("dodge_whip", at: 10)
+        #expect(whip.hits.count == 1)
+        #expect(whip.events.contains { event in
+            if case .statsChanged(0, let changes, _) = event { return changes.contains(StatChange(stat: .speed, amount: 0.3)) }
+            return false
+        })
+        // God of Beast Impact: the companion's ATK (ten times its tamer's) behind the blow, far past
+        // anything the tamer's own could do, even a critical hit at the top of its roll.
+        let beast = heroSkill("beast_impact", at: 10).hits
+        let alone = 30 * 2.2 * 1.1 * 1.5
+        #expect(beast.count == 1 && Double(beast[0].amount) > alone)
+    }
+
+    /// Companions learn as they grow (playtesting 2026-11-01, Phase 2): Boost at 30, their element's
+    /// skill at 60, Super Boost at 100 (Full Heal if they're of light), never one they already know;
+    /// and their skills grow past mastery, a level every four, to 50.
+    @Test func companionsLearnAsTheyGrowAndTheirSkillsKeepGrowing() throws {
+        let session = GameSession.newGame(name: "Test", raceID: "human")
+        let jelly = try #require(session.content.monster("jelly"))
+        var pet = try #require(session.makePet(species: "jelly", level: 29))
+        #expect(session.skills(of: pet).map(\.id) == jelly.skills)
+        pet.level = 30
+        #expect(session.skills(of: pet).map(\.id) == jelly.skills + ["boost"])
+        pet.level = 100
+        let lessons = GameSession.companionLessons(element: jelly.element, level: 100)
+        #expect(lessons.count == 3 && lessons.last == (jelly.element == .light ? "full_heal" : "super_boost"))
+        #expect(Set(session.skills(of: pet).map(\.id)) == Set(jelly.skills + lessons))
+        // Light's lesson at 60 is Recovery, and at 100 Full Heal.
+        #expect(GameSession.companionLessons(element: .light, level: 100) == ["boost", "recovery", "full_heal"])
+        #expect(GameSession.companionLessons(element: .dark, level: 60) == ["boost", "curse"])
+        for id in GameSession.elementLessons.values { #expect(session.content.skill(id) != nil) }
+        // Skill levels: as a monster's to mastery at 18, then a level every four, to 50.
+        #expect(GameSession.companionSkillLevel(1) == Combatant.naturalSkillLevel(for: 1))
+        #expect(GameSession.companionSkillLevel(18) == GameSession.maxSkillLevel)
+        #expect(GameSession.companionSkillLevel(58) == GameSession.maxSkillLevel + 10)
+        #expect(GameSession.companionSkillLevel(200) == GameSession.skillLevelCap)
+    }
+
     @Test func monstersPowerThemselvesUp() throws {
         let content = Content.shared
         let wolf = try #require(content.monster("werewolf"))
@@ -3576,19 +3654,19 @@ struct RulesTests {
         let towns = content.maps.filter { $0.fence == true }.map(\.id)
         // In the first town with nowhere else visited, there's nowhere to go.
         session.data.mapID = content.startMap
-        #expect(session.travelDestinations.isEmpty)
+        #expect(session.townDestinations.isEmpty)
         // Out in the wild having been to them all: every town, the checkpoint first.
         let wild = try #require(content.maps.first { $0.fence != true && $0.encounters != nil })
         session.data.mapID = wild.id
         for town in towns { session.markVisited(town) }
         let home = try #require(towns.last)
         session.reachCheckpoint(try #require(content.map(home)))
-        #expect(session.travelDestinations.first == home)
-        #expect(Set(session.travelDestinations) == Set(towns))
+        #expect(session.townDestinations.first == home)
+        #expect(Set(session.townDestinations) == Set(towns))
         // In one of them: every other one.
         session.data.mapID = towns[0]
-        #expect(session.travelDestinations.count == towns.count - 1)
-        #expect(!session.travelDestinations.contains(towns[0]))
+        #expect(session.townDestinations.count == towns.count - 1)
+        #expect(!session.townDestinations.contains(towns[0]))
     }
 
     @Test func errandsAreCarriedToSomeoneElseAndBack() throws {
@@ -3652,26 +3730,23 @@ struct RulesTests {
         session.data.mapID = content.startMap
         // Asleep till their quests are done: nowhere to go yet.
         #expect(stones.allSatisfy { !session.isAwake($0) })
-        #expect(session.travelDestinations.isEmpty)
+        #expect(session.waystoneDestinations.isEmpty)
         for stone in stones {
             let quest = try #require(stone.quest)
             session.data.quests[quest] = QuestProgress(state: .completed, count: 1)
         }
-        // Awake, every one is somewhere to go, after the towns.
-        #expect(session.travelDestinations == stones.map(\.id))
+        // Awake, every one is somewhere to go.
+        #expect(session.waystoneDestinations == stones.map(\.id))
         // Standing in a waystone's land, that one's left out.
-        // (Any town you have been to is listed as well; this looks only at the waystones.)
         let first = try #require(stones.first)
         session.data.mapID = try #require(content.home(ofNPC: first.id)).id
-        let listed = session.travelDestinations.filter { id in stones.contains { $0.id == id } }
-        #expect(listed == stones.dropFirst().map(\.id))
-        // A feather or Bridge of Light goes to towns alone; a Waystone Shard to the waystones alone
-        // (playtesting 2026-11-01), and both from a waystone you touch.
+        // A feather or Bridge of Light goes to towns alone; a Waystone Shard, or a waystone you touch,
+        // to the waystones alone (playtesting 2026-11-01).
         #expect(session.townDestinations.allSatisfy { id in !stones.contains { $0.id == id } })
         #expect(session.waystoneDestinations == stones.dropFirst().map(\.id))
         #expect(GameCoordinator.Travel.feather(GameSession.featherID).places(in: session) == session.townDestinations)
         #expect(GameCoordinator.Travel.shard(GameSession.shardID).places(in: session) == session.waystoneDestinations)
-        #expect(GameCoordinator.Travel.waystone.places(in: session) == session.travelDestinations)
+        #expect(GameCoordinator.Travel.waystone.places(in: session) == session.waystoneDestinations)
         let shard = try #require(content.item(GameSession.shardID))
         #expect(shard.travel == true && shard.toWaystones == true && shard.type == .consumable)
         #expect(content.item(GameSession.featherID)?.toWaystones != true)

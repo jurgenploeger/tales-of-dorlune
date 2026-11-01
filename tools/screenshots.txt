@@ -373,6 +373,9 @@ lair_morvane | newgame,level=130,map=secret_plain,at=-13_34,weather=clear,hour=1
 # The waystone (tools/prop_art.py, 0.9.6): asleep, faded, then woken by its quest.
 waystone_asleep | newgame,level=20,map=twilight_woods,at=15_5,weather=clear,hour=12 | 8
 waystone_awake  | newgame,level=20,map=twilight_woods,at=15_5,done=dusk_waystone,weather=clear,hour=12 | 8
+# Starfall Isle's, in the north meadow by Pip the Lamplighter (playtesting 2026-11-01): the island's
+# way home with no boat once its quest wakes it.
+waystone_starfall | newgame,level=140,map=starfall_isle,at=-6_-24,done=starfall_waystone,weather=clear,hour=12 | 10
 # A waystone's light taking you (0.9.26, WaystoneMagic): the ring of runes, the stone flaring and motes
 # rising, then the pillar as you turn to light.
 waystone_magic   | newgame,level=20,map=twilight_woods,at=15_5,done=dusk_waystone,weather=clear,hour=12,waystone=0.8 | 8
@@ -675,6 +678,24 @@ fx_flare_fire   | newgame,level=60,class=mage,map=sunny_meadow,battle=3,cast=fir
 fx_flare_leaves | newgame,level=60,class=mage,map=sunny_meadow,battle=3,cast=leaf_storm:9,fxstop=1.52   | 74
 fx_flare_strike | newgame,level=60,class=fighter,map=sunny_meadow,battle=3,cast=power_strike:9,fxstop=0.8 | 50
 fx_flare_whirl  | newgame,level=60,class=fighter,map=sunny_meadow,battle=3,cast=whirlwind:9,fxstop=1.26  | 66
+# The Fighter's and Beast Tamer's later skills (playtesting 2026-11-01, Phase 1), each frozen as it lands.
+fx_charge       | newgame,level=150,class=fighter,equip=steel_sword,map=sunny_meadow,battle=3,cast=charge:9,fxstop=0.8 | 50
+fx_rush         | newgame,level=150,class=fighter,equip=steel_sword,map=sunny_meadow,battle=3,cast=rush:9,fxstop=0.9 | 50
+fx_impact       | newgame,level=150,class=fighter,equip=steel_sword,map=sunny_meadow,battle=3,cast=impact:9,fxstop=0.85 | 50
+fx_combo        | newgame,level=150,class=fighter,equip=steel_sword,map=sunny_meadow,battle=3,cast=double_combo:9,fxstop=0.95 | 50
+fx_whip         | newgame,level=150,class=tamer,pet=pineapple,map=sunny_meadow,battle=3,cast=dodge_whip:9,fxstop=0.8 | 50
+fx_lore         | newgame,level=150,class=tamer,pet=pineapple,map=sunny_meadow,battle=3,cast=beast_lore:9,fxstop=0.9 | 50
+fx_super_boost  | newgame,level=150,class=tamer,pet=pineapple,map=sunny_meadow,battle=3,cast=super_boost:9,fxstop=0.8 | 50
+fx_full_heal    | newgame,level=150,class=tamer,pet=pineapple,hp=0.3,map=sunny_meadow,battle=3,cast=full_heal:9,fxstop=0.95 | 50
+fx_beast_impact | newgame,level=150,class=tamer,pet=pineapple,map=sunny_meadow,battle=3,cast=beast_impact:9,fxstop=0.85 | 50
+skills_fighter_late | newgame,level=150,class=fighter,learn=bash+first_aid+protection+power_strike+whirlwind+berserk+charge+rush+impact+double_combo,menu=character,sub=skills | 8
+# The Mage's later spells (Phase 3) and what companions learn growing up (Phase 2).
+fx_fountain     | newgame,level=150,class=mage,map=sunny_meadow,battle=3,cast=dancing_fountain:9,fxstop=0.9 | 50
+fx_lance        | newgame,level=150,class=mage,map=sunny_meadow,battle=3,cast=spiritual_lance:9,fxstop=0.95 | 50
+fx_meteor       | newgame,level=150,class=mage,map=sunny_meadow,battle=3,cast=meteor_blast:9,fxstop=1.05 | 50
+skills_mage_late | newgame,level=150,class=mage,learn=fire_bolt+curse+recovery+stone_spike+leaf_storm+dancing_fountain+spiritual_lance+meteor_blast,menu=character,sub=skills | 8
+companions_learned | newgame,level=135,pet=wisp,menu=companions | 8
+skills_tamer_late   | newgame,level=150,class=tamer,pet=pineapple,learn=bash+first_aid+wild_call+animal_training+revive+mend_beast+boost+dodge_whip+beast_lore+super_boost+full_heal+beast_impact,menu=character,sub=skills | 8
 # The blow itself (BattleActor.swing, playtesting 2026-11-01): the sword drawn back and up as the
 # hero sets off, then brought down through the blow as they arrive, the body leaning into it.
 swing_back  | newgame,level=60,class=fighter,equip=steel_sword,map=sunny_meadow,battle=3,cast=power_strike:9,fxstop=0.66 | 50
@@ -770,6 +791,9 @@ travel_pick    | newgame,map=sunny_meadow,travel | 6
 # A Waystone Shard (0.9.27): its own choice, the waystones you've woken; a feather's is towns alone. And
 # the shard in the bag.
 travel_shard   | newgame,level=40,map=sunny_meadow,travel=shard,done=dusk_waystone | 6
+# Touching a waystone: the other waystones woken and no towns (playtesting 2026-11-01: "You should only
+# be going between waystones"); the one you're by left out.
+travel_waystone | newgame,level=150,map=twilight_woods,travel=waystone,done=dusk_waystone+shiverdell_waystone+starfall_waystone | 6
 shard_bag      | newgame,menu=bag,bag=waystone_shard+waystone_shard+homeward_feather+potion,inspect=waystone_shard | 8
 # A stranger's card on a danger map: Befriend, Trade and Duel on one line, in English and in French (its longest words).
 card_duel    | newgame,level=45,class=fighter,map=wolf_lair,meet=1 | 10

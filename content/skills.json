@@ -573,6 +573,187 @@
         "rounds": 3,
         "power": 0.2
       }
+    },
+    {
+      "id": "charge",
+      "icon": "wind",
+      "art": "skill_charge",
+      "name": "Charge",
+      "mp": 8,
+      "kind": "physical",
+      "power": 2.0,
+      "target": "enemy",
+      "pierce": 0.4,
+      "description": "Dash in and strike through a foe's guard, ignoring 40% of its DEF.",
+      "animation": "charge"
+    },
+    {
+      "id": "rush",
+      "icon": "sword",
+      "art": "skill_rush",
+      "name": "Rush",
+      "mp": 10,
+      "kind": "physical",
+      "power": 0.9,
+      "target": "enemy",
+      "hits": 3,
+      "scatter": true,
+      "description": "Three quick blows, each at a foe picked at random.",
+      "animation": "rush"
+    },
+    {
+      "id": "impact",
+      "icon": "hammer",
+      "art": "skill_impact",
+      "name": "Impact",
+      "mp": 12,
+      "kind": "physical",
+      "power": 2.6,
+      "target": "enemy",
+      "description": "A shattering blow that cracks the foe's armour: DEF −20% for 3 rounds.",
+      "animation": "impact",
+      "inflicts": {
+        "effect": "curse",
+        "rounds": 3,
+        "power": 0.2,
+        "stats": [
+          "defense"
+        ]
+      }
+    },
+    {
+      "id": "double_combo",
+      "icon": "sword",
+      "art": "skill_double_combo",
+      "name": "Double Combo",
+      "mp": 14,
+      "kind": "physical",
+      "power": 1.6,
+      "target": "enemy",
+      "hits": 2,
+      "description": "Two heavy blows on the same foe, one after the other.",
+      "animation": "combo",
+      "grand": "crescent"
+    },
+    {
+      "id": "dodge_whip",
+      "icon": "bounce",
+      "art": "skill_dodge_whip",
+      "name": "Dodge Whip",
+      "mp": 8,
+      "kind": "physical",
+      "power": 1.5,
+      "target": "enemy",
+      "description": "Lash a foe and skip clear: your SPD +30% for 3 rounds.",
+      "animation": "whip",
+      "raises": {
+        "speed": 0.3
+      }
+    },
+    {
+      "id": "beast_lore",
+      "icon": "search",
+      "art": "skill_beast_lore",
+      "name": "Beast Lore",
+      "mp": 10,
+      "kind": "curse",
+      "power": 0,
+      "target": "allEnemies",
+      "description": "Call out every foe's weak spots: their DEF −15% for 3 rounds.",
+      "animation": "lore",
+      "inflicts": {
+        "effect": "curse",
+        "rounds": 3,
+        "power": 0.15,
+        "stats": [
+          "defense"
+        ]
+      }
+    },
+    {
+      "id": "super_boost",
+      "icon": "arrow-up",
+      "art": "skill_super_boost",
+      "name": "Super Boost",
+      "mp": 12,
+      "kind": "buff",
+      "power": 0,
+      "target": "ally",
+      "description": "Fire an ally right up: ATK +40% for 3 rounds.",
+      "animation": "super_boost",
+      "raises": {
+        "attack": 0.4
+      }
+    },
+    {
+      "id": "full_heal",
+      "icon": "heart-plus",
+      "art": "skill_full_heal",
+      "name": "Full Heal",
+      "mp": 40,
+      "kind": "heal",
+      "power": 0,
+      "target": "ally",
+      "full": true,
+      "description": "Mend an ally completely, back to full HP.",
+      "animation": "full_heal",
+      "grand": "pillar"
+    },
+    {
+      "id": "beast_impact",
+      "icon": "paw",
+      "art": "skill_beast_impact",
+      "name": "God of Beast Impact",
+      "mp": 20,
+      "kind": "physical",
+      "power": 2.2,
+      "target": "enemy",
+      "withCompanion": true,
+      "description": "You and your companion strike as one: its ATK joins yours.",
+      "animation": "beast_impact",
+      "grand": "crescent"
+    },
+    {
+      "id": "dancing_fountain",
+      "icon": "droplet",
+      "art": "skill_dancing_fountain",
+      "name": "Dancing Fountain",
+      "mp": 9,
+      "kind": "magic",
+      "element": "water",
+      "power": 2.6,
+      "target": "enemy",
+      "splash": 0.5,
+      "description": "Jets of water dance up under a foe and rain on those beside it.",
+      "animation": "fountain"
+    },
+    {
+      "id": "spiritual_lance",
+      "icon": "wand",
+      "art": "skill_spiritual_lance",
+      "name": "Spiritual Lance",
+      "mp": 12,
+      "kind": "magic",
+      "element": "metal",
+      "power": 3.2,
+      "target": "enemy",
+      "description": "A lance of spirit light runs one foe through.",
+      "animation": "lance",
+      "grand": "crescent"
+    },
+    {
+      "id": "meteor_blast",
+      "icon": "flame",
+      "art": "skill_meteor_blast",
+      "name": "Meteor Blast",
+      "mp": 24,
+      "kind": "magic",
+      "element": "fire",
+      "power": 2.0,
+      "target": "allEnemies",
+      "description": "Burning meteors rain down on every foe.",
+      "animation": "meteor",
+      "grand": "pillar"
     }
   ]
 }
