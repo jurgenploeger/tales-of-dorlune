@@ -495,6 +495,26 @@
       "description": "Restores 50 MP."
     },
     {
+      "id": "mega_ether",
+      "icon": "flask",
+      "art": "item_mega_ether",
+      "name": "Mega-Ether",
+      "type": "consumable",
+      "price": 300,
+      "mp": 150,
+      "description": "Restores 150 MP."
+    },
+    {
+      "id": "max_ether",
+      "icon": "flask",
+      "art": "item_max_ether",
+      "name": "Max-Ether",
+      "type": "consumable",
+      "price": 900,
+      "mp": 400,
+      "description": "Restores 400 MP."
+    },
+    {
       "id": "toy_soldier",
       "icon": "sword",
       "art": "item_toy_soldier",

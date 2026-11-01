@@ -5822,6 +5822,44 @@
       }
     },
     {
+      "id": "item_mega_ether",
+      "kind": "item",
+      "derive": {
+        "from": "item_potion",
+        "recolor": [
+          {
+            "hue": [
+              335,
+              9
+            ],
+            "minSaturation": 0.1,
+            "to": 186,
+            "saturation": 1.0,
+            "value": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "id": "item_max_ether",
+      "kind": "item",
+      "derive": {
+        "from": "item_potion",
+        "recolor": [
+          {
+            "hue": [
+              335,
+              9
+            ],
+            "minSaturation": 0.1,
+            "to": 236,
+            "saturation": 1.0,
+            "value": 0.8
+          }
+        ]
+      }
+    },
+    {
       "id": "item_toy_soldier",
       "kind": "item",
       "request": {

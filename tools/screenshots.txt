@@ -267,6 +267,8 @@ tiers_mage     | newgame,race=elf,level=150,class=mage,equip=amethyst_robe+ameth
 tiers_tamer    | newgame,race=dwarf,gender=female,level=80,class=tamer,equip=jade_hide+jade_gauntlets+jade_boots,weather=clear,hour=12 | 8
 tiers_sapphire | newgame,race=elf,gender=male,level=60,class=fighter,equip=sapphire_plate+sapphire_gauntlets+sapphire_boots,weather=clear,hour=12 | 8
 tiers_shop     | newgame,level=60,npc=goldburg_shop,wares | 8
+# The stronger ethers (playtesting 2026-11-01): Mega-Ether and Max-Ether in Glimmerbough's shop.
+shop_ethers    | newgame,level=140,npc=glimmer_shop,wares | 8
 # Festive seasons and their hats, like RuneScape's holiday events (0.7.30, playtesting 2026-10-17: "Also
 # add festive items like party, halloween, Christmas and Easter"): the season's first gift brings a hat
 # (`date=` sets the day), the hats on every body, and the crowd wearing them in town.
