@@ -99,6 +99,9 @@ final class GameCoordinator {
     /// How far the map build has got, 0...1, for the loading bar.
     private(set) var loadProgress: Double = 0
     @ObservationIgnored private var loadingStarted = Date()
+    /// Where the bar is heading on the continent (`aim`): it glides there, never jumps.
+    @ObservationIgnored private var loadGoal: Double = 0
+    @ObservationIgnored private var glider: Task<Void, Never>?
     @ObservationIgnored private(set) var battleScene: BattleScene?
     /// Set by the app: saves are done, go back to the title screen.
     @ObservationIgnored var onQuitToTitle: (() -> Void)?
@@ -262,26 +265,74 @@ final class GameCoordinator {
     /// The game starts on the continent: behind the loading card till the chunks round you are drawn.
     private func startOnContinent(_ map: MapDef, grid: WorldMap?, began: Date) {
         loadingStarted = began
-        loadProgress = 0.15
+        resetLoad(to: 0.15)
         let scene = makeContinent()
         // Laid out already, as the game opened.
         if let grid { scene.adopt(grid) }
         showsContinent = true
         let saved = session.playerPosition
         Task { [weak self] in
-            await scene.place(on: map, entry: nil, arrival: saved)
-            await self?.waitForContinent()
+            await self?.followContinent(kind: "start", from: 0.15) {
+                await scene.place(on: map, entry: nil, arrival: saved)
+            }
             self?.finishLoading()
         }
     }
 
-    /// Till the land you're in is drawn round you on the continent (or a couple of minutes, should
-    /// it never be), the loading bar creeping on meanwhile.
-    private func waitForContinent() async {
-        guard let continent else { return }
-        for _ in 0..<480 where !continent.isReady {
-            try? await Task.sleep(for: .milliseconds(250))
-            loadProgress = min(0.95, loadProgress + 0.01)
+    /// Places you on the continent (`placing`) and waits till the land you're in is drawn round you
+    /// (or a couple of minutes, should it never be), the bar filling from `from` meanwhile by how
+    /// long that took the last time (`kind`: opening the game or travelling; remembered on this
+    /// phone). It had crept a point at a time from 15% and then leapt to 90% when the land was in
+    /// (playtesting 2026-11-01: "it often jumps from 15% to 90%"); now it fills toward three
+    /// quarters by the time it took before, slower past that, and the last stretch
+    /// (`finishLoading`) glides on from wherever it is.
+    private func followContinent(kind: String, from start: Double, placing: () async -> Void) async {
+        let key = "continentReady." + kind
+        let stored = UserDefaults.standard.double(forKey: key)
+        let expected = stored > 0 ? min(30, max(0.5, stored)) : (kind == "start" ? 2 : 3)
+        let began = Date()
+        let creep = Task { [weak self] in
+            while !Task.isCancelled {
+                let t = Date().timeIntervalSince(began) / expected
+                // Steady to 80% of the way by the expected time, then ever slower toward the end.
+                let share = t < 1 ? 0.8 * t : 0.8 + 0.2 * (1 - exp(-(t - 1) * 1.5))
+                self?.aim(start + (0.88 - start) * share)
+                try? await Task.sleep(for: .milliseconds(100))
+            }
+        }
+        await placing()
+        if let continent {
+            for _ in 0..<1200 where !continent.isReady {
+                try? await Task.sleep(for: .milliseconds(100))
+            }
+            if continent.isReady {
+                UserDefaults.standard.set(Date().timeIntervalSince(began), forKey: key)
+            }
+        }
+        creep.cancel()
+    }
+
+    /// Starts the bar over at `progress`.
+    private func resetLoad(to progress: Double) {
+        glider?.cancel()
+        glider = nil
+        loadGoal = progress
+        loadProgress = progress
+    }
+
+    /// Sends the bar on toward `goal` (never back): it glides there a little at a time, quicker the
+    /// farther it has to go, so no step leaps.
+    private func aim(_ goal: Double) {
+        loadGoal = min(1, max(loadGoal, goal))
+        guard glider == nil else { return }
+        glider = Task { [weak self] in
+            while let self, !Task.isCancelled, self.loadProgress < self.loadGoal {
+                let gap = self.loadGoal - self.loadProgress
+                self.loadProgress = min(self.loadGoal, self.loadProgress + min(0.03, max(0.004, gap * 0.25)))
+                try? await Task.sleep(for: .milliseconds(16))
+            }
+            // A glider cancelled by `resetLoad` has already been let go (another may be running).
+            if !Task.isCancelled { self?.glider = nil }
         }
     }
 
@@ -364,7 +415,7 @@ final class GameCoordinator {
         mapScene.isInputLocked = true
         loadingMapName = map.name
         loadingStarted = Date()
-        loadProgress = 0
+        resetLoad(to: 0)
         isReady = false
         if Continent.origin(of: map) != nil {
             // A land on the continent (out of a cave, carried to a town, waking at your checkpoint):
@@ -377,8 +428,9 @@ final class GameCoordinator {
                 let scene = makeContinent()
                 showsContinent = true
                 input.move = .zero
-                await scene.place(on: map, entry: entry, arrival: arrival, waystone: waystone)
-                await waitForContinent()
+                await followContinent(kind: "travel", from: 0.05) {
+                    await scene.place(on: map, entry: entry, arrival: arrival, waystone: waystone)
+                }
                 scene.resume()
                 finishLoading()
                 session.save()
@@ -405,8 +457,8 @@ final class GameCoordinator {
             // Not 100% till the card really lifts (playtesting 2026-11-01: "it already says 100% but
             // then waits a couple of seconds"): the waits below fill the bar's last stretch, and it
             // reaches the end just as the clouds part.
-            let lastStretch = max(loadProgress, 0.9)
-            loadProgress = lastStretch
+            // On from wherever the bar has got to: a floor of 90% here made it leap.
+            let lastStretch = max(loadProgress, loadGoal)
             if remaining > 0 { try? await Task.sleep(for: .seconds(remaining)) }
             // Carried by a Homeward Feather or a waystone: you're not standing there yet when the card lifts.
             let arriving = arrivesBy
@@ -428,14 +480,22 @@ final class GameCoordinator {
                 let left = max(1, continent.workLeft)
                 for _ in 0..<12 where !continent.isSettled {
                     let done = 1 - Double(min(continent.workLeft, left)) / Double(left)
-                    loadProgress = max(loadProgress, lastStretch + (0.99 - lastStretch) * done)
+                    // Creeping on a little too, should the work stand still for a moment.
+                    aim(max(lastStretch + (0.99 - lastStretch) * done, loadGoal + 0.01))
                     try? await Task.sleep(for: .milliseconds(250))
                 }
                 continent.hurries = hurried
                 continent.holdWork(for: LoadingCurtain.landingTime + LoadingCurtain.clearingTime + 0.3)
             }
-            // All there: the bar full and the clouds parting at once.
-            loadProgress = 1
+            // All there: the bar runs to the end (under half a second), and the clouds part the
+            // moment it's full.
+            if showsContinent, loadProgress < 1 {
+                aim(1)
+                for _ in 0..<25 where loadProgress < 1 {
+                    try? await Task.sleep(for: .milliseconds(16))
+                }
+            }
+            resetLoad(to: 1)
             isReady = true
             // A debug launch's screenshot of the continent waits, the card gone as a player's would
             // be, for the lands round you to come in too (`isSettled`), a few minutes at most.
