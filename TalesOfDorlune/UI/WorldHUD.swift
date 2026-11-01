@@ -832,9 +832,10 @@ private struct MinimapWindow: View {
         .shadow(color: .black.opacity(0.35), radius: 3, x: 0, y: 2)
         // Which way north lies as you see the land (playtesting 2026-11-01): up and to the left, as
         // the map under it is turned.
-        .overlay(alignment: .bottomLeading) {
-            MapCompass(size: 38, compact: true, isometric: true)
-                .offset(x: -4, y: 4)
+        // Top right (playtesting 2026-11-01), over the minimap's rim.
+        .overlay(alignment: .topTrailing) {
+            MapCompass(size: 42, compact: true, isometric: true)
+                .offset(x: 2, y: -2)
                 .allowsHitTesting(false)
                 .accessibilityHidden(true)
         }
