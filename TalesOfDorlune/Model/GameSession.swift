@@ -1483,10 +1483,10 @@ final class GameSession {
         for friend in friendsAtYourSide {
             guard let index = data.friends?.firstIndex(where: { $0.id == friend.id }) else { continue }
             if fainted.contains(friend.id) {
-                // Bruised when they wake, as you are: half their HP and MP.
+                // Rested when they wake, as you are: full HP and MP.
                 let stats = stats(of: friend)
-                data.friends?[index].hp = max(1, stats.hp / 2)
-                data.friends?[index].mp = stats.mp / 2
+                data.friends?[index].hp = stats.hp
+                data.friends?[index].mp = stats.mp
                 let home = inTown(friend.checkpoint) ?? checkpoint
                 if heroFainted && home == checkpoint {
                     wokeWithYou.append(friend.name)
@@ -1502,7 +1502,7 @@ final class GameSession {
         if heroFainted {
             faint()
             let place = checkpointName(checkpoint)
-            lines.insert(L("{names} wake up at {place}, a little bruised.", ["names": Self.listed([L("You")] + wokeWithYou), "place": place]), at: 0)
+            lines.insert(L("{names} wake up at {place}, fully rested.", ["names": Self.listed([L("You")] + wokeWithYou), "place": place]), at: 0)
         }
         if !stayed.isEmpty {
             lines.append(stayed.count == 1
@@ -1518,13 +1518,15 @@ final class GameSession {
         return names.count > 1 ? L("{names} and {last}", ["names": names.dropLast().joined(separator: ", "), "last": last]) : last
     }
 
-    /// Lost a battle: wake up at the last checkpoint, bruised.
+    /// Lost a battle: wake up at the last checkpoint with full HP and MP, your companions too
+    /// (playtesting 2026-11-01: "After you die you should have full hp and mp again"; it had been
+    /// half, and a companion that fell woke on 1 HP).
     func faint() {
-        let stats = heroStats
-        data.hero.hp = max(1, stats.hp / 2)
-        data.hero.mp = stats.mp / 2
-        for index in data.pets.indices where data.pets[index].hp <= 0 {
-            data.pets[index].hp = 1
+        restoreHero()
+        for index in data.pets.indices {
+            let stats = stats(of: data.pets[index])
+            data.pets[index].hp = stats.hp
+            data.pets[index].mp = stats.mp
         }
         data.mapID = checkpoint.mapID
         playerPosition = nil

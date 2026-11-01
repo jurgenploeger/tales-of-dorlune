@@ -1276,7 +1276,7 @@ final class BattleController {
         for fighter in engine.combatants {
             guard case .ally(let friendID) = fighter.source,
                   let index = session.data.friends?.firstIndex(where: { $0.id == friendID }) else { continue }
-            // One who fainted is bruised when they wake (GameSession.partWays); the rest keep this.
+            // One who fainted wakes rested (GameSession.partWays); the rest keep this.
             session.data.friends?[index].hp = max(1, fighter.hp)
             session.data.friends?[index].mp = fighter.mp
         }

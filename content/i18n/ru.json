@@ -283,7 +283,7 @@
     "Checkpoint saved at {place}.": "Контрольная точка: {place}.",
     "the {map} entrance": "вход: {map}",
     "{name} fainted and wakes up at {place}.": "{name} теряет сознание и приходит в себя здесь: {place}.",
-    "{names} wake up at {place}, a little bruised.": "{names} приходят в себя здесь: {place}. Немного помяты.",
+    "{names} wake up at {place}, fully rested.": "{names} приходят в себя здесь: {place}. Силы полностью вернулись.",
     "{names} waits for you where you fell.": "{names} ждёт тебя там, где ты упал.",
     "{names} wait for you where you fell.": "{names} ждут тебя там, где ты упал.",
     "Your bag is full. Make room, then open the chest.": "Сумка полна. Освободи место, а потом открой сундук.",

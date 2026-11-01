@@ -283,7 +283,7 @@
     "Checkpoint saved at {place}.": "{place}에 체크포인트를 저장했어요.",
     "the {map} entrance": "{map} 입구",
     "{name} fainted and wakes up at {place}.": "{name}이(가) 기절했다가 {place}에서 깨어나요.",
-    "{names} wake up at {place}, a little bruised.": "{names}은(는) {place}에서 깨어났어요. 조금 멍이 들었네요.",
+    "{names} wake up at {place}, fully rested.": "{names}은(는) {place}에서 깨어났어요. 기운이 가득해요.",
     "{names} waits for you where you fell.": "{names}이(가) 당신이 쓰러진 곳에서 기다리고 있어요.",
     "{names} wait for you where you fell.": "{names}이(가) 당신이 쓰러진 곳에서 기다리고 있어요.",
     "Your bag is full. Make room, then open the chest.": "가방이 가득 찼어요. 자리를 비운 다음 상자를 여세요.",
