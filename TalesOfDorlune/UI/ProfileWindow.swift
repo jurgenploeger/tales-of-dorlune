@@ -184,11 +184,18 @@ struct ProfileWindow: View {
 
     /// Standing next to them, what you can do with them, as on their card by the map (`AdventurerCard`):
     /// befriend them, trade, duel in a danger zone, invite them along (friend or not), or ask to join
-    /// the party they travel with. What takes you back to the map closes the window first.
+    /// the party they travel with. What takes you back to the map closes the window first. One in
+    /// your party, near or not: send them on their way (playtesting 2026-11-01: "I should be able to
+    /// remove party members").
     @ViewBuilder
     private var actions: some View {
         let here = session.nearbyAdventurer?.id == person.id
         let danger = coordinator.currentLand.danger == true
+        if session.isInParty(person) {
+            Button { session.leaveParty(person.id); onClose() } label: { word(L("Remove from party")) }
+                .buttonStyle(PixelButtonStyle(tint: Color(red: 1, green: 0.55, blue: 0.5), compact: true))
+                .padding(.top, 4)
+        }
         if here {
             VStack(spacing: 6) {
                 HStack(spacing: 6) {

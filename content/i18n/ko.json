@@ -626,7 +626,7 @@
     "Lv {level} {race} {class}": "Lv {level} {race} {class}",
     "with their {name}": "{name}와(과) 함께",
     "Waiting for you at {map}": "{map}에서 기다리는 중",
-    "Leave": "떠나기",
+    "Remove": "내보내기",
     "Invite": "초대",
     "Party full": "파티 가득 참",
     "Offline": "오프라인",
@@ -779,6 +779,7 @@
     "Waiting for you at {place}": "{place}에서 기다리는 중",
     "Travelling with you": "함께 여행 중",
     "Your friend": "친구",
+    "Remove from party": "파티에서 내보내기",
     "Daily gift": "일일 선물",
     "Day {day} of {days}": "{days}일 중 {day}일째",
     "A gift waits each day you play. Come back tomorrow for the next one!": "플레이하는 날마다 선물이 기다려요. 내일 다음 선물을 받으러 오세요!",
@@ -3766,6 +3767,7 @@
     "Bounty Hunter": "현상금 사냥꾼",
     "Town Favourite": "마을의 인기인",
     "Faithful": "단골",
-    "Old Friend": "오랜 친구"
+    "Old Friend": "오랜 친구",
+    "Leave": "떠나기"
   }
 }

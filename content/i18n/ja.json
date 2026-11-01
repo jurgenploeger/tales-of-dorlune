@@ -626,7 +626,7 @@
     "Lv {level} {race} {class}": "Lv {level} {race}の{class}",
     "with their {name}": "{name}をつれている",
     "Waiting for you at {map}": "{map}で待っている",
-    "Leave": "ぬける",
+    "Remove": "はずす",
     "Invite": "さそう",
     "Party full": "パーティ満員",
     "Offline": "オフライン",
@@ -779,6 +779,7 @@
     "Waiting for you at {place}": "{place}で待っている",
     "Travelling with you": "一緒に旅をしている",
     "Your friend": "あなたのフレンド",
+    "Remove from party": "パーティからはずす",
     "Daily gift": "毎日のプレゼント",
     "Day {day} of {days}": "{day}日目／{days}日",
     "A gift waits each day you play. Come back tomorrow for the next one!": "遊んだ日には毎日プレゼントが待っているよ。また明日、次のを受けとりに来てね！",
@@ -3766,6 +3767,7 @@
     "Bounty Hunter": "賞金かせぎ",
     "Town Favourite": "町の人気者",
     "Faithful": "常連さん",
-    "Old Friend": "古なじみ"
+    "Old Friend": "古なじみ",
+    "Leave": "ぬける"
   }
 }

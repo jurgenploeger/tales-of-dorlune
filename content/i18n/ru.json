@@ -626,7 +626,7 @@
     "Lv {level} {race} {class}": "Ур. {level} · {race} · {class}",
     "with their {name}": "питомец: {name}",
     "Waiting for you at {map}": "Ждёт тебя: {map}",
-    "Leave": "Отпустить",
+    "Remove": "Отпустить",
     "Invite": "Позвать",
     "Party full": "Команда полна",
     "Offline": "Не в сети",
@@ -779,6 +779,7 @@
     "Waiting for you at {place}": "Ждёт тебя: {place}",
     "Travelling with you": "Путешествует с тобой",
     "Your friend": "Твой друг",
+    "Remove from party": "Убрать из команды",
     "Daily gift": "Ежедневный подарок",
     "Day {day} of {days}": "День {day} из {days}",
     "A gift waits each day you play. Come back tomorrow for the next one!": "Каждый день, когда ты играешь, тебя ждёт подарок. Возвращайся завтра за следующим!",
@@ -3766,6 +3767,7 @@
     "Bounty Hunter": "Охотник за наградами",
     "Town Favourite": "Любимец города",
     "Faithful": "Верный",
-    "Old Friend": "Старый друг"
+    "Old Friend": "Старый друг",
+    "Leave": "Отпустить"
   }
 }

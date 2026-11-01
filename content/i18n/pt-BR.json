@@ -626,7 +626,7 @@
     "Lv {level} {race} {class}": "{race} {class} Nv {level}",
     "with their {name}": "com {name}",
     "Waiting for you at {map}": "Esperando você em {map}",
-    "Leave": "Sair",
+    "Remove": "Tirar",
     "Invite": "Convidar",
     "Party full": "Grupo cheio",
     "Offline": "Offline",
@@ -779,6 +779,7 @@
     "Waiting for you at {place}": "Esperando você em {place}",
     "Travelling with you": "Viajando com você",
     "Your friend": "Seu amigo",
+    "Remove from party": "Tirar do grupo",
     "Daily gift": "Presente diário",
     "Day {day} of {days}": "Dia {day} de {days}",
     "A gift waits each day you play. Come back tomorrow for the next one!": "Um presente espera por você a cada dia que você joga. Volte amanhã para o próximo!",
@@ -3766,6 +3767,7 @@
     "Bounty Hunter": "Caçador de Recompensas",
     "Town Favourite": "Favorito da Cidade",
     "Faithful": "Fiel",
-    "Old Friend": "Velho Amigo"
+    "Old Friend": "Velho Amigo",
+    "Leave": "Sair"
   }
 }
