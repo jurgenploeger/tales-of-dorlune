@@ -254,7 +254,7 @@
     "Rebirth is gone from Dorlune: you're back at level {level}, where your rebirth began.": "Ya no se puede renacer en Dorlune: vuelves al nivel {level}, el nivel en el que renaciste.",
     "Helmets and hoods are hats of their own now: yours are in your bag, or on your head.": "Los yelmos y las capuchas ahora son sombreros aparte: los tuyos están en tu bolsa o en tu cabeza.",
     "New skills are here: all your skill points are back, to choose your skills again.": "¡Llegan habilidades nuevas! Recuperas todos tus puntos de habilidad para elegir de nuevo.",
-    "Bosses and quests now give skill points: {count} for what you've already done!": "Los jefes y las misiones ahora dan puntos de habilidad: ¡{count} por lo que ya has hecho!",
+    "Hard and Elite quests now give a skill point: {count} for those you've already done!": "Las misiones difíciles y de élite ahora dan un punto de habilidad: ¡{count} por las que ya has hecho!",
     "The world grew bigger! You're now level {level}.": "¡El mundo se ha hecho más grande! Ahora eres nivel {level}.",
     "No skills yet.\nSpend your skill point to learn {skill}.": "Aún no tienes habilidades.\nGasta tu punto de habilidad para aprender {skill}.",
     "No skills yet.\nYou can learn {skill} at level {level}.": "Aún no tienes habilidades.\nPuedes aprender {skill} en el nivel {level}.",
@@ -302,10 +302,9 @@
     "You carved {item}.": "Tallaste {item}.",
     "You pieced together {item}.": "Recompusiste {item}.",
     "You mixed {item}.": "Mezclaste {item}.",
-    "A skill point for beating {boss}!": "¡Un punto de habilidad por vencer a {boss}!",
     "{monster} dropped {item}!": "¡{monster} soltó {item}!",
     "Quest complete: {quest}": "Misión completada: {quest}",
-    "{count} quests done: +1 skill point": "{count} misiones hechas: +1 punto de habilidad",
+    "+1 skill point": "+1 punto de habilidad",
     "The ship from {from} to {map} is ready to sail!": "¡El barco de {from} a {map} está listo para zarpar!",
     "The road from {from} to {map} is open!": "¡El camino de {from} a {map} está abierto!",
     "The waystone in {map} is awake! Touch it to travel.": "¡La piedra de paso de {map} ha despertado! Tócala para viajar.",
@@ -3801,7 +3800,6 @@
     "Bounty Hunter": "Cazarrecompensas",
     "Town Favourite": "Favorito del Pueblo",
     "Faithful": "Fiel",
-    "Old Friend": "Viejo Amigo",
-    "Leave": "Separarse"
+    "Old Friend": "Viejo Amigo"
   }
 }

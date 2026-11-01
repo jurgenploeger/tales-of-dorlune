@@ -564,14 +564,14 @@ final class GameSession {
         save()
     }
 
-    /// Once, when bosses and quests began to give skill points (0.9.46): what you'd already done
+    /// Once, when Hard and Elite quests began to give skill points (0.9.46): what you'd already done
     /// counts (`rewardSkillPoints` is worked out from the save), and a line in the chat says so.
     func announceSkillPointRewardsIfNeeded() {
         guard data.skillPointRewardsTold != true else { return }
         data.skillPointRewardsTold = true
         let earned = rewardSkillPoints
         if earned > 0 {
-            post(L("Bosses and quests now give skill points: {count} for what you've already done!", ["count": earned]), .reward)
+            post(L("Hard and Elite quests now give a skill point: {count} for those you've already done!", ["count": earned]), .reward)
         }
         save()
     }
@@ -779,16 +779,19 @@ final class GameSession {
         return max(0, data.hero.level - 1 + (data.hero.bonusSkillPoints ?? 0) + rewardSkillPoints - spent)
     }
 
-    /// Quests finished for each skill point they give.
-    static let questsPerSkillPoint = 5
-
     /// Skill points besides the levels' (playtesting 2026-11-01, with more skills than points: "Skill
-    /// points as rewards from bosses or quests, but I already finished a lot of quests"): one for
-    /// each boss the first time it's beaten, and one for every `questsPerSkillPoint` quests
-    /// finished. Worked out from the save, so whatever was done before they began to count counts.
+    /// points as rewards from bosses or quests, but I already finished a lot of quests", then "Only
+    /// difficult quests and bosses that are meaningful should reward it"): one for each quest that's
+    /// hard in itself (`givesSkillPoint`), every boss's among them. Worked out from the save, so
+    /// those finished before they began to count count.
     var rewardSkillPoints: Int {
-        let finished = data.quests.values.filter { $0.state == .completed }.count
-        return Set(data.defeatedBosses ?? []).count + finished / Self.questsPerSkillPoint
+        content.quests.filter { givesSkillPoint($0) && hasCompleted($0.id) }.count
+    }
+
+    /// A quest rated Hard or Elite in itself (`baseDifficulty`, not how hard it is for you now, so it
+    /// pays the same whenever it's done): every boss's, the long hunts and the rarest finds.
+    func givesSkillPoint(_ quest: QuestDef) -> Bool {
+        baseDifficulty(of: quest) >= .hard
     }
 
     func learnSkill(_ id: String) {
@@ -2291,9 +2294,6 @@ final class GameSession {
         bossesBeatenHere.insert(boss.id)
         if !isDefeated(boss) {
             data.defeatedBosses = (data.defeatedBosses ?? []) + [boss.id]
-            // A first win gives a skill point (`rewardSkillPoints`).
-            let kind = boss.monster.flatMap(content.monster)
-            post(L("A skill point for beating {boss}!", ["boss": kind?.name ?? boss.name]), .reward)
         }
         let species = boss.monster.flatMap(content.monster)
         for drop in species?.drops ?? [] where Double.random(in: 0..<1) < drop.chance {
@@ -2374,7 +2374,6 @@ final class GameSession {
         data.quests[id]?.finished = Date()
         data.quests[id]?.paidGold = pay.gold
         data.quests[id]?.paidEXP = pay.exp
-        let finished = data.quests.values.filter { $0.state == .completed }.count
         SoundEffects.shared.play(.questDone)
         Haptics.success()
         post(L("Quest complete: {quest}", ["quest": quest.title]), .quest)
@@ -2387,10 +2386,8 @@ final class GameSession {
             lines.append(L("+{exp} EXP", ["exp": pay.exp]))
             if gainHeroEXP(pay.exp) > 0 { lines.append(L("Level up! You're now level {level}.", ["level": data.hero.level])) }
         }
-        // Every `questsPerSkillPoint` quests finished, a skill point (`rewardSkillPoints`).
-        if finished % Self.questsPerSkillPoint == 0 {
-            lines.append(L("{count} quests done: +1 skill point", ["count": finished]))
-        }
+        // A Hard or Elite quest, a skill point (`rewardSkillPoints`).
+        if givesSkillPoint(quest) { lines.append(L("+1 skill point")) }
         // What doesn't fit is left behind; a quest's treasure waits instead, and comes once there's
         // room (`deliverQuestTreasures`).
         for itemID in quest.reward.items ?? [] where addItem(itemID) {

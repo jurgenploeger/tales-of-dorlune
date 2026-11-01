@@ -254,7 +254,7 @@
     "Rebirth is gone from Dorlune: you're back at level {level}, where your rebirth began.": "Dorlune에서 환생이 사라졌어요. 환생했던 레벨 {level} 상태로 돌아왔어요.",
     "Helmets and hoods are hats of their own now: yours are in your bag, or on your head.": "이제 투구와 후드는 따로 쓰는 모자가 되었어요. 가방 안이나 머리 위에 있답니다.",
     "New skills are here: all your skill points are back, to choose your skills again.": "새 스킬이 나왔어요! 스킬 포인트를 모두 돌려받았으니 스킬을 다시 골라 보세요.",
-    "Bosses and quests now give skill points: {count} for what you've already done!": "이제 보스와 퀘스트로 스킬 포인트를 받아요: 지금까지 한 일로 {count} 포인트!",
+    "Hard and Elite quests now give a skill point: {count} for those you've already done!": "이제 어려움·엘리트 퀘스트로 스킬 포인트를 받아요: 이미 완료한 퀘스트로 {count} 포인트!",
     "The world grew bigger! You're now level {level}.": "세계가 더 넓어졌어요! 현재 레벨: {level}",
     "No skills yet.\nSpend your skill point to learn {skill}.": "아직 스킬이 없어요.\n스킬 포인트를 써서 {skill}을(를) 배워 보세요.",
     "No skills yet.\nYou can learn {skill} at level {level}.": "아직 스킬이 없어요.\n레벨 {level}에 {skill}을(를) 배울 수 있어요.",
@@ -302,10 +302,9 @@
     "You carved {item}.": "{item}을(를) 깎아 만들었어요.",
     "You pieced together {item}.": "{item}을(를) 이어 붙여 완성했어요.",
     "You mixed {item}.": "{item}을(를) 섞어 만들었어요.",
-    "A skill point for beating {boss}!": "{boss}을(를) 물리쳐 스킬 포인트 획득!",
     "{monster} dropped {item}!": "{monster}이(가) {item}을(를) 떨어뜨렸어요!",
     "Quest complete: {quest}": "퀘스트 완료: {quest}",
-    "{count} quests done: +1 skill point": "퀘스트 {count}개 완료: 스킬 포인트 +1",
+    "+1 skill point": "스킬 포인트 +1",
     "The ship from {from} to {map} is ready to sail!": "{from}에서 {map}(으)로 가는 배가 출항 준비를 마쳤어요!",
     "The road from {from} to {map} is open!": "{from}에서 {map}(으)로 가는 길이 열렸어요!",
     "The waystone in {map} is awake! Touch it to travel.": "{map}의 길잡이 돌이 깨어났어요! 만지면 여행할 수 있어요.",
@@ -3801,7 +3800,6 @@
     "Bounty Hunter": "현상금 사냥꾼",
     "Town Favourite": "마을의 인기인",
     "Faithful": "단골",
-    "Old Friend": "오랜 친구",
-    "Leave": "떠나기"
+    "Old Friend": "오랜 친구"
   }
 }

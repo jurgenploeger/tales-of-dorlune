@@ -1810,6 +1810,11 @@ struct QuestRewardLine: View {
                     Label(L("{exp} EXP", ["exp": pay.exp]), icon: .star, size: 12)
                         .frame(height: 22)
                 }
+                // A Hard or Elite quest gives a skill point (`GameSession.givesSkillPoint`).
+                if session.givesSkillPoint(quest) {
+                    Label(L("+1 skill point"), icon: .sparkles, size: 12)
+                        .frame(height: 22)
+                }
                 ForEach(RewardList.group(quest.reward.items ?? [], in: session), id: \.item.id) { entry in
                     ItemIcon(item: entry.item, size: 20, count: entry.count)
                         .frame(height: 22)
@@ -1878,6 +1883,9 @@ struct QuestRewardsView: View {
                 }
                 if pay.exp > 0 {
                     Label(L("{exp} EXP", ["exp": pay.exp]), icon: .star, size: 14)
+                }
+                if session.givesSkillPoint(quest) {
+                    Label(L("+1 skill point"), icon: .sparkles, size: 14)
                 }
             }
             .font(HUDStyle.font(12))
