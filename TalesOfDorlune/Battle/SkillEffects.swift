@@ -57,8 +57,11 @@ enum SkillEffects {
         }
     }
 
-    static func projectile(from start: CGPoint?, to end: CGPoint?, color: UIColor, level: Int, trail: Bool, in parent: SKNode) async {
-        guard let start, let end else { return }
+    /// Returns how long it flies. Not `async` (see `fireball`): set up here on the main thread, and
+    /// flown and taken away by SpriteKit's own actions.
+    @discardableResult
+    static func projectile(from start: CGPoint?, to end: CGPoint?, color: UIColor, level: Int, trail: Bool, in parent: SKNode) -> TimeInterval {
+        guard let start, let end else { return 0 }
         let diameter = 20 + CGFloat(level) * 6
         let orb = glowSprite(color, size: CGSize(width: diameter, height: diameter))
         orb.position = start
@@ -83,8 +86,8 @@ enum SkillEffects {
         parent.addChild(orb)
         let travel = SKAction.move(to: end, duration: 0.3)
         travel.timingMode = .easeIn
-        await orb.run(travel)
-        orb.removeFromParent()
+        orb.run(.sequence([travel, .removeFromParent()]))
+        return 0.3
     }
 
     static func explosion(on target: BattleActor, color: UIColor, level: Int, in parent: SKNode) {

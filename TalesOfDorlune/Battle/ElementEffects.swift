@@ -379,22 +379,24 @@ extension SkillEffects {
 
     /// Fire Bolt: a blazing ball of fire's light flies at the target, flickering and streaming
     /// sparks of yellow, orange and red behind it.
-    static func fireball(from start: CGPoint?, to end: CGPoint?, level: Int, in parent: SKNode) async {
-        guard let start, let end else { return }
+    /// Returns how long it flies. Not `async`: an async function here runs off the main thread, and
+    /// a ball added to the stage and moved from there, while SpriteKit drew it, crashed the game
+    /// (playtesting 2026-11-01, after a mage's spells: a freed node in `doBuildRenderGroup`).
+    /// SpriteKit's own actions fly it, settle its trail and take it away.
+    @discardableResult
+    static func fireball(from start: CGPoint?, to end: CGPoint?, level: Int, in parent: SKNode) -> TimeInterval {
+        guard let start, let end else { return 0 }
         let ball = lightBall(.fire, size: 34 + CGFloat(level) * 8)
         ball.position = start
         ball.zPosition = 18_200
         parent.addChild(ball)
-        // In an async function a plain run(_:) is SpriteKit's awaiting one: these go by key.
         ball.run(.repeatForever(.sequence([.scale(to: 1.12, duration: 0.05), .scale(to: 0.92, duration: 0.05)])), withKey: "flicker")
         let tail = trail(.fire, level: level, parent: parent)
         ball.addChild(tail)
         let travel = SKAction.move(to: end, duration: 0.3)
         travel.timingMode = .easeIn
-        await ball.run(travel)
-        settle(tail, in: parent)
-        ball.removeAllActions()
-        ball.removeFromParent()
+        ball.run(.sequence([travel, .run { SkillEffects.settle(tail, in: parent) }, .removeFromParent()]), withKey: "travel")
+        return 0.3
     }
 
     /// The fireball bursting on the target: a white-hot flash blooms into a ball of fire that burns
@@ -456,8 +458,10 @@ extension SkillEffects {
 
     /// Jelly Splash, Bubble, Frost Breath: an orb of water's light, glinting on top, wobbles at the
     /// target, dripping blue light as it goes.
-    static func waterOrb(from start: CGPoint?, to end: CGPoint?, level: Int, in parent: SKNode) async {
-        guard let start, let end else { return }
+    /// Returns how long it flies; not `async`, as `fireball` isn't.
+    @discardableResult
+    static func waterOrb(from start: CGPoint?, to end: CGPoint?, level: Int, in parent: SKNode) -> TimeInterval {
+        guard let start, let end else { return 0 }
         let size = 32 + CGFloat(level) * 7
         let orb = lightBall(.water, size: size)
         let glint = glowSprite(.white, size: CGSize(width: size * 0.2, height: size * 0.14))
@@ -475,10 +479,8 @@ extension SkillEffects {
         orb.addChild(drips)
         let travel = SKAction.move(to: end, duration: 0.3)
         travel.timingMode = .easeIn
-        await orb.run(travel)
-        settle(drips, in: parent)
-        orb.removeAllActions()
-        orb.removeFromParent()
+        orb.run(.sequence([travel, .run { SkillEffects.settle(drips, in: parent) }, .removeFromParent()]), withKey: "travel")
+        return 0.3
     }
 
     /// The orb bursting on the target: a flash of blue light in a mist, a crown of droplets thrown
