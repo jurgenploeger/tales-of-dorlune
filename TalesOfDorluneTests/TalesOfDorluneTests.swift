@@ -3384,6 +3384,27 @@ struct RulesTests {
         #expect(session.friends.count == 1)
     }
 
+    /// Challenging someone in a party takes on the whole party (playtesting 2026-11-01), each with
+    /// their companion behind them, as many as a party holds; on their own, just them.
+    @Test func duellingSomeoneInAPartyTakesOnTheWholeParty() {
+        let session = GameSession.newGame(name: "Test", raceID: "human")
+        session.data.hero.level = 40
+        let leader = Adventurer(name: "Echo", raceID: "elf", classID: "mage", level: 40, look: .standard)
+        var tara = Adventurer(name: "Tara", raceID: "human", classID: "fighter", level: 40, look: .standard)
+        tara.petSpecies = "jelly"
+        let crowd = (1...5).map { Adventurer(name: "Extra \($0)", raceID: "dwarf", classID: "fighter", level: 40, look: .standard) }
+        let alone = BattleController.duel(with: leader, session: session)
+        #expect(alone.enemies.map(\.name) == ["Echo"])
+        let party = BattleController.duel(with: tara, group: [leader, tara] + crowd, session: session)
+        let people = party.enemies.filter { $0.art.hasPrefix("adv:") }
+        // The one you challenged first, then the rest, no more than a party holds.
+        #expect(people.first?.name == "Tara")
+        #expect(people.count == 1 + GameSession.maxAllies)
+        #expect(people.contains { $0.name == "Echo" })
+        let puff = party.enemies.first { $0.name == "Tara's Jelly Puff" }
+        #expect(puff?.ownerID == people.first?.id)
+    }
+
     /// You don't have to be friends to party up (playtesting 2026-10-26): anyone about can come
     /// along as a guest, not in your friends, and gone from your list once they leave.
     @Test func strangersJoinThePartyAsGuests() {

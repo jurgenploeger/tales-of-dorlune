@@ -479,16 +479,19 @@ final class GameCoordinator {
         DebugLaunch.markReady()
     }
 
-    /// The adventurer you're duelling, so they can leave the map if you win.
-    private var rival: Adventurer?
+    /// The adventurers you're duelling, so they can leave the map if you win.
+    private var rivals: [Adventurer] = []
 
+    /// A duel with `rival` and whoever travels with them (`GameSession.nearbyGroup`, when it's
+    /// theirs): the whole party, as yours fights beside you.
     private func startDuel(with rival: Adventurer, backdrop: SKTexture?) {
         guard battle == nil else { return }
-        let controller = BattleController.duel(with: rival, session: session)
+        let group = session.nearbyGroup.contains { $0.id == rival.id } ? session.nearbyGroup : [rival]
+        let controller = BattleController.duel(with: rival, group: group, session: session)
         controller.onFinish = { [weak self] outcome in self?.endBattle(outcome) }
         battleScene = BattleScene(controller: controller, size: mapScene.size, backdrop: backdrop)
         input.move = .zero
-        self.rival = rival
+        rivals = [rival] + group.filter { $0.id != rival.id }.prefix(GameSession.maxAllies)
         battle = controller
         isReady = true
         DebugLaunch.markReady()
@@ -581,8 +584,8 @@ final class GameCoordinator {
         let fainted = battle?.heroIsDown == true
         battle = nil
         battleScene = nil
-        if let rival, outcome == .victory { mapScene.dismissAdventurer(rival.id) }
-        rival = nil
+        if outcome == .victory { for rival in rivals { mapScene.dismissAdventurer(rival.id) } }
+        rivals = []
         if let boss, outcome == .victory { session.defeatBoss(boss) }
         boss = nil
         if fainted, let map = Content.shared.map(session.checkpoint.mapID) {
