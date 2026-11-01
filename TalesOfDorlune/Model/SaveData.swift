@@ -157,6 +157,9 @@ nonisolated struct SaveData: Codable, Sendable {
     /// Skill points were all given back once, when the classes got their late skills (0.9.43, see
     /// `refundSkillsIfNeeded`).
     var skillsRefunded: Bool?
+    /// Told, once, of the skill points earned from bosses and quests already done when they began to
+    /// give them (0.9.46, see `GameSession.rewardSkillPoints`).
+    var skillPointRewardsTold: Bool?
     /// The hats that went with armour were handed out once (see `handOutArmourHatsIfNeeded`).
     var armourHatsGiven: Bool?
     /// Your order of the battle buttons (see `GameSession.battleButtons`).

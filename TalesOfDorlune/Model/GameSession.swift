@@ -252,6 +252,7 @@ final class GameSession {
         slotted.slot = UUID().uuidString   // every new game gets its own save
         slotted.skillLevelsDoubled = true  // already on the 10-step skill scale
         slotted.skillsRefunded = true      // nothing to give back: a new game has no skills yet
+        slotted.skillPointRewardsTold = true   // nothing done yet to be told of
         slotted.levelsRescaled = true      // and on the 200-level scale (a debug level isn't stretched)
         slotted.giftDay = GameSession.dayKey()  // the first daily gift is tomorrow's: today has the story and the tour
         slotted.bankStocked = true         // nothing to put in the bank: a new game starts with it
@@ -563,6 +564,18 @@ final class GameSession {
         save()
     }
 
+    /// Once, when bosses and quests began to give skill points (0.9.46): what you'd already done
+    /// counts (`rewardSkillPoints` is worked out from the save), and a line in the chat says so.
+    func announceSkillPointRewardsIfNeeded() {
+        guard data.skillPointRewardsTold != true else { return }
+        data.skillPointRewardsTold = true
+        let earned = rewardSkillPoints
+        if earned > 0 {
+            post(L("Bosses and quests now give skill points: {count} for what you've already done!", ["count": earned]), .reward)
+        }
+        save()
+    }
+
     func rescaleLevelsIfNeeded() {
         guard data.levelsRescaled != true else { return }
         data.levelsRescaled = true
@@ -759,11 +772,23 @@ final class GameSession {
             && (!learnableSkills.isEmpty || heroSkills.contains { skillLevel($0.id) < Self.skillLevelCap })
     }
 
-    /// One point per level gained. Learning costs one and each upgrade one; points in skills
-    /// your class no longer has come back.
+    /// One point per level gained, and those bosses and quests give (`rewardSkillPoints`). Learning
+    /// costs one and each upgrade one; points in skills your class no longer has come back.
     var unspentSkillPoints: Int {
         let spent = heroSkills.reduce(0) { $0 + skillLevel($1.id) }
-        return max(0, data.hero.level - 1 + (data.hero.bonusSkillPoints ?? 0) - spent)
+        return max(0, data.hero.level - 1 + (data.hero.bonusSkillPoints ?? 0) + rewardSkillPoints - spent)
+    }
+
+    /// Quests finished for each skill point they give.
+    static let questsPerSkillPoint = 5
+
+    /// Skill points besides the levels' (playtesting 2026-11-01, with more skills than points: "Skill
+    /// points as rewards from bosses or quests, but I already finished a lot of quests"): one for
+    /// each boss the first time it's beaten, and one for every `questsPerSkillPoint` quests
+    /// finished. Worked out from the save, so whatever was done before they began to count counts.
+    var rewardSkillPoints: Int {
+        let finished = data.quests.values.filter { $0.state == .completed }.count
+        return Set(data.defeatedBosses ?? []).count + finished / Self.questsPerSkillPoint
     }
 
     func learnSkill(_ id: String) {
@@ -2266,6 +2291,9 @@ final class GameSession {
         bossesBeatenHere.insert(boss.id)
         if !isDefeated(boss) {
             data.defeatedBosses = (data.defeatedBosses ?? []) + [boss.id]
+            // A first win gives a skill point (`rewardSkillPoints`).
+            let kind = boss.monster.flatMap(content.monster)
+            post(L("A skill point for beating {boss}!", ["boss": kind?.name ?? boss.name]), .reward)
         }
         let species = boss.monster.flatMap(content.monster)
         for drop in species?.drops ?? [] where Double.random(in: 0..<1) < drop.chance {
@@ -2346,6 +2374,7 @@ final class GameSession {
         data.quests[id]?.finished = Date()
         data.quests[id]?.paidGold = pay.gold
         data.quests[id]?.paidEXP = pay.exp
+        let finished = data.quests.values.filter { $0.state == .completed }.count
         SoundEffects.shared.play(.questDone)
         Haptics.success()
         post(L("Quest complete: {quest}", ["quest": quest.title]), .quest)
@@ -2357,6 +2386,10 @@ final class GameSession {
         if pay.exp > 0 {
             lines.append(L("+{exp} EXP", ["exp": pay.exp]))
             if gainHeroEXP(pay.exp) > 0 { lines.append(L("Level up! You're now level {level}.", ["level": data.hero.level])) }
+        }
+        // Every `questsPerSkillPoint` quests finished, a skill point (`rewardSkillPoints`).
+        if finished % Self.questsPerSkillPoint == 0 {
+            lines.append(L("{count} quests done: +1 skill point", ["count": finished]))
         }
         // What doesn't fit is left behind; a quest's treasure waits instead, and comes once there's
         // room (`deliverQuestTreasures`).
