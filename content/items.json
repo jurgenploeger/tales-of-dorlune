@@ -86,6 +86,17 @@
       "description": "Outside battle: the wind carries you to a town you've been to. For any class."
     },
     {
+      "id": "waystone_shard",
+      "icon": "sparkles",
+      "art": "item_waystone_shard",
+      "name": "Waystone Shard",
+      "type": "consumable",
+      "price": 60,
+      "travel": true,
+      "toWaystones": true,
+      "description": "A chip of a waystone, its rune still glowing. Outside battle: its light carries you to a waystone you've woken. For any class."
+    },
+    {
       "id": "pet_egg",
       "icon": "egg",
       "art": "item_pet_egg",

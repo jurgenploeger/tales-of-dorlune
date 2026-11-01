@@ -356,6 +356,34 @@ def draw_wishing_seal(c):
     seal_spiral(c, hexc("6a46b8"))
 
 
+# The waystone's own stone and runes (tools/prop_art.py draw_waystone): blue-grey, its runes cyan light.
+WAYSTONE_STONE = [hexc("464a62"), hexc("6c7290"), hexc("989eba")]
+WAYSTONE_RUNE = [hexc("3aa8e8"), hexc("7ad8ff"), hexc("d6f8ff")]
+
+
+def draw_waystone_shard(c):
+    """A Waystone Shard: a chip broken off a waystone, its blue-grey stone broken along straight edges, its
+    right side in shade, a rune cut down it still glowing cyan (a stroke with two arms raised, as on the
+    waystone's face), and a sliver of the stone's blue
+    crystal at its top (playtesting 2026-11-01: "a small piece of the waystone, that allows you to travel
+    to one of the waystones")."""
+    # Broken off along a few straight cleavages, cut exactly at 64 as a gem is, so its edges stay clean.
+    shard = [(11, 5), (18, 3), (25, 10), (24, 19), (20, 28), (11, 28), (7, 20), (8, 11)]
+    c.poly(shard, WAYSTONE_STONE[1], exact=True)
+    c.shade(lambda x, y, col: col == WAYSTONE_STONE[1] and x - 0.3 * y > 14, WAYSTONE_STONE[0])
+    c.poly([(10, 7), (15, 5), (14, 11), (9, 15), (8, 11)], WAYSTONE_STONE[2])     # the broken face catching the light
+    # Two pixels wide, so the finish at 64 keeps its arms.
+    c.line(16, 11, 16, 23, WAYSTONE_RUNE[1], width=2)
+    c.line(16, 17, 12, 12, WAYSTONE_RUNE[1], width=2)
+    c.line(16, 17, 20, 12, WAYSTONE_RUNE[1], width=2)
+    for x, y in [(16, yy) for yy in range(12, 23)] + [(14, 14), (13, 13), (18, 14), (19, 13), (15, 15), (17, 15)]:
+        c.set(x, y, WAYSTONE_RUNE[2])                                           # its bright core
+    # A sliver of the waystone's crystal, set in the top of the chip.
+    for (x, y), col in {(20, 8): WAYSTONE_RUNE[1], (21, 8): WAYSTONE_RUNE[0], (20, 9): WAYSTONE_RUNE[0],
+                        (21, 9): hexc("2a5aa8"), (19, 8): WAYSTONE_RUNE[2]}.items():
+        c.set(x, y, col)
+
+
 def draw_homeward_feather(c):
     """A soft white feather, gently curved, on a golden quill, with a homeward glint."""
     vane = [hexc("8fa8d0"), hexc("eef4ff"), WHITE]
@@ -3121,6 +3149,7 @@ PROMPTS = {  # for a later Retro Diffusion upgrade (python3 tools/rd.py generate
     "hi_ether": "violet mana potion in a cone flask with a gold star",
     "seal_stone": "teal crystal sealing stone with a white spiral rune",
     "homeward_feather": "white feather with a golden quill and a soft glow",
+    "waystone_shard": "a chip of blue-grey standing stone with a glowing cyan rune",
     "pet_egg": "cream pet egg with colourful spots, wiggling",
     "wooden_sword": "small wooden practice sword",
     "steel_sword": "steel sword with a gold crossguard and a red gem",
@@ -3483,7 +3512,7 @@ MATERIAL_PRESETS = {
              "steel_ingot titanium_alloy tungsten_alloy bell_clapper gold_nugget",
     "crystal": "amber azurite cats_eye chalcedony diamond emerald topaz rough_gem glimmerstone starfall_shard "
                "clear_ice sugar_crystal",
-    "stone": "raw_ore agate",
+    "stone": "raw_ore agate waystone_shard",
     "fur": "lion_mane marten_fur sheepskin tuft_of_wool",
     "leather": "cowhide deer_hide",
     "scales": "crocodile_hide dragon_scale snake_scale",

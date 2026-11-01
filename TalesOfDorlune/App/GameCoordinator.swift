@@ -64,13 +64,26 @@ final class GameCoordinator {
         case destinations(Travel)
     }
 
-    /// A way to a town you've been to or a waystone you've woken (`GameSession.travelDestinations`):
-    /// Bridge of Light (the skill's id) or a Homeward Feather (the item's id), its MP or its feather
-    /// spent once you pick where; or touching a waystone you've woken, free.
+    /// A way to a town you've been to or a waystone you've woken: Bridge of Light (the skill's id) or
+    /// a Homeward Feather (the item's id) to a town, its MP or its feather spent once you pick where; a
+    /// Waystone Shard (the item's id) to a waystone, used up; or touching a waystone you've woken, free,
+    /// to either.
     enum Travel: Equatable {
         case bridge(String)
         case feather(String)
+        case shard(String)
         case waystone
+
+        /// Where it can take you (`GameSession`): towns by Bridge of Light or a feather, waystones by a
+        /// shard, both from a waystone (playtesting 2026-11-01: "You shouldn't be able to use the feather
+        /// item to go to a waystone").
+        func places(in session: GameSession) -> [String] {
+            switch self {
+            case .bridge, .feather: session.townDestinations
+            case .shard: session.waystoneDestinations
+            case .waystone: session.travelDestinations
+            }
+        }
     }
 
     let session: GameSession
@@ -663,15 +676,19 @@ final class GameCoordinator {
     /// Bridge of Light, for any class. One is used up.
     private func travel(with item: ItemDef) {
         guard battle == nil, item.travel == true, session.count(of: item.id) > 0 else { return }
-        choose(.feather(item.id))
+        choose(item.toWaystones == true ? .shard(item.id) : .feather(item.id))
     }
 
     /// Where to: with one town or waystone to go to, straight there; with more, the choice
     /// (`TravelPicker`), nothing spent until you pick one.
     private func choose(_ travel: Travel) {
-        let places = session.travelDestinations
+        let places = travel.places(in: session)
         guard let only = places.first else {
-            session.post(L("There's no other town you've been to yet."))
+            if case .shard = travel {
+                session.post(L("You haven't woken a waystone yet. Someone near one might know how."))
+            } else {
+                session.post(L("There's no other town you've been to yet."))
+            }
             return
         }
         if places.count == 1 {
@@ -688,7 +705,7 @@ final class GameCoordinator {
     /// window and the bag closed so you see it; a waystone you're touching takes you free.
     func depart(_ travel: Travel, to destination: String) {
         let waystone = Content.shared.npc(destination).flatMap { $0.role == .waystone ? $0.id : nil }
-        guard battle == nil, session.travelDestinations.contains(destination),
+        guard battle == nil, travel.places(in: session).contains(destination),
               let map = waystone.flatMap({ Content.shared.home(ofNPC: $0) }) ?? Content.shared.map(destination) else { return }
         switch travel {
         case .bridge(let id):
@@ -700,6 +717,18 @@ final class GameCoordinator {
             // stone (finishLoading). Playtesting 2026-10-31: "The waystone teleports need a different
             // animation, more magical".
             let line = L("The waystone hums, and the world folds round you. You step out in {place}.", ["place": map.name])
+            overlay = nil
+            SoundEffects.shared.play(.spellLight)
+            mapScene.waystoneAway { [weak self] in
+                guard let self else { return }
+                arrivesBy = .waystone
+                SoundEffects.shared.play(.whoosh, volume: 0.6)
+                carry(to: map, waystone: waystone, saying: line, sound: false)
+            }
+        case .shard(let id):
+            // The shard's rune wakes the same light as its waystone's (`WaystoneMagic`), and it's used up.
+            guard session.removeItem(id) else { return }
+            let line = L("The shard's rune flares, and the world folds round you. You step out by the waystone in {place}.", ["place": map.name])
             overlay = nil
             SoundEffects.shared.play(.spellLight)
             mapScene.waystoneAway { [weak self] in

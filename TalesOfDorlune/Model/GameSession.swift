@@ -1243,18 +1243,27 @@ final class GameSession {
         post(L("Checkpoint saved at {place}.", ["place": checkpointName(point)]), .quest)
     }
 
-    /// Where Bridge of Light, Homeward Feathers and waystones can take you: every town you've been
-    /// to but the one you're in (by its map's id), your checkpoint first, then the rest in the order
-    /// the world lists them; then every waystone you've woken but one in the land you're in (by
-    /// its own id).
-    var travelDestinations: [String] {
+    /// Where a waystone you touch can take you: every town you've been to (`townDestinations`), then
+    /// every waystone you've woken (`waystoneDestinations`).
+    var travelDestinations: [String] { townDestinations + waystoneDestinations }
+
+    /// Where Bridge of Light and Homeward Feathers can take you: every town you've been to but the one
+    /// you're in (by its map's id), your checkpoint first, then the rest in the order the world lists
+    /// them. Never a waystone (playtesting 2026-11-01: "You shouldn't be able to use the feather item to
+    /// go to a waystone"): that's a Waystone Shard's.
+    var townDestinations: [String] {
         let towns = content.maps.filter { $0.fence == true && $0.id != data.mapID && hasVisited($0.id) }.map(\.id)
         let home = checkpoint.mapID
-        let waystones = content.maps.filter { $0.id != data.mapID }
+        return towns.filter { $0 == home } + towns.filter { $0 != home }
+    }
+
+    /// Where a Waystone Shard can take you: every waystone you've woken but one in the land you're in
+    /// (by its own id).
+    var waystoneDestinations: [String] {
+        content.maps.filter { $0.id != data.mapID }
             .flatMap { $0.npcs ?? [] }
             .filter { $0.role == .waystone && isAwake($0) }
             .map(\.id)
-        return towns.filter { $0 == home } + towns.filter { $0 != home } + waystones
     }
 
     /// A waystone (`NPCRole.waystone`) is awake once the quest that wakes it (`NPCDef.quest`) is
@@ -1728,6 +1737,9 @@ final class GameSession {
 
     /// The Homeward Feather: sold in every town shop, and now and then dropped after a won fight.
     static let featherID = "homeward_feather"
+    /// The Waystone Shard: dropped now and then after a won fight, as a feather is, but half as often, and
+    /// by a boss one time in two (`shardDropChance`). No shop sells it.
+    static let shardID = "waystone_shard"
 
     /// What a beaten monster counts for in what a fight drops, by its level next to yours
     /// (playtesting 2026-10-30: a level 2 monster beaten at level 179 left five things and gold): in
@@ -1744,6 +1756,9 @@ final class GameSession {
     /// at your level (`worth`, `dropWorth`), more for more and stronger ones, and always after a boss,
     /// so a hard zone always gives you a way home.
     static func featherDropChance(boss: Bool, worth: Double) -> Double { boss ? 1 : min(0.2, 0.027 * worth) }
+
+    /// How likely a won fight is to leave a Waystone Shard: half a feather's chance, and a boss one time in two.
+    static func shardDropChance(boss: Bool, worth: Double) -> Double { boss ? 0.5 : featherDropChance(boss: false, worth: worth) / 2 }
 
     /// How likely a beaten wild monster is to drop a piece of equipment: 6%, a point more for each
     /// level it has over you (up to 16%) and a point less for each below, down to 2% of what it's
