@@ -550,7 +550,7 @@ capsule (H). Mining spots include Ilium, Kars Mountain and Siwa Oasis (H).
     shown; the stick always did). The tests print a background build's longest holds and where they
     are (`WorldScene.longestSlices`): a range of hills held the frame for seconds in a debug build and
     SpriteKit takes a fifth of a millisecond over each tile, so hills are drawn a piece at a time
-    (`HillArt.sprites`' `pause`) and tiles set 32 at a time. Movement goes by the time that's passed up
+    (`HillArt.drawn`'s `pause`) and tiles set 32 at a time. Movement goes by the time that's passed up
     to an eighth of a second a frame (it was a twentieth), so a frame the background build makes late
     doesn't slow your walking ("walking around feels slower").
     Walking over hands the scene over with no card (`takeOver`): the hero, companion, party and camera

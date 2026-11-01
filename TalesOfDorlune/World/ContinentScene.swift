@@ -1845,7 +1845,9 @@ final class ContinentScene: SKScene {
             }
             let things = drawn.things
             art.use(palette: land.def.theme.palette, for: land.def.id)
-            let sprites = await land.painters[job.painter].draw(job.corner, self.pause(for: land.def))
+            let square = await land.painters[job.painter].draw(job.corner, self.pause(for: land.def))
+            // Made sprites here, on the scene's thread (`Painter.sprites(of:)`).
+            let sprites = land.painters[job.painter].sprites(of: square)
             // Unless the chunk's been let go meanwhile (and maybe drawn again, with its own).
             guard chunks[job.chunk]?.things === things else { continue }
             for sprite in sprites {

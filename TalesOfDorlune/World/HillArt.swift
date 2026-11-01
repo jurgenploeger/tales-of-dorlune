@@ -79,7 +79,7 @@ enum HillArt {
         return (1 + (shade - 1) * sun.strength, lambert)
     }
 
-    /// Lights hills' sprites (from `sprites(for:look:)`) by `sun`: cheap, so it can follow the clock.
+    /// Lights hills' sprites (from `drawn(for:look:)`) by `sun`: cheap, so it can follow the clock.
     static func light(_ sprites: [SKNode], by sun: Sun) {
         let value = SIMD4(Float(sun.x), Float(sun.y), Float(sun.z), Float(sun.strength))
         var done: Set<ObjectIdentifier> = []
@@ -122,22 +122,71 @@ enum HillArt {
     struct Painter {
         /// The south-west corners of its squares that show any of it, in the map's cells.
         let corners: [GridPoint]
-        /// One square's sprites (at one of `corners`), in the map's own space, each already sorted.
-        let draw: (_ corner: GridPoint, _ pause: @escaping () async -> Void) async -> [SKSpriteNode]
+        /// The lifting shader every strip of the range shares.
+        let shader: SKShader
+        /// One square (at one of `corners`): its picture and its strips, worked out off the main
+        /// thread; `sprites(of:)` makes them sprites.
+        let draw: (_ corner: GridPoint, _ pause: @escaping () async -> Void) async -> Square?
+
+        /// A square's sprites, in the map's own space, each already sorted. Made where it's called,
+        /// on the scene's thread, never in `draw`: sprites made there were given the shader every
+        /// strip shares while the scene drew it, and SpriteKit, gathering the strips' attributes
+        /// for a picture of the map as a battle began, read past them and crashed (screenshots
+        /// 2026-11-01, `textureFromNode` in `SKAttributeValue copyValueTo`).
+        func sprites(of square: Square?) -> [SKSpriteNode] {
+            guard let square else { return [] }
+            let texture = SKTexture(cgImage: square.picture)
+            texture.filteringMode = .nearest
+            return square.strips.map { strip in
+                let sprite = SKSpriteNode(texture: texture, size: strip.frame.size)
+                sprite.anchorPoint = .zero
+                sprite.position = strip.frame.origin
+                sprite.zPosition = strip.z
+                sprite.shader = shader
+                sprite.setValue(SKAttributeValue(vectorFloat4: strip.box), forAttribute: "a_box")
+                sprite.setValue(SKAttributeValue(vectorFloat4: strip.area), forAttribute: "a_area")
+                sprite.setValue(SKAttributeValue(vectorFloat4: strip.band), forAttribute: "a_band")
+                sprite.setValue(SKAttributeValue(vectorFloat4: strip.light), forAttribute: "a_light")
+                return sprite
+            }
+        }
     }
 
-    /// The range as sprites in the map's own space (put them straight in the world), each already
-    /// sorted; none if it can't be drawn.
+    /// One square of a range, ready to be made sprites (`Painter.sprites(of:)`): its picture, and
+    /// the strips it shows in, each where it stands, how it sorts and what its shader's told.
+    struct Square: @unchecked Sendable {
+        struct Strip {
+            let frame: CGRect
+            let z: CGFloat
+            let box: SIMD4<Float>
+            let area: SIMD4<Float>
+            let band: SIMD4<Float>
+            let light: SIMD4<Float>
+        }
+        let picture: CGImage
+        let strips: [Strip]
+    }
+
+    /// A whole range drawn, square by square (`sprites()` makes them sprites, on the scene's thread).
+    struct Drawn {
+        let painter: Painter
+        let squares: [Square]
+
+        func sprites() -> [SKSpriteNode] { squares.flatMap { painter.sprites(of: $0) } }
+    }
+
+    /// The range drawn, every square of it; none if it can't be drawn. Its `sprites()` are in the
+    /// map's own space (put them straight in the world), each already sorted.
     /// `pause`: called every so often, for a land built in the background to give the frame back
     /// (`WorldScene.breathe`): a range takes far too long to draw in one go.
-    static func sprites(for hill: WorldMap.Hill, look: Look, pause: @escaping () async -> Void = {}) async -> [SKSpriteNode] {
-        guard let ready = await Self.painter(for: hill, look: look, pause: pause) else { return [] }
-        var sprites: [SKSpriteNode] = []
+    static func drawn(for hill: WorldMap.Hill, look: Look, pause: @escaping () async -> Void = {}) async -> Drawn? {
+        guard let ready = await Self.painter(for: hill, look: look, pause: pause) else { return nil }
+        var squares: [Square] = []
         for corner in ready.corners {
             await pause()
-            sprites += await ready.draw(corner, pause)
+            if let square = await ready.draw(corner, pause) { squares.append(square) }
         }
-        return sprites
+        return Drawn(painter: ready, squares: squares)
     }
 
     /// The range made ready to draw a square at a time (`Painter`); nil if it can't be drawn.
@@ -544,12 +593,10 @@ enum HillArt {
                 if !cellsShown(from: corner).isEmpty { corners.append(corner) }
             }
         }
-        func drawSquare(at corner: GridPoint, pause: @escaping () async -> Void) async -> [SKSpriteNode] {
+        func drawSquare(at corner: GridPoint, pause: @escaping () async -> Void) async -> Square? {
             let own = cellsShown(from: corner)
-            guard let picture = await paint(corner, pause: pause) else { return [] }
-            var sprites: [SKSpriteNode] = []
-            let texture = SKTexture(cgImage: picture)
-            texture.filteringMode = .nearest
+            guard let picture = await paint(corner, pause: pause) else { return nil }
+            var strips: [Square.Strip] = []
             // The strips a cell reaches into: a cell spans two of the map's diagonals.
             var bands: Set<Int> = []
             for cell in own {
@@ -590,12 +637,8 @@ enum HillArt {
                 let box = CGRect(x: CGFloat(least) * across - 1, y: CGFloat(from) * depthStep + CGFloat(lift.low) - 1,
                                  width: CGFloat(most - least) * across + 2,
                                  height: CGFloat(to - from) * depthStep + CGFloat(lift.high - lift.low) + 2)
-                let sprite = SKSpriteNode(texture: texture, size: box.size)
-                sprite.anchorPoint = .zero
-                sprite.position = box.origin
                 // Just behind its back edge, as `strip(at:)` says.
-                sprite.zPosition = -CGFloat(to) * depthStep - 0.75
-                sprite.shader = shader
+                let z = -CGFloat(to) * depthStep - 0.75
                 // Everything from the box's corner, worked out here in full precision, so the
                 // shader only ever handles small numbers (`lifting`): a phone's GPU, working in
                 // the land's own points thousands across, dropped rows of the ground, and what
@@ -607,23 +650,20 @@ enum HillArt {
                 let fromSamples = (x: cellX - Double(low.col), y: cellY - Double(low.row))
                 let atCorner = SIMD2(Float((fromSamples.x * Double(samples) + 0.5) / Double(lattice.columns)),
                                      Float((fromSamples.y * Double(samples) + 0.5) / Double(lattice.rows)))
-                sprite.setValue(SKAttributeValue(vectorFloat4: SIMD4(atCorner.x, atCorner.y, Float(box.width), Float(box.height))),
-                                forAttribute: "a_box")
                 let uvCorner = SIMD2(Float((cellX - Double(corner.col)) / size), Float((cellY - Double(corner.row)) / size))
-                sprite.setValue(SKAttributeValue(vectorFloat4: SIMD4(uvCorner.x, uvCorner.y, Float(square), Float(square))),
-                                forAttribute: "a_area")
                 let reach: SIMD4<Float> = [Float(Double(CGFloat(from) * depthStep) - originY), Float(Double(CGFloat(to) * depthStep) - originY),
                                            lift.low - 0.5, lift.high + 0.5]
-                sprite.setValue(SKAttributeValue(vectorFloat4: reach), forAttribute: "a_band")
                 let squareInSamples = SIMD4(Float((Double(corner.col - low.col) * Double(samples) + 0.5) / Double(lattice.columns)),
                                             Float((Double(corner.row - low.row) * Double(samples) + 0.5) / Double(lattice.rows)),
                                             Float(sampled.x), Float(sampled.y))
-                sprite.setValue(SKAttributeValue(vectorFloat4: squareInSamples), forAttribute: "a_light")
-                sprites.append(sprite)
+                strips.append(Square.Strip(frame: box, z: z,
+                                           box: SIMD4(atCorner.x, atCorner.y, Float(box.width), Float(box.height)),
+                                           area: SIMD4(uvCorner.x, uvCorner.y, Float(square), Float(square)),
+                                           band: reach, light: squareInSamples))
             }
-            return sprites
+            return Square(picture: picture, strips: strips)
         }
-        return Painter(corners: corners, draw: drawSquare)
+        return Painter(corners: corners, shader: shader, draw: drawSquare)
     }
 
     /// Each pixel of a strip's sprite: the ground point that rises to it, found by halving (the ground
