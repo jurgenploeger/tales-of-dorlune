@@ -1100,7 +1100,7 @@ final class BattleController {
             finish(.fled, lines: [L("{name} ran away!", ["name": runaway])] + concludeVictory() + afterTheFight())
         case .defeat:
             // Lost: what you carried is gone, and beaten in a duel, what you wore too (`loseBelongings`).
-            let lost = session.loseBelongings(worn: rival != nil)
+            let lost = session.loseBelongings(worn: !rivals.isEmpty)
             finish(.defeat, lines: [L("{hero} fainted…", ["hero": hero?.name ?? L("You")])] + handOverSealed() + lost + afterTheFight())
         case .escaped:
             syncParty()
