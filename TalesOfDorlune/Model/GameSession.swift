@@ -253,6 +253,7 @@ final class GameSession {
         slotted.skillLevelsDoubled = true  // already on the 10-step skill scale
         slotted.skillsRefunded = true      // nothing to give back: a new game has no skills yet
         slotted.skillPointRewardsTold = true   // nothing done yet to be told of
+        slotted.companionSkillPointsTold = true    // no companion yet
         slotted.levelsRescaled = true      // and on the 200-level scale (a debug level isn't stretched)
         slotted.giftDay = GameSession.dayKey()  // the first daily gift is tomorrow's: today has the story and the tour
         slotted.bankStocked = true         // nothing to put in the bank: a new game starts with it
@@ -641,13 +642,131 @@ final class GameSession {
         return order
     }
 
-    /// A companion's skills, its species' and what it has learned growing up (`companionLessons`),
-    /// in your order of them (the Companions page: playtesting 2026-10-30, "Same for the
-    /// companion"), as its battle row shows them.
+    /// The skills a companion has learned (you choose them: playtesting 2026-11-01, "When they level
+    /// up we should also be able to choose their skills"), in your order of them (the Companions
+    /// page: playtesting 2026-10-30, "Same for the companion"), as its battle row shows them.
     func skills(of pet: Pet) -> [SkillDef] {
+        let learned = Set(pet.learnedSkills ?? [])
+        return Self.ordered(offeredSkills(of: pet).filter { learned.contains($0.id) }, by: pet.skillOrder)
+    }
+
+    /// What a companion can learn at its level: its species' own, and what its kind and element
+    /// open as it grows (`companionLessons`), in that order.
+    func offeredSkills(of pet: Pet) -> [SkillDef] {
         guard let species = species(of: pet) else { return [] }
-        let known = species.skills + Self.companionLessons(element: species.element, level: pet.level).filter { !species.skills.contains($0) }
-        return Self.ordered(known.compactMap { content.skill($0) }, by: pet.skillOrder)
+        let ids = species.skills + Self.companionLessons(element: species.element, level: pet.level).filter { !species.skills.contains($0) }
+        return ids.compactMap { content.skill($0) }
+    }
+
+    /// What it could learn now and hasn't.
+    func learnableSkills(of pet: Pet) -> [SkillDef] {
+        let learned = Set(pet.learnedSkills ?? [])
+        return offeredSkills(of: pet).filter { !learned.contains($0.id) }
+    }
+
+    /// How far you've raised a companion's skill (1 once learned).
+    func skillLevel(_ id: String, of pet: Pet) -> Int {
+        max(1, pet.skillLevels?[id] ?? 1)
+    }
+
+    /// A companion's points, as your hero's: one a level, less one to learn a skill and one for each
+    /// step up (points in skills it no longer has come back).
+    func unspentSkillPoints(of pet: Pet) -> Int {
+        let spent = skills(of: pet).reduce(0) { $0 + skillLevel($1.id, of: pet) }
+        return max(0, pet.level - 1 - spent)
+    }
+
+    func learnSkill(_ id: String, for petID: UUID) {
+        guard let index = data.pets.firstIndex(where: { $0.id == petID }) else { return }
+        let pet = data.pets[index]
+        guard unspentSkillPoints(of: pet) > 0, let skill = learnableSkills(of: pet).first(where: { $0.id == id }) else { return }
+        SoundEffects.shared.play(.learn)
+        data.pets[index].learnedSkills = (pet.learnedSkills ?? []) + [id]
+        var levels = pet.skillLevels ?? [:]
+        levels[id] = 1
+        data.pets[index].skillLevels = levels
+        post(L("{name} learned {skill}!", ["name": pet.name, "skill": skill.name]), .reward)
+    }
+
+    func upgradeSkill(_ id: String, for petID: UUID) {
+        guard let index = data.pets.firstIndex(where: { $0.id == petID }) else { return }
+        let pet = data.pets[index]
+        guard unspentSkillPoints(of: pet) > 0, skills(of: pet).contains(where: { $0.id == id }),
+              skillLevel(id, of: pet) < Self.skillLevelCap else { return }
+        var levels = pet.skillLevels ?? [:]
+        levels[id] = skillLevel(id, of: pet) + 1
+        data.pets[index].skillLevels = levels
+    }
+
+    /// Spends all a companion's points as it would have grown on its own: what it can learn, then a
+    /// level at a time round what it knows, quietly (debug launches' companions, for screenshots).
+    func spendSkillPointsEvenly(for petID: UUID) {
+        guard let index = data.pets.firstIndex(where: { $0.id == petID }) else { return }
+        var pet = data.pets[index]
+        var budget = unspentSkillPoints(of: pet)
+        var learned = pet.learnedSkills ?? []
+        var levels = pet.skillLevels ?? [:]
+        for skill in learnableSkills(of: pet) where budget > 0 {
+            learned.append(skill.id)
+            levels[skill.id] = 1
+            budget -= 1
+        }
+        var raised = true
+        while budget > 0 && raised {
+            raised = false
+            for id in learned where budget > 0 && (levels[id] ?? 1) < Self.skillLevelCap {
+                levels[id] = (levels[id] ?? 1) + 1
+                budget -= 1
+                raised = true
+            }
+        }
+        pet.learnedSkills = learned
+        pet.skillLevels = levels
+        data.pets[index] = pet
+    }
+
+    // The hero's skills (`owner` nil) or a companion's (its id), for what shows either (`SkillChoices`).
+    func learnableSkills(owner: UUID?) -> [SkillDef] {
+        if let pet = ownedPet(owner) { return learnableSkills(of: pet) }
+        return learnableSkills
+    }
+    func knownSkills(owner: UUID?) -> [SkillDef] {
+        if let pet = ownedPet(owner) { return skills(of: pet) }
+        return heroSkills
+    }
+    func skillLevel(_ id: String, owner: UUID?) -> Int {
+        if let pet = ownedPet(owner) { return skillLevel(id, of: pet) }
+        return skillLevel(id)
+    }
+    func unspentSkillPoints(owner: UUID?) -> Int {
+        if let pet = ownedPet(owner) { return unspentSkillPoints(of: pet) }
+        return unspentSkillPoints
+    }
+    func learnSkill(_ id: String, owner: UUID?) {
+        if let owner { learnSkill(id, for: owner) } else { learnSkill(id) }
+    }
+    func upgradeSkill(_ id: String, owner: UUID?) {
+        if let owner { upgradeSkill(id, for: owner) } else { upgradeSkill(id) }
+    }
+    @discardableResult
+    func moveSkill(_ id: String, onto target: String, owner: UUID?) -> Bool {
+        if let owner { return moveSkill(id, onto: target, of: owner) }
+        return moveSkill(id, onto: target)
+    }
+    private func ownedPet(_ id: UUID?) -> Pet? {
+        guard let id else { return nil }
+        return data.pets.first { $0.id == id }
+    }
+
+    /// Once, when companions began to choose their skills (0.9.51): every companion's points are its
+    /// own to spend (none was chosen before, so all are free), and a line in the chat says so.
+    func announceCompanionSkillPointsIfNeeded() {
+        guard data.companionSkillPointsTold != true else { return }
+        data.companionSkillPointsTold = true
+        if !data.pets.isEmpty {
+            post(L("Companions choose their skills now: each has its skill points to spend in Companions."), .reward)
+        }
+        save()
     }
 
     /// What a companion learns as it grows, on top of its kind's own (playtesting 2026-11-01: they
@@ -669,15 +788,6 @@ final class GameSession {
         .fire: "ember", .water: "bubble", .wood: "vine_whip", .earth: "rock_throw", .metal: "golden_spin",
         .light: "recovery", .dark: "curse",
     ]
-
-    /// How strong a companion's skills are at its `level`: growing into them to mastery at 18, as a
-    /// monster's do, then on past it like your own (playtesting 2026-11-01), a level every four, to
-    /// `skillLevelCap` at 178.
-    static func companionSkillLevel(_ level: Int) -> Int {
-        let natural = Combatant.naturalSkillLevel(for: level)
-        guard natural >= maxSkillLevel else { return natural }
-        return min(skillLevelCap, maxSkillLevel + max(0, level - 18) / 4)
-    }
 
     /// Puts a companion's skill `id` where `target` is in its order. False when either isn't one it
     /// has, or they're the same.

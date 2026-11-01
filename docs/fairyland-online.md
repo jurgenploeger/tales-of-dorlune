@@ -998,8 +998,13 @@ Full Heal.
   2026-11-01) what they learn growing up, as FO's pets did by species and element (`GameSession.companionLessons`):
   Boost at 30, their element's skill at 60 (fire Ember, water Bubble, wood Vine Whip, earth Rock Throw, metal
   Golden Spin, light Recovery, dark Curse) and Super Boost at 100 (Full Heal if they're of light, held to a
-  fifth of the HP like any monster's mending). Their skills grow past mastery too, a level every four from 18
-  to 50 at 178 (`companionSkillLevel`), where wild monsters' and friends' stop.
+  fifth of the HP like any monster's mending). Since 0.9.51 (playtesting 2026-11-01: "When they level up we
+  should also be able to choose their skills") these are offered, not learned by themselves: a companion has a
+  skill point a level as your hero has, one to learn a skill and one for each step up to 50
+  (`GameSession.learnSkill(_:for:)`, `upgradeSkill(_:for:)`), chosen on the Companions page with the hero's
+  own grid (`SkillChoices` with an `owner`). Companions from before were given all their points back to choose
+  with (none had been chosen), as the hero's were in 0.9.43. Wild monsters' and friends' skills still grow on
+  their own, to mastery at 18.
 - Each round, after your own choice, you pick your companion's: Attack, one of its skills, Guard, or Auto (it
   decides itself). It always obeys, since there's no intimacy. A Settings switch leaves it to fight on its own.
 - Toys (since 0.3.69, asked for in playtesting 2026-10-07: "more items that really add value and you want to

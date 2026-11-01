@@ -16,10 +16,13 @@ struct SkillChoices: View {
     /// is hidden I keep hitting the decide later button"). Nil: all of it in one column, as the Character
     /// screen's scroll view holds it.
     var gridHeight: CGFloat? = nil
+    /// Whose skills: the hero's (nil) or a companion's, by its id (the Companions page: playtesting
+    /// 2026-11-01, "When they level up we should also be able to choose their skills").
+    var owner: UUID? = nil
 
     var body: some View {
-        let learnable = session.learnableSkills
-        let known = session.heroSkills
+        let learnable = session.learnableSkills(owner: owner)
+        let known = session.knownSkills(owner: owner)
         let shown = selected.flatMap { id in (learnable + known).first { $0.id == id } } ?? learnable.first ?? known.first
         VStack(alignment: .leading, spacing: 10) {
             if let gridHeight {
@@ -36,7 +39,7 @@ struct SkillChoices: View {
                 grid(learnable: learnable, known: known, shown: shown)
             }
             if let shown {
-                SkillDetail(session: session, skill: shown, isNew: learnable.contains { $0.id == shown.id })
+                SkillDetail(session: session, skill: shown, isNew: learnable.contains { $0.id == shown.id }, owner: owner)
                     .id(shown.id)
                     .transition(.opacity)
             }
@@ -50,10 +53,10 @@ struct SkillChoices: View {
         VStack(alignment: .leading, spacing: 10) {
             LazyVGrid(columns: Self.columns, alignment: .leading, spacing: 10) {
                 ForEach(learnable) { skill in
-                    SkillTileButton(session: session, skill: skill, isNew: true, isSelected: skill.id == shown?.id) { selected = skill.id }
+                    SkillTileButton(session: session, skill: skill, isNew: true, isSelected: skill.id == shown?.id, owner: owner) { selected = skill.id }
                 }
                 ForEach(Array(known.enumerated()), id: \.element.id) { index, skill in
-                    SkillTileButton(session: session, skill: skill, isNew: false, isSelected: skill.id == shown?.id) { selected = skill.id }
+                    SkillTileButton(session: session, skill: skill, isNew: false, isSelected: skill.id == shown?.id, owner: owner) { selected = skill.id }
                         // Held and dragged onto another, it takes that one's place: your order is the
                         // battle row's (`GameSession.heroSkills`).
                         .draggable(skill.id) { SkillIcon(skill: skill, size: 54) }
@@ -70,7 +73,8 @@ struct SkillChoices: View {
                 }
             }
             if known.count > 1 {
-                Text(L("Hold a skill and drag it to reorder. In battle the first ones are buttons of their own; the rest wait behind More."))
+                Text(owner == nil ? L("Hold a skill and drag it to reorder. In battle the first ones are buttons of their own; the rest wait behind More.")
+                     : L("Hold a skill and drag it to reorder: in battle its row shows them in this order."))
                     .font(HUDStyle.font(10))
                     .foregroundStyle(HUDStyle.dim)
                     .fixedSize(horizontal: false, vertical: true)
@@ -80,7 +84,7 @@ struct SkillChoices: View {
 
     @discardableResult
     private func move(_ id: String, onto target: String) -> Bool {
-        let moved = withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) { session.moveSkill(id, onto: target) }
+        let moved = withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) { session.moveSkill(id, onto: target, owner: owner) }
         if moved { session.save() }
         return moved
     }
@@ -98,12 +102,14 @@ private struct SkillTileButton: View {
     let skill: SkillDef
     let isNew: Bool
     let isSelected: Bool
+    /// Whose skill: the hero's (nil) or a companion's (`SkillChoices.owner`).
+    let owner: UUID?
     let onTap: () -> Void
 
     var body: some View {
-        let level = session.skillLevel(skill.id)
+        let level = session.skillLevel(skill.id, owner: owner)
         let mastered = !isNew && level >= GameSession.maxSkillLevel
-        let canRaise = session.unspentSkillPoints > 0 && (isNew || level < GameSession.skillLevelCap)
+        let canRaise = session.unspentSkillPoints(owner: owner) > 0 && (isNew || level < GameSession.skillLevelCap)
         let tag = isNew ? L("NEW") : L("Lv {level}", ["level": level])
         Button(action: onTap) {
             VStack(spacing: 4) {
@@ -158,10 +164,12 @@ private struct SkillDetail: View {
     let session: GameSession
     let skill: SkillDef
     let isNew: Bool
+    /// Whose skill: the hero's (nil) or a companion's (`SkillChoices.owner`).
+    let owner: UUID?
 
     var body: some View {
-        let level = isNew ? 1 : session.skillLevel(skill.id)
-        let points = session.unspentSkillPoints
+        let level = isNew ? 1 : session.skillLevel(skill.id, owner: owner)
+        let points = session.unspentSkillPoints(owner: owner)
         VStack(alignment: .leading, spacing: 8) {
             HStack(alignment: .top, spacing: 10) {
                 SkillIcon(skill: skill, size: 44)
@@ -184,8 +192,8 @@ private struct SkillDetail: View {
             HStack(spacing: 8) {
                 if !isNew { SkillGauge(level: level) }
                 Spacer(minLength: 0)
-                // Field spells are cast from here, outside battle.
-                if !isNew, skill.kind == .field, let cast = session.onCastField {
+                // Your field spells are cast from here, outside battle.
+                if !isNew, owner == nil, skill.kind == .field, let cast = session.onCastField {
                     let affordable = session.data.hero.mp >= GameSession.mpCost(of: skill, level: level)
                     Button(L("Cast")) { cast(skill) }
                         .buttonStyle(PixelButtonStyle(tint: HUDStyle.gold, compact: true))
@@ -193,14 +201,14 @@ private struct SkillDetail: View {
                         .opacity(affordable ? 1 : 0.5)
                 }
                 if isNew {
-                    Button(L("Learn")) { session.learnSkill(skill.id) }
+                    Button(L("Learn")) { session.learnSkill(skill.id, owner: owner) }
                         .buttonStyle(PixelButtonStyle(tint: HUDStyle.gold, compact: true))
                         .disabled(points == 0)
                         .opacity(points == 0 ? 0.5 : 1)
                 } else if level < GameSession.skillLevelCap {
                     // Up a level for a point: the level it rises to on the button.
                     Button {
-                        session.upgradeSkill(skill.id)
+                        session.upgradeSkill(skill.id, owner: owner)
                     } label: {
                         HStack(spacing: 4) {
                             IconImage(.plus, size: 12)
