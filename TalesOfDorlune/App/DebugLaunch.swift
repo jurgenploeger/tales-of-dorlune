@@ -59,7 +59,8 @@ import SpriteKit
 ///   gender=<id>    male | female | other (picks the race's matching sheet)
 ///   battle[=n]     start in a random battle on the current map (n: exactly that many monsters)
 ///   win            with battle, duel or boss: the foes fall at once and the victory plays out
-///   duel           start in a duel with an adventurer of your level (with win: their dropped goods)
+///   duel           start in a duel with an adventurer of your level (with win: their dropped goods);
+///                  `duel=party`, with the two others they travel with too
 ///   boss=<npc>     once the map is on screen, fight that boss (as if you'd pressed Fight)
 ///   invite=n       once the map is on screen, the n nearest adventurers come over, become friends
 ///                  and join your party, through the same steps as their card's buttons
@@ -1038,7 +1039,14 @@ enum DebugLaunch {
         }
         if flags["duel"] != nil {
             let level = coordinator.session.data.hero.level
-            coordinator.duelForDebug(Adventurer(name: "Hazel", raceID: "elf", classID: "tamer", level: level, look: .standard))
+            let hazel = Adventurer(name: "Hazel", raceID: "elf", classID: "tamer", level: level, look: .standard)
+            // `duel=party`: Hazel travels with two others, and the duel takes on all three.
+            if flags["duel"] == "party" {
+                coordinator.session.nearbyGroup = [hazel,
+                                                   Adventurer(name: "Bramble", raceID: "dwarf", classID: "fighter", level: level, look: .standard),
+                                                   Adventurer(name: "Wren", raceID: "human", classID: "mage", level: level, look: .standard)]
+            }
+            coordinator.duelForDebug(hazel)
             if flags["win"] != nil, let battle = coordinator.battle {
                 Task {
                     try? await Task.sleep(for: .seconds(2))

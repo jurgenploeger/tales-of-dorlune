@@ -71,7 +71,9 @@ final class BattleController {
     private let engine: BattleEngine
     @ObservationIgnored private var pending: Pending?
     /// The adventurer you're duelling: beaten, they drop what they carry.
-    @ObservationIgnored private var rival: Adventurer?
+    /// The adventurers you're duelling: the one you challenged (or who picked the fight) first, then
+    /// whoever travels with them.
+    @ObservationIgnored private var rivals: [Adventurer] = []
     /// A boss you've never beaten: winning tells its story.
     @ObservationIgnored private var story: BossStory?
     /// The opening march is over and the first turn has started (`begin`).
@@ -170,31 +172,45 @@ final class BattleController {
         case .ally(let id):
             if let friend = session.data.friends?.first(where: { $0.id == id }) { return friend }
             return session.joinedParty?.members.first(where: { $0.id == id })
-        case .rival(let id): return rival?.id == id ? rival : nil
+        case .rival(let id): return rivals.first { $0.id == id }
         default: return nil
         }
     }
 
-    /// A duel with another adventurer (and their companion) in a danger zone. Their companion can be
-    /// sealed as a wild monster can (playtesting 2026-10-24), and joins you.
-    static func duel(with rival: Adventurer, session: GameSession) -> BattleController {
-        var enemies = [adventurer(rival, id: 10, side: .enemies, session: session)]
-        if let speciesID = rival.petSpecies, let species = session.content.monster(speciesID) {
-            let level = max(1, rival.level - 1)
-            let stats = species.stats(at: level)
-            var companion = Combatant(
-                id: 11, side: .enemies, source: .rival(rival.id), name: L("{owner}'s {monster}", ["owner": rival.name, "monster": species.name]), art: species.art,
-                level: level, element: species.element, stats: stats, hp: stats.hp, mp: stats.mp, skills: species.skills,
-                captureRate: species.captureRate
-            )
-            companion.ownerID = 10
-            companion.species = speciesID
-            enemies.append(companion)
+    /// A duel with another adventurer (and their companion) in a danger zone, and with everyone
+    /// they travel with (`group`, them among them: playtesting 2026-11-01, "When fighting someone
+    /// else that's in a party, you duel that full party"), as many as a party holds, each with
+    /// their companion. A companion can be sealed as a wild monster can (playtesting 2026-10-24),
+    /// and joins you.
+    static func duel(with rival: Adventurer, group: [Adventurer] = [], session: GameSession) -> BattleController {
+        let rivals = [rival] + group.filter { $0.id != rival.id }.prefix(GameSession.maxAllies)
+        var enemies: [Combatant] = []
+        for (index, person) in rivals.enumerated() {
+            // Each at an even id from 10, their companion behind them at the odd one after.
+            let id = 10 + 2 * index
+            enemies.append(adventurer(person, id: id, side: .enemies, session: session))
+            if let speciesID = person.petSpecies, let species = session.content.monster(speciesID) {
+                let level = max(1, person.level - 1)
+                let stats = species.stats(at: level)
+                var companion = Combatant(
+                    id: id + 1, side: .enemies, source: .rival(person.id), name: L("{owner}'s {monster}", ["owner": person.name, "monster": species.name]), art: species.art,
+                    level: level, element: species.element, stats: stats, hp: stats.hp, mp: stats.mp, skills: species.skills,
+                    captureRate: species.captureRate
+                )
+                companion.ownerID = id
+                companion.species = speciesID
+                enemies.append(companion)
+            }
         }
         let engine = BattleEngine(party: party(for: session), enemies: enemies, content: session.content)
-        let intro = rival.hostile ? L("{name} picks a fight with you!", ["name": rival.name]) : L("You challenge {name} to a duel!", ["name": rival.name])
+        let intro = switch (rival.hostile, rivals.count > 1) {
+        case (true, false): L("{name} picks a fight with you!", ["name": rival.name])
+        case (true, true): L("{name} and their party pick a fight with you!", ["name": rival.name])
+        case (false, false): L("You challenge {name} to a duel!", ["name": rival.name])
+        case (false, true): L("You challenge {name} and their party to a duel!", ["name": rival.name])
+        }
         let controller = BattleController(engine: engine, session: session, intro: intro)
-        controller.rival = rival
+        controller.rivals = rivals
         return controller
     }
 
@@ -1259,14 +1275,14 @@ final class BattleController {
         var exp = 0
         var gold = 0
         for foe in engine.combatants where foe.side == .enemies && !foe.isCaptured && !foe.hasFled {
-            if case .rival = foe.source {
-                // The adventurer pays out for the duel, and drops everything they carry; their
+            if case .rival(let personID) = foe.source {
+                // Each adventurer pays out for the duel, and drops everything they carry; their
                 // companion comes along for free.
                 if foe.art.hasPrefix("adv:") {
                     exp += 14 * foe.level
                     gold += 10 * foe.level
                     lines.append(L("You won the duel against {name}!", ["name": foe.name]))
-                    if let rival {
+                    if let rival = rivals.first(where: { $0.id == personID }) {
                         let spoils = session.takeSpoils(from: rival)
                         for item in spoils { loot[item.id, default: 0] += 1 }
                         if !spoils.isEmpty { lines.append(L("{name} dropped everything they carried!", ["name": foe.name])) }
