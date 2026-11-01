@@ -173,12 +173,32 @@ extension SkillEffects {
         return node
     }
 
-    /// Stops a trail and lets its last sparks die out where they are.
-    static func settle(_ trail: SKNode, in parent: SKNode) {
-        for case let emitter as SKEmitterNode in trail.children { emitter.particleBirthRate = 0 }
-        trail.move(toParent: parent)
-        trail.zPosition = 18_100
-        trail.run(.sequence([.wait(forDuration: 0.6), .removeFromParent()]))
+    /// Sends a trail along with something in flight: beside it on the stage, not on it, flown by
+    /// the same move after the same wait. Where it lands its sparks stop, and it stays till the last
+    /// of them have died out, lets go of the stage and leaves.
+    /// Its emitters put their sparks on the stage (`targetNode`), and SpriteKit crashed updating
+    /// sparks whose emitter had been moved to another node, or taken away, while they still lived
+    /// (playtesting 2026-11-01, 0.9.51, after Fire Bolt and Meteor Blast: a freed object in
+    /// `SKCNode::update`). So a trail is never moved between nodes, and outlives its sparks.
+    static func fly(_ trail: SKNode, from start: CGPoint, after wait: TimeInterval = 0, flight: SKAction, z: CGFloat, in parent: SKNode) {
+        trail.position = start
+        trail.zPosition = z
+        let emitters = trail.children.compactMap { $0 as? SKEmitterNode }
+        let rates = emitters.map(\.particleBirthRate)
+        var steps: [SKAction] = []
+        if wait > 0 {
+            // Nothing to stream from yet: what it follows waits unseen.
+            for emitter in emitters { emitter.particleBirthRate = 0 }
+            steps.append(.wait(forDuration: wait))
+            steps.append(.run { for (emitter, rate) in zip(emitters, rates) { emitter.particleBirthRate = rate } })
+        }
+        steps.append(flight)
+        steps.append(.run { for emitter in emitters { emitter.particleBirthRate = 0 } })
+        steps.append(.wait(forDuration: 0.8))
+        steps.append(.run { for emitter in emitters { emitter.targetNode = nil } })
+        steps.append(.removeFromParent())
+        parent.addChild(trail)
+        trail.run(.sequence(steps), withKey: "travel")
     }
 
     /// Light rising from a fighter's feet and dying out as it goes (flames, a cyclone's lift).
@@ -382,7 +402,7 @@ extension SkillEffects {
     /// Returns how long it flies. Not `async`: an async function here runs off the main thread, and
     /// a ball added to the stage and moved from there, while SpriteKit drew it, crashed the game
     /// (playtesting 2026-11-01, after a mage's spells: a freed node in `doBuildRenderGroup`).
-    /// SpriteKit's own actions fly it, settle its trail and take it away.
+    /// SpriteKit's own actions fly it and its trail (`fly`) and take them away.
     @discardableResult
     static func fireball(from start: CGPoint?, to end: CGPoint?, level: Int, in parent: SKNode) -> TimeInterval {
         guard let start, let end else { return 0 }
@@ -391,11 +411,10 @@ extension SkillEffects {
         ball.zPosition = 18_200
         parent.addChild(ball)
         ball.run(.repeatForever(.sequence([.scale(to: 1.12, duration: 0.05), .scale(to: 0.92, duration: 0.05)])), withKey: "flicker")
-        let tail = trail(.fire, level: level, parent: parent)
-        ball.addChild(tail)
         let travel = SKAction.move(to: end, duration: 0.3)
         travel.timingMode = .easeIn
-        ball.run(.sequence([travel, .run { SkillEffects.settle(tail, in: parent) }, .removeFromParent()]), withKey: "travel")
+        fly(trail(.fire, level: level, parent: parent), from: start, flight: travel, z: ball.zPosition - 1, in: parent)
+        ball.run(.sequence([travel, .removeFromParent()]), withKey: "travel")
         return 0.3
     }
 
@@ -475,11 +494,10 @@ extension SkillEffects {
         let squash = SKAction.group([.scaleX(to: 1.12, duration: 0.07), .scaleY(to: 0.9, duration: 0.07)])
         let stretch = SKAction.group([.scaleX(to: 0.92, duration: 0.07), .scaleY(to: 1.1, duration: 0.07)])
         orb.run(.repeatForever(.sequence([squash, stretch])), withKey: "wobble")
-        let drips = trail(.water, level: level, falling: true, parent: parent)
-        orb.addChild(drips)
         let travel = SKAction.move(to: end, duration: 0.3)
         travel.timingMode = .easeIn
-        orb.run(.sequence([travel, .run { SkillEffects.settle(drips, in: parent) }, .removeFromParent()]), withKey: "travel")
+        fly(trail(.water, level: level, falling: true, parent: parent), from: start, flight: travel, z: orb.zPosition - 1, in: parent)
+        orb.run(.sequence([travel, .removeFromParent()]), withKey: "travel")
         return 0.3
     }
 

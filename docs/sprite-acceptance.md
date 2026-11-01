@@ -184,6 +184,16 @@ python3 tools/check_content.py
 
 ## Learnings
 
+### Hats cut from a sheet of their own
+
+- A hat cut from a pilot sheet (`HAT_ONLY`) keeps the pilot's face, laid over the wearer's head: it has to
+  stand where the race's own bodies stand, or both faces show (2026-11-01, the dwarf's hide hood: RD's dwarf
+  stood 7 to 9 pixels taller than the game's dwarves, its eyes on row 21 to theirs on 26 to 28, "some
+  characters on this side have double face/eyes"). Compare the pilot's head top and eyes with each body's
+  (art/eyes.json) in every direction, and move the sheet before the hat's cut (`HAT_SHIFT` in
+  tools/wear_art.py) till the hat sits as far over the head as the other races' (2 to 4 pixels). Check the
+  smallest body with `gear_preview.py --wear <hat>` facing left and right, where a face shows most.
+
 ### Retro Diffusion
 
 - App icon heroes (2026-10-25, 24 options, $2.88, in `art-variants/app_icon_*`): `rd_pro__fantasy` at
