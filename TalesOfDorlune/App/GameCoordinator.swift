@@ -75,13 +75,12 @@ final class GameCoordinator {
         case waystone
 
         /// Where it can take you (`GameSession`): towns by Bridge of Light or a feather, waystones by a
-        /// shard, both from a waystone (playtesting 2026-11-01: "You shouldn't be able to use the feather
-        /// item to go to a waystone").
+        /// shard or from a waystone (playtesting 2026-11-01: "You shouldn't be able to use the feather
+        /// item to go to a waystone"; "You should only be going between waystones").
         func places(in session: GameSession) -> [String] {
             switch self {
             case .bridge, .feather: session.townDestinations
-            case .shard: session.waystoneDestinations
-            case .waystone: session.travelDestinations
+            case .shard, .waystone: session.waystoneDestinations
             }
         }
     }
@@ -686,6 +685,8 @@ final class GameCoordinator {
         guard let only = places.first else {
             if case .shard = travel {
                 session.post(L("You haven't woken a waystone yet. Someone near one might know how."))
+            } else if case .waystone = travel {
+                session.post(L("It's the only waystone you've woken. Wake another, and this one can take you there."))
             } else {
                 session.post(L("There's no other town you've been to yet."))
             }
@@ -700,7 +701,7 @@ final class GameCoordinator {
         input.move = .zero
     }
 
-    /// Off to a town or a waystone (`travelDestinations`: a town's map id or a waystone's id):
+    /// Off to a town or a waystone (`Travel.places`: a town's map id or a waystone's id):
     /// Bridge of Light spends its MP; a Homeward Feather is used up and whisks you away first, the
     /// window and the bag closed so you see it; a waystone you're touching takes you free.
     func depart(_ travel: Travel, to destination: String) {

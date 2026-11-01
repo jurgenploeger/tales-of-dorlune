@@ -1192,7 +1192,7 @@ final class GameSession {
     }
 
     /// Where you wake up after fainting, and the first town Bridge of Light and Homeward Feathers
-    /// offer to take you to (`travelDestinations`): the square of the last town you walked into.
+    /// offer to take you to (`townDestinations`): the square of the last town you walked into.
     /// (An older save could hold a wild map's entrance; that becomes the town nearest to it.)
     var checkpoint: Checkpoint {
         inTown(data.checkpoint) ?? Checkpoint(mapID: content.startMap, entry: nil)
@@ -1243,10 +1243,6 @@ final class GameSession {
         post(L("Checkpoint saved at {place}.", ["place": checkpointName(point)]), .quest)
     }
 
-    /// Where a waystone you touch can take you: every town you've been to (`townDestinations`), then
-    /// every waystone you've woken (`waystoneDestinations`).
-    var travelDestinations: [String] { townDestinations + waystoneDestinations }
-
     /// Where Bridge of Light and Homeward Feathers can take you: every town you've been to but the one
     /// you're in (by its map's id), your checkpoint first, then the rest in the order the world lists
     /// them. Never a waystone (playtesting 2026-11-01: "You shouldn't be able to use the feather item to
@@ -1257,8 +1253,9 @@ final class GameSession {
         return towns.filter { $0 == home } + towns.filter { $0 != home }
     }
 
-    /// Where a Waystone Shard can take you: every waystone you've woken but one in the land you're in
-    /// (by its own id).
+    /// Where a Waystone Shard, or a waystone you touch, can take you: every waystone you've woken but
+    /// one in the land you're in (by its own id). A waystone goes only to waystones (playtesting
+    /// 2026-11-01), towns are Bridge of Light's and the feathers'.
     var waystoneDestinations: [String] {
         content.maps.filter { $0.id != data.mapID }
             .flatMap { $0.npcs ?? [] }

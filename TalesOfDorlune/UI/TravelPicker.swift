@@ -2,7 +2,7 @@ import SwiftUI
 
 /// Where to, by Bridge of Light, a Homeward Feather, a Waystone Shard or a waystone
 /// (`GameCoordinator.Travel`, `places(in:)`): the towns you've been to but the one you're in, your
-/// checkpoint first, for the first two; the waystones you've woken for a shard; both from a waystone.
+/// checkpoint first, for the first two; the waystones you've woken for a shard or a waystone.
 /// A tap goes there. Nothing's spent until then: closing the window keeps your MP, feather or shard.
 struct TravelPicker: View {
     let session: GameSession

@@ -149,7 +149,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   then lit and finished as the buildings are and held to their bands, `form_relief` too;
   `cave_ladder`, the way down to a cave's deeper level, and `cave_rope`, the way back up, `depth` and NPC role
   `stairs` in maps.json; `lost_pile`, what you lost when you fell, lying where you fell (`LostPile`); `waystone`, NPC role `waystone`, a standing stone out in a wild land that a quest
-  wakes, then a stop for travel like the towns: `GameSession.travelDestinations`).
+  wakes, then a way to the other waystones you've woken, and only to them: `GameSession.waystoneDestinations`).
   Rerun it after editing a drawing; `--sheet out.png` previews them.
 - `tools/scenery_art.py`: trees and bushes drawn in code with `pixel_kit` (docs/pixel-style.md), one species
   each where every tree had been a recolour of RD's `tree` and every bush of its `berry_bush`: a cherry, a
