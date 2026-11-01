@@ -626,7 +626,7 @@
     "Lv {level} {race} {class}": "Lv {level} {race}{class}",
     "with their {name}": "带着{name}",
     "Waiting for you at {map}": "在{map}等你",
-    "Leave": "离队",
+    "Remove": "移出",
     "Invite": "邀请",
     "Party full": "队伍已满",
     "Offline": "离线",
@@ -779,6 +779,7 @@
     "Waiting for you at {place}": "在{place}等你",
     "Travelling with you": "与你同行",
     "Your friend": "你的好友",
+    "Remove from party": "移出队伍",
     "Daily gift": "每日礼物",
     "Day {day} of {days}": "第{day}天（共{days}天）",
     "A gift waits each day you play. Come back tomorrow for the next one!": "每天游玩都有一份礼物等着你。明天再来领下一份吧！",
@@ -3766,6 +3767,7 @@
     "Bounty Hunter": "赏金猎人",
     "Town Favourite": "小镇红人",
     "Faithful": "常客",
-    "Old Friend": "老朋友"
+    "Old Friend": "老朋友",
+    "Leave": "离队"
   }
 }

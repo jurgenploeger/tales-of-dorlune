@@ -1008,7 +1008,8 @@ private struct FriendRow: View {
             }
             Spacer()
             if inParty {
-                Button(L("Leave")) { session.leaveParty(friend.id) }
+                // Theirs to leave, not yours: "Leave" read as you leaving (playtesting 2026-11-01).
+                Button(L("Remove")) { session.leaveParty(friend.id) }
                     .buttonStyle(PixelButtonStyle(compact: true))
             } else if !session.adventurersAround.contains(friend.id) {
                 // Friends have to be near you to join you: where they are says where to find them.
