@@ -470,7 +470,7 @@ private struct CharacterTab: View {
 }
 
 /// The Stats section of the Character screen, and of the companion you bring along: the level,
-/// EXP, HP and MP bars and the four stats with their icons, every number in one size. Big and easy
+/// HP, MP and EXP bars and the four stats with their icons, every number in one size. Big and easy
 /// to read: the screen has the room. Another adventurer's (`ProfileWindow`) has no EXP to show.
 struct StatsPanel: View {
     let level: String
@@ -491,10 +491,11 @@ struct StatsPanel: View {
                 Spacer()
                 Text(level).font(HUDStyle.font(15))
             }
-            if let exp { bar(L("EXP"), exp, expToNext, HUDStyle.exp) }
             bar(L("HP"), hp, stats.hp, HUDStyle.hp)
             // Companions without magic have no MP to show.
             if stats.mp > 0 { bar(L("MP"), mp, stats.mp, HUDStyle.mp) }
+            // EXP last, under HP and MP, as the HUD's own block has it (playtesting 2026-11-01).
+            if let exp { bar(L("EXP"), exp, expToNext, HUDStyle.exp) }
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], alignment: .leading, spacing: 8) {
                 StatCell(name: L("Attack"), value: stats.attack, size: 13, icon: .sword, tint: Self.attackTint, digits: Self.digits)
                 StatCell(name: L("Defense"), value: stats.defense, size: 13, icon: .shield, tint: HUDStyle.mp, digits: Self.digits)
