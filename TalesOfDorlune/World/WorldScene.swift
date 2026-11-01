@@ -2157,7 +2157,11 @@ final class WorldScene: SKScene {
         player.idles = false
         let column = featherColumn(over: player.position)
         column.alpha = 0
-        column.run(.sequence([.wait(forDuration: Feather.length - Feather.hold - Feather.fade), .fadeAlpha(to: 0.9, duration: Feather.fade)]))
+        // Gone once you are, under the loading card: the scene stays, and so did the light, where
+        // you'd left from (playtesting 2026-11-01). Taken down on arrival too.
+        column.run(.sequence([.wait(forDuration: Feather.length - Feather.hold - Feather.fade), .fadeAlpha(to: 0.9, duration: Feather.fade),
+                              .wait(forDuration: 4), .removeFromParent()]))
+        departure = column
         featherGust(around: player.position, backward: true)
         let lift = SKAction.moveBy(x: 0, y: Feather.height, duration: Feather.drop)
         lift.timingMode = .easeIn
@@ -2174,9 +2178,13 @@ final class WorldScene: SKScene {
 
     /// What happens once a Homeward Feather has lifted you away (`featherAway`).
     private var onFeatherGone: (() -> Void)?
+    /// The light a Homeward Feather lifted you into, till you've arrived (`awaitFeatherArrival`).
+    private var departure: SKNode?
 
     /// Before the map shows: the hero isn't here yet (`featherArrive` brings them down).
     func awaitFeatherArrival() {
+        departure?.removeFromParent()
+        departure = nil
         player.idles = false
         player.alpha = 0
         player.sprite.position = CGPoint(x: 0, y: Feather.height)
