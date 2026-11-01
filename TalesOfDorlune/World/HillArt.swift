@@ -521,7 +521,10 @@ enum HillArt {
             SKAttribute(name: "a_box", type: .vectorFloat4),
             SKAttribute(name: "a_area", type: .vectorFloat4),
             SKAttribute(name: "a_band", type: .vectorFloat4),
+            SKAttribute(name: "a_light", type: .vectorFloat4),
         ]
+        // Where in the heights' picture a cell is, from the lattice's corner (`u_samples`).
+        let sampled = (x: Double(samples) / Double(lattice.columns), y: Double(samples) / Double(lattice.rows))
 
         let across = WorldMap.project(CGPoint(x: tile, y: 0)).x
         // The cells that show in each square, by its corner, sorted out once (not the whole range
@@ -593,12 +596,29 @@ enum HillArt {
                 // Just behind its back edge, as `strip(at:)` says.
                 sprite.zPosition = -CGFloat(to) * depthStep - 0.75
                 sprite.shader = shader
-                sprite.setValue(SKAttributeValue(vectorFloat4: SIMD4(Float(box.minX), Float(box.minY), Float(box.width), Float(box.height))),
+                // Everything from the box's corner, worked out here in full precision, so the
+                // shader only ever handles small numbers (`lifting`): a phone's GPU, working in
+                // the land's own points thousands across, dropped rows of the ground, and what
+                // lay under it (the trees' shadows) showed through in stripes (playtesting
+                // 2026-10-31, Windswept Downs; 2026-11-01, Emerald Road).
+                let originX = Double(box.minX), originY = Double(box.minY)
+                let along = originY / 0.35355339, sideways = originX / 0.70710678
+                let cellX = (along + sideways) * (0.5 / 44), cellY = (along - sideways) * (0.5 / 44)
+                let fromSamples = (x: cellX - Double(low.col), y: cellY - Double(low.row))
+                let atCorner = SIMD2(Float((fromSamples.x * Double(samples) + 0.5) / Double(lattice.columns)),
+                                     Float((fromSamples.y * Double(samples) + 0.5) / Double(lattice.rows)))
+                sprite.setValue(SKAttributeValue(vectorFloat4: SIMD4(atCorner.x, atCorner.y, Float(box.width), Float(box.height))),
                                 forAttribute: "a_box")
-                sprite.setValue(SKAttributeValue(vectorFloat4: SIMD4(Float(corner.col), Float(corner.row), Float(square), Float(square))),
+                let uvCorner = SIMD2(Float((cellX - Double(corner.col)) / size), Float((cellY - Double(corner.row)) / size))
+                sprite.setValue(SKAttributeValue(vectorFloat4: SIMD4(uvCorner.x, uvCorner.y, Float(square), Float(square))),
                                 forAttribute: "a_area")
-                let reach: SIMD4<Float> = [Float(CGFloat(from) * depthStep), Float(CGFloat(to) * depthStep), lift.low - 0.5, lift.high + 0.5]
+                let reach: SIMD4<Float> = [Float(Double(CGFloat(from) * depthStep) - originY), Float(Double(CGFloat(to) * depthStep) - originY),
+                                           lift.low - 0.5, lift.high + 0.5]
                 sprite.setValue(SKAttributeValue(vectorFloat4: reach), forAttribute: "a_band")
+                let squareInSamples = SIMD4(Float((Double(corner.col - low.col) * Double(samples) + 0.5) / Double(lattice.columns)),
+                                            Float((Double(corner.row - low.row) * Double(samples) + 0.5) / Double(lattice.rows)),
+                                            Float(sampled.x), Float(sampled.y))
+                sprite.setValue(SKAttributeValue(vectorFloat4: squareInSamples), forAttribute: "a_light")
                 sprites.append(sprite)
             }
             return sprites
@@ -617,9 +637,14 @@ enum HillArt {
     /// steps of 6% with a 4×4 ordered dither where one gives way to the next, as `shade` lights the
     /// picture, the shade leaning toward the map's shadow colour (`u_lean`). Flat ground stays as it
     /// is. Everything inline: SpriteKit's shaders can't count on helper functions seeing uniforms.
+    ///
+    /// All in small numbers, from the strip's box (`drawSquare` works out its corner in the heights'
+    /// picture, `a_box.xy`; in the square's, `a_area.xy`; the band from it, `a_band.xy`; and the
+    /// square's corner in the heights with their samples a cell, `a_light`), never the land's own
+    /// points: a phone's GPU may work in half precision, where those thousands dropped whole rows.
     private static let lifting = """
     void main() {
-        vec2 spot = a_box.xy + v_tex_coord * a_box.zw;
+        vec2 spot = v_tex_coord * a_box.zw;
         float low = spot.y - a_band.w;
         float high = spot.y - a_band.z;
         float across = spot.x / 0.70710678;
@@ -627,26 +652,23 @@ enum HillArt {
             float middle = 0.5 * (low + high);
             float along = middle / 0.35355339;
             vec2 cell = vec2(along + across, along - across) * (0.5 / 44.0);
-            vec2 at = ((cell - u_samples.xy) * u_samples.z + 0.5) / u_sampleSize;
-            vec4 level = texture2D(u_heights, at);
+            vec4 level = texture2D(u_heights, a_box.xy + cell * a_light.zw);
             float lift = (level.r * 255.0 + level.g) / 255.0 * u_samples.w + u_look.z;
             if (middle + lift > spot.y) { high = middle; } else { low = middle; }
         }
         float ground = 0.5 * (low + high);
         float along = ground / 0.35355339;
         vec2 cell = vec2(along + across, along - across) * (0.5 / 44.0);
-        vec2 at = ((cell - u_samples.xy) * u_samples.z + 0.5) / u_sampleSize;
-        vec4 level = texture2D(u_heights, at);
+        vec4 level = texture2D(u_heights, a_box.xy + cell * a_light.zw);
         float lift = (level.r * 255.0 + level.g) / 255.0 * u_samples.w + u_look.z;
-        vec2 uv = (cell - a_area.xy) / a_area.zw;
+        vec2 uv = a_area.xy + cell / a_area.zw;
         if (ground < a_band.x - 0.3 || ground > a_band.y + 0.3 || abs(ground + lift - spot.y) > 0.3
             || uv.x < 0.0 || uv.y < 0.0 || uv.x > 1.0 || uv.y > 1.0) {
             gl_FragColor = vec4(0.0);
         } else {
             vec4 paint = texture2D(u_texture, uv);
             vec2 pixel = floor(uv * a_area.zw * u_look.w);
-            vec2 centre = a_area.xy + (pixel + 0.5) / u_look.w;
-            vec2 base = ((centre - u_samples.xy) * u_samples.z + 0.5) / u_sampleSize;
+            vec2 base = a_light.xy + (pixel + 0.5) / u_look.w * a_light.zw;
             vec2 sideways = vec2(0.5 / u_sampleSize.x, 0.0);
             vec2 upward = vec2(0.0, 0.5 / u_sampleSize.y);
             vec4 east = texture2D(u_heights, base + sideways);

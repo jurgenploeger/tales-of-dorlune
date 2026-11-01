@@ -1318,6 +1318,8 @@ final class Content {
         let questTreasures: [String: String]
         /// Chest treasures (`chestHolding`): each one's chest.
         let chestTreasures: [String: String]
+        /// Every item some shop stocks (`isStocked`).
+        let stocked: Set<String>
     }
 
     private let bundle: Bundle
@@ -1449,7 +1451,8 @@ final class Content {
             regions: regions,
             cardLevels: cardLevels,
             questTreasures: questTreasures,
-            chestTreasures: chestTreasures
+            chestTreasures: chestTreasures,
+            stocked: stocked
         )
     }
 
@@ -1594,6 +1597,9 @@ final class Content {
     func isTreasure(_ itemID: String) -> Bool {
         isQuestTreasure(itemID) || loaded.chestTreasures[ItemDef.baseID(of: itemID)] != nil || prize(for: itemID) != nil
     }
+
+    /// Whether some shop sells it (an NPC's `stock`); one none does, shops only buy.
+    func isStocked(_ itemID: String) -> Bool { loaded.stocked.contains(ItemDef.baseID(of: itemID)) }
 
     /// The status cape an item is (rewards.json `prizes`), if it's one.
     func prize(for itemID: String) -> RewardsDef.Prize? { rewards.prizes?.first { $0.item == itemID } }
