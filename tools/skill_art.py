@@ -743,6 +743,217 @@ def draw_bridge_of_light(ic):
         ic.sparkle(x, y, 0.05, L)
 
 
+def slash(ic, light, x0, y0, x1, y1, bow, w, strength=1.0):
+    """A blade's cut: a crescent of light from (x0, y0) to (x1, y1), bowed `bow` to its left, thickest
+    in the middle and sharp at both ends, a white-hot core along it."""
+    dx, dy = x1 - x0, y1 - y0
+    length = math.hypot(dx, dy)
+    nx, ny = -dy / length, dx / length
+    ts = np.linspace(0, 1, 24)
+    mid = [(x0 + dx * t + nx * bow * math.sin(t * math.pi), y0 + dy * t + ny * bow * math.sin(t * math.pi)) for t in ts]
+
+    def lens(width):
+        a = [(x + nx * width * math.sin(t * math.pi), y + ny * width * math.sin(t * math.pi)) for (x, y), t in zip(mid, ts)]
+        b = [(x - nx * width * 0.35 * math.sin(t * math.pi), y - ny * width * 0.35 * math.sin(t * math.pi))
+             for (x, y), t in zip(mid, ts)]
+        return a + b[::-1]
+    ic.add(light[0], ic.poly(lens(w * 1.8), blur=0.03) * 0.7 * strength)
+    ic.add(light[1], ic.poly(lens(w), blur=0.006) * strength)
+    ic.add(light[2], ic.poly(lens(w * 0.55), blur=0.003) * strength)
+    ic.add(light[3], ic.poly(lens(w * 0.22), blur=0.002) * strength)
+
+
+def chevron(ic, cx, cy, w, h, t):
+    """An upward chevron: a roof of thickness `t`, its tip at (cx, cy - h / 2)."""
+    top, bottom = cy - h / 2, cy + h / 2
+    return ic.poly([(cx, top), (cx + w / 2, bottom - t * 0.4), (cx + w / 2 - t * 0.9, bottom + t * 0.25),
+                    (cx, top + t * 1.25), (cx - w / 2 + t * 0.9, bottom + t * 0.25), (cx - w / 2, bottom - t * 0.4)],
+                   blur=0.003)
+
+
+def draw_charge(ic):
+    L = LIGHTS["blow"]
+    ic.glow(0.7, 0.46, 0.34, L[0], 0.5)
+    for (y, x0, x1) in ((0.24, 0.14, 0.5), (0.7, 0.2, 0.56), (0.82, 0.36, 0.6)):     # speed lines
+        ic.add(L[1], ic.line([(x0, y), (x1, y - 0.06)], 0.025, blur=0.008) * 0.6)
+        ic.add(L[3], ic.line([(x0 + (x1 - x0) * 0.4, y - 0.024), (x1, y - 0.06)], 0.008, blur=0.002) * 0.8)
+    # The dash itself: a wedge of light, wide at its head, driving right into the foe.
+    tail, head = (0.06, 0.6), (0.7, 0.46)
+    ic.add(L[0], ic.poly([tail, (head[0], head[1] - 0.15), (head[0] + 0.06, head[1]), (head[0], head[1] + 0.15)],
+                         blur=0.03) * 0.8)
+    ic.add(L[1], ic.poly([tail, (head[0], head[1] - 0.1), (head[0] + 0.04, head[1]), (head[0], head[1] + 0.1)],
+                         blur=0.008))
+    ic.add(L[2], ic.poly([(0.18, 0.58), (head[0], head[1] - 0.055), (head[0], head[1] + 0.055)], blur=0.004))
+    ic.add(L[3], ic.poly([(0.34, 0.54), (head[0], head[1] - 0.025), (head[0], head[1] + 0.025)], blur=0.002))
+    for k in range(3):                                   # the shock front where it lands
+        r = 0.12 + k * 0.08
+        ic.add(L[2], ic.arc(0.66, 0.46, r, -60, 60, 0.03 - k * 0.006, blur=0.006) * (1 - k * 0.25))
+    ic.flare(0.74, 0.46, 0.3, L, rays=4, turn=0.4, strength=1.0)
+
+
+def draw_rush(ic):
+    L = LIGHTS["white"]
+    B = LIGHTS["buff"]
+    ic.glow(0.5, 0.5, 0.42, B[0], 0.45)
+    for k, off in enumerate((-0.2, 0.0, 0.2)):          # three cuts in quick succession, fanned a little
+        x0, y0 = 0.74 + off - k * 0.02, 0.12 + off * 0.3
+        x1, y1 = 0.24 + off + k * 0.02, 0.86 + off * 0.3
+        slash(ic, [B[0], B[1], L[2], L[3]], x0, y0, x1, y1, 0.06, 0.05, 0.8 + 0.1 * k)
+    for (x, y) in ((0.88, 0.62), (0.12, 0.34)):
+        ic.sparkle(x, y, 0.045, L)
+
+
+def draw_impact(ic):
+    L = LIGHTS["earth"]
+    O = LIGHTS["blow"]
+    ic.glow(0.5, 0.64, 0.42, L[0], 0.55)
+    ic.add(L[1], ic.ring(0.5, 0.36, 0.34, 0.025, blur=0.01) * 0.5)    # the shock ring
+    ic.add(L[2], ic.ring(0.5, 0.36, 0.26, 0.012, blur=0.004) * 0.6)
+    mask = shield(ic, L, 0.5, 0.6, 0.95)
+    # Cracks running out from where the blow lands.
+    for crack in (((0.5, 0.33), (0.46, 0.44), (0.52, 0.53), (0.45, 0.66), (0.49, 0.8)),
+                  ((0.46, 0.44), (0.36, 0.5), (0.31, 0.6)),
+                  ((0.52, 0.53), (0.62, 0.58), (0.66, 0.7)),
+                  ((0.5, 0.36), (0.6, 0.42), (0.68, 0.4))):
+        ic.over(rgb("#2a1404"), ic.line(list(crack), 0.032) * mask)
+        ic.add(O[2], ic.line(list(crack), 0.011, blur=0.002) * mask * 0.9)
+    # The blow coming down onto it.
+    ic.add(O[1], ic.poly([(0.42, 0.0), (0.58, 0.0), (0.52, 0.3), (0.48, 0.3)], blur=0.02) * 0.8)
+    ic.add(O[3], ic.poly([(0.47, 0.0), (0.53, 0.0), (0.505, 0.3), (0.495, 0.3)], blur=0.005))
+    ic.flare(0.5, 0.31, 0.3, O, rays=6, turn=0.25, strength=0.9)
+    for (x, y, s) in ((0.16, 0.5, 0.025), (0.84, 0.46, 0.03), (0.22, 0.24, 0.02), (0.8, 0.22, 0.022)):
+        ic.over(L[1], ic.ellipse(x, y, s, blur=0.003))
+        ic.add(L[3], ic.ellipse(x - s * 0.3, y - s * 0.3, s * 0.35))
+
+
+def draw_double_combo(ic):
+    R = rgb_light("#a01020", "#e0303a", "#ff8070", "#ffe0d0")
+    ic.glow(0.5, 0.5, 0.44, R[0], 0.7)
+    slash(ic, R, 0.14, 0.12, 0.88, 0.88, -0.08, 0.095)
+    slash(ic, R, 0.86, 0.12, 0.12, 0.88, 0.08, 0.095)
+    ic.flare(0.5, 0.5, 0.28, R, rays=4, turn=math.pi / 4, strength=0.9)
+    ic.glow(0.5, 0.5, 0.06, np.ones(3), 0.9)
+    for (x, y) in ((0.5, 0.14), (0.5, 0.86)):
+        ic.sparkle(x, y, 0.04, R, 0.8)
+
+
+def draw_dodge_whip(ic):
+    L = LIGHTS["earth"]
+    W = LIGHTS["wood"]
+    for (y, x0, x1) in ((0.36, 0.06, 0.3), (0.5, 0.1, 0.36), (0.64, 0.06, 0.28)):      # quickened: speed marks
+        ic.add(W[1], ic.line([(x0, y), (x1, y)], 0.04, blur=0.012) * 0.7)
+        ic.add(W[3], ic.line([(x0 + 0.06, y), (x1, y)], 0.012, blur=0.002))
+    # The lash: from the grip at the lower left up in a sweep, curling over at its tip.
+    knots = [(0.4, 0.86), (0.44, 0.66), (0.58, 0.5), (0.72, 0.56), (0.66, 0.7), (0.52, 0.64), (0.5, 0.48),
+             (0.6, 0.32), (0.84, 0.18)]
+    pts = []
+    for k in range(len(knots) - 1):                      # a smooth curve through them (Catmull-Rom)
+        p0, p1, p2, p3 = (np.array(knots[max(k - 1, 0)]), np.array(knots[k]), np.array(knots[k + 1]),
+                          np.array(knots[min(k + 2, len(knots) - 1)]))
+        for t in np.linspace(0, 1, 8)[:-1]:
+            q = 0.5 * (2 * p1 + (p2 - p0) * t + (2 * p0 - 5 * p1 + 4 * p2 - p3) * t * t +
+                       (3 * p1 - p0 - 3 * p2 + p3) * t ** 3)
+            pts.append((float(q[0]), float(q[1])))
+    pts.append(knots[-1])
+    n = len(pts) - 1
+    for layer, colour, scale, alpha, blur in ((0, L[1], 2.2, 0.5, 0.025), (1, L[0], 1.0, 1.0, 0.0),
+                                              (2, L[1], 0.6, 1.0, 0.0), (3, L[3], 0.22, 0.8, 0.0)):
+        mask = np.zeros_like(ic.a)
+        for k in range(n):                               # thick at the grip, thinning to the tip
+            w = (0.085 - 0.055 * k / n) * scale
+            mask = np.maximum(mask, ic.line(pts[k:k + 2], w, blur=blur))
+        if layer in (0, 3):
+            ic.add(colour, mask * alpha)
+        else:
+            ic.over(colour, mask * alpha)
+    grip = [(0.33, 1.0), (0.45, 1.0), (0.46, 0.84), (0.36, 0.83)]
+    ic.over(np.zeros(3), ic.poly(grip, blur=0.015) * 0.4)
+    ic.over(ic.linear(0.34, 0.9, 0.46, 0.9, rgb("#9a5a24"), rgb("#4a2a10")), ic.poly(grip, blur=0.003))
+    ic.add(L[2], ic.line([(0.38, 0.98), (0.39, 0.86)], 0.014) * 0.7)
+    ic.over(L[0], ic.line([(0.35, 0.84), (0.47, 0.85)], 0.02))
+    tip = pts[-1]
+    ic.flare(tip[0], tip[1], 0.2, L, rays=4, turn=0.3, strength=0.9)
+    ic.sparkle(0.88, 0.62, 0.04, W)
+
+
+def draw_beast_lore(ic):
+    L = rgb_light("#0f7a80", "#2cc6c6", "#9af2ee", "#e8fffd")
+    ic.glow(0.5, 0.5, 0.42, L[0], 0.7)
+    # A target sight: two rings, four ticks reaching in.
+    ic.add(L[1], ic.ring(0.5, 0.5, 0.4, 0.022, blur=0.006) * 0.9)
+    ic.add(L[2], ic.ring(0.5, 0.5, 0.4, 0.008, blur=0.002))
+    for a in (0, 90, 180, 270):
+        t = math.radians(a)
+        ic.add(L[3], ic.line([(0.5 + math.cos(t) * 0.46, 0.5 + math.sin(t) * 0.46),
+                              (0.5 + math.cos(t) * 0.3, 0.5 + math.sin(t) * 0.3)], 0.022, blur=0.003))
+    # The watchful eye inside it, drawn in light: its outline, a round iris and pupil.
+    top = [(0.22 + 0.56 * t, 0.5 - 0.17 * math.sin(t * math.pi)) for t in np.linspace(0, 1, 20)]
+    bottom = [(0.22 + 0.56 * t, 0.5 + 0.17 * math.sin(t * math.pi)) for t in np.linspace(0, 1, 20)]
+    ic.over(L[0] * 0.5, ic.poly(top + bottom[::-1], blur=0.004) * 0.8)
+    ic.add(L[1], ic.line(top, 0.03, blur=0.008) * 0.7)
+    ic.add(L[1], ic.line(bottom, 0.03, blur=0.008) * 0.7)
+    ic.add(L[3], ic.line(top, 0.012, blur=0.002))
+    ic.add(L[3], ic.line(bottom, 0.012, blur=0.002))
+    ic.body(ic.ellipse(0.5, 0.5, 0.11), L, 0.47, 0.47, 0.11, shadow=False)
+    ic.over(rgb("#032a2c"), ic.ellipse(0.5, 0.5, 0.045))
+    ic.over(np.ones(3), ic.ellipse(0.47, 0.465, 0.018))
+    ic.sparkle(0.75, 0.25, 0.06, L)                      # the weak spot it finds
+
+
+def draw_super_boost(ic):
+    R = rgb_light("#b01a10", "#ff4a24", "#ffa060", "#fff0d8")
+    G = LIGHTS["light"]
+    ic.glow(0.5, 0.52, 0.44, R[0], 0.65)
+    rising_motes(ic, R, ((0.12, 0.62, 0.035), (0.88, 0.56, 0.04), (0.16, 0.86, 0.025), (0.84, 0.86, 0.03)))
+    lower = chevron(ic, 0.5, 0.7, 0.66, 0.32, 0.13)
+    ic.body(lower, R, 0.46, 0.62, 0.34)
+    upper = chevron(ic, 0.5, 0.36, 0.7, 0.34, 0.14)
+    ic.body(upper, G, 0.46, 0.28, 0.36)
+    ic.flare(0.5, 0.18, 0.2, G, strength=0.9)
+    ic.sparkle(0.24, 0.2, 0.04, G)
+    ic.sparkle(0.78, 0.16, 0.035, G)
+
+
+def draw_full_heal(ic):
+    L = LIGHTS["heal"]
+    W = LIGHTS["white"]
+    ic.glow(0.5, 0.5, 0.46, L[0], 0.65)
+    # A bloom: eight petals of light opening round the cross.
+    for k in range(8):
+        a = k * math.pi / 4 + math.pi / 8
+        px, py = 0.5 + math.cos(a) * 0.27, 0.5 + math.sin(a) * 0.27
+        dx, dy = math.cos(a), math.sin(a)
+        petal = [(0.5 + dx * 0.12, 0.5 + dy * 0.12), (px - dy * 0.08, py + dx * 0.08), (0.5 + dx * 0.44, 0.5 + dy * 0.44),
+                 (px + dy * 0.08, py - dx * 0.08)]
+        ic.add(L[1], ic.poly(petal, blur=0.012) * 0.75)
+        ic.add(L[2], ic.line([(0.5 + dx * 0.16, 0.5 + dy * 0.16), (0.5 + dx * 0.38, 0.5 + dy * 0.38)], 0.012, blur=0.003) * 0.8)
+    ic.add(W[2], ic.ring(0.5, 0.5, 0.2, 0.012, blur=0.004) * 0.7)
+    ic.body(plus(ic, 0.5, 0.5, 0.22, 0.075), [L[0], L[1], L[2], W[3]], 0.47, 0.46, 0.24)
+    ic.flare(0.5, 0.5, 0.2, W, rays=4, turn=math.pi / 4, strength=0.35)
+    rising_motes(ic, L, ((0.12, 0.2, 0.035), (0.88, 0.16, 0.04), (0.9, 0.84, 0.03), (0.1, 0.8, 0.03)))
+
+
+def draw_beast_impact(ic):
+    G = LIGHTS["light"]
+    E = LIGHTS["earth"]
+    ic.glow(0.5, 0.84, 0.46, E[0], 0.7, ry=0.18)
+    # The ground it strikes: a crescent of shock thrown up, rocks flying.
+    ic.add(E[1], ic.arc(0.5, 0.58, 0.4, 20, 160, 0.08, blur=0.02) * 0.8)
+    ic.add(E[2], ic.arc(0.5, 0.58, 0.4, 28, 152, 0.035, blur=0.006))
+    ic.add(G[3], ic.arc(0.5, 0.58, 0.4, 45, 135, 0.012, blur=0.002))
+    for (x, y, s) in ((0.1, 0.66, 0.035), (0.9, 0.62, 0.04), (0.18, 0.5, 0.025), (0.84, 0.44, 0.028)):
+        rock = [(x - s, y), (x - s * 0.3, y - s), (x + s, y - s * 0.5), (x + s * 0.7, y + s * 0.8), (x - s * 0.5, y + s * 0.8)]
+        ic.over(E[0], ic.poly(rock, blur=0.003))
+        ic.add(E[2], ic.ellipse(x - s * 0.3, y - s * 0.3, s * 0.4, blur=0.003) * 0.8)
+    # Coming down on it: streaks above, then the great paw of light.
+    for x in (0.26, 0.5, 0.74):
+        ic.add(G[1], ic.line([(x, 0.02), (x, 0.2)], 0.03, blur=0.01) * 0.6)
+        ic.add(G[3], ic.line([(x, 0.06), (x, 0.18)], 0.008, blur=0.002) * 0.8)
+    ic.glow(0.5, 0.5, 0.36, G[1], 0.5)
+    paw(ic, G, 0.5, 0.48, 1.45)
+    ic.flare(0.5, 0.86, 0.3, G, rays=6, turn=0.0, strength=0.9)
+
+
 def rgb_light(*hexes):
     return [rgb(h) for h in hexes]
 
