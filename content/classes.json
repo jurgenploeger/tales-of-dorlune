@@ -114,6 +114,26 @@
         {
           "skill": "whirlwind",
           "level": 40
+        },
+        {
+          "skill": "berserk",
+          "level": 50
+        },
+        {
+          "skill": "charge",
+          "level": 65
+        },
+        {
+          "skill": "rush",
+          "level": 80
+        },
+        {
+          "skill": "impact",
+          "level": 100
+        },
+        {
+          "skill": "double_combo",
+          "level": 120
         }
       ]
     },
@@ -224,6 +244,30 @@
         {
           "skill": "mend_beast",
           "level": 40
+        },
+        {
+          "skill": "boost",
+          "level": 50
+        },
+        {
+          "skill": "dodge_whip",
+          "level": 65
+        },
+        {
+          "skill": "beast_lore",
+          "level": 80
+        },
+        {
+          "skill": "super_boost",
+          "level": 100
+        },
+        {
+          "skill": "full_heal",
+          "level": 120
+        },
+        {
+          "skill": "beast_impact",
+          "level": 150
         }
       ]
     }

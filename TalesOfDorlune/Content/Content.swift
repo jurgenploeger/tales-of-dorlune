@@ -215,6 +215,17 @@ nonisolated struct SkillDef: Decodable, Identifiable, Sendable {
     let lowers: [String: Double]?
     /// Buffs: how many rounds it lasts after the one it's cast in (3 unless set).
     let rounds: Int?
+    /// Attacks: how many blows it lands (1 unless set), each at its `power`; `scatter`, each at a
+    /// foe picked at random (Rush), else all at the chosen one (Double Combo).
+    let hits: Int?
+    let scatter: Bool?
+    /// Attacks: the share of the target's DEF it goes straight through (Charge: 0.4).
+    let pierce: Double?
+    /// Heals: all the way back to full HP, whatever its power (Full Heal).
+    let full: Bool?
+    /// Attacks: the caster's companion strikes with them, its ATK added to theirs (God of Beast
+    /// Impact).
+    let withCompanion: Bool?
 }
 
 nonisolated struct MonsterDef: Decodable, Identifiable, Sendable {
