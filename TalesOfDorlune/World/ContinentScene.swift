@@ -128,6 +128,11 @@ final class ContinentScene: SKScene {
     var isSettled: Bool {
         isReady && building == nil && wanted.isEmpty && waiting.isEmpty && !painting
     }
+    /// How much is left before it's settled: lands to lay out (and the one being laid out) and
+    /// squares and banks to draw, for the loading bar's last stretch (`GameCoordinator.finishLoading`).
+    var workLeft: Int {
+        wanted.count + waiting.count + (building == nil ? 0 : 1) + (painting ? 1 : 0)
+    }
     /// Debug launches waiting for the lands round you (`isSettled`): the work keeps its longer
     /// slices till they're in.
     var hurries = false
