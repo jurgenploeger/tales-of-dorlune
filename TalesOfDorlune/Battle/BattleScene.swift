@@ -759,7 +759,7 @@ final class BattleScene: SKScene {
                 caster.thrust(reach: 0.15, hold: 0.3)
             }
             await pause(0.15)
-            await SkillEffects.projectile(from: actors[actorID]?.center, to: target?.center, color: violet, level: 1, trail: true, in: stage)
+            await pause(SkillEffects.projectile(from: actors[actorID]?.center, to: target?.center, color: violet, level: 1, trail: true, in: stage))
             if let target { SkillEffects.explosion(on: target, color: violet, level: 1, in: stage) }
             landed()
         case "tamer":
@@ -895,7 +895,7 @@ final class BattleScene: SKScene {
             default:
                 let poison = skill.inflicts?.effect == .poison
                 if skill.target != .allEnemies, let first = targets.first {
-                    await SkillEffects.projectile(from: actors[actorID]?.center, to: first.center, color: color, level: level, trail: true, in: stage)
+                    await pause(SkillEffects.projectile(from: actors[actorID]?.center, to: first.center, color: color, level: level, trail: true, in: stage))
                 }
                 for target in targets {
                     if poison {
@@ -938,12 +938,12 @@ final class BattleScene: SKScene {
             for target in targets { SkillEffects.whirl(on: target, level: level, in: stage) }
             impactAll(hits, heal: false)
         case "fire" where skill.element == .fire:
-            await SkillEffects.fireball(from: actors[actorID]?.center, to: targets.first?.center, level: level, in: stage)
+            await pause(SkillEffects.fireball(from: actors[actorID]?.center, to: targets.first?.center, level: level, in: stage))
             for target in targets { SkillEffects.fireBlast(on: target, level: level, in: stage) }
             impactAll(hits, heal: false)
         case "fire":
             // Magic of another element in the fire style: a glowing bolt in its own colour.
-            await SkillEffects.projectile(from: actors[actorID]?.center, to: targets.first?.center, color: color, level: level, trail: true, in: stage)
+            await pause(SkillEffects.projectile(from: actors[actorID]?.center, to: targets.first?.center, color: color, level: level, trail: true, in: stage))
             for target in targets { SkillEffects.explosion(on: target, color: color, level: level, in: stage) }
             impactAll(hits, heal: false)
         case "stone":
@@ -957,7 +957,7 @@ final class BattleScene: SKScene {
             await pause(0.45)
             impactAll(hits, heal: false)
         case "water":
-            await SkillEffects.waterOrb(from: actors[actorID]?.center, to: targets.first?.center, level: level, in: stage)
+            await pause(SkillEffects.waterOrb(from: actors[actorID]?.center, to: targets.first?.center, level: level, in: stage))
             for target in targets { SkillEffects.waterSplash(on: target, level: level, in: stage) }
             impactAll(hits, heal: false)
         case "holy":
