@@ -180,6 +180,7 @@ ANIMATIONS = {
     "curse", "glare", "poison", "mist", "first_aid", "heart", "paw", "rain", "revive",
     "bless", "shield", "glow", "ward", "spur", "boost", "rage",
     "charge", "rush", "impact", "combo", "whip", "lore", "super_boost", "full_heal", "beast_impact",
+    "fountain", "lance", "meteor",
 }
 seen = {}
 for skill in skills.values():

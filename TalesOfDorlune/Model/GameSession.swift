@@ -612,10 +612,42 @@ final class GameSession {
         return order
     }
 
-    /// A companion's skills, its species', in your order of them (the Companions page: playtesting
-    /// 2026-10-30, "Same for the companion"), as its battle row shows them.
+    /// A companion's skills, its species' and what it has learned growing up (`companionLessons`),
+    /// in your order of them (the Companions page: playtesting 2026-10-30, "Same for the
+    /// companion"), as its battle row shows them.
     func skills(of pet: Pet) -> [SkillDef] {
-        Self.ordered(species(of: pet)?.skills.compactMap { content.skill($0) } ?? [], by: pet.skillOrder)
+        guard let species = species(of: pet) else { return [] }
+        let known = species.skills + Self.companionLessons(element: species.element, level: pet.level).filter { !species.skills.contains($0) }
+        return Self.ordered(known.compactMap { content.skill($0) }, by: pet.skillOrder)
+    }
+
+    /// What a companion learns as it grows, on top of its kind's own (playtesting 2026-11-01: they
+    /// stopped at their kind's one to three; Fairyland Online's pets learned skills by species and
+    /// element as they levelled, Boost, Super Boost, Heal and Full Heal among them): Boost at 30, one
+    /// of its element's at 60 (`elementLessons`), and at 100 Full Heal if it's of light, else Super
+    /// Boost.
+    static func companionLessons(element: Element, level: Int) -> [String] {
+        var lessons: [String] = []
+        if level >= 30 { lessons.append("boost") }
+        if level >= 60 { lessons.append(elementLessons[element] ?? "berserk") }
+        if level >= 100 { lessons.append(element == .light ? "full_heal" : "super_boost") }
+        return lessons
+    }
+
+    /// The skill each element teaches a companion at 60: a blow in its own element, Light's mending
+    /// and Dark's curse.
+    static let elementLessons: [Element: String] = [
+        .fire: "ember", .water: "bubble", .wood: "vine_whip", .earth: "rock_throw", .metal: "golden_spin",
+        .light: "recovery", .dark: "curse",
+    ]
+
+    /// How strong a companion's skills are at its `level`: growing into them to mastery at 18, as a
+    /// monster's do, then on past it like your own (playtesting 2026-11-01), a level every four, to
+    /// `skillLevelCap` at 178.
+    static func companionSkillLevel(_ level: Int) -> Int {
+        let natural = Combatant.naturalSkillLevel(for: level)
+        guard natural >= maxSkillLevel else { return natural }
+        return min(skillLevelCap, maxSkillLevel + max(0, level - 18) / 4)
     }
 
     /// Puts a companion's skill `id` where `target` is in its order. False when either isn't one it

@@ -712,6 +712,48 @@
       "description": "You and your companion strike as one: its ATK joins yours.",
       "animation": "beast_impact",
       "grand": "crescent"
+    },
+    {
+      "id": "dancing_fountain",
+      "icon": "droplet",
+      "art": "skill_dancing_fountain",
+      "name": "Dancing Fountain",
+      "mp": 9,
+      "kind": "magic",
+      "element": "water",
+      "power": 2.6,
+      "target": "enemy",
+      "splash": 0.5,
+      "description": "Jets of water dance up under a foe and rain on those beside it.",
+      "animation": "fountain"
+    },
+    {
+      "id": "spiritual_lance",
+      "icon": "wand",
+      "art": "skill_spiritual_lance",
+      "name": "Spiritual Lance",
+      "mp": 12,
+      "kind": "magic",
+      "element": "metal",
+      "power": 3.2,
+      "target": "enemy",
+      "description": "A lance of spirit light runs one foe through.",
+      "animation": "lance",
+      "grand": "crescent"
+    },
+    {
+      "id": "meteor_blast",
+      "icon": "flame",
+      "art": "skill_meteor_blast",
+      "name": "Meteor Blast",
+      "mp": 24,
+      "kind": "magic",
+      "element": "fire",
+      "power": 2.0,
+      "target": "allEnemies",
+      "description": "Burning meteors rain down on every foe.",
+      "animation": "meteor",
+      "grand": "pillar"
     }
   ]
 }

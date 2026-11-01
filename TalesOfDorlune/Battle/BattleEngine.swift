@@ -137,7 +137,8 @@ struct Combatant: Identifiable {
         skillLevels[id] ?? Self.naturalSkillLevel(for: level)
     }
 
-    /// Monsters and companions grow into their skills with their own level, mastering them at 18.
+    /// Monsters grow into their skills with their own level, mastering them at 18 (your companions
+    /// on past it: `GameSession.companionSkillLevel`, set on them as they come into a fight).
     static func naturalSkillLevel(for level: Int) -> Int {
         min(GameSession.maxSkillLevel, 1 + level / 2)
     }
@@ -521,10 +522,7 @@ final class BattleEngine {
                 case .magic: return magicHit(from: actor, to: target, skill: skill, boost: boost)
                 case .heal:
                     // Full Heal: all the way back up.
-                    if skill.full == true {
-                        return Hit(target: target.id, amount: max(0, target.stats.hp - target.hp), effectiveness: 1, critical: false)
-                    }
-                    var amount = Int(Double(healAmount(actor, skill)) * boost)
+                    var amount = skill.full == true ? max(0, target.stats.hp - target.hp) : Int(Double(healAmount(actor, skill)) * boost)
                     // A monster's mending (wild or a companion's) is held to a share of the HP it
                     // goes to, so it never undoes a fight or makes a companion a healer.
                     if actor.speciesID != nil || actor.petID != nil {

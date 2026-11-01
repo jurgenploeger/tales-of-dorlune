@@ -202,6 +202,18 @@
         {
           "skill": "blessing",
           "level": 70
+        },
+        {
+          "skill": "dancing_fountain",
+          "level": 85
+        },
+        {
+          "skill": "spiritual_lance",
+          "level": 105
+        },
+        {
+          "skill": "meteor_blast",
+          "level": 140
         }
       ]
     },

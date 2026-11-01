@@ -8786,6 +8786,18 @@
       "id": "skill_beast_impact",
       "kind": "icon"
     },
+    {
+      "id": "skill_dancing_fountain",
+      "kind": "icon"
+    },
+    {
+      "id": "skill_spiritual_lance",
+      "kind": "icon"
+    },
+    {
+      "id": "skill_meteor_blast",
+      "kind": "icon"
+    },
 {
       "id": "item_crimson_ranger_cloak",
       "kind": "item",

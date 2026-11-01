@@ -1089,6 +1089,16 @@ final class BattleScene: SKScene {
                 }
             }
             await pause(gap * Double(max(0, hits.count - 1)))
+        case "fountain":
+            await pause(SkillEffects.fountainJets(on: targets, level: level, in: stage))
+            impactAll(hits, heal: false)
+        case "lance":
+            await pause(SkillEffects.spiritLance(from: actors[actorID], to: targets.first, level: level, in: stage))
+            impactAll(hits, heal: false)
+        case "meteor":
+            await pause(SkillEffects.meteorShower(on: targets, level: level, top: size.height / 2, in: stage))
+            shake(strength: 4 + CGFloat(level))
+            impactAll(hits, heal: false)
         case "whip":
             await pause(SkillEffects.whipLash(from: actors[actorID], on: targets, level: level, in: stage))
             impactAll(hits, heal: false)

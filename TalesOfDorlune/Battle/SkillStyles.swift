@@ -60,6 +60,7 @@ extension SkillEffects {
         case "super_boost": .surge
         case "full_heal": .bloom
         case "beast_impact": .beast
+        case "lance": .spirit
         default: nil
         }
         return light?.main
@@ -77,6 +78,9 @@ extension SkillEffects {
         case "first_aid", "heart", "paw", "rain", "full_heal": "heal"
         case "beast_impact", "lore": "holy"
         case "impact": "stone"
+        case "fountain": "water"
+        case "meteor": "fire"
+        case "lance": "whirlwind"
         default: style
         }
     }
