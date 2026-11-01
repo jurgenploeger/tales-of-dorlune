@@ -307,7 +307,8 @@ struct LoadingBar: View {
     /// The foot of the brand bar's fill: its deep blue a shade darker, toward midnight (#2E61C7).
     static let deepBlue = Color(red: 0.18, green: 0.38, blue: 0.78)
 
-    private var percent: Int { Int((min(max(progress, 0), 1) * 100).rounded()) }
+    /// 100 only once it's done: 99.5% rounded up read as finished while the card still waited.
+    private var percent: Int { progress >= 1 ? 100 : min(99, Int((max(progress, 0) * 100).rounded())) }
 
     var body: some View {
         VStack(spacing: 6) {

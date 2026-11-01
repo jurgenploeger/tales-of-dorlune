@@ -401,7 +401,11 @@ final class GameCoordinator {
         announcer.arrived(at: currentLand)
         let remaining = 0.8 - Date().timeIntervalSince(loadingStarted)
         Task {
-            loadProgress = 1
+            // Not 100% till the card really lifts (playtesting 2026-11-01: "it already says 100% but
+            // then waits a couple of seconds"): the waits below fill the bar's last stretch, and it
+            // reaches the end just as the clouds part.
+            let lastStretch = max(loadProgress, 0.9)
+            loadProgress = lastStretch
             if remaining > 0 { try? await Task.sleep(for: .seconds(remaining)) }
             // Carried by a Homeward Feather or a waystone: you're not standing there yet when the card lifts.
             let arriving = arrivesBy
@@ -419,12 +423,18 @@ final class GameCoordinator {
             if !DebugLaunch.isActive, showsContinent, !byFeather, let continent {
                 let hurried = continent.hurries
                 continent.hurries = true
+                // The bar follows what's been drawn of what was left (it never goes back).
+                let left = max(1, continent.workLeft)
                 for _ in 0..<12 where !continent.isSettled {
+                    let done = 1 - Double(min(continent.workLeft, left)) / Double(left)
+                    loadProgress = max(loadProgress, lastStretch + (0.99 - lastStretch) * done)
                     try? await Task.sleep(for: .milliseconds(250))
                 }
                 continent.hurries = hurried
                 continent.holdWork(for: LoadingCurtain.landingTime + LoadingCurtain.clearingTime + 0.3)
             }
+            // All there: the bar full and the clouds parting at once.
+            loadProgress = 1
             isReady = true
             // A debug launch's screenshot of the continent waits, the card gone as a player's would
             // be, for the lands round you to come in too (`isSettled`), a few minutes at most.
