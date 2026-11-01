@@ -4,7 +4,9 @@ import SwiftUI
 /// (each land's minimap, `WorldOverview`), the sea all round, north up like a paper map (playtesting
 /// 2026-10-26: turned like the game's isometric view, north up-left, its compass's points weren't a
 /// quarter turn apart). Drag to look round, pinch (or the buttons) to zoom, twist with two fingers to
-/// turn it: the compass turns with it, and a tap on the compass turns north back up. The names and
+/// turn it: the compass turns with it, and a tap on the compass turns it as you see the land in the
+/// game (north up and to the left, `asSeen`; playtesting 2026-11-01), and a tap again north back up,
+/// as you left it next time. The names and
 /// marks stay upright however it's turned. It opens on where you are. Places you haven't been to
 /// are faded and named "???"; a quest's shut gate shows its lock; caves show where they open. A
 /// dark land shows only where you've been, as its minimap does. Zoomed in, a land you've been to
@@ -23,6 +25,9 @@ struct WorldAtlas: View {
     /// Which badges show (playtesting 2026-10-30: "Add filters to the map so you can quickly see
     /// stuff"), kept for the next time the map opens.
     @AppStorage("mapFilter") private var filter: MapFilter = .all
+    /// Whether the map lies as you see the land in the game (`seenTurn`) rather than north up, kept
+    /// for the next time it opens.
+    @AppStorage("mapAsSeen") private var asSeen = false
     /// How the map lies in the view: its zoom, its turn and the spot in the middle.
     @State private var framing = Framing()
     /// The view's size, for the buttons over it.
@@ -129,8 +134,13 @@ struct WorldAtlas: View {
     /// How far two fingers must twist before the map turns with them, so a pinch doesn't turn it
     /// (radians: about 7 degrees).
     private static let turnThreshold: CGFloat = 0.12
-    /// A turn left this near north settles on it (radians: about 6 degrees).
+    /// A turn left this near north, or near the game's own view (`seenTurn`), settles on it
+    /// (radians: about 6 degrees).
     private static let northSnap: CGFloat = 0.1
+    /// The map turned as you see the land in the game (`WorldMap.project`): north up and to the left,
+    /// east up and to the right, so pushing up walks you up the map. Turned only, not squashed as the
+    /// game's view is, so the compass's points stay a quarter turn apart.
+    private static let seenTurn: CGFloat = -.pi / 4
     /// The blur under the map's top and bottom edges (`edgeBand`): copies of the map, each blurred
     /// more and reaching less far in from the edge (a fraction of the band), so it's blurred most
     /// at the edge and not at all where the band ends.
@@ -281,7 +291,8 @@ struct WorldAtlas: View {
         LinearGradient(stops: stops, startPoint: edge == .top ? .top : .bottom, endPoint: edge == .top ? .bottom : .top)
     }
 
-    /// Opens on where you are, north up, your land filling most of the view.
+    /// Opens on where you are, north up (or as you see the land, `asSeen`), your land filling most of
+    /// the view.
     private func open(in size: CGSize) {
         guard size.width > 0, size.height > 0 else { return }
         let (_, columns, rows) = bounds
@@ -289,7 +300,7 @@ struct WorldAtlas: View {
         var opening = Framing()
         opening.scale = clamped(min(size.width * 0.8 / CGFloat(here?.def.width ?? 150), size.height * 0.7 / CGFloat(here?.def.height ?? 120)),
                                 in: size)
-        opening.rotation = CGFloat((DebugLaunch.mapTurn ?? 0) * Double.pi / 180)
+        opening.rotation = DebugLaunch.mapTurn.map { CGFloat($0 * Double.pi / 180) } ?? (asSeen ? Self.seenTurn : 0)
         if let cell = hereCell ?? lands.first.map({ GridPoint(col: $0.origin.col + $0.def.width / 2, row: $0.origin.row + $0.def.height / 2) }) {
             opening.focus = spot(of: cell)
         } else {
@@ -409,25 +420,32 @@ struct WorldAtlas: View {
         return clampedFocus(next)
     }
 
-    /// Once the fingers lift: the turn kept within half a turn either way, and settled on north
-    /// when it's left near it.
+    /// Once the fingers lift: the turn kept within half a turn either way, and settled on north, or
+    /// on the game's view, when it's left near one.
     private func settleTurn() {
         var settled = framing
         settled.rotation = Self.normalized(framing.rotation)
         framing = settled
-        guard settled.rotation != 0, abs(settled.rotation) < Self.northSnap else { return }
-        var north = settled
-        north.rotation = 0
-        glide(to: north, from: settled)
+        guard let snap = [0, Self.seenTurn].first(where: { abs(settled.rotation - $0) < Self.northSnap }) else { return }
+        asSeen = snap != 0
+        guard settled.rotation != snap else { return }
+        var snapped = settled
+        snapped.rotation = snap
+        glide(to: snapped, from: settled)
     }
 
-    /// The compass's tap: north back up, turning the short way round about the middle of the view.
-    private func northUp() {
+    /// Whether the map lies north up now (or near enough).
+    private var isNorthUp: Bool { abs(Self.normalized(framing.rotation)) < 0.01 }
+
+    /// The compass's tap: north up, the map turns as you see the land in the game; turned any way,
+    /// north back up. The short way round, about the middle of the view.
+    private func turnByCompass() {
         var turned = framing
         turned.rotation = Self.normalized(framing.rotation)
-        var north = turned
-        north.rotation = 0
-        glide(to: north, from: turned, duration: 0.4)
+        var target = turned
+        target.rotation = isNorthUp ? Self.seenTurn : 0
+        asSeen = target.rotation != 0
+        glide(to: target, from: turned, duration: 0.4)
     }
 
     /// Glides the map from `origin` (where it is) to `target`, easing in and out; straight there
@@ -452,15 +470,15 @@ struct WorldAtlas: View {
         }
     }
 
-    /// The compass, turned with the map; a tap turns north back up.
+    /// The compass, turned with the map; a tap turns it as you see the land, or north back up.
     private var compass: some View {
         Button {
-            northUp()
+            turnByCompass()
         } label: {
             MapCompass(heading: .radians(Double(framing.rotation)))
         }
         .buttonStyle(.plain)
-        .accessibilityLabel(L("Turn the map north up"))
+        .accessibilityLabel(isNorthUp ? L("Turn the map as you see the land") : L("Turn the map north up"))
     }
 
     private var controls: some View {
@@ -847,9 +865,12 @@ struct WorldAtlas: View {
 /// game's turned view lies, north up-left and south down-right, they looked skewed). On the world
 /// map north is up till you turn the map (`heading`): the needle and the points go round with it,
 /// the letters staying upright. A cave's map lies as the game's view does (`isometric`): north up
-/// and to the left, east up and to the right, as the cave does on screen.
+/// and to the left, east up and to the right, as the cave does on screen. So does the minimap's
+/// (`compact`, playtesting 2026-11-01), small at its rim: only the N, its other letters too small to read.
 struct MapCompass: View {
     var size: CGFloat = 72
+    /// Small: the N alone, bigger, no E, S or W.
+    var compact = false
     /// How far the map under it is turned clockwise: its north points that way from straight up.
     var heading: Angle = .zero
     /// The map under it lies turned and squashed as the game's view is (a cave's, `CaveMap`).
@@ -867,7 +888,7 @@ struct MapCompass: View {
 
     var body: some View {
         let north = angle(col: 0, row: 1)
-        let points: [(label: String, angle: Double, main: Bool)] = [
+        let points: [(label: String, angle: Double, main: Bool)] = compact ? [(L("N"), north, true)] : [
             (L("N"), north, true), (L("E"), angle(col: 1, row: 0), false),
             (L("S"), angle(col: 0, row: -1), false), (L("W"), angle(col: -1, row: 0), false),
         ]
@@ -887,7 +908,7 @@ struct MapCompass: View {
             ForEach(points, id: \.label) { point in
                 let radians = point.angle * Double.pi / 180
                 Text(point.label)
-                    .font(HUDStyle.font(size * (point.main ? 0.2 : 0.15)))
+                    .font(HUDStyle.font(size * (compact ? 0.26 : point.main ? 0.2 : 0.15)))
                     .foregroundStyle(point.main ? Self.needleRed : HUDStyle.ink)
                     .offset(x: CGFloat(sin(radians)) * size * 0.36, y: -CGFloat(cos(radians)) * size * 0.36)
             }
