@@ -2945,6 +2945,25 @@ struct RulesTests {
         #expect(GameSession.companionSkillLevel(200) == GameSession.skillLevelCap)
     }
 
+    /// Once, every skill point back (0.9.43): what was learned and raised is cleared, so all the
+    /// points the hero's level gives are free to spend again; a second time does nothing.
+    @Test func skillPointsComeBackOnce() {
+        let session = GameSession.newGame(name: "Test", raceID: "human")
+        session.data.hero.level = 50
+        session.data.skillsRefunded = nil
+        session.data.hero.learnedSkills = ["bash"]
+        session.data.hero.skillLevels = ["bash": 7]
+        let before = session.unspentSkillPoints
+        session.refundSkillsIfNeeded()
+        #expect(session.data.hero.learnedSkills == [])
+        #expect(session.unspentSkillPoints == before + 7)
+        #expect(session.data.skillsRefunded == true)
+        session.data.hero.learnedSkills = ["bash"]
+        session.data.hero.skillLevels = ["bash": 2]
+        session.refundSkillsIfNeeded()
+        #expect(session.data.hero.learnedSkills == ["bash"])
+    }
+
     @Test func monstersPowerThemselvesUp() throws {
         let content = Content.shared
         let wolf = try #require(content.monster("werewolf"))

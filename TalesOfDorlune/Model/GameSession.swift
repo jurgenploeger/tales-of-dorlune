@@ -251,6 +251,7 @@ final class GameSession {
         var slotted = data
         slotted.slot = UUID().uuidString   // every new game gets its own save
         slotted.skillLevelsDoubled = true  // already on the 10-step skill scale
+        slotted.skillsRefunded = true      // nothing to give back: a new game has no skills yet
         slotted.levelsRescaled = true      // and on the 200-level scale (a debug level isn't stretched)
         slotted.giftDay = GameSession.dayKey()  // the first daily gift is tomorrow's: today has the story and the tour
         slotted.bankStocked = true         // nothing to put in the bank: a new game starts with it
@@ -545,6 +546,21 @@ final class GameSession {
             levels[id] = min(Self.maxSkillLevel, level * 2)
         }
         data.hero.skillLevels = levels
+    }
+
+    /// Every skill point back, once (playtesting 2026-11-01: with the Fighter's, Beast Tamer's and
+    /// Mage's late skills new, "for one time reset my skills so I can choose over again"): what
+    /// you'd learned and raised is cleared, and as points are what your level gives less what's
+    /// spent (`unspentSkillPoints`), every one is yours to spend again.
+    func refundSkillsIfNeeded() {
+        guard data.skillsRefunded != true else { return }
+        data.skillsRefunded = true
+        guard !(data.hero.learnedSkills ?? []).isEmpty || !(data.hero.skillLevels ?? [:]).isEmpty else { return }
+        data.hero.learnedSkills = []
+        data.hero.skillLevels = [:]
+        data.skillOrder = nil
+        post(L("New skills are here: all your skill points are back, to choose your skills again."), .reward)
+        save()
     }
 
     func rescaleLevelsIfNeeded() {

@@ -154,6 +154,9 @@ nonisolated struct SaveData: Codable, Sendable {
     var levelsRescaled: Bool?
     /// Skill levels were doubled when mastering went from 5 steps to 10 (see `rescaleSkillLevelsIfNeeded`).
     var skillLevelsDoubled: Bool?
+    /// Skill points were all given back once, when the classes got their late skills (0.9.43, see
+    /// `refundSkillsIfNeeded`).
+    var skillsRefunded: Bool?
     /// The hats that went with armour were handed out once (see `handOutArmourHatsIfNeeded`).
     var armourHatsGiven: Bool?
     /// Your order of the battle buttons (see `GameSession.battleButtons`).
