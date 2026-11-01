@@ -281,6 +281,13 @@ private struct StatusCluster: View {
                         }
                         .buttonStyle(.plain)
                         .accessibilityLabel(statsLabel)
+                        // Held down: send them on their way (also on their card, `ProfileWindow`).
+                        .contextMenu {
+                            Button(role: .destructive) { session.leaveParty(friend.id) } label: {
+                                Label(L("Remove from party"), systemImage: "person.badge.minus")
+                            }
+                        }
+                        .accessibilityAction(named: L("Remove from party")) { session.leaveParty(friend.id) }
                         if crowded && friend.id == friends.last?.id {
                             Button { setFolded(true) } label: { FoldArrow(up: true) }
                                 .buttonStyle(.plain)
