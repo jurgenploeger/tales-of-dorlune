@@ -333,7 +333,11 @@ final class Crowd {
     /// troublemakers.
     private static func profile(named name: String, levels: ClosedRange<Int>, danger: Bool, climate: MapDef.Climate?) -> Adventurer {
         let content = Content.shared
-        let level = Int.random(in: levels)
+        // Never past the level cap (playtesting 2026-11-01: "How is this one over lvl 200?"): the
+        // ranges reach above the area's monsters, your level or a group leader's, and at the top of
+        // the game that went past 200.
+        let top = min(levels.upperBound, GameSession.levelCap)
+        let level = Int.random(in: min(levels.lowerBound, top)...top)
         let classID = level < content.classChoiceLevel ? "novice" : (content.classes.filter { $0.id != "novice" }.randomElement()?.id ?? "novice")
         let race = content.races.randomElement()?.id ?? "human"
         return Adventurer(name: name, raceID: race, classID: classID, level: level,

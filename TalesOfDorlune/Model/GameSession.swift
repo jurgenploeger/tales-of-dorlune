@@ -577,6 +577,16 @@ final class GameSession {
         save()
     }
 
+    /// Adventurers met before the crowd kept to the level cap could stand past it (level 202 at
+    /// the top of the game): friends saved like that come back down to it.
+    func capFriendLevels() {
+        guard var friends = data.friends, friends.contains(where: { $0.level > Self.levelCap }) else { return }
+        for index in friends.indices where friends[index].level > Self.levelCap {
+            friends[index].level = Self.levelCap
+        }
+        data.friends = friends
+    }
+
     func rescaleLevelsIfNeeded() {
         guard data.levelsRescaled != true else { return }
         data.levelsRescaled = true

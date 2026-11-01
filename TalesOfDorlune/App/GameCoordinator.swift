@@ -120,6 +120,7 @@ final class GameCoordinator {
         session.checkTitles(quietly: true)
         session.markVisited(map.id)
         session.rescaleLevelsIfNeeded()
+        session.capFriendLevels()
         session.rescaleSkillLevelsIfNeeded()
         session.refundSkillsIfNeeded()
         session.announceSkillPointRewardsIfNeeded()
