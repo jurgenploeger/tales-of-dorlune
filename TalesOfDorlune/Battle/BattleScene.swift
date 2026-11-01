@@ -784,7 +784,9 @@ final class BattleScene: SKScene {
     /// (dimmed field, magic circles, an elemental finale) once the skill is mastered, grander again at
     /// every milestone past it (`GameSession.skillRank`: Heroic, Epic, Mythic, Legendary).
     private func castSkill(_ skill: SkillDef, level: Int, from actorID: Int, hits: [Hit]) async {
-        let targets = hits.compactMap { actors[$0.target] }
+        // Each fighter it reaches, once (several blows can land on the same one: Double Combo).
+        var reached: Set<Int> = []
+        let targets = hits.compactMap { hit in reached.insert(hit.target).inserted ? actors[hit.target] : nil }
         let heal = skill.kind == .heal || skill.kind == .revive
         let blessBlue = UIColor(red: 0.6, green: 0.85, blue: 1, alpha: 1)
         // Every skill has a look of its own (`animation` in content/skills.json; the checker keeps
@@ -885,6 +887,8 @@ final class BattleScene: SKScene {
             case "glare":
                 for target in targets { SkillEffects.evilEye(on: target, in: stage) }
                 await pause(0.55)
+            case "lore":
+                await pause(SkillEffects.loreSight(on: targets, in: stage))
             case "mist":
                 SkillEffects.poisonMist(on: targets, in: stage)
                 await pause(0.6)
@@ -1051,6 +1055,54 @@ final class BattleScene: SKScene {
             SkillEffects.lightRain(on: targets, level: level, in: stage)
             await pause(0.4)
             impactAll(hits, heal: true)
+        case "full_heal":
+            var longest: TimeInterval = 0
+            for target in targets { longest = max(longest, SkillEffects.fullBloom(on: target, in: stage)) }
+            await pause(longest)
+            impactAll(hits, heal: true)
+        case "charge":
+            await lunge(actorID, toward: hits.first?.target ?? actorID, speed: 0.75) {
+                for target in targets { SkillEffects.chargeBurst(from: self.actors[actorID], on: target, level: level, in: self.stage) }
+                self.impactAll(hits, heal: false)
+            }
+        case "impact":
+            await lunge(actorID, toward: hits.first?.target ?? actorID) {
+                for target in targets { SkillEffects.impactQuake(on: target, level: level, in: self.stage) }
+                self.shake(strength: 5 + CGFloat(level))
+                self.impactAll(hits, heal: false)
+            }
+        case "rush", "combo":
+            // Several blows, one after another: Rush's each at a foe of its own, Double Combo's both
+            // at the one; the last carries the grand stroke, if it has one.
+            let gap = style == "rush" ? 0.12 : 0.18
+            await lunge(actorID, toward: hits.first?.target ?? actorID) {
+                for (index, hit) in hits.enumerated() {
+                    self.stage.run(.sequence([.wait(forDuration: gap * Double(index)), .run { [weak self] in
+                        guard let self, let target = self.actors[hit.target] else { return }
+                        if style == "rush" {
+                            SkillEffects.rushStroke(on: target, index: index, level: level, in: self.stage)
+                        } else {
+                            SkillEffects.comboStroke(on: target, index: index, level: level, in: self.stage)
+                        }
+                        if index == hits.count - 1 { self.impactAll([hit], heal: false) } else { self.impact(hit, heal: false) }
+                    }]))
+                }
+            }
+            await pause(gap * Double(max(0, hits.count - 1)))
+        case "whip":
+            await pause(SkillEffects.whipLash(from: actors[actorID], on: targets, level: level, in: stage))
+            impactAll(hits, heal: false)
+        case "beast_impact":
+            // The companion bounds in alongside its tamer, and the paw comes down as they land.
+            let target = hits.first?.target ?? actorID
+            if let companion = controller.combatants.first(where: { $0.ownerID == actorID && $0.isAlive }) {
+                Task { await self.lunge(companion.id, toward: target) {} }
+            }
+            await lunge(actorID, toward: target) {
+                for foe in targets { SkillEffects.beastPaw(on: foe, level: level, in: self.stage) }
+                self.shake(strength: 6 + CGFloat(level))
+                self.impactAll(hits, heal: false)
+            }
         default:
             for target in targets { SkillEffects.sparkles(on: target, color: color, level: level, in: stage) }
             await pause(0.3)
@@ -1415,7 +1467,9 @@ final class BattleScene: SKScene {
         }
         let foes = controller.enemiesOnField.map(\.id)
         let one = foes.isEmpty ? [] : [foes[min(max(target ?? 0, 0), foes.count - 1)]]
-        let targets = skill.target == .allEnemies ? foes : one
+        // A heal or a buff goes to the hero (Full Heal, Super Boost), anything else at the foes.
+        let targets = skill.target == .ally || skill.target == .allAllies ? [hero.id]
+            : skill.target == .allEnemies ? foes : one
         let hits = controller.expectedHitsForDebug(skill, level: level, on: targets)
         if let stopAt {
             speed = 0.03

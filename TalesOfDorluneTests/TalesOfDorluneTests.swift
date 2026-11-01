@@ -2867,6 +2867,58 @@ struct RulesTests {
         #expect(engine.combatant(2)?.raised[.defense] != nil)
     }
 
+    /// The Fighter's and Beast Tamer's later skills (playtesting 2026-11-01): Double Combo's two blows
+    /// on one foe, Rush's three at foes picked at random, Dodge Whip's speed for its caster, Full
+    /// Heal all the way up, and God of Beast Impact with the companion's ATK behind it.
+    @Test func laterSkillsLandSeveralBlowsHealFullyAndBringTheCompanion() throws {
+        let content = Content.shared
+        let jelly = try #require(content.monster("jelly"))
+        let ids = ["double_combo", "rush", "dodge_whip", "full_heal", "beast_impact", "charge", "impact", "beast_lore", "super_boost"]
+        for id in ids { #expect(content.skill(id) != nil) }
+        let stats = Stats(hp: 500, mp: 900, attack: 30, defense: 40, magic: 20, speed: 50)
+        var hero = Combatant(id: 0, side: .party, source: .hero, name: "Hero", art: "player_walk", level: 150, element: .neutral,
+                             stats: stats, hp: 100, mp: 900, skills: ids, captureRate: 0)
+        hero.skillLevels = Dictionary(uniqueKeysWithValues: ids.map { ($0, 1) })
+        var pet = Combatant(id: 1, side: .party, source: .pet(UUID()), name: "Pet", art: jelly.art, level: 150, element: jelly.element,
+                            stats: Stats(hp: 500, mp: 0, attack: 300, defense: 40, magic: 0, speed: 1), hp: 500, mp: 0,
+                            skills: [], captureRate: 0)
+        pet.ownerID = 0
+        let foeStats = jelly.stats(at: 1)
+        let foes = [10, 11].map { id in
+            Combatant(id: id, side: .enemies, source: .wild("jelly"), name: "Jelly", art: jelly.art, level: 1, element: jelly.element,
+                      stats: foeStats, hp: 99_999, mp: 0, skills: [], captureRate: 0)
+        }
+        let engine = BattleEngine(party: [hero, pet], enemies: foes, content: content, seed: 5)
+        func heroSkill(_ id: String, at target: Int) -> (hits: [Hit], events: [BattleEvent]) {
+            let events = engine.resolveRound(heroAction: .skill(id, target: target), orders: [1: .defend])
+            for event in events {
+                if case .skill(0, let skill, _, let hits) = event, skill.id == id { return (hits, events) }
+            }
+            return ([], events)
+        }
+        // Full Heal: from 100 HP back to all 500.
+        let healed = heroSkill("full_heal", at: 0).hits
+        #expect(healed.map(\.amount) == [400])
+        // Double Combo: two blows, both on the foe chosen.
+        let combo = heroSkill("double_combo", at: 10).hits
+        #expect(combo.count == 2 && combo.allSatisfy { $0.target == 10 })
+        // Rush: three blows, the first at the foe chosen, the rest at any of them.
+        let rush = heroSkill("rush", at: 11).hits
+        #expect(rush.count == 3 && rush.first?.target == 11 && rush.allSatisfy { [10, 11].contains($0.target) })
+        // Dodge Whip: one blow, and the caster's SPD up 30%.
+        let whip = heroSkill("dodge_whip", at: 10)
+        #expect(whip.hits.count == 1)
+        #expect(whip.events.contains { event in
+            if case .statsChanged(0, let changes, _) = event { return changes.contains(StatChange(stat: .speed, amount: 0.3)) }
+            return false
+        })
+        // God of Beast Impact: the companion's ATK (ten times its tamer's) behind the blow, far past
+        // anything the tamer's own could do, even a critical hit at the top of its roll.
+        let beast = heroSkill("beast_impact", at: 10).hits
+        let alone = 30 * 2.2 * 1.1 * 1.5
+        #expect(beast.count == 1 && Double(beast[0].amount) > alone)
+    }
+
     @Test func monstersPowerThemselvesUp() throws {
         let content = Content.shared
         let wolf = try #require(content.monster("werewolf"))

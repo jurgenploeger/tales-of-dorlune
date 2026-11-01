@@ -51,6 +51,15 @@ extension SkillEffects {
         case "gust": .wind
         case "spur": .amber
         case "roar": .sound
+        case "charge": .charge
+        case "rush": .rush
+        case "impact": .quake
+        case "combo": .combo
+        case "whip": .lash
+        case "lore": .lore
+        case "super_boost": .surge
+        case "full_heal": .bloom
+        case "beast_impact": .beast
         default: nil
         }
         return light?.main
@@ -65,7 +74,9 @@ extension SkillEffects {
         case "vine": "leaves"
         case "gold_spin", "gust": "whirlwind"
         case "flash": "holy"
-        case "first_aid", "heart", "paw", "rain": "heal"
+        case "first_aid", "heart", "paw", "rain", "full_heal": "heal"
+        case "beast_impact", "lore": "holy"
+        case "impact": "stone"
         default: style
         }
     }
@@ -990,6 +1001,9 @@ extension SkillEffects {
         case "rage":
             for target in targets { rage(on: target, in: parent) }
             return 0.4
+        case "super_boost":
+            for target in targets { superBoost(on: target, in: parent) }
+            return 0.45
         default:
             // Bless: a pillar of light, and a shield.
             for target in targets {

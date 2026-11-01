@@ -8750,6 +8750,42 @@
       "id": "skill_evil_eye",
       "kind": "icon"
     },
+    {
+      "id": "skill_charge",
+      "kind": "icon"
+    },
+    {
+      "id": "skill_rush",
+      "kind": "icon"
+    },
+    {
+      "id": "skill_impact",
+      "kind": "icon"
+    },
+    {
+      "id": "skill_double_combo",
+      "kind": "icon"
+    },
+    {
+      "id": "skill_dodge_whip",
+      "kind": "icon"
+    },
+    {
+      "id": "skill_beast_lore",
+      "kind": "icon"
+    },
+    {
+      "id": "skill_super_boost",
+      "kind": "icon"
+    },
+    {
+      "id": "skill_full_heal",
+      "kind": "icon"
+    },
+    {
+      "id": "skill_beast_impact",
+      "kind": "icon"
+    },
 {
       "id": "item_crimson_ranger_cloak",
       "kind": "item",

@@ -505,11 +505,25 @@ final class BattleEngine {
             // keep growing past it.
             let boost = Self.skillBoost(level)
             let chosen = targets(for: skill, actor: actor, preferring: targetID)
-            var hits = chosen.map { target -> Hit in
+            // Its blows, in the order they land: one at each target, or several (`hits`), all at the
+            // chosen one or each at a foe picked at random (`scatter`).
+            var struck = chosen
+            if let count = skill.hits, count > 1, skill.kind.isAttack, let first = chosen.first {
+                struck = (0..<count).map { blow in
+                    blow == 0 || skill.scatter != true ? first : alive(on: first.side).randomElement(using: &rng) ?? first
+                }
+            }
+            var hits = struck.map { target -> Hit in
                 switch skill.kind {
-                case .physical: return physicalHit(from: actor, to: target, power: skill.power * boost)
+                case .physical:
+                    return physicalHit(from: actor, to: target, power: skill.power * boost,
+                                       pierce: skill.pierce ?? 0, helper: skill.withCompanion == true ? companion(of: actor) : nil)
                 case .magic: return magicHit(from: actor, to: target, skill: skill, boost: boost)
                 case .heal:
+                    // Full Heal: all the way back up.
+                    if skill.full == true {
+                        return Hit(target: target.id, amount: max(0, target.stats.hp - target.hp), effectiveness: 1, critical: false)
+                    }
                     var amount = Int(Double(healAmount(actor, skill)) * boost)
                     // A monster's mending (wild or a companion's) is held to a share of the HP it
                     // goes to, so it never undoes a fight or makes a companion a healer.
@@ -532,6 +546,11 @@ final class BattleEngine {
                 }
             }
             events.append(.skill(actor: actor.id, skill: skill, level: level, hits: hits))
+            // An attack that also raises the caster's own stats (Dodge Whip's speed), from the start.
+            if skill.kind.isAttack, skill.raises != nil {
+                changeStats(of: actor.id, Self.statChanges(of: skill, level: level),
+                            rounds: (skill.rounds ?? Self.buffLength) + 1, events: &events)
+            }
             for hit in hits {
                 switch skill.kind {
                 case .heal, .revive:
@@ -784,7 +803,7 @@ final class BattleEngine {
                 }
             case .heal:
                 // Topping up someone hurt but not yet in trouble (that's handled first).
-                let amount = Double(healAmount(fighter, skill)) * boost
+                let amount = skill.full == true ? Double.infinity : Double(healAmount(fighter, skill)) * boost
                 func value(for friend: Combatant) -> Double {
                     guard friend.hpFraction < 0.7 else { return 0 }
                     return min(amount, Double(friend.stats.hp - friend.hp)) * (0.6 + (0.7 - friend.hpFraction))
@@ -897,6 +916,11 @@ final class BattleEngine {
         return alive(on: actor.side.opposite).randomElement(using: &rng)
     }
 
+    /// The companion fighting beside `actor`, if it's standing.
+    private func companion(of actor: Combatant) -> Combatant? {
+        combatants.first { $0.ownerID == actor.id && $0.isAlive }
+    }
+
     private func ally(of actor: Combatant, preferring id: Int) -> Combatant? {
         if let preferred = combatant(id), preferred.isAlive, preferred.side == actor.side { return preferred }
         return alive(on: actor.side).min { $0.hpFraction < $1.hpFraction }
@@ -936,7 +960,11 @@ final class BattleEngine {
             damage = attacker.magic * skill.power * Self.skillBoost(attacker.skillLevel(skill.id)) * effectiveness * k / (k + defender.defense / 2)
         } else {
             let power = skill.map { $0.power * Self.skillBoost(attacker.skillLevel($0.id)) } ?? 1
-            damage = attacker.attack * power * k / (k + defender.defense)
+            let attack = attacker.attack + (skill?.withCompanion == true ? companion(of: attacker)?.attack ?? 0 : 0)
+            let defense = defender.defense * (1 - min(1, max(0, skill?.pierce ?? 0)))
+            damage = attack * power * k / (k + defense)
+            // Several blows: all of them on this foe (a scattered one's spread, so about the same in all).
+            if let hits = skill?.hits, hits > 1 { damage *= Double(hits) }
         }
         if defender.isDefending { damage *= 0.5 }
         return max(1, damage)
@@ -948,9 +976,13 @@ final class BattleEngine {
         return attacker.magic * 1.5 * k / (k + defender.defense / 2)
     }
 
-    private func physicalHit(from attacker: Combatant, to defender: Combatant, power: Double) -> Hit {
+    /// `pierce`: the share of DEF it goes through; `helper`: a companion striking alongside, its
+    /// ATK added to the attacker's.
+    private func physicalHit(from attacker: Combatant, to defender: Combatant, power: Double,
+                             pierce: Double = 0, helper: Combatant? = nil) -> Hit {
         let k = armorConstant(for: defender)
-        var damage = attacker.attack * power * k / (k + defender.defense)
+        let attack = attacker.attack + (helper?.attack ?? 0)
+        var damage = attack * power * k / (k + defender.defense * (1 - min(1, max(0, pierce))))
         damage *= Double.random(in: 0.9...1.1, using: &rng)
         let critical = Double.random(in: 0..<1, using: &rng) < 0.08
         if critical { damage *= 1.5 }
@@ -1103,9 +1135,20 @@ final class BattleEngine {
     func expectedHitsForDebug(_ skill: SkillDef, level: Int, on targets: [Int]) -> [Hit] {
         guard var caster = hero else { return [] }
         caster.skillLevels[skill.id] = level
-        return targets.compactMap { combatant($0) }.map { foe in
+        let reached = targets.compactMap { combatant($0) }
+        // Several blows (`hits`): each its share, a scattered one's round the foes in turn.
+        let count = max(1, skill.hits ?? 1)
+        let around = alive(on: reached.first?.side ?? .enemies)
+        let struck = count > 1 ? (0..<count).compactMap { blow in
+            skill.scatter == true && !around.isEmpty ? Optional(around[blow % around.count]) : reached.first
+        } : reached
+        return struck.map { foe in
+            if skill.kind == .heal || skill.kind == .buff {
+                let amount = skill.full == true ? max(0, foe.stats.hp - foe.hp) : skill.kind == .heal ? healAmount(caster, skill) : 0
+                return Hit(target: foe.id, amount: amount, effectiveness: 1, critical: false)
+            }
             let effectiveness = skill.kind == .magic ? (skill.element ?? .neutral).multiplier(against: foe.element) : 1
-            let amount = Int(expectedDamage(from: caster, to: foe, skill: skill).rounded())
+            let amount = Int((expectedDamage(from: caster, to: foe, skill: skill) / Double(count)).rounded())
             return Hit(target: foe.id, amount: amount, effectiveness: effectiveness, critical: false)
         }
     }

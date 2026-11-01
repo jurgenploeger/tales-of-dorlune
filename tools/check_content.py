@@ -148,8 +148,29 @@ for skill in skills.values():
         rounds = skill.get("rounds", 3)
         check(isinstance(rounds, int) and 1 <= rounds <= 6, f"{where} → rounds must be 1 to 6")
         check(skill["target"] in ("ally", "allAllies"), f"{where} → a buff is for your own side (ally or allAllies)")
+    elif skill["kind"] in ("physical", "magic") and "raises" in skill:
+        # An attack that also raises its caster's own stats (Dodge Whip's speed), as a buff would.
+        raises = skill["raises"]
+        check(isinstance(raises, dict) and raises and set(raises) <= BATTLE_STATS
+              and all(isinstance(v, (int, float)) and 0 < v <= 1 for v in raises.values()),
+              f"{where} → raises must name some of {sorted(BATTLE_STATS)}, each above 0 and at most 1")
+        check(not {"lowers", "rounds"} & set(skill), f"{where} → an attack raises its caster's stats, nothing more")
     else:
-        check(not {"raises", "lowers", "rounds"} & set(skill), f"{where} → only buffs have raises, lowers or rounds")
+        check(not {"raises", "lowers", "rounds"} & set(skill), f"{where} → only buffs (and an attack, for its caster) have raises, lowers or rounds")
+    # Several blows (Rush, Double Combo), a strike through the guard (Charge), a companion joining in
+    # (God of Beast Impact): attacks only; Full Heal: heals only (BattleEngine.perform).
+    if "hits" in skill:
+        check(skill["kind"] in ("physical", "magic") and isinstance(skill["hits"], int) and 2 <= skill["hits"] <= 6
+              and skill["target"] == "enemy", f"{where} → hits must be 2 to 6, on an attack at one foe")
+    if "scatter" in skill:
+        check(skill["scatter"] is True and "hits" in skill, f"{where} → scatter is for an attack of several hits")
+    if "pierce" in skill:
+        check(skill["kind"] == "physical" and isinstance(skill["pierce"], (int, float)) and 0 < skill["pierce"] < 1,
+              f"{where} → pierce must be between 0 and 1, on a physical attack")
+    if "withCompanion" in skill:
+        check(skill["withCompanion"] is True and skill["kind"] == "physical", f"{where} → withCompanion is for a physical attack")
+    if "full" in skill:
+        check(skill["full"] is True and skill["kind"] == "heal", f"{where} → full is for a heal")
 
 # Every skill used in battle looks like no other (a playtest rule): its own `animation`, one the
 # scene knows (BattleScene.castSkill and SkillEffects in TalesOfDorlune/Battle).
@@ -158,6 +179,7 @@ ANIMATIONS = {
     "wild", "roar", "needles", "web", "bounce", "bite", "shadow_bite", "venom_bite", "gold_spin", "gust", "flash",
     "curse", "glare", "poison", "mist", "first_aid", "heart", "paw", "rain", "revive",
     "bless", "shield", "glow", "ward", "spur", "boost", "rage",
+    "charge", "rush", "impact", "combo", "whip", "lore", "super_boost", "full_heal", "beast_impact",
 }
 seen = {}
 for skill in skills.values():
