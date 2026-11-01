@@ -67,6 +67,8 @@ enum SkillEffects {
         orb.position = start
         let core = glowSprite(.white, size: CGSize(width: diameter * 0.45, height: diameter * 0.45))
         orb.addChild(core)
+        let travel = SKAction.move(to: end, duration: 0.3)
+        travel.timingMode = .easeIn
         if trail {
             let emitter = SKEmitterNode()
             emitter.particleTexture = SoftTextures.glow
@@ -81,11 +83,13 @@ enum SkillEffects {
             emitter.particleScaleSpeed = -0.8
             emitter.particleAlphaSpeed = -2.5
             emitter.targetNode = parent
-            orb.addChild(emitter)
+            // Beside the orb, not on it, and outliving its sparks (`fly`): an emitter taken away
+            // while its sparks lived on the stage crashed SpriteKit.
+            let tail = SKNode()
+            tail.addChild(emitter)
+            fly(tail, from: start, flight: travel, z: orb.zPosition, in: parent)
         }
         parent.addChild(orb)
-        let travel = SKAction.move(to: end, duration: 0.3)
-        travel.timingMode = .easeIn
         orb.run(.sequence([travel, .removeFromParent()]))
         return 0.3
     }
