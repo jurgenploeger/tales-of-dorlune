@@ -46,6 +46,9 @@ nonisolated enum GameSettings {
     static var autoBattle: Bool { value(autoBattleKey, fallback: false) }
     static var turnTimer: Double { value(turnTimerKey, fallback: 10) }
     static var appearance: String { value(appearanceKey, fallback: "system") }
+    /// Whether the game shows in Dark Mode now (the phone's or Settings → Appearance), kept by
+    /// `RootView` for what SpriteKit draws (an encounter's flash, `SKScene.encounterFlashPeak`).
+    nonisolated(unsafe) static var looksDark = false
 
     private static func value<T>(_ key: String, fallback: T) -> T {
         UserDefaults.standard.object(forKey: key) as? T ?? fallback
