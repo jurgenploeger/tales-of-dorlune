@@ -545,10 +545,10 @@ struct ItemInfoCard: View {
             lines.append(L("Up for trade: {count} at {gold}g each", ["count": ask.count, "gold": ask.price]))
         }
         if item.price > 0 {
-            // No shop sells a quest treasure, but they'll buy one.
-            lines.append(session.content.isTreasure(item.id)
-                         ? L("Shops pay {gold}g for it", ["gold": GameSession.sellPrice(of: item)])
-                         : L("Shops sell it for {price}g and pay {gold}g", ["price": item.price, "gold": GameSession.sellPrice(of: item)]))
+            // What no shop stocks (a quest treasure, a monster's drop) shops only buy.
+            lines.append(session.content.isStocked(item.id)
+                         ? L("Shops sell it for {price}g and pay {gold}g", ["price": item.price, "gold": GameSession.sellPrice(of: item)])
+                         : L("Shops pay {gold}g for it", ["gold": GameSession.sellPrice(of: item)]))
         }
         return VStack(alignment: .leading, spacing: 3) {
             ForEach(lines, id: \.self) { line in
