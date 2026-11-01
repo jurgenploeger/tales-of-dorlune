@@ -1467,7 +1467,9 @@ final class BattleScene: SKScene {
         }
         let foes = controller.enemiesOnField.map(\.id)
         let one = foes.isEmpty ? [] : [foes[min(max(target ?? 0, 0), foes.count - 1)]]
-        let targets = skill.target == .allEnemies ? foes : one
+        // A heal or a buff goes to the hero (Full Heal, Super Boost), anything else at the foes.
+        let targets = skill.target == .ally || skill.target == .allAllies ? [hero.id]
+            : skill.target == .allEnemies ? foes : one
         let hits = controller.expectedHitsForDebug(skill, level: level, on: targets)
         if let stopAt {
             speed = 0.03

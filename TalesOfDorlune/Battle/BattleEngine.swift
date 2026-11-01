@@ -1135,9 +1135,20 @@ final class BattleEngine {
     func expectedHitsForDebug(_ skill: SkillDef, level: Int, on targets: [Int]) -> [Hit] {
         guard var caster = hero else { return [] }
         caster.skillLevels[skill.id] = level
-        return targets.compactMap { combatant($0) }.map { foe in
+        let reached = targets.compactMap { combatant($0) }
+        // Several blows (`hits`): each its share, a scattered one's round the foes in turn.
+        let count = max(1, skill.hits ?? 1)
+        let around = alive(on: reached.first?.side ?? .enemies)
+        let struck = count > 1 ? (0..<count).compactMap { blow in
+            skill.scatter == true && !around.isEmpty ? Optional(around[blow % around.count]) : reached.first
+        } : reached
+        return struck.map { foe in
+            if skill.kind == .heal || skill.kind == .buff {
+                let amount = skill.full == true ? max(0, foe.stats.hp - foe.hp) : skill.kind == .heal ? healAmount(caster, skill) : 0
+                return Hit(target: foe.id, amount: amount, effectiveness: 1, critical: false)
+            }
             let effectiveness = skill.kind == .magic ? (skill.element ?? .neutral).multiplier(against: foe.element) : 1
-            let amount = Int(expectedDamage(from: caster, to: foe, skill: skill).rounded())
+            let amount = Int((expectedDamage(from: caster, to: foe, skill: skill) / Double(count)).rounded())
             return Hit(target: foe.id, amount: amount, effectiveness: effectiveness, critical: false)
         }
     }

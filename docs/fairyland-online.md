@@ -852,7 +852,15 @@ No advanced classes.
 - **Trader:** Dodge, Hide, Invisible, bribery and collection.
 
 **Us:**
-- 20 hero skills.
+- 29 hero skills. Since 0.9.37 (playtesting 2026-11-01: the Fighter had 5 and the Beast Tamer 6, their last at
+  level 40, the Mage 13) both learn more into the late game, named after FO's Warrior, Beast Master and pet
+  skills with our own effects (FO's aren't in any source reachable from a cloud session): the Fighter
+  Berserk (50, the monsters' own), Charge (65, through 40% of DEF), Rush (80, three blows at foes picked at
+  random), Impact (100, DEF −20%) and Double Combo (120, two blows on one foe); the Beast Tamer Boost (50),
+  Dodge Whip (65, a lash that raises your SPD), Beast Lore (80, every foe's DEF −15%), Super Boost (100,
+  ATK +40%), Full Heal (120, an ally back to full HP) and God of Beast Impact (150, your companion's ATK
+  joined to yours). Skills.json `hits`, `scatter`, `pierce`, `full` and `withCompanion` (BattleEngine), and
+  an attack's `raises` for its caster.
 - Skill levels (ours): a skill point a level, one to learn a skill and one for each step up; ten steps to
   Mastered (×1.8 damage, ×1 when learned, a point of MP a step). Since 0.7.72 your hero's skills keep growing
   past it, to level 50 (playtesting 2026-10-23: "you should be able to continuously improve these skills,
