@@ -4139,6 +4139,22 @@
           "hi_ether"
         ]
       }
+    },
+    {
+      "id": "starfall_waystone",
+      "title": "The Waystone Under the Stars",
+      "giver": "pip_lamplighter",
+      "description": "There's a waystone up here in the meadow, and the Lantern Sprites keep stealing its glow for their lanterns. It's gone all dim and sleepy. Catch 10 of them and give the light back, and it'll wake up and take you anywhere you've been, no boat needed.",
+      "minLevel": 130,
+      "objective": {
+        "type": "defeat",
+        "target": "lantern_sprite",
+        "count": 10
+      },
+      "reward": {
+        "gold": 1940,
+        "exp": 45000
+      }
     }
   ]
 }

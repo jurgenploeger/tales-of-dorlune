@@ -370,6 +370,9 @@ lair_morvane | newgame,level=130,map=secret_plain,at=-13_34,weather=clear,hour=1
 # The waystone (tools/prop_art.py, 0.9.6): asleep, faded, then woken by its quest.
 waystone_asleep | newgame,level=20,map=twilight_woods,at=15_5,weather=clear,hour=12 | 8
 waystone_awake  | newgame,level=20,map=twilight_woods,at=15_5,done=dusk_waystone,weather=clear,hour=12 | 8
+# Starfall Isle's, in the north meadow by Pip the Lamplighter (playtesting 2026-11-01): the island's
+# way home with no boat once its quest wakes it.
+waystone_starfall | newgame,level=140,map=starfall_isle,at=-6_-24,done=starfall_waystone,weather=clear,hour=12 | 10
 # A waystone's light taking you (0.9.26, WaystoneMagic): the ring of runes, the stone flaring and motes
 # rising, then the pillar as you turn to light.
 waystone_magic   | newgame,level=20,map=twilight_woods,at=15_5,done=dusk_waystone,weather=clear,hour=12,waystone=0.8 | 8
