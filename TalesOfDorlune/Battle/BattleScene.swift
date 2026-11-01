@@ -755,6 +755,8 @@ final class BattleScene: SKScene {
             if let caster = actors[actorID] {
                 caster.sprite.flash(violet)
                 SkillEffects.magicCircle(at: caster.position, color: violet, radius: 30, duration: 0.25, in: stage)
+                // The staff pointed at the foe as the bolt leaves it.
+                caster.thrust(reach: 0.15, hold: 0.3)
             }
             await pause(0.15)
             await SkillEffects.projectile(from: actors[actorID]?.center, to: target?.center, color: violet, level: 1, trail: true, in: stage)
@@ -1076,6 +1078,8 @@ final class BattleScene: SKScene {
         }
         let offset = target.home - actor.home
         let step = offset.normalized * min(offset.length * 0.6, 150)
+        // The weapon drawn back as they set off, brought down as they arrive.
+        actor.swing(windUp: 0.09 * speed, strike: 0.07 * speed)
         let out = SKAction.move(to: actor.home + step, duration: 0.16 * speed)
         out.timingMode = .easeIn
         await actor.run(out)
@@ -1615,6 +1619,71 @@ final class BattleActor: SKNode {
             sprite.addChild(node)
             GearArt.pose(node, facing: facing, height: sprite.size.height)
         }
+    }
+
+    /// A blow with the weapon in hand (playtesting 2026-11-01: "their arm with weapon should move so
+    /// it's more realistic they attack"): drawn back and up over `windUp`, brought down through the
+    /// blow over `strike` (so it lands when the hit does), then back to rest, the body leaning into
+    /// it. The arm is drawn into the body's sprite, so it's the weapon that moves, turning about the
+    /// hand (its anchor is the grip, `GearArt.weapon`) as the hand rises and reaches forward. Nothing
+    /// for one without a weapon (a monster, a companion).
+    func swing(windUp: TimeInterval, strike: TimeInterval) {
+        guard let held = weaponAtRest() else { return }
+        let (weapon, way, rest, unit) = held
+        let back = SKAction.group([.rotate(toAngle: 0.75 * way, duration: windUp),
+                                   .move(to: rest + CGVector(dx: -1.5 * unit * way, dy: 2.5 * unit), duration: windUp)])
+        back.timingMode = .easeOut
+        let blow = SKAction.group([.rotate(toAngle: -1.25 * way, duration: strike),
+                                   .move(to: rest + CGVector(dx: 3 * unit * way, dy: -unit), duration: strike)])
+        blow.timingMode = .easeIn
+        weapon.run(.sequence([back, blow, .wait(forDuration: 0.08), settle(to: rest)]), withKey: "blow")
+        lean(back: 0.04 * way, into: -0.09 * way, windUp: windUp, strike: strike)
+    }
+
+    /// A staff (or any weapon) pointed at the foe as a bolt flies (a mage's plain attack): raised a
+    /// little, thrust forward over `reach`, held for `hold`, then lowered.
+    func thrust(reach: TimeInterval, hold: TimeInterval) {
+        guard let held = weaponAtRest() else { return }
+        let (weapon, way, rest, unit) = held
+        let raise = SKAction.group([.rotate(toAngle: 0.3 * way, duration: reach * 0.4),
+                                    .move(to: rest + CGVector(dx: 0, dy: 2 * unit), duration: reach * 0.4)])
+        raise.timingMode = .easeOut
+        let point = SKAction.group([.rotate(toAngle: -0.8 * way, duration: reach * 0.6),
+                                    .move(to: rest + CGVector(dx: 3 * unit * way, dy: 2 * unit), duration: reach * 0.6)])
+        point.timingMode = .easeIn
+        weapon.run(.sequence([raise, point, .wait(forDuration: hold), settle(to: rest)]), withKey: "blow")
+        lean(back: 0.02 * way, into: -0.05 * way, windUp: reach * 0.4, strike: reach * 0.6, hold: hold)
+    }
+
+    /// The weapon in hand at rest (a blow cut short put back first), which way is forward for it
+    /// (mirrored facing left or away: `GearArt.pose`), where it rests, and a pixel of the walk sheet.
+    private func weaponAtRest() -> (SKSpriteNode, CGFloat, CGPoint, CGFloat)? {
+        guard let weapon = sprite.childNode(withName: "weapon") as? SKSpriteNode else { return nil }
+        weapon.removeAction(forKey: "blow")
+        sprite.removeAction(forKey: "lean")
+        GearArt.pose(weapon, facing: facing, height: sprite.size.height)
+        weapon.zRotation = 0
+        sprite.zRotation = 0
+        // A turn's sense flips with the mirror (SpriteKit scales before it turns).
+        return (weapon, weapon.xScale < 0 ? -1 : 1, weapon.position, sprite.size.height / 48)
+    }
+
+    private func settle(to rest: CGPoint) -> SKAction {
+        let settle = SKAction.group([.rotate(toAngle: 0, duration: 0.2), .move(to: rest, duration: 0.2)])
+        settle.timingMode = .easeInEaseOut
+        return settle
+    }
+
+    /// The body leaning back as the weapon's drawn back, into the blow, then upright, turning about
+    /// its feet (the sprite's anchor).
+    private func lean(back: CGFloat, into: CGFloat, windUp: TimeInterval, strike: TimeInterval, hold: TimeInterval = 0.08) {
+        let leanBack = SKAction.rotate(toAngle: back, duration: windUp)
+        leanBack.timingMode = .easeOut
+        let leanIn = SKAction.rotate(toAngle: into, duration: strike)
+        leanIn.timingMode = .easeIn
+        let upright = SKAction.rotate(toAngle: 0, duration: 0.22)
+        upright.timingMode = .easeInEaseOut
+        sprite.run(.sequence([leanBack, leanIn, .wait(forDuration: hold), upright]), withKey: "lean")
     }
 
     func setHealth(_ fraction: Double, mana: Double) {

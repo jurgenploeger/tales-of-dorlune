@@ -672,6 +672,11 @@ fx_flare_fire   | newgame,level=60,class=mage,map=sunny_meadow,battle=3,cast=fir
 fx_flare_leaves | newgame,level=60,class=mage,map=sunny_meadow,battle=3,cast=leaf_storm:9,fxstop=1.52   | 74
 fx_flare_strike | newgame,level=60,class=fighter,map=sunny_meadow,battle=3,cast=power_strike:9,fxstop=0.8 | 50
 fx_flare_whirl  | newgame,level=60,class=fighter,map=sunny_meadow,battle=3,cast=whirlwind:9,fxstop=1.26  | 66
+# The blow itself (BattleActor.swing, playtesting 2026-11-01): the sword drawn back and up as the
+# hero sets off, then brought down through the blow as they arrive, the body leaning into it.
+swing_back  | newgame,level=60,class=fighter,equip=steel_sword,map=sunny_meadow,battle=3,cast=power_strike:9,fxstop=0.66 | 50
+swing_blow  | newgame,level=60,class=fighter,equip=steel_sword,map=sunny_meadow,battle=3,cast=power_strike:9,fxstop=0.73 | 50
+swing_after | newgame,level=60,class=fighter,equip=steel_sword,map=sunny_meadow,battle=3,cast=power_strike:9,fxstop=0.78 | 50
 # The top skills' grand strokes (skills.json `grand`): Power Strike's and Whirlwind's crescent of light
 # sweeping through the foes as the blow lands, Leaf Storm's pillars falling onto them, over the rune
 # circles a skill that reaches a whole side opens under everyone it will reach.
