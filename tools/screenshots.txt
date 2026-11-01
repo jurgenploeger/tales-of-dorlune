@@ -346,6 +346,8 @@ bank_grid_land   | newgame,bank=meadow_banker,bag=potion+seal_stone+ether+iron_a
 # folded and out; a piece of gear's Compare row, folded (equip_detail) and open; how many to buy or
 # sell at a shop; Settings' Advanced tab, in the game and on the title screen.
 quests_sort      | newgame,menu=quests,sortopen | 8
+# A Hard quest (a boss's) shows its skill point in its rewards (0.9.46).
+quest_skill_point | newgame,level=25,taken=grumpy_oak,menu=quests | 8
 bank_card        | newgame,bank=meadow_banker,bag=potion+potion+potion+seal_stone,gold=500,inspect=potion | 8
 equip_compare    | newgame,class=fighter,level=16,equip=leather_vest,bag=cloth_tunic+chain_mail+silk_robe+dragon_mail,menu=character,change=armor,inspect=chain_mail,compare | 8
 shop_buy_many    | newgame,npc=shop,gold=500,deal=potion | 8
