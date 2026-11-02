@@ -585,7 +585,7 @@ side wall going back, and a hard footing line on nothing. RD's:
   theatre and shop front are drawn as boxes too. `building_art.by_hand` draws a building with `Build.bend`:
   every edge cut every couple of pixels and moved by one smooth field of offsets (0.6 pixels in waves
   about 20 long since 2026-11-02, a little more where a drawing needs it for `straight_edges`; the same
-  wherever two faces share an edge, so they still meet).
+  wherever two faces share an edge, so they still meet). Roofs and pillars keep to the ruler (`ruled`).
 - **Big rounded stuff.** Stones are lumps 4 to 8 pixels long, each lit on its upper left and dark on its
   lower right, corners worn into the joints, every other one a pixel up so no joint runs across the face
   (`rubble`); shingles are rounded tongues that curl at their foot (`shingles`, 8 × 5). A fine even
@@ -778,6 +778,13 @@ in a loose arc, its end trailing off thin along the bottom; never coiled.
   5. Animation: walk cycles stay RD's for now (`sprite-acceptance.md`).
 
 ## Learned
+
+- **2026-11-02 (roofs and pillars):** "Roof should still have basic geometry, same for pillars" (the
+  user): the bend is for walls and stone. Roofs, spires, domes, cornices, columns and pilasters keep to
+  the ruler (`Build.ruled()`, and `@ruled` on `gable`, `gable_roof`, `eaves_roof`, `dome`,
+  `facet_spire`). A building whose outline is mostly roof and columns then fails `straight_edges`
+  however hard its walls bend (the Moonwell, its cornices and pilasters its outline): break the line by
+  design, as a builder would (finials along its cornices), not by bending the roof.
 
 - **2026-11-02 (crystals):** The crystal cottage's crystals, each two flat triangles (one light, one
   dark), "look too flat" (the user). A crystal reads as a cut stone by its facets: a prism of three faces
