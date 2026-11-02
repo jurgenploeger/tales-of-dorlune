@@ -4,16 +4,20 @@ import SpriteKit
 /// raised walls you pass in front of and disappear behind. Each cell
 /// near the floor gets a depth-sorted block: a shaded stone top and lit faces where the rock
 /// drops to the floor. The outline runs through the middles of the cells (marching squares),
-/// so corners are cut at 45° instead of stepping in sharp right angles: on screen, walls that
-/// would zig-zag run straight. Rock deeper in is one flat raised layer underneath. Walls stay
-/// solid: whoever walks behind one is hidden, and their name tag shows where they are.
+/// so corners are cut across instead of stepping in sharp right angles, each cut broken into a
+/// few angled facets that differ from cell to cell, as rock splits: real caves aren't carved
+/// round (playtesting 2026-11-02: "The caves now have a bit too much rounded walls, that's not
+/// how real caves are carved"; every corner had been a quarter circle). Rock deeper in is one
+/// flat raised layer underneath. Walls stay solid: whoever walks behind one is hidden, and their
+/// name tag shows where they are.
 final class CaveWalls {
     /// Faces, edges and soft shadows (in points) around each block's texture.
     private static let pad: CGFloat = 10
     /// The tops of the walls are in shadow, so they stand apart from the lit floor.
     private static let topShade: CGFloat = 0.45
-    /// Straight pieces per rounded corner.
-    private static let arcSteps = 6
+    /// How many ways each corner can break (`facets`), picked by the cell, so neighbouring corners
+    /// of the same shape don't repeat.
+    private static let variants = 3
 
     /// A cave's walls: its rock, and beyond the map rock too but for the tunnels the roads leave by.
     convenience init(map: WorldMap, cave: MapDef.Cave, world: SKNode, art: ArtLibrary, margin: Int) {
@@ -76,11 +80,13 @@ final class CaveWalls {
                     for dc in -1...1 where isRock(GridPoint(col: col + dc, row: row + dr)) { mask |= 1 << ((dr + 1) * 3 + dc + 1) }
                 }
                 let center = WorldMap.project(CGPoint(x: (CGFloat(col) + 0.5) * tile, y: (CGFloat(row) + 0.5) * tile))
+                // Which way its corners break (only blocks with a corner have more than one).
+                let variant = (((col &* 73_856_093) ^ (row &* 19_349_663)) & 0x7fff_ffff) % Self.variants
                 if isRock(cell) {
                     // Only rock near the floor needs its own block; the rest is the flat layer.
                     let nearFloor = (-near...near).contains { dr in (-near...near).contains { dc in !isRock(GridPoint(col: col + dc, row: row + dr)) } }
                     if nearFloor {
-                        pending.append((cell, mask, -center.y))
+                        pending.append((cell, Self.hasCorner(mask) ? mask | variant << 12 : mask, -center.y))
                     } else {
                         deep.setTileGroup(group, forColumn: col + margin, row: row + margin)
                     }
@@ -88,7 +94,7 @@ final class CaveWalls {
                     for corner in 0..<4 where Self.fills(mask: mask, corner: corner) {
                         let quarter = WorldMap.project(CGPoint(x: (CGFloat(col) + 0.25 + 0.5 * CGFloat(corner & 1)) * tile,
                                                                y: (CGFloat(row) + 0.25 + 0.5 * CGFloat(corner >> 1)) * tile))
-                        pending.append((cell, mask | (corner + 1) << 9, -quarter.y))
+                        pending.append((cell, mask | (corner + 1) << 9 | variant << 12, -quarter.y))
                     }
                 }
             }
@@ -142,14 +148,52 @@ final class CaveWalls {
         return !rock(mask, 0, 0) && rock(mask, x, 0) && rock(mask, 0, y) && rock(mask, x, y)
     }
 
-    /// Marching squares over the cell middles, one quarter of the cell at a time, with every
-    /// corner rounded: a quarter circle around the cell's middle, bulging out where the rock
-    /// sticks out and hollowed where it goes in. Neighbouring arcs and straight walls meet
-    /// without a kink, so walls that would zig-zag become gentle waves. Key: the 3×3 rock mask,
-    /// plus (for a floor cell's corner sliver) `(corner + 1) << 9`.
+    /// Whether a rock cell's block has a corner sticking out (one its `facets` break).
+    private static func hasCorner(_ mask: Int) -> Bool {
+        rock(mask, 0, 0) && (0..<4).contains { corner in
+            !rock(mask, corner & 1 == 1 ? 1 : -1, 0) && !rock(mask, 0, corner >> 1 == 1 ? 1 : -1)
+        }
+    }
+
+    /// A number in 0..<1 from `seed` and `index`, the same every time (splitmix64).
+    private static func noise(_ seed: Int, _ index: Int) -> CGFloat {
+        var z = UInt64(bitPattern: Int64(seed &* 1_000_003 &+ index)) &+ 0x9E37_79B9_7F4A_7C15
+        z = (z ^ (z >> 30)) &* 0xBF58_476D_1CE4_E5B9
+        z = (z ^ (z >> 27)) &* 0x94D0_49BB_1331_11EB
+        z ^= z >> 31
+        return CGFloat(z % 10_000) / 10_000
+    }
+
+    /// A corner's cut across its quarter, from the middle of one side, (0.5, 0) in the quarter's
+    /// (p, q), to the middle of the other, (0, 0.5): two or three straight facets. Each break lies
+    /// a step further round from the cell's middle (so the facets never fold back over each other)
+    /// and is pushed out toward the cell's corner or back toward its middle by a different amount
+    /// from the straight cut, so some corners come out nearly square, some chipped deep, none round.
+    private static func facets(_ seed: Int) -> [(p: CGFloat, q: CGFloat)] {
+        let breaks = noise(seed, 0) < 0.45 ? 1 : 2
+        var points: [(p: CGFloat, q: CGFloat)] = [(p: 0.5, q: 0)]
+        for index in 1...breaks {
+            // How far round, a little off even spacing.
+            let even = CGFloat(index) / CGFloat(breaks + 1)
+            let angle = (even + (noise(seed, index * 2) - 0.5) * 0.3) * .pi / 2
+            // The straight cut's distance from the middle that way, pushed out (more rock) or in.
+            let straight = 0.5 / (cos(angle) + sin(angle))
+            let reach = straight * (0.72 + noise(seed, index * 2 + 1) * 0.6)
+            // Inside the quarter, so the rock never pokes out past the cell's sides.
+            points.append((p: min(0.47, reach * cos(angle)), q: min(0.47, reach * sin(angle))))
+        }
+        points.append((p: 0, q: 0.5))
+        return points
+    }
+
+    /// Marching squares over the cell middles, one quarter of the cell at a time, every corner cut
+    /// across in angled facets (`facets`) where the rock sticks out and where it goes in. They
+    /// start and end at the middles of the cell's sides, so they meet the straight walls and the
+    /// next cell's corners there. Key: the 3×3 rock mask, plus (for a floor cell's corner sliver)
+    /// `(corner + 1) << 9`, plus which way its corners break, `variant << 12`.
     private static func shape(for key: Int) -> Shape {
         let mask = key & 511
-        let only = (key >> 9) - 1
+        let only = ((key >> 9) & 7) - 1
         var result = Shape()
         for corner in 0..<4 where only < 0 || corner == only {
             let x = corner & 1 == 1 ? 1 : -1, y = corner >> 1 == 1 ? 1 : -1
@@ -157,29 +201,32 @@ final class CaveWalls {
             // (p, q) runs from the cell's middle (0, 0) out to its corner (0.5, 0.5).
             func at(_ p: CGFloat, _ q: CGFloat) -> CGPoint { CGPoint(x: 0.5 + sx * p, y: 0.5 + sy * q) }
             let here = rock(mask, 0, 0), across = rock(mask, x, 0), above = rock(mask, 0, y), diagonal = rock(mask, x, y)
-            let angles = (0...arcSteps).map { CGFloat($0) / CGFloat(arcSteps) * .pi / 2 }
-            let arc = angles.map { at(0.5 * cos($0), 0.5 * sin($0)) }
-            let step = 0.5 * .pi / 2 / CGFloat(arcSteps)
+            let cut = facets(key &* 4 &+ corner).map { at($0.p, $0.q) }
+            /// The cut's pieces, each with its normal from the rock out to the floor: toward the
+            /// cell's corner where the rock sticks out (`outward`), toward its middle where it goes in.
+            func pieces(outward: Bool) {
+                var along: CGFloat = 0
+                for (a, b) in zip(cut, cut.dropFirst()) {
+                    var normal = CGVector(dx: b.y - a.y, dy: a.x - b.x)
+                    if (normal.dx * sx + normal.dy * sy > 0) != outward { normal = CGVector(dx: -normal.dx, dy: -normal.dy) }
+                    result.edges.append((a, b, normal, along))
+                    along += a.distance(to: b)
+                }
+            }
             if here {
                 if !across && !above {
-                    // A corner sticking out: rounded off.
-                    result.tops.append([at(0, 0)] + arc)
-                    for i in 0..<arcSteps {
-                        let middle = (angles[i] + angles[i + 1]) / 2
-                        result.edges.append((arc[i], arc[i + 1], CGVector(dx: sx * cos(middle), dy: sy * sin(middle)), CGFloat(i) * step))
-                    }
+                    // A corner sticking out: broken off in facets.
+                    result.tops.append([at(0, 0)] + cut)
+                    pieces(outward: true)
                 } else {
                     result.tops.append([at(0, 0), at(0.5, 0), at(0.5, 0.5), at(0, 0.5)])
                     if !across && !diagonal { result.edges.append((at(0.5, 0), at(0.5, 0.5), CGVector(dx: sx, dy: 0), 0)) }
                     if !above && !diagonal { result.edges.append((at(0, 0.5), at(0.5, 0.5), CGVector(dx: 0, dy: sy), 0)) }
                 }
             } else if across && above && diagonal {
-                // A corner going in: a rounded hollow.
-                result.tops.append(arc + [at(0.5, 0.5)])
-                for i in 0..<arcSteps {
-                    let middle = (angles[i] + angles[i + 1]) / 2
-                    result.edges.append((arc[i], arc[i + 1], CGVector(dx: -sx * cos(middle), dy: -sy * sin(middle)), CGFloat(i) * step))
-                }
+                // A corner going in: a hollow chipped out in facets.
+                result.tops.append(cut + [at(0.5, 0.5)])
+                pieces(outward: false)
             }
         }
         return result
