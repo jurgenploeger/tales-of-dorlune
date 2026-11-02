@@ -5,8 +5,10 @@ import SwiftUI
 /// 2026-10-26: turned like the game's isometric view, north up-left, its compass's points weren't a
 /// quarter turn apart). Drag to look round, pinch (or the buttons) to zoom, twist with two fingers to
 /// turn it: the compass turns with it, and a tap on the compass turns it as you see the land in the
-/// game (north up and to the left, `asSeen`; playtesting 2026-11-01), and a tap again north back up,
-/// as you left it next time. The names and
+/// game (north up and to the left, `asSeen`; playtesting 2026-11-01), turned and squashed as the
+/// game's view is so north points where the minimap's does (playtesting 2026-11-02: turned only, the
+/// two compasses pointed 18 degrees apart), and a tap again north back up, as you left it next time.
+/// The names and
 /// marks stay upright however it's turned. It opens on where you are. Places you haven't been to
 /// are faded and named "???"; a quest's shut gate shows its lock; caves show where they open. A
 /// dark land shows only where you've been, as its minimap does. Zoomed in, a land you've been to
@@ -67,19 +69,35 @@ struct WorldAtlas: View {
         /// The spot of the picture in the middle of the view.
         var focus: CGPoint = .zero
 
+        /// How tall the turned map stands on screen, for its width: half, as the game's view is
+        /// (`WorldMap.project`), when it's turned as you see the land (`seenTurn`), easing back to
+        /// whole as it turns toward north up or a quarter turn left, and whole turned any other way.
+        /// So a glide or a twist between north up and the game's view tilts it gently into it.
+        var squash: CGFloat {
+            let quarter = CGFloat.pi / 2
+            var turn = rotation.truncatingRemainder(dividingBy: 2 * .pi)
+            if turn > .pi { turn -= 2 * .pi } else if turn <= -.pi { turn += 2 * .pi }
+            guard turn < 0, turn > -quarter else { return 1 }
+            return 1 - 0.5 * cos(2 * (turn - Self.seenTurn))
+        }
+
+        /// The turn as you see the land in the game (`WorldAtlas.seenTurn`): north up and to the left.
+        static let seenTurn: CGFloat = -.pi / 4
+
         /// Where a spot of the picture shows, from the middle of the view.
         func offset(of spot: CGPoint) -> CGPoint {
             let x = (spot.x - focus.x) * scale, y = (spot.y - focus.y) * scale
             let cosine = cos(rotation), sine = sin(rotation)
-            return CGPoint(x: x * cosine - y * sine, y: x * sine + y * cosine)
+            return CGPoint(x: x * cosine - y * sine, y: (x * sine + y * cosine) * squash)
         }
 
         /// The spot of the picture that shows `offset` from the middle of the view.
         func spot(at offset: CGPoint) -> CGPoint {
             guard scale > 0 else { return focus }
             let cosine = cos(rotation), sine = sin(rotation)
-            return CGPoint(x: focus.x + (offset.x * cosine + offset.y * sine) / scale,
-                           y: focus.y + (offset.y * cosine - offset.x * sine) / scale)
+            let across = offset.x, down = offset.y / squash
+            return CGPoint(x: focus.x + (across * cosine + down * sine) / scale,
+                           y: focus.y + (down * cosine - across * sine) / scale)
         }
 
         /// `fraction` of the way from `start` to `end`: the zoom by even ratios, the turn and the
@@ -138,9 +156,9 @@ struct WorldAtlas: View {
     /// (radians: about 6 degrees).
     private static let northSnap: CGFloat = 0.1
     /// The map turned as you see the land in the game (`WorldMap.project`): north up and to the left,
-    /// east up and to the right, so pushing up walks you up the map. Turned only, not squashed as the
-    /// game's view is, so the compass's points stay a quarter turn apart.
-    private static let seenTurn: CGFloat = -.pi / 4
+    /// east up and to the right, so pushing up walks you up the map. Squashed too, as the game's view
+    /// is (`Framing.squash`), so north points where it does on screen and on the minimap.
+    private static let seenTurn: CGFloat = Framing.seenTurn
     /// The blur under the map's top and bottom edges (`edgeBand`): copies of the map, each blurred
     /// more and reaching less far in from the edge (a fraction of the band), so it's blurred most
     /// at the edge and not at all where the band ends.
@@ -218,7 +236,9 @@ struct WorldAtlas: View {
         let (_, columns, rows) = bounds
         let origin = framing.offset(of: .zero)
         let cosine = cos(framing.rotation) * framing.scale, sine = sin(framing.rotation) * framing.scale
-        let turned = CGAffineTransform(a: cosine, b: sine, c: -sine, d: cosine,
+        // Turned, then squashed down the screen (`Framing.squash`), as `Framing.offset` places a spot.
+        let squash = framing.squash
+        let turned = CGAffineTransform(a: cosine, b: sine * squash, c: -sine, d: cosine * squash,
                                        tx: size.width / 2 + origin.x, ty: size.height / 2 + origin.y)
         return ZStack(alignment: .topLeading) {
             // The picture rides in an overlay, so its size never moves the view's.
@@ -475,7 +495,7 @@ struct WorldAtlas: View {
         Button {
             turnByCompass()
         } label: {
-            MapCompass(heading: .radians(Double(framing.rotation)))
+            MapCompass(heading: .radians(Double(framing.rotation)), squash: framing.squash)
         }
         .buttonStyle(.plain)
         .accessibilityLabel(isNorthUp ? L("Turn the map as you see the land") : L("Turn the map north up"))
@@ -876,8 +896,12 @@ struct MapCompass: View {
     /// its needle shorter to leave it room.
     private var reach: CGFloat { compact ? 0.3 : 0.36 }
     private var needle: CGFloat { compact ? 0.17 : 0.24 }
-    /// How far the map under it is turned clockwise: its north points that way from straight up.
+    /// How far the map under it is turned clockwise: before `squash`, its north points that way
+    /// from straight up.
     var heading: Angle = .zero
+    /// How tall the turned map under it stands for its width (the world map's `Framing.squash`):
+    /// half, as the game's view is, when it's turned as you see the land.
+    var squash: CGFloat = 1
     /// The map under it lies turned and squashed as the game's view is (a cave's, `CaveMap`).
     var isometric = false
     /// The needle's north half, and the N.
@@ -887,8 +911,12 @@ struct MapCompass: View {
     /// from straight up.
     private func angle(col: CGFloat, row: CGFloat) -> Double {
         // On the turned, squashed view a row north is half as far up as it's across to the left.
-        let (across, up) = isometric ? (col - row, (col + row) / 2) : (col, row)
-        return atan2(Double(across), Double(up)) * 180 / Double.pi + heading.degrees
+        if isometric { return atan2(Double(col - row), Double((col + row) / 2)) * 180 / Double.pi + heading.degrees }
+        // Turned clockwise by `heading`, then squashed: up shrinks, across stays.
+        let turn = heading.radians
+        let across = Double(col) * cos(turn) + Double(row) * sin(turn)
+        let up = (Double(row) * cos(turn) - Double(col) * sin(turn)) * Double(squash)
+        return atan2(across, up) * 180 / Double.pi
     }
 
     var body: some View {
