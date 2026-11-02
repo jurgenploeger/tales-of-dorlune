@@ -865,6 +865,11 @@ No advanced classes.
   joined to yours). Skills.json `hits`, `scatter`, `pierce`, `full` and `withCompanion` (BattleEngine), and
   an attack's `raises` for its caster. Since 0.9.39 the Mage too, after FO's Mage list: Dancing Fountain (85,
   water, splashing those beside), Spiritual Lance (105, metal, one foe) and Meteor Blast (140, fire, every foe).
+- Learning a new skill (ours, since 0.9.62, playtesting 2026-11-02: "learning new skills should go through
+  your guild"): your hero learns it from the guild master (`GuildPanel.lessons`, a skill point each); the
+  Skills tab shows it greyed with where to go (`guildHint`), and NEW only while a level-up or joining the
+  guild has just unlocked it (`Hero.newSkills`, `isNewSkill`). Raising a skill you know is still done
+  anywhere. Companions learn on the Companions page as before.
 - Skill levels (ours): a skill point a level, one to learn a skill and one for each step up; ten steps to
   Mastered (×1.8 damage, ×1 when learned, a point of MP a step). Since 0.7.72 your hero's skills keep growing
   past it, to level 50 (playtesting 2026-10-23: "you should be able to continuously improve these skills,

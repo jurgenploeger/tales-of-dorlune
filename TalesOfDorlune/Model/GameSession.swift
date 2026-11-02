@@ -855,7 +855,7 @@ final class GameSession {
 
     /// "No skills yet" plus what to do about it.
     var skillHint: String {
-        if let skill = learnableSkills.first { return L("No skills yet.\nSpend your skill point to learn {skill}.", ["skill": skill.name]) }
+        if let skill = learnableSkills.first { return L("No skills yet.\nLearn {skill} at your guild.", ["skill": skill.name]) }
         if let next = nextSkillUnlock { return L("No skills yet.\nYou can learn {skill} at level {level}.", ["skill": next.skill.name, "level": next.level]) }
         return L("No skills yet.")
     }
@@ -887,9 +887,42 @@ final class GameSession {
     }
 
     /// A point to spend and something to spend it on: a skill to learn, or one not yet at its cap.
+    /// Whether a point can go somewhere now: into raising a skill you know. Learning a new one is
+    /// done at your guild (`guildMaster`; playtesting 2026-11-02: "learning new skills should go
+    /// through your guild"), so a skill still to learn doesn't count here (`canLearnAtGuild`).
     var canSpendSkillPoint: Bool {
-        unspentSkillPoints > 0
-            && (!learnableSkills.isEmpty || heroSkills.contains { skillLevel($0.id) < Self.skillLevelCap })
+        unspentSkillPoints > 0 && heroSkills.contains { skillLevel($0.id) < Self.skillLevelCap }
+    }
+
+    /// Whether your guild master has a skill to teach you and you've a point to learn it with.
+    var canLearnAtGuild: Bool { unspentSkillPoints > 0 && !learnableSkills.isEmpty }
+
+    /// Whether a level-up (or joining a guild) unlocked `id` and it's still to learn: NEW in the
+    /// Skills tab (playtesting 2026-11-02: "This new label should only be there once you hit a level
+    /// and the skill gets added to your skill list"). Skills unlocked before this, never learned,
+    /// show without it.
+    func isNewSkill(_ id: String) -> Bool {
+        data.hero.newSkills?.contains(id) == true && learnableSkills.contains { $0.id == id }
+    }
+
+    /// Whether any skill is NEW (the menu's Skills tab and the HUD's menu button light up for it).
+    var hasNewSkills: Bool { learnableSkills.contains { isNewSkill($0.id) } }
+
+    /// Your guild's master, who teaches your class's skills, and the town they're in.
+    var guildMaster: (npc: NPCDef, town: String)? {
+        for map in content.maps {
+            if let npc = (map.npcs ?? []).first(where: { $0.role == .guild && $0.classId == data.hero.classID }) {
+                return (npc, map.name)
+            }
+        }
+        return nil
+    }
+
+    /// Where to learn a new skill: "Learn it from Captain Brann at the Warrior Guild in Meadowbrook."
+    var guildHint: String {
+        guard let master = guildMaster else { return L("Learn it at your guild.") }
+        return L("Learn it from {master} at the {guild} in {town}.",
+                 ["master": master.npc.name, "guild": heroClass.guild ?? L("guild"), "town": master.town])
     }
 
     /// The same for a companion: a point and something to spend it on (its Level Up card after a
@@ -926,6 +959,7 @@ final class GameSession {
         guard unspentSkillPoints > 0, let skill = learnableSkills.first(where: { $0.id == id }) else { return }
         SoundEffects.shared.play(.learn)
         data.hero.learnedSkills = (data.hero.learnedSkills ?? []) + [id]
+        data.hero.newSkills = data.hero.newSkills?.filter { $0 != id }
         var levels = data.hero.skillLevels ?? [:]
         levels[id] = 1
         data.hero.skillLevels = levels
@@ -969,19 +1003,32 @@ final class GameSession {
         guard amount > 0 else { return 0 }
         guard data.hero.level < Self.levelCap else { return 0 }
         data.hero.exp += amount
+        let unlocked = Set(learnableSkills.map(\.id))
         var levels = 0
         while data.hero.level < Self.levelCap, data.hero.exp >= Self.expToNext(level: data.hero.level) {
             data.hero.exp -= Self.expToNext(level: data.hero.level)
             data.hero.level += 1
             levels += 1
         }
-        if levels > 0 { restoreHero() }
+        if levels > 0 {
+            restoreHero()
+            markNewSkills(besides: unlocked)
+        }
         return levels
+    }
+
+    /// Skills to learn now that weren't before (`unlocked`), marked NEW till learned at the guild.
+    private func markNewSkills(besides unlocked: Set<String>) {
+        let fresh = learnableSkills.map(\.id).filter { !unlocked.contains($0) }
+        guard !fresh.isEmpty else { return }
+        data.hero.newSkills = (data.hero.newSkills ?? []).filter { !fresh.contains($0) } + fresh
     }
 
     func chooseClass(_ id: String) {
         guard canChooseClass, content.classes.contains(where: { $0.id == id }) else { return }
+        let unlocked = Set(learnableSkills.map(\.id))
         data.hero.classID = id
+        markNewSkills(besides: unlocked)
         SoundEffects.shared.play(.levelUp)
         Haptics.success()
         post(L("You joined the {guild} as a {className}!", ["guild": content.classDef(id).guild ?? L("guild"), "className": content.classDef(id).name]), .reward)

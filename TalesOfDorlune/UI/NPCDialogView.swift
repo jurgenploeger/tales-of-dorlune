@@ -810,6 +810,7 @@ private struct GuildPanel: View {
 
             if hero.classID == path.id {
                 Text(L("Welcome back, {className}!", ["className": path.name])).font(HUDStyle.font(12)).foregroundStyle(HUDStyle.green)
+                lessons
             } else if hero.classID != "novice" {
                 Text(L("You've already chosen the path of the {className}.", ["className": session.heroClass.name])).font(HUDStyle.font(12)).foregroundStyle(HUDStyle.dim)
             } else if !session.canChooseClass {
@@ -829,6 +830,59 @@ private struct GuildPanel: View {
             } else {
                 Button(L("Join and become a {className}", ["className": path.name])) { confirming = true }
                     .buttonStyle(PixelButtonStyle(tint: HUDStyle.gold))
+            }
+        }
+    }
+}
+
+extension GuildPanel {
+    /// What your guild master teaches you: every skill your level has unlocked and you've still to
+    /// learn, a skill point each (playtesting 2026-11-02: "learning new skills should go through your
+    /// guild"). NEW on those a level has just unlocked.
+    @ViewBuilder
+    var lessons: some View {
+        let learnable = session.learnableSkills
+        let points = session.unspentSkillPoints
+        if learnable.isEmpty {
+            Text(L("You know every skill your level allows. Come back when you've grown."))
+                .font(HUDStyle.font(11))
+                .foregroundStyle(HUDStyle.dim)
+        } else {
+            Text(points == 0 ? L("You need a skill point to learn one: you earn one each level.")
+                 : (points == 1 ? L("1 skill point to spend") : L("{count} skill points to spend", ["count": points])))
+                .font(HUDStyle.font(11))
+                .foregroundStyle(points == 0 ? HUDStyle.dim : HUDStyle.gold)
+            ForEach(learnable) { skill in
+                HStack(spacing: 8) {
+                    SkillIcon(skill: skill, size: 34)
+                    VStack(alignment: .leading, spacing: 1) {
+                        HStack(spacing: 5) {
+                            Text(skill.name).font(HUDStyle.font(12))
+                            if session.isNewSkill(skill.id) {
+                                Text(L("NEW"))
+                                    .font(HUDStyle.font(9))
+                                    .foregroundStyle(HUDStyle.ink)
+                                    .padding(.horizontal, 5)
+                                    .padding(.vertical, 1)
+                                    .background(Capsule().fill(HUDStyle.gold))
+                            }
+                        }
+                        if let description = skill.description {
+                            Text(description)
+                                .font(HUDStyle.font(10))
+                                .foregroundStyle(HUDStyle.dim)
+                                .lineLimit(2)
+                        }
+                    }
+                    Spacer(minLength: 0)
+                    Button(L("Learn")) {
+                        session.learnSkill(skill.id)
+                        session.save()
+                    }
+                    .buttonStyle(PixelButtonStyle(tint: HUDStyle.gold, compact: true))
+                    .disabled(points == 0)
+                    .opacity(points == 0 ? 0.5 : 1)
+                }
             }
         }
     }

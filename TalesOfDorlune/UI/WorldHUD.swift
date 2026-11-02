@@ -184,7 +184,7 @@ struct WorldHUD: View {
 
     private func badge(for tab: MenuTab) -> Bool {
         switch tab {
-        case .character: session.canChooseClass || session.canSpendSkillPoint || session.hasGearUpgrade
+        case .character: session.canChooseClass || session.canSpendSkillPoint || session.hasNewSkills || session.hasGearUpgrade
         case .quests: session.activeQuests.contains { session.status(of: $0) == .ready }
         case .bag: session.count(of: "pet_egg") > 0
         case .companions, .friends, .settings: false
@@ -223,7 +223,7 @@ private struct StatusCluster: View {
             Button { onInspect(.hero) } label: {
                 PortraitRow(face: ArtLibrary.shared.face(GameSession.heroArt), level: hero.level, name: hero.name,
                             detail: session.heroClass.name, size: HeroFace.size,
-                            glowing: session.canChooseClass || session.canSpendSkillPoint) {
+                            glowing: session.canChooseClass || session.canSpendSkillPoint || session.hasNewSkills) {
                     // A little taller and further apart than a friend's, so name and bars fill your
                     // face's height with no gap opening between them (playtesting 2026-10-26).
                     VStack(alignment: .leading, spacing: 4) {

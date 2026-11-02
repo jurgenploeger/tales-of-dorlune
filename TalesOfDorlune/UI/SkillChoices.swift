@@ -23,7 +23,12 @@ struct SkillChoices: View {
     var body: some View {
         let learnable = session.learnableSkills(owner: owner)
         let known = session.knownSkills(owner: owner)
-        let shown = selected.flatMap { id in (learnable + known).first { $0.id == id } } ?? learnable.first ?? known.first
+        // Your hero's new skills are learned at the guild, so what you know comes first here; a
+        // skill a level just unlocked is shown first, to say where to learn it.
+        let first = owner == nil
+            ? learnable.first { session.isNewSkill($0.id) } ?? known.first ?? learnable.first
+            : learnable.first ?? known.first
+        let shown = selected.flatMap { id in (learnable + known).first { $0.id == id } } ?? first
         VStack(alignment: .leading, spacing: 10) {
             if let gridHeight {
                 ScrollView {
@@ -47,14 +52,21 @@ struct SkillChoices: View {
         .animation(.easeOut(duration: 0.15), value: shown?.id)
     }
 
-    /// The tiles, new skills first, and under them how to reorder.
+    /// The tiles still to learn: a companion's first, your hero's last, greyed (learned at the guild).
+    @ViewBuilder
+    private func toLearn(_ learnable: [SkillDef], shown: SkillDef?) -> some View {
+        ForEach(learnable) { skill in
+            SkillTileButton(session: session, skill: skill, isNew: true, isSelected: skill.id == shown?.id, owner: owner) { selected = skill.id }
+        }
+    }
+
+    /// The tiles (a companion's new skills first, your hero's after what you know), and under them
+    /// how to reorder.
     @ViewBuilder
     private func grid(learnable: [SkillDef], known: [SkillDef], shown: SkillDef?) -> some View {
         VStack(alignment: .leading, spacing: 10) {
             LazyVGrid(columns: Self.columns, alignment: .leading, spacing: 10) {
-                ForEach(learnable) { skill in
-                    SkillTileButton(session: session, skill: skill, isNew: true, isSelected: skill.id == shown?.id, owner: owner) { selected = skill.id }
-                }
+                if owner != nil { toLearn(learnable, shown: shown) }
                 ForEach(Array(known.enumerated()), id: \.element.id) { index, skill in
                     SkillTileButton(session: session, skill: skill, isNew: false, isSelected: skill.id == shown?.id, owner: owner) { selected = skill.id }
                         // Held and dragged onto another, it takes that one's place: your order is the
@@ -71,6 +83,7 @@ struct SkillChoices: View {
                             if index + 1 < known.count { move(skill.id, onto: known[index + 1].id) }
                         }
                 }
+                if owner == nil { toLearn(learnable, shown: shown) }
             }
             if known.count > 1 {
                 Text(owner == nil ? L("Hold a skill and drag it to reorder. In battle the first ones are buttons of their own; the rest wait behind More.")
@@ -95,8 +108,10 @@ private func skillTitle(_ skill: SkillDef, mp: Int) -> Text {
     Text(skill.name) + Text(L(" ({cost} MP)", ["cost": mp])).foregroundStyle(HUDStyle.mp)
 }
 
-/// A skill's tile in the grid: its icon, NEW on one still to learn, its level under it, a gold plus
-/// when a point would raise it, ringed in gold while it's the one shown below.
+/// A skill's tile in the grid: its icon, its level under it, a gold plus when a point would raise
+/// it, ringed in gold while it's the one shown below. One still to learn: a companion's wears NEW;
+/// your hero's is greyed (learned at the guild), NEW only while a level-up has just unlocked it
+/// (`GameSession.isNewSkill`).
 private struct SkillTileButton: View {
     let session: GameSession
     let skill: SkillDef
@@ -109,11 +124,15 @@ private struct SkillTileButton: View {
     var body: some View {
         let level = session.skillLevel(skill.id, owner: owner)
         let mastered = !isNew && level >= GameSession.maxSkillLevel
-        let canRaise = session.unspentSkillPoints(owner: owner) > 0 && (isNew || level < GameSession.skillLevelCap)
-        let tag = isNew ? L("NEW") : L("Lv {level}", ["level": level])
+        let atGuild = isNew && owner == nil
+        let canRaise = session.unspentSkillPoints(owner: owner) > 0 && (isNew ? !atGuild : level < GameSession.skillLevelCap)
+        let tag: String? = !isNew ? L("Lv {level}", ["level": level])
+            : (!atGuild || session.isNewSkill(skill.id) ? L("NEW") : nil)
         Button(action: onTap) {
             VStack(spacing: 4) {
                 SkillIcon(skill: skill, size: 54)
+                    .saturation(atGuild ? 0.15 : 1)
+                    .opacity(atGuild ? 0.55 : 1)
                     .overlay {
                         RoundedRectangle(cornerRadius: 54 * 0.26 + 4)
                             .strokeBorder(isSelected ? HUDStyle.gold : .clear, lineWidth: 2.5)
@@ -132,19 +151,21 @@ private struct SkillTileButton: View {
                         }
                     }
                     .overlay(alignment: .bottom) {
-                        Text(tag)
-                            .font(HUDStyle.font(9))
-                            .foregroundStyle(HUDStyle.ink)
-                            .padding(.horizontal, 5)
-                            .padding(.vertical, 1)
-                            .background(Capsule().fill(isNew || mastered ? HUDStyle.gold : HUDStyle.cream))
-                            .overlay(Capsule().strokeBorder(.white.opacity(0.8), lineWidth: 1))
-                            .fixedSize()
-                            .offset(y: 7)
+                        if let tag {
+                            Text(tag)
+                                .font(HUDStyle.font(9))
+                                .foregroundStyle(HUDStyle.ink)
+                                .padding(.horizontal, 5)
+                                .padding(.vertical, 1)
+                                .background(Capsule().fill(isNew || mastered ? HUDStyle.gold : HUDStyle.cream))
+                                .overlay(Capsule().strokeBorder(.white.opacity(0.8), lineWidth: 1))
+                                .fixedSize()
+                                .offset(y: 7)
+                        }
                     }
                 Text(skill.name)
                     .font(HUDStyle.font(10))
-                    .foregroundStyle(isSelected ? HUDStyle.gold : HUDStyle.cream)
+                    .foregroundStyle(isSelected ? HUDStyle.gold : (atGuild ? HUDStyle.dim : HUDStyle.cream))
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
                     .padding(.top, 4)
@@ -153,7 +174,7 @@ private struct SkillTileButton: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(PressScaleStyle())
-        .accessibilityLabel(Text(skill.name + ", " + tag))
+        .accessibilityLabel(Text(skill.name + ", " + (tag ?? session.guildHint)))
         .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 }
@@ -200,7 +221,14 @@ private struct SkillDetail: View {
                         .disabled(!affordable)
                         .opacity(affordable ? 1 : 0.5)
                 }
-                if isNew {
+                if isNew, owner == nil {
+                    // Your hero learns new skills from the guild master, not here.
+                    Text(session.guildHint)
+                        .font(HUDStyle.font(10))
+                        .foregroundStyle(HUDStyle.gold)
+                        .multilineTextAlignment(.trailing)
+                        .fixedSize(horizontal: false, vertical: true)
+                } else if isNew {
                     Button(L("Learn")) { session.learnSkill(skill.id, owner: owner) }
                         .buttonStyle(PixelButtonStyle(tint: HUDStyle.gold, compact: true))
                         .disabled(points == 0)
@@ -250,8 +278,8 @@ struct LevelUpCard: View {
             return points == 1 ? L("{name} has 1 skill point to spend.", ["name": name])
                 : L("{name} has {count} skill points to spend.", ["name": name, "count": points])
         }
-        return points == 1 ? L("You have 1 skill point. Learn a new skill or power one up.")
-            : L("You have {count} skill points. Learn a new skill or power one up.", ["count": points])
+        return points == 1 ? L("You have 1 skill point. Power up a skill, or learn a new one at your guild.")
+            : L("You have {count} skill points. Power up a skill, or learn a new one at your guild.", ["count": points])
     }
 
     var body: some View {

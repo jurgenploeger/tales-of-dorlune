@@ -1337,7 +1337,7 @@ final class BattleController {
                 levelsGained = levels
                 lines.append(levelLine(session.data.hero.level))
                 for skill in session.learnableSkills where !learnableBefore.contains(skill.id) {
-                    lines.append(L("New skill to learn: {skill}!", ["skill": skill.name]))
+                    lines.append(L("New skill: {skill}! Learn it at your guild.", ["skill": skill.name]))
                 }
                 if session.canChooseClass {
                     lines.append(L("You can choose a path now! Visit a guild master in town."))

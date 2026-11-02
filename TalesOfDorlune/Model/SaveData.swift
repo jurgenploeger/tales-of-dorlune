@@ -57,6 +57,9 @@ nonisolated struct Hero: Codable, Equatable, Sendable {
     var look: Look?
     /// Skills learned with skill points (nil in saves from before skills had to be learned).
     var learnedSkills: [String]?
+    /// Skills a level-up (or joining a guild) just unlocked, still to learn at the guild: they wear
+    /// NEW in the Skills tab till then (`GameSession.isNewSkill`).
+    var newSkills: [String]?
     /// Extra points, e.g. for skills older saves got for free.
     var bonusSkillPoints: Int?
     /// Times reborn, from before rebirth was taken out (0.7.27): read once to give a reborn hero
