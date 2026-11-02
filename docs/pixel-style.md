@@ -643,7 +643,7 @@ Its round windows are lamplit amber held at one tone: a pale yellow glass on its
 the palette cut (`limit_palette`) merged it into the cap.
 
 The three landmarks (`emerald_spire`, `star_observatory`, `moonwell`) went from 0.015, 0.015 and 0.019 to
-0.017, 0.023 (redrawn as a drum) and 0.022 with these. `fit` measured a drawing on the 96-pixel frame, so one taller than it
+0.017, 0.023 (redrawn as a drum) and 0.022 with these (the moonwell 0.024 since its redraw, 2026-11-02: *Learned*). `fit` measured a drawing on the 96-pixel frame, so one taller than it
 (the spire) was cut off and measured short; one that reaches the frame's edge is now measured again on a
 canvas with room all round.
 
@@ -777,6 +777,18 @@ in a loose arc, its end trailing off thin along the bottom; never coiled.
   5. Animation: walk cycles stay RD's for now (`sprite-acceptance.md`).
 
 ## Learned
+
+- **2026-11-02 (landmarks):** The Moonwell's three free-standing arches, thin, pale grey and rounded at
+  every end, "look too much like bones" (the user), and the numbers passed them. Pale, thin and rounded
+  is how bone reads; a building reads by its making: coursed `blocks`, a cornice with its shadow under
+  it, pilasters with capitals and bases, voussoirs round each arch, in a tinted stone (the observatory's
+  violet). Keep a moulding on the ruler (`straight=True`) where the bend makes a long pale edge lumpy
+  (it read as snow), and shade a big dark hollow round, not flat (`cluster_size`). A crescent is cut
+  (`crescent`), never a disc with a disc of the sky over it: graded another colour, the sky disc shows.
+  Placing landmarks: on screen a land's column step goes right and up and its row step left and up
+  (`WorldMap.project`), so two buildings with the same `x − y` stand in one screen column, the nearer
+  one's roof in the farther one's foot. The acorn cottage at (5, −10) stood so over the observatory at
+  (−1, −15), its brown blending with the telescope; keep a tall one's neighbours 4 or more apart in `x − y`.
 
 - **2026-10-31 (palette swaps):** The swap preview showed the base's colours, so the first Midnight
   Pegasus went out a blob of one dark hue, and `check` passed it on the base's numbers. `sprite_check.py`

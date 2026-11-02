@@ -1550,44 +1550,104 @@ def star_observatory(b):
     return b
 
 
+def crescent(b, cx, cy, r, colour, bite=0.45, inner=0.85):
+    """A crescent moon cut out, not a disc with a disc of the sky over it (on a land graded another
+    colour, that disc showed): the outer circle's arc outside the bite, then the bite's arc back."""
+    r2 = r * inner
+    ix, iy = cx + r * bite, cy - r * bite * 0.55
+    d = math.hypot(ix - cx, iy - cy)
+    psi = math.atan2(iy - cy, ix - cx)
+    a0 = math.acos((r * r + d * d - r2 * r2) / (2 * r * d))
+    outer = [(cx + r * math.cos(t), cy + r * math.sin(t)) for t in np.linspace(psi + a0, psi + 2 * math.pi - a0, 21)]
+    b0 = math.acos((r2 * r2 + d * d - r * r) / (2 * r2 * d))
+    back = [(ix + r2 * math.cos(t), iy + r2 * math.sin(t)) for t in np.linspace(psi + math.pi - b0, psi + math.pi + b0, 13)]
+    if math.dist(back[-1], outer[-1]) < math.dist(back[0], outer[-1]):         # from where the outer arc ends
+        back = back[::-1]
+    b.poly(outer + back, colour, texture=0.0, profile="flat", gloss=0.4)
+
+
 @by_hand
 @grand(160)
 def moonwell(b):
-    """The Moonwell on Starfall Isle: a round pool of glowing water in a basin of pale moonstone, under
-    three arches of moonstone, the middle one tallest with a gold crescent on it; crystals floating over
-    the water and a wisp lantern at each side, on a patch of grass with stones round it."""
-    moon, deep, water = "#dadcf0", "#8a8eb8", "#78e0f0"
+    """The Moonwell on Starfall Isle: a round pool of glowing water in a basin of pale moonstone before a
+    shrine wall of violet moonstone in coursed blocks, three bays under a cornice, the middle one taller
+    and crowned with a round pediment and a gold crescent; an arched niche in each, its ring of
+    voussoirs round a deep night-blue hollow where a crystal floats over a glow, the middle one spilling
+    water into the pool; a wisp lantern at each side, on a patch of grass with stones round it.
+    (2026-11-02, the user: its first three thin free-standing arches of pale grey "look too much like
+    bones": built stone, blocks and mouldings, in the observatory's violet, reads as a building.)"""
+    stone, light, rim, night = "#b4a8d8", "#d6cfee", "#8a82b0", "#232a5e"
+    deep = "#8a8eb8"
     grounds(b, 8, 84, colour="#6a9a5a", stone="#a8acc8")
-    ground_shadow(b, 14, 80, 50)
-    for x, h, w in ((22, 30, 11), (72, 30, 11), (47, 46, 16)):                    # the arches, behind the pool
-        top = GROUND - 6 - h
-        shadow = [(x + 1.6 + (w / 2) * math.cos(a), top + 1.4 + w / 2 - (w / 2) * math.sin(a)) for a in np.linspace(0, math.pi, 15)]
-        b.stroke(shadow, 3.6, shade(deep, 0.6))                                    # its shadow, behind
-        for px in (x - w / 2, x + w / 2):
-            b.poly([(px - 2, GROUND - 4), (px + 2, GROUND - 4), (px + 2, top + w / 2), (px - 2, top + w / 2)], moon,
-                   texture=0.03, profile="cylinder")
-            b.rect(px - 2.8, GROUND - 6, px + 2.8, GROUND - 3, deep, texture=0.03)
-        arc = [(x + (w / 2) * math.cos(a), top + w / 2 - (w / 2) * math.sin(a)) for a in np.linspace(0, math.pi, 15)]
-        b.stroke(arc, 3.6, moon)
-        b.ellipse(x, top - 0.5, 1.8, 1.6, "#a8f0ff", gloss=0.7)
-        if w > 12:
-            b.ellipse(x, top - 9, 4.4, 4.4, "#ffd860", texture=0.0, profile="flat")   # the crescent
-            b.ellipse(x + 2.2, top - 10, 3.8, 3.8, "#6a9a5a", texture=0.0, profile="flat")
+    ground_shadow(b, 16, 80, 50)
+    sx, sy = DX * 0.35, DY * 0.35                                                 # the wall's depth going back
+    foot = GROUND - 4
+
+    def bay(x0, x1, top):
+        """A stretch of wall: its face in blocks, its right end going back, its cornice and that cornice's top."""
+        b.surface([(x1, foot), (x1 + sx, foot + sy), (x1 + sx, top + sy), (x1, top)], stone, "blocks", tone=-0.4,
+                  axes=(SIDEWAYS, DOWN))
+        b.surface([(x0, foot), (x1, foot), (x1, top), (x0, top)], stone, "blocks", slope=(-0.006, 0.004), foot=4)
+        b.rect(x0 - 1.5, top - 1, x1 + 1.5, top + 2.6, light, texture=0.02, straight=True)   # the cornice, made
+        b.rect(x0, top + 2.6, x1, top + 3.6, shade(stone, 0.6), texture=0.0, profile="flat")  # its shadow
+        b.poly([(x0 - 1.5, top - 1), (x1 + 1.5, top - 1), (x1 + 1.5 + sx, top - 1 + sy), (x0 - 1.5 + sx, top - 1 + sy)],
+               stone, texture=0.0, profile="flat", tone=0.45, straight=True)
+
+    def pilaster(x, top):
+        b.rect(x - 1.6, foot, x + 1.6, top + 3.6, light, texture=0.02, profile="cylinder")
+        b.rect(x - 2.4, top + 3.6, x + 2.4, top + 5.2, light, texture=0.0)                   # its capital
+        b.rect(x - 2.4, foot - 2, x + 2.4, foot, light, texture=0.0)                          # its base
+
+    def niche(cx, w, h, colour):
+        """An arched niche: a ring of voussoirs, its keystone a gem, a night-blue hollow, a glow at its
+        foot and a crystal floating in it."""
+        y1, r = GROUND - 9, w / 2
+        y0 = y1 - h
+        ring = [(cx + (r + 2.2) * math.cos(a), y0 + r - (r + 2.2) * math.sin(a)) for a in np.linspace(0, math.pi, 15)]
+        b.poly([(cx + r + 2.2, y1 + 1)] + ring + [(cx - r - 2.2, y1 + 1)], light, texture=0.02)
+        for a in np.linspace(0.2, math.pi - 0.2, 6):                              # the joints between voussoirs
+            b.stroke([(cx + r * math.cos(a), y0 + r - r * math.sin(a)),
+                      (cx + (r + 2.2) * math.cos(a), y0 + r - (r + 2.2) * math.sin(a))], 0.7, rim, straight=True)
+        hollow = [(cx + r * math.cos(a), y0 + r - r * math.sin(a)) for a in np.linspace(0, math.pi, 15)]
+        b.poly([(cx + r, y1)] + hollow + [(cx - r, y1)], night, texture=0.0, profile="cylinder")
+        b.poly([(cx + r, y0 + r), (cx + r, y1), (cx + r - 1.6, y1), (cx + r - 1.6, y0 + r + 1)] , shade(night, 0.6),
+               texture=0.0, profile="flat")                                       # its reveal, in shadow
+        b.ellipse(cx, y1 - 1.5, r - 1, 2.2, "#3a8ab8", texture=0.0, profile="dome")              # the glow at its foot
+        b.ellipse(cx, y1 - 1.8, r - 2.6, 1.2, "#78e0f0", texture=0.0, profile="flat")
+        cy, ch = y0 + h * 0.55, min(7.0, h * 0.3)
+        b.poly([(cx, cy - ch), (cx + 2.4, cy), (cx, cy + ch * 0.5), (cx - 2.4, cy)], colour, texture=0.0, gloss=0.8)
+        b.poly([(cx, cy - ch), (cx + 2.4, cy), (cx, cy + ch * 0.5)], shade(colour, 0.8), texture=0.0)
+        b.rect(cx - r - 2.6, y1, cx + r + 2.6, y1 + 1.8, light, texture=0.0)        # its sill
+        b.ellipse(cx, y0 - 2.2, 1.5, 1.5, "#a8f0ff", gloss=0.7)                   # the keystone's gem
+
+    side_top, mid_top = GROUND - 38, GROUND - 52
+    bay(16, 78, side_top)
+    bay(34, 60, mid_top)
+    # The crown over the middle: a round pediment, its rim a moulding, a crescent of gold in it.
+    cx, cr = 47, 11
+    b.poly(oval(cx, mid_top - 1, cr + 1.5, cr + 1.5, math.pi, 2 * math.pi, 21), light, texture=0.02, profile="dome")
+    b.poly(oval(cx, mid_top - 1, cr, cr - 0.5, math.pi, 2 * math.pi, 21), stone, texture=0.02, profile="dome")
+    crescent(b, cx - 0.5, mid_top - 6.5, 4.4, "#ffd860")
+    b.ellipse(cx, mid_top - cr - 4, 1.8, 1.8, "#a8f0ff", gloss=0.7)               # its finial
+    for x, top in ((16, side_top), (34, mid_top), (60, mid_top), (78, side_top)):
+        pilaster(x, top)
+    niche(25, 10, 20, "#c8a0f0")
+    niche(69, 10, 20, "#8ad8f0")
+    niche(47, 14, 30, "#a8f0ff")
+    b.rect(45.6, GROUND - 9, 48.4, GROUND - 3, "#78e0f0", texture=0.0, profile="flat")           # its water spilling
+    b.rect(46.4, GROUND - 9, 47.2, GROUND - 3, "#e8ffff", texture=0.0, profile="flat")
     b.ellipse(47, GROUND - 1, 30, 9.5, deep, texture=0.04)                        # the basin and its pool
-    b.ellipse(47, GROUND - 2.5, 27.5, 8, moon, texture=0.04)
+    b.ellipse(47, GROUND - 2.5, 27.5, 8, light, texture=0.04)
     b.ellipse(47, GROUND - 3, 24, 6.4, shade(deep, 0.62), texture=0.0, profile="flat")   # its far wall, inside, in shadow
     b.ellipse(47, GROUND - 2.2, 23.5, 5.6, "#3ab8d0", texture=0.0, profile="flat")
-    b.ellipse(46, GROUND - 3.6, 18, 4.4, water, texture=0.0, profile="flat", gloss=0.5)
+    b.ellipse(46, GROUND - 3.6, 18, 4.4, "#78e0f0", texture=0.0, profile="flat", gloss=0.5)
     b.ellipse(43, GROUND - 4.4, 7, 1.6, "#e8ffff", texture=0.0, profile="flat")
-    for x, y, h, colour in ((36, GROUND - 22, 9, "#8ad8f0"), (58, GROUND - 26, 8, "#c8a0f0"), (47, GROUND - 16, 6, "#a8f0ff")):
-        b.poly([(x, y - h), (x + 2.6, y), (x, y + h * 0.5), (x - 2.6, y)], colour, texture=0.0, gloss=0.8)
-        b.poly([(x, y - h), (x + 2.6, y), (x, y + h * 0.5)], shade(colour, 0.8), texture=0.0)
+    b.ellipse(47.5, GROUND - 4.2, 3.2, 1.0, "#e8ffff", texture=0.0, profile="flat")         # where the water falls in
     for x in (8, 86):                                                             # wisp lanterns
         b.stroke([(x, GROUND + 1), (x, GROUND - 13)], 1.5, "#5a5470")
         b.ellipse(x, GROUND - 16, 3.0, 3.4, "#b8f0ff", gloss=0.7)
         b.ellipse(x, GROUND - 16, 1.6, 1.8, "#f0ffff", texture=0.0, profile="flat")
     return b
-
 
 BUILDINGS = {
     "thatched_cottage": thatched_cottage,
