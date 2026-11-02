@@ -141,7 +141,7 @@ extension MenuView {
             PageTabs(page: $characterPage, title: { $0.title }) { page in
                 switch page {
                 case .hero: session.canChooseClass || session.hasGearUpgrade
-                case .skills: session.canSpendSkillPoint
+                case .skills: session.canSpendSkillPoint || session.hasNewSkills
                 case .titles: false
                 }
             }
@@ -429,6 +429,13 @@ private struct CharacterTab: View {
                 Text(L("{count} saved for your next skill", ["count": session.unspentSkillPoints]))
                     .font(HUDStyle.font(11))
                     .foregroundStyle(HUDStyle.dim)
+            }
+            // New skills come from your guild master (greyed below till then).
+            if !session.learnableSkills.isEmpty {
+                Text(L("New skills are learned at your guild, a skill point each. {hint}", ["hint": session.guildHint]))
+                    .font(HUDStyle.font(10))
+                    .foregroundStyle(HUDStyle.dim)
+                    .fixedSize(horizontal: false, vertical: true)
             }
             if session.heroSkills.isEmpty && session.learnableSkills.isEmpty {
                 EmptyNote(session.skillHint, size: 11)

@@ -1209,6 +1209,36 @@ struct RulesTests {
         #expect(session.unspentSkillPoints == points - 1)
     }
 
+    /// New skills are learned at your guild (playtesting 2026-11-02): a level that unlocks one marks it
+    /// NEW till it's learned, one unlocked before isn't, and a point counts as one to spend only when
+    /// it can raise a skill you know.
+    @Test func newSkillsAreMarkedTillLearnedAtTheGuild() {
+        let session = GameSession.newGame(name: "Test", raceID: "human")
+        session.data.hero.level = Content.shared.classChoiceLevel
+        session.chooseClass("fighter")
+        // Joining the guild unlocks the Fighter's first skills: NEW, to learn from Captain Brann.
+        #expect(session.isNewSkill("bash"))
+        #expect(session.hasNewSkills)
+        #expect(session.guildMaster?.npc.id == "guild_warrior")
+        // Nothing known to raise yet: a point waits for the guild.
+        #expect(!session.canSpendSkillPoint)
+        #expect(session.canLearnAtGuild)
+        session.learnSkill("bash")
+        #expect(!session.isNewSkill("bash"))
+        #expect(session.heroSkills.contains { $0.id == "bash" })
+        // First Aid, unlocked when you joined and never learned, stays NEW only from that unlock: once
+        // marked old (a save from before), a level that unlocks something else doesn't mark it again.
+        session.data.hero.newSkills = []
+        #expect(!session.isNewSkill("first_aid"))
+        let protection = Content.shared.classDef("fighter").skills.first { $0.skill == "protection" }!.level
+        while session.data.hero.level < protection {
+            session.gainHeroEXP(GameSession.expToNext(level: session.data.hero.level))
+        }
+        #expect(session.isNewSkill("protection"))
+        #expect(!session.isNewSkill("first_aid"))
+        #expect(session.learnableSkills.contains { $0.id == "first_aid" })
+    }
+
     @Test func classChoiceNeedsLevel() {
         let session = GameSession.newGame(name: "Test", raceID: "elf")
         session.addItem("wooden_sword")
