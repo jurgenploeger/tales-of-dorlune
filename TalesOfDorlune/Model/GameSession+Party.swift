@@ -23,8 +23,6 @@ extension GameSession {
     /// off on their own, or they're nowhere about any more (you went somewhere else).
     enum PartyEnd { case wandered, headedOff, gone }
 
-    /// How far apart in level you can be before an adventurer would mostly rather not party up.
-    static let partyLevelGap = 20
     /// How long someone who said no keeps saying it, in seconds.
     static let declineFor: TimeInterval = 180
     /// How long someone who headed off on their own won't come along again, in seconds.
@@ -61,19 +59,16 @@ extension GameSession {
     }
 
     /// Whether `adventurer` says yes to partying up, at `chance` (crowd.json `acceptChance`, less
-    /// for some reason of theirs): never while they've just said no, and far less often with you far
-    /// apart in level. After a no, they say no again for a while (`declineFor`). `roll`: the dice,
-    /// 0 to 1.
+    /// for some reason of theirs): never while they've just said no. How far apart in level you are
+    /// doesn't matter (playtesting 2026-11-02: "It shouldn't matter if we're too far apart"; it had
+    /// cut their yes to a quarter past 20 levels apart). After a no, they say no again for a while
+    /// (`declineFor`). `roll`: the dice, 0 to 1.
     private func agrees(_ adventurer: Adventurer, chance: Double, roll: Double, now: Date) -> Bool {
         if let until = declinedUntil[adventurer.id], until > now { return false }
         if let until = data.partyRests?[adventurer.id.uuidString], until > now { return false }
-        if roll < chance * (isFarApart(adventurer) ? 0.25 : 1) { return true }
+        if roll < chance { return true }
         declinedUntil[adventurer.id] = now.addingTimeInterval(Self.declineFor)
         return false
-    }
-
-    private func isFarApart(_ adventurer: Adventurer) -> Bool {
-        abs(adventurer.level - data.hero.level) > Self.partyLevelGap
     }
 
     private var acceptChance: Double { content.crowd.acceptChance ?? 0.75 }
@@ -93,8 +88,6 @@ extension GameSession {
             let line: String
             if again {
                 line = L("Still no, sorry!")
-            } else if isFarApart(friend) {
-                line = L("We're too far apart in level, sorry!")
             } else if busy {
                 line = L("I'm with my party right now. Another time!")
             } else {
@@ -124,8 +117,6 @@ extension GameSession {
             let line: String
             if again {
                 line = L("Still no, sorry!")
-            } else if isFarApart(leader) {
-                line = L("We're too far apart in level, sorry!")
             } else {
                 line = [L("We're fine on our own for now, thanks!"), L("Maybe another time!")].randomElement() ?? L("Maybe another time!")
             }
