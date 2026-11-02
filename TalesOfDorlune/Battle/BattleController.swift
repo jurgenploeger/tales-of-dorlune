@@ -29,6 +29,8 @@ struct LevelUp {
     let line: String
     /// Their fighter, to celebrate on the field (nil when they weren't standing at the end).
     let fighterID: Int?
+    /// A companion's own id, for its Level Up card after the battle (nil for a friend).
+    var petID: UUID? = nil
 }
 
 /// A boss's `victory` story (content/maps.json), with the boss to draw above it.
@@ -1366,7 +1368,7 @@ final class BattleController {
                 let offered = Set(session.offeredSkills(of: pet).map(\.id))
                 if session.gainPetEXP(petID, share) > 0, let updated = session.data.pets.first(where: { $0.id == petID }) {
                     let line = L("{name} grew to level {level}!", ["name": pet.name, "level": updated.level])
-                    othersLevelled.append(LevelUp(name: pet.name, level: updated.level, line: line, fighterID: fighter.id))
+                    othersLevelled.append(LevelUp(name: pet.name, level: updated.level, line: line, fighterID: fighter.id, petID: petID))
                     lines.append(line)
                     // What it can learn now (`GameSession.companionLessons`), and the points it has
                     // to spend (you choose its skills in Companions).

@@ -2133,18 +2133,18 @@ final class WorldScene: SKScene {
         player.setWalking(false)
         player.idles = false
         let stone = npcs.first { $0.def.id == session.nearbyNPC && $0.def.role == .waystone }?.node.position
-        WaystoneMagic.away(player, from: stone, in: world, then: done)
+        WaystoneMagic.away(player, from: stone, glow: WaystoneMagic.Glow.of(def.id), in: world, then: done)
     }
 
     /// Before the map shows: the hero isn't here yet (`waystoneArrive` brings them out of the light).
     func awaitWaystoneArrival() {
         player.idles = false
-        WaystoneMagic.hold(player)
+        WaystoneMagic.hold(player, glow: WaystoneMagic.Glow.of(def.id))
     }
 
     /// Arriving by waystone: out of the light in a ring of runes.
     func waystoneArrive() {
-        WaystoneMagic.arrive(player, in: world) { [weak self] in self?.player.idles = true }
+        WaystoneMagic.arrive(player, glow: WaystoneMagic.Glow.of(def.id), in: world) { [weak self] in self?.player.idles = true }
     }
 
     /// A Homeward Feather taking you away: its arrival (`featherArrive`) played backward. A gust

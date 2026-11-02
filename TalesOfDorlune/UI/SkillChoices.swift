@@ -229,30 +229,46 @@ private struct SkillDetail: View {
     }
 }
 
-/// After a battle that levelled you up: spend the new point now, or keep it for later.
+/// After a battle that levelled you up: spend the new point now, or keep it for later. The same for a
+/// companion that grew (`owner`, its id, and its `name`; playtesting 2026-11-02: "If my companion
+/// levels up, it should have the same skill level up picker as the hero").
 struct LevelUpCard: View {
     let session: GameSession
     let level: Int
     let onDone: () -> Void
+    var owner: UUID? = nil
+    var name: String? = nil
+
+    private var title: String {
+        guard owner != nil, let name else { return L("Level {level}!", ["level": level]) }
+        return L("{name} grew to level {level}!", ["name": name, "level": level])
+    }
+
+    private func hint(_ points: Int) -> String {
+        guard points > 0 else { return L("All points spent. Good choice!") }
+        if owner != nil, let name {
+            return points == 1 ? L("{name} has 1 skill point to spend.", ["name": name])
+                : L("{name} has {count} skill points to spend.", ["name": name, "count": points])
+        }
+        return points == 1 ? L("You have 1 skill point. Learn a new skill or power one up.")
+            : L("You have {count} skill points. Learn a new skill or power one up.", ["count": points])
+    }
 
     var body: some View {
-        let points = session.unspentSkillPoints
+        let points = session.unspentSkillPoints(owner: owner)
         VStack(spacing: 12) {
             VStack(spacing: 2) {
-                Text(L("Level {level}!", ["level": level]))
-                    .font(HUDStyle.font(26))
+                Text(title)
+                    .font(HUDStyle.font(owner == nil ? 26 : 22))
                     .foregroundStyle(HUDStyle.gold)
-                Text(points > 0
-                     ? (points == 1
-                        ? L("You have 1 skill point. Learn a new skill or power one up.")
-                        : L("You have {count} skill points. Learn a new skill or power one up.", ["count": points]))
-                     : L("All points spent. Good choice!"))
+                    .multilineTextAlignment(.center)
+                Text(hint(points))
                     .font(HUDStyle.font(12))
                     .foregroundStyle(HUDStyle.cream)
                     .multilineTextAlignment(.center)
             }
             // The grid scrolls; the skill tapped stays in sight under it, Learn or raise on it.
-            SkillChoices(session: session, gridHeight: 210)
+            SkillChoices(session: session, gridHeight: 210, owner: owner)
                 .foregroundStyle(HUDStyle.cream)
             Button(points > 0 ? L("Decide later") : L("Done"), action: onDone)
                 .buttonStyle(PixelButtonStyle(tint: points > 0 ? HUDStyle.cream : HUDStyle.gold))

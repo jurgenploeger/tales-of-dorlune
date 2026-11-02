@@ -892,6 +892,14 @@ final class GameSession {
             && (!learnableSkills.isEmpty || heroSkills.contains { skillLevel($0.id) < Self.skillLevelCap })
     }
 
+    /// The same for a companion: a point and something to spend it on (its Level Up card after a
+    /// battle, as the hero's).
+    func companionCanSpendSkillPoint(_ petID: UUID) -> Bool {
+        unspentSkillPoints(owner: petID) > 0
+            && (!learnableSkills(owner: petID).isEmpty
+                || knownSkills(owner: petID).contains { skillLevel($0.id, owner: petID) < Self.skillLevelCap })
+    }
+
     /// One point per level gained, and those bosses and quests give (`rewardSkillPoints`). Learning
     /// costs one and each upgrade one; points in skills your class no longer has come back.
     var unspentSkillPoints: Int {

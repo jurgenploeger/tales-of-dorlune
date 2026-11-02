@@ -1602,8 +1602,10 @@ private struct ResultPanel: View {
 
     /// A boss's story first (the first time you beat it), then the summary; then, if needed, who
     /// stays behind (full party) and skill choices.
-    private enum Stage { case story, summary, release, levelUp }
+    private enum Stage { case story, summary, release, levelUp, companionLevelUp }
     @State private var stage: Stage
+    /// The companion that grew and has a point to spend, its card after yours.
+    @State private var companion: LevelUp?
 
     init(result: BattleResult, session: GameSession, onContinue: @escaping () -> Void) {
         self.result = result
@@ -1638,7 +1640,12 @@ private struct ResultPanel: View {
                     .transition(.scale(scale: 0.9).combined(with: .opacity))
             case .levelUp:
                 if let level = result.newLevel {
-                    LevelUpCard(session: session, level: level, onDone: onContinue)
+                    LevelUpCard(session: session, level: level, onDone: advance)
+                        .transition(.scale(scale: 0.9).combined(with: .opacity))
+                }
+            case .companionLevelUp:
+                if let companion, let petID = companion.petID {
+                    LevelUpCard(session: session, level: companion.level, onDone: onContinue, owner: petID, name: companion.name)
                         .transition(.scale(scale: 0.9).combined(with: .opacity))
                 }
             }
@@ -1651,8 +1658,13 @@ private struct ResultPanel: View {
             stage = .summary
         } else if stage == .summary, session.pendingPet != nil {
             stage = .release
-        } else if stage != .levelUp, result.newLevel != nil, session.canSpendSkillPoint {
+        } else if stage != .levelUp, stage != .companionLevelUp, result.newLevel != nil, session.canSpendSkillPoint {
             stage = .levelUp
+        } else if stage != .companionLevelUp,
+                  let grown = result.others.first(where: { up in up.petID.map { session.companionCanSpendSkillPoint($0) } ?? false }) {
+            // Your companion's skills to choose too, as yours (it's levelled up with you, or alone).
+            companion = grown
+            stage = .companionLevelUp
         } else {
             onContinue()
         }

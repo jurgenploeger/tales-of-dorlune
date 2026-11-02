@@ -11,11 +11,64 @@ import SpriteKit
 ///
 /// Shared by the continent (`ContinentScene`) and a cave or a land's own scene (`WorldScene`), drawn
 /// in whatever node the hero walks in.
+///
+/// Each land's stone glows in its own colours (playtesting 2026-11-02: "the waystone animation should
+/// mimic the color and style of the different waystones in different lands"): every land grades the
+/// one waystone sprite with its palette (`theme.palette`), so its runes are violet in Twilight Woods,
+/// magenta in the Valley of Fear, teal in the Genie Desert; the light takes them (`Glow.of`).
 @MainActor
 enum WaystoneMagic {
-    /// The waystone's cyan (its role's colour on the HUD) and the violet its light turns at the edges.
-    static let light = UIColor(red: 0.4, green: 0.95, blue: 1, alpha: 1)
-    static let violet = UIColor(red: 0.62, green: 0.5, blue: 1, alpha: 1)
+    /// The light's two colours: `light`, its runes' brightest, and `accent`, their deepest, at the
+    /// light's edges.
+    struct Glow {
+        let light: UIColor
+        let accent: UIColor
+
+        /// The stone's own, ungraded: cyan (its role's colour on the HUD) and a violet.
+        static let standard = Glow(light: UIColor(red: 0.4, green: 0.95, blue: 1, alpha: 1),
+                                   accent: UIColor(red: 0.62, green: 0.5, blue: 1, alpha: 1))
+        private static var found: [String: Glow] = [:]
+
+        /// The waystone's colours in land `mapID` (a cave, or a land with no palette: `standard`).
+        static func of(_ mapID: String?) -> Glow {
+            guard let mapID else { return standard }
+            if let known = found[mapID] { return known }
+            let glow = runes(in: mapID) ?? standard
+            found[mapID] = glow
+            return glow
+        }
+
+        /// The runes' pixels (the sprite's blues) as the land's palette grades them: the brightest
+        /// lit up as the light, the deepest as the accent.
+        private static func runes(in mapID: String) -> Glow? {
+            guard let palette = Content.shared.map(mapID)?.theme.palette,
+                  let source = ArtLibrary.shared.gradedTile("waystone", palette: nil),
+                  let graded = ArtLibrary.shared.gradedTile("waystone", palette: palette),
+                  source.width == graded.width, source.height == graded.height,
+                  let before = PixelImage.pixels(of: source, width: source.width, height: source.height),
+                  let after = PixelImage.pixels(of: graded, width: graded.width, height: graded.height)
+            else { return nil }
+            func hsb(_ pixels: [UInt8], _ index: Int) -> (h: CGFloat, s: CGFloat, b: CGFloat)? {
+                let alpha = CGFloat(pixels[index + 3])
+                guard alpha >= 200 else { return nil }
+                var h: CGFloat = 0, s: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
+                UIColor(red: CGFloat(pixels[index]) / alpha, green: CGFloat(pixels[index + 1]) / alpha,
+                        blue: CGFloat(pixels[index + 2]) / alpha, alpha: 1).getHue(&h, saturation: &s, brightness: &b, alpha: &a)
+                return (h, s, b)
+            }
+            var runes: [(h: CGFloat, s: CGFloat, b: CGFloat)] = []
+            for index in stride(from: 0, to: before.count, by: 4) {
+                // A rune as drawn: blue (its moss and stone aren't), coloured and lit.
+                guard let drawn = hsb(before, index), (0.5...0.7).contains(drawn.h), drawn.s > 0.3, drawn.b > 0.45,
+                      let shown = hsb(after, index), shown.s > 0.2 else { continue }
+                runes.append(shown)
+            }
+            guard let brightest = runes.max(by: { $0.s * $0.b < $1.s * $1.b }),
+                  let deepest = runes.min(by: { $0.b < $1.b }) else { return nil }
+            return Glow(light: UIColor(hue: brightest.h, saturation: min(1, brightest.s) * 0.75, brightness: 1, alpha: 1),
+                        accent: UIColor(hue: deepest.h, saturation: min(1, deepest.s), brightness: 0.95, alpha: 1))
+        }
+    }
     /// Away: the gathering, then you're gone; arriving takes about as long.
     static let gather = 1.15, vanish = 0.45
     static var length: Double { gather + vanish }
@@ -26,17 +79,19 @@ enum WaystoneMagic {
 
     // MARK: Away
 
-    /// Takes `player` away from `stone` (the waystone's place, if it's known), drawn in `parent`, then `done`.
-    static func away(_ player: Walker, from stone: CGPoint?, in parent: SKNode, then done: @escaping () -> Void) {
+    /// Takes `player` away from `stone` (the waystone's place, if it's known), drawn in `parent` in
+    /// `glow`, the stone's colours in its land, then `done`.
+    static func away(_ player: Walker, from stone: CGPoint?, glow: Glow, in parent: SKNode, then done: @escaping () -> Void) {
+        let light = glow.light
         let feet = player.position
-        let ring = runeRing(at: feet, in: parent)
+        let ring = runeRing(at: feet, glow: glow, in: parent)
         ring.setScale(0.2)
         ring.alpha = 0
         ring.run(.group([.fadeIn(withDuration: 0.35), .scale(to: 1, duration: 0.45)]))
         ring.run(.sequence([.wait(forDuration: length), .group([.fadeOut(withDuration: 0.5), .scale(to: 1.25, duration: 0.5)]), .removeFromParent()]))
-        if let stone { flare(stone, toward: feet, in: parent) }
-        motes(around: feet, in: parent, rising: true, count: 16, over: gather)
-        let pillar = pillar(at: feet, in: parent)
+        if let stone { flare(stone, toward: feet, glow: glow, in: parent) }
+        motes(around: feet, glow: glow, in: parent, rising: true, count: 16, over: gather)
+        let pillar = pillar(at: feet, glow: glow, in: parent)
         pillar.alpha = 0
         pillar.xScale = 0.4
         pillar.run(.sequence([
@@ -55,27 +110,28 @@ enum WaystoneMagic {
                     .moveBy(x: 0, y: rise, duration: vanish)]),
         ]), withKey: "waystone")
         player.run(.sequence([.wait(forDuration: gather + vanish * 0.4), .fadeOut(withDuration: vanish * 0.6)]))
-        parent.run(.sequence([.wait(forDuration: gather), .run { flash(at: feet, in: parent); burst(at: feet, in: parent, outward: true) }]))
+        parent.run(.sequence([.wait(forDuration: gather), .run { flash(at: feet, in: parent); burst(at: feet, glow: glow, in: parent, outward: true) }]))
         parent.run(.sequence([.wait(forDuration: length), .run(done)]))
     }
 
     // MARK: Arriving
 
-    /// Before the land shows: you aren't there yet (`arrive` brings you out of the light).
-    static func hold(_ player: Walker) {
+    /// Before the land shows: you aren't there yet (`arrive` brings you out of the light, `glow`).
+    static func hold(_ player: Walker, glow: Glow) {
         player.alpha = 0
         player.sprite.removeAction(forKey: "waystone")
         player.sprite.position = CGPoint(x: 0, y: rise)
         player.sprite.xScale = 0.25
         player.sprite.yScale = 1.5
-        player.sprite.color = light
+        player.sprite.color = glow.light
         player.sprite.colorBlendFactor = 0.85
     }
 
-    /// You come out of the light in a ring of runes at the waystone you chose, then `done`.
-    static func arrive(_ player: Walker, in parent: SKNode, then done: @escaping () -> Void) {
+    /// You come out of the light in a ring of runes at the waystone you chose, in its colours there
+    /// (`glow`), then `done`.
+    static func arrive(_ player: Walker, glow: Glow, in parent: SKNode, then done: @escaping () -> Void) {
         let feet = player.position
-        let ring = runeRing(at: feet, in: parent)
+        let ring = runeRing(at: feet, glow: glow, in: parent)
         ring.setScale(1.25)
         ring.alpha = 0
         ring.run(.sequence([
@@ -85,9 +141,9 @@ enum WaystoneMagic {
             .removeFromParent(),
         ]))
         flash(at: feet, in: parent)
-        burst(at: feet, in: parent, outward: false)
-        motes(around: feet, in: parent, rising: false, count: 12, over: arrival)
-        let pillar = pillar(at: feet, in: parent)
+        burst(at: feet, glow: glow, in: parent, outward: false)
+        motes(around: feet, glow: glow, in: parent, rising: false, count: 12, over: arrival)
+        let pillar = pillar(at: feet, glow: glow, in: parent)
         pillar.alpha = 0.9
         pillar.run(.sequence([.wait(forDuration: 0.25), .group([.fadeOut(withDuration: 0.7), .scaleX(to: 0.2, duration: 0.7)]), .removeFromParent()]))
         let settle = SKAction.group([
@@ -105,14 +161,15 @@ enum WaystoneMagic {
 
     /// The ring of runes on the ground: two rings of light, eight runes going round between them, and
     /// a glow under it all, flat on the ground as the map is seen.
-    private static func runeRing(at point: CGPoint, in parent: SKNode) -> SKNode {
+    private static func runeRing(at point: CGPoint, glow: Glow, in parent: SKNode) -> SKNode {
+        let light = glow.light, violet = glow.accent
         let node = SKNode()
         node.position = point
         node.zPosition = z - 2
-        let glow = SkillEffects.glowSprite(light, size: CGSize(width: 110, height: 48))
-        glow.alpha = 0.55
-        glow.zPosition = 0
-        node.addChild(glow)
+        let halo = SkillEffects.glowSprite(light, size: CGSize(width: 110, height: 48))
+        halo.alpha = 0.55
+        halo.zPosition = 0
+        node.addChild(halo)
         for (index, radius) in [CGFloat(34), 25].enumerated() {
             let ring = SKShapeNode(ellipseOf: CGSize(width: radius * 2, height: radius * 0.9))
             ring.strokeColor = index == 0 ? light : violet
@@ -148,8 +205,8 @@ enum WaystoneMagic {
     }
 
     /// A tall soft pillar of light standing on `point`.
-    private static func pillar(at point: CGPoint, in parent: SKNode) -> SKSpriteNode {
-        let pillar = SkillEffects.glowSprite(light, size: CGSize(width: 54, height: 210))
+    private static func pillar(at point: CGPoint, glow: Glow, in parent: SKNode) -> SKSpriteNode {
+        let pillar = SkillEffects.glowSprite(glow.light, size: CGSize(width: 54, height: 210))
         pillar.anchorPoint = CGPoint(x: 0.5, y: 0.1)
         pillar.position = point
         pillar.zPosition = z
@@ -158,7 +215,8 @@ enum WaystoneMagic {
     }
 
     /// The waystone lighting up, and motes of its light streaming over to `target`.
-    private static func flare(_ stone: CGPoint, toward target: CGPoint, in parent: SKNode) {
+    private static func flare(_ stone: CGPoint, toward target: CGPoint, glow colours: Glow, in parent: SKNode) {
+        let light = colours.light, violet = colours.accent
         let glow = SkillEffects.glowSprite(light, size: CGSize(width: 46, height: 64))
         glow.position = stone + CGVector(dx: 0, dy: 22)
         glow.zPosition = z
@@ -190,7 +248,8 @@ enum WaystoneMagic {
     }
 
     /// Motes round `center`: spiralling up and in as you go (`rising`), or down and in as you arrive.
-    private static func motes(around center: CGPoint, in parent: SKNode, rising: Bool, count: Int, over duration: Double) {
+    private static func motes(around center: CGPoint, glow: Glow, in parent: SKNode, rising: Bool, count: Int, over duration: Double) {
+        let light = glow.light, violet = glow.accent
         for index in 0..<count {
             let mote = SkillEffects.glowSprite(index.isMultiple(of: 3) ? violet : light, size: CGSize(width: 8, height: 8))
             mote.zPosition = z + 1
@@ -223,7 +282,8 @@ enum WaystoneMagic {
     }
 
     /// Sparks flying out from where you stand (`outward`), or gathering in to it.
-    private static func burst(at point: CGPoint, in parent: SKNode, outward: Bool) {
+    private static func burst(at point: CGPoint, glow: Glow, in parent: SKNode, outward: Bool) {
+        let light = glow.light, violet = glow.accent
         let middle = point + CGVector(dx: 0, dy: 20)
         let count = 14
         for index in 0..<count {
