@@ -958,26 +958,6 @@ def bluebell_house(b):
         b.poly([(x - 7, GROUND), (x + lean * 6, GROUND - 16), (x + 7, GROUND)], "#5aa84a", profile="dome")
 
 
-def crystal_cottage(b):
-    """A little stone cottage the star's crystals have grown through: spires out of its roof and wall,
-    glowing windows."""
-    x0, x1 = 24, 60
-    top = box(b, x0, x1, 24, "#a8a0b8", pattern="blocks")
-    footing(b, x0, x1, colour="#7a7488")
-    eaves_roof(b, x0, x1, top, "#5a4a8a", "slate", rise=14, over=3, wall="#a8a0b8", wall_pattern="blocks")
-    def spire(x, y, h, w, colour):
-        b.poly([(x - w, y), (x, y - h), (x + w * 0.2, y)], shade(colour, 1.2), tone=0.85)
-        b.poly([(x + w * 0.2, y), (x, y - h), (x + w, y)], shade(colour, 0.85), tone=0.45)
-    spire(38, top - 6, 22, 4.5, "#8ad8f0")
-    spire(46, top - 9, 15, 3.4, "#c8a0f0")
-    spire(70, GROUND - 2, 26, 5, "#8ad8f0")
-    spire(76, GROUND - 1, 14, 3.4, "#c8a0f0")
-    spire(18, GROUND, 12, 3.2, "#8ad8f0")
-    door(b, x0 + 10, w=9, h=14, colour="#4a6ab0")
-    window(b, x1 - 9, top + 10, w=7, h=8, glass="#a8f0ff", frame="#5a4a8a")
-
-
-
 def by_hand(draw=None, amount=0.6, wave=0.5):
     """Marks a drawing to be drawn with its edges off the ruler (`Build.bend`), as RD's houses are:
     `amount` pixels off it at most, in waves `wave` times as close as the first bend's (about 20 pixels
@@ -989,6 +969,53 @@ def by_hand(draw=None, amount=0.6, wave=0.5):
         d.organic, d.wave = amount, wave
         return d
     return mark(draw) if draw else mark
+
+
+def crystal(b, x, y, h, w, colour, lean=0.0):
+    """A cut crystal standing from (x, y), `h` tall and `w` across its middle: a six-sided prism with a
+    pointed tip, its three faces turned to us each lit a clear step apart (the left catching the light,
+    nearly white; the middle glossy; the right in deep shade), the tip's facets a step brighter than the
+    faces under them, and a glint near the tip. `lean` tips it over sideways (its top moves `lean` × its
+    height). Two flat triangles, light and dark, read as paper (2026-11-02, the user: the crystal
+    cottage's "look too flat"); faces shaded round, a glow under each and thin crystals came out muddy
+    at this size: flat faces, strong steps, few and broad."""
+    shoulder = y - h * 0.55                                                       # where the faces end and the tip begins
+
+    def at(px, py):
+        """Leaned, and narrowing up to the shoulder (to 0.75 of its foot): a crystal tapers."""
+        squeeze = 1 - 0.25 * min(1.0, (y - py) / (y - shoulder))
+        return (x + (px - x) * squeeze + lean * (y - py), py)
+    xs = (x - w, x - w * 0.3, x + w * 0.4, x + w)                                 # the edges between the faces
+    shoulders = (shoulder + 1.2, shoulder, shoulder, shoulder + 1.2)              # lower at the sides, turning away
+    tip = at(x + w * 0.05, y - h)
+    faces = ((shade(colour, 1.45), 0.95, 0.0), (colour, 0.65, 0.5), (shade(colour, 0.58), 0.3, 0.0))
+    for k, (fill, tone, gloss) in enumerate(faces):
+        a, c, sa, sc = xs[k], xs[k + 1], shoulders[k], shoulders[k + 1]
+        b.poly([at(a, y), at(c, y), at(c, sc), at(a, sa)], fill, texture=0.0, profile="flat", tone=tone, gloss=gloss)
+        b.poly([at(a, sa), at(c, sc), tip], shade(fill, 1.15), texture=0.0, profile="flat", tone=min(1.0, tone + 0.1))
+    gx, gy = at(xs[1] + w * 0.25, shoulder - h * 0.05)
+    b.ellipse(gx, gy, 0.8, 0.8, "#ffffff", texture=0.0, profile="flat")
+
+
+@by_hand
+def crystal_cottage(b):
+    """A little stone cottage the star's crystals have grown through: cut crystals out of its roof and
+    up its walls, glowing windows."""
+    x0, x1 = 24, 60
+    top = box(b, x0, x1, 24, "#a8a0b8", pattern="blocks")
+    footing(b, x0, x1, colour="#7a7488")
+    eaves_roof(b, x0, x1, top, "#5a4a8a", "slate", rise=14, over=3, wall="#a8a0b8", wall_pattern="blocks")
+    blue, violet = "#6ac4ec", "#a880e8"
+    crystal(b, 45, top - 8, 14, 3.2, violet, lean=0.2)                           # through the roof
+    crystal(b, 37, top - 6, 24, 4.4, blue, lean=-0.05)
+    crystal(b, 77, GROUND - 1, 15, 3.4, violet, lean=0.22)                        # up the wall at the right
+    crystal(b, 69, GROUND - 2, 28, 5.0, blue, lean=0.04)
+    crystal(b, 19, GROUND, 15, 3.6, blue, lean=-0.16)                             # and at the left
+    door(b, x0 + 10, w=9, h=14, colour="#4a6ab0")
+    # Warm lamplight: a pale cyan glass shared its shades with the crystals' lit faces and the palette cut
+    # speckled it with theirs.
+    window(b, x1 - 9, top + 10, w=7, h=8, glass="#ffd27a", frame="#5a4a8a")
+
 
 
 def grounds(b, x0, x1, colour="#6a9a40", stone="#9a948a", path=None, earth="#c8a878", seed=3):

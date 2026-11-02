@@ -779,6 +779,14 @@ in a loose arc, its end trailing off thin along the bottom; never coiled.
 
 ## Learned
 
+- **2026-11-02 (crystals):** The crystal cottage's crystals, each two flat triangles (one light, one
+  dark), "look too flat" (the user). A crystal reads as a cut stone by its facets: a prism of three faces
+  a clear step of light apart (the lit one nearly white, the shaded one deep), a tip of facets a step
+  brighter, a taper to its shoulder and a lean (`building_art.crystal`). Facets shaded round, a glow
+  under each and thin crystals came out muddy at a house's size: keep the faces flat, the steps strong,
+  the crystals few and broad. A cyan window beside them was speckled by the palette cut (it shares their
+  shades); warm lamplight keeps it apart.
+
 - **2026-11-02 (the bend):** The first bend (`Build.bend`, 1.2 pixels in waves about 10 long) made the
   drawn buildings "too wavy, like the castle at Emerald Road" (the user): a ripple down every wall, band
   and turret. Its job is only to break long straight runs (`straight_edges`, a hard band on RD's share);
