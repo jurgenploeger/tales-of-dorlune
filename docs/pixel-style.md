@@ -583,8 +583,9 @@ side wall going back, and a hard footing line on nothing. RD's:
   were 0.41; hard, at most 0.40, RD's 90th percentile, `pixel_style.CAPS`) and `grid_lines` (RD's
   0.014, ours 0.039; soft, at most 0.033). They cost two of RD's own a pass (now 18 / 29): its puppet
   theatre and shop front are drawn as boxes too. `building_art.by_hand` draws a building with `Build.bend`:
-  every edge cut every couple of pixels and moved by one smooth field of offsets (about 1.2 pixels, the
-  same wherever two faces share an edge, so they still meet).
+  every edge cut every couple of pixels and moved by one smooth field of offsets (0.6 pixels in waves
+  about 20 long since 2026-11-02, a little more where a drawing needs it for `straight_edges`; the same
+  wherever two faces share an edge, so they still meet). Roofs and pillars keep to the ruler (`ruled`).
 - **Big rounded stuff.** Stones are lumps 4 to 8 pixels long, each lit on its upper left and dark on its
   lower right, corners worn into the joints, every other one a pixel up so no joint runs across the face
   (`rubble`); shingles are rounded tongues that curl at their foot (`shingles`, 8 × 5). A fine even
@@ -643,7 +644,7 @@ Its round windows are lamplit amber held at one tone: a pale yellow glass on its
 the palette cut (`limit_palette`) merged it into the cap.
 
 The three landmarks (`emerald_spire`, `star_observatory`, `moonwell`) went from 0.015, 0.015 and 0.019 to
-0.017, 0.023 (redrawn as a drum) and 0.022 with these. `fit` measured a drawing on the 96-pixel frame, so one taller than it
+0.017, 0.023 (redrawn as a drum) and 0.022 with these (the moonwell 0.024 since its redraw, 2026-11-02: *Learned*). `fit` measured a drawing on the 96-pixel frame, so one taller than it
 (the spire) was cut off and measured short; one that reaches the frame's edge is now measured again on a
 canvas with room all round.
 
@@ -777,6 +778,42 @@ in a loose arc, its end trailing off thin along the bottom; never coiled.
   5. Animation: walk cycles stay RD's for now (`sprite-acceptance.md`).
 
 ## Learned
+
+- **2026-11-02 (roofs and pillars):** "Roof should still have basic geometry, same for pillars" (the
+  user): the bend is for walls and stone. Roofs, spires, domes, cornices, columns and pilasters keep to
+  the ruler (`Build.ruled()`, and `@ruled` on `gable`, `gable_roof`, `eaves_roof`, `dome`,
+  `facet_spire`). A building whose outline is mostly roof and columns then fails `straight_edges`
+  however hard its walls bend (the Moonwell, its cornices and pilasters its outline): break the line by
+  design, as a builder would (finials along its cornices), not by bending the roof.
+
+- **2026-11-02 (crystals):** The crystal cottage's crystals, each two flat triangles (one light, one
+  dark), "look too flat" (the user). A crystal reads as a cut stone by its facets: a prism of three faces
+  a clear step of light apart (the lit one nearly white, the shaded one deep), a tip of facets a step
+  brighter, a taper to its shoulder and a lean (`building_art.crystal`). Facets shaded round, a glow
+  under each and thin crystals came out muddy at a house's size: keep the faces flat, the steps strong,
+  the crystals few and broad. A cyan window beside them was speckled by the palette cut (it shares their
+  shades); warm lamplight keeps it apart.
+
+- **2026-11-02 (the bend):** The first bend (`Build.bend`, 1.2 pixels in waves about 10 long) made the
+  drawn buildings "too wavy, like the castle at Emerald Road" (the user): a ripple down every wall, band
+  and turret. Its job is only to break long straight runs (`straight_edges`, a hard band on RD's share);
+  half as far in waves twice as long (`by_hand`'s default, 0.6 and 0.5) does that for most, a lean and a
+  bulge rather than a ripple. No one setting passes them all: where the waves fall decides it, so a
+  drawing too ruled at the default takes a little more of its own (`@by_hand(amount=0.8)`, the guild;
+  the moonwell 1.0 in longer waves). Drawn dead straight, five of the ten fail the band. A long pale
+  edge bent hard came out lumpy and read as snow (the Moonwell's cornices at 1.2); at the gentle bend
+  it doesn't.
+
+- **2026-11-02 (landmarks):** The Moonwell's three free-standing arches, thin, pale grey and rounded at
+  every end, "look too much like bones" (the user), and the numbers passed them. Pale, thin and rounded
+  is how bone reads; a building reads by its making: coursed `blocks`, a cornice with its shadow under
+  it, pilasters with capitals and bases, voussoirs round each arch, in a tinted stone (the observatory's
+  violet). Shade a big dark hollow round, not flat (`cluster_size`). A crescent is cut
+  (`crescent`), never a disc with a disc of the sky over it: graded another colour, the sky disc shows.
+  Placing landmarks: on screen a land's column step goes right and up and its row step left and up
+  (`WorldMap.project`), so two buildings with the same `x − y` stand in one screen column, the nearer
+  one's roof in the farther one's foot. The acorn cottage at (5, −10) stood so over the observatory at
+  (−1, −15), its brown blending with the telescope; keep a tall one's neighbours 4 or more apart in `x − y`.
 
 - **2026-10-31 (palette swaps):** The swap preview showed the base's colours, so the first Midnight
   Pegasus went out a blob of one dark hue, and `check` passed it on the base's numbers. `sprite_check.py`

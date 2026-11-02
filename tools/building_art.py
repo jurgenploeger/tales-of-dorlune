@@ -15,6 +15,8 @@ them beside RD's `house` and `item_shop`; `ids...` redraws only those. Needs pil
 docs/pixel-style.md has the rules.
 """
 
+import contextlib
+import functools
 import math
 import pathlib
 import sys
@@ -187,7 +189,7 @@ class Build:
     96-pixel frame's coordinates, then (`fit`) scaled about its foot to fill the frame as RD's do; the
     materials' patterns stay at the sprite's own pixels, so a bigger house has more blocks, not bigger."""
 
-    def __init__(self, k=1.0, cx=SIZE / 2, organic=0.0, size=SIZE):
+    def __init__(self, k=1.0, cx=SIZE / 2, organic=0.0, size=SIZE, wave=1.0):
         # Its canvas, `size` pixels square: a house's 96, a grand building's more (its drawing, in the
         # 96-pixel frame's coordinates, scaled up to fill it; its materials stay at the sprite's pixels).
         self.size = size
@@ -196,11 +198,25 @@ class Build:
         self.s.light, self.s.rim = LIGHT, "lower"
         self.k, self.cx = k, cx
         # How far its edges wander off the ruler, in pixels (0: drawn straight; `bend`).
-        self.organic = organic
+        self.organic, self.wave = organic, wave
+        # Inside `ruled()`, shapes keep to the ruler whatever the bend.
+        self.keeps_ruled = False
 
     def t(self, points, closed=True, straight=False):
         pts = [(self.size / 2 + (x - self.cx) * self.k, self.foot + (y - GROUND) * self.k) for x, y in points]
-        return self.bend(pts, closed) if self.organic and len(pts) > 1 and not straight else pts
+        bent = self.organic and len(pts) > 1 and not straight and not self.keeps_ruled
+        return self.bend(pts, closed) if bent else pts
+
+    @contextlib.contextmanager
+    def ruled(self):
+        """Everything drawn inside keeps to the ruler: roofs and pillars, whose plain geometry is what
+        makes them read (2026-11-02, the user: "Roof should still have basic geometry, same for
+        pillars"). The bend is for walls and stone."""
+        was, self.keeps_ruled = self.keeps_ruled, True
+        try:
+            yield
+        finally:
+            self.keeps_ruled = was
 
     def bend(self, pts, closed):
         """The outline drawn by hand, as RD's houses are (2026-10-24: ours came out "a bit too squared"):
@@ -214,9 +230,9 @@ class Build:
             out += [(x0 + (x1 - x0) * k / steps, y0 + (y1 - y0) * k / steps) for k in range(steps)]
         if not closed:
             out.append(pts[-1])
-        a = self.organic
-        return [(x + a * (0.5 * math.sin(0.61 * x + 0.43 * y + 0.7) + 0.5 * math.sin(0.29 * x - 0.71 * y + 2.1)),
-                 y + a * (0.5 * math.sin(0.57 * y - 0.67 * x + 1.9) + 0.5 * math.sin(0.31 * y + 0.73 * x + 4.0)))
+        a, f = self.organic, self.wave
+        return [(x + a * (0.5 * math.sin(f * (0.61 * x + 0.43 * y) + 0.7) + 0.5 * math.sin(f * (0.29 * x - 0.71 * y) + 2.1)),
+                 y + a * (0.5 * math.sin(f * (0.57 * y - 0.67 * x) + 1.9) + 0.5 * math.sin(f * (0.31 * y + 0.73 * x) + 4.0)))
                 for x, y in out]
 
     def _mask(self, points):
@@ -320,6 +336,16 @@ def footing(b, x0, x1, ground=GROUND, depth=1.0, colour="#8f8a86"):
     b.surface([(x0 - 1, ground + 1), (x1, ground + 1), (x1, ground - 3), (x0 - 1, ground - 3)], colour, "blocks")
 
 
+def ruled(draw):
+    """Draws a helper's shapes on the ruler (`Build.ruled`): a roof, a spire, a dome."""
+    @functools.wraps(draw)
+    def drawn(b, *args, **kw):
+        with b.ruled():
+            return draw(b, *args, **kw)
+    return drawn
+
+
+@ruled
 def gable_roof(b, x0, x1, top, colour, pattern="tiles", rise=20, over=3, depth=1.0):
     """A roof with its gable to the front: the gable wall's triangle (in the wall's own colour, drawn by
     the caller) under a roof whose right plane runs back, and an edge of the left plane."""
@@ -338,12 +364,14 @@ def gable_roof(b, x0, x1, top, colour, pattern="tiles", rise=20, over=3, depth=1
     return apex
 
 
+@ruled
 def gable(b, x0, x1, top, wall, pattern="plaster", rise=20):
     """The gable end's triangle of wall, over a front wall from x0 to x1."""
     mid = (x0 + x1) / 2
     b.surface([(x0, top + 0.5), (x1, top + 0.5), (mid, top - rise + 1)], wall, pattern, tone=0.04, eave=3)
 
 
+@ruled
 def eaves_roof(b, x0, x1, top, colour, pattern="tiles", rise=16, over=3, depth=1.0, wall=None, wall_pattern=None):
     """A roof with its eaves to the front: the front plane sloping up and back to the ridge, the gable
     end on the right (in `wall`)."""
@@ -958,30 +986,64 @@ def bluebell_house(b):
         b.poly([(x - 7, GROUND), (x + lean * 6, GROUND - 16), (x + 7, GROUND)], "#5aa84a", profile="dome")
 
 
+def by_hand(draw=None, amount=0.6, wave=0.5):
+    """Marks a drawing to be drawn with its edges off the ruler (`Build.bend`), as RD's houses are:
+    `amount` pixels off it at most, in waves `wave` times as close as the first bend's (about 20 pixels
+    long at 0.5). The first bend, 1.2 in waves of 10, made the walls wavy (2026-11-02, the user: "too
+    wavy, like the castle at Emerald Road"); the gentle one keeps them standing, a lean and a bulge, not
+    a ripple. A drawing whose silhouette is too ruled at that for `straight_edges` (RD's own share, a
+    hard band) takes a little more: `@by_hand(amount=0.9)`."""
+    def mark(d):
+        d.organic, d.wave = amount, wave
+        return d
+    return mark(draw) if draw else mark
+
+
+def crystal(b, x, y, h, w, colour, lean=0.0):
+    """A cut crystal standing from (x, y), `h` tall and `w` across its middle: a six-sided prism with a
+    pointed tip, its three faces turned to us each lit a clear step apart (the left catching the light,
+    nearly white; the middle glossy; the right in deep shade), the tip's facets a step brighter than the
+    faces under them, and a glint near the tip. `lean` tips it over sideways (its top moves `lean` × its
+    height). Two flat triangles, light and dark, read as paper (2026-11-02, the user: the crystal
+    cottage's "look too flat"); faces shaded round, a glow under each and thin crystals came out muddy
+    at this size: flat faces, strong steps, few and broad."""
+    shoulder = y - h * 0.55                                                       # where the faces end and the tip begins
+
+    def at(px, py):
+        """Leaned, and narrowing up to the shoulder (to 0.75 of its foot): a crystal tapers."""
+        squeeze = 1 - 0.25 * min(1.0, (y - py) / (y - shoulder))
+        return (x + (px - x) * squeeze + lean * (y - py), py)
+    xs = (x - w, x - w * 0.3, x + w * 0.4, x + w)                                 # the edges between the faces
+    shoulders = (shoulder + 1.2, shoulder, shoulder, shoulder + 1.2)              # lower at the sides, turning away
+    tip = at(x + w * 0.05, y - h)
+    faces = ((shade(colour, 1.45), 0.95, 0.0), (colour, 0.65, 0.5), (shade(colour, 0.58), 0.3, 0.0))
+    for k, (fill, tone, gloss) in enumerate(faces):
+        a, c, sa, sc = xs[k], xs[k + 1], shoulders[k], shoulders[k + 1]
+        b.poly([at(a, y), at(c, y), at(c, sc), at(a, sa)], fill, texture=0.0, profile="flat", tone=tone, gloss=gloss)
+        b.poly([at(a, sa), at(c, sc), tip], shade(fill, 1.15), texture=0.0, profile="flat", tone=min(1.0, tone + 0.1))
+    gx, gy = at(xs[1] + w * 0.25, shoulder - h * 0.05)
+    b.ellipse(gx, gy, 0.8, 0.8, "#ffffff", texture=0.0, profile="flat")
+
+
+@by_hand
 def crystal_cottage(b):
-    """A little stone cottage the star's crystals have grown through: spires out of its roof and wall,
-    glowing windows."""
+    """A little stone cottage the star's crystals have grown through: cut crystals out of its roof and
+    up its walls, glowing windows."""
     x0, x1 = 24, 60
     top = box(b, x0, x1, 24, "#a8a0b8", pattern="blocks")
     footing(b, x0, x1, colour="#7a7488")
     eaves_roof(b, x0, x1, top, "#5a4a8a", "slate", rise=14, over=3, wall="#a8a0b8", wall_pattern="blocks")
-    def spire(x, y, h, w, colour):
-        b.poly([(x - w, y), (x, y - h), (x + w * 0.2, y)], shade(colour, 1.2), tone=0.85)
-        b.poly([(x + w * 0.2, y), (x, y - h), (x + w, y)], shade(colour, 0.85), tone=0.45)
-    spire(38, top - 6, 22, 4.5, "#8ad8f0")
-    spire(46, top - 9, 15, 3.4, "#c8a0f0")
-    spire(70, GROUND - 2, 26, 5, "#8ad8f0")
-    spire(76, GROUND - 1, 14, 3.4, "#c8a0f0")
-    spire(18, GROUND, 12, 3.2, "#8ad8f0")
+    blue, violet = "#6ac4ec", "#a880e8"
+    crystal(b, 45, top - 8, 14, 3.2, violet, lean=0.2)                           # through the roof
+    crystal(b, 37, top - 6, 24, 4.4, blue, lean=-0.05)
+    crystal(b, 77, GROUND - 1, 15, 3.4, violet, lean=0.22)                        # up the wall at the right
+    crystal(b, 69, GROUND - 2, 28, 5.0, blue, lean=0.04)
+    crystal(b, 19, GROUND, 15, 3.6, blue, lean=-0.16)                             # and at the left
     door(b, x0 + 10, w=9, h=14, colour="#4a6ab0")
-    window(b, x1 - 9, top + 10, w=7, h=8, glass="#a8f0ff", frame="#5a4a8a")
+    # Warm lamplight: a pale cyan glass shared its shades with the crystals' lit faces and the palette cut
+    # speckled it with theirs.
+    window(b, x1 - 9, top + 10, w=7, h=8, glass="#ffd27a", frame="#5a4a8a")
 
-
-
-def by_hand(draw):
-    """Marks a drawing to be drawn with its edges off the ruler (`Build.bend`), as RD's houses are."""
-    draw.organic = 1.2
-    return draw
 
 
 def grounds(b, x0, x1, colour="#6a9a40", stone="#9a948a", path=None, earth="#c8a878", seed=3):
@@ -1049,10 +1111,11 @@ def acorn_cottage(b):
     b.poly(oval(cx, rim + 5.5, r0, r0 * TILT, math.pi, 0) + oval(cx, rim + 1, r0, r0 * TILT, 0, math.pi), shade(nut, 0.5),
            texture=0.0, profile="flat")
     # The cap: a dome of scales, lit on top, darker down to its rim.
-    R, rise = 30, 23
-    b.surface(oval(cx, rim, R, R * TILT, 0, math.pi) + oval(cx, rim, R, rise, math.pi, 2 * math.pi, 25)[1:-1], cap, "shingles",
-              curve=1.0, slope=(-0.004, -0.012))
-    b.stroke(oval(cx, rim + 0.5, R + 0.5, R * TILT + 0.3, 0.05, math.pi - 0.05, 23), 3.2, shade(cap, 0.92))   # the rolled rim
+    with b.ruled():  # the cap
+        R, rise = 30, 23
+        b.surface(oval(cx, rim, R, R * TILT, 0, math.pi) + oval(cx, rim, R, rise, math.pi, 2 * math.pi, 25)[1:-1], cap, "shingles",
+                  curve=1.0, slope=(-0.004, -0.012))
+        b.stroke(oval(cx, rim + 0.5, R + 0.5, R * TILT + 0.3, 0.05, math.pi - 0.05, 23), 3.2, shade(cap, 0.92))   # the rolled rim
     porthole(cx - 13, rim - 11, 3.8, 3.4)                                         # a dormer in the cap
     # A little stovepipe out of the cap, made, so straight.
     px = cx + 15
@@ -1098,11 +1161,12 @@ def bank(b):
         window(b, x, top + 15, w=6, h=9, frame="#8a6438", glass="#ffd27a", arched=True, deep=True)
         b.stroke([(x, top + 11.5), (x, top + 19)], 0.6, "#4a3a36", straight=True)
     # Four columns, each with its base and capital, shaded round.
-    for x in (25, 35, 49, 59):
-        b.poly([(x, floor - 1.5), (x + 4.5, floor - 1.5), (x + 4.5, top + 4), (x, top + 4)], cream, texture=0.03,
-               profile="cylinder", straight=True)
-        b.rect(x - 1.2, floor - 2.5, x + 5.7, floor, stone, texture=0.03)
-        b.rect(x - 1.2, top + 2, x + 5.7, top + 5, stone, texture=0.03)
+    with b.ruled():  # the columns
+        for x in (25, 35, 49, 59):
+            b.poly([(x, floor - 1.5), (x + 4.5, floor - 1.5), (x + 4.5, top + 4), (x, top + 4)], cream, texture=0.03,
+                   profile="cylinder", straight=True)
+            b.rect(x - 1.2, floor - 2.5, x + 5.7, floor, stone, texture=0.03)
+            b.rect(x - 1.2, top + 2, x + 5.7, top + 5, stone, texture=0.03)
     # The entablature, standing out with its shadow under it, a gold band along it.
     ledge(b, 21, 67, top - 3, cream, shade(stone, 0.7), h=5)
     b.stroke([(21, top - 0.5), (67, top - 0.5)], 0.9, gold)
@@ -1138,11 +1202,12 @@ def lake_shrine(b):
     b.poly([(43, floor - 14), (38, floor - 18), (39.5, floor - 10)], "#d8dce6", texture=0.02)
     b.poly([(45, floor - 14), (50, floor - 18), (48.5, floor - 10)], "#d8dce6", texture=0.02)
     b.ellipse(44, floor - 18, 2.0, 2.0, "#e4e8f0", texture=0.0)
-    for x in (25.5, 36.5, 47, 57.5):                                    # stout columns, a base and a capital each
-        b.poly([(x, floor - 1.5), (x + 5, floor - 1.5), (x + 5, top + 4), (x, top + 4)], marble, texture=0.03,
-               profile="cylinder")
-        b.rect(x - 1.2, floor - 2.5, x + 6.2, floor, stone, texture=0.03)
-        b.rect(x - 1.2, top + 2, x + 6.2, top + 5, stone, texture=0.03)
+    with b.ruled():  # the columns
+        for x in (25.5, 36.5, 47, 57.5):                                    # stout columns, a base and a capital each
+            b.poly([(x, floor - 1.5), (x + 5, floor - 1.5), (x + 5, top + 4), (x, top + 4)], marble, texture=0.03,
+                   profile="cylinder")
+            b.rect(x - 1.2, floor - 2.5, x + 6.2, floor, stone, texture=0.03)
+            b.rect(x - 1.2, top + 2, x + 6.2, top + 5, stone, texture=0.03)
     b.surface([(20, top + 3), (68, top + 3), (68, top - 3), (20, top - 3)], marble, "rubble", tone=0.06)
     b.surface([(68, top + 3), (68 + DX * 0.6, top + 3 + DY * 0.6), (68 + DX * 0.6, top - 3 + DY * 0.6), (68, top - 3)], stone,
               "rubble", tone=-0.38, axes=(SIDEWAYS, DOWN))
@@ -1150,17 +1215,18 @@ def lake_shrine(b):
         b.stroke([(x, top + 3.5), (x, top + 3.5 + length)], 1.1, "#d8f0ff", texture=0.0)
     gable(b, 20, 68, top - 3, marble, "rubble", rise=17)
     gable_roof(b, 20, 68, top - 3, slate, "shingles", rise=17, over=5, depth=0.6)
-    apex = (44, top - 20)
-    b.ellipse(44, top - 10, 4.6, 4.0, "#9aa8c0", texture=0.0)
-    b.ellipse(44, top - 10, 3.5, 3.0, "#5a6a8a", texture=0.0, profile="flat")
-    b.poly([(44, top - 12.8), (46.2, top - 8.2), (41.8, top - 8.2)], "#e0e6f0", gloss=0.7)
-    b.ellipse(44, top - 7.4, 0.9, 0.8, "#e8c050", gloss=0.6)
-    right_eave = (68 + 5, top - 1)
-    lip = (apex[0] + (right_eave[0] - apex[0]) * 0.85, apex[1] + (right_eave[1] - apex[1]) * 0.85)
-    b.poly([apex, (apex[0] + DX * 0.6, apex[1] + DY * 0.6), (lip[0] + DX * 0.6, lip[1] + DY * 0.6 + 1.5),
-            (lip[0] + DX * 0.3, lip[1] + DY * 0.3 + 0.4), (lip[0], lip[1] + 1.8)], snow, texture=0.03, tone=0.62)
-    b.stroke([(20 - 5, top - 1.5), apex, right_eave], 2.2, snow, texture=0.0)
-    b.ellipse(apex[0], apex[1] - 0.8, 3.4, 1.8, snow, texture=0.0)
+    with b.ruled():  # the pediment's bell and the roof's snow
+        apex = (44, top - 20)
+        b.ellipse(44, top - 10, 4.6, 4.0, "#9aa8c0", texture=0.0)
+        b.ellipse(44, top - 10, 3.5, 3.0, "#5a6a8a", texture=0.0, profile="flat")
+        b.poly([(44, top - 12.8), (46.2, top - 8.2), (41.8, top - 8.2)], "#e0e6f0", gloss=0.7)
+        b.ellipse(44, top - 7.4, 0.9, 0.8, "#e8c050", gloss=0.6)
+        right_eave = (68 + 5, top - 1)
+        lip = (apex[0] + (right_eave[0] - apex[0]) * 0.85, apex[1] + (right_eave[1] - apex[1]) * 0.85)
+        b.poly([apex, (apex[0] + DX * 0.6, apex[1] + DY * 0.6), (lip[0] + DX * 0.6, lip[1] + DY * 0.6 + 1.5),
+                (lip[0] + DX * 0.3, lip[1] + DY * 0.3 + 0.4), (lip[0], lip[1] + 1.8)], snow, texture=0.03, tone=0.62)
+        b.stroke([(20 - 5, top - 1.5), apex, right_eave], 2.2, snow, texture=0.0)
+        b.ellipse(apex[0], apex[1] - 0.8, 3.4, 1.8, snow, texture=0.0)
     for x in (12, 76):
         b.stroke([(x, GROUND + 1), (x, GROUND - 11)], 1.6, "#4a4250")
         b.ellipse(x, GROUND - 14.5, 2.8, 3.4, "#3a3a48", texture=0.0)
@@ -1192,7 +1258,7 @@ def pennant(b, x, top, colour, length=9):
     b.poly([(x, top - 12), (x + length, top - 10), (x, top - 7.5)], colour, texture=0.02)
 
 
-@by_hand
+@by_hand(amount=0.8)
 @grand(160)
 def warrior_guild(b):
     """The Warrior Guild's hall, Captain Brann's, the grandest thing in Meadowbrook: a tall hall of rough
@@ -1214,12 +1280,13 @@ def warrior_guild(b):
     footing(b, x0, x1, colour="#7e7872", depth=0.6)
     gable(b, x0, x1, top, stone, "rubble", rise=26)
     gable_roof(b, x0, x1, top, red, "shingles", rise=26, over=5, depth=0.6)
-    for a, c in (((cx - 8, top - 4), (cx + 8, top - 18)), ((cx + 8, top - 4), (cx - 8, top - 18))):
-        b.stroke([a, c], 1.8, "#d8dee8")                                         # the crest: swords and shield
-    b.poly([(cx - 6, top - 17), (cx + 6, top - 17), (cx + 6, top - 10), (cx, top - 3.5), (cx - 6, top - 10)], "#b8302c",
-           texture=0.0)
-    b.stroke([(cx, top - 16), (cx, top - 5.5)], 1.2, "#e8c050")
-    b.stroke([(cx - 4.5, top - 12.5), (cx + 4.5, top - 12.5)], 1.2, "#e8c050")
+    with b.ruled():  # the crest, on the gable
+        for a, c in (((cx - 8, top - 4), (cx + 8, top - 18)), ((cx + 8, top - 4), (cx - 8, top - 18))):
+            b.stroke([a, c], 1.8, "#d8dee8")                                         # the crest: swords and shield
+        b.poly([(cx - 6, top - 17), (cx + 6, top - 17), (cx + 6, top - 10), (cx, top - 3.5), (cx - 6, top - 10)], "#b8302c",
+               texture=0.0)
+        b.stroke([(cx, top - 16), (cx, top - 5.5)], 1.2, "#e8c050")
+        b.stroke([(cx - 4.5, top - 12.5), (cx + 4.5, top - 12.5)], 1.2, "#e8c050")
     b.rect(x0 - 1, top + 13, x1 + 1, top + 15, "#c8c0b4", texture=0.03)          # a string course between storeys
     for x in (x0 + 8, x1 - 8):                                                    # tall arched windows upstairs
         window(b, x, top + 7, w=6, h=9, frame="#5a4a40", arched=True)
@@ -1284,9 +1351,10 @@ def wildfolk_lodge(b):
     window(b, x0 + 7, top + 9, w=6, h=7, frame="#4a3020", box="#f0c040")
     window(b, x1 - 7, top + 9, w=6, h=7, frame="#4a3020", box="#e05a7a")
     door(b, cx, w=11, h=15, colour="#6a4426", frame="#4a3020")
-    for x in (cx - 10, cx + 10):                                                  # the porch on log posts
-        b.stroke([(x, GROUND), (x, GROUND - 19)], 2.2, "#9a6a3e")
-    b.poly([(cx - 13, GROUND - 18), (cx + 13, GROUND - 18), (cx + 11, GROUND - 24), (cx - 11, GROUND - 24)], moss, texture=0.03)
+    with b.ruled():  # the porch, its posts and roof
+        for x in (cx - 10, cx + 10):                                                  # the porch on log posts
+            b.stroke([(x, GROUND), (x, GROUND - 19)], 2.2, "#9a6a3e")
+        b.poly([(cx - 13, GROUND - 18), (cx + 13, GROUND - 18), (cx + 11, GROUND - 24), (cx - 11, GROUND - 24)], moss, texture=0.03)
     sign(b, cx + 12, GROUND - 17, paw_emblem, board="#c8945a")
     totem = [("#8a5a34", "#e8c050"), ("#5a7aa8", "#f0f0e8"), ("#a8483a", "#f0f0e8")]  # a totem: owl, wolf, bear
     for k, (wood, eye) in enumerate(totem):
@@ -1323,19 +1391,20 @@ def bell_tower(b):
     b.ellipse(cx, oy0 + 12.6, 1.2, 1.0, "#8a5a1a")
     b.rect(x0 - 2, oy1, x1 + 2, oy1 + 3, "#c8c4be", texture=0.03)
     b.rect(cx - 1, top + 23, cx + 1, top + 29, "#2a2630", texture=0.0)
-    apex = (cx + 2, top - 24)
-    b.surface([(x0 - 4, top + 2), (x1 + 4, top + 2), (cx + 6, top - 6), apex, (cx - 3, top - 6)], "#5c6684", "shingles",
-              tone=0.12, axes=((1.0, 0.0), DOWN))
-    b.surface([(x1 + 4, top + 2), (x1 + 4 + DX * 0.5, top + 2 + DY * 0.5), apex, (cx + 6, top - 6)], "#5c6684", "shingles",
-              tone=-0.3, axes=(SIDEWAYS, DOWN))
-    b.stroke([apex, (apex[0], apex[1] - 6)], 1.0, "#3a3a44")
-    b.poly([(apex[0] - 3.5, apex[1] - 4.6), (apex[0] + 3.5, apex[1] - 4.6), (apex[0] + 4.5, apex[1] - 3.6),
-            (apex[0] - 3.5, apex[1] - 3.6)], "#3a3a44", texture=0.0)
+    with b.ruled():  # the spire and its weathervane
+        apex = (cx + 2, top - 24)
+        b.surface([(x0 - 4, top + 2), (x1 + 4, top + 2), (cx + 6, top - 6), apex, (cx - 3, top - 6)], "#5c6684", "shingles",
+                  tone=0.12, axes=((1.0, 0.0), DOWN))
+        b.surface([(x1 + 4, top + 2), (x1 + 4 + DX * 0.5, top + 2 + DY * 0.5), apex, (cx + 6, top - 6)], "#5c6684", "shingles",
+                  tone=-0.3, axes=(SIDEWAYS, DOWN))
+        b.stroke([apex, (apex[0], apex[1] - 6)], 1.0, "#3a3a44")
+        b.poly([(apex[0] - 3.5, apex[1] - 4.6), (apex[0] + 3.5, apex[1] - 4.6), (apex[0] + 4.5, apex[1] - 3.6),
+                (apex[0] - 3.5, apex[1] - 3.6)], "#3a3a44", texture=0.0)
     door(b, cx, w=9, h=13, colour="#5a3a2a")
     return b
 
 
-@by_hand
+@by_hand(amount=0.8, wave=0.4)
 def gem_workshop(b):
     """A gemcutter's workshop, Iolanthe's: a squat cottage of rough stone under a big slate shingle roof, a
     wide lit window of cut gems, crystals grown up by its wall, a grinding wheel on a bench out front and a
@@ -1392,6 +1461,7 @@ def steps(b, spans, stone, rise=4, depth=0.6, top=None):
     return GROUND - rise * len(spans)
 
 
+@ruled
 def facet_spire(b, x0, x1, base, height, light, dark, side, depth=0.45):
     """A faceted crystal spire on a base from x0 to x1: its lit facet, its shaded one and its side going
     back, meeting at a point a little right of its middle. Returns the point."""
@@ -1416,12 +1486,13 @@ def emerald_spire(b):
     for x0, x1 in ((14, 28), (66, 80)):                                          # the turrets, behind: round
         cx = (x0 + x1) / 2
         top = box(b, x0, x1, 36, jade, pattern="blocks", depth=0.45, curve=0.9)
-        apex = (cx + 1, top - 20)
-        b.surface([(x0 - 2.5, top + 1), (x1 + 2.5, top + 1), apex], green, "shingles", tone=0.1, curve=0.9)
-        b.surface([(x1 + 2.5, top + 1), (x1 + 2.5 + DX * 0.45, top + 1 + DY * 0.45), apex], green, "shingles", tone=-0.3,
-                  axes=(SIDEWAYS, DOWN))
-        b.stroke([apex, (apex[0], apex[1] - 5)], 1.0, gold)
-        b.ellipse(apex[0], apex[1] - 6, 1.5, 1.5, gold, gloss=0.6)
+        with b.ruled():  # the turret's cone
+            apex = (cx + 1, top - 20)
+            b.surface([(x0 - 2.5, top + 1), (x1 + 2.5, top + 1), apex], green, "shingles", tone=0.1, curve=0.9)
+            b.surface([(x1 + 2.5, top + 1), (x1 + 2.5 + DX * 0.45, top + 1 + DY * 0.45), apex], green, "shingles", tone=-0.3,
+                      axes=(SIDEWAYS, DOWN))
+            b.stroke([apex, (apex[0], apex[1] - 5)], 1.0, gold)
+            b.ellipse(apex[0], apex[1] - 6, 1.5, 1.5, gold, gloss=0.6)
         window(b, cx, top + 13, w=5, h=8, frame="#2e6a46", glass=glow, arched=True, deep=True)
     floor = steps(b, ((24, 70), (29, 65)), jade, top=shade(jade, 1.04))
     x0, x1 = 33, 61
@@ -1439,10 +1510,11 @@ def emerald_spire(b):
     window(b, (ux0 + ux1) / 2, utop + 8, w=6, h=7, frame="#2e6a46", glass=glow, deep=True)
     ledge(b, ux0, ux1, utop - 1, gold, jade, h=3)
     apex = facet_spire(b, ux0 - 1, ux1 + 1, utop - 1, 40, "#6ae896", "#1f8a4a", "#17703c")
-    b.stroke([(ux0 + 2, utop - 3), (apex[0] - 0.5, apex[1] + 4)], 1.0, "#d8ffe0")   # a gleam up its edge
-    b.stroke([apex, (apex[0], apex[1] - 3)], 1.2, gold)
-    b.ellipse(apex[0], apex[1] - 6.5, 3.8, 3.8, "#8affb0", gloss=0.85)
-    b.ellipse(apex[0] - 1.2, apex[1] - 7.8, 1.1, 1.1, "#f0fff4", texture=0.0, profile="flat")
+    with b.ruled():  # the spire's gleam and orb
+        b.stroke([(ux0 + 2, utop - 3), (apex[0] - 0.5, apex[1] + 4)], 1.0, "#d8ffe0")   # a gleam up its edge
+        b.stroke([apex, (apex[0], apex[1] - 3)], 1.2, gold)
+        b.ellipse(apex[0], apex[1] - 6.5, 3.8, 3.8, "#8affb0", gloss=0.85)
+        b.ellipse(apex[0] - 1.2, apex[1] - 7.8, 1.1, 1.1, "#f0fff4", texture=0.0, profile="flat")
     for side in (-1, 1):                                                          # green banners down the plinth
         x = cx + side * 18
         b.poly([(x - 3, floor - 16), (x + 3, floor - 16), (x + 3, floor - 5), (x, floor - 2.5), (x - 3, floor - 5)],
@@ -1481,6 +1553,7 @@ def ring(b, cx, y, r, colour, wall, h=3.0):
            profile="cylinder")
 
 
+@ruled
 def dome(b, cx, top, r, colour, rise=None, stars=True, slit=True):
     """A dome on a drum's top, shaded round: gold stars on it and its slit open, an observatory's.
     Returns its peak's height."""
@@ -1550,44 +1623,114 @@ def star_observatory(b):
     return b
 
 
-@by_hand
+def crescent(b, cx, cy, r, colour, bite=0.45, inner=0.85):
+    """A crescent moon cut out, not a disc with a disc of the sky over it (on a land graded another
+    colour, that disc showed): the outer circle's arc outside the bite, then the bite's arc back."""
+    r2 = r * inner
+    ix, iy = cx + r * bite, cy - r * bite * 0.55
+    d = math.hypot(ix - cx, iy - cy)
+    psi = math.atan2(iy - cy, ix - cx)
+    a0 = math.acos((r * r + d * d - r2 * r2) / (2 * r * d))
+    outer = [(cx + r * math.cos(t), cy + r * math.sin(t)) for t in np.linspace(psi + a0, psi + 2 * math.pi - a0, 21)]
+    b0 = math.acos((r2 * r2 + d * d - r * r) / (2 * r2 * d))
+    back = [(ix + r2 * math.cos(t), iy + r2 * math.sin(t)) for t in np.linspace(psi + math.pi - b0, psi + math.pi + b0, 13)]
+    if math.dist(back[-1], outer[-1]) < math.dist(back[0], outer[-1]):         # from where the outer arc ends
+        back = back[::-1]
+    b.poly(outer + back, colour, texture=0.0, profile="flat", gloss=0.4)
+
+
+@by_hand(amount=0.8)
 @grand(160)
 def moonwell(b):
-    """The Moonwell on Starfall Isle: a round pool of glowing water in a basin of pale moonstone, under
-    three arches of moonstone, the middle one tallest with a gold crescent on it; crystals floating over
-    the water and a wisp lantern at each side, on a patch of grass with stones round it."""
-    moon, deep, water = "#dadcf0", "#8a8eb8", "#78e0f0"
+    """The Moonwell on Starfall Isle: a round pool of glowing water in a basin of pale moonstone before a
+    shrine wall of violet moonstone in coursed blocks, three bays under a cornice, the middle one taller
+    and crowned with a round pediment and a gold crescent; an arched niche in each, its ring of
+    voussoirs round a deep night-blue hollow where a crystal floats over a glow, the middle one spilling
+    water into the pool; a wisp lantern at each side, on a patch of grass with stones round it.
+    (2026-11-02, the user: its first three thin free-standing arches of pale grey "look too much like
+    bones": built stone, blocks and mouldings, in the observatory's violet, reads as a building.)"""
+    stone, light, rim, night = "#b4a8d8", "#d6cfee", "#8a82b0", "#232a5e"
+    deep = "#8a8eb8"
     grounds(b, 8, 84, colour="#6a9a5a", stone="#a8acc8")
-    ground_shadow(b, 14, 80, 50)
-    for x, h, w in ((22, 30, 11), (72, 30, 11), (47, 46, 16)):                    # the arches, behind the pool
-        top = GROUND - 6 - h
-        shadow = [(x + 1.6 + (w / 2) * math.cos(a), top + 1.4 + w / 2 - (w / 2) * math.sin(a)) for a in np.linspace(0, math.pi, 15)]
-        b.stroke(shadow, 3.6, shade(deep, 0.6))                                    # its shadow, behind
-        for px in (x - w / 2, x + w / 2):
-            b.poly([(px - 2, GROUND - 4), (px + 2, GROUND - 4), (px + 2, top + w / 2), (px - 2, top + w / 2)], moon,
-                   texture=0.03, profile="cylinder")
-            b.rect(px - 2.8, GROUND - 6, px + 2.8, GROUND - 3, deep, texture=0.03)
-        arc = [(x + (w / 2) * math.cos(a), top + w / 2 - (w / 2) * math.sin(a)) for a in np.linspace(0, math.pi, 15)]
-        b.stroke(arc, 3.6, moon)
-        b.ellipse(x, top - 0.5, 1.8, 1.6, "#a8f0ff", gloss=0.7)
-        if w > 12:
-            b.ellipse(x, top - 9, 4.4, 4.4, "#ffd860", texture=0.0, profile="flat")   # the crescent
-            b.ellipse(x + 2.2, top - 10, 3.8, 3.8, "#6a9a5a", texture=0.0, profile="flat")
+    ground_shadow(b, 16, 80, 50)
+    sx, sy = DX * 0.35, DY * 0.35                                                 # the wall's depth going back
+    foot = GROUND - 4
+
+    def bay(x0, x1, top):
+        """A stretch of wall: its face in blocks, its right end going back, its cornice and that cornice's top."""
+        b.surface([(x1, foot), (x1 + sx, foot + sy), (x1 + sx, top + sy), (x1, top)], stone, "blocks", tone=-0.4,
+                  axes=(SIDEWAYS, DOWN))
+        b.surface([(x0, foot), (x1, foot), (x1, top), (x0, top)], stone, "blocks", slope=(-0.006, 0.004), foot=4)
+        with b.ruled():                                                           # the cornice, a roof's lines
+            b.rect(x0 - 1.5, top - 1, x1 + 1.5, top + 2.6, light, texture=0.02)
+            b.rect(x0, top + 2.6, x1, top + 3.6, shade(stone, 0.6), texture=0.0, profile="flat")  # its shadow
+            b.poly([(x0 - 1.5, top - 1), (x1 + 1.5, top - 1), (x1 + 1.5 + sx, top - 1 + sy), (x0 - 1.5 + sx, top - 1 + sy)],
+                   stone, texture=0.0, profile="flat", tone=0.45)
+
+    def pilaster(x, top):
+        with b.ruled():
+            b.rect(x - 1.6, foot, x + 1.6, top + 3.6, light, texture=0.02, profile="cylinder")
+            b.rect(x - 2.4, top + 3.6, x + 2.4, top + 5.2, light, texture=0.0)                   # its capital
+            b.rect(x - 2.4, foot - 2, x + 2.4, foot, light, texture=0.0)                          # its base
+
+    def niche(cx, w, h, colour):
+        """An arched niche: a ring of voussoirs, its keystone a gem, a night-blue hollow, a glow at its
+        foot and a crystal floating in it."""
+        y1, r = GROUND - 9, w / 2
+        y0 = y1 - h
+        ring = [(cx + (r + 2.2) * math.cos(a), y0 + r - (r + 2.2) * math.sin(a)) for a in np.linspace(0, math.pi, 15)]
+        b.poly([(cx + r + 2.2, y1 + 1)] + ring + [(cx - r - 2.2, y1 + 1)], light, texture=0.02)
+        for a in np.linspace(0.2, math.pi - 0.2, 6):                              # the joints between voussoirs
+            b.stroke([(cx + r * math.cos(a), y0 + r - r * math.sin(a)),
+                      (cx + (r + 2.2) * math.cos(a), y0 + r - (r + 2.2) * math.sin(a))], 0.7, rim, straight=True)
+        hollow = [(cx + r * math.cos(a), y0 + r - r * math.sin(a)) for a in np.linspace(0, math.pi, 15)]
+        b.poly([(cx + r, y1)] + hollow + [(cx - r, y1)], night, texture=0.0, profile="cylinder")
+        b.poly([(cx + r, y0 + r), (cx + r, y1), (cx + r - 1.6, y1), (cx + r - 1.6, y0 + r + 1)] , shade(night, 0.6),
+               texture=0.0, profile="flat")                                       # its reveal, in shadow
+        b.ellipse(cx, y1 - 1.5, r - 1, 2.2, "#3a8ab8", texture=0.0, profile="dome")              # the glow at its foot
+        b.ellipse(cx, y1 - 1.8, r - 2.6, 1.2, "#78e0f0", texture=0.0, profile="flat")
+        cy, ch = y0 + h * 0.55, min(7.0, h * 0.3)
+        b.poly([(cx, cy - ch), (cx + 2.4, cy), (cx, cy + ch * 0.5), (cx - 2.4, cy)], colour, texture=0.0, gloss=0.8)
+        b.poly([(cx, cy - ch), (cx + 2.4, cy), (cx, cy + ch * 0.5)], shade(colour, 0.8), texture=0.0)
+        b.rect(cx - r - 2.6, y1, cx + r + 2.6, y1 + 1.8, light, texture=0.0)        # its sill
+        b.ellipse(cx, y0 - 2.2, 1.5, 1.5, "#a8f0ff", gloss=0.7)                   # the keystone's gem
+
+    side_top, mid_top = GROUND - 38, GROUND - 52
+    bay(16, 78, side_top)
+    bay(34, 60, mid_top)
+    # The crown over the middle: a round pediment, its rim a moulding, a crescent of gold in it.
+    with b.ruled():  # the crown
+        cx, cr = 47, 11
+        b.poly(oval(cx, mid_top - 1, cr + 1.5, cr + 1.5, math.pi, 2 * math.pi, 21), light, texture=0.02, profile="dome")
+        b.poly(oval(cx, mid_top - 1, cr, cr - 0.5, math.pi, 2 * math.pi, 21), stone, texture=0.02, profile="dome")
+        crescent(b, cx - 0.5, mid_top - 6.5, 4.4, "#ffd860")
+        b.ellipse(cx, mid_top - cr - 4, 1.8, 1.8, "#a8f0ff", gloss=0.7)               # its finial
+    for x, top in ((16, side_top), (34, mid_top), (60, mid_top), (78, side_top)):
+        pilaster(x, top)
+    # Finials along the side bays' tops, each a little pedestal and a glowing moon-orb: they break the
+    # cornice's long ruled line as a balustrade's urns do (ruled, its outline failed `straight_edges`).
+    for x in (16, 25, 78, 69):
+        with b.ruled():
+            b.rect(x - 1.8, side_top - 4, x + 1.8, side_top - 1, light, texture=0.02)
+            b.rect(x - 2.4, side_top - 5, x + 2.4, side_top - 3.8, light, texture=0.0)
+        b.ellipse(x, side_top - 7.4, 2.3, 2.3, "#a8f0ff", gloss=0.7)
+    niche(25, 10, 20, "#c8a0f0")
+    niche(69, 10, 20, "#8ad8f0")
+    niche(47, 14, 30, "#a8f0ff")
+    b.rect(45.6, GROUND - 9, 48.4, GROUND - 3, "#78e0f0", texture=0.0, profile="flat")           # its water spilling
+    b.rect(46.4, GROUND - 9, 47.2, GROUND - 3, "#e8ffff", texture=0.0, profile="flat")
     b.ellipse(47, GROUND - 1, 30, 9.5, deep, texture=0.04)                        # the basin and its pool
-    b.ellipse(47, GROUND - 2.5, 27.5, 8, moon, texture=0.04)
+    b.ellipse(47, GROUND - 2.5, 27.5, 8, light, texture=0.04)
     b.ellipse(47, GROUND - 3, 24, 6.4, shade(deep, 0.62), texture=0.0, profile="flat")   # its far wall, inside, in shadow
     b.ellipse(47, GROUND - 2.2, 23.5, 5.6, "#3ab8d0", texture=0.0, profile="flat")
-    b.ellipse(46, GROUND - 3.6, 18, 4.4, water, texture=0.0, profile="flat", gloss=0.5)
+    b.ellipse(46, GROUND - 3.6, 18, 4.4, "#78e0f0", texture=0.0, profile="flat", gloss=0.5)
     b.ellipse(43, GROUND - 4.4, 7, 1.6, "#e8ffff", texture=0.0, profile="flat")
-    for x, y, h, colour in ((36, GROUND - 22, 9, "#8ad8f0"), (58, GROUND - 26, 8, "#c8a0f0"), (47, GROUND - 16, 6, "#a8f0ff")):
-        b.poly([(x, y - h), (x + 2.6, y), (x, y + h * 0.5), (x - 2.6, y)], colour, texture=0.0, gloss=0.8)
-        b.poly([(x, y - h), (x + 2.6, y), (x, y + h * 0.5)], shade(colour, 0.8), texture=0.0)
+    b.ellipse(47.5, GROUND - 4.2, 3.2, 1.0, "#e8ffff", texture=0.0, profile="flat")         # where the water falls in
     for x in (8, 86):                                                             # wisp lanterns
         b.stroke([(x, GROUND + 1), (x, GROUND - 13)], 1.5, "#5a5470")
         b.ellipse(x, GROUND - 16, 3.0, 3.4, "#b8f0ff", gloss=0.7)
         b.ellipse(x, GROUND - 16, 1.6, 1.8, "#f0ffff", texture=0.0, profile="flat")
     return b
-
 
 BUILDINGS = {
     "thatched_cottage": thatched_cottage,
@@ -1625,21 +1768,21 @@ BUILDINGS = {
 def fit(draw, width=76, height=76):
     """`draw` (a function of a Build) redrawn scaled about its foot so it fills `width` × `height` of the
     frame, centred, as RD's buildings fill theirs (about 70 to 80 pixels each way)."""
-    organic, size = getattr(draw, "organic", 0.0), getattr(draw, "size", SIZE)
-    first = Build(organic=organic)
+    organic, size, wave = getattr(draw, "organic", 0.0), getattr(draw, "size", SIZE), getattr(draw, "wave", 1.0)
+    first = Build(organic=organic, wave=wave)
     draw(first)
     left, top, right, bottom = first.extent()
     if left <= 0 or top <= 0 or right >= SIZE - 1:
         # Past the frame's own 96 pixels (a spire) it was cut off there and measured short: measured
         # again on a canvas with room all round, in the frame's coordinates.
         room = SIZE * 3
-        first = Build(organic=organic, size=room)
+        first = Build(organic=organic, size=room, wave=wave)
         draw(first)
         left, top, right, bottom = first.extent()
         left, right, top = left - (room - SIZE) / 2, right - (room - SIZE) / 2, top - (room - SIZE)
     grow = size / SIZE
     k = min(width * grow / (right - left), height * grow / (GROUND - top), 1.6 * grow)
-    b = Build(k, (left + right) / 2, organic, size)
+    b = Build(k, (left + right) / 2, organic, size, wave)
     draw(b)
     return b
 
