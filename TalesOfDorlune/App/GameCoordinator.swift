@@ -712,6 +712,10 @@ final class GameCoordinator {
 
     private func openChest(_ chest: NPCDef) {
         if session.isOpened(chest.id) {
+            // Opened a moment ago: what it held has just been shown, so a second open on its heels
+            // (a tap on the chest and the HUD's Open both) says nothing (playtesting 2026-11-02:
+            // the items' toast, then at once "empty").
+            if let opened = session.data.chestsOpenedAt?[chest.id], Date().timeIntervalSince(opened) < 3 { return }
             // Something new turns up in it after a while (`GameSession.refillsAt`); just when isn't
             // said (playtesting 2026-10-16: "come back later" instead of the exact hours).
             session.post(L("The {chest} is empty. Come back later.", ["chest": chest.name.midSentence]))

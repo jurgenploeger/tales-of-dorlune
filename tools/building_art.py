@@ -187,7 +187,7 @@ class Build:
     96-pixel frame's coordinates, then (`fit`) scaled about its foot to fill the frame as RD's do; the
     materials' patterns stay at the sprite's own pixels, so a bigger house has more blocks, not bigger."""
 
-    def __init__(self, k=1.0, cx=SIZE / 2, organic=0.0, size=SIZE):
+    def __init__(self, k=1.0, cx=SIZE / 2, organic=0.0, size=SIZE, wave=1.0):
         # Its canvas, `size` pixels square: a house's 96, a grand building's more (its drawing, in the
         # 96-pixel frame's coordinates, scaled up to fill it; its materials stay at the sprite's pixels).
         self.size = size
@@ -196,7 +196,7 @@ class Build:
         self.s.light, self.s.rim = LIGHT, "lower"
         self.k, self.cx = k, cx
         # How far its edges wander off the ruler, in pixels (0: drawn straight; `bend`).
-        self.organic = organic
+        self.organic, self.wave = organic, wave
 
     def t(self, points, closed=True, straight=False):
         pts = [(self.size / 2 + (x - self.cx) * self.k, self.foot + (y - GROUND) * self.k) for x, y in points]
@@ -214,9 +214,9 @@ class Build:
             out += [(x0 + (x1 - x0) * k / steps, y0 + (y1 - y0) * k / steps) for k in range(steps)]
         if not closed:
             out.append(pts[-1])
-        a = self.organic
-        return [(x + a * (0.5 * math.sin(0.61 * x + 0.43 * y + 0.7) + 0.5 * math.sin(0.29 * x - 0.71 * y + 2.1)),
-                 y + a * (0.5 * math.sin(0.57 * y - 0.67 * x + 1.9) + 0.5 * math.sin(0.31 * y + 0.73 * x + 4.0)))
+        a, f = self.organic, self.wave
+        return [(x + a * (0.5 * math.sin(f * (0.61 * x + 0.43 * y) + 0.7) + 0.5 * math.sin(f * (0.29 * x - 0.71 * y) + 2.1)),
+                 y + a * (0.5 * math.sin(f * (0.57 * y - 0.67 * x) + 1.9) + 0.5 * math.sin(f * (0.31 * y + 0.73 * x) + 4.0)))
                 for x, y in out]
 
     def _mask(self, points):
@@ -978,10 +978,17 @@ def crystal_cottage(b):
 
 
 
-def by_hand(draw):
-    """Marks a drawing to be drawn with its edges off the ruler (`Build.bend`), as RD's houses are."""
-    draw.organic = 1.2
-    return draw
+def by_hand(draw=None, amount=0.6, wave=0.5):
+    """Marks a drawing to be drawn with its edges off the ruler (`Build.bend`), as RD's houses are:
+    `amount` pixels off it at most, in waves `wave` times as close as the first bend's (about 20 pixels
+    long at 0.5). The first bend, 1.2 in waves of 10, made the walls wavy (2026-11-02, the user: "too
+    wavy, like the castle at Emerald Road"); the gentle one keeps them standing, a lean and a bulge, not
+    a ripple. A drawing whose silhouette is too ruled at that for `straight_edges` (RD's own share, a
+    hard band) takes a little more: `@by_hand(amount=0.9)`."""
+    def mark(d):
+        d.organic, d.wave = amount, wave
+        return d
+    return mark(draw) if draw else mark
 
 
 def grounds(b, x0, x1, colour="#6a9a40", stone="#9a948a", path=None, earth="#c8a878", seed=3):
@@ -1192,7 +1199,7 @@ def pennant(b, x, top, colour, length=9):
     b.poly([(x, top - 12), (x + length, top - 10), (x, top - 7.5)], colour, texture=0.02)
 
 
-@by_hand
+@by_hand(amount=0.8)
 @grand(160)
 def warrior_guild(b):
     """The Warrior Guild's hall, Captain Brann's, the grandest thing in Meadowbrook: a tall hall of rough
@@ -1335,7 +1342,7 @@ def bell_tower(b):
     return b
 
 
-@by_hand
+@by_hand(amount=0.8, wave=0.4)
 def gem_workshop(b):
     """A gemcutter's workshop, Iolanthe's: a squat cottage of rough stone under a big slate shingle roof, a
     wide lit window of cut gems, crystals grown up by its wall, a grinding wheel on a bench out front and a
@@ -1566,7 +1573,7 @@ def crescent(b, cx, cy, r, colour, bite=0.45, inner=0.85):
     b.poly(outer + back, colour, texture=0.0, profile="flat", gloss=0.4)
 
 
-@by_hand
+@by_hand(amount=1.0, wave=0.4)
 @grand(160)
 def moonwell(b):
     """The Moonwell on Starfall Isle: a round pool of glowing water in a basin of pale moonstone before a
@@ -1588,10 +1595,10 @@ def moonwell(b):
         b.surface([(x1, foot), (x1 + sx, foot + sy), (x1 + sx, top + sy), (x1, top)], stone, "blocks", tone=-0.4,
                   axes=(SIDEWAYS, DOWN))
         b.surface([(x0, foot), (x1, foot), (x1, top), (x0, top)], stone, "blocks", slope=(-0.006, 0.004), foot=4)
-        b.rect(x0 - 1.5, top - 1, x1 + 1.5, top + 2.6, light, texture=0.02, straight=True)   # the cornice, made
+        b.rect(x0 - 1.5, top - 1, x1 + 1.5, top + 2.6, light, texture=0.02)          # the cornice
         b.rect(x0, top + 2.6, x1, top + 3.6, shade(stone, 0.6), texture=0.0, profile="flat")  # its shadow
         b.poly([(x0 - 1.5, top - 1), (x1 + 1.5, top - 1), (x1 + 1.5 + sx, top - 1 + sy), (x0 - 1.5 + sx, top - 1 + sy)],
-               stone, texture=0.0, profile="flat", tone=0.45, straight=True)
+               stone, texture=0.0, profile="flat", tone=0.45)
 
     def pilaster(x, top):
         b.rect(x - 1.6, foot, x + 1.6, top + 3.6, light, texture=0.02, profile="cylinder")
@@ -1685,21 +1692,21 @@ BUILDINGS = {
 def fit(draw, width=76, height=76):
     """`draw` (a function of a Build) redrawn scaled about its foot so it fills `width` × `height` of the
     frame, centred, as RD's buildings fill theirs (about 70 to 80 pixels each way)."""
-    organic, size = getattr(draw, "organic", 0.0), getattr(draw, "size", SIZE)
-    first = Build(organic=organic)
+    organic, size, wave = getattr(draw, "organic", 0.0), getattr(draw, "size", SIZE), getattr(draw, "wave", 1.0)
+    first = Build(organic=organic, wave=wave)
     draw(first)
     left, top, right, bottom = first.extent()
     if left <= 0 or top <= 0 or right >= SIZE - 1:
         # Past the frame's own 96 pixels (a spire) it was cut off there and measured short: measured
         # again on a canvas with room all round, in the frame's coordinates.
         room = SIZE * 3
-        first = Build(organic=organic, size=room)
+        first = Build(organic=organic, size=room, wave=wave)
         draw(first)
         left, top, right, bottom = first.extent()
         left, right, top = left - (room - SIZE) / 2, right - (room - SIZE) / 2, top - (room - SIZE)
     grow = size / SIZE
     k = min(width * grow / (right - left), height * grow / (GROUND - top), 1.6 * grow)
-    b = Build(k, (left + right) / 2, organic, size)
+    b = Build(k, (left + right) / 2, organic, size, wave)
     draw(b)
     return b
 

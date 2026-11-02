@@ -583,8 +583,9 @@ side wall going back, and a hard footing line on nothing. RD's:
   were 0.41; hard, at most 0.40, RD's 90th percentile, `pixel_style.CAPS`) and `grid_lines` (RD's
   0.014, ours 0.039; soft, at most 0.033). They cost two of RD's own a pass (now 18 / 29): its puppet
   theatre and shop front are drawn as boxes too. `building_art.by_hand` draws a building with `Build.bend`:
-  every edge cut every couple of pixels and moved by one smooth field of offsets (about 1.2 pixels, the
-  same wherever two faces share an edge, so they still meet).
+  every edge cut every couple of pixels and moved by one smooth field of offsets (0.6 pixels in waves
+  about 20 long since 2026-11-02, a little more where a drawing needs it for `straight_edges`; the same
+  wherever two faces share an edge, so they still meet).
 - **Big rounded stuff.** Stones are lumps 4 to 8 pixels long, each lit on its upper left and dark on its
   lower right, corners worn into the joints, every other one a pixel up so no joint runs across the face
   (`rubble`); shingles are rounded tongues that curl at their foot (`shingles`, 8 × 5). A fine even
@@ -778,12 +779,21 @@ in a loose arc, its end trailing off thin along the bottom; never coiled.
 
 ## Learned
 
+- **2026-11-02 (the bend):** The first bend (`Build.bend`, 1.2 pixels in waves about 10 long) made the
+  drawn buildings "too wavy, like the castle at Emerald Road" (the user): a ripple down every wall, band
+  and turret. Its job is only to break long straight runs (`straight_edges`, a hard band on RD's share);
+  half as far in waves twice as long (`by_hand`'s default, 0.6 and 0.5) does that for most, a lean and a
+  bulge rather than a ripple. No one setting passes them all: where the waves fall decides it, so a
+  drawing too ruled at the default takes a little more of its own (`@by_hand(amount=0.8)`, the guild;
+  the moonwell 1.0 in longer waves). Drawn dead straight, five of the ten fail the band. A long pale
+  edge bent hard came out lumpy and read as snow (the Moonwell's cornices at 1.2); at the gentle bend
+  it doesn't.
+
 - **2026-11-02 (landmarks):** The Moonwell's three free-standing arches, thin, pale grey and rounded at
   every end, "look too much like bones" (the user), and the numbers passed them. Pale, thin and rounded
   is how bone reads; a building reads by its making: coursed `blocks`, a cornice with its shadow under
   it, pilasters with capitals and bases, voussoirs round each arch, in a tinted stone (the observatory's
-  violet). Keep a moulding on the ruler (`straight=True`) where the bend makes a long pale edge lumpy
-  (it read as snow), and shade a big dark hollow round, not flat (`cluster_size`). A crescent is cut
+  violet). Shade a big dark hollow round, not flat (`cluster_size`). A crescent is cut
   (`crescent`), never a disc with a disc of the sky over it: graded another colour, the sky disc shows.
   Placing landmarks: on screen a land's column step goes right and up and its row step left and up
   (`WorldMap.project`), so two buildings with the same `x − y` stand in one screen column, the nearer
