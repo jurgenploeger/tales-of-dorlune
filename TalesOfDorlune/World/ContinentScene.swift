@@ -790,18 +790,22 @@ final class ContinentScene: SKScene {
         let stone = nearbyTalk.flatMap { near in
             lands[near.land]?.stage.npcs.first { $0.def.id == near.npc && $0.def.role == .waystone }?.node
         }.flatMap { node in node.parent.map { layer.convert(node.position, from: $0) } }
-        WaystoneMagic.away(player, from: stone, in: layer, then: done)
+        // In its colours as the stone's land draws it (`WaystoneMagic.Glow`).
+        let glow = WaystoneMagic.Glow.of(nearbyTalk?.land ?? here?.id)
+        WaystoneMagic.away(player, from: stone, glow: glow, in: layer, then: done)
     }
 
     /// Before you're shown: you aren't there yet (`waystoneArrive` brings you out of the light).
     func awaitWaystoneArrival() {
         player.idles = false
-        WaystoneMagic.hold(player)
+        WaystoneMagic.hold(player, glow: WaystoneMagic.Glow.of(here?.id ?? session.data.mapID))
     }
 
     /// Arriving by waystone: out of the light in a ring of runes.
     func waystoneArrive() {
-        WaystoneMagic.arrive(player, in: layer) { [weak self] in self?.player.idles = true }
+        WaystoneMagic.arrive(player, glow: WaystoneMagic.Glow.of(here?.id ?? session.data.mapID), in: layer) { [weak self] in
+            self?.player.idles = true
+        }
     }
 
     /// A Homeward Feather taking you away: feathers spiral up round you, the column of light shines,
