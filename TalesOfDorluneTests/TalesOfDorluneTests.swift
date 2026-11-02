@@ -3522,7 +3522,7 @@ struct RulesTests {
     }
 
     /// Friends don't always come along (playtesting 2026-10-16): mostly yes, but no again for a while
-    /// after a no, mostly no far apart in level, and less keen with friends of their own.
+    /// after a no, and less keen with friends of their own; how far apart in level doesn't matter.
     @Test func friendsCanTurnDownAnInvite() {
         let session = GameSession.newGame(name: "Test", raceID: "human")
         session.data.hero.level = 30
@@ -3540,8 +3540,8 @@ struct RulesTests {
         #expect(session.askAlong(momo.id, roll: 0, now: now.addingTimeInterval(60))?.line == "Still no, sorry!")
         #expect(session.askAlong(momo.id, roll: 0, now: now.addingTimeInterval(GameSession.declineFor + 1))?.accepted == true)
         #expect(session.partyMembers.map(\.name) == ["Momo"])
-        // Fifty levels apart, dice that'd mean yes for anyone else mean no.
-        #expect(session.askAlong(pip.id, roll: chance * 0.5, now: now)?.accepted == false)
+        // Fifty levels apart, the same dice mean yes as for anyone else.
+        #expect(session.askAlong(pip.id, roll: chance * 0.5, now: now)?.accepted == true)
         // With friends of their own they're half as keen.
         #expect(session.askAlong(kip.id, busy: true, roll: chance * 0.75, now: now)?.accepted == false)
         #expect(session.askAlong(lia.id, roll: chance * 0.75, now: now)?.accepted == true)
