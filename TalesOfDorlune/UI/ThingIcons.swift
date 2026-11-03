@@ -139,7 +139,9 @@ struct GoldPill: View {
             .foregroundStyle(HUDStyle.cream)
             .lineLimit(1)
             .fixedSize()
-            .padding(.leading, coin * 0.62)
+            // Past the coin's right edge (it reaches 0.62 of itself into the pill), a gap so the
+            // figures don't touch it (playtesting 2026-11-03: "sits too close together").
+            .padding(.leading, coin * 0.62 + size * 0.4)
             .padding(.trailing, size * 0.75)
             .frame(height: (size * 1.6).rounded())
             // No outline (playtesting 2026-10-30: the gold rim can go).
