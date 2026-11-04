@@ -1,0 +1,45 @@
+{
+  "_about": "Retro Diffusion trials kept out of the game's own list (tools/rd.py generate --manifest art/pilots.json). Every asset here is a pilot: its results stay in art-variants/<id>/ till one is picked. References are in art-variants/_refs/ (cut from the game's sheets, never shipped).",
+  "defaults": {
+    "num_images": 1
+  },
+  "assets": [
+    {
+      "id": "pilot_human_female_front",
+      "pilot": true,
+      "request": {
+        "prompt": "cute chibi adventurer girl with long orange hair in a ponytail, green tunic, brown belt and boots, standing facing the viewer, same pixel art style, proportions, outline and face as the reference boy",
+        "prompt_style": "rd_pro__default",
+        "width": 48,
+        "height": 48,
+        "remove_bg": true,
+        "reference_image_paths": ["art-variants/_refs/human_male_down.png"]
+      }
+    },
+    {
+      "id": "pilot_rotate_test",
+      "pilot": true,
+      "request": {
+        "prompt": "cute chibi adventurer boy with spiky orange hair, green tunic, brown belt and boots",
+        "prompt_style": "rd_advanced_animation__rotate",
+        "width": 48,
+        "height": 48,
+        "return_spritesheet": true,
+        "input_image_path": "art-variants/_refs/human_male_down.png"
+      }
+    },
+    {
+      "id": "pilot_walk_test",
+      "pilot": true,
+      "request": {
+        "prompt": "walking",
+        "prompt_style": "rd_advanced_animation__walking",
+        "width": 48,
+        "height": 48,
+        "frames_duration": 4,
+        "return_spritesheet": true,
+        "input_image_path": "art-variants/_refs/human_male_down.png"
+      }
+    }
+  ]
+}

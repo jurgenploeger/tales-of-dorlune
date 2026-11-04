@@ -14,6 +14,12 @@ Every image (and the request that made it) is also kept in art-variants/<id>/.
     python3 tools/rd.py edit dwarf_walk --input art/sprites/dwarf_walk.png \
         --mask art-variants/_masks/dwarf_walk_face.png --prompt "…" --variants 2 [--dry-run]
 
+A request may name images on disk: `input_image_path` (the frame the advanced animation styles,
+rd_advanced_animation__*, animate or turn) and `reference_image_paths` (up to 9 for the RD Pro
+styles, rd_pro__*, to draw in their likeness). They're read and sent base64 and kept out of the saved
+record. An asset with `"pilot": true` keeps its results in art-variants/<id>/ only, never in
+art/sprites/, till one is picked with `use`.
+
 `edit` runs an edit tool (inpainting by default) on an existing sprite: only the mask's opaque
 pixels are redrawn, the rest is copied back exactly, so new art keeps the old poses, faces and
 proportions. Its results land in art-variants/<name>/ only; promote one with `use`.
@@ -55,8 +61,10 @@ class APIError(Exception):
     pass
 
 
-def load_manifest() -> dict:
-    return json.loads(MANIFEST.read_text())
+def load_manifest(path: str | None = None) -> dict:
+    """art/assets.json, or another manifest of the same shape (`--manifest`, e.g. art/pilots.json for
+    trials kept out of the game's own list)."""
+    return json.loads((ROOT / path).read_text() if path else MANIFEST.read_text())
 
 
 def api_key() -> str:
@@ -131,13 +139,25 @@ def submit(payload: dict, key: str) -> dict:
     raise APIError(f"task {accepted['task_id']} timed out")
 
 
+def with_images(payload: dict) -> dict:
+    """The request as sent: `input_image_path` and `reference_image_paths` (paths from the repo's root)
+    read and put in as base64 (`input_image`, `reference_images`), the path keys dropped."""
+    out = {k: v for k, v in payload.items() if k not in ("input_image_path", "reference_image_paths")}
+    if "input_image_path" in payload:
+        out["input_image"] = base64.b64encode((ROOT / payload["input_image_path"]).read_bytes()).decode()
+    if "reference_image_paths" in payload:
+        out["reference_images"] = [base64.b64encode((ROOT / path).read_bytes()).decode()
+                                   for path in payload["reference_image_paths"]]
+    return out
+
+
 def png_size(data: bytes) -> tuple[int, int] | None:
     if data[:8] != b"\x89PNG\r\n\x1a\n":
         return None
     return int.from_bytes(data[16:20], "big"), int.from_bytes(data[20:24], "big")
 
 
-def save(asset_id: str, payload: dict, result: dict) -> None:
+def save(asset_id: str, payload: dict, result: dict, pilot: bool = False) -> None:
     images = [base64.b64decode(item) for item in result.get("base64_images", [])]
     if not images:
         raise APIError(f"no images in result: {json.dumps(result)[:300]}")
@@ -154,6 +174,10 @@ def save(asset_id: str, payload: dict, result: dict) -> None:
 
     first = images[0]
     size = png_size(first)
+    if pilot:
+        print(f"  ✓ {len(images)} image(s) in {folder.relative_to(ROOT)}/ (a pilot: art/sprites/ untouched)  "
+              f"cost {result.get('balance_cost')}  balance left {result.get('remaining_balance')}")
+        return
     if size is None:
         print(f"  ! got a non-PNG (GIF?) — for animations set \"return_spritesheet\": true. Kept in {folder.relative_to(ROOT)}/")
         return
@@ -225,7 +249,7 @@ def cmd_credits(_: argparse.Namespace) -> None:
 
 
 def cmd_generate(args: argparse.Namespace) -> None:
-    manifest = load_manifest()
+    manifest = load_manifest(args.manifest)
     key = api_key()
     defaults = manifest.get("defaults", {})
     generated = failed = 0
@@ -250,7 +274,7 @@ def cmd_generate(args: argparse.Namespace) -> None:
             payload["check_cost"] = True
         print(f"→ {asset_id}  {payload['prompt_style']} {payload.get('width')}×{payload.get('height')}  “{payload.get('prompt', '')}”")
         try:
-            result = submit(payload, key)
+            result = submit(with_images(payload), key)
         except APIError as error:
             print(f"  ✗ {error}")
             failed += 1
@@ -264,7 +288,7 @@ def cmd_generate(args: argparse.Namespace) -> None:
                 print(f"  {json.dumps(result)}")
             continue
         try:
-            save(asset_id, payload, result)
+            save(asset_id, payload, result, pilot=asset.get("pilot", False))
             generated += 1
         except APIError as error:
             print(f"  ✗ {error}")
@@ -403,6 +427,7 @@ def main() -> None:
     generate.add_argument("--force", action="store_true", help="regenerate even if the sprite exists")
     generate.add_argument("--dry-run", action="store_true", help="only report the cost (free)")
     generate.add_argument("--variants", type=int, metavar="N", help="generate N options to pick from")
+    generate.add_argument("--manifest", help="another manifest than art/assets.json (art/pilots.json for trials)")
     generate.set_defaults(run=cmd_generate)
 
     edit = commands.add_parser("edit", help="run an edit tool (inpainting) on an existing sprite")

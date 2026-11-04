@@ -1,0 +1,28 @@
+{
+  "request": {
+    "num_images": 1,
+    "prompt": "cute chibi adventurer boy with spiky orange hair, green tunic, brown belt and boots",
+    "prompt_style": "rd_advanced_animation__rotate",
+    "width": 48,
+    "height": 48,
+    "return_spritesheet": true,
+    "input_image_path": "art-variants/_refs/human_male_down.png"
+  },
+  "result": {
+    "created_at": 1793812572,
+    "credit_cost": 1,
+    "balance_cost": 0.1,
+    "output_urls": [],
+    "model": "rd_fast",
+    "remaining_credits": 0,
+    "remaining_balance": 11.071,
+    "request_id": "03ddb93a-bfcf-4aaf-b800-e0472dd6098b",
+    "outputs_retained_until": 1793898846,
+    "billing": {
+      "reason": "no_plan",
+      "source": "balance",
+      "balance_left": 11.071,
+      "balance_charged": 0.1
+    }
+  }
+}

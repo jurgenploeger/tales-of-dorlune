@@ -1,0 +1,29 @@
+{
+  "request": {
+    "num_images": 1,
+    "prompt": "walking",
+    "prompt_style": "rd_advanced_animation__walking",
+    "width": 48,
+    "height": 48,
+    "frames_duration": 4,
+    "return_spritesheet": true,
+    "input_image_path": "art-variants/_refs/human_male_down.png"
+  },
+  "result": {
+    "created_at": 1793812644,
+    "credit_cost": 1,
+    "balance_cost": 0.14,
+    "output_urls": [],
+    "model": "rd_fast",
+    "remaining_credits": 0,
+    "remaining_balance": 10.931,
+    "request_id": "b5f44e5f-0b4d-44e6-ac35-3251e662534a",
+    "outputs_retained_until": 1793898975,
+    "billing": {
+      "reason": "no_plan",
+      "source": "balance",
+      "balance_left": 10.931,
+      "balance_charged": 0.14
+    }
+  }
+}
