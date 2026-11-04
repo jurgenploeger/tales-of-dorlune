@@ -1404,7 +1404,7 @@ def bell_tower(b):
     return b
 
 
-@by_hand(amount=0.8, wave=0.4)
+@by_hand(amount=1.0, wave=0.4)
 def gem_workshop(b):
     """A gemcutter's workshop, Iolanthe's: a squat cottage of rough stone under a big slate shingle roof, a
     wide lit window of cut gems, crystals grown up by its wall, a grinding wheel on a bench out front and a
@@ -1418,9 +1418,10 @@ def gem_workshop(b):
     grounds(b, 20, 60, colour="#a8a294", stone="#7a7488", path=29, earth="#c8bca8")
     shop(b, "#a8a2b8", "rubble", "#3e4e72", "shingles", gem_emblem, board="#c8b8e0", display=display,
          door_colour="#4a3a6a", height=23, rise=22)
-    for x, h, w, colour in ((13, 20, 4.2, "#8ad8f0"), (18, 12, 3.0, "#c8a0f0"), (9, 10, 2.8, "#c8a0f0")):
-        b.poly([(x - w, GROUND), (x, GROUND - h), (x + w * 0.2, GROUND)], shade(colour, 1.2), tone=0.85)
-        b.poly([(x + w * 0.2, GROUND), (x, GROUND - h), (x + w, GROUND)], shade(colour, 0.85), tone=0.45)
+    # Crystals grown up by its wall, cut as the crystal cottage's are (`crystal`).
+    # Two, broad: three at this house's size came out a pixel or two wide and showed no faces.
+    crystal(b, 14, GROUND + 0.5, 26, 5.6, "#6ac4ec", lean=-0.05)
+    crystal(b, 8.5, GROUND + 1.5, 14, 4.0, "#a880e8", lean=-0.12)
     b.rect(66, GROUND - 6, 76, GROUND - 3.5, "#7a5232", texture=0.04)
     for x in (67.5, 74.5):
         b.stroke([(x, GROUND - 4), (x, GROUND + 2)], 1.4, "#5a3a24")
@@ -1617,9 +1618,11 @@ def star_observatory(b):
     b.stroke([(cx, peak), (cx, peak - 4)], 1.0, "#5a5470")                        # the crescent over it all
     b.ellipse(cx, peak - 8, 3.4, 3.4, "#ffe08a", texture=0.0, profile="flat")
     b.ellipse(cx + 1.6, peak - 8.8, 2.9, 2.9, "#3a3e7e", texture=0.0, profile="flat")
-    for x, h, w, colour in ((24, 16, 3.8, "#8ad8f0"), (29, 9, 2.6, "#c8a0f0"), (67, 12, 3.0, "#8ad8f0"), (71, 7, 2.2, "#c8a0f0")):
-        b.poly([(x - w, GROUND + 1), (x, GROUND + 1 - h), (x + w * 0.2, GROUND + 1)], shade(colour, 1.2), tone=0.85, gloss=0.3)
-        b.poly([(x + w * 0.2, GROUND + 1), (x, GROUND + 1 - h), (x + w, GROUND + 1)], shade(colour, 0.85), tone=0.45)
+    # Star crystals grown up round its foot, cut as the crystal cottage's are (`crystal`).
+    crystal(b, 29.5, GROUND + 1, 10, 2.8, "#a880e8", lean=0.24)
+    crystal(b, 24, GROUND + 1, 17, 3.8, "#6ac4ec", lean=-0.08)
+    crystal(b, 71.5, GROUND + 1, 9, 2.6, "#a880e8", lean=0.26)
+    crystal(b, 67, GROUND + 1, 13, 3.2, "#6ac4ec", lean=-0.06)
     return b
 
 
