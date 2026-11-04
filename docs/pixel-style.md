@@ -793,6 +793,9 @@ in a loose arc, its end trailing off thin along the bottom; never coiled.
   under each and thin crystals came out muddy at a house's size: keep the faces flat, the steps strong,
   the crystals few and broad. A cyan window beside them was speckled by the palette cut (it shares their
   shades); warm lamplight keeps it apart.
+  The observatory's and the gem workshop's crystals are cut the same way since (2026-11-04). On a house
+  `fit` shrinks a lot (the workshop), three crystals came out a pixel or two wide with no faces showing:
+  two, broad, read; a crystal leaning past the drawing's edge rescales the whole house, so keep it inside.
 
 - **2026-11-02 (the bend):** The first bend (`Build.bend`, 1.2 pixels in waves about 10 long) made the
   drawn buildings "too wavy, like the castle at Emerald Road" (the user): a ripple down every wall, band
