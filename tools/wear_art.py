@@ -341,13 +341,46 @@ def dwarf_hats():
     helmets and hoods Retro Diffusion drew on its dwarves fitted their squat heads, not it."""
     import hero_layers
     offsets = hero_layers.offsets_for("dwarf")
+    # Up with the head, as the dwarf's torso is drawn longer (hero_layers.LENGTHEN).
+    rows, n = hero_layers.lengthen_rows("dwarf"), hero_layers.LENGTHEN["dwarf"]
     for path in sorted(SPRITES.glob("hat_*_human*.png")):
         name = path.stem
         if not (name.endswith("_human") or name.endswith("_human_trim")):
             continue
         out = name.replace("_human", "_dwarf")
-        save(hero_layers.moved(load(path), offsets), out)
+        save(hero_layers.lengthened(hero_layers.moved(load(path), offsets), rows, n), out)
         print(f"art/sprites/{out}.png  from {name}.png")
+
+
+def lengthened_already(sheet, n):
+    """Whether a sheet has been through `dwarf_armour`: in every frame a row drawn n + 1 times running.
+    Retro Diffusion's own sheets never have that in all of them."""
+    for row in range(sheet.shape[0] // F):
+        for col in range(sheet.shape[1] // F):
+            f = sheet[row * F:(row + 1) * F, col * F:(col + 1) * F]
+            if not (f[..., 3] > 0.5).any():
+                continue
+            if not any((f[r, :, 3] > 0.5).sum() >= 4 and all(np.array_equal(f[r], f[r + k]) for k in range(1, n + 1))
+                       for r in range(F - n)):
+                return False
+    return True
+
+
+def dwarf_armour():
+    """The dwarves' armour sheets (`armor_<kind>_dwarf`) drawn longer in the torso as their bodies are
+    (hero_layers.LENGTHEN), each frame at its own quietest row under the chin, so the human head they wear
+    meets the collar. Once only: a sheet already lengthened (`lengthened_already`) is left as it is, as
+    these sheets can't be made again from their sources (docs/sprite-acceptance.md). Rerun
+    tools/dye_art.py cut after."""
+    import hero_layers
+    n = hero_layers.LENGTHEN["dwarf"]
+    for path in sorted(SPRITES.glob("armor_*_dwarf.png")):
+        sheet = load(path)
+        if lengthened_already(sheet, n):
+            print(f"{path.name}: lengthened already")
+            continue
+        save(hero_layers.lengthened(sheet, hero_layers.lengthen_rows("dwarf", sheet), n), path.stem)
+        print(f"art/sprites/{path.name}  {n} rows longer")
 
 
 def bared(img, race):
@@ -683,6 +716,8 @@ def main():
     parser.add_argument("--shine", action="store_true", help="only tint the metals' shine on the sheets already made")
     parser.add_argument("--dwarf-hats", action="store_true", help="only the dwarves' hats: the human's, moved "
                         "onto their neck (they wear the human head)")
+    parser.add_argument("--dwarf-armour", action="store_true", help="only lengthen the dwarves' armour sheets, "
+                        "once (hero_layers.LENGTHEN)")
     parser.add_argument("--heads", action="store_true", help="only the bare heads and the necks under them "
                         "(the whole run recolours the committed armour sheets: docs/sprite-acceptance.md)")
     args = parser.parse_args()
@@ -696,9 +731,13 @@ def main():
     if args.dwarf_hats:
         dwarf_hats()
         return
+    if args.dwarf_armour:
+        dwarf_armour()
+        return
     heads()
     necks()
     made = armour() | wear()
+    dwarf_armour()
     if args.sheet:
         contact(made, args.sheet)
 

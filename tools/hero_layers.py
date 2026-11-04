@@ -71,6 +71,21 @@ CHIN = 6   # a shaved chin's row under the brow: the female elf's, in every dire
 # (hair, nape, hood, helmet, and tools/wear_art.py's head, neck and armour hats) is the human's, moved
 # the same. The dwarf keeps his beard, the short stocky body, and his armour.
 GRAFT = {"dwarf": "human", "dwarf_female": "human_female"}
+# Bodies whose torso is drawn longer (2026-11-04, the user: under the human head a dwarf's body looked "a
+# bit too squeezed"; of one and two rows, "Go with +2"): in each frame a row under the chin repeated
+# LENGTHEN times and everything above it, the head with all worn on it, moved up as far (`lengthened`).
+# The row is one of RD's own bald body's (`lengthen_rows`), so a rerun picks the same; tools/wear_art.py's
+# dwarf hats and armour sheets are lengthened at the same rows (`--dwarf-hats`, `--dwarf-armour`).
+LENGTHEN = {"dwarf": 2, "dwarf_female": 2}
+LENGTHEN_ROWS = (2, 8)   # the rows under the chin a repeated row is picked from
+# RD drew the dwarves' arms near-black, as dark as the shadows round them, and they read as missing (the
+# user, 2026-11-04: "it seems like it's missing its arms?"). In the rows under the chin (`ARM_ROWS`), a
+# near-black pixel (`ARM_DARK`) that touches neither the background (the outline) nor the tunic's green
+# (the line between arm and body) takes the tunic's own shadow green, lit a shade along its top and left
+# (`lit_arms`). In the tunic's dyeable family (over dye_art.DARK), drawn-on armour colours them as well.
+LIT_ARMS = {"dwarf", "dwarf_female"}
+ARM_DARK = 0.16
+ARM_ROWS = 12
 # Headgear is drawn in magenta, which no recolour touches (skin 5-45°, hair 12-58°, outfit 85-170°)
 # and no hero sheet uses. The game paints soft magenta (saturation 0.6) in the armour's colour,
 # keeping the shade (value: 0.92 light, 0.7 mid, 0.45 dark), and full magenta in its trim colour.
@@ -836,6 +851,13 @@ def build():
             layers[f"napeback_{style}_{rid}"] = back_view(layers[f"nape_{style}_{rid}"], rid)
     for body, donor in GRAFT.items():
         graft(layers, body, donor)
+    for body in LIT_ARMS:
+        layers[f"body_{body}"] = lit_arms(layers[f"body_{body}"])
+    for body, n in LENGTHEN.items():
+        rows = lengthen_rows(body)
+        for name in list(layers):
+            if name.endswith(f"_{body}") and name.split("_")[0] in ("body", "locks", "hood", "helmet", "hair", "nape", "napeback"):
+                layers[name] = lengthened(layers[name], rows, n)
     for body, (race_id, sheet) in TOWNSFOLK.items():
         folk = Race(race_id, sheet, template=races[race_id], sidehair=True)
         layers[f"body_{body}"] = folk.body
@@ -884,18 +906,103 @@ def graft_offsets(a, b):
     return out
 
 
+def bald(rid):
+    """The bald body split from Retro Diffusion's own sheet for `rid` (a race, or race_gender), as drawn:
+    no graft, no lengthening (the body layers on disk have both)."""
+    races = {r["id"]: r for r in json.load(open(ROOT / "content" / "classes.json"))["races"]}
+    race, _, gender = rid.partition("_")
+    r = races[race]
+    sheet = (r.get("sheets") or {}).get(gender) if gender else (r.get("art") or "player_walk")
+    return Race(race, sheet, sidehair=race != "human").body
+
+
 def offsets_for(body):
     """`graft_offsets` for a GRAFT body, measured on the bald bodies split from Retro Diffusion's own
-    sheets (the body layers on disk already wear the donor's head): for tools/wear_art.py's head, neck
-    and armour hats, and art/eyes.json's boxes."""
-    races = {r["id"]: r for r in json.load(open(ROOT / "content" / "classes.json"))["races"]}
-
-    def bald(rid):
-        race, _, gender = rid.partition("_")
-        r = races[race]
-        sheet = (r.get("sheets") or {}).get(gender) if gender else (r.get("art") or "player_walk")
-        return Race(race, sheet, sidehair=race != "human").body
+    sheets: for tools/wear_art.py's head, neck and armour hats, and art/eyes.json's boxes."""
     return graft_offsets(bald(body), bald(GRAFT[body]))
+
+
+def quiet_row(f, chin):
+    """Of the rows `LENGTHEN_ROWS` under `chin`, the one most like the row under it: repeated, a plain
+    stretch of tunic, not a strap or a belt."""
+    best = None
+    for r in range(chin + LENGTHEN_ROWS[0], min(F - 1, chin + LENGTHEN_ROWS[1] + 1)):
+        drawn = (f[r, :, 3] > 0.5) | (f[r + 1, :, 3] > 0.5)
+        if drawn.sum() < 4:
+            continue
+        d = float(np.abs(f[r][drawn] - f[r + 1][drawn]).sum())
+        if best is None or d < best[0]:
+            best = (d, r)
+    return best[1] if best else chin + LENGTHEN_ROWS[0]
+
+
+def lengthen_rows(body, sheet=None):
+    """Per frame (row, col), the row a LENGTHEN body repeats: `quiet_row` on RD's own bald body (or on
+    `sheet`, an armour sheet worn on it), under the bald body's chin."""
+    import wear_art
+    own = bald(body)
+    rows = {}
+    for row in range(own.shape[0] // F):
+        for col in range(own.shape[1] // F):
+            f = frame(own, row, col)
+            if not (f[..., 3] > 0.5).any():
+                continue
+            c = wear_art.chin(f)
+            c = wear_art.neck(f) if c is None else c
+            rows[row, col] = quiet_row(frame(sheet, row, col) if sheet is not None else f, c)
+    return rows
+
+
+def lengthened(layer, rows, n):
+    """A sheet with, in each frame, its row `rows[frame]` drawn `n` times more and everything above it
+    moved up `n` (its top `n` rows, empty on a short body, dropped)."""
+    out = layer.copy()
+    for (row, col), at in rows.items():
+        src, dst = frame(layer, row, col), frame(out, row, col)
+        dst[:at - n] = src[n:at]
+        dst[at - n:at + 1] = src[at]
+    return out
+
+
+def lit_arms(body):
+    """A body layer with its near-black arms in the tunic's own shadow green (`LIT_ARMS`)."""
+    import wear_art
+    out = body.copy()
+    for row in range(body.shape[0] // F):
+        for col in range(body.shape[1] // F):
+            f = frame(out, row, col)
+            a = f[..., 3] > 0.5
+            if not a.any():
+                continue
+            c = wear_art.chin(f)
+            c = wear_art.neck(f) if c is None else c
+            h, s, v = wear_art.rgb2hsv(f[..., :3])
+            green = a & (h >= 85) & (h <= 170) & (s >= 0.3) & (v >= 0.2)
+            dark = a & (v < ARM_DARK)
+            dark[:c + 1] = False
+            dark[c + 1 + ARM_ROWS:] = False
+
+            def touches(m):
+                t = np.zeros_like(m)
+                t[1:] |= m[:-1]
+                t[:-1] |= m[1:]
+                t[:, 1:] |= m[:, :-1]
+                t[:, :-1] |= m[:, 1:]
+                return t
+            fill = dark & ~touches(~a) & ~touches(green)
+            if not green.any() or not fill.any():
+                continue
+            tones = np.unique(f[green][:, :3], axis=0)
+            tones = tones[np.argsort(tones.max(1))]
+            base, lit = tones[0], tones[min(1, len(tones) - 1)]
+            above = np.zeros_like(fill)
+            above[1:] = fill[:-1]
+            left = np.zeros_like(fill)
+            left[:, 1:] = fill[:, :-1]
+            edge = fill & ~(above & left)
+            f[fill & ~edge, :3] = base
+            f[edge, :3] = lit
+    return out
 
 
 def moved(layer, offsets):

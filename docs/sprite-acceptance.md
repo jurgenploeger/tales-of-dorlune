@@ -239,6 +239,17 @@ python3 tools/check_content.py
   The hands kept off an armour's trim were every body's hands over all its frames, which reached a dwarf's
   chest and kept his dragon mail's gold V gold: now only where the sheet itself shows skin, 2 pixels round.
   Check: dye a sheet in two far-apart colours (azure main, crimson trim) and look for its trim colour left.
+- **2026-11-04 (dwarves under the human head):** the human head is taller than the dwarf's own and sat
+  two rows lower (crown at 17, was 15), leaving some 15 rows of body under it against a human's 20: "a bit
+  too squeezed" (the user). Of one and two rows longer, "Go with +2": `hero_layers.LENGTHEN` repeats, in
+  each frame, the row under the chin most like the row below it (a strap repeated read as a box on the
+  chest), and moves everything above up with it, on every dwarf layer, hat and armour sheet. The rows are
+  picked on RD's own bald body, so a rerun picks the same; the armour sheets can't be made again, so
+  `wear_art.py --dwarf-armour` lengthens each once and leaves one that has a row drawn three times running
+  in every frame. RD drew the dwarves' arms near-black, as dark as the shadows round them: they read as
+  missing. A near-black pixel under the chin touching neither the background nor the tunic's green takes
+  the tunic's shadow green (`LIT_ARMS`); eroding the dark (the ranger cloak's way) left nothing, as the
+  arms are 2 to 3 pixels wide.
 
 ### Hats cut from a sheet of their own
 
