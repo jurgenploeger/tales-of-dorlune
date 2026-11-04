@@ -202,6 +202,13 @@ python3 tools/check_content.py
   floating, mostly on the human woman (a race's sheets are cut at the highest neck of its bodies, and her
   chin sits two rows higher). A neck layer under the armour fixes it without touching the armour
   (`neck_<body>`, `wear_art.py --heads`, `GameSession.layers`): the collar hides it wherever it reaches.
+  Look at stacks on a neutral grey, never the map's green: every armoured hero's irises were holes
+  (`wear_art.heads()` left out the tunic's green, and the green eyes with it), and on a green backdrop
+  they passed for green eyes. Only green joined to the tunic under the neck is left out now
+  (`wear_art.outfit`). A neck centred under the jaw's skin stuck out in front of the chest side on (the
+  skin at the chin is all face): centre it under the whole head. Shadow under the jaw spread past the
+  head's own width showed as boxes beside the shoulders, where no armour covered it: keep it within
+  `NECK_REACH` of the neck.
 
 ### Hats cut from a sheet of their own
 

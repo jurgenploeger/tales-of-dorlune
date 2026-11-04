@@ -253,6 +253,17 @@ def tunic(frame):
     return (frame[..., 3] > 0.5) & (h >= 70) & (h <= 170) & (s > 0.25)
 
 
+def outfit(frame, cut):
+    """The tunic a head layer leaves out: its green pixels joined (8-way, through green) to the tunic under
+    the neck row `cut`, as a shoulder or an arm reaching up past the neck in a side view. Green inside the
+    face that isn't (the eyes) stays: left out with the rest, every armoured hero's irises were holes and
+    the ground showed through them (2026-11-04)."""
+    green = tunic(frame)
+    parts, _ = ndimage.label(green, structure=np.ones((3, 3), bool))
+    below = np.unique(parts[cut + 1:][green[cut + 1:]])
+    return np.isin(parts, below[below > 0])
+
+
 def heads():
     """`head_<body>`: each body's bald head down to its neck, for armour that leaves it bare."""
     for bodies in BODIES.values():
@@ -264,9 +275,10 @@ def heads():
                     f = sheet[row * F:(row + 1) * F, col * F:(col + 1) * F]
                     if not (f[..., 3] > 0.5).any():
                         continue
+                    cut = neck(f)
                     keep = np.zeros((F, F), bool)
-                    keep[:neck(f) + 1] = True
-                    keep &= ~tunic(f)
+                    keep[:cut + 1] = True
+                    keep &= ~outfit(f, cut)
                     out[row * F:(row + 1) * F, col * F:(col + 1) * F][keep] = f[keep]
             save(out, f"head_{body}")
             print(f"art/sprites/head_{body}.png  from body_{body}.png")
@@ -274,6 +286,7 @@ def heads():
 
 # A neck under bare-headed armour (`neck_<body>`): rows from just under the jaw down, and half its width.
 NECK_ROWS, NECK_HALF = 8, 2
+NECK_REACH = 4   # the shadow under the jaw, at most this far either side of the neck's middle
 
 
 def necks():
@@ -282,7 +295,8 @@ def necks():
     body whose chin sits higher (the human woman's, two rows) had a gap of ground between chin and
     collar, the head floating (2026-11-04). Under the armour, the collar hides it wherever it reaches.
     In each frame: from the head layer's chin down `NECK_ROWS`, under the middle of the chin, the skin a
-    shade into shadow (under the jaw), its sides in the head's outline."""
+    shade into shadow (under the jaw), its sides in the head's outline, and out to the jaw's width the
+    jaw's deepest shade darkened: ground showed there, between chin, long hair and collar."""
     for bodies in BODIES.values():
         for body in bodies:
             head = load(SPRITES / f"head_{body}.png")
@@ -299,14 +313,23 @@ def necks():
                         continue
                     ys, xs = np.nonzero(skin)
                     chin = ys.max()
-                    cx = int(round(xs[ys >= chin - 2].mean()))
+                    jaw = xs[ys >= chin - 2]
+                    # Under the middle of the whole head, not of its skin: side on, the skin at the chin
+                    # is all face, and the neck under it stuck out in front of the chest.
+                    cols = np.nonzero(a[max(0, chin - 3):chin + 1].any(0))[0]
+                    cx = int(round((cols.min() + cols.max()) / 2))
+                    left, right = max(int(jaw.min()), cx - NECK_REACH), min(int(jaw.max()), cx + NECK_REACH)
                     tones = f[skin][:, :3]
                     shadow = tones[np.argsort(tones.sum(1))[len(tones) // 4]]
+                    deep = tones[np.argmin(tones.sum(1))] * 0.7
                     dark = f[a][:, :3][np.argmin(f[a][:, :3].sum(1))]
                     n = out[row * F:(row + 1) * F, col * F:(col + 1) * F]
                     for y in range(chin, min(F, chin + NECK_ROWS)):
-                        for x in range(cx - NECK_HALF, cx + NECK_HALF + 1):
-                            n[y, x, :3] = dark if abs(x - cx) == NECK_HALF else shadow
+                        # The neck in the middle, its sides outlined; out to the jaw's width either side
+                        # the shadow under the jaw, so no ground shows between chin, hair and collar.
+                        for x in range(left, right + 1):
+                            d = abs(x - cx)
+                            n[y, x, :3] = shadow if d < NECK_HALF else (dark if d == NECK_HALF else deep)
                             n[y, x, 3] = 1
             save(out, f"neck_{body}")
             print(f"art/sprites/neck_{body}.png  under head_{body}.png")
