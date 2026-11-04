@@ -60,6 +60,11 @@ STYLES = {
 # sheet): split the same way, their own hair kept as hair_<body> (an old dwarf's bushy mop; his
 # beard is his locks).
 TOWNSFOLK = {"dwarf_npc": ("dwarf", "dwarf_npc_walk")}
+# Sheets whose beard is shaved off: its pixels painted as the face's skin, closed by the head's outline
+# at the chin, and no locks layer (2026-11-04, the user: male elves clean-shaven; Retro Diffusion drew the
+# male elf a blond beard over his chin and mouth).
+SHAVEN = {"elf_male_walk"}
+CHIN = 6   # a shaved chin's row under the brow: the female elf's, in every direction
 # Headgear is drawn in magenta, which no recolour touches (skin 5-45°, hair 12-58°, outfit 85-170°)
 # and no hero sheet uses. The game paints soft magenta (saturation 0.6) in the armour's colour,
 # keeping the shade (value: 0.92 light, 0.7 mid, 0.45 dark), and full magenta in its trim colour.
@@ -483,7 +488,52 @@ class Race:
             core = [(y, x) for y in range(head.brow + 3, head.brow + 7) for x in range(F)
                     if beard[y, x] and abs(x - mid) <= 3 and lockish(f[y, x])]
             locks = flood(f, core, lockish, beard, diagonal=True)
-            frame(self.locks, row, col)[locks] = f[locks]
+            if self.sheet_id in SHAVEN:
+                self._shave(body, locks, head, f)
+            else:
+                frame(self.locks, row, col)[locks] = f[locks]
+
+    def _shave(self, body, beard, head, f):
+        """Paints a beard (`beard`, a frame's mask) as a clean-shaven chin: below the eyes (the beard's
+        search reaches up into them), the face's skin down to the chin, `CHIN` rows under the brow as
+        the female elf's is, a shade darker on its last row (the jaw turning under) and the head's
+        outline under it; what the beard hung over below that, the tunic's own colour. Painted as skin
+        all the way down, the face came out long, its chin on the collar."""
+        beard = beard.copy()
+        beard[:head.brow + 4] = False
+        if not beard.any():
+            return
+        chin = head.brow + CHIN
+        # The tunic's own main colour on the chest, its shadows left out: carried up each column, a hand
+        # or a highlight under the beard made stripes; the nearest pixel on the row was the collar's
+        # shadow, a dark bib.
+        chest = [tuple(np.round(f[y, x, :3], 3)) for y in range(chin + 2, min(F, chin + 10)) for x in range(F)
+                 if is_outfit(f[y, x]) and not beard[y, x] and hsv(f[y, x])[2] >= 0.45]
+        tunic = np.array(max(set(chest), key=chest.count)) if chest else OUTLINE
+        for y, x in np.argwhere(beard):
+            body[y, x, 3] = 1
+            if y < chin:
+                body[y, x, :3] = self.skin
+            elif y == chin:
+                body[y, x, :3] = self.skin * 0.86
+            elif y == chin + 1:
+                body[y, x, :3] = OUTLINE
+            else:
+                body[y, x, :3] = tunic
+        # Below the chin, a beard that hung out past the chest (seen from the side, forward of it) goes:
+        # the tunic only as wide as the torso is on that row.
+        for y in range(chin + 2, F):
+            row = beard[y]
+            if not row.any():
+                continue
+            torso = np.nonzero((body[y, :, 3] >= 0.5) & ~row)[0]
+            for x in np.nonzero(row)[0]:
+                if not len(torso) or x < torso.min() or x > torso.max():
+                    body[y, x] = 0
+        # Where a shaved pixel now meets nothing, the outline.
+        for y, x in np.argwhere(beard):
+            if body[y, x, 3] >= 0.5 and any(not 0 <= x + dx < F or body[y, x + dx, 3] < 0.5 for dx in (-1, 1)):
+                body[y, x, :3] = OUTLINE
 
     def _scalp(self, body, head, drawn):
         """Draws the bare skull round the face, shaded, with an outline, and joins the ears to it,

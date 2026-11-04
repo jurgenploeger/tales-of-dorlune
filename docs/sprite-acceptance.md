@@ -184,6 +184,19 @@ python3 tools/check_content.py
 
 ## Learnings
 
+- **2026-11-04 (heroes, a review of every armour on every body, all 16 frames):** the head sits right on
+  the armour's collar in most frames; moving it per frame onto the armour figure's own head (found by its
+  face) made the side views worse, the head floating off the shoulders, as RD drew those faces further
+  forward than the neck. What does look wrong: the armour figures' own beards and hair left at the collar
+  (dwarf and elf sheets), views of one armour that disagree in the source (the human ranger cloak near-black
+  from the front, green from behind), the male elf's blond beard (RD's), and the female dwarf's hair across
+  her face. Male elves are clean-shaven since (the user's call): `hero_layers.SHAVEN` paints the beard as
+  the face down to a chin `CHIN` rows under the brow (the female elf's), the outline under it, the tunic's
+  main colour below (carried up each column it striped; the nearest pixel on the row was its shadow, a dark
+  bib), nothing past the chest. Rerunning `tools/wear_art.py` doesn't reproduce the committed armour and hat
+  sheets' colours (every one changes, its transparency the same): leave them be and regenerate only what
+  changed (here `head_<body>`, which `heads()` makes as committed).
+
 ### Hats cut from a sheet of their own
 
 - A hat cut from a pilot sheet (`HAT_ONLY`) keeps the pilot's face, laid over the wearer's head: it has to
