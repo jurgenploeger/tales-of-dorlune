@@ -36,8 +36,6 @@ SWIFT = ROOT / "TalesOfDorlune" / "Content" / "Dyes.swift"
 RACES = ["human", "elf", "dwarf"]
 KINDS = ["iron_plate", "chain_mail", "dragon_mail", "mage_robe", "ranger_cloak", "snow_cloak"]
 HAT_KINDS = KINDS + ["hide_hood"]
-# Where a race's eyes are in a frame (art/eyes.json): a dwarf's hair under a hat starts a little above.
-EYE = {"human": 20, "elf": 20, "dwarf": 27}   # the dwarf's since he wears the human head
 
 # Each trim layer's colours: (hue from, hue to, saturation from, to, value from, to), a hue window that
 # wraps round red when from > to. Measured on the sheets (2026-10-30): a robe's gold sash and hem, a
@@ -414,20 +412,13 @@ def hands(race):
 
 
 def keep_off(name, race):
-    """Where a trim never goes: on a sheet the head, a dwarf's beard and the hands; under a dwarf's hat his
-    face and hair."""
+    """Where a trim never goes: on a sheet the head, a dwarf's beard and the hands. A hat has nothing to keep
+    off: it's the hat alone (a dwarf's is the human's, moved, as he wears the human head since 0.9.70)."""
     if name.startswith("armor_"):
         # A dwarf's sheet has his beard drawn on it in gold; an elf's collar lies where a beard would.
         beard = union(f"locks_{race}*.png") if race == "dwarf" else False
         return union(f"head_{race}*.png") | beard | hands(race)
-    shape = load(name).shape[:2]
-    if race != "dwarf":
-        return np.zeros(shape, bool)
-    zone = union(f"locks_{race}*.png") | union(f"hair_*_{race}*.png") | union(f"head_{race}*.png")
-    rows = np.zeros(shape, bool)
-    for fy in range(0, shape[0], 48):
-        rows[fy + EYE[race] - 3:fy + 48, :] = True
-    return zone & rows
+    return np.zeros(load(name).shape[:2], bool)
 
 
 def trim_mask(name):
