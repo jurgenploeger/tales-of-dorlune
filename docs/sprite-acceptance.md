@@ -230,6 +230,15 @@ python3 tools/check_content.py
   material's family should be alike (the cloak's was 42% from behind, 5% from the front). Since the dwarf
   wears the human head, his hats are the human's moved, and `dye_art.keep_off` keeps nothing off a hat
   (cutting the old dwarf's face and hair zone took 64 to 177 trim pixels off them).
+- **2026-11-04 (trim and main colour when dyed):** `dye_art.py cut` found each trim by fixed colour windows,
+  which held its middle: a gold's deep shadows and near-white highlights stayed in the main layer, gold beside
+  a dyed trim (the elf's and dwarf's robes, every dragon mail, the elf's plate). A trim now also takes, frame
+  by frame, the pixels of its hue family (windows widened by `TRIM_REACH`) that touch it 8-way, if saturated
+  (`TRIM_DEEP`, 0.55: a gold's shadow is 0.58 to 0.95) or near white (`TRIM_PALE`); dull leather and wood
+  beside it stay (a ranger's belt, 0.42 to 0.45), and so does skin on a hat, whose sheet shows the face.
+  The hands kept off an armour's trim were every body's hands over all its frames, which reached a dwarf's
+  chest and kept his dragon mail's gold V gold: now only where the sheet itself shows skin, 2 pixels round.
+  Check: dye a sheet in two far-apart colours (azure main, crimson trim) and look for its trim colour left.
 
 ### Hats cut from a sheet of their own
 

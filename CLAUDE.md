@@ -140,7 +140,8 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   coloured as it's worn: the sheets' `MATERIAL` and the item's `tint` (a hide cloak its hood's), so icon and hero match;
   at 64 pixels as a weapon's is (`weapon_art.icon`).
 - `tools/dye_art.py`: dyes (`TalesOfDorlune/Content/Dyes.swift`) mirrored: `cut` cuts each armour sheet's and hat's
-  trim into a layer of its own (`<sheet>_trim.png`, its `TRIMS` windows, never a hand, face or a dwarf's gold hair)
+  trim into a layer of its own (`<sheet>_trim.png`, its `TRIMS` windows grown to the trim's whole ramp frame by frame:
+  its saturated shadows and pale highlights touching it, `TRIM_REACH`; never a hand, face or a dwarf's gold hair)
   and measures every material for `DyeDef.mains`/`trims`, and lists the one-colour weapons, `oneColour` (paste them in); `check` reads that table back and holds
   every dye on every kind, main and trim, gloves, boots, icons and held weapons, to reading as its colour;
   `--sheet out.png` shows them all. Rerun `cut` and `check` after changing a sheet or a dye rule.

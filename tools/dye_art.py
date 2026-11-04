@@ -417,17 +417,47 @@ def keep_off(name, race):
     if name.startswith("armor_"):
         # A dwarf's sheet has his beard drawn on it in gold; an elf's collar lies where a beard would.
         beard = union(f"locks_{race}*.png") if race == "dwarf" else False
-        return union(f"head_{race}*.png") | beard | hands(race)
+        # The hands where this sheet shows skin: every body's hands over all its frames reached a
+        # dwarf's chest, and kept his dragon mail's gold V out of its trim.
+        near_skin = ndimage.binary_dilation(skin_like(load(name)), iterations=2)
+        return union(f"head_{race}*.png") | beard | (hands(race) & near_skin)
     return np.zeros(load(name).shape[:2], bool)
+
+
+# A trim's whole ramp (2026-11-04, the user: "trim and main mismatch" when coloured): the windows found its
+# middle, and its darkest and palest shades stayed in the main layer, still gold beside a dyed trim. So a
+# trim also takes, frame by frame, the pixels of its hue family (its windows' hue widened by TRIM_REACH)
+# that touch it, 8-way, through each other: a gold's shadows, saturated (TRIM_DEEP), and its highlights,
+# near white (TRIM_PALE), not skin on a hat. Leather and wood beside it are dull and stay: a ranger's belt,
+# s 0.42 to 0.45.
+TRIM_REACH = 10
+TRIM_DEEP = 0.55
+TRIM_PALE = 0.9
 
 
 def trim_mask(name):
     a = load(name)
     h, s, v = hsv(a[..., :3].astype(float) / 255)
-    mask = np.zeros(h.shape, bool)
+    solid = (a[..., 3] > 127) & ~keep_off(name, name.rsplit("_", 1)[1])
+    mask, family = np.zeros(h.shape, bool), np.zeros(h.shape, bool)
     for w in TRIMS[name]:
         mask |= matches(dict(hue=[w[0], w[1]], minSaturation=w[2], maxSaturation=w[3], minValue=w[4], maxValue=w[5]), h, s, v)
-    return mask & (a[..., 3] > 127) & ~keep_off(name, name.rsplit("_", 1)[1])
+        family |= matches(dict(hue=[(w[0] - TRIM_REACH) % 360, (w[1] + TRIM_REACH) % 360], minSaturation=0.15,
+                               minValue=DARK), h, s, v)
+    mask &= solid
+    kind = name.split("_", 1)[1].rsplit("_", 1)[0]
+    main = matches(dict(MAINS[kind], minValue=DARK), h, s, v) if kind in MAINS else False
+    family &= solid & ~main & ((s >= TRIM_DEEP) | (v >= TRIM_PALE))
+    if name.startswith("hat_"):
+        family &= ~skin_like(a)   # a hat's sheet shows the face under it: a cream cheek isn't its gold
+    grown = mask.copy()
+    for fy in range(0, a.shape[0], 48):
+        for fx in range(0, a.shape[1], 48):
+            box = (slice(fy, fy + 48), slice(fx, fx + 48))
+            labels, _ = ndimage.label(family[box] | mask[box], np.ones((3, 3), bool))
+            touching = np.unique(labels[mask[box]])
+            grown[box] = np.isin(labels, touching[touching > 0])
+    return grown
 
 
 def measure(pixels):
