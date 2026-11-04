@@ -1,0 +1,27 @@
+{
+  "request": {
+    "num_images": 2,
+    "prompt": "cute chibi adventurer girl with a long orange ponytail, green tunic, brown belt and boots, clean pixel art, dark outline, magenta background",
+    "prompt_style": "rd_pro__pixelate",
+    "width": 64,
+    "height": 64,
+    "input_image_path": "art-variants/_refs/female_edit_small_rgb64.png"
+  },
+  "result": {
+    "created_at": 1793813396,
+    "credit_cost": 2,
+    "balance_cost": 0.36,
+    "output_urls": [],
+    "model": "rd_pro",
+    "remaining_credits": 0,
+    "remaining_balance": 9.671,
+    "request_id": "2271c7cf-cd00-41fa-9514-bd4960ba05fc",
+    "outputs_retained_until": 1793899770,
+    "billing": {
+      "reason": "no_plan",
+      "source": "balance",
+      "balance_left": 9.671,
+      "balance_charged": 0.36
+    }
+  }
+}

@@ -78,6 +78,17 @@
         "height": 64,
         "input_image_path": "art-variants/_refs/human_male_down_rgb64.png"
       }
+    },
+    {
+      "id": "pilot_human_female_pixelate",
+      "pilot": true,
+      "request": {
+        "prompt": "cute chibi adventurer girl with a long orange ponytail, green tunic, brown belt and boots, clean pixel art, dark outline, magenta background",
+        "prompt_style": "rd_pro__pixelate",
+        "width": 64,
+        "height": 64,
+        "input_image_path": "art-variants/_refs/female_edit_small_rgb64.png"
+      }
     }
   ]
 }
