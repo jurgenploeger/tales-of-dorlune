@@ -272,6 +272,46 @@ def heads():
             print(f"art/sprites/head_{body}.png  from body_{body}.png")
 
 
+# A neck under bare-headed armour (`neck_<body>`): rows from just under the jaw down, and half its width.
+NECK_ROWS, NECK_HALF = 8, 2
+
+
+def necks():
+    """`neck_<body>`: each body's neck, drawn under bare-headed armour, in its own skin (the game gives it
+    the skin tone, as `head_<body>`). A race's sheets are cut at the highest neck of its bodies, so a
+    body whose chin sits higher (the human woman's, two rows) had a gap of ground between chin and
+    collar, the head floating (2026-11-04). Under the armour, the collar hides it wherever it reaches.
+    In each frame: from the head layer's chin down `NECK_ROWS`, under the middle of the chin, the skin a
+    shade into shadow (under the jaw), its sides in the head's outline."""
+    for bodies in BODIES.values():
+        for body in bodies:
+            head = load(SPRITES / f"head_{body}.png")
+            out = np.zeros_like(head)
+            for row in range(head.shape[0] // F):
+                for col in range(head.shape[1] // F):
+                    f = head[row * F:(row + 1) * F, col * F:(col + 1) * F]
+                    a = f[..., 3] > 0.5
+                    if not a.any():
+                        continue
+                    h, s, v = rgb2hsv(f[..., :3])
+                    skin = a & ((h <= 45) | (h >= 340)) & (s >= 0.12) & (s <= 0.75) & (v >= 0.45)
+                    if not skin.any():
+                        continue
+                    ys, xs = np.nonzero(skin)
+                    chin = ys.max()
+                    cx = int(round(xs[ys >= chin - 2].mean()))
+                    tones = f[skin][:, :3]
+                    shadow = tones[np.argsort(tones.sum(1))[len(tones) // 4]]
+                    dark = f[a][:, :3][np.argmin(f[a][:, :3].sum(1))]
+                    n = out[row * F:(row + 1) * F, col * F:(col + 1) * F]
+                    for y in range(chin, min(F, chin + NECK_ROWS)):
+                        for x in range(cx - NECK_HALF, cx + NECK_HALF + 1):
+                            n[y, x, :3] = dark if abs(x - cx) == NECK_HALF else shadow
+                            n[y, x, 3] = 1
+            save(out, f"neck_{body}")
+            print(f"art/sprites/neck_{body}.png  under head_{body}.png")
+
+
 def bared(img, race):
     """An armour sheet with its head cut off, and what's cut off (its hat): everything above the
     highest neck of the race's bodies, so whichever body wears it, its head (`head_<body>`, down to
@@ -603,11 +643,18 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--sheet", help="also write a contact sheet here")
     parser.add_argument("--shine", action="store_true", help="only tint the metals' shine on the sheets already made")
+    parser.add_argument("--heads", action="store_true", help="only the bare heads and the necks under them "
+                        "(the whole run recolours the committed armour sheets: docs/sprite-acceptance.md)")
     args = parser.parse_args()
     if args.shine:
         shine_existing()
         return
+    if args.heads:
+        heads()
+        necks()
+        return
     heads()
+    necks()
     made = armour() | wear()
     if args.sheet:
         contact(made, args.sheet)

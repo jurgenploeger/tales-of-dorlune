@@ -196,6 +196,12 @@ python3 tools/check_content.py
   bib), nothing past the chest. Rerunning `tools/wear_art.py` doesn't reproduce the committed armour and hat
   sheets' colours (every one changes, its transparency the same): leave them be and regenerate only what
   changed (here `head_<body>`, which `heads()` makes as committed).
+  Up close, stacked as the game does, most of what looked like the armour figures' leftovers was the
+  hero's own face (a dwarf's red beard, his big green eyes); what an armour figure left at its collar (its
+  neck, its chin) lies under the hero's head. What did show: ground between chin and collar, the head
+  floating, mostly on the human woman (a race's sheets are cut at the highest neck of its bodies, and her
+  chin sits two rows higher). A neck layer under the armour fixes it without touching the armour
+  (`neck_<body>`, `wear_art.py --heads`, `GameSession.layers`): the collar hides it wherever it reaches.
 
 ### Hats cut from a sheet of their own
 

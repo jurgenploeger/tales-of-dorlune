@@ -368,9 +368,13 @@ final class GameSession {
         if let sheet = armor?.sheets?[race.id] {
             var worn = [ArtLayer(id: sheet)]
             if let trim = armor?.trimLayer(over: sheet) { worn.append(trim) }
-            // Its head is cut off: the hero's own over it, in their skin tone.
+            // Its head is cut off: the hero's own over it, in their skin tone, and their neck under it
+            // (`neck_<body>`, tools/wear_art.py necks): a race's sheets are cut at its highest neck, so
+            // where a body's chin sits higher than the collar the neck shows, not the ground under a
+            // floating head (2026-11-04).
             if armor?.bareHead == true {
-                return under + worn + [ArtLayer(id: "head_\(body)", recolor: skin)] + back + top
+                let neck = ArtLayer(id: "neck_\(body)", recolor: skin)
+                return under + [neck] + worn + [ArtLayer(id: "head_\(body)", recolor: skin)] + back + top
             }
             return [ArtLayer(id: "nape_\(style)_\(body)", recolor: hair)] + worn
         }

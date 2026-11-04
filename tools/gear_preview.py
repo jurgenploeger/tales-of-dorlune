@@ -1134,10 +1134,12 @@ def dressed(race, body, style, armour=None, worn=(), skin=None):
     if sheet and armour.get("bareHead"):
         # A sheet with its head cut off (tools/wear_art.py BARE_HEADED): the hero's own head under
         # what's on it, the skin tone on the head, the armour's tint on the sheet.
-        worn_sheet, head = array(load(sheet)), array(load(f"head_{body}"))
-        base = stacked(under + [worn_sheet, head] + back + top)
+        # Its neck under the sheet (tools/wear_art.py necks): the gap where a collar sits low shows skin.
+        worn_sheet, head, neck = array(load(sheet)), array(load(f"head_{body}")), array(load(f"neck_{body}"))
+        base = stacked(under + [neck, worn_sheet, head] + back + top)
         sheet_rules = tone + (armour.get("tint") or [])
-        out = stacked(under + [pp.recolor(worn_sheet, sheet_rules) if sheet_rules else worn_sheet,
+        out = stacked(under + [pp.recolor(neck, tone) if tone else neck,
+                               pp.recolor(worn_sheet, sheet_rules) if sheet_rules else worn_sheet,
                                pp.recolor(head, tone) if tone else head] + back + top_out)
         skeleton = f"body_{race}"
     elif sheet:
