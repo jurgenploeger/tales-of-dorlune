@@ -67,6 +67,17 @@
         "remove_bg": true,
         "input_image_path": "art-variants/_refs/human_male_down_rgb64.png"
       }
+    },
+    {
+      "id": "pilot_human_female_edit_small",
+      "pilot": true,
+      "request": {
+        "prompt": "change this boy into a girl: long orange hair tied in a ponytail, the same big green eyes; keep the character exactly the same small size and position as in the input image, the same pose, outline, green tunic, brown belt and boots, with the same wide empty magenta background around the character",
+        "prompt_style": "rd_pro__edit",
+        "width": 64,
+        "height": 64,
+        "input_image_path": "art-variants/_refs/human_male_down_rgb64.png"
+      }
     }
   ]
 }

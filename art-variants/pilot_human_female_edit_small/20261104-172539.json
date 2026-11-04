@@ -1,0 +1,27 @@
+{
+  "request": {
+    "num_images": 2,
+    "prompt": "change this boy into a girl: long orange hair tied in a ponytail, the same big green eyes; keep the character exactly the same small size and position as in the input image, the same pose, outline, green tunic, brown belt and boots, with the same wide empty magenta background around the character",
+    "prompt_style": "rd_pro__edit",
+    "width": 64,
+    "height": 64,
+    "input_image_path": "art-variants/_refs/human_male_down_rgb64.png"
+  },
+  "result": {
+    "created_at": 1793813138,
+    "credit_cost": 2,
+    "balance_cost": 0.36,
+    "output_urls": [],
+    "model": "rd_pro",
+    "remaining_credits": 0,
+    "remaining_balance": 10.031,
+    "request_id": "1e979f2d-e7d7-469d-87da-47dadaf6a04a",
+    "outputs_retained_until": 1793899516,
+    "billing": {
+      "reason": "no_plan",
+      "source": "balance",
+      "balance_left": 10.031,
+      "balance_charged": 0.36
+    }
+  }
+}
