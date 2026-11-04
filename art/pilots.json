@@ -13,7 +13,9 @@
         "width": 48,
         "height": 48,
         "remove_bg": true,
-        "reference_image_paths": ["art-variants/_refs/human_male_down.png"]
+        "reference_image_paths": [
+          "art-variants/_refs/human_male_down.png"
+        ]
       }
     },
     {
@@ -39,6 +41,31 @@
         "frames_duration": 4,
         "return_spritesheet": true,
         "input_image_path": "art-variants/_refs/human_male_down.png"
+      }
+    },
+    {
+      "id": "pilot_human_female_edit",
+      "pilot": true,
+      "request": {
+        "prompt": "change this boy into a girl: long orange hair tied in a ponytail, a slightly softer face with the same big green eyes; keep everything else exactly the same: same size, pose, outline, green tunic, brown belt and boots, magenta background",
+        "prompt_style": "rd_pro__edit",
+        "width": 64,
+        "height": 64,
+        "remove_bg": true,
+        "input_image_path": "art-variants/_refs/human_male_down_rgb64.png"
+      }
+    },
+    {
+      "id": "pilot_human_female_img2img",
+      "pilot": true,
+      "request": {
+        "prompt": "cute chibi adventurer girl with long orange hair in a ponytail, green tunic, brown belt and boots, facing the viewer, on a magenta background",
+        "prompt_style": "rd_plus__default",
+        "width": 64,
+        "height": 64,
+        "strength": 0.45,
+        "remove_bg": true,
+        "input_image_path": "art-variants/_refs/human_male_down_rgb64.png"
       }
     }
   ]
