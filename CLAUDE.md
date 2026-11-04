@@ -227,7 +227,8 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   (`hat_<kind>_<race>`, a hat item of its own: items.json `headgear`, the armour's `headpiece`). `TOWNSFOLK` sheets no hero wears are split too (`dwarf_npc`: the old bearded dwarf,
   his own mop as `hair_dwarf_npc`, a mouth drawn into his beard by `tools/character_art.py mouth`). The bald head is painted only inside the sprite as drawn (`_scalp`), so a
   body wearing its own hair matches its sheet: a skull painted past a side-view face stuck out like a brow ridge.
-  Rerun after changing a race's sheet, and look at `--preview` before committing. Gloves, boots and necklaces are painted on by GearOverlay (`tools/gear_preview.py --trinkets`),
+  Dwarves wear the human head on their own short body (`GRAFT`; run `tools/wear_art.py --heads` and
+  `--dwarf-hats` after). Rerun after changing a race's sheet, and look at `--preview` before committing. Gloves, boots and necklaces are painted on by GearOverlay (`tools/gear_preview.py --trinkets`),
   and the festive seasons' hats, masks and scarves and the status capes go on from pieces `tools/wear_art.py` cut out.
 - `tools/wear_art.py`: worn gear from Retro Diffusion sheets in `art-variants/` (picked by hand, its `ARMOUR` and
   `WEAR`; sheets older than these notes in `art-variants/legacy/`), fixed in code: every armour walk sheet

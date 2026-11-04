@@ -335,6 +335,21 @@ def necks():
             print(f"art/sprites/neck_{body}.png  under head_{body}.png")
 
 
+def dwarf_hats():
+    """`hat_<kind>_dwarf` (and its dye trim): the human's, moved onto the dwarf's neck as the head is
+    (tools/hero_layers.py GRAFT, `offsets_for`): a dwarf wears the human head since 2026-11-04, and the
+    helmets and hoods Retro Diffusion drew on its dwarves fitted their squat heads, not it."""
+    import hero_layers
+    offsets = hero_layers.offsets_for("dwarf")
+    for path in sorted(SPRITES.glob("hat_*_human*.png")):
+        name = path.stem
+        if not (name.endswith("_human") or name.endswith("_human_trim")):
+            continue
+        out = name.replace("_human", "_dwarf")
+        save(hero_layers.moved(load(path), offsets), out)
+        print(f"art/sprites/{out}.png  from {name}.png")
+
+
 def bared(img, race):
     """An armour sheet with its head cut off, and what's cut off (its hat): everything above the
     highest neck of the race's bodies, so whichever body wears it, its head (`head_<body>`, down to
@@ -666,6 +681,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--sheet", help="also write a contact sheet here")
     parser.add_argument("--shine", action="store_true", help="only tint the metals' shine on the sheets already made")
+    parser.add_argument("--dwarf-hats", action="store_true", help="only the dwarves' hats: the human's, moved "
+                        "onto their neck (they wear the human head)")
     parser.add_argument("--heads", action="store_true", help="only the bare heads and the necks under them "
                         "(the whole run recolours the committed armour sheets: docs/sprite-acceptance.md)")
     args = parser.parse_args()
@@ -675,6 +692,9 @@ def main():
     if args.heads:
         heads()
         necks()
+        return
+    if args.dwarf_hats:
+        dwarf_hats()
         return
     heads()
     necks()

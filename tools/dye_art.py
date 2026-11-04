@@ -37,7 +37,7 @@ RACES = ["human", "elf", "dwarf"]
 KINDS = ["iron_plate", "chain_mail", "dragon_mail", "mage_robe", "ranger_cloak", "snow_cloak"]
 HAT_KINDS = KINDS + ["hide_hood"]
 # Where a race's eyes are in a frame (art/eyes.json): a dwarf's hair under a hat starts a little above.
-EYE = {"human": 20, "elf": 20, "dwarf": 26}
+EYE = {"human": 20, "elf": 20, "dwarf": 27}   # the dwarf's since he wears the human head
 
 # Each trim layer's colours: (hue from, hue to, saturation from, to, value from, to), a hue window that
 # wraps round red when from > to. Measured on the sheets (2026-10-30): a robe's gold sash and hem, a
@@ -45,7 +45,7 @@ EYE = {"human": 20, "elf": 20, "dwarf": 26}
 # gold clasps, a hide hood's fur lining. Under a hat the gold is the more saturated: an elf's face is a
 # pale gold. Chain mail's only second colour is its undershirt, the same
 # reds and browns as the hands; a snow cloak has none; nor do a ranger's hood (its gold is the face's),
-# a dwarf's wizard hat (its gold is his hair) or a dwarf's plate (a few spots on the hands).
+# or a dwarf's plate (a few spots on the hands). A dwarf's hats are the human's (he wears its head).
 TRIMS = {
     "armor_mage_robe_human": [(45, 62, 0.33, 1, 0.4, 1)],
     "armor_mage_robe_elf": [(45, 62, 0.5, 1, 0.5, 1)],
@@ -59,9 +59,10 @@ TRIMS = {
     "armor_ranger_cloak_elf": [(40, 62, 0.33, 1, 0.5, 1)],
     "armor_ranger_cloak_dwarf": [(40, 62, 0.33, 1, 0.5, 1)],
     "hat_mage_robe_human": [(44, 62, 0.4, 0.8, 0.4, 1)],
+    "hat_mage_robe_dwarf": [(44, 62, 0.4, 0.8, 0.4, 1)],   # the human's, as he wears its head
     "hat_iron_plate_human": [(38, 62, 0.65, 1, 0.3, 1)],
     "hat_iron_plate_elf": [(38, 62, 0.65, 1, 0.3, 1)],
-    "hat_iron_plate_dwarf": [(30, 62, 0.5, 1, 0.4, 1)],
+    "hat_iron_plate_dwarf": [(38, 62, 0.65, 1, 0.3, 1)],
     "hat_dragon_mail_human": [(35, 62, 0.6, 1, 0.5, 1)],
     "hat_dragon_mail_elf": [(35, 62, 0.6, 1, 0.5, 1)],
     "hat_dragon_mail_dwarf": [(35, 62, 0.6, 1, 0.5, 1)],

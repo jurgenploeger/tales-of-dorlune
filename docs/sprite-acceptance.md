@@ -209,6 +209,16 @@ python3 tools/check_content.py
   skin at the chin is all face): centre it under the whole head. Shadow under the jaw spread past the
   head's own width showed as boxes beside the shoulders, where no armour covered it: keep it within
   `NECK_REACH` of the neck.
+  Dwarves' heads read squat (2026-11-04, the user: "a low forehead, especially noticeable from the
+  side"). Measured, the forehead wasn't low (four rows of skin over the eye, as a human's); the face was
+  small at the foot of a wide dome. Raising the fringe barely showed; two rows added across the skull
+  looked "stretched, not natural". What the user chose: the human head on the dwarf's short body
+  (`hero_layers.GRAFT`, `graft`): the bald dwarf head off, the human's set chin on chin, per direction
+  the median offset plus each walk frame's bob (frame by frame it jumped 4 to 7 rows), and every hair,
+  nape, hood, helmet layer, the head and neck under armour and the armour hats (`wear_art.py
+  --dwarf-hats`, their dye numbers the human's) the human's moved the same. art/eyes.json's dwarf boxes
+  moved with it. The dwarf man was always clean-shaven: the orange beard in a hood was the hood
+  drawing's own dwarf.
 
 ### Hats cut from a sheet of their own
 

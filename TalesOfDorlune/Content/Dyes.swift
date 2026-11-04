@@ -65,47 +65,48 @@ nonisolated extension DyeDef {
         "armor_iron_plate_elf": DyeMaterial(hue: [140, 260], minSaturation: 0.05, minValue: 0.2, saturation: 0.28, value: 0.45, light: 1.0),
         "hat_iron_plate_elf": DyeMaterial(hue: [140, 260], minSaturation: 0.05, minValue: 0.2, saturation: 0.11, value: 0.81, light: 1.0),
         "armor_iron_plate_dwarf": DyeMaterial(hue: [140, 260], minSaturation: 0.05, minValue: 0.2, saturation: 0.28, value: 0.45, light: 1.0),
-        "hat_iron_plate_dwarf": DyeMaterial(hue: [140, 260], minSaturation: 0.05, minValue: 0.2, saturation: 0.28, value: 0.45, light: 1.0),
+        "hat_iron_plate_dwarf": DyeMaterial(hue: [140, 260], minSaturation: 0.05, minValue: 0.2, saturation: 0.25, value: 0.62, light: 1.0),
         "armor_chain_mail_human": DyeMaterial(hue: [150, 260], minSaturation: 0.03, minValue: 0.2, saturation: 0.17, value: 0.6, light: 1.0),
         "hat_chain_mail_human": DyeMaterial(hue: [150, 260], minSaturation: 0.03, minValue: 0.2, saturation: 0.17, value: 0.6, light: 0.88),
         "armor_chain_mail_elf": DyeMaterial(hue: [150, 260], minSaturation: 0.03, minValue: 0.2, saturation: 0.19, value: 0.33, light: 0.82),
         "hat_chain_mail_elf": DyeMaterial(hue: [150, 260], minSaturation: 0.03, minValue: 0.2, saturation: 0.22, value: 0.55, light: 0.82),
         "armor_chain_mail_dwarf": DyeMaterial(hue: [150, 260], minSaturation: 0.03, minValue: 0.2, saturation: 0.2, value: 0.4, light: 0.75),
-        "hat_chain_mail_dwarf": DyeMaterial(hue: [150, 260], minSaturation: 0.03, minValue: 0.2, saturation: 0.2, value: 0.4, light: 0.92),
+        "hat_chain_mail_dwarf": DyeMaterial(hue: [150, 260], minSaturation: 0.03, minValue: 0.2, saturation: 0.17, value: 0.6, light: 0.88),
         "armor_dragon_mail_human": DyeMaterial(hue: [335, 25], minSaturation: 0.55, minValue: 0.2, saturation: 0.85, value: 0.85, light: 0.98),
         "hat_dragon_mail_human": DyeMaterial(hue: [335, 25], minSaturation: 0.55, minValue: 0.2, saturation: 0.85, value: 0.85, light: 0.98),
         "armor_dragon_mail_elf": DyeMaterial(hue: [335, 25], minSaturation: 0.55, minValue: 0.2, saturation: 0.85, value: 0.85, light: 0.99),
         "hat_dragon_mail_elf": DyeMaterial(hue: [335, 25], minSaturation: 0.55, minValue: 0.2, saturation: 0.85, value: 0.85, light: 0.99),
         "armor_dragon_mail_dwarf": DyeMaterial(hue: [335, 25], minSaturation: 0.55, minValue: 0.2, saturation: 0.85, value: 0.71, light: 0.97),
-        "hat_dragon_mail_dwarf": DyeMaterial(hue: [335, 25], minSaturation: 0.55, minValue: 0.2, saturation: 0.85, value: 0.85, light: 0.97),
+        "hat_dragon_mail_dwarf": DyeMaterial(hue: [335, 25], minSaturation: 0.55, minValue: 0.2, saturation: 0.85, value: 0.85, light: 0.98),
         "armor_mage_robe_human": DyeMaterial(hue: [190, 260], minSaturation: 0.2, minValue: 0.2, saturation: 0.8, value: 0.4, light: 0.79),
         "hat_mage_robe_human": DyeMaterial(hue: [190, 260], minSaturation: 0.2, minValue: 0.2, saturation: 0.82, value: 0.5, light: 0.79),
         "armor_mage_robe_elf": DyeMaterial(hue: [190, 260], minSaturation: 0.2, minValue: 0.2, saturation: 0.8, value: 0.5, light: 0.83),
         "hat_mage_robe_elf": DyeMaterial(hue: [190, 260], minSaturation: 0.2, minValue: 0.2, saturation: 0.8, value: 0.5, light: 0.83),
         "armor_mage_robe_dwarf": DyeMaterial(hue: [190, 260], minSaturation: 0.2, minValue: 0.2, saturation: 0.61, value: 0.98, light: 0.98),
-        "hat_mage_robe_dwarf": DyeMaterial(hue: [190, 260], minSaturation: 0.2, minValue: 0.2, saturation: 0.61, value: 0.98, light: 0.98),
+        "hat_mage_robe_dwarf": DyeMaterial(hue: [190, 260], minSaturation: 0.2, minValue: 0.2, saturation: 0.82, value: 0.5, light: 0.79),
         "armor_ranger_cloak_human": DyeMaterial(hue: [70, 170], minSaturation: 0.2, minValue: 0.2, saturation: 0.56, value: 0.33, light: 0.59),
         "hat_ranger_cloak_human": DyeMaterial(hue: [70, 170], minSaturation: 0.2, minValue: 0.2, saturation: 0.56, value: 0.33, light: 0.66),
         "armor_ranger_cloak_elf": DyeMaterial(hue: [70, 170], minSaturation: 0.2, minValue: 0.2, saturation: 0.55, value: 0.4, light: 0.67),
         "hat_ranger_cloak_elf": DyeMaterial(hue: [70, 170], minSaturation: 0.2, minValue: 0.2, saturation: 0.55, value: 0.5, light: 0.67),
         "armor_ranger_cloak_dwarf": DyeMaterial(hue: [70, 170], minSaturation: 0.2, minValue: 0.2, saturation: 0.5, value: 0.4, light: 0.4),
-        "hat_ranger_cloak_dwarf": DyeMaterial(hue: [70, 170], minSaturation: 0.2, minValue: 0.2, saturation: 0.5, value: 0.4, light: 0.4),
+        "hat_ranger_cloak_dwarf": DyeMaterial(hue: [70, 170], minSaturation: 0.2, minValue: 0.2, saturation: 0.56, value: 0.33, light: 0.66),
         "armor_snow_cloak_human": DyeMaterial(hue: [180, 250], minSaturation: 0.1, minValue: 0.2, saturation: 0.54, value: 0.75, light: 0.98),
         "hat_snow_cloak_human": DyeMaterial(hue: [180, 250], minSaturation: 0.1, minValue: 0.2, saturation: 0.33, value: 0.9, light: 0.98),
         "armor_snow_cloak_elf": DyeMaterial(hue: [180, 250], minSaturation: 0.1, minValue: 0.2, saturation: 0.31, value: 0.76, light: 0.96),
         "hat_snow_cloak_elf": DyeMaterial(hue: [180, 250], minSaturation: 0.1, minValue: 0.2, saturation: 0.3, value: 0.84, light: 0.96),
         "armor_snow_cloak_dwarf": DyeMaterial(hue: [180, 250], minSaturation: 0.1, minValue: 0.2, saturation: 0.72, value: 0.42, light: 0.81),
-        "hat_snow_cloak_dwarf": DyeMaterial(hue: [180, 250], minSaturation: 0.1, minValue: 0.2, saturation: 0.63, value: 0.61, light: 0.81),
+        "hat_snow_cloak_dwarf": DyeMaterial(hue: [180, 250], minSaturation: 0.1, minValue: 0.2, saturation: 0.33, value: 0.9, light: 0.98),
         "hat_hide_hood_human": DyeMaterial(hue: [180, 260], minSaturation: 0.2, minValue: 0.2, saturation: 0.6, value: 0.55, light: 1.0),
         "hat_hide_hood_elf": DyeMaterial(hue: [180, 260], minSaturation: 0.2, minValue: 0.2, saturation: 0.6, value: 0.67, light: 0.91),
-        "hat_hide_hood_dwarf": DyeMaterial(hue: [180, 260], minSaturation: 0.2, minValue: 0.2, saturation: 0.59, value: 0.55, light: 0.94),
+        "hat_hide_hood_dwarf": DyeMaterial(hue: [180, 260], minSaturation: 0.2, minValue: 0.2, saturation: 0.6, value: 0.55, light: 1.0),
     ]
 
     /// Each sheet's and hat's trim, a layer of its own ("<sheet>_trim", tools/dye_art.py `TRIMS`): a
     /// robe's gold sash and hem, a plate's red sash or gold collar, a dragon mail's gold, a ranger
     /// cloak's gold, a hide hood's fur lining. Chain mail and a snow cloak have none (chain mail's
-    /// undershirt is the hands' reds), nor do a ranger's hood or a dwarf's wizard hat (their gold is the
-    /// face's and the hair's).
+    /// undershirt is the hands' reds), nor does a ranger's hood (its gold is the face's and the hair's).
+    /// A dwarf's hats are the human's since he wears the human head (tools/wear_art.py dwarf_hats), so
+    /// their numbers are the human's.
     static let trims: [String: DyeMaterial] = [
         "armor_mage_robe_human": DyeMaterial(saturation: 0.42, value: 0.53, light: 0.94),
         "armor_mage_robe_elf": DyeMaterial(saturation: 0.72, value: 0.95, light: 0.95),
@@ -117,15 +118,16 @@ nonisolated extension DyeDef {
         "armor_dragon_mail_dwarf": DyeMaterial(saturation: 0.63, value: 0.99, light: 0.99),
         "armor_ranger_cloak_human": DyeMaterial(saturation: 0.47, value: 0.82, light: 0.91),
         "hat_mage_robe_human": DyeMaterial(saturation: 0.55, value: 0.85, light: 0.94),
+        "hat_mage_robe_dwarf": DyeMaterial(saturation: 0.55, value: 0.85, light: 0.94),
         "hat_iron_plate_human": DyeMaterial(saturation: 0.87, value: 0.84, light: 0.84),
         "hat_iron_plate_elf": DyeMaterial(saturation: 0.79, value: 0.81, light: 0.97),
-        "hat_iron_plate_dwarf": DyeMaterial(saturation: 0.62, value: 0.63, light: 0.89),
+        "hat_iron_plate_dwarf": DyeMaterial(saturation: 0.87, value: 0.84, light: 0.84),
         "hat_dragon_mail_human": DyeMaterial(saturation: 0.77, value: 0.91, light: 0.98),
         "hat_dragon_mail_elf": DyeMaterial(saturation: 0.77, value: 0.75, light: 0.9),
-        "hat_dragon_mail_dwarf": DyeMaterial(saturation: 0.63, value: 0.99, light: 0.99),
+        "hat_dragon_mail_dwarf": DyeMaterial(saturation: 0.77, value: 0.91, light: 0.98),
         "hat_hide_hood_human": DyeMaterial(saturation: 0.19, value: 0.96, light: 0.96),
         "hat_hide_hood_elf": DyeMaterial(saturation: 0.23, value: 0.96, light: 0.96),
-        "hat_hide_hood_dwarf": DyeMaterial(saturation: 0.18, value: 0.98, light: 0.98),
+        "hat_hide_hood_dwarf": DyeMaterial(saturation: 0.19, value: 0.96, light: 0.96),
     ]
 
     /// The weapons whose icon has no second colour to take a trim (a wooden sword, all wood; a steel one
