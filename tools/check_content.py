@@ -894,6 +894,9 @@ for item in items.values():
         for body in (p.stem[len("body_"):] for p in (ROOT / "art" / "sprites").glob("body_*.png") if not p.stem.endswith("_npc")):
             check((ROOT / "art" / "sprites" / f"head_{body}.png").exists(),
                   f"item {item['id']} → art/sprites/head_{body}.png is missing (tools/wear_art.py)")
+            # And the neck under it (GameSession.layers): a missing layer drops the whole stack.
+            check((ROOT / "art" / "sprites" / f"neck_{body}.png").exists(),
+                  f"item {item['id']} → art/sprites/neck_{body}.png is missing (tools/wear_art.py --heads)")
     for rule in item.get("tint", []):
         check(("sheets" in item or item.get("headgear") not in (None, "hood")) and isinstance(rule.get("hue"), list) and len(rule["hue"]) == 2,
               f"item {item['id']} → tint rules need a hue: [from, to] (and the item needs sheets, or a hat their head)")

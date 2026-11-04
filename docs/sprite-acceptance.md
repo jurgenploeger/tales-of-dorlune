@@ -184,6 +184,42 @@ python3 tools/check_content.py
 
 ## Learnings
 
+- **2026-11-04 (heroes, a review of every armour on every body, all 16 frames):** the head sits right on
+  the armour's collar in most frames; moving it per frame onto the armour figure's own head (found by its
+  face) made the side views worse, the head floating off the shoulders, as RD drew those faces further
+  forward than the neck. What does look wrong: the armour figures' own beards and hair left at the collar
+  (dwarf and elf sheets), views of one armour that disagree in the source (the human ranger cloak near-black
+  from the front, green from behind), the male elf's blond beard (RD's), and the female dwarf's hair across
+  her face. Male elves are clean-shaven since (the user's call): `hero_layers.SHAVEN` paints the beard as
+  the face down to a chin `CHIN` rows under the brow (the female elf's), the outline under it, the tunic's
+  main colour below (carried up each column it striped; the nearest pixel on the row was its shadow, a dark
+  bib), nothing past the chest. Rerunning `tools/wear_art.py` doesn't reproduce the committed armour and hat
+  sheets' colours (every one changes, its transparency the same): leave them be and regenerate only what
+  changed (here `head_<body>`, which `heads()` makes as committed).
+  Up close, stacked as the game does, most of what looked like the armour figures' leftovers was the
+  hero's own face (a dwarf's red beard, his big green eyes); what an armour figure left at its collar (its
+  neck, its chin) lies under the hero's head. What did show: ground between chin and collar, the head
+  floating, mostly on the human woman (a race's sheets are cut at the highest neck of its bodies, and her
+  chin sits two rows higher). A neck layer under the armour fixes it without touching the armour
+  (`neck_<body>`, `wear_art.py --heads`, `GameSession.layers`): the collar hides it wherever it reaches.
+  Look at stacks on a neutral grey, never the map's green: every armoured hero's irises were holes
+  (`wear_art.heads()` left out the tunic's green, and the green eyes with it), and on a green backdrop
+  they passed for green eyes. Only green joined to the tunic under the neck is left out now
+  (`wear_art.outfit`). A neck centred under the jaw's skin stuck out in front of the chest side on (the
+  skin at the chin is all face): centre it under the whole head. Shadow under the jaw spread past the
+  head's own width showed as boxes beside the shoulders, where no armour covered it: keep it within
+  `NECK_REACH` of the neck.
+  Dwarves' heads read squat (2026-11-04, the user: "a low forehead, especially noticeable from the
+  side"). Measured, the forehead wasn't low (four rows of skin over the eye, as a human's); the face was
+  small at the foot of a wide dome. Raising the fringe barely showed; two rows added across the skull
+  looked "stretched, not natural". What the user chose: the human head on the dwarf's short body
+  (`hero_layers.GRAFT`, `graft`): the bald dwarf head off, the human's set chin on chin, per direction
+  the median offset plus each walk frame's bob (frame by frame it jumped 4 to 7 rows), and every hair,
+  nape, hood, helmet layer, the head and neck under armour and the armour hats (`wear_art.py
+  --dwarf-hats`, their dye numbers the human's) the human's moved the same. art/eyes.json's dwarf boxes
+  moved with it. The dwarf man was always clean-shaven: the orange beard in a hood was the hood
+  drawing's own dwarf.
+
 ### Hats cut from a sheet of their own
 
 - A hat cut from a pilot sheet (`HAT_ONLY`) keeps the pilot's face, laid over the wearer's head: it has to

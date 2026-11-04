@@ -60,6 +60,17 @@ STYLES = {
 # sheet): split the same way, their own hair kept as hair_<body> (an old dwarf's bushy mop; his
 # beard is his locks).
 TOWNSFOLK = {"dwarf_npc": ("dwarf", "dwarf_npc_walk")}
+# Sheets whose beard is shaved off: its pixels painted as the face's skin, closed by the head's outline
+# at the chin, and no locks layer (2026-11-04, the user: male elves clean-shaven; Retro Diffusion drew the
+# male elf a blond beard over his chin and mouth).
+SHAVEN = {"elf_male_walk"}
+CHIN = 6   # a shaved chin's row under the brow: the female elf's, in every direction
+# Bodies that wear another body's head (2026-11-04, the user: a dwarf's head was too squat, "Like the
+# human head"; stretched, it looked "not natural"): the human's, drawn by Retro Diffusion in every view
+# and walk frame, set on the dwarf's neck frame by frame (`graft_offsets`); everything worn on the head
+# (hair, nape, hood, helmet, and tools/wear_art.py's head, neck and armour hats) is the human's, moved
+# the same. The dwarf keeps his beard, the short stocky body, and his armour.
+GRAFT = {"dwarf": "human", "dwarf_female": "human_female"}
 # Headgear is drawn in magenta, which no recolour touches (skin 5-45°, hair 12-58°, outfit 85-170°)
 # and no hero sheet uses. The game paints soft magenta (saturation 0.6) in the armour's colour,
 # keeping the shade (value: 0.92 light, 0.7 mid, 0.45 dark), and full magenta in its trim colour.
@@ -483,7 +494,52 @@ class Race:
             core = [(y, x) for y in range(head.brow + 3, head.brow + 7) for x in range(F)
                     if beard[y, x] and abs(x - mid) <= 3 and lockish(f[y, x])]
             locks = flood(f, core, lockish, beard, diagonal=True)
-            frame(self.locks, row, col)[locks] = f[locks]
+            if self.sheet_id in SHAVEN:
+                self._shave(body, locks, head, f)
+            else:
+                frame(self.locks, row, col)[locks] = f[locks]
+
+    def _shave(self, body, beard, head, f):
+        """Paints a beard (`beard`, a frame's mask) as a clean-shaven chin: below the eyes (the beard's
+        search reaches up into them), the face's skin down to the chin, `CHIN` rows under the brow as
+        the female elf's is, a shade darker on its last row (the jaw turning under) and the head's
+        outline under it; what the beard hung over below that, the tunic's own colour. Painted as skin
+        all the way down, the face came out long, its chin on the collar."""
+        beard = beard.copy()
+        beard[:head.brow + 4] = False
+        if not beard.any():
+            return
+        chin = head.brow + CHIN
+        # The tunic's own main colour on the chest, its shadows left out: carried up each column, a hand
+        # or a highlight under the beard made stripes; the nearest pixel on the row was the collar's
+        # shadow, a dark bib.
+        chest = [tuple(np.round(f[y, x, :3], 3)) for y in range(chin + 2, min(F, chin + 10)) for x in range(F)
+                 if is_outfit(f[y, x]) and not beard[y, x] and hsv(f[y, x])[2] >= 0.45]
+        tunic = np.array(max(set(chest), key=chest.count)) if chest else OUTLINE
+        for y, x in np.argwhere(beard):
+            body[y, x, 3] = 1
+            if y < chin:
+                body[y, x, :3] = self.skin
+            elif y == chin:
+                body[y, x, :3] = self.skin * 0.86
+            elif y == chin + 1:
+                body[y, x, :3] = OUTLINE
+            else:
+                body[y, x, :3] = tunic
+        # Below the chin, a beard that hung out past the chest (seen from the side, forward of it) goes:
+        # the tunic only as wide as the torso is on that row.
+        for y in range(chin + 2, F):
+            row = beard[y]
+            if not row.any():
+                continue
+            torso = np.nonzero((body[y, :, 3] >= 0.5) & ~row)[0]
+            for x in np.nonzero(row)[0]:
+                if not len(torso) or x < torso.min() or x > torso.max():
+                    body[y, x] = 0
+        # Where a shaved pixel now meets nothing, the outline.
+        for y, x in np.argwhere(beard):
+            if body[y, x, 3] >= 0.5 and any(not 0 <= x + dx < F or body[y, x + dx, 3] < 0.5 for dx in (-1, 1)):
+                body[y, x, :3] = OUTLINE
 
     def _scalp(self, body, head, drawn):
         """Draws the bare skull round the face, shaded, with an outline, and joins the ears to it,
@@ -778,12 +834,100 @@ def build():
                                                       race.body)
             layers[f"nape_{style}_{rid}"] = nape(layers[f"hair_{style}_{rid}"], race.body)
             layers[f"napeback_{style}_{rid}"] = back_view(layers[f"nape_{style}_{rid}"], rid)
+    for body, donor in GRAFT.items():
+        graft(layers, body, donor)
     for body, (race_id, sheet) in TOWNSFOLK.items():
         folk = Race(race_id, sheet, template=races[race_id], sidehair=True)
         layers[f"body_{body}"] = folk.body
         layers[f"locks_{body}"] = folk.locks
         layers[f"hair_{body}"] = hair_edge(folk.hair, folk.body)
     return races, layers
+
+
+def head_mask(frame):
+    """A bald body frame's head: down to its neck (tools/wear_art.py), the tunic joined to the body left out."""
+    import wear_art
+    if not (frame[..., 3] > 0.5).any():
+        return np.zeros(frame.shape[:2], bool)
+    cut = wear_art.neck(frame)
+    keep = np.zeros(frame.shape[:2], bool)
+    keep[:cut + 1] = True
+    return keep & (frame[..., 3] > 0.5) & ~wear_art.outfit(frame, cut)
+
+
+def graft_offsets(a, b):
+    """Per frame (row, col): (dx, dy) that moves the bald body `b`'s head onto the bald body `a`'s neck.
+    Per direction, the median over its frames of chin on chin and the middle of the head on the middle
+    of the head; then in each frame the walk's bob of `a` less `b`'s (its crown's rise against the
+    standing frame's), so the head rides the body's step. Measured frame by frame, a bearded chin moved
+    it 4 to 7 rows within one walk, the head bobbing against the body."""
+    import wear_art
+    out = {}
+    for row in range(a.shape[0] // F):
+        dxs, dys, bobs = [], [], {}
+        crowns = {}
+        for col in range(a.shape[1] // F):
+            fa, fb = frame(a, row, col), frame(b, row, col)
+            ma, mb = head_mask(fa), head_mask(fb)
+            if not ma.any() or not mb.any():
+                continue
+            crowns[col] = (np.nonzero((fa[..., 3] > 0.5).any(1))[0].min(), np.nonzero((fb[..., 3] > 0.5).any(1))[0].min())
+            ca = wear_art.chin(fa) or int(np.nonzero(ma.any(1))[0].max())
+            cb = wear_art.chin(fb) or int(np.nonzero(mb.any(1))[0].max())
+            xa, xb = np.nonzero(ma.any(0))[0], np.nonzero(mb.any(0))[0]
+            dxs.append((xa.min() + xa.max()) / 2 - (xb.min() + xb.max()) / 2)
+            bobs[col] = (crowns[col][0] - crowns[min(crowns)][0]) - (crowns[col][1] - crowns[min(crowns)][1])
+            dys.append(ca - cb - bobs[col])
+        dx, dy = (int(round(float(np.median(dxs)))), int(round(float(np.median(dys))))) if dxs else (0, 0)
+        for col in range(a.shape[1] // F):
+            out[row, col] = (dx, int(dy + bobs.get(col, 0)))
+    return out
+
+
+def offsets_for(body):
+    """`graft_offsets` for a GRAFT body, measured on the bald bodies split from Retro Diffusion's own
+    sheets (the body layers on disk already wear the donor's head): for tools/wear_art.py's head, neck
+    and armour hats, and art/eyes.json's boxes."""
+    races = {r["id"]: r for r in json.load(open(ROOT / "content" / "classes.json"))["races"]}
+
+    def bald(rid):
+        race, _, gender = rid.partition("_")
+        r = races[race]
+        sheet = (r.get("sheets") or {}).get(gender) if gender else (r.get("art") or "player_walk")
+        return Race(race, sheet, sidehair=race != "human").body
+    return graft_offsets(bald(body), bald(GRAFT[body]))
+
+
+def moved(layer, offsets):
+    """A sheet with each frame moved by its (dx, dy), what passes the frame's edge dropped."""
+    out = np.zeros_like(layer)
+    for (row, col), (dx, dy) in offsets.items():
+        src, dst = frame(layer, row, col), frame(out, row, col)
+        ys, yd = (slice(0, F - dy), slice(dy, F)) if dy >= 0 else (slice(-dy, F), slice(0, F + dy))
+        xs, xd = (slice(0, F - dx), slice(dx, F)) if dx >= 0 else (slice(-dx, F), slice(0, F + dx))
+        dst[yd, xd] = src[ys, xs]
+    return out
+
+
+def graft(layers, body, donor):
+    """`body` wearing `donor`'s head (GRAFT): its own bald head taken off its body layer and the donor's
+    put on its neck, and every hair, nape, hood and helmet layer the donor's, moved the same. Its
+    beard (locks) stays: chin is set on chin."""
+    offsets = graft_offsets(layers[f"body_{body}"], layers[f"body_{donor}"])
+    own, theirs = layers[f"body_{body}"], moved(layers[f"body_{donor}"], offsets)
+    out = own.copy()
+    for (row, col) in offsets:
+        o, t = frame(out, row, col), frame(theirs, row, col)
+        o[head_mask(frame(own, row, col))] = 0
+        head = head_mask(t)
+        o[head] = t[head]
+    layers[f"body_{body}"] = out
+    for name in list(layers):
+        for kind in ("hair_", "nape_", "napeback_"):
+            if name.startswith(kind) and name.endswith(f"_{donor}") and name[len(kind):-len(donor) - 1] in STYLES:
+                layers[f"{kind}{name[len(kind):-len(donor) - 1]}_{body}"] = moved(layers[name], offsets)
+    for kind in ("hood", "helmet"):
+        layers[f"{kind}_{body}"] = moved(layers[f"{kind}_{donor}"], offsets)
 
 
 def hair_edge(hair, body):
