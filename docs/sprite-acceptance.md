@@ -219,6 +219,17 @@ python3 tools/check_content.py
   --dwarf-hats`, their dye numbers the human's) the human's moved the same. art/eyes.json's dwarf boxes
   moved with it. The dwarf man was always clean-shaven: the orange beard in a hood was the hood
   drawing's own dwarf.
+- **2026-11-04 (armour views that disagree in colour):** RD drew the ranger cloak's back as a green cape and
+  its front and sides near-black (the human's cape behind his dark coat, the dwarf's cape wings), so a tier's
+  tint or a dye coloured it only from behind. `tools/armour_views.py` gives the near-black cape in the front
+  and side views the back's cape shades: a cape pixel is a near-black one whose whole 3 x 3 neighbourhood is
+  near-black (the dark mass less a one-pixel rim, so the outline and a coat's thin dark seams stay), lit a
+  shade lighter along its top and left. A shade drawn just under the dyes' floor (`dye_art.DARK`, 0.2: the
+  dwarf's darkest green at 0.18) stayed green under every dye, in patches; it's lifted a hair over it
+  (`lift`). Check a new armour sheet dyed, not only plain: per view, the share of its pixels in the main
+  material's family should be alike (the cloak's was 42% from behind, 5% from the front). Since the dwarf
+  wears the human head, his hats are the human's moved, and `dye_art.keep_off` keeps nothing off a hat
+  (cutting the old dwarf's face and hair zone took 64 to 177 trim pixels off them).
 
 ### Hats cut from a sheet of their own
 

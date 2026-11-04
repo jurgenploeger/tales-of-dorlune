@@ -144,6 +144,9 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   and measures every material for `DyeDef.mains`/`trims`, and lists the one-colour weapons, `oneColour` (paste them in); `check` reads that table back and holds
   every dye on every kind, main and trim, gloves, boots, icons and held weapons, to reading as its colour;
   `--sheet out.png` shows them all. Rerun `cut` and `check` after changing a sheet or a dye rule.
+- `tools/armour_views.py`: armour sheets whose views disagree in colour (RD's ranger cloak: a green cape from behind,
+  near-black from the front and sides), the front and side views' cape given the back's shades, so a tint or dye
+  colours every view; idempotent, its `VIEWS` table names each sheet. Rerun `dye_art.py cut` and `check` after.
 - `tools/prop_art.py`: the same for the few props a generated sprite got wrong (`candy_cane`, whose hook came out
   as a two-sided arch) or none was made for (the harbors' `ship`, built in 3D and projected as the game's view is,
   then lit and finished as the buildings are and held to their bands, `form_relief` too;
