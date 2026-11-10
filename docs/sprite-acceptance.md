@@ -148,6 +148,23 @@ are the ones to regenerate first, with the user's OK on the cost.
   their head as their plain body has it, sized by that body. Measured from the top of the sprite, a pointed
   hat or a hood pushed the face to the bottom of the circle.
 
+### Gloves and boots
+
+- They go where `tools/worn_marks.py` marks them on each body, frame by frame (`art/sprites/marks_<body>.png`:
+  red a glove, blue a boot, the paler of each its band, painted a shade lighter), since 2026-11-10 (the user:
+  "It should also be more clear when it's wearing different gloves and shoes"). Until then the game looked
+  for the hands as it dressed a hero, as the patches of skin under the chin: none on a body whose hands
+  Retro Diffusion drew as white cuffs or mitts (the human man, the human other: no gloves at all), a neck or
+  a belt buckle on others (a red bib on an elf or a dwarf in ruby gauntlets). Marks can be looked at
+  (`worn_marks.py --sheet`) and corrected; rerun it after `hero_layers.py` changes a body.
+- A hand is skin, or the pale cuff drawn for it, whose lowest row is at hand height; facing you or away,
+  never near the figure's middle; a side with none gets the arm's end. Its cuff is three rows of sleeve.
+- Over armour with a sheet of its own, boots take what the sheet drew over the body's boots and a pixel
+  round them, where the figure is two legs across (not a robe's hem): only the body's brown took them
+  before, and a plate's greaves kept their steel but for a toe.
+- Check with strong colours (`ruby_gauntlets`, `amethyst_boots`) on every body under no armour, mail, plate
+  and a robe: a glove on each hand that shows, none on a chest, chin or hem; boots whole.
+
 ### Held weapons and item icons
 
 - Item icons are 32 × 32, drawn in `tools/item_art.py`, outlined.

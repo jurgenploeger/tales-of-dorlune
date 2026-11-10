@@ -302,11 +302,14 @@ final class ArtLibrary {
             let directions = from.directions ?? ["up", "right", "down", "left"]
             // The plain body the hands, chin and boots are found on (GearLook.body).
             let skeleton = gear.body.flatMap { pngURL($0) }.flatMap { UIImage(contentsOfFile: $0.path)?.cgImage }
+            // Where gloves and boots go on that body, marked frame by frame (tools/worn_marks.py).
+            let marks = gear.body.flatMap { $0.hasPrefix("body_") ? pngURL("marks_" + String($0.dropFirst("body_".count))) : nil }
+                .flatMap { UIImage(contentsOfFile: $0.path)?.cgImage }
             // A festive hat's piece, cut out by tools/wear_art.py (art/sprites/wear_<hat>.png).
             let piece = gear.hat.flatMap { pngURL("wear_\($0)") }.flatMap { UIImage(contentsOfFile: $0.path)?.cgImage }
             let cape = gear.cape == nil && gear.cloak == nil ? nil : pngURL("wear_cape").flatMap { UIImage(contentsOfFile: $0.path)?.cgImage }
             let scarf = gear.scarf == nil ? nil : pngURL("wear_scarf").flatMap { UIImage(contentsOfFile: $0.path)?.cgImage }
-            return GearOverlay.apply(gear, original: base, dressed: recolored, skeleton: skeleton, piece: piece,
+            return GearOverlay.apply(gear, original: base, dressed: recolored, skeleton: skeleton, marks: marks, piece: piece,
                                      capePiece: cape, scarfPiece: scarf, frame: from.frame ?? 48, directions: directions)
         }
         return recolored

@@ -278,9 +278,19 @@ GLOVE_ROWS = 5
 GLOVE_TONE = (0.55, 0.9)
 # Rows of the sleeve over each hand the gloves' cuff takes (the human hand is only two pixels).
 GLOVE_CUFF = 2
+# A cuff's top row, and a boot's, a shade lighter: a band that says where the piece ends (2026-11-10, the
+# user: "It should also be more clear when it's wearing different gloves and shoes").
+BAND_TONE = (0.8, 0.9)
+# Boots over armour drawn on a sheet of its own: every pixel of it over the body's boots and a pixel
+# round them, in the boots' rows, where the figure is no wider than this across (two legs, not a robe's
+# hem). Only the plain body's brown took them, and a plate's greaves or a mail's leggings kept their
+# steel but for a toe.
+BOOT_ROWS = 5
+BOOT_REACH = 1
+BOOT_SPAN = 9
 
 
-def trinkets(body, out, gloves=None, boots=None, necklace=None, chain=None):
+def trinkets(body, out, gloves=None, boots=None, necklace=None, chain=None, marks=None):
     """Gloves on the hands, boots on the feet and a necklace under the chin (GearOverlay.trinkets),
     each in its colour (#RRGGBB) at the brightness of what was there. Found on the plain body: its
     skin in patches, the biggest the face and those below its chin the arms, whose last three rows
@@ -306,13 +316,46 @@ def trinkets(body, out, gloves=None, boots=None, necklace=None, chain=None):
                 if 0 <= x < FRAME and 0 <= y < FRAME and f[y, x, 3] > 0.5:
                     f[y, x, :3] = c
 
-            if boots is not None:
+            if marks is not None:
+                # Marked offline on every frame of the body (tools/worn_marks.py): red a glove, blue a
+                # boot, the paler of each its band, a shade lighter.
+                m = marks[oy:oy + FRAME, ox:ox + FRAME]
+                on = m[..., 3] > 0.5
+                is_boot = on & (m[..., 2] > m[..., 0])
+                worn = np.zeros((FRAME, FRAME), bool)
+                if boots is not None:
+                    worn = is_boot.copy()
+                    # Over armour on a sheet of its own: what it drew over the boots and a pixel round
+                    # them, where the figure is two legs across, not a robe's hem; never its outline.
+                    for y in range(max(0, feet - BOOT_ROWS), feet + 1):
+                        xs = np.nonzero(f[y, :, 3] > 0.5)[0]
+                        if len(xs) == 0:
+                            continue
+                        for run in np.split(xs, np.nonzero(np.diff(xs) > 1)[0] + 1):
+                            if len(run) > BOOT_SPAN:
+                                continue
+                            for x in run:
+                                near = is_boot[max(0, y - BOOT_REACH):y + BOOT_REACH + 1, max(0, x - BOOT_REACH):x + BOOT_REACH + 1].any()
+                                differs = not a[y, x] or np.abs(f[y, x, :3] - b[y, x, :3]).max() > 0.02
+                                if near and differs and hsv(tuple(f[y, x, :3]))[2] >= 0.25:
+                                    worn[y, x] = True
+                for y in range(FRAME):
+                    for x in range(FRAME):
+                        if worn[y, x]:
+                            band = y == 0 or not worn[y - 1, x]
+                            paint(x, y, boots, *(BAND_TONE if band else (0.55, 0.9)))
+                        elif gloves is not None and on[y, x] and not is_boot[y, x] and f[y, x, 3] > 0.5 \
+                                and hsv(tuple(f[y, x, :3]))[2] >= 0.25:
+                            paint(x, y, gloves, *(BAND_TONE if m[y, x, 1] > 0.25 else GLOVE_TONE))
+            elif boots is not None:
                 for y in range(max(0, feet - 5), feet + 1):
                     for x in range(FRAME):
                         hh, s, v = hsv(tuple(b[y, x, :3]))
                         if a[y, x] and 7 / 360 <= hh <= 43 / 360 and s > 0.35 and v < 0.75:
                             paint(x, y, boots, 0.55, 0.9)
-            if gloves is None and necklace is None:
+            # (With marks the gloves are on: only a necklace is left to find a place for.)
+            find_hands = gloves is not None and marks is None
+            if not find_hands and necklace is None:
                 continue
             skin = np.zeros((FRAME, FRAME), bool)
             for y in range(FRAME):
@@ -340,7 +383,7 @@ def trinkets(body, out, gloves=None, boots=None, necklace=None, chain=None):
                 continue
             face = max(patches, key=len)
             chin = max(y for y, _ in face)
-            if gloves is not None:
+            if find_hands:
                 for cells in patches:
                     # A hand: under the chin (not a sliver of the jaw seen from the side) and above the
                     # knees (not a bare knee): its top at least two rows under the chin, and in the
@@ -1165,8 +1208,11 @@ def dressed(race, body, style, armour=None, worn=(), skin=None):
     wrap = pieces.pop("necklace") if pieces.get("necklace", {}).get("wear") == "scarf" else None
     necklace = pieces.get("necklace", {})
     plain = np.asarray(load(skeleton)).astype(float) / 255
+    marked = sprites / f"marks_{skeleton[len('body_'):]}.png" if skeleton.startswith("body_") else None
+    marks = np.asarray(Image.open(marked).convert("RGBA")).astype(float) / 255 if marked and marked.exists() else None
     out = trinkets(plain, out, gloves=pieces.get("gloves", {}).get("color"),
-                   boots=pieces.get("boots", {}).get("color"), necklace=necklace.get("color"), chain=necklace.get("accent"))
+                   boots=pieces.get("boots", {}).get("color"), necklace=necklace.get("color"), chain=necklace.get("accent"),
+                   marks=marks)
     if not sheet and (armour or {}).get("wear") == "cloak":
         # A hide cloak: the cape in its colour, its fur along the hem (GearLook.cloak).
         out = cape(base, out, armour["color"], armour.get("accent") or "#F2C740", emblem=False, skeleton=plain)
