@@ -49,7 +49,7 @@ struct MapOverlay: View {
                 } else {
                     WorldAtlas(session: session) {
                         VStack(alignment: .leading, spacing: 6) {
-                            WindowTitle(L("World map"), onClose: onClose)
+                            WindowTitle(L("World map"), bar: false, onClose: onClose)
                             pills.padding(.horizontal, 16)
                         }
                     } bottomLeading: {

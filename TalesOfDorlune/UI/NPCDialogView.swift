@@ -52,7 +52,9 @@ struct NPCDialogView: View {
                         .allowsHitTesting(false)
                         .accessibilityHidden(true)
                 }
-                .opacity(browsing && hasWares ? 0 : 1)
+                // Nor under the dyeing window: the speech window's close button and its Dye gear button
+                // showed round it.
+                .opacity((browsing && hasWares) || dyeing ? 0 : 1)
 
                 if browsing, hasWares {
                     waresWindow(safeArea: screen.safeAreaInsets)
@@ -111,8 +113,7 @@ struct NPCDialogView: View {
     private func bubble(maxHeight: CGFloat, speakerRoom: CGFloat) -> some View {
         let window = RoundedRectangle(cornerRadius: HUDStyle.windowRadius)
         return VStack(alignment: .leading, spacing: 0) {
-            WindowTitle(npc.name)
-                .padding(.trailing, speakerRoom)
+            WindowTitle(npc.name, trailingRoom: speakerRoom)
             VStack(alignment: .leading, spacing: 10) {
                 if npc.role == .quests {
                     QuestConversation(session: session, giver: npc, reply: $reply, finished: $finished,
@@ -127,6 +128,9 @@ struct NPCDialogView: View {
             .padding(.top, 10)
             .padding(.bottom, 14)
         }
+        // At least as tall as most of the character standing by it: a line or two left it a strip under
+        // their feet.
+        .frame(minHeight: speakerRoom * 1.2, alignment: .top)
         .frame(maxWidth: .infinity, alignment: .leading)
         .foregroundStyle(HUDStyle.cream)
         .clipShape(window)
@@ -433,6 +437,11 @@ private struct ShopPanel: View {
                             if item.type != .consumable, let issue = session.equipIssue(item) {
                                 Text(issue).font(HUDStyle.font(10)).foregroundStyle(HUDStyle.orange)
                             }
+                            // Why its price is grey: how much you're short.
+                            if session.data.gold < item.price {
+                                Text(L("Need {gold} more gold", ["gold": item.price - session.data.gold]))
+                                    .font(HUDStyle.font(10)).foregroundStyle(HUDStyle.orange)
+                            }
                         }
                         Spacer(minLength: 0)
                     }
@@ -454,6 +463,7 @@ private struct ShopPanel: View {
                 .buttonStyle(PixelButtonStyle(tint: session.data.gold >= item.price ? HUDStyle.gold : HUDStyle.dim, compact: true))
             }
             .font(HUDStyle.font(12))
+            .rowCard()
         }
     }
 
@@ -494,6 +504,7 @@ private struct ShopPanel: View {
                 .buttonStyle(PixelButtonStyle(tint: HUDStyle.gold, compact: true))
             }
             .font(HUDStyle.font(12))
+            .rowCard()
         }
     }
 }

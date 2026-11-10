@@ -166,7 +166,7 @@ extension MenuView {
             // How full the bag is after its name (playtesting 2026-10-26: "add the x/50 behind the big
             // 'Inventory' title"): 50 slots, one for every item (`GameSession+Bank`); coins take none.
             WindowTitle(window.menuTitle, detail: "\(session.bagSlotsUsed)/\(GameSession.bagSlots)",
-                        detailTint: session.bagSlotsFree == 0 ? HUDStyle.orange : HUDStyle.dim)
+                        detailTint: session.bagSlotsFree == 0 ? HUDStyle.orange : nil)
                 .accessibilityValue(L("{used} of {slots} slots", ["used": session.bagSlotsUsed, "slots": GameSession.bagSlots]))
                 .padding(.bottom, 2)
         }
@@ -230,10 +230,12 @@ extension MenuView {
 
 /// A window's tabs along its top, its pages' names and nothing else (playtesting 2026-10-26: "The tabs
 /// don't need icons and shouldn't get truncated. If it doesn't fit, there should just be a horizontal
-/// scroll"): the one you're on in gold, each name in full, the row scrolling sideways when they don't
-/// all fit (the one you're on kept in view), clear of the close button over the window's corner. One
-/// you're not on wears the HUD's gold dot when something there waits for you (`waiting`). The pages
-/// are a nonisolated enum (its raw value is the debug name, `sub=skills`).
+/// scroll"): folder tabs on the window's title bar (`WindowBar`; the user, 2026-11-10: "We can have the
+/// title bars with the tabs"), the one you're on the window's own glass with its name in gold, joined
+/// to the page under it, the others sunk into the bar; each name in full, the row scrolling sideways
+/// when they don't all fit (the one you're on kept in view), clear of the close button over the
+/// window's corner. One you're not on wears the HUD's gold dot when something there waits for you
+/// (`waiting`). The pages are a nonisolated enum (its raw value is the debug name, `sub=skills`).
 struct PageTabs<Page: Hashable & CaseIterable>: View {
     @Binding var page: Page
     let title: (Page) -> String
@@ -243,14 +245,15 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
         HStack(spacing: 0) {
             ScrollViewReader { reader in
                 ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 4) {
+                    // Standing on the bar's foot, the one you're on a little taller.
+                    HStack(alignment: .bottom, spacing: 3) {
                         ForEach(Array(Page.allCases), id: \.self) { item in
                             tab(item)
                                 .id(item)
                         }
                     }
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 6)
+                    .padding(.horizontal, 10)
+                    .padding(.top, 8)
                 }
                 .scrollBounceBehavior(.basedOnSize, axes: .horizontal)
                 .onAppear { reader.scrollTo(page, anchor: .center) }
@@ -261,6 +264,7 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
             // The close button's room: it sits over the window's corner.
             Color.clear.frame(width: OrangeCloseButton.room, height: 34)
         }
+        .background(WindowBar())
     }
 
     private func tab(_ item: Page) -> some View {
@@ -275,10 +279,15 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
                 .font(HUDStyle.font(13))
                 .lineLimit(1)
                 .fixedSize()
-                .foregroundStyle(selected ? HUDStyle.ink : HUDStyle.cream)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 7)
-                .background(Capsule().fill(selected ? HUDStyle.gold : .white.opacity(0.08)))
+                .foregroundStyle(selected ? HUDStyle.gold : Color.white)
+                .shadow(color: HUDStyle.frameDark.opacity(selected ? 0 : 1), radius: 0, x: 1, y: 1)
+                .padding(.horizontal, 13)
+                .padding(.vertical, selected ? 9 : 7)
+                .background(Self.tabShape.fill(selected ? HUDStyle.glassTop : HUDStyle.frameDark.opacity(0.3)))
+                .overlay {
+                    // A light edge up its sides and over its top; none along its foot, where it's the page's.
+                    if selected { TabEdge().stroke(HUDStyle.frameLight.opacity(0.8), lineWidth: 1.5) }
+                }
                 .overlay(alignment: .topTrailing) {
                     if marked {
                         Circle().fill(HUDStyle.gold).frame(width: 10, height: 10)
@@ -286,11 +295,40 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
                             .offset(x: 2, y: -2)
                     }
                 }
-                .contentShape(Capsule())
+                // One you're not on stops short of the bar's foot, its dark line showing under it.
+                .padding(.bottom, selected ? 0 : 3)
+                .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
         .accessibilityAddTraits(selected ? .isSelected : [])
         .accessibilityValue(marked ? L("Something to do") : "")
+    }
+}
+
+extension PageTabs {
+    /// A folder tab: round at the top, square where it stands on the bar's foot.
+    fileprivate static var tabShape: UnevenRoundedRectangle {
+        UnevenRoundedRectangle(topLeadingRadius: TabEdge.radius, bottomLeadingRadius: 0, bottomTrailingRadius: 0,
+                               topTrailingRadius: TabEdge.radius, style: .continuous)
+    }
+}
+
+/// A folder tab's edge (`PageTabs`): up its left side, over its top and down its right, open along
+/// its foot.
+private nonisolated struct TabEdge: Shape {
+    static let radius: CGFloat = 10
+
+    func path(in rect: CGRect) -> Path {
+        // Inside the tab by half the line's width, so the stroke stays on it.
+        let left = rect.minX + 0.75, right = rect.maxX - 0.75, top = rect.minY + 0.75, radius = Self.radius
+        var path = Path()
+        path.move(to: CGPoint(x: left, y: rect.maxY))
+        path.addLine(to: CGPoint(x: left, y: top + radius))
+        path.addQuadCurve(to: CGPoint(x: left + radius, y: top), control: CGPoint(x: left, y: top))
+        path.addLine(to: CGPoint(x: right - radius, y: top))
+        path.addQuadCurve(to: CGPoint(x: right, y: top + radius), control: CGPoint(x: right, y: top))
+        path.addLine(to: CGPoint(x: right, y: rect.maxY))
+        return path
     }
 }
 
@@ -1032,8 +1070,7 @@ private struct FriendRow: View {
             }
         }
         .font(HUDStyle.font(12))
-        .padding(8)
-        .background(RoundedRectangle(cornerRadius: 8).fill(.white.opacity(0.05)))
+        .rowCard()
     }
 
     /// Whether they're online, and where: a green dot and the land they're in (here, if it's yours),
@@ -1597,7 +1634,7 @@ private struct QuestsTab: View {
         if shelf != .done {
             SectionTitle(text: L("Active"))
             if session.activeQuests.isEmpty {
-                Text(L("No active quests. Elder Oak in Meadowbrook always needs help.")).font(HUDStyle.font(11)).foregroundStyle(HUDStyle.dim)
+                EmptyNote(L("No active quests. Elder Oak in Meadowbrook always needs help."))
             } else if active.isEmpty {
                 Text(L("No quests match.")).font(HUDStyle.font(11)).foregroundStyle(HUDStyle.dim)
             }
