@@ -160,6 +160,12 @@ are the ones to regenerate first, with the user's OK on the cost.
   farther, facing away and walking left. Walking left or right it points up and away; facing you or away it's
   held up nearly upright. Learned 2026-10-22: held sideways from the front, as on the side, looked wrong; moved
   off to the side to keep the face clear, it looked stood behind the hero, not held.
+- The grip is at the hand as the walk sheets draw it, about two thirds of the way down the figure and out
+  at the body's side (`GearArt.hand`, `gear_preview.HAND`; 2026-11-10). At the chest (0.56 to 0.6 down, until
+  0.9.73) the blade lay across the face walking right and came out of the chin walking left, on every body.
+  Check the side views at 6x: no blade over an eye or the mouth.
+- What hangs under the grip trails at the feet, never under them (`GearArt.grip`'s `drop`): the grip is
+  lifted on a short body, so a dwarf's whip doesn't sink into the ground.
 - A whip's lash hangs down from a short handle and trails on the ground by the feet (2026-10-22: held up like a
   sword, a whip read as a stick). Its icon keeps the coil.
 

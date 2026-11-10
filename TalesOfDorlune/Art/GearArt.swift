@@ -215,8 +215,10 @@ enum GearArt {
             weapon.texture = held.texture
             weapon.size = sized(held.pixels, height: height)
             weapon.childNode(withName: "glow")?.position = CGPoint(x: held.tip.x / 48 * height, y: held.tip.y / 48 * height)
+            // How far it hangs under the grip, in the sheet's pixels (a whip's lash; nothing for a blade).
+            weapon.userData?.setValue(NSNumber(value: Double(max(0, 0.5 - held.tip.y))), forKey: "drop")
         }
-        weapon.position = grip(on: weapon.parent as? SKSpriteNode, frame: frame, facing: facing, height: height)
+        weapon.position = grip(on: weapon.parent as? SKSpriteNode, frame: frame, facing: facing, height: height, drop: drop(of: weapon))
         let held = weapon.userData?["held"] != nil
         // In one hand, the same one every way (on your right facing you): in front of the body where
         // that hand is nearer you (facing you, walking right), behind it where it's farther (facing
@@ -225,12 +227,23 @@ enum GearArt {
         weapon.zPosition = held && (facing == .down || facing == .right) ? 1 : -1
     }
 
+    /// How far a posed weapon hangs under its grip, in the sheet's pixels (set by `pose`).
+    static func drop(of weapon: SKSpriteNode) -> CGFloat {
+        CGFloat((weapon.userData?["drop"] as? NSNumber)?.doubleValue ?? 0)
+    }
+
     /// Where a weapon's grip goes on `body` (a walking sprite) showing `frame` (else its own): its
     /// hand there, from the sprite's anchor.
-    static func grip(on body: SKSpriteNode?, frame: SKTexture? = nil, facing: Direction, height: CGFloat) -> CGPoint {
+    /// `drop`: how far the weapon hangs under its grip, in the sheet's pixels (`drop(of:)`): the grip
+    /// is lifted so a whip's lash trails at the feet, not under them, on a short body too.
+    static func grip(on body: SKSpriteNode?, frame: SKTexture? = nil, facing: Direction, height: CGFloat, drop: CGFloat = 0) -> CGPoint {
         let size = body?.size ?? CGSize(width: height, height: height)
         let anchor = body?.anchorPoint ?? CGPoint(x: 0.5, y: 0.08)
-        let spot = (frame ?? body?.texture).map { hand(in: $0, facing: facing) } ?? hand(top: 0.27, bottom: 0.94, facing: facing)
+        var spot = (frame ?? body?.texture).map { hand(in: $0, facing: facing) } ?? hand(top: 0.27, bottom: 0.94, facing: facing)
+        if drop > 0 {
+            let feet = (frame ?? body?.texture).map { 1 - figure(of: $0).bottom } ?? 0.06
+            spot.y = max(spot.y, feet + drop / 48)
+        }
         return CGPoint(x: (spot.x - anchor.x) * size.width, y: (spot.y - anchor.y) * size.height)
     }
 
@@ -248,10 +261,12 @@ enum GearArt {
     /// from the top).
     private static func hand(top: CGFloat, bottom: CGFloat, facing: Direction) -> CGPoint {
         let (across, down): (CGFloat, CGFloat) = switch facing {
-        case .down: (5, 0.6)   // the hand at the body's side, where a held sprite's grip goes
-        case .up: (-8, 0.57)   // the same hand from behind
-        case .right: (3, 0.56)
-        case .left: (-4, 0.56)
+        // At the hand as the walk sheets draw it, about two thirds of the way down the figure. Up at
+        // the chest (0.56 to 0.6, until 0.9.73) a blade walking sideways lay across the face.
+        case .down: (7, 0.66)   // the hand at the body's side, where a held sprite's grip goes
+        case .up: (-8, 0.65)   // the same hand from behind
+        case .right: (6, 0.65)   // held out in front, the blade clear of the face
+        case .left: (-7, 0.65)
         }
         return CGPoint(x: 0.5 + across / 48, y: 1 - (top + down * (bottom - top)))
     }

@@ -1263,7 +1263,7 @@ def hat_sheet(out, hats=None):
     print(f"wrote {out}: {', '.join(i['id'] for i in worn)}")
 
 
-HAND = {"down": (5, 0.6), "up": (-8, 0.57), "right": (3, 0.56), "left": (-4, 0.56)}   # GearArt.hand
+HAND = {"down": (7, 0.66), "up": (-8, 0.65), "right": (6, 0.65), "left": (-7, 0.65)}   # GearArt.hand
 
 
 def holding(frame, weapon, facing):
@@ -1277,6 +1277,14 @@ def holding(frame, weapon, facing):
     top, bottom = (rows[0], rows[-1] + 1) if len(rows) else (0.27 * FRAME, 0.94 * FRAME)
     across, down = HAND[facing]
     hx, hy = FRAME / 2 + across, top + down * (bottom - top)
+    # What hangs under the grip (a whip's lash) trails at the feet, not under them: GearArt.grip's `drop`,
+    # by the solid pixel farthest from the grip (GearArt.posed's tip).
+    ys, xs = np.nonzero(weapon[..., 3] > 200 / 255)
+    if len(ys):
+        far = np.argmax((xs + 0.5 - weapon.shape[1] / 2) ** 2 + (weapon.shape[0] / 2 - ys - 0.5) ** 2)
+        drop = max(0, 0.5 - (weapon.shape[0] / 2 - ys[far] - 0.5))
+        if drop > 0:
+            hy = min(hy, bottom - drop)
     if facing in ("up", "left"):   # the far side: mirrored
         weapon = weapon[:, ::-1]
     h, w = weapon.shape[:2]
