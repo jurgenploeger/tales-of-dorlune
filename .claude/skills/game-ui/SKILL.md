@@ -152,3 +152,9 @@ Add what each UI change teaches, dated, with the case and what to do instead.
 
 - 2026-11-10: the screenshots branch's scenes from before the workflow came back (the newest 2026-11-01)
   predate 0.9.72's bigger, cleaner windows and per-window menus: don't use them for how the game looks now.
+- 2026-11-10: Figma's `UI / Window` had a bevelled title bar the code had dropped for a gold title on the
+  glass; the user chose the bar, with the tabs on it (0.9.74). Figma's page still lacks the folder tabs and
+  `rowCard`: add them when the file is next open.
+- 2026-11-10: fresh shots (0.9.73) showed a first mock-up's "now" was wrong: Friends and Settings rows
+  were already on cards. Six real findings came from the shots instead (rows not alike, a grey price with
+  no reason, a window showing under another, empty glass, the speech window a strip, the bar). Shoot first.
