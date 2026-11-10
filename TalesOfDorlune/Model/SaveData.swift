@@ -72,8 +72,8 @@ nonisolated struct Look: Codable, Equatable, Sendable {
     var hair: String
     var outfit: String
     var skin: String
-    /// male | female (content/appearance.json `genders`); nil in older saves, which keep their
-    /// race's original sheet, as does "other" from before it was dropped.
+    /// male | female | other (content/appearance.json `genders`); nil in older saves, which keep
+    /// their race's original sheet.
     var gender: String? = nil
     /// Hairstyle; nil means the walk sheet's own hair, else the race's (GameSession.style).
     var style: String? = nil

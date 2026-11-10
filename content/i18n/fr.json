@@ -1024,6 +1024,7 @@
     "The rare {monster} in {map} has gone back into hiding.": "Le {monster} rare de la zone {map} est retourné se cacher.",
     "Male": "Masculin",
     "Female": "Féminin",
+    "Other": "Autre",
     "Spiky": "En pétard",
     "Long": "Longs",
     "Crop": "Courts",

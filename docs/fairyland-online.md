@@ -648,13 +648,20 @@ three guilds (M): humans are balanced, elves lean to magic and dwarves to attack
 
 **Us:** the same three. Each has base HP/MP/ATK/DEF/MAG/SPD (`content/classes.json`) and no home capital.
 
-**Genders and hairstyles (our decision, 2026-10-05, replacing 2026-10-04's):**
-- Two genders, male and female, each with its own walk sheet per race. A third, "Other", was dropped at the
-  playtester's request; its sheets (`*_other_walk`) stay only as the source of the Bob, Shoulder and Messy styles.
+**Genders and hairstyles (our decision, 2026-10-05, replacing 2026-10-04's; Other back 2026-11-10):**
+- Three genders, male, female and other, each with its own walk sheet per race. "Other" was dropped on
+  2026-10-05 at the playtester's request, its sheets (`*_other_walk`) kept only as the source of the Bob,
+  Shoulder and Messy styles, and brought back on 2026-11-10 (the user: "Can we introduce the 'Other' gender
+  in the game again?"): `classes.json` `sheets.other`, its paper-doll layers from `tools/hero_layers.py`
+  (`body_<race>_other` and every hairstyle on it; the dwarf wears the human one's head, `GRAFT`), its head
+  and neck under armour from `tools/wear_art.py --heads`, its eyes in art/eyes.json. A save made with
+  "other" before it was dropped wears its sheet again. To add a body: put its sheet in classes.json, write
+  its bald body once (hero_layers' `Race(...).body`), then run `wear_art.py --heads` and `hero_layers.py`
+  in turn until nothing changes (each reads what the other writes).
 - Every hairstyle fits every race and gender, so a girl can wear a boy's hair and the other way round
   (`tools/hero_layers.py` fits each style to every head).
 - A gender's own hair is the one it starts with and comes first in the picker: Ponytail (human female), Swept
-  (elf male), Braids (dwarf female). The race's default sheet starts with the race's `hair`.
+  (elf male), Braids (dwarf female). Bob (human other), Shoulder (elf other) and Messy (dwarf other) too. The race's default sheet starts with the race's `hair`.
 - This reverses 2026-10-04's rule that each gender sheet's hair stayed with that sheet.
 - Since 0.7.60 a barber in every town (NPC role `barber`, playtesting 2026-10-21: "You should be able to
   change your hair style and color somewhere in the game, at a barber in a town") changes the hairstyle and

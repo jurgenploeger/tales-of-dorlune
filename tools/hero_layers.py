@@ -49,7 +49,7 @@ F = 48
 DIRS = ["up", "right", "down", "left"]
 OUTLINE = np.array([0.16, 0.12, 0.18])
 # Every hairstyle, each taken from the walk sheet it was drawn on, as (race, sheet). The last three
-# sheets are no one's body any more, only where their hair comes from.
+# are the "other" gender's sheets (classes.json `sheets`), a body again since 2026-11-10.
 STYLES = {
     "spiky": ("human", "player_walk"), "long": ("elf", "elf_walk"), "crop": ("dwarf", "dwarf_walk"),
     "ponytail": ("human", "human_female_walk"), "swept": ("elf", "elf_male_walk"),
@@ -70,7 +70,7 @@ CHIN = 6   # a shaved chin's row under the brow: the female elf's, in every dire
 # and walk frame, set on the dwarf's neck frame by frame (`graft_offsets`); everything worn on the head
 # (hair, nape, hood, helmet, and tools/wear_art.py's head, neck and armour hats) is the human's, moved
 # the same. The dwarf keeps his beard, the short stocky body, and his armour.
-GRAFT = {"dwarf": "human", "dwarf_female": "human_female"}
+GRAFT = {"dwarf": "human", "dwarf_female": "human_female", "dwarf_other": "human_other"}
 # Headgear is drawn in magenta, which no recolour touches (skin 5-45°, hair 12-58°, outfit 85-170°)
 # and no hero sheet uses. The game paints soft magenta (saturation 0.6) in the armour's colour,
 # keeping the shade (value: 0.92 light, 0.7 mid, 0.45 dark), and full magenta in its trim colour.

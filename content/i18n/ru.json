@@ -1024,6 +1024,7 @@
     "The rare {monster} in {map} has gone back into hiding.": "Редкий монстр {monster} снова спрятался. Место: {map}.",
     "Male": "Мужской",
     "Female": "Женский",
+    "Other": "Другой",
     "Spiky": "Торчком",
     "Long": "Длинные",
     "Crop": "Короткая",

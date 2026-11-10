@@ -212,7 +212,7 @@ def shifted(img, moves):
             out[row * F:(row + 1) * F, col * F:(col + 1) * F] = moved
     return out
 # Heroes' bodies (tools/hero_layers.py), each race's: its own and its other gender's.
-BODIES = {race: [race] + [f"{race}_{g}" for g in ("male", "female") if (SPRITES / f"body_{race}_{g}.png").exists()]
+BODIES = {race: [race] + [f"{race}_{g}" for g in ("male", "female", "other") if (SPRITES / f"body_{race}_{g}.png").exists()]
           for race in RACES}
 
 

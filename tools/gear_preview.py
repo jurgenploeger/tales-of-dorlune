@@ -1179,8 +1179,9 @@ def dressed(race, body, style, armour=None, worn=(), skin=None):
     return out
 
 
-BODIES = [("human", "human", "spiky"), ("human", "human_female", "ponytail"), ("elf", "elf", "long"),
-          ("elf", "elf_male", "swept"), ("dwarf", "dwarf", "crop"), ("dwarf", "dwarf_female", "braids")]
+BODIES = [("human", "human", "spiky"), ("human", "human_female", "ponytail"), ("human", "human_other", "bob"),
+          ("elf", "elf", "long"), ("elf", "elf_male", "swept"), ("elf", "elf_other", "shoulder"),
+          ("dwarf", "dwarf", "crop"), ("dwarf", "dwarf_female", "braids"), ("dwarf", "dwarf_other", "messy")]
 # Every skin tone (appearance.json `skin`), taken in turn across the --wear grid.
 SKINS = ["fair", "rosy", "tan", "brown", "deep"]
 # One armour of every cut, and every walk sheet of its own: what a wearable must fit over.
@@ -1218,8 +1219,7 @@ def trinket_sheet(out):
     from PIL import Image
     root = pathlib.Path(__file__).resolve().parent.parent
     items = {i["id"]: i for i in json.load(open(root / "content" / "items.json"))["items"]}
-    bodies = [("human", "human", "spiky"), ("human", "human_female", "ponytail"), ("elf", "elf", "long"),
-              ("elf", "elf_male", "swept"), ("dwarf", "dwarf", "crop"), ("dwarf", "dwarf_female", "braids")]
+    bodies = BODIES
     outfits = [(None, ("leather_gloves", "speed_boots", "amber_amulet")),
                ("leather_vest", ("falcon_gloves", "traveler_boots", "phoenix_amulet")),
                ("mage_robe", ("starforged_gauntlets", "cloudstep_boots", "moonstone_pendant")),
@@ -1246,8 +1246,7 @@ def hat_sheet(out, hats=None):
     from PIL import Image
     root = pathlib.Path(__file__).resolve().parent.parent
     items = {i["id"]: i for i in json.load(open(root / "content" / "items.json"))["items"]}
-    bodies = [("human", "human", "spiky"), ("human", "human_female", "ponytail"), ("elf", "elf", "long"),
-              ("elf", "elf_male", "swept"), ("dwarf", "dwarf", "crop"), ("dwarf", "dwarf_female", "braids")]
+    bodies = BODIES
     worn = hats or [i for i in items.values() if i["type"] == "head"]
     outfits = [None, "leather_vest", "mage_robe", "iron_plate", "ranger_cloak"]
     zoom = 3
