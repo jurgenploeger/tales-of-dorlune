@@ -24,7 +24,7 @@ For the look itself (ramps, light, texture, outlines) and art drawn in code with
 
 ## Acceptance criteria
 
-Every criterion holds on **all six bodies** (human, elf and dwarf, each gender), **all four directions**,
+Every criterion holds on **all nine bodies** (human, elf and dwarf, each gender: male, female, other), **all four directions**,
 **every armour cut and sheet** (`gear_preview.OUTFITS`: none, vest, hide, chain mail, robe, ranger cloak,
 snow cloak, plate, dragon mail) and **every skin tone** (fair, rosy, tan, brown, deep). A fix that's right on
 one body and wrong on another isn't done.
@@ -206,6 +206,16 @@ python3 tools/check_content.py
   the real game. Read them before calling it done.
 
 ## Learnings
+
+- **2026-11-10 (dyes, how armour fits, the third body):** a dye is a tint of the piece's own shading, not
+  a slab at the dye's brightness (`DyeDef.rule(onto:)`, `tools/dye_art.py`: its middle part of the way down
+  to the piece's own, its lights paling toward the shine, its shadows kept): check a dyed sheet beside the
+  plain one, and that its darkest and lightest are as far apart as they were. How the head meets each
+  armour sheet, measured (the armour's top row against the head layer's last, all 16 frames): within two
+  rows on most, but a race's sheets are cut for one body, so the others float or sink in some frames
+  (the human other facing you, first step: 4 rows of neck; an elf other from behind: 3). The fix that
+  would hold is an armour sheet per body, each frame moved to that body's neck; not done yet. Acceptance
+  criteria now cover nine bodies (`gear_preview.BODIES`), not six.
 
 - **2026-11-04 (heroes, a review of every armour on every body, all 16 frames):** the head sits right on
   the armour's collar in most frames; moving it per frame onto the armour figure's own head (found by its

@@ -231,9 +231,15 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   (`hat_<kind>_<race>`, a hat item of its own: items.json `headgear`, the armour's `headpiece`). `TOWNSFOLK` sheets no hero wears are split too (`dwarf_npc`: the old bearded dwarf,
   his own mop as `hair_dwarf_npc`, a mouth drawn into his beard by `tools/character_art.py mouth`). The bald head is painted only inside the sprite as drawn (`_scalp`), so a
   body wearing its own hair matches its sheet: a skull painted past a side-view face stuck out like a brow ridge.
+  Each race has three bodies (classes.json `sheets`: male, female and other, back since 2026-11-10).
   Dwarves wear the human head on their own short body (`GRAFT`; run `tools/wear_art.py --heads` and
   `--dwarf-hats` after). Rerun after changing a race's sheet, and look at `--preview` before committing. Gloves, boots and necklaces are painted on by GearOverlay (`tools/gear_preview.py --trinkets`),
   and the festive seasons' hats, masks and scarves and the status capes go on from pieces `tools/wear_art.py` cut out.
+- `tools/worn_marks.py`: where gloves and boots go on each hero body, marked once, frame by frame
+  (`art/sprites/marks_<body>.png`: red a glove, blue a boot, the paler of each its band), which
+  `GearOverlay.trinkets` and `tools/gear_preview.py` paint; found as skin while dressing, a body with white
+  cuffs took no gloves and a neck took them as a bib. Rerun it after `hero_layers.py` changes a body;
+  `--sheet out.png` shows the marks on every frame.
 - `tools/wear_art.py`: worn gear from Retro Diffusion sheets in `art-variants/` (picked by hand, its `ARMOUR` and
   `WEAR`; sheets older than these notes in `art-variants/legacy/`), fixed in code: every armour walk sheet
   (`armor_<item>_<race>`, items.json `sheets`) with its main material brought to one colour on every race
