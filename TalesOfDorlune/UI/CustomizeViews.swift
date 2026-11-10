@@ -81,8 +81,7 @@ struct TurntablePreview: View {
     }
 }
 
-/// Male or female: which of the race's walk sheets the hero uses. (A save from when there was a
-/// third shows the first as picked; its hero keeps the race's own sheet.)
+/// Male, female or other: which of the race's walk sheets the hero uses.
 private struct GenderPicker: View {
     let genders: [GenderOption]
     @Binding var selection: String?

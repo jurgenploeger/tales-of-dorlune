@@ -55,7 +55,19 @@ Examples that shipped (art/assets.json):
   match: normalise in `tools/wear_art.py` (`MATERIAL`).
 - **It draws more than asked:** a scarf as a muffler over the mouth, a cape half behind the arm. Cut to what
   the game needs.
-- **`num_images` is ignored for walk sheets:** one sheet a call.
+- **`num_images` is ignored for walk sheets:** one sheet a call. The API still requires the field: a request
+  without it is rejected (422, nothing charged).
+- **One shared prompt template doesn't make a matched family** (2026-11-10, 27 hero sheets, $1.89, in
+  `art-variants/hero_v2_<id>/`): the nine hero prompts rewritten as "cute chibi {who}, big head, big round
+  eyes, thick dark outline, {hair}, plain bright green tunic, brown belt, brown boots", three calls each.
+  Every call is drawn on its own: the same prompt gave orange, auburn and blond hair, a tunic, a dress and
+  trousers, lime to forest green. Don't expect consistency from wording; normalise in code or pick one sheet
+  and derive the others.
+- **"big head, big round eyes" overrode "very short and chubby":** all nine dwarf sheets came out 34 to 37
+  pixels tall, a human's height (the dwarves in the game are 27 to 29). The earlier dwarf prompts, without
+  those words, gave short bodies.
+- **"short ... hair" on an elf boy came out bald** in two of three ("short golden blonde hair, a smooth
+  clean-shaven young face"); the third was a girl in a sleeveless dress.
 - **Inpainting walk sheets is a dead end:** faces come out muddy at about 10 px wide, armour too bulky,
   side and back views that don't match.
 - **Small details vanish when shrunk:** a ghost's eyes on a staff, a thin blade's crossguard at 24 px held.

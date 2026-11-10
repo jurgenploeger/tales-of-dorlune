@@ -142,35 +142,37 @@ nonisolated extension DyeDef {
         "steel_sword", "strong_ox_whip", "tamer_whip", "teak_whip", "twin_blade_axe", "wooden_sword", "yew_staff"
     ]
 
-    /// `material` taken to this dye's colour (playtesting 2026-10-30: an olive plate read as white): its
-    /// hue, its saturation the dye's with half the material's own shading in it, its brightness the dye's
-    /// in the middle and the ramp round it kept from dark to light, squeezed (to no less than 30%)
-    /// where the lightest would pass white. tools/dye_art.py `rule_onto` is the same.
+    /// `material` taken to this dye's colour, as a tint of its own shading (playtesting 2026-10-30: an
+    /// olive plate read as white): its hue, its saturation the dye's with half the material's own shading
+    /// in it. Its middle is the dye's brightness, part of the way down to the piece's own where that's
+    /// darker (`depth`), so its lights have room under white and it isn't one bright slab (the user,
+    /// 2026-11-10: dyed armour had "too much exposure" and seemed "a flat color slabbed on top"; at the
+    /// dye's own brightness a plate's middle went from 0.45 to 0.8 and its lights were squeezed to a
+    /// third). Its lights keep the contrast they had where they fit under the lightest, never more, and
+    /// pale toward it (`fade`), as drawn metal and cloth do. tools/dye_art.py `rule_onto` is the same.
     func rule(onto material: DyeMaterial) -> RecolorRule {
         let top = lightest
-        // Room to keep the shading (playtesting 2026-10-31: "make sure that the dyed items don't lose the
-        // details like shadows and highlights"): a light dye's middle may sit a little under its own
-        // (`slack`), so the ramp needn't be squeezed flat under white; a dark one's darkest only has to
-        // stay over `floor`, not scale down with its middle; and never more contrast than the piece had,
-        // unless brightening a dark one as before. tools/dye_art.py `rule_onto` is the same.
         let least = material.minValue ?? 0.2
         // A dark dye's middle may sit a little over its own (`rise`), so its shadows have room over black.
-        let middle = value + rise
-        let gain = Swift.max(0.3, Swift.min(Swift.max(1, value / material.value),
-                                            (middle - slack - Self.floor) / Swift.max(0.01, material.value - least),
-                                            (top - value + slack) / Swift.max(0.01, material.light - material.value)))
+        let middle = value + rise - depth * Swift.max(0, value - material.value)
+        // A dark dye's lights are measured from its own brightness, under its raised middle; and never so
+        // much contrast that the material's darkest would pass under `floor`, where a piece is nearly all
+        // one light shade and this one rule takes all of it.
+        let gain = Swift.max(0.3, Swift.min(1,
+                                            (top - middle + rise) / Swift.max(0.01, material.light - material.value),
+                                            (middle - Self.floor) / Swift.max(0.01, material.value - least)))
         return RecolorRule(hue: material.hue, minSaturation: material.minSaturation, maxSaturation: material.maxSaturation,
                            minValue: material.minValue, maxValue: nil, to: hue, shift: nil, spread: 0.25,
                            saturation: 0.5 * saturation / material.saturation, value: gain,
                            saturationOffset: 0.5 * saturation,
-                           valueOffset: Swift.min(middle - gain * material.value, top - gain * material.light))
+                           valueOffset: Swift.min(middle - gain * material.value, top - gain * material.light),
+                           fade: [middle, top, Self.fade])
     }
 
-    /// `rule(onto:)`, and under it, where that squeezed the ramp to fit a light dye under white, a rule
-    /// of the material's shadows (its middle and darker) that keeps their contrast: up to `shadowGain`
-    /// and no darker than `floor`. Squeezed whole, a Snow White plate's deepest shadow sat at 0.76 and it
-    /// read as one white blob (playtesting 2026-10-31: "This looks too white"). tools/dye_art.py
-    /// `rules_onto` is the same.
+    /// `rule(onto:)` for the material's lights, and under it a rule of its shadows (its middle and
+    /// darker) that keeps their depth: up to `shadowGain` of their contrast and no darker than `floor`.
+    /// Squeezed whole, a Snow White plate's deepest shadow sat at 0.76 and it read as one white blob
+    /// (playtesting 2026-10-31: "This looks too white"). tools/dye_art.py `rules_onto` is the same.
     func rules(onto material: DyeMaterial) -> [RecolorRule] {
         let main = rule(onto: material)
         let gain = main.value ?? 1
@@ -188,23 +190,26 @@ nonisolated extension DyeDef {
         return [shadows, main]
     }
 
-    /// How much contrast a light dye's shadows keep where its lights are squeezed under white: all they
-    /// had, a white's more, so its plate still has a deep shadow and an edge (tools/dye_art.py
-    /// `SHADOW_GAIN`, `SHADOW_GAIN_WHITE`).
+    /// How much of their contrast a dyed piece's shadows keep: a little more than they had, a white's
+    /// more still, so its plate has a deep shadow and an edge (tools/dye_art.py `SHADOW_GAIN`,
+    /// `SHADOW_GAIN_WHITE`).
     var shadowGain: Double {
-        shadowContrast ?? (saturation < 0.1 ? 2.0 : 1.0)
+        shadowContrast ?? (saturation < 0.1 ? 2.0 : 1.3)
     }
+
+    /// How far from the dye's own brightness down to a darker piece's a dyed piece's middle sits: a
+    /// white's less, to stay white (tools/dye_art.py `DEPTH`, `DEPTH_WHITE`).
+    var depth: Double {
+        saturation < 0.1 ? 0.2 : 0.45
+    }
+
+    /// How much of its saturation a dyed piece's brightest keeps (tools/dye_art.py `FADE`).
+    static let fade = 0.75
 
     /// The brightest a dye's shine goes: white for a light dye; for a dark one, down toward halfway
     /// from its colour to white, the darker the further (from 0.7 down to 0.3). A Midnight plate's
     /// shine at 0.8 read as white beside its 0.32 navy (playtesting 2026-10-31). tools/dye_art.py
     /// `lightest` is the same.
-    /// How far under its own brightness a piece's middle may sit to keep its shading: a light dye's
-    /// (a white's more), none for a dark one, which has no white to fit under (tools/dye_art.py `SLACK`).
-    var slack: Double {
-        (saturation < 0.1 ? 0.12 : 0.08) * Swift.min(1, Swift.max(0, (value - 0.5) / 0.2))
-    }
-
     /// How far over its own brightness a dark dye's middle may sit, so its shadows have room over black
     /// (a blackish Midnight on a bright blade squeezed it flat): none for a light dye (tools/dye_art.py
     /// `rise`).

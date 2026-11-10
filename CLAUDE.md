@@ -231,9 +231,23 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   (`hat_<kind>_<race>`, a hat item of its own: items.json `headgear`, the armour's `headpiece`). `TOWNSFOLK` sheets no hero wears are split too (`dwarf_npc`: the old bearded dwarf,
   his own mop as `hair_dwarf_npc`, a mouth drawn into his beard by `tools/character_art.py mouth`). The bald head is painted only inside the sprite as drawn (`_scalp`), so a
   body wearing its own hair matches its sheet: a skull painted past a side-view face stuck out like a brow ridge.
+  Each race has three bodies (classes.json `sheets`: male, female and other, back since 2026-11-10).
   Dwarves wear the human head on their own short body (`GRAFT`; run `tools/wear_art.py --heads` and
   `--dwarf-hats` after). Rerun after changing a race's sheet, and look at `--preview` before committing. Gloves, boots and necklaces are painted on by GearOverlay (`tools/gear_preview.py --trinkets`),
   and the festive seasons' hats, masks and scarves and the status capes go on from pieces `tools/wear_art.py` cut out.
+- `tools/worn_marks.py`: where gloves and boots go on each hero body, marked once, frame by frame
+  (`art/sprites/marks_<body>.png`: red a glove, blue a boot, the paler of each its band), which
+  `GearOverlay.trinkets` and `tools/gear_preview.py` paint; found as skin while dressing, a body with white
+  cuffs took no gloves and a neck took them as a bib. Rerun it after `hero_layers.py` changes a body;
+  `--sheet out.png` shows the marks on every frame.
+- `tools/armour_fit.py`: armour sheets fitted to the bodies a race's own sheet doesn't reach. A race's sheet
+  is worn by its three bodies under each one's own head; where a body's head ends two rows or more above the
+  collar in a frame, that body gets every sheet of its race again (`<sheet>_fit_<body>.png`, and `_trim`), the
+  armour a little taller in that frame: rows between collar and hands drawn twice, so the shoulders meet the
+  head and feet, legs and hands stay put. classes.json lists the bodies (a race's `fitted`), which
+  `GameSession.layers`, `gear_preview.py` and `eyes.py` read. Never move a frame up (the feet leave the
+  ground) or raise only the collar (a dark block under the chin). Rerun after `wear_art.py`, `hero_layers.py`
+  or `dye_art.py cut`; `--report` lists the bare neck rows, `--sheet out.png` shows before and after.
 - `tools/wear_art.py`: worn gear from Retro Diffusion sheets in `art-variants/` (picked by hand, its `ARMOUR` and
   `WEAR`; sheets older than these notes in `art-variants/legacy/`), fixed in code: every armour walk sheet
   (`armor_<item>_<race>`, items.json `sheets`) with its main material brought to one colour on every race

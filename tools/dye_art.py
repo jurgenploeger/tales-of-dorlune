@@ -158,6 +158,9 @@ def apply(rules, image):
                      + (rule.get("saturationOffset") or 0), 0, 1)
         nv = np.clip(v * (rule.get("value") if rule.get("value") is not None else 1)
                      + (rule.get("valueOffset") or 0), 0, 1)
+        if rule.get("fade"):
+            start, end, keep = rule["fade"]
+            ns = ns * (1 - (1 - keep) * np.clip((nv - start) / max(0.01, end - start), 0, 1))
         out[..., :3] = np.where(m[..., None], rgb(nh, ns, nv), out[..., :3])
     return (np.clip(out, 0, 1) * 255 + 0.5).astype(np.uint8), taken
 
@@ -187,35 +190,38 @@ def dyes():
 
 
 def rule_onto(dye, m):
-    """DyeDef.rule(onto:): the material `m` taken to the dye's colour."""
+    """DyeDef.rule(onto:): the material `m` taken to the dye's colour, as a tint of its own shading."""
     top = lightest(dye)
-    # Room to keep the shading: the middle may sit a little under the dye's own (SLACK, a white's more),
-    # so the ramp needn't be squeezed flat under white (playtesting 2026-10-31: "make sure that the dyed
-    # items don't lose the details like shadows and highlights").
-    # A light dye's: a dark one has no white to fit under, its shadows black to stay over.
-    slack = (SLACK_WHITE if dye["saturation"] < 0.1 else SLACK) * min(1, max(0, (dye["value"] - 0.5) / 0.2))
-    # A dark dye's the other way: its middle may sit a little over its own, so its shadows have room
-    # over black (`rise`, DyeDef.rise; a blackish Midnight on a bright blade squeezed it flat).
+    white = dye["saturation"] < 0.1
+    # A dark dye's middle may sit a little over its own, so its shadows have room over black (`rise`,
+    # DyeDef.rise; a blackish Midnight on a bright blade squeezed it flat).
     rise = SLACK * min(1, max(0, (0.5 - dye["value"]) / 0.2))
-    middle = dye["value"] + rise
-    # Its darkest (the material's least, `minValue`) no darker than FLOOR, nor its lightest past `top`.
+    # A light dye's middle sits part of the way down to the piece's own (DEPTH, a white's DEPTH_WHITE), so
+    # its lights have room under white and it isn't one bright slab (the user, 2026-11-10: dyed armour had
+    # "too much exposure" and seemed "a flat color slabbed on top"). At the dye's own brightness (until
+    # then) a plate's middle went from 0.45 to 0.8 or more and its lights were squeezed to a third.
+    middle = dye["value"] + rise - (DEPTH_WHITE if white else DEPTH) * max(0, dye["value"] - m["value"])
+    # Its lights keep the contrast they had where they fit under `top`, never more.
+    # (A dark dye's are measured from its own brightness, under its raised middle, as before.)
+    # Nor so much that its darkest (the material's least, `minValue`) would pass under FLOOR, where the
+    # piece is nearly all one light shade (a white cloak's icon) and one rule takes all of it.
     least = m["minValue"] if m.get("minValue") is not None else 0.2
-    # Never more contrast than it had, unless brightening a dark one as before (`value` over its middle).
-    gain = max(0.3, min(max(1, dye["value"] / m["value"]),
-                        (middle - slack - FLOOR) / max(0.01, m["value"] - least),
-                        (top - dye["value"] + slack) / max(0.01, m["light"] - m["value"])))
+    gain = max(0.3, min(1, (top - middle + rise) / max(0.01, m["light"] - m["value"]),
+                        (middle - FLOOR) / max(0.01, m["value"] - least)))
+    # Its lights pale toward the top as drawn metal and cloth do (`fade`: saturation down to FADE of
+    # itself from the middle to the top), so a shine reads as a shine, not more of the same colour.
     return dict(hue=m.get("hue"), minSaturation=m.get("minSaturation", 0), maxSaturation=m.get("maxSaturation"),
                 minValue=m.get("minValue"), to=dye["hue"], spread=0.25,
                 saturation=0.5 * dye["saturation"] / m["saturation"], saturationOffset=0.5 * dye["saturation"],
-                value=gain, valueOffset=min(middle - gain * m["value"], top - gain * m["light"]))
+                value=gain, valueOffset=min(middle - gain * m["value"], top - gain * m["light"]),
+                fade=[middle, top, FADE])
 
 
 def rules_onto(dye, m):
-    """DyeDef.rules(onto:): `rule_onto`, and under it, where that squeezed the ramp to fit a light dye under
-    white, a rule of the material's shadows (its middle and darker) that keeps their contrast: up to
-    SHADOW_GAIN (a white's SHADOW_GAIN_WHITE) and no darker than FLOOR. Squeezed whole, a Snow White
-    plate's deepest shadow sat at 0.76 and it read as one white blob (playtesting 2026-10-31: "This
-    looks too white")."""
+    """DyeDef.rules(onto:): `rule_onto` for the material's lights, and under it a rule of its shadows (its
+    middle and darker) that keeps their depth: up to SHADOW_GAIN of their contrast (a white's
+    SHADOW_GAIN_WHITE) and no darker than FLOOR. Squeezed whole, a Snow White plate's deepest shadow sat
+    at 0.76 and it read as one white blob (playtesting 2026-10-31: "This looks too white")."""
     main = rule_onto(dye, m)
     least = m["minValue"] if m.get("minValue") is not None else 0.2
     middle = main["valueOffset"] + main["value"] * m["value"]
@@ -224,6 +230,7 @@ def rules_onto(dye, m):
     if gain <= main["value"] + 1e-6:
         return [main]
     shadows = dict(main, maxValue=m["value"], value=gain, valueOffset=middle - gain * m["value"])
+    del shadows["fade"]
     # A dye's own shadow colour (items.json `shadowHue`, `shadowSaturation`): gold's warmer, toward
     # amber, white's a cool blue grey, so the ramp turns as it darkens, as drawn shading does.
     if dye.get("shadowHue") is not None:
@@ -237,12 +244,16 @@ def rules_onto(dye, m):
 SHADED = rules_onto   # how an icon's dyed family is recoloured (a preview can swap it)
 
 
-# How far under a dye's own brightness a piece's middle may sit, to keep its shading (DyeDef.slack).
+# How far over its own brightness a dark dye's middle may sit (`rise`, DyeDef.rise).
 SLACK = 0.08
-SLACK_WHITE = 0.12
-# How much contrast a light dye's shadows keep where its lights are squeezed under white (`rules_onto`,
-# DyeDef.shadowGain): all they had, a white's more, so its plate still has a deep shadow and an edge.
-SHADOW_GAIN = 1.0
+# How far from the dye's own brightness down to a darker piece's a dyed piece's middle sits (DyeDef.depth).
+DEPTH = 0.45
+DEPTH_WHITE = 0.2
+# How much of its saturation a dyed piece's brightest keeps (DyeDef.fade).
+FADE = 0.75
+# How much of their contrast a dyed piece's shadows keep (`rules_onto`, DyeDef.shadowGain): a little more
+# than they had, a white's more still, so its plate has a deep shadow and an edge.
+SHADOW_GAIN = 1.3
 SHADOW_GAIN_WHITE = 2.0
 # The darkest a dyed piece's material goes (DyeDef.floor): just over black, so its deepest shadow still
 # reads as part of it.
@@ -556,7 +567,10 @@ def verdict(dye, before, after, held=False):
     # White can't sit at its own 0.96 and keep a ramp on a dark, wide one: very pale is what it must read.
     # A held sprite is a few dozen pixels, most of them its edges' shading, so its middle sits in its
     # shadows, which keep their depth (`rules_onto`): it reads as the dye a little lower.
-    val_ok = mv >= (0.68 if held else 0.75) if white else abs(mv - dye["value"]) <= (0.2 if held else 0.15)
+    # Its middle is the dye's own brightness, part of the way down to the piece's where that's darker
+    # (`rule_onto`, DEPTH): a tint of the piece's shading, not a slab at the dye's brightness.
+    aim = dye["value"] - DEPTH * max(0, dye["value"] - float(np.median(v0)))
+    val_ok = mv >= (0.68 if held else 0.75) if white else abs(mv - aim) <= (0.2 if held else 0.15)
     spread0 = np.percentile(v0, 90) - np.percentile(v0, 10)
     spread = np.percentile(v, 90) - np.percentile(v, 10)
     # A few pixels (a held sprite's clasp) can't hold a ramp; more keep at least RAMP_KEPT of theirs, so

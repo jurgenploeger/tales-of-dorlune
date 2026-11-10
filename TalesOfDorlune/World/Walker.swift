@@ -215,7 +215,7 @@ final class Walker: SKNode {
         let frames = cycle.frames(facing)
         guard frames.count > 1 else { return }
         let steps = frames.flatMap { frame -> [SKAction] in
-            [.move(to: GearArt.grip(on: sprite, frame: frame, facing: facing, height: cycle.size.height), duration: 0), .wait(forDuration: 0.16)]
+            [.move(to: GearArt.grip(on: sprite, frame: frame, facing: facing, height: cycle.size.height, drop: GearArt.drop(of: weapon)), duration: 0), .wait(forDuration: 0.16)]
         }
         weapon.run(.repeatForever(.sequence(steps)), withKey: "walk")
     }

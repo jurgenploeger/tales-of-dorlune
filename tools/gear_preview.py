@@ -278,9 +278,19 @@ GLOVE_ROWS = 5
 GLOVE_TONE = (0.55, 0.9)
 # Rows of the sleeve over each hand the gloves' cuff takes (the human hand is only two pixels).
 GLOVE_CUFF = 2
+# A cuff's top row, and a boot's, a shade lighter: a band that says where the piece ends (2026-11-10, the
+# user: "It should also be more clear when it's wearing different gloves and shoes").
+BAND_TONE = (0.8, 0.9)
+# Boots over armour drawn on a sheet of its own: every pixel of it over the body's boots and a pixel
+# round them, in the boots' rows, where the figure is no wider than this across (two legs, not a robe's
+# hem). Only the plain body's brown took them, and a plate's greaves or a mail's leggings kept their
+# steel but for a toe.
+BOOT_ROWS = 5
+BOOT_REACH = 1
+BOOT_SPAN = 9
 
 
-def trinkets(body, out, gloves=None, boots=None, necklace=None, chain=None):
+def trinkets(body, out, gloves=None, boots=None, necklace=None, chain=None, marks=None):
     """Gloves on the hands, boots on the feet and a necklace under the chin (GearOverlay.trinkets),
     each in its colour (#RRGGBB) at the brightness of what was there. Found on the plain body: its
     skin in patches, the biggest the face and those below its chin the arms, whose last three rows
@@ -306,13 +316,46 @@ def trinkets(body, out, gloves=None, boots=None, necklace=None, chain=None):
                 if 0 <= x < FRAME and 0 <= y < FRAME and f[y, x, 3] > 0.5:
                     f[y, x, :3] = c
 
-            if boots is not None:
+            if marks is not None:
+                # Marked offline on every frame of the body (tools/worn_marks.py): red a glove, blue a
+                # boot, the paler of each its band, a shade lighter.
+                m = marks[oy:oy + FRAME, ox:ox + FRAME]
+                on = m[..., 3] > 0.5
+                is_boot = on & (m[..., 2] > m[..., 0])
+                worn = np.zeros((FRAME, FRAME), bool)
+                if boots is not None:
+                    worn = is_boot.copy()
+                    # Over armour on a sheet of its own: what it drew over the boots and a pixel round
+                    # them, where the figure is two legs across, not a robe's hem; never its outline.
+                    for y in range(max(0, feet - BOOT_ROWS), feet + 1):
+                        xs = np.nonzero(f[y, :, 3] > 0.5)[0]
+                        if len(xs) == 0:
+                            continue
+                        for run in np.split(xs, np.nonzero(np.diff(xs) > 1)[0] + 1):
+                            if len(run) > BOOT_SPAN:
+                                continue
+                            for x in run:
+                                near = is_boot[max(0, y - BOOT_REACH):y + BOOT_REACH + 1, max(0, x - BOOT_REACH):x + BOOT_REACH + 1].any()
+                                differs = not a[y, x] or np.abs(f[y, x, :3] - b[y, x, :3]).max() > 0.02
+                                if near and differs and hsv(tuple(f[y, x, :3]))[2] >= 0.25:
+                                    worn[y, x] = True
+                for y in range(FRAME):
+                    for x in range(FRAME):
+                        if worn[y, x]:
+                            band = y == 0 or not worn[y - 1, x]
+                            paint(x, y, boots, *(BAND_TONE if band else (0.55, 0.9)))
+                        elif gloves is not None and on[y, x] and not is_boot[y, x] and f[y, x, 3] > 0.5 \
+                                and hsv(tuple(f[y, x, :3]))[2] >= 0.25:
+                            paint(x, y, gloves, *(BAND_TONE if m[y, x, 1] > 0.25 else GLOVE_TONE))
+            elif boots is not None:
                 for y in range(max(0, feet - 5), feet + 1):
                     for x in range(FRAME):
                         hh, s, v = hsv(tuple(b[y, x, :3]))
                         if a[y, x] and 7 / 360 <= hh <= 43 / 360 and s > 0.35 and v < 0.75:
                             paint(x, y, boots, 0.55, 0.9)
-            if gloves is None and necklace is None:
+            # (With marks the gloves are on: only a necklace is left to find a place for.)
+            find_hands = gloves is not None and marks is None
+            if not find_hands and necklace is None:
                 continue
             skin = np.zeros((FRAME, FRAME), bool)
             for y in range(FRAME):
@@ -340,7 +383,7 @@ def trinkets(body, out, gloves=None, boots=None, necklace=None, chain=None):
                 continue
             face = max(patches, key=len)
             chin = max(y for y, _ in face)
-            if gloves is not None:
+            if find_hands:
                 for cells in patches:
                     # A hand: under the chin (not a sliver of the jaw seen from the side) and above the
                     # knees (not a bare knee): its top at least two rows under the chin, and in the
@@ -1117,6 +1160,12 @@ def dressed(race, body, style, armour=None, worn=(), skin=None):
             img.alpha_composite(Image.fromarray((np.clip(layer, 0, 1) * 255).round().astype(np.uint8), "RGBA"))
         return array(img)
     sheet = (armour or {}).get("sheets", {}).get(race)
+    # The sheet fitted to this body, where the race's doesn't reach its head (classes.json `fitted`,
+    # tools/armour_fit.py; GameSession.layers).
+    fitted = next((r.get("fitted") or [] for r in json.load(open(sprites.parent.parent / "content" / "classes.json"))["races"]
+                   if r["id"] == race), [])
+    if sheet and body in fitted:
+        sheet = f"{sheet}_fit_{body}"
     # On the head (GameSession.layers): a festive hat sits on the hair (`hat`, below); one that goes
     # with an armour (`headgear`) takes the hair's place: a sheet's cut-off head over the hair below
     # it (nape_*), the beard on top, or a hide cloak's hood, painted in its colour (`hood`).
@@ -1165,8 +1214,11 @@ def dressed(race, body, style, armour=None, worn=(), skin=None):
     wrap = pieces.pop("necklace") if pieces.get("necklace", {}).get("wear") == "scarf" else None
     necklace = pieces.get("necklace", {})
     plain = np.asarray(load(skeleton)).astype(float) / 255
+    marked = sprites / f"marks_{skeleton[len('body_'):]}.png" if skeleton.startswith("body_") else None
+    marks = np.asarray(Image.open(marked).convert("RGBA")).astype(float) / 255 if marked and marked.exists() else None
     out = trinkets(plain, out, gloves=pieces.get("gloves", {}).get("color"),
-                   boots=pieces.get("boots", {}).get("color"), necklace=necklace.get("color"), chain=necklace.get("accent"))
+                   boots=pieces.get("boots", {}).get("color"), necklace=necklace.get("color"), chain=necklace.get("accent"),
+                   marks=marks)
     if not sheet and (armour or {}).get("wear") == "cloak":
         # A hide cloak: the cape in its colour, its fur along the hem (GearLook.cloak).
         out = cape(base, out, armour["color"], armour.get("accent") or "#F2C740", emblem=False, skeleton=plain)
@@ -1179,8 +1231,9 @@ def dressed(race, body, style, armour=None, worn=(), skin=None):
     return out
 
 
-BODIES = [("human", "human", "spiky"), ("human", "human_female", "ponytail"), ("elf", "elf", "long"),
-          ("elf", "elf_male", "swept"), ("dwarf", "dwarf", "crop"), ("dwarf", "dwarf_female", "braids")]
+BODIES = [("human", "human", "spiky"), ("human", "human_female", "ponytail"), ("human", "human_other", "bob"),
+          ("elf", "elf", "long"), ("elf", "elf_male", "swept"), ("elf", "elf_other", "shoulder"),
+          ("dwarf", "dwarf", "crop"), ("dwarf", "dwarf_female", "braids"), ("dwarf", "dwarf_other", "messy")]
 # Every skin tone (appearance.json `skin`), taken in turn across the --wear grid.
 SKINS = ["fair", "rosy", "tan", "brown", "deep"]
 # One armour of every cut, and every walk sheet of its own: what a wearable must fit over.
@@ -1218,8 +1271,7 @@ def trinket_sheet(out):
     from PIL import Image
     root = pathlib.Path(__file__).resolve().parent.parent
     items = {i["id"]: i for i in json.load(open(root / "content" / "items.json"))["items"]}
-    bodies = [("human", "human", "spiky"), ("human", "human_female", "ponytail"), ("elf", "elf", "long"),
-              ("elf", "elf_male", "swept"), ("dwarf", "dwarf", "crop"), ("dwarf", "dwarf_female", "braids")]
+    bodies = BODIES
     outfits = [(None, ("leather_gloves", "speed_boots", "amber_amulet")),
                ("leather_vest", ("falcon_gloves", "traveler_boots", "phoenix_amulet")),
                ("mage_robe", ("starforged_gauntlets", "cloudstep_boots", "moonstone_pendant")),
@@ -1246,8 +1298,7 @@ def hat_sheet(out, hats=None):
     from PIL import Image
     root = pathlib.Path(__file__).resolve().parent.parent
     items = {i["id"]: i for i in json.load(open(root / "content" / "items.json"))["items"]}
-    bodies = [("human", "human", "spiky"), ("human", "human_female", "ponytail"), ("elf", "elf", "long"),
-              ("elf", "elf_male", "swept"), ("dwarf", "dwarf", "crop"), ("dwarf", "dwarf_female", "braids")]
+    bodies = BODIES
     worn = hats or [i for i in items.values() if i["type"] == "head"]
     outfits = [None, "leather_vest", "mage_robe", "iron_plate", "ranger_cloak"]
     zoom = 3
@@ -1263,7 +1314,7 @@ def hat_sheet(out, hats=None):
     print(f"wrote {out}: {', '.join(i['id'] for i in worn)}")
 
 
-HAND = {"down": (5, 0.6), "up": (-8, 0.57), "right": (3, 0.56), "left": (-4, 0.56)}   # GearArt.hand
+HAND = {"down": (7, 0.66), "up": (-8, 0.65), "right": (6, 0.65), "left": (-7, 0.65)}   # GearArt.hand
 
 
 def holding(frame, weapon, facing):
@@ -1277,6 +1328,14 @@ def holding(frame, weapon, facing):
     top, bottom = (rows[0], rows[-1] + 1) if len(rows) else (0.27 * FRAME, 0.94 * FRAME)
     across, down = HAND[facing]
     hx, hy = FRAME / 2 + across, top + down * (bottom - top)
+    # What hangs under the grip (a whip's lash) trails at the feet, not under them: GearArt.grip's `drop`,
+    # by the solid pixel farthest from the grip (GearArt.posed's tip).
+    ys, xs = np.nonzero(weapon[..., 3] > 200 / 255)
+    if len(ys):
+        far = np.argmax((xs + 0.5 - weapon.shape[1] / 2) ** 2 + (weapon.shape[0] / 2 - ys - 0.5) ** 2)
+        drop = max(0, 0.5 - (weapon.shape[0] / 2 - ys[far] - 0.5))
+        if drop > 0:
+            hy = min(hy, bottom - drop)
     if facing in ("up", "left"):   # the far side: mirrored
         weapon = weapon[:, ::-1]
     h, w = weapon.shape[:2]

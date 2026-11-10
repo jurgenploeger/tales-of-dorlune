@@ -1,0 +1,27 @@
+{
+  "request": {
+    "prompt": "cute chibi androgynous elf adventurer kid with long pointy ears, big head, big round eyes, thick dark outline, shoulder-length golden blonde hair, plain bright green tunic, brown belt, brown boots",
+    "prompt_style": "rd_animation__four_angle_walking",
+    "width": 48,
+    "height": 48,
+    "return_spritesheet": true,
+    "num_images": 1
+  },
+  "result": {
+    "created_at": 1794314195,
+    "credit_cost": 10,
+    "balance_cost": 0.07,
+    "output_urls": [],
+    "model": "rd_plus",
+    "remaining_credits": 0,
+    "remaining_balance": 8.411,
+    "request_id": "98bf4d72-6770-439e-a1de-ce9d9815607e",
+    "outputs_retained_until": 1794400590,
+    "billing": {
+      "reason": "no_plan",
+      "source": "balance",
+      "balance_left": 8.411,
+      "balance_charged": 0.07
+    }
+  }
+}

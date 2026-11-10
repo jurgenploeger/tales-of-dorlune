@@ -1,0 +1,27 @@
+{
+  "request": {
+    "prompt": "cute chibi dwarf adventurer girl, very short and chubby with a round belly and short legs, round rosy cheeks, no beard, big head, big round eyes, thick dark outline, two thick ginger braids hanging behind the shoulders, the face clear, plain bright green tunic, brown belt, brown boots",
+    "prompt_style": "rd_animation__four_angle_walking",
+    "width": 48,
+    "height": 48,
+    "return_spritesheet": true,
+    "num_images": 1
+  },
+  "result": {
+    "created_at": 1794314209,
+    "credit_cost": 10,
+    "balance_cost": 0.07,
+    "output_urls": [],
+    "model": "rd_plus",
+    "remaining_credits": 0,
+    "remaining_balance": 7.991,
+    "request_id": "2a1adc2e-2dcc-42b1-ab0a-9864346b9cfe",
+    "outputs_retained_until": 1794400605,
+    "billing": {
+      "reason": "no_plan",
+      "source": "balance",
+      "balance_left": 7.991,
+      "balance_charged": 0.07
+    }
+  }
+}

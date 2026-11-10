@@ -297,7 +297,9 @@ for axe_art in axe_arts:
 for path in sorted((ROOT / "art" / "sprites").glob("*_haft.png")):
     check(path.stem[:-len("_haft")] in axe_arts, f"{path.name} → no axe's picture: rerun tools/dye_art.py hafts")
 for path in sorted((ROOT / "art" / "sprites").glob("*_trim.png")):
-    check(path.stem[:-len("_trim")] in trim_layers, f"{path.name} → no trim of DyeDef.trims: rerun tools/dye_art.py cut")
+    # (A sheet fitted to a body, "<sheet>_fit_<body>", takes its race's sheet's trim: tools/armour_fit.py.)
+    check(path.stem[:-len("_trim")].split("_fit_")[0] in trim_layers,
+          f"{path.name} → no trim of DyeDef.trims: rerun tools/dye_art.py cut")
 
 # Where a quest's pieces come from: its monsters (`drops`), a chest it opens, a shop, a boss, the
 # monsters' own materials, or made by hand from those.
@@ -882,6 +884,12 @@ for item in items.values():
         check(item["type"] == "armor" and race_id in {r["id"] for r in classes["races"]},
               f"item {item['id']} → sheets: {race_id!r} isn't a race (or the item isn't armour)")
         check((ROOT / "art" / "sprites" / f"{sheet}.png").exists(), f"item {item['id']} → art/sprites/{sheet}.png is missing")
+        # A body the race's sheets are fitted to wears its own (classes.json `fitted`, tools/armour_fit.py).
+        for race in classes["races"]:
+            for body in (race.get("fitted") or []) if race["id"] == race_id else []:
+                for layer in [f"{sheet}_fit_{body}"] + ([f"{sheet}_fit_{body}_trim"] if (ROOT / "art" / "sprites" / f"{sheet}_trim.png").exists() else []):
+                    check((ROOT / "art" / "sprites" / f"{layer}.png").exists(),
+                          f"item {item['id']} → art/sprites/{layer}.png is missing: rerun tools/armour_fit.py")
     if item.get("bareHead") or any(sheet in bare_sheets for sheet in item.get("sheets", {}).values()):
         check(item.get("bareHead") is True and all(sheet in bare_sheets for sheet in item.get("sheets", {}).values()),
               f"item {item['id']} → wears a sheet with its head cut off along with a bareHead item: both need bareHead, "

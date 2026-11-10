@@ -24,7 +24,7 @@ For the look itself (ramps, light, texture, outlines) and art drawn in code with
 
 ## Acceptance criteria
 
-Every criterion holds on **all six bodies** (human, elf and dwarf, each gender), **all four directions**,
+Every criterion holds on **all nine bodies** (human, elf and dwarf, each gender: male, female, other), **all four directions**,
 **every armour cut and sheet** (`gear_preview.OUTFITS`: none, vest, hide, chain mail, robe, ranger cloak,
 snow cloak, plate, dragon mail) and **every skin tone** (fair, rosy, tan, brown, deep). A fix that's right on
 one body and wrong on another isn't done.
@@ -148,6 +148,23 @@ are the ones to regenerate first, with the user's OK on the cost.
   their head as their plain body has it, sized by that body. Measured from the top of the sprite, a pointed
   hat or a hood pushed the face to the bottom of the circle.
 
+### Gloves and boots
+
+- They go where `tools/worn_marks.py` marks them on each body, frame by frame (`art/sprites/marks_<body>.png`:
+  red a glove, blue a boot, the paler of each its band, painted a shade lighter), since 2026-11-10 (the user:
+  "It should also be more clear when it's wearing different gloves and shoes"). Until then the game looked
+  for the hands as it dressed a hero, as the patches of skin under the chin: none on a body whose hands
+  Retro Diffusion drew as white cuffs or mitts (the human man, the human other: no gloves at all), a neck or
+  a belt buckle on others (a red bib on an elf or a dwarf in ruby gauntlets). Marks can be looked at
+  (`worn_marks.py --sheet`) and corrected; rerun it after `hero_layers.py` changes a body.
+- A hand is skin, or the pale cuff drawn for it, whose lowest row is at hand height; facing you or away,
+  never near the figure's middle; a side with none gets the arm's end. Its cuff is three rows of sleeve.
+- Over armour with a sheet of its own, boots take what the sheet drew over the body's boots and a pixel
+  round them, where the figure is two legs across (not a robe's hem): only the body's brown took them
+  before, and a plate's greaves kept their steel but for a toe.
+- Check with strong colours (`ruby_gauntlets`, `amethyst_boots`) on every body under no armour, mail, plate
+  and a robe: a glove on each hand that shows, none on a chest, chin or hem; boots whole.
+
 ### Held weapons and item icons
 
 - Item icons are 32 × 32, drawn in `tools/item_art.py`, outlined.
@@ -160,6 +177,12 @@ are the ones to regenerate first, with the user's OK on the cost.
   farther, facing away and walking left. Walking left or right it points up and away; facing you or away it's
   held up nearly upright. Learned 2026-10-22: held sideways from the front, as on the side, looked wrong; moved
   off to the side to keep the face clear, it looked stood behind the hero, not held.
+- The grip is at the hand as the walk sheets draw it, about two thirds of the way down the figure and out
+  at the body's side (`GearArt.hand`, `gear_preview.HAND`; 2026-11-10). At the chest (0.56 to 0.6 down, until
+  0.9.73) the blade lay across the face walking right and came out of the chin walking left, on every body.
+  Check the side views at 6x: no blade over an eye or the mouth.
+- What hangs under the grip trails at the feet, never under them (`GearArt.grip`'s `drop`): the grip is
+  lifted on a short body, so a dwarf's whip doesn't sink into the ground.
 - A whip's lash hangs down from a short handle and trails on the ground by the feet (2026-10-22: held up like a
   sword, a whip read as a stick). Its icon keeps the coil.
 
@@ -183,6 +206,22 @@ python3 tools/check_content.py
   the real game. Read them before calling it done.
 
 ## Learnings
+
+- **2026-11-10 (dyes, how armour fits, the third body):** a dye is a tint of the piece's own shading, not
+  a slab at the dye's brightness (`DyeDef.rule(onto:)`, `tools/dye_art.py`: its middle part of the way down
+  to the piece's own, its lights paling toward the shine, its shadows kept): check a dyed sheet beside the
+  plain one, and that its darkest and lightest are as far apart as they were. How the head meets each
+  armour sheet, measured (the armour's top row against the head layer's last, all 16 frames): within two
+  rows on most, but a race's sheets are cut for one body, so the others float or sink in some frames
+  (the human other facing you, first step: 4 rows of neck; an elf other from behind: 3). Fixed the same
+  day with a sheet per body that needs one (`tools/armour_fit.py`, `<sheet>_fit_<body>`, classes.json
+  `fitted`: the human man and other, the elf other): the armour a little taller in those frames, rows
+  between collar and hands drawn twice (the ones most like the row under them), so one row of neck is
+  left, as most frames have. Two things tried first and dropped: moving the frame up to the head (every
+  armour frame stands on the body's own ground row, so the feet left the ground on that step), and
+  raising only the collar (the pixel under a collar's edge is its dark inside: a black block under the
+  chin). Check `armour_fit.py --report` after any change to a head or a sheet: no frame over one row.
+  Acceptance criteria now cover nine bodies (`gear_preview.BODIES`), not six.
 
 - **2026-11-04 (heroes, a review of every armour on every body, all 16 frames):** the head sits right on
   the armour's collar in most frames; moving it per frame onto the armour figure's own head (found by its

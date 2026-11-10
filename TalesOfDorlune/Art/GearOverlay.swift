@@ -54,13 +54,16 @@ nonisolated struct GearLook: Sendable, Hashable {
 enum GearOverlay {
     /// `piece` is a festive hat's (GearLook.hat), `capePiece` a status cape's and `scarfPiece` a scarf's,
     /// as tools/wear_art.py cut them out: a frame a row, one row for each of `directions`.
+    /// `marks` is where gloves and boots go on the plain body, frame by frame (tools/worn_marks.py).
     nonisolated static func apply(_ gear: GearLook, original: CGImage, dressed: CGImage, skeleton: CGImage? = nil,
-                                  piece: CGImage? = nil, capePiece: CGImage? = nil, scarfPiece: CGImage? = nil, frame: Int = 48,
+                                  marks: CGImage? = nil, piece: CGImage? = nil, capePiece: CGImage? = nil, scarfPiece: CGImage? = nil, frame: Int = 48,
                                   directions: [String] = ["up", "right", "down", "left"]) -> CGImage? {
         guard !gear.isPlain, original.width == dressed.width, original.height == dressed.height,
               let base = Bitmap(original), var out = Bitmap(dressed) else { return dressed }
         var body = base
         if let skeleton, let plain = Bitmap(skeleton), plain.width == base.width, plain.height == base.height { body = plain }
+        var marked: Bitmap? = nil
+        if let marks, let sheet = Bitmap(marks), sheet.width == base.width, sheet.height == base.height { marked = sheet }
         let accent = color(hex: gear.accent) ?? RGB(0.95, 0.78, 0.25)
         var pieces: [Piece] = []
         if let piece, let sheet = Bitmap(piece), sheet.width == frame, sheet.height >= frame * directions.count,
@@ -95,7 +98,7 @@ enum GearOverlay {
             for column in 0..<(base.width / frame) {
                 dress(&out, base: base, origin: (column * frame, row * frame), size: frame, facing: facing, gear: gear, accent: accent)
                 if gear.hood != nil { hood(&out, base: base, origin: (column * frame, row * frame), size: frame, gear: gear) }
-                trinkets(&out, body: body, origin: (column * frame, row * frame), size: frame, facing: facing, gear: gear)
+                trinkets(&out, body: body, marks: marked, origin: (column * frame, row * frame), size: frame, facing: facing, gear: gear)
                 if let colour = color(hex: gear.cloak), row < cloaks.count {
                     drape(&out, base: base, body: body, span: span, origin: (column * frame, row * frame), size: frame,
                           facing: facing, piece: cloaks[row], colour: colour, trim: accent, emblem: false)
@@ -534,8 +537,18 @@ enum GearOverlay {
     /// How many of a hand's last rows gloves take, and the rows of sleeve over it their cuff takes.
     nonisolated private static let gloveRows = 5
     nonisolated private static let gloveCuff = 2
+    /// Boots over armour drawn on a sheet of its own: every pixel of it over the body's boots and a
+    /// pixel round them (`bootReach`), in the boots' rows (`bootRows`), where the figure is no wider than
+    /// `bootSpan` across (two legs, not a robe's hem). tools/gear_preview.py BOOT_ROWS, BOOT_REACH, BOOT_SPAN.
+    nonisolated private static let bootRows = 5
+    nonisolated private static let bootReach = 1
+    nonisolated private static let bootSpan = 9
 
-    nonisolated private static func trinkets(_ out: inout Bitmap, body: Bitmap, origin: (x: Int, y: Int), size: Int,
+    /// `marks`: the body's hands and boots marked frame by frame (tools/worn_marks.py: red a glove, blue
+    /// a boot, the paler of each its band, painted a shade lighter). Found here frame by frame (until
+    /// 0.9.73, and still where a body has no marks) the hands were the patches of skin under the chin:
+    /// none on a body whose hands are white cuffs, a neck or a buckle on others.
+    nonisolated private static func trinkets(_ out: inout Bitmap, body: Bitmap, marks: Bitmap? = nil, origin: (x: Int, y: Int), size: Int,
                                              facing: String, gear: GearLook) {
         let gloves = color(hex: gear.gloves), boots = color(hex: gear.boots), necklace = color(hex: gear.necklace)
         guard gloves != nil || boots != nil || necklace != nil else { return }
@@ -549,7 +562,64 @@ enum GearOverlay {
         }
         let rows = (0..<size).filter { y in (0..<size).contains { opaque($0, y) } }
         guard let top = rows.first, let feet = rows.last, feet - top > 8 else { return }
-        if let boots {
+        if let marks {
+            func mark(_ x: Int, _ y: Int) -> RGB? {
+                guard x >= 0, y >= 0, x < size, y < size, marks.alpha(origin.x + x, origin.y + y) > 0.5 else { return nil }
+                return marks.rgb(origin.x + x, origin.y + y)
+            }
+            func isBoot(_ x: Int, _ y: Int) -> Bool {
+                guard let m = mark(x, y) else { return false }
+                return m.b > m.r
+            }
+            var worn = [Bool](repeating: false, count: size * size)
+            if boots != nil {
+                for y in 0..<size {
+                    for x in 0..<size where isBoot(x, y) { worn[y * size + x] = true }
+                }
+                // Over armour on a sheet of its own: what it drew over the boots and a pixel round them,
+                // where the figure is two legs across, not a robe's hem; never its outline.
+                for y in Swift.max(0, feet - Self.bootRows)...feet {
+                    var x = 0
+                    while x < size {
+                        guard out.alpha(origin.x + x, origin.y + y) > 0.5 else {
+                            x += 1
+                            continue
+                        }
+                        var end = x
+                        while end + 1 < size, out.alpha(origin.x + end + 1, origin.y + y) > 0.5 { end += 1 }
+                        if end - x + 1 <= Self.bootSpan {
+                            for at in x...end {
+                                var near = false
+                                for dy in -Self.bootReach...Self.bootReach {
+                                    for dx in -Self.bootReach...Self.bootReach where isBoot(at + dx, y + dy) { near = true }
+                                }
+                                guard near else { continue }
+                                let drawn = out.rgb(origin.x + at, origin.y + y)
+                                var differs = !opaque(at, y)
+                                if !differs {
+                                    let own = body.rgb(origin.x + at, origin.y + y)
+                                    differs = Swift.max(abs(drawn.r - own.r), abs(drawn.g - own.g), abs(drawn.b - own.b)) > 0.02
+                                }
+                                if differs, hsv(drawn).2 >= 0.25 { worn[y * size + at] = true }
+                            }
+                        }
+                        x = end + 1
+                    }
+                }
+            }
+            for y in 0..<size {
+                for x in 0..<size {
+                    if worn[y * size + x], let boots {
+                        // Its top row a band, a shade lighter.
+                        let band = y == 0 || !worn[(y - 1) * size + x]
+                        paint(x, y, boots, lift: band ? 0.8 : 0.55, gain: 0.9)
+                    } else if let gloves, let m = mark(x, y), m.r >= m.b,
+                              out.alpha(origin.x + x, origin.y + y) > 0.5, hsv(out.rgb(origin.x + x, origin.y + y)).2 >= 0.25 {
+                        paint(x, y, gloves, lift: m.g > 0.25 ? 0.8 : 0.55, gain: 0.9)
+                    }
+                }
+            }
+        } else if let boots {
             for y in max(0, feet - 5)...feet {
                 for x in 0..<size where opaque(x, y) {
                     let (h, s, v) = hsv(body.rgb(origin.x + x, origin.y + y))
@@ -557,7 +627,9 @@ enum GearOverlay {
                 }
             }
         }
-        guard gloves != nil || necklace != nil else { return }
+        // (With marks the gloves are on: only a necklace is left to find a place for.)
+        let findHands = gloves != nil && marks == nil
+        guard findHands || necklace != nil else { return }
         var skin = [Bool](repeating: false, count: size * size)
         for y in 0..<size {
             for x in 0..<size where opaque(x, y) {
@@ -589,7 +661,7 @@ enum GearOverlay {
         // the feet (playtesting 2026-10-31: "the gloves should change the color of the hero a bit more,
         // similar to the boots": a human's hand is two pixels of skin, and they took only that, faintly).
         // tools/gear_preview.py `trinkets` (GLOVE_ROWS, GLOVE_CUFF, GLOVE_TONE).
-        if let gloves {
+        if let gloves, findHands {
             let knees = Double(top) + 0.7 * Double(feet - top)
             for (index, cells) in patches.enumerated() where index != face {
                 // A hand: under the chin (not a sliver of the jaw seen from the side) and above the knees

@@ -40,6 +40,9 @@ SPRITES = os.path.join(ROOT, "art", "sprites")
 DIRS = ["up", "right", "down", "left"]  # every walk sheet's rows, top to bottom
 FRAME = 48
 EYES = json.load(open(os.path.join(ROOT, "art", "eyes.json")))
+# The bodies with armour sheets fitted to them (classes.json `fitted`, tools/armour_fit.py).
+FITTED = {body for race in json.load(open(os.path.join(ROOT, "content", "classes.json")))["races"]
+          for body in race.get("fitted") or []}
 SHEETS, PICTURES = EYES["sheets"], EYES["pictures"]
 SKIPPED = EYES.get("skipped", {})
 ASSETS = {a["id"]: a for a in json.load(open(os.path.join(ROOT, "art", "assets.json")))["assets"]}
@@ -240,7 +243,10 @@ def hero_stacks():
         styles = sorted({os.path.basename(p)[5:-4][: -len(body) - 1] for p in glob.glob(f"{SPRITES}/hair_*_{body}.png")})
         styles = [s for s in styles if png(f"hair_{s}_{body}")]
         kinds = sorted({os.path.basename(p)[4:-4].rsplit("_", 1)[0] for p in glob.glob(f"{SPRITES}/hat_*_{race}.png")})
-        armours = sorted({os.path.basename(p)[6:-4].rsplit("_", 1)[0] for p in glob.glob(f"{SPRITES}/armor_*_{race}.png")})
+        armours = sorted({os.path.basename(p)[6:-4].rsplit("_", 1)[0] for p in glob.glob(f"{SPRITES}/armor_*_{race}.png")
+                          if "_fit_" not in os.path.basename(p)})
+        # A body the race's sheets are fitted to wears its own (tools/armour_fit.py, GameSession.layers).
+        fit = f"_fit_{body}" if body in FITTED else ""
         for s in styles:
             top = [f"locks_{body}", f"hair_{s}_{body}"]
             stacks.append((f"{body}/{s}/plain", ["body_" + body] + top))
@@ -249,7 +255,7 @@ def hero_stacks():
                 stacks.append((f"{body}/{s}/helmet {k}",
                                [f"nape_{s}_{body}", "body_" + body, f"napeback_{s}_{body}", f"hat_{k}_{race}", f"locks_{body}"]))
             for a in armours:
-                stacks.append((f"{body}/{s}/armour {a}", [f"armor_{a}_{race}", "head_" + body] + top))
+                stacks.append((f"{body}/{s}/armour {a}", [f"armor_{a}_{race}{fit}", "head_" + body] + top))
     # A layer a hero doesn't have (no locks for a beardless body) is left out, as the game's are.
     return [(n, [l for l in ls if png(l) is not None]) for n, ls in stacks]
 
