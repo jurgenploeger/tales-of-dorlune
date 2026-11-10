@@ -93,6 +93,8 @@ enum HUDStyle {
                  Color.adaptive(light: glassFootLight.opacity(0.95), dark: glassFootDark.opacity(0.96))],
         startPoint: .top, endPoint: .bottom
     )
+    /// The glass at a window's top, solid: the tab you're on (`PageTabs`) is the window's own glass.
+    static let glassTop = Color.adaptive(light: glassTopLight, dark: glassTopDark)
     private static let glassTopLight = Color(red: 0.13, green: 0.32, blue: 0.56)
     private static let glassTopDark = Color(red: 0.07, green: 0.15, blue: 0.28)
     private static let glassFootLight = Color(red: 0.05, green: 0.17, blue: 0.35)
@@ -235,26 +237,36 @@ struct GlossyBar: View {
 struct WindowTitle: View {
     let title: String
     var onClose: (() -> Void)?
-    /// A few words after the title, smaller and dimmer ("Inventory 5/50").
+    /// A few words after the title, smaller and dimmer ("Inventory 5/50"), in `detailTint` (else a
+    /// soft white on the bar, the HUD's dim off it).
     var detail: String?
-    var detailTint: Color = HUDStyle.dim
+    var detailTint: Color?
+    /// On the window's title bar (`WindowBar`), white, as every window's is; off for a title laid over
+    /// something else (the world map's, over its atlas), gold as before.
+    var bar = true
+    /// Room kept clear at the title's right, under the bar (the character a speech window's stands by).
+    var trailingRoom: CGFloat = 0
 
-    init(_ title: String, detail: String? = nil, detailTint: Color = HUDStyle.dim, onClose: (() -> Void)? = nil) {
+    init(_ title: String, detail: String? = nil, detailTint: Color? = nil, bar: Bool = true, trailingRoom: CGFloat = 0,
+         onClose: (() -> Void)? = nil) {
         self.title = title
         self.detail = detail
         self.detailTint = detailTint
+        self.bar = bar
+        self.trailingRoom = trailingRoom
         self.onClose = onClose
     }
 
     private var text: Text {
         guard let detail else { return Text(title) }
-        return Text(title) + Text("  " + detail).font(HUDStyle.font(13)).foregroundStyle(detailTint)
+        let tint = detailTint ?? (bar ? Color.white.opacity(0.85) : HUDStyle.dim)
+        return Text(title) + Text("  " + detail).font(HUDStyle.font(13)).foregroundStyle(tint)
     }
 
     var body: some View {
         text
-            .font(HUDStyle.font(18))
-            .foregroundStyle(HUDStyle.gold)
+            .font(HUDStyle.font(bar ? 17 : 18))
+            .foregroundStyle(bar ? Color.white : HUDStyle.gold)
             .shadow(color: HUDStyle.frameDark, radius: 0, x: 1, y: 1)
             .lineLimit(2)
             .minimumScaleFactor(0.8)
@@ -263,10 +275,31 @@ struct WindowTitle: View {
             .padding(.leading, 16)
             // The close button sits over the window's corner (playtesting 2026-10-25: "Put all the
             // close buttons overlayed top right of the modals"): its room kept clear here.
-            .padding(.trailing, OrangeCloseButton.room + 8)
-            .padding(.top, 14)
+            .padding(.trailing, OrangeCloseButton.room + 8 + trailingRoom)
+            .padding(.top, bar ? 10 : 14)
+            .padding(.bottom, bar ? 10 : 0)
+            .background { if bar { WindowBar() } }
             .accessibilityAddTraits(.isHeader)
             .preference(key: WindowCloseKey.self, value: onClose.map { WindowCloseKey.Action(run: $0) })
+    }
+}
+
+/// A window's title bar, along its top out to the frame: the frame's own glossy light-blue bevel, a
+/// dark line under it (Figma's `UI / Window`; the user, 2026-11-10: "We can have the title bars with
+/// the tabs"). A window's name sits on it in white (`WindowTitle`), or its pages' tabs (`PageTabs`).
+struct WindowBar: View {
+    var body: some View {
+        HUDStyle.bevel
+            .overlay(alignment: .bottom) { HUDStyle.frameDark.opacity(0.85).frame(height: 1) }
+    }
+}
+
+extension View {
+    /// A row on a card of its own, a shade lighter than the glass (a friend, something a shop sells):
+    /// a list's rows read apart, each one thing to tap.
+    func rowCard() -> some View {
+        padding(8)
+            .background(RoundedRectangle(cornerRadius: 8).fill(.white.opacity(0.05)))
     }
 }
 

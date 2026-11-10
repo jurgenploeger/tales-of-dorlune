@@ -37,6 +37,13 @@ glass (`HUDStyle.glass`) in the same glossy light-blue bevel (`HUDStyle.frame`),
 continuous corners (at 10 "everything felt too sharp", 2026-10-26), a soft shadow under it. Build every
 modal with `.gameWindow()`, never a background of its own.
 
+**Every window has a title bar** (`WindowBar`, since 0.9.74; the user, 2026-11-10: "We can have the title
+bars with the tabs"): the frame's own bevel along the window's top, out to the frame, as Figma's `UI /
+Window` has it. On it, the window's name in white with a hard dark shadow (`WindowTitle`), or its pages'
+tabs (`PageTabs`). Put the title or tabs first in the window's `VStack(spacing: 0)`, flush to its top, with
+no padding round them, or the bar stops short. Only a title laid over something else (the world map's,
+over its atlas) goes without (`bar: false`, gold).
+
 **The close button is always orange and always over the top-right corner** (`windowCloseButton`, or a
 `WindowTitle` with `onClose`), hanging 9 pt past it (2026-10-25: "Put all the close buttons overlayed top
 right of the modals"). Keep `OrangeCloseButton.room` clear along the top. Orange means closing, losses and
@@ -61,10 +68,19 @@ vector glyphs below that.
 
 **Tabs** (`PageTabs`): a window's pages' names and nothing else, in full, never truncated; the row scrolls
 sideways when they don't fit (2026-10-26: "The tabs don't need icons and shouldn't get truncated. If it
-doesn't fit, there should just be a horizontal scroll"). The one you're on is the gold capsule; one with
-something waiting wears the gold dot. Each of Character, Companions, Friends, Bag, Quests and Settings is
+doesn't fit, there should just be a horizontal scroll"). They're folder tabs standing on the title bar:
+the one you're on is the window's own glass (`HUDStyle.glassTop`) with its name in gold, joined to the page
+under it; the others are sunk into the bar, white. One with something waiting wears the gold dot. Each of Character, Companions, Friends, Bag, Quests and Settings is
 a window of its own, opened from the HUD menu (2026-10-25: "The menu items hero etc should become their
 own modal window"), so a window's tabs are its own pages, never the other windows.
+
+**Rows sit on cards** (`rowCard()`): anything in a list you can tap or act on (a friend, something a shop
+sells) is a row on its own slightly lighter card, so a long list reads as separate things. A control that
+can't be used says why beside it, in orange (a price you can't pay: "Need 30 more gold"), never just grey.
+
+**A window over a window hides what's under it** where both would show through each other (the dye window
+over a speech window: its close button and Dye gear button showed round it, until 0.9.74). A card over a
+menu window is fine: the menu is a backdrop.
 
 **Fits a phone held either way.** Every window fits portrait and landscape; the part that scrolls gives way
 first (`FitOrScroll`, a `ScrollView` under fixed tabs and title). Menu windows are as big as the HUD's
@@ -116,7 +132,8 @@ Russian too; Chinese, Japanese and Korean shorter but taller. Never fix a width 
 A UI change ships when every line holds, in portrait and landscape, light and dark, in English and the
 longest translation (usually German):
 
-- It uses `gameWindow()`, the orange close button over the corner, `PageTabs` for pages,
+- It uses `gameWindow()`, a title bar with `WindowTitle` or `PageTabs` flush at its top, the orange close
+  button over the corner, `rowCard()` for list rows,
   `PixelButtonStyle` / `FLIconButton` for buttons, `SectionTitle` for sections, `EmptyNote` for nothing.
 - Colours only from `HUDStyle`; no brand sky, midnight or Luckiest Guy inside a window.
 - Text 10 pt or more, cream on glass, gold headings; dark ink only on light faces.
@@ -135,3 +152,9 @@ Add what each UI change teaches, dated, with the case and what to do instead.
 
 - 2026-11-10: the screenshots branch's scenes from before the workflow came back (the newest 2026-11-01)
   predate 0.9.72's bigger, cleaner windows and per-window menus: don't use them for how the game looks now.
+- 2026-11-10: Figma's `UI / Window` had a bevelled title bar the code had dropped for a gold title on the
+  glass; the user chose the bar, with the tabs on it (0.9.74). Figma's page still lacks the folder tabs and
+  `rowCard`: add them when the file is next open.
+- 2026-11-10: fresh shots (0.9.73) showed a first mock-up's "now" was wrong: Friends and Settings rows
+  were already on cards. Six real findings came from the shots instead (rows not alike, a grey price with
+  no reason, a window showing under another, empty glass, the speech window a strip, the bar). Shoot first.
