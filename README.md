@@ -87,10 +87,11 @@ The app icon and title logo come from the Figma file and live in `TalesOfDorlune
 
 ## Screenshots
 
-`tools/screenshots.sh <simulator-udid> <path/to/TalesOfDorlune.app> <out-dir>` opens each scene in
-`tools/screenshots.txt` with the debug shortcuts below in a booted simulator and saves a screenshot of each
-(macOS only). The GitHub Action that did this for every `claude/**` branch was removed on 2026-11-01 to save
-Actions minutes; the images it took stay on the `screenshots` branch.
+The **Screenshots** GitHub Action (run by hand: Actions → Screenshots → Run workflow) builds the app for the
+iOS Simulator on a macOS runner, runs the tests and opens each scene you name from `tools/screenshots.txt`
+with the debug shortcuts below, saving the images to the `screenshots` branch in a folder named after the
+branch. It no longer runs on pushes (it did until 2026-11-01). On a Mac,
+`tools/screenshots.sh <simulator-udid> <path/to/TalesOfDorlune.app> <out-dir>` does the same in a booted simulator.
 
 ## Debug shortcuts
 

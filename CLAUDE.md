@@ -284,7 +284,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
 ## Rules
 - **Cloud sessions (Linux) can't build or run the app.** After editing `content/` or `art/assets.json`, run
   `python3 tools/check_content.py`. Keep Swift edits small and careful: nothing compiles a `claude/**`
-  branch any more, only `.github/workflows/testflight.yml` after a push to `main`, so a mistake fails that
+  branch by itself (a Screenshots run by hand does, below), only `.github/workflows/testflight.yml` after a push to `main`, so a mistake fails that
   TestFlight build (Xcode Cloud isn't used: its GitHub app was uninstalled on 2026-10-23). Read every
   changed line for what the compiler would catch (a name renamed in one place and not another broke 0.9.42).
 - **Never redraw Retro Diffusion's art in code** (the user, 2026-10-24: "that's actually really good"). Every
@@ -305,11 +305,16 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   (the checker enforces it). What's new sums up big updates, not every patch: one entry per update with at most
   five short lines (the checker enforces it). A small user-visible change moves the top entry's `version` and
   `date` along and folds into its lines; start a new entry only for a big update. 1.0.0 = App Store launch.
-- **Screenshots and tests:** there's no CI for them (the user, 2026-11-01: the Screenshots workflow "keeps
-  eating all our minutes"; it was removed). On a Mac, `xcodebuild test` runs the unit tests and
-  `tools/screenshots.sh` shoots the scenes in `tools/screenshots.txt` (TALES_OF_DORLUNE_DEBUG flags) in a
-  simulator. From a cloud session nothing can be seen running: say plainly what hasn't been tested or seen.
-  The old shots stay on the `screenshots` branch (`git fetch origin screenshots`). Never add a workflow that
-  runs on pushes without the user's say.
+- **Screenshots and tests:** `.github/workflows/screenshots.yml` runs **by hand only** (`workflow_dispatch`,
+  on any branch: the GitHub MCP's `actions_run_trigger` with `run_workflow`, workflow `screenshots.yml`, the
+  branch as `ref` and inputs `run` (tests, screenshots or both) and `scenes`, comma-separated names from
+  `tools/screenshots.txt`). It builds for the simulator, runs the unit tests and shoots the scenes it names
+  (TALES_OF_DORLUNE_DEBUG flags), publishing them to the `screenshots` branch under `<branch>/`: fetch with
+  `git fetch --depth=1 --filter=blob:none origin screenshots`, then `git show origin/screenshots:<branch>/<scene>.png`.
+  Name the few scenes you need: all of them take two and a half hours. It ran on every push until the user
+  removed it (2026-11-01: it "keeps eating all our minutes", the repository was private); back by hand
+  since 2026-11-10, the repository public and macOS runners free. Never make it, or any workflow, run on
+  pushes without the user's say. On a Mac, `xcodebuild test` and `tools/screenshots.sh` do the same.
+  Say plainly what hasn't been tested or seen.
 - On a Mac: `make open` or `make sim`; tests with `xcodebuild test` (see README). Tests and debug launches use
   separate save files, so they never touch the player's save.
