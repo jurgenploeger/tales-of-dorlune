@@ -35,6 +35,9 @@ nonisolated struct RecolorRule: Decodable, Sendable {
     /// ramp round its own colour (`DyeDef.rule(onto:)`), however pale or dark the material was.
     var saturationOffset: Double? = nil
     var valueOffset: Double? = nil
+    /// [from, to, keep]: the saturation falls to `keep` of itself as the new brightness goes from `from`
+    /// to `to`, so a dyed piece's lights pale toward its shine (`DyeDef.rule(onto:)`).
+    var fade: [Double]? = nil
 
     func matches(hue h: Double, saturation s: Double, value v: Double) -> Bool {
         guard s >= (minSaturation ?? 0.15), s <= (maxSaturation ?? 1), v >= (minValue ?? 0), v <= (maxValue ?? 1) else { return false }
@@ -56,7 +59,7 @@ nonisolated struct RecolorRule: Decodable, Sendable {
         RecolorRule(hue: window.hue, minSaturation: window.minSaturation, maxSaturation: window.maxSaturation,
                     minValue: window.minValue, maxValue: window.maxValue,
                     to: to, shift: shift, spread: spread, saturation: saturation, value: value,
-                    saturationOffset: saturationOffset, valueOffset: valueOffset)
+                    saturationOffset: saturationOffset, valueOffset: valueOffset, fade: fade)
     }
 }
 
@@ -108,6 +111,9 @@ enum Recolor {
             if h < 0 { h += 360 }
             s = min(1, max(0, s * (rule.saturation ?? 1) + (rule.saturationOffset ?? 0)))
             v = min(1, max(0, v * (rule.value ?? 1) + (rule.valueOffset ?? 0)))
+            if let fade = rule.fade, fade.count == 3 {
+                s *= 1 - (1 - fade[2]) * min(1, max(0, (v - fade[0]) / max(0.01, fade[1] - fade[0])))
+            }
             let (nr, ng, nb) = rgb(h, s, v)
             pixels[index] = UInt8(max(0, min(255, (nr * alpha).rounded())))
             pixels[index + 1] = UInt8(max(0, min(255, (ng * alpha).rounded())))
