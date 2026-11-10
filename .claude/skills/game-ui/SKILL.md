@@ -90,11 +90,11 @@ Russian too; Chinese, Japanese and Korean shorter but taller. Never fix a width 
 
 ## Making a change
 
-1. **Look at what's there first.** From a cloud session nothing runs: the latest screenshots of the real
-   game are on the `screenshots` branch (`git fetch --depth=1 --filter=blob:none origin screenshots`, then
-   `git show origin/screenshots:<dir>/<scene>.png > file`; `main/` and each `claude/<branch>/`, the newest
-   from 2026-11-01, so older than 0.9.72's windows: say so when you use them). Ask the user for a
-   screenshot from TestFlight when it matters. On a Mac session, the Xcode plugin (`/plugin install
+1. **Look at what's there first, as it is today.** Run the Screenshots workflow by hand for the scenes the
+   change touches, on your branch (CLAUDE.md *Screenshots and tests*), and read them; never design from
+   old shots (2026-11-10: a first mock-up was drawn from shots ten days and two redesigns old, and the user
+   had to point it out). Add a scene to `tools/screenshots.txt` when none shows the screen. After the
+   change, run the same scenes again and show both. On a Mac session, the Xcode plugin (`/plugin install
    xcode@claude-plugins-official`) builds, renders previews and drives a simulator: use it.
 2. **Find references.** Fairyland Online itself first (docs/fairyland-online.md), then games of its kind
    (cosy MMOs and RPGs on iOS). Mobbin (`mobbin:search`) has real apps' screens but few games, and its
@@ -133,5 +133,5 @@ longest translation (usually German):
 
 Add what each UI change teaches, dated, with the case and what to do instead.
 
-- 2026-11-10: the screenshots branch's newest scenes (2026-11-01) predate 0.9.72's bigger, cleaner windows
-  and per-window menus: what they show of tabs and menu windows is out of date.
+- 2026-11-10: the screenshots branch's scenes from before the workflow came back (the newest 2026-11-01)
+  predate 0.9.72's bigger, cleaner windows and per-window menus: don't use them for how the game looks now.
