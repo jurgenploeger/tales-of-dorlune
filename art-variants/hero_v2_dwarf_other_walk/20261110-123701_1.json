@@ -1,0 +1,27 @@
+{
+  "request": {
+    "prompt": "cute chibi androgynous dwarf adventurer kid, very short and chubby with a round belly and short legs, round rosy cheeks, no beard, big head, big round eyes, thick dark outline, short tousled ginger hair, plain bright green tunic, brown belt, brown boots",
+    "prompt_style": "rd_animation__four_angle_walking",
+    "width": 48,
+    "height": 48,
+    "return_spritesheet": true,
+    "num_images": 1
+  },
+  "result": {
+    "created_at": 1794314219,
+    "credit_cost": 10,
+    "balance_cost": 0.07,
+    "output_urls": [],
+    "model": "rd_plus",
+    "remaining_credits": 0,
+    "remaining_balance": 7.851,
+    "request_id": "cedfc239-8daa-4cba-a25e-4b50d3e767b6",
+    "outputs_retained_until": 1794400611,
+    "billing": {
+      "reason": "no_plan",
+      "source": "balance",
+      "balance_left": 7.851,
+      "balance_charged": 0.07
+    }
+  }
+}

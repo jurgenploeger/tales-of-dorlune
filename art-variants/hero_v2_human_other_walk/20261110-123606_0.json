@@ -1,0 +1,27 @@
+{
+  "request": {
+    "prompt": "cute chibi androgynous human adventurer kid, big head, big round eyes, thick dark outline, short fluffy orange bob haircut, plain bright green tunic, brown belt, brown boots",
+    "prompt_style": "rd_animation__four_angle_walking",
+    "width": 48,
+    "height": 48,
+    "return_spritesheet": true,
+    "num_images": 1
+  },
+  "result": {
+    "created_at": 1794314164,
+    "credit_cost": 10,
+    "balance_cost": 0.07,
+    "output_urls": [],
+    "model": "rd_plus",
+    "remaining_credits": 0,
+    "remaining_balance": 9.251,
+    "request_id": "dc750621-ec51-4a19-9c2a-eb12279250d9",
+    "outputs_retained_until": 1794400559,
+    "billing": {
+      "reason": "no_plan",
+      "source": "balance",
+      "balance_left": 9.251,
+      "balance_charged": 0.07
+    }
+  }
+}
