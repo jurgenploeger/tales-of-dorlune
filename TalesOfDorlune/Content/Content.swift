@@ -112,6 +112,9 @@ nonisolated struct RaceDef: Decodable, Identifiable, Sendable {
     let art: String?
     /// Gender id → its own walk sheet; genders without one use `art`.
     let sheets: [String: String]?
+    /// The bodies ("human", "human_other": `GameSession.body`) whose head this race's armour sheets
+    /// don't reach in some frames, each with sheets of its own ("<sheet>_fit_<body>", tools/armour_fit.py).
+    var fitted: [String]? = nil
     /// The hairstyle a hero of this race starts with (an AppearanceOptions `styles` id).
     let hair: String?
 

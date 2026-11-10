@@ -213,9 +213,15 @@ python3 tools/check_content.py
   plain one, and that its darkest and lightest are as far apart as they were. How the head meets each
   armour sheet, measured (the armour's top row against the head layer's last, all 16 frames): within two
   rows on most, but a race's sheets are cut for one body, so the others float or sink in some frames
-  (the human other facing you, first step: 4 rows of neck; an elf other from behind: 3). The fix that
-  would hold is an armour sheet per body, each frame moved to that body's neck; not done yet. Acceptance
-  criteria now cover nine bodies (`gear_preview.BODIES`), not six.
+  (the human other facing you, first step: 4 rows of neck; an elf other from behind: 3). Fixed the same
+  day with a sheet per body that needs one (`tools/armour_fit.py`, `<sheet>_fit_<body>`, classes.json
+  `fitted`: the human man and other, the elf other): the armour a little taller in those frames, rows
+  between collar and hands drawn twice (the ones most like the row under them), so one row of neck is
+  left, as most frames have. Two things tried first and dropped: moving the frame up to the head (every
+  armour frame stands on the body's own ground row, so the feet left the ground on that step), and
+  raising only the collar (the pixel under a collar's edge is its dark inside: a black block under the
+  chin). Check `armour_fit.py --report` after any change to a head or a sheet: no frame over one row.
+  Acceptance criteria now cover nine bodies (`gear_preview.BODIES`), not six.
 
 - **2026-11-04 (heroes, a review of every armour on every body, all 16 frames):** the head sits right on
   the armour's collar in most frames; moving it per frame onto the armour figure's own head (found by its

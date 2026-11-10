@@ -1099,6 +1099,16 @@ struct LookTests {
         // The third gender has a sheet of its own in every race (back since 0.9.73).
         #expect(content.race("elf").sheet(for: "other") == "elf_other_walk")
         #expect(GameSession.body(race: content.race("dwarf"), look: Look(hair: "ginger", outfit: "green", skin: "fair", gender: "other")) == "dwarf_other")
+        // A body its race's armour sheets don't reach wears sheets fitted to it (tools/armour_fit.py).
+        let plate = content.item("iron_plate")
+        for race in content.races {
+            for body in race.fitted ?? [] {
+                guard let sheet = plate?.sheets?[race.id] else { continue }
+                #expect(ArtLibrary.shared.artImage("\(sheet)_fit_\(body)") != nil, "art/sprites/\(sheet)_fit_\(body).png is missing")
+            }
+        }
+        let other = Look(hair: "ginger", outfit: "green", skin: "fair", gender: "other")
+        #expect(GameSession.layers(race: content.race("human"), look: other, armor: plate).contains { $0.id == "armor_iron_plate_human_fit_human_other" })
     }
 
     @Test func anyoneCanWearTheOtherGendersHair() {

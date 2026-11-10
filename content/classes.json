@@ -19,6 +19,7 @@
         "female": "human_female_walk",
         "other": "human_other_walk"
       },
+      "fitted": ["human", "human_other"],
       "hair": "spiky"
     },
     {
@@ -38,6 +39,7 @@
         "male": "elf_male_walk",
         "other": "elf_other_walk"
       },
+      "fitted": ["elf_other"],
       "hair": "long"
     },
     {

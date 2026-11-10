@@ -240,6 +240,14 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   `GearOverlay.trinkets` and `tools/gear_preview.py` paint; found as skin while dressing, a body with white
   cuffs took no gloves and a neck took them as a bib. Rerun it after `hero_layers.py` changes a body;
   `--sheet out.png` shows the marks on every frame.
+- `tools/armour_fit.py`: armour sheets fitted to the bodies a race's own sheet doesn't reach. A race's sheet
+  is worn by its three bodies under each one's own head; where a body's head ends two rows or more above the
+  collar in a frame, that body gets every sheet of its race again (`<sheet>_fit_<body>.png`, and `_trim`), the
+  armour a little taller in that frame: rows between collar and hands drawn twice, so the shoulders meet the
+  head and feet, legs and hands stay put. classes.json lists the bodies (a race's `fitted`), which
+  `GameSession.layers`, `gear_preview.py` and `eyes.py` read. Never move a frame up (the feet leave the
+  ground) or raise only the collar (a dark block under the chin). Rerun after `wear_art.py`, `hero_layers.py`
+  or `dye_art.py cut`; `--report` lists the bare neck rows, `--sheet out.png` shows before and after.
 - `tools/wear_art.py`: worn gear from Retro Diffusion sheets in `art-variants/` (picked by hand, its `ARMOUR` and
   `WEAR`; sheets older than these notes in `art-variants/legacy/`), fixed in code: every armour walk sheet
   (`armor_<item>_<race>`, items.json `sheets`) with its main material brought to one colour on every race

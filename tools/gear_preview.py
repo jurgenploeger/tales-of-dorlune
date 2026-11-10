@@ -1160,6 +1160,12 @@ def dressed(race, body, style, armour=None, worn=(), skin=None):
             img.alpha_composite(Image.fromarray((np.clip(layer, 0, 1) * 255).round().astype(np.uint8), "RGBA"))
         return array(img)
     sheet = (armour or {}).get("sheets", {}).get(race)
+    # The sheet fitted to this body, where the race's doesn't reach its head (classes.json `fitted`,
+    # tools/armour_fit.py; GameSession.layers).
+    fitted = next((r.get("fitted") or [] for r in json.load(open(sprites.parent.parent / "content" / "classes.json"))["races"]
+                   if r["id"] == race), [])
+    if sheet and body in fitted:
+        sheet = f"{sheet}_fit_{body}"
     # On the head (GameSession.layers): a festive hat sits on the hair (`hat`, below); one that goes
     # with an armour (`headgear`) takes the hair's place: a sheet's cut-off head over the hair below
     # it (nape_*), the beard on top, or a hide cloak's hood, painted in its colour (`hood`).

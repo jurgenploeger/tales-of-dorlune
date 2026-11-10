@@ -365,9 +365,13 @@ final class GameSession {
                 top = worn + [locks]
             }
         }
-        if let sheet = armor?.sheets?[race.id] {
+        if let base = armor?.sheets?[race.id] {
+            // The race's sheet, or the one fitted to this body where its head sits higher than the
+            // race's collar in some frames (`RaceDef.fitted`, tools/armour_fit.py: the armour a little
+            // taller there, so the shoulders meet the head). Its dyes are the race's sheet's.
+            let sheet = race.fitted?.contains(body) == true ? "\(base)_fit_\(body)" : base
             var worn = [ArtLayer(id: sheet)]
-            if let trim = armor?.trimLayer(over: sheet) { worn.append(trim) }
+            if let trim = armor?.trimLayer(over: base) { worn.append(ArtLayer(id: sheet + "_trim", recolor: trim.recolor)) }
             // Its head is cut off: the hero's own over it, in their skin tone, and their neck under it
             // (`neck_<body>`, tools/wear_art.py necks): a race's sheets are cut at its highest neck, so
             // where a body's chin sits higher than the collar the neck shows, not the ground under a
