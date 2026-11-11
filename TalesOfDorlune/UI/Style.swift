@@ -87,6 +87,18 @@ enum HUDStyle {
 
     static let bevel = LinearGradient(colors: [frameLight, frameMid, frameDark], startPoint: .top, endPoint: .bottom)
 
+    /// A window's title bar (`WindowBar`): the bevel's light half only, so its foot stays clear of the
+    /// glass under it (the user, 2026-11-11: "make the gradient less dark at the bottom, because now
+    /// it almost looks like it merges with the darker bg below"). Ending in the bevel's dark, it was
+    /// 1.1 : 1 against the glass's top; ending in its middle blue, 4.2 : 1.
+    static let barGradient = LinearGradient(colors: [frameLight, frameMid], startPoint: .top, endPoint: .bottom)
+    /// Lettering on the title bar: dark ink on its light blue (7.5 : 1 or more; white was 1.1 : 1 at
+    /// its top, under the 3 : 1 large text needs, WCAG 1.4.3: "when the header just has a white
+    /// title, the contrast is not enough"); white in Dark Mode, where the bar is a deeper blue.
+    static let barText = Color.adaptive(light: ink, dark: .white)
+    /// Its 1-point shadow: a pale highlight under dark ink (pressed into the bar), a dark one under white.
+    static let barTextShadow = Color.adaptive(light: .white.opacity(0.55), dark: frameDark)
+
     /// The deep-blue glass of the windows (deeper still, nearly midnight, in Dark Mode).
     static let glass = LinearGradient(
         colors: [Color.adaptive(light: glassTopLight.opacity(0.93), dark: glassTopDark.opacity(0.95)),
@@ -259,15 +271,15 @@ struct WindowTitle: View {
 
     private var text: Text {
         guard let detail else { return Text(title) }
-        let tint = detailTint ?? (bar ? Color.white.opacity(0.85) : HUDStyle.dim)
+        let tint = detailTint ?? (bar ? HUDStyle.barText.opacity(0.75) : HUDStyle.dim)
         return Text(title) + Text("  " + detail).font(HUDStyle.font(13)).foregroundStyle(tint)
     }
 
     var body: some View {
         text
             .font(HUDStyle.font(bar ? 17 : 18))
-            .foregroundStyle(bar ? Color.white : HUDStyle.gold)
-            .shadow(color: HUDStyle.frameDark, radius: 0, x: 1, y: 1)
+            .foregroundStyle(bar ? HUDStyle.barText : HUDStyle.gold)
+            .shadow(color: bar ? HUDStyle.barTextShadow : HUDStyle.frameDark, radius: 0, x: 0, y: 1)
             .lineLimit(2)
             .minimumScaleFactor(0.8)
             .fixedSize(horizontal: false, vertical: true)
@@ -289,7 +301,7 @@ struct WindowTitle: View {
 /// the tabs"). A window's name sits on it in white (`WindowTitle`), or its pages' tabs (`PageTabs`).
 struct WindowBar: View {
     var body: some View {
-        HUDStyle.bevel
+        HUDStyle.barGradient
             .overlay(alignment: .bottom) { HUDStyle.frameDark.opacity(0.85).frame(height: 1) }
     }
 }

@@ -296,8 +296,10 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
                 .font(HUDStyle.font(13))
                 .lineLimit(1)
                 .fixedSize()
-                .foregroundStyle(selected ? HUDStyle.gold : Color.white)
-                .shadow(color: HUDStyle.frameDark.opacity(selected ? 0 : 1), radius: 0, x: 1, y: 1)
+                // The one you're on in gold on the glass; the others in the title bar's lettering
+                // (`HUDStyle.barText`), readable on its light blue.
+                .foregroundStyle(selected ? HUDStyle.gold : HUDStyle.barText)
+                .shadow(color: selected ? .clear : HUDStyle.barTextShadow, radius: 0, x: 0, y: 1)
                 .padding(.horizontal, 13)
                 .padding(.vertical, selected ? 9 : 7)
                 .background {

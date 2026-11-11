@@ -39,7 +39,9 @@ modal with `.gameWindow()`, never a background of its own.
 
 **Every window has a title bar** (`WindowBar`, since 0.9.74; the user, 2026-11-10: "We can have the title
 bars with the tabs"): the frame's own bevel along the window's top, out to the frame, as Figma's `UI /
-Window` has it. On it, the window's name in white with a hard dark shadow (`WindowTitle`), or its pages'
+Window` has it. On it, the window's name in dark ink (`HUDStyle.barText`, white in Dark Mode; white on the light bar was
+1.1 : 1, 2026-11-11) with a pale 1-point highlight (`WindowTitle`), on the bevel's light half only
+(`HUDStyle.barGradient`: ending in its dark it merged with the glass under it), or its pages'
 tabs (`PageTabs`). Put the title or tabs first in the window's `VStack(spacing: 0)`, flush to its top, with
 no padding round them, or the bar stops short. The world map too, its atlas under the bar (0.9.76; the
 user: "update the map with the new modal header"); `bar: false` (gold, no bar) is for a title laid
@@ -49,6 +51,11 @@ over a picture, which nothing now is.
 `WindowTitle` with `onClose`), hanging 9 pt past it (2026-10-25: "Put all the close buttons overlayed top
 right of the modals"). Keep `OrangeCloseButton.room` clear along the top. Orange means closing, losses and
 warnings, nothing else.
+
+**Contrast.** Text at least 4.5 : 1 against what's behind it, 3 : 1 for large bold text (14 pt bold and
+up: titles), WCAG 1.4.3; a 1-point shadow doesn't count toward it. Measure it (relative luminance) for
+any text on a gradient at the gradient's worst point, and in both looks. Neighbouring surfaces (a bar
+and the glass under it) at least 3 : 1 apart, or a line between them, or they merge.
 
 **Colour on glass.** Text cream (`HUDStyle.cream`); headings and the tab you're on gold (`gold`); minor text
 `dim`; good news and bonuses `green`; dark ink (`ink`) only on light buttons, plates and the gold tab. The
@@ -75,7 +82,7 @@ chips, swatches, hairstyles) is a `SideScroll`, never a bare `ScrollView(.horizo
 the one you're on is the window's own glass (`HUDStyle.glassTop`) with its name in gold, joined to the page
 under it, its foot flaring out into the bar in corners rounded the other way (`FlaredTab`, the user,
 2026-11-11); their top corners concentric with the window's (`TabEdge.radius`: the window's 22 less the
-tabs' 10-point inset from its top and side; the user, 2026-11-11); the others are sunk into the bar, white. One with something waiting wears the gold dot. Each of Character, Companions, Friends, Bag, Quests and Settings is
+tabs' 10-point inset from its top and side; the user, 2026-11-11); the others are sunk into the bar, their names in the bar's ink. One with something waiting wears the gold dot. Each of Character, Companions, Friends, Bag, Quests and Settings is
 a window of its own, opened from the HUD menu (2026-10-25: "The menu items hero etc should become their
 own modal window"), so a window's tabs are its own pages, never the other windows.
 
