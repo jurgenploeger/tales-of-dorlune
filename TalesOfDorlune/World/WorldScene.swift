@@ -614,7 +614,7 @@ final class WorldScene: SKScene {
         for row in 0..<map.rows {
             for col in 0..<map.columns {
                 let cell = GridPoint(col: col, row: row)
-                guard map.isCountryside(cell), let side = seam.side(cell), side < Seam.blend + 1 else { continue }
+                guard map.isCountryside(cell), let side = seam.side(cell), side < seam.width + 1 else { continue }
                 low = GridPoint(col: min(low.col, col), row: min(low.row, row))
                 high = GridPoint(col: max(high.col, col), row: max(high.row, row))
             }
@@ -649,7 +649,7 @@ final class WorldScene: SKScene {
                 let cell = GridPoint(col: Int(gx.rounded(.down)), row: Int(gy.rounded(.down)))
                 guard map.isCountryside(cell), let at = side(gx, gy) else { continue }
                 // How much of the ground is the other land's here (`Seam.share`).
-                let share = CGFloat(Seam.share(at: at))
+                let share = CGFloat(Seam.share(at: at, over: seam.width))
                 guard share > 0.001, share < 0.999 else { continue }
                 let near: Bool
                 if let known = wet[cell] {

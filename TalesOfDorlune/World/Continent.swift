@@ -181,6 +181,7 @@ enum Continent {
         let width = here.width + 2 * margin, height = here.height + 2 * margin
         var owners = [Int16](repeating: -1, count: width * height)
         var ids: [String] = []
+        var blends: [Double] = []
         for land in lands {
             guard let shape = regions[land.def.id] else { continue }
             // Its box in this window's cells.
@@ -198,8 +199,9 @@ enum Continent {
             }
             guard any else { continue }
             ids.append(land.def.id)
+            blends.append(land.def.theme.blend ?? Seam.blend)
         }
-        return Neighbourhood(region: region, origin: origin, lands: ids, owners: owners)
+        return Neighbourhood(region: region, origin: origin, lands: ids, owners: owners, blends: blends)
     }
 
     /// The other lands within `reach` cells of `here`'s box, each with its box's south-west cell in
@@ -227,12 +229,23 @@ nonisolated struct Neighbourhood: Sendable {
     /// Which of `lands` holds each cell of the window (the box and `region.margin` round it, row by
     /// row from the south), -1 none: the sea.
     private let owners: [Int16]
+    /// How far each of `lands` lets its ground mix with a land next door's, in cells
+    /// (maps.json theme `blend`, else `Seam.blend`).
+    private let blends: [Double]
 
-    init(region: Region, origin: GridPoint, lands: [String], owners: [Int16]) {
+    init(region: Region, origin: GridPoint, lands: [String], owners: [Int16], blends: [Double] = []) {
         self.region = region
         self.origin = origin
         self.lands = lands
         self.owners = owners
+        self.blends = blends
+    }
+
+    /// How far either side of the border between two of `lands` (by index) their grounds mix: the
+    /// narrower of the two's, never past `Seam.blend` (the band's window reaches no further).
+    func blend(between one: Int, and other: Int) -> Double {
+        func of(_ land: Int) -> Double { land < blends.count ? blends[land] : Seam.blend }
+        return max(1, min(Seam.blend, of(one), of(other)))
     }
 
     var margin: Int { region.margin }
