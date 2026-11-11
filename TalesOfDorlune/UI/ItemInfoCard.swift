@@ -59,60 +59,76 @@ struct ItemInfoCard: View {
                                 .foregroundStyle(HUDStyle.cream)
                                 .fixedSize(horizontal: false, vertical: true)
                         }
-                        if let quest = session.content.questGiving(item.id) {
-                            section(L("Quest treasure")) {
-                                Text(origin(of: quest))
-                                    .font(HUDStyle.font(12))
-                                    .foregroundStyle(HUDStyle.cream)
-                                    .fixedSize(horizontal: false, vertical: true)
-                            }
-                        } else if let place = session.content.chestHolding(item.id).flatMap({ session.content.home(ofNPC: $0.id) }) {
-                            section(L("Summit treasure")) {
-                                Text(L("Only in the treasure chest at the top of {place}. No monster drops it and no shop sells it.",
-                                       ["place": place.name]))
-                                    .font(HUDStyle.font(12))
-                                    .foregroundStyle(HUDStyle.cream)
-                                    .fixedSize(horizontal: false, vertical: true)
-                            }
-                        } else if let prize = session.content.prize(for: item.id), let weaver = session.weaver {
-                            // A status cape: what earns it, who weaves it, and how far along you are.
-                            let progress = session.prizeProgress(prize)
-                            section(L("Cape of renown")) {
-                                VStack(alignment: .leading, spacing: 3) {
-                                    Text(L("{requirement}, and {weaver} in {town} will weave it for you. No one else has one to give.",
-                                           ["requirement": session.prizeRequirement(prize), "weaver": weaver.npc.name, "town": weaver.land.name]))
+                        // What it is and does, on one plate sunk into the glass, what it's worth under
+                        // a hairline (the user, 2026-11-11, on the bank's card: "This is messy, use best
+                        // practices for UI and UX design"): one group, not lines strewn down the card.
+                        if hasDetails || !footerLines.isEmpty {
+                        VStack(alignment: .leading, spacing: 12) {
+                            if let quest = session.content.questGiving(item.id) {
+                                section(L("Quest treasure")) {
+                                    Text(origin(of: quest))
                                         .font(HUDStyle.font(12))
                                         .foregroundStyle(HUDStyle.cream)
                                         .fixedSize(horizontal: false, vertical: true)
-                                    Text(L("So far: {have} of {need}", ["have": progress.have, "need": progress.need]))
-                                        .font(HUDStyle.font(11))
-                                        .foregroundStyle(session.hasEarned(prize) ? HUDStyle.gold : HUDStyle.dim)
+                                }
+                            } else if let place = session.content.chestHolding(item.id).flatMap({ session.content.home(ofNPC: $0.id) }) {
+                                section(L("Summit treasure")) {
+                                    Text(L("Only in the treasure chest at the top of {place}. No monster drops it and no shop sells it.",
+                                           ["place": place.name]))
+                                        .font(HUDStyle.font(12))
+                                        .foregroundStyle(HUDStyle.cream)
+                                        .fixedSize(horizontal: false, vertical: true)
+                                }
+                            } else if let prize = session.content.prize(for: item.id), let weaver = session.weaver {
+                                // A status cape: what earns it, who weaves it, and how far along you are.
+                                let progress = session.prizeProgress(prize)
+                                section(L("Cape of renown")) {
+                                    VStack(alignment: .leading, spacing: 3) {
+                                        Text(L("{requirement}, and {weaver} in {town} will weave it for you. No one else has one to give.",
+                                               ["requirement": session.prizeRequirement(prize), "weaver": weaver.npc.name, "town": weaver.land.name]))
+                                            .font(HUDStyle.font(12))
+                                            .foregroundStyle(HUDStyle.cream)
+                                            .fixedSize(horizontal: false, vertical: true)
+                                        Text(L("So far: {have} of {need}", ["have": progress.have, "need": progress.need]))
+                                            .font(HUDStyle.font(11))
+                                            .foregroundStyle(session.hasEarned(prize) ? HUDStyle.gold : HUDStyle.dim)
+                                    }
                                 }
                             }
-                        }
-                        if isGear {
-                            requirements
-                            if let stats = item.stats, !Self.parts(of: stats).isEmpty {
-                                section(L("Stats")) { chips(Self.parts(of: stats)) }
+                            if isGear {
+                                requirements
+                                if let stats = item.stats, !Self.parts(of: stats).isEmpty {
+                                    section(L("Stats")) { chips(Self.parts(of: stats)) }
+                                }
+                                comparison
                             }
-                            comparison
+                            effects
+                            // A quest's piece drops only for its quest, and no smith wants it.
+                            if item.dye != nil {
+                                dyeUse
+                            } else if item.type == .material && item.material != "quest" {
+                                materialUse
+                            }
+                            if !footerLines.isEmpty {
+                                if hasDetails { Hairline().padding(.horizontal, -12) }
+                                footer
+                            }
                         }
-                        effects
-                        // A quest's piece drops only for its quest, and no smith wants it.
-                        if item.dye != nil {
-                            dyeUse
-                        } else if item.type == .material && item.material != "quest" {
-                            materialUse
+                        .padding(12)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(GlassCard())
                         }
-                        footer
                     }
                     .padding(16)
                 }
-                // Cancel and Equip stay in view under the details, even when those scroll.
+                // Cancel and Equip stay in view under the details, even when those scroll: in a bar of
+                // their own along the card's foot, a hairline over it.
                 if choosing {
                     actions
                         .padding(.horizontal, 16)
-                        .padding(.bottom, 16)
+                        .padding(.vertical, 14)
+                        .background(Color.black.opacity(0.14))
+                        .overlay(alignment: .top) { Hairline() }
                 }
             }
             .frame(maxWidth: 360, alignment: .leading)
@@ -543,8 +559,24 @@ struct ItemInfoCard: View {
         }
     }
 
+    /// Whether the plate holds more than what it's worth (requirements, stats, effects, uses), for
+    /// the hairline between them.
+    private var hasDetails: Bool {
+        isGear || session.content.questGiving(item.id) != nil || (item.heal ?? 0) > 0 || (item.mp ?? 0) > 0
+            || item.hatches != nil || item.toy == true || item.dye != nil || (item.type == .material && item.material != "quest")
+            || session.content.chestHolding(item.id) != nil || session.content.prize(for: item.id) != nil
+    }
+
     /// How many you have, and what shops ask and pay.
     private var footer: some View {
+        VStack(alignment: .leading, spacing: 3) {
+            ForEach(footerLines, id: \.self) { line in
+                Text(line).font(HUDStyle.font(11)).foregroundStyle(HUDStyle.dim)
+            }
+        }
+    }
+
+    private var footerLines: [String] {
         let owned = session.count(of: item.id)
         let worn = isGear && session.equipped(item.type)?.id == item.id
         var lines: [String] = []
@@ -561,11 +593,7 @@ struct ItemInfoCard: View {
                          ? L("Shops sell it for {price}g and pay {gold}g", ["price": item.price, "gold": GameSession.sellPrice(of: item)])
                          : L("Shops pay {gold}g for it", ["gold": GameSession.sellPrice(of: item)]))
         }
-        return VStack(alignment: .leading, spacing: 3) {
-            ForEach(lines, id: \.self) { line in
-                Text(line).font(HUDStyle.font(11)).foregroundStyle(HUDStyle.dim)
-            }
-        }
+        return lines
     }
 
     // MARK: - Building blocks

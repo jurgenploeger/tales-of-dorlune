@@ -17,13 +17,14 @@ import SwiftUI
 /// so you can't get stuck).
 struct WorldAtlas: View {
     let session: GameSession
-    /// Over the map's top left corner, on the window's own blue melting into the map over a blur
-    /// that deepens toward the edge (`edgeBand`): where you are and the time (`MapOverlay`).
+    /// Over the map's top left corner: the time and your coordinates (`MapOverlay`).
     private let topLeading: AnyView
     @State private var selected: String?
     /// The filter's dropdown (`filterMenu`) open.
     @State private var filtering = false
     @State private var pulse = false
+    /// The ring pulsing out from where you are, out and fading, then again.
+    @State private var ping = false
     /// Which badges show (playtesting 2026-10-30: "Add filters to the map so you can quickly see
     /// stuff"), kept for the next time the map opens.
     @AppStorage("mapFilter") private var filter: MapFilter = .all
@@ -158,13 +159,8 @@ struct WorldAtlas: View {
     /// east up and to the right, so pushing up walks you up the map. Squashed too, as the game's view
     /// is (`Framing.squash`), so north points where it does on screen and on the minimap.
     private static let seenTurn: CGFloat = Framing.seenTurn
-    /// The blur under the map's top and bottom edges (`edgeBand`): copies of the map, each blurred
-    /// more and reaching less far in from the edge (a fraction of the band), so it's blurred most
-    /// at the edge and not at all where the band ends.
-    private static let edgeBlurs: [(radius: CGFloat, reach: CGFloat)] = [(2.5, 1), (6, 0.6), (12, 0.3)]
-
     var body: some View {
-        // Placed once, for the map and the blurred copies of it along its edges.
+        // Placed once.
         let shown = framing.scale > 0 ? marks : []
         GeometryReader { proxy in
             map(in: proxy.size, marks: shown)
@@ -172,9 +168,9 @@ struct WorldAtlas: View {
         .frame(minHeight: 260, maxHeight: .infinity)
         .background(Self.sea)
         // Touches go through to the map under them.
-        // Where you are, and when, over the top left; the band under it only as tall as that (the
-        // user, 2026-11-11: "The top gradient is too tall. The bottom left content should move to top
-        // left"). Nothing up here takes a touch but the compass.
+        // The time and where you are over the top left, straight on the map: no band or blur under
+        // it, nor under the controls at the foot (the user, 2026-11-11: "Remove the top and bottom
+        // gradient blurs"). Nothing up here takes a touch but the compass.
         .overlay(alignment: .top) {
             topLeading
                 .allowsHitTesting(false)
@@ -182,12 +178,10 @@ struct WorldAtlas: View {
                 .padding(.leading, 16)
                 // Clear of the compass on the right.
                 .padding(.trailing, 76)
-                .padding(.top, 12)
-                .padding(.bottom, 16)
-                .background { edgeBand(.top, marks: shown).allowsHitTesting(false) }
+                .padding(.top, 16)
         }
         // As far in from the corner as everything else over the map (16).
-        .overlay(alignment: .topTrailing) { compass.padding(.top, 10).padding(.trailing, 16) }
+        .overlay(alignment: .topTrailing) { compass.padding(.top, 10).padding(.trailing, 16).ignoresSafeArea() }
         // The controls along the bottom: what's shown at the left, the buttons in a row at the right
         // ("The filter dropdown should be bottom left. The three controls on the bottom right should
         // be horizontal with the user first, then minus, then plus").
@@ -198,14 +192,19 @@ struct WorldAtlas: View {
                 Spacer(minLength: 8)
                 controls
             }
-            .padding(.horizontal, 16)
-            .padding(.top, 16)
-            .padding(.bottom, 16)
-            .background { edgeBand(.bottom, marks: shown).allowsHitTesting(false) }
+            .padding(16)
+            // As far from the window's foot as from its sides (the user, 2026-11-11: "The margins
+            // around the dropdown and bottom controls is not the same from the modal edges"): the
+            // safe area's inset had added some 15 points under them.
+            .ignoresSafeArea()
         }
         .onAppear {
             overview.prepare()
             withAnimation(.easeInOut(duration: 0.8).repeatForever(autoreverses: true)) { pulse = true }
+            // Where you are pulses out (`Mark.Kind.here`), still under Reduce Motion.
+            if !reduceMotion {
+                withAnimation(.easeOut(duration: 1.6).repeatForever(autoreverses: false)) { ping = true }
+            }
         }
         .onDisappear { gliding?.cancel() }
         // Drawn again as each land's picture comes in.
@@ -263,59 +262,6 @@ struct WorldAtlas: View {
             }
         }
         .frame(width: size.width, height: size.height)
-    }
-
-    /// Along the map's top or bottom edge, under what's written there: the map blurred more the
-    /// nearer the edge (`edgeBlurs`, as the story's pictures blur toward where they melt into the
-    /// window, `EdgeBlur`), and over it the window's own glass melting to clear: the very gradient the
-    /// window is filled with (`HUDStyle.glass`), as it lies behind that edge, so the band is the
-    /// window's blue wherever it is (playtesting 2026-10-30: one blue at both edges, a top's
-    /// `glassTop`, wasn't the window's at its foot), with no dark tint to muddy the map's colours.
-    private func edgeBand(_ edge: SwiftUI.Edge, marks: [Mark]) -> some View {
-        let top = edge == .top
-        let size = viewSize
-        return GeometryReader { band in
-            ZStack {
-                // Not while two fingers pinch or twist it: each blurred copy draws the whole map again,
-                // every frame of the gesture (six more maps), and the glass alone holds the edge till
-                // they lift.
-                if framing.scale > 0, size.width > 0, size.height > 0, fingers == nil {
-                    // Only the marks under the band.
-                    let near = marks.filter { mark in
-                        let y = point(of: mark.spot, in: size).y
-                        return top ? y < band.size.height + 30 : y > size.height - band.size.height - 30
-                    }
-                    ForEach(Self.edgeBlurs.indices, id: \.self) { index in
-                        drawing(in: size, marks: near)
-                            .background(Self.sea)
-                            .frame(width: band.size.width, height: band.size.height, alignment: top ? .top : .bottom)
-                            .clipped()
-                            .blur(radius: Self.edgeBlurs[index].radius, opaque: true)
-                            .mask {
-                                Self.ramp(edge, [.init(color: .black, location: 0),
-                                                 .init(color: .black.opacity(0), location: Self.edgeBlurs[index].reach)])
-                            }
-                            // VoiceOver reads the map's marks once, from the map itself.
-                            .accessibilityHidden(true)
-                    }
-                }
-                // The window's glass as tall as the map, its own end of it showing in the band.
-                Rectangle()
-                    .fill(HUDStyle.glass)
-                    .frame(width: band.size.width, height: max(band.size.height, size.height))
-                    .frame(width: band.size.width, height: band.size.height, alignment: top ? .top : .bottom)
-                    .clipped()
-                    .mask {
-                        Self.ramp(edge, [.init(color: .black, location: 0), .init(color: .black.opacity(0.75), location: 0.3),
-                                         .init(color: .black.opacity(0.35), location: 0.65), .init(color: .black.opacity(0), location: 1)])
-                    }
-            }
-        }
-    }
-
-    /// A gradient running in from `edge` (`stops` counted from there).
-    private static func ramp(_ edge: SwiftUI.Edge, _ stops: [Gradient.Stop]) -> LinearGradient {
-        LinearGradient(stops: stops, startPoint: edge == .top ? .top : .bottom, endPoint: edge == .top ? .bottom : .top)
     }
 
     /// Opens on where you are, north up (or as you see the land, `asSeen`), your land filling most of
@@ -830,9 +776,21 @@ struct WorldAtlas: View {
     private func view(of mark: Mark) -> some View {
         switch mark.kind {
         case .here:
+            // Where you are, as map apps mark it (the user, 2026-11-11: "Have a pulsing yellow circle
+            // around your current location, just like any other map app"): a gold dot in a white rim on
+            // a soft halo, a ring pulsing out from it and fading, over and over.
             ZStack {
-                Circle().fill(HUDStyle.gold.opacity(0.35)).frame(width: pulse ? 26 : 16, height: pulse ? 26 : 16)
-                Circle().fill(HUDStyle.gold).frame(width: 10, height: 10).overlay(Circle().stroke(HUDStyle.ink, lineWidth: 1.5))
+                Circle()
+                    .stroke(HUDStyle.gold, lineWidth: 3)
+                    .frame(width: 18, height: 18)
+                    .scaleEffect(ping ? 3.2 : 1)
+                    .opacity(ping ? 0 : 0.9)
+                Circle().fill(HUDStyle.gold.opacity(0.3)).frame(width: 30, height: 30)
+                Circle()
+                    .fill(HUDStyle.gold)
+                    .frame(width: 14, height: 14)
+                    .overlay(Circle().strokeBorder(.white, lineWidth: 2.5))
+                    .shadow(color: .black.opacity(0.4), radius: 2, x: 0, y: 1)
             }
             .allowsHitTesting(false)
             .accessibilityLabel(L("Where you are"))

@@ -599,7 +599,6 @@
     "Travelling": "移動中",
     "{percent} percent": "{percent}パーセント",
     "World map": "ワールドマップ",
-    "You are in {place}": "現在地: {place}",
     "Coordinates {x}, {y}": "座標 {x}、{y}",
     "{used} of {slots} slots": "{slots}枠中{used}枠",
     "Hatch": "かえす",

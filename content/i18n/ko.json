@@ -599,7 +599,6 @@
     "Travelling": "이동 중",
     "{percent} percent": "{percent}퍼센트",
     "World map": "월드맵",
-    "You are in {place}": "현재 위치: {place}",
     "Coordinates {x}, {y}": "좌표 {x}, {y}",
     "{used} of {slots} slots": "{slots}칸 중 {used}칸",
     "Hatch": "부화",

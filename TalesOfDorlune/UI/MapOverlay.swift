@@ -49,23 +49,11 @@ struct MapOverlay: View {
                     }
                 } else {
                     WindowTitle(L("World map"), onClose: onClose)
-                    // Where you are, your coordinates and the time together at the top left; the map's
-                    // controls along the bottom (the user, 2026-11-11).
-                    // The land you're in: its name as the game shows it, else as the content has it (the
-                    // game's is set once you've walked into a land; till then it was empty, and the
-                    // map showed no name, 2026-11-11).
-                    let here = session.mapName.isEmpty ? (session.content.map(session.data.mapID)?.name ?? "") : session.mapName
+                    // The time and your coordinates at the top left, no name over them: the pulsing mark
+                    // on the map says where you are (the user, 2026-11-11: "Remove the top left title of
+                    // where you are, that's obvious"); the map's controls along the bottom.
                     WorldAtlas(session: session) {
-                        VStack(alignment: .leading, spacing: 6) {
-                            Text(here)
-                                .font(HUDStyle.font(15))
-                                .foregroundStyle(HUDStyle.cream)
-                                .shadow(color: .black.opacity(0.8), radius: 0, x: 1, y: 1)
-                                .lineLimit(2)
-                                .fixedSize(horizontal: false, vertical: true)
-                                .accessibilityLabel(L("You are in {place}", ["place": here]))
-                            pills
-                        }
+                        pills
                     }
                 }
             }
@@ -82,13 +70,12 @@ struct MapOverlay: View {
     /// dark blue pill. The coordinates should also show in a dark blue pill").
     private var pills: some View {
         let x = session.mapCell.col, y = rows - 1 - session.mapCell.row
-        return HStack(spacing: 6) {
+        // As the gold's pill (`ArtPill`): a pixel-art sun or moon, and a map pin by your coordinates.
+        return HStack(spacing: 8) {
             GameTimePill(session: session)
             // Close together: a thin space either side of the colon.
-            Text(verbatim: "\(x)\u{2009}:\u{2009}\(y)")
-                .font(HUDStyle.font(11).monospacedDigit())
-                .foregroundStyle(HUDStyle.cream)
-                .mapPill()
+            ArtPill(art: "pill_pin", text: "\(x)\u{2009}:\u{2009}\(y)", size: 12, fallback: .map)
+                .accessibilityElement(children: .ignore)
                 .accessibilityLabel(L("Coordinates {x}, {y}", ["x": x, "y": y]))
         }
     }
@@ -211,16 +198,9 @@ private struct GameTimePill: View {
             let hours = GameClock.hours(at: context.date, since: session.data.startedAt)
             let hour = Int(hours) % 24
             let daytime = (6..<18).contains(hour) || !dayAndNight
-            HStack(spacing: 4) {
-                IconImage(daytime ? .sun : .moon, size: 12)
-                    .foregroundStyle(daytime ? HUDStyle.gold : HUDStyle.cream)
-                Text(Self.text(hour: hour))
-                    .font(HUDStyle.font(11).monospacedDigit())
-                    .foregroundStyle(HUDStyle.cream)
-                    .lineLimit(1)
-                    .fixedSize()
-            }
-            .mapPill()
+            // A pixel-art sun by day and moon by night (tools/hud_icon_art.py), as the gold's coin.
+            ArtPill(art: daytime ? "pill_sun" : "pill_moon", text: Self.text(hour: hour), size: 12,
+                    fallback: daytime ? .sun : .moon)
         }
     }
 

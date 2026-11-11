@@ -129,12 +129,13 @@ over a speech window: its close button and Dye gear button showed round it, unti
 menu window is fine: the menu is a backdrop.
 
 **The world map is a map first** (2026-11-11, the user: "a bit messy now", then where each goes): its
-canvas clear; where you are, your coordinates and the time at the top left, the band under them only
-as tall as they are; the compass small at the top right; the filter dropdown (`filterMenu`) at the
-bottom left; Where you are, zoom out and zoom in in a row at the bottom right, in that order. All the
-map's buttons gold, as the filter is, 40 points, 44 to tap. Nothing that takes a touch floats over the
-middle of the map. An overlay with nothing in it but a `GeometryReader` background fills the map's
-whole height: give the band real content to size to.
+canvas clear, no band or blur along its edges; the time and your coordinates at the top left, in pills
+like the gold's (`ArtPill`: a pixel-art sun or moon, a map pin; tools/hud_icon_art.py), no name over
+them (the pulsing gold ring on the map says where you are, as map apps do); the compass small at the
+top right; the filter dropdown (`filterMenu`) at the bottom left; Where you are, zoom out and zoom in in
+a row at the bottom right, in that order; all of it 16 points in from every edge (the bottom row
+`ignoresSafeArea()`, or the safe area's inset lifts it). All the map's buttons gold, as the filter is,
+40 points, 44 to tap. Nothing that takes a touch floats over the middle of the map.
 
 **Fits a phone held either way.** Every window fits portrait and landscape; the part that scrolls gives way
 first (`FitOrScroll`, a `ScrollView` under fixed tabs and title). Menu windows are as big as the HUD's

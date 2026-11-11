@@ -599,7 +599,6 @@
     "Travelling": "移動中",
     "{percent} percent": "百分之{percent}",
     "World map": "世界地圖",
-    "You are in {place}": "你在{place}",
     "Coordinates {x}, {y}": "座標 {x}，{y}",
     "{used} of {slots} slots": "{used}/{slots}格",
     "Hatch": "孵化",

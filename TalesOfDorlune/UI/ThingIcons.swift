@@ -164,6 +164,43 @@ struct GoldPill: View {
     }
 }
 
+/// A pill like the gold's (`GoldPill`), a pixel-art picture (`art`, from art/sprites) hanging over its
+/// left end in place of the coin: the world map's time of day and where you are (tools/hud_icon_art.py:
+/// the user, 2026-11-11, "The top left pills should become the same as the coin pill").
+struct ArtPill: View {
+    let art: String
+    let text: String
+    var size: CGFloat = 13
+    /// Drawn when the picture is missing.
+    var fallback: GameIcon = .star
+
+    var body: some View {
+        let picture = (size * 1.75).rounded()
+        Text(text)
+            .font(HUDStyle.mono(size))
+            .monospacedDigit()
+            .foregroundStyle(HUDStyle.cream)
+            .lineLimit(1)
+            .fixedSize()
+            .padding(.leading, picture * 0.62 + size * 0.4)
+            .padding(.trailing, size * 0.75)
+            .frame(height: (size * 1.6).rounded())
+            .background(Capsule().fill(Color.black.opacity(0.55)))
+            .padding(.leading, picture * 0.38)
+            .overlay(alignment: .leading) {
+                Group {
+                    if let image = ArtLibrary.shared.artImage(art) {
+                        Image(uiImage: image).resizable().interpolation(.none)
+                    } else {
+                        IconImage(fallback, size: picture * 0.8).foregroundStyle(HUDStyle.gold)
+                    }
+                }
+                .frame(width: picture, height: picture)
+                .shadow(color: .black.opacity(0.4), radius: 0, x: 0, y: 1)
+            }
+    }
+}
+
 /// Something better to wear: a gold arrow pointing up, on a badge like `CountBadge`.
 struct UpgradeBadge: View {
     var size: CGFloat = 17
