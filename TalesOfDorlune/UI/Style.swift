@@ -294,35 +294,105 @@ struct WindowBar: View {
     }
 }
 
-/// A card on a window's glass (`rowCard()`, a settings section, a stat): a shade lighter than the
-/// glass, lit along its top edge and a hair darker along its foot, as the window's own bevel is, so
-/// it reads as a raised panel and not a smudge (0.9.75: flat white at 5% barely showed). `lit` for
-/// one that's open or wants you (an unrolled quest, a bounty to claim): a little brighter. `gold` for
-/// the one that's yours or ready (what you can afford to forge): rimmed in gold.
+/// A plate sunk into a window's glass (a list's rows, a settings section, a stat, a summary): darker
+/// than the glass, shadowed along its top edge and lit along its foot, so a window's content reads
+/// as groups set into it and not one flat blue sheet (the user, 2026-11-11, on a mock-up's grouped
+/// party list: "I want UX improvements like that in all windows"; 0.9.75's raised cards were too
+/// faint to group anything). `lit` for one that's open or wants you (an unrolled quest): a little
+/// lighter. `gold` for the one that's ready (a recipe you can forge, a bounty to claim): rimmed in gold.
 struct GlassCard: View {
-    var radius: CGFloat = 10
+    var radius: CGFloat = 12
     var lit = false
     var gold = false
 
     var body: some View {
         let shape = RoundedRectangle(cornerRadius: radius, style: .continuous)
         shape
-            .fill(LinearGradient(colors: [.white.opacity(lit ? 0.15 : 0.09), .white.opacity(lit ? 0.08 : 0.04)],
-                                 startPoint: .top, endPoint: .bottom))
+            .fill(Color.black.opacity(lit ? 0.12 : 0.2))
             .overlay {
                 if gold {
+                    shape.fill(HUDStyle.gold.opacity(0.08))
                     shape.strokeBorder(HUDStyle.gold.opacity(0.75), lineWidth: 1.5)
                 } else {
-                    shape.strokeBorder(LinearGradient(colors: [.white.opacity(0.24), .white.opacity(0.05), .black.opacity(0.22)],
+                    shape.strokeBorder(LinearGradient(colors: [.black.opacity(0.3), .white.opacity(0.03), .white.opacity(0.12)],
                                                       startPoint: .top, endPoint: .bottom), lineWidth: 1)
                 }
             }
     }
 }
 
+/// Rows in one sunk plate (`GlassCard`), split by hairlines (`Hairline`): a list reads as one group,
+/// each row one thing (a friend in your party, a quest, something a shop sells). Each row lays
+/// itself out with `groupRow()`. Under a `SectionTitle` that names the group, and its count.
+struct GroupedRows<Data: RandomAccessCollection, ID: Hashable, Row: View>: View {
+    let data: Data
+    /// What tells the rows apart (ForEach's `id`).
+    let key: KeyPath<Data.Element, ID>
+    let row: (Data.Element) -> Row
+
+    init(_ data: Data, id: KeyPath<Data.Element, ID>, @ViewBuilder row: @escaping (Data.Element) -> Row) {
+        self.data = data
+        self.key = id
+        self.row = row
+    }
+
+    var body: some View {
+        let first = data.first.map { $0[keyPath: key] }
+        let shape = RoundedRectangle(cornerRadius: 12, style: .continuous)
+        VStack(spacing: 0) {
+            ForEach(data, id: key) { item in
+                if item[keyPath: key] != first { Hairline() }
+                row(item)
+            }
+        }
+        .background(GlassCard())
+        .clipShape(shape)
+    }
+}
+
+extension GroupedRows where Data.Element: Identifiable, ID == Data.Element.ID {
+    init(_ data: Data, @ViewBuilder row: @escaping (Data.Element) -> Row) {
+        self.init(data, id: \.id, row: row)
+    }
+}
+
+/// A row laid out as one of a list's (`groupRow()`, in a `GroupedRows`) or on a plate of its own
+/// (`rowCard()`), for a row that's used both ways (a quest: in the Quests list, and as its giver
+/// offers it).
+struct ListRow: ViewModifier {
+    let grouped: Bool
+    var lit = false
+    var gold = false
+
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        if grouped {
+            content.groupRow(lit: lit, gold: gold)
+        } else {
+            content.rowCard(lit: lit, gold: gold)
+        }
+    }
+}
+
+/// The line between two rows of a `GroupedRows`.
+struct Hairline: View {
+    var body: some View {
+        Color.white.opacity(0.08).frame(height: 1)
+    }
+}
+
 extension View {
-    /// A row on a card of its own (`GlassCard`: a friend, something a shop sells, a quest): a list's
-    /// rows read apart, each one thing to tap.
+    /// A row in a `GroupedRows`: its padding, the full width, and a tint when it's open (`lit`) or
+    /// ready (`gold`: a quest to report, a recipe you can forge).
+    func groupRow(lit: Bool = false, gold: Bool = false) -> some View {
+        padding(.horizontal, 12)
+            .padding(.vertical, 10)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(gold ? HUDStyle.gold.opacity(0.12) : lit ? Color.white.opacity(0.05) : Color.clear)
+    }
+
+    /// A row on a sunk plate of its own (`GlassCard`), for one that stands alone (a quest as its giver
+    /// offers it); in a list, `GroupedRows` and `groupRow()`.
     func rowCard(lit: Bool = false, gold: Bool = false) -> some View {
         padding(.horizontal, 10)
             .padding(.vertical, 8)

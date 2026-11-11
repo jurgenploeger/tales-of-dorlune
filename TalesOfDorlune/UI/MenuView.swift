@@ -373,14 +373,24 @@ private struct HowItWorks: View {
     }
 }
 
+/// A group's name over it, in gold capitals, and how many it holds (`detail`: "Party · 3/4"), a
+/// faint gold rule running on after it so the window reads as groups (the user, 2026-11-11).
 struct SectionTitle: View {
     let text: String
+    var detail: String? = nil
 
     var body: some View {
-        Text(text.uppercased())
-            .font(HUDStyle.font(11))
-            .foregroundStyle(HUDStyle.gold)
-            .padding(.top, 4)
+        HStack(spacing: 8) {
+            Text((detail.map { text + " · " + $0 } ?? text).uppercased())
+                .font(HUDStyle.font(11))
+                .foregroundStyle(HUDStyle.gold)
+                .monospacedDigit()
+                .fixedSize()
+            HUDStyle.gold.opacity(0.3).frame(height: 1)
+        }
+        .padding(.top, 4)
+        .accessibilityElement(children: .combine)
+        .accessibilityAddTraits(.isHeader)
     }
 }
 
@@ -534,8 +544,8 @@ struct StatsPanel: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(alignment: .firstTextBaseline) {
+                // Its gold rule runs on to the level.
                 SectionTitle(text: L("Stats"))
-                Spacer()
                 Text(level).font(HUDStyle.font(15))
             }
             bar(L("HP"), hp, stats.hp, HUDStyle.hp)
@@ -958,7 +968,7 @@ private struct CompanionsTab: View {
             if let active {
                 CompanionCard(session: session, pet: active, featured: true)
                 if !others.isEmpty {
-                    SectionTitle(text: L("Other companions")).padding(.top, 6)
+                    SectionTitle(text: L("Other companions"), detail: "\(others.count)").padding(.top, 6)
                 }
             }
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 250), spacing: 10)], spacing: 10) {
@@ -995,16 +1005,31 @@ private struct FriendsTab: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HowItWorks(L("Befriend adventurers you meet (walk up to one). Up to {count} friends can travel and fight with you, and they bring their companions. They fight on if you faint, and wait where you fell; a friend who faints wakes up at their own checkpoint. Walk up to them to set off together again.", ["count": GameSession.maxAllies])
-                       + "\n" + L("They don't always say yes, and after a while they head off on their own. You can also ask whoever leads a group of adventurers to let you join them, and follow them about.")
-                       + "\n" + L("You don't have to be friends to party up: invite anyone you meet from their card."),
-                       open: session.friends.isEmpty)
-            if session.friends.isEmpty && session.partyGuests.isEmpty {
+        let howItWorks = HowItWorks(L("Befriend adventurers you meet (walk up to one). Up to {count} friends can travel and fight with you, and they bring their companions. They fight on if you faint, and wait where you fell; a friend who faints wakes up at their own checkpoint. Walk up to them to set off together again.", ["count": GameSession.maxAllies])
+                                    + "\n" + L("They don't always say yes, and after a while they head off on their own. You can also ask whoever leads a group of adventurers to let you join them, and follow them about.")
+                                    + "\n" + L("You don't have to be friends to party up: invite anyone you meet from their card."),
+                                    open: session.friends.isEmpty)
+        let everyone = listed
+        let party = everyone.filter { session.isInParty($0) }
+        let others = everyone.filter { !session.isInParty($0) }
+        return VStack(alignment: .leading, spacing: 10) {
+            if everyone.isEmpty {
+                howItWorks
                 EmptyNote(L("No friends yet.\nSay hi to the adventurers you meet!"))
             }
-            ForEach(listed) { friend in
-                FriendRow(session: session, friend: friend)
+            // Grouped (the user, 2026-11-11, on a mock-up: "I like this grouping of content to make
+            // everything more scannable"): who travels with you, how many of how many, then the rest.
+            if !party.isEmpty {
+                SectionTitle(text: L("Party"), detail: "\(party.count)/\(GameSession.maxAllies)")
+                GroupedRows(party) { FriendRow(session: session, friend: $0) }
+            }
+            if !others.isEmpty {
+                SectionTitle(text: L("Friends"), detail: "\(others.count)")
+                GroupedRows(others) { FriendRow(session: session, friend: $0) }
+            }
+            // The page opens on your friends; how it works after.
+            if !everyone.isEmpty {
+                howItWorks.padding(.top, 6)
             }
         }
     }
@@ -1026,17 +1051,10 @@ private struct FriendRow: View {
                     }
                 }
             VStack(alignment: .leading, spacing: 2) {
+                // In your party or not, the group they're listed in says (`FriendsTab`).
                 HStack(spacing: 6) {
                     Text(friend.name)
                     NameBadge(badge: .bot)
-                    if inParty {
-                        Text(L("IN PARTY"))
-                            .font(HUDStyle.font(9))
-                            .foregroundStyle(HUDStyle.ink)
-                            .padding(.horizontal, 6)
-                            .padding(.vertical, 2)
-                            .background(Capsule().fill(HUDStyle.green))
-                    }
                 }
                 Text(L("Lv {level} {race} {class}", ["level": friend.level, "race": session.content.race(friend.raceID).name, "class": session.content.classDef(friend.classID).name]))
                     .font(HUDStyle.font(10))
@@ -1072,7 +1090,7 @@ private struct FriendRow: View {
             }
         }
         .font(HUDStyle.font(12))
-        .rowCard()
+        .groupRow()
     }
 
     /// Whether they're online, and where: a green dot and the land they're in (here, if it's yours),
@@ -1331,10 +1349,11 @@ private struct CompanionCard: View {
         }
         .padding(10)
         .frame(maxWidth: .infinity, alignment: .leading)
+        // On a plate sunk into the glass, as every group is (`GlassCard`); green round the one with you.
         .background(
-            RoundedRectangle(cornerRadius: 8)
-                .fill(.white.opacity(isActive ? 0.1 : 0.05))
-                .overlay(RoundedRectangle(cornerRadius: 8).strokeBorder(isActive ? HUDStyle.green.opacity(0.7) : .clear, lineWidth: 2))
+            GlassCard(lit: isActive)
+                .overlay(RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .strokeBorder(isActive ? HUDStyle.green.opacity(0.7) : .clear, lineWidth: 2))
         )
     }
 }
@@ -1634,23 +1653,21 @@ private struct QuestsTab: View {
         // The sort's panel over the quests under it.
         .zIndex(1)
         if shelf != .done {
-            SectionTitle(text: L("Active"))
+            SectionTitle(text: L("Active"), detail: active.isEmpty ? nil : "\(active.count)")
             if session.activeQuests.isEmpty {
                 EmptyNote(L("No active quests. Elder Oak in Meadowbrook always needs help."))
             } else if active.isEmpty {
                 Text(L("No quests match.")).font(HUDStyle.font(11)).foregroundStyle(HUDStyle.dim)
-            }
-            ForEach(active) { quest in
-                QuestRow(session: session, quest: quest, showsGiver: true)
+            } else {
+                GroupedRows(active) { QuestRow(session: session, quest: $0, showsGiver: true, grouped: true) }
             }
         }
         if !completed.isEmpty || shelf == .done {
-            SectionTitle(text: L("Completed"))
+            SectionTitle(text: L("Completed"), detail: completed.isEmpty ? nil : "\(completed.count)")
             if completed.isEmpty {
                 Text(L("No quests match.")).font(HUDStyle.font(11)).foregroundStyle(HUDStyle.dim)
-            }
-            ForEach(completed) { quest in
-                CompletedQuestRow(session: session, quest: quest)
+            } else {
+                GroupedRows(completed) { CompletedQuestRow(session: session, quest: $0) }
             }
         }
     }
@@ -1712,6 +1729,8 @@ struct QuestRow: View {
     var showsGiver = false
     /// Its story (not on the last page of a conversation with its giver, who's just told it).
     var showsDescription = true
+    /// One of a list's rows (`GroupedRows`), not on a plate of its own.
+    var grouped = false
     @State private var expanded = false
 
     var body: some View {
@@ -1759,9 +1778,8 @@ struct QuestRow: View {
                 }
             }
         }
-        .padding(8)
-        // Rimmed in gold when it's done, waiting for you to report back.
-        .background(GlassCard(lit: expanded, gold: isReady))
+        // Gold when it's done, waiting for you to report back.
+        .modifier(ListRow(grouped: grouped, lit: expanded, gold: isReady))
         .contentShape(Rectangle())
         .onTapGesture {
             guard showsGiver else { return }
@@ -1853,10 +1871,8 @@ private struct CompletedQuestRow: View {
                 .transition(.reveal)
             }
         }
-        // On a card as every row is (`GlassCard`), a slim one: the list's long.
-        .padding(.horizontal, 10)
-        .padding(.vertical, 6)
-        .background(GlassCard(radius: 8, lit: expanded))
+        // A row of the Completed group (`GroupedRows`).
+        .groupRow(lit: expanded)
         .contentShape(Rectangle())
         .onTapGesture { withAnimation(Reveal.animation) { expanded.toggle() } }
         .accessibilityElement(children: .combine)

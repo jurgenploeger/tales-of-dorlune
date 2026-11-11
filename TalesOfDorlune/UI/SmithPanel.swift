@@ -53,7 +53,8 @@ struct SmithPanel: View {
             if shown.isEmpty {
                 EmptyNote(L("Nothing to forge in this line at your level."))
             }
-            ForEach(shown) { item in
+            // One group (`GroupedRows`), as every list is (the user, 2026-11-11).
+            GroupedRows(shown) { item in
                 SmithRecipeRow(session: session, item: item, reply: $reply, info: $info)
             }
         }
@@ -102,8 +103,8 @@ private struct SmithRecipeRow: View {
             .padding(.leading, 46)
         }
         .font(HUDStyle.font(12))
-        // Rimmed in gold when you have all it takes.
-        .rowCard(gold: ready)
+        // Gold when you have all it takes.
+        .groupRow(gold: ready)
     }
 
     private func forge(ready: Bool) -> some View {

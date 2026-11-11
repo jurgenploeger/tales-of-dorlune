@@ -76,15 +76,26 @@ under it; the others are sunk into the bar, white. One with something waiting we
 a window of its own, opened from the HUD menu (2026-10-25: "The menu items hero etc should become their
 own modal window"), so a window's tabs are its own pages, never the other windows.
 
-**Rows and panels sit on cards** (`GlassCard`, `rowCard()`): anything in a list you can tap or act on (a
-friend, something a shop sells, a quest, a recipe, a bounty) is a row on its own card, and a group of
-settings or stats is a panel on one: a shade lighter than the glass, lit along its top edge and darker at
-its foot, so it reads as raised (flat white at 5% barely showed, 0.9.74). `lit` for one that's open or
-wants you; `gold` rims the one that's ready (a quest to report, a recipe you can forge, a bounty to claim).
-Never a hand-rolled `RoundedRectangle().fill(.white.opacity(…))`. How many you own goes on the icon as a
-`CountBadge`, as the Bag shows it. A control that can't be used says why, short and quiet beside it (a
-price you can't pay: "Need 30" in `dim` under the grey price, the full sentence for VoiceOver), never just
-grey; orange only for a real warning ("Only for Fighter"): a line on every row turned the shop orange.
+**Content sits in groups** (the user, 2026-11-11, on a mock-up's grouped party list: "I like this
+grouping of content to make everything more scannable. I want UX improvements like that in all
+windows"). A window's content is groups set into the glass, never one flat blue sheet:
+- Each group has a `SectionTitle` over it: its name in gold capitals, how many it holds (`detail`:
+  "Party · 3/4", "Active · 5"), a faint gold rule running on to the window's edge or to a control.
+- A list is one `GroupedRows`: its rows on one plate sunk into the glass (`GlassCard`: darker than
+  the glass, shadowed along its top, lit along its foot), split by hairlines, each row laid out with
+  `groupRow()`. Split a long list by kind into several groups (a shop's Items, Gear, Materials; your
+  Party, then your Friends) rather than one long run.
+- A row that's ready gold (`groupRow(gold:)`: a quest to report, a recipe you can forge, a bounty to
+  claim); one that's open `lit`. A row that stands alone (a quest as its giver offers it) is a
+  `rowCard()`; a panel (a settings section, a stat) a `GlassCard` background. Never a hand-rolled
+  `RoundedRectangle().fill(.white.opacity(…))`.
+- What a group's title says, its rows don't repeat (no IN PARTY badge in the Party group).
+- How it works goes at the end once you know the ropes (`HowItWorks`), at the top only while the
+  window is empty.
+- How many you own goes on the icon as a `CountBadge`, as the Bag shows it. A control that can't be
+  used says why, short and quiet beside it (a price you can't pay: "Need 30" in `dim` under the grey
+  price, the full sentence for VoiceOver), never just grey; orange only for a real warning ("Only
+  for Fighter"): a line on every row turned the shop orange (0.9.74).
 
 **A window over a window hides what's under it** where both would show through each other (the dye window
 over a speech window: its close button and Dye gear button showed round it, until 0.9.74). A card over a
@@ -141,7 +152,8 @@ A UI change ships when every line holds, in portrait and landscape, light and da
 longest translation (usually German):
 
 - It uses `gameWindow()`, a title bar with `WindowTitle` or `PageTabs` flush at its top, the orange close
-  button over the corner, `rowCard()` / `GlassCard` for rows and panels, `SideScroll` for sideways rows,
+  button over the corner, `SectionTitle` over each group, `GroupedRows` + `groupRow()` for lists, `GlassCard` for panels,
+  `SideScroll` for sideways rows,
   `PixelButtonStyle` / `FLIconButton` for buttons, `SectionTitle` for sections, `EmptyNote` for nothing.
 - Colours only from `HUDStyle`; no brand sky, midnight or Luckiest Guy inside a window.
 - Text 10 pt or more, cream on glass, gold headings; dark ink only on light faces.
@@ -163,6 +175,13 @@ Add what each UI change teaches, dated, with the case and what to do instead.
 - 2026-11-10: Figma's `UI / Window` had a bevelled title bar the code had dropped for a gold title on the
   glass; the user chose the bar, with the tabs on it (0.9.74). Figma's page still lacks the folder tabs and
   `rowCard`: add them when the file is next open.
+- 2026-11-11: 0.9.75's raised cards (white at 9% over the glass) were too faint to group anything; the
+  user picked a mock-up's darker sunk plates with hairline rows and gold-ruled section titles, for
+  every window (0.9.76). The Screenshots workflow cancels a branch's run when another starts on it
+  (`cancel-in-progress`): a tests-only run cancelled a screenshot run. Start one run with both, or
+  wait.
+- 2026-11-11: 0.9.75's speech window floor (1.6 times the speaker's room) was still about as tall
+  as the window already was; 0.9.76 makes it the speaker's full height.
 - 2026-11-11: 0.9.74's after-shots: "Need X more gold" in orange under the name showed on nearly every row
   at low gold, doubling the rows; the speech window's new floor was lower than it already was, so it
   didn't grow; Settings' last tab ran hard into the close button's room. Fixed in 0.9.75 (a quiet

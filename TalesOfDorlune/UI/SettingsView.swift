@@ -259,16 +259,24 @@ struct SettingsView: View {
         .toggleStyle(PixelSwitchStyle())
     }
 
+    /// A group of settings: its name over it with a gold rule, as every window's groups are
+    /// (`SectionTitle`), and its controls on a plate sunk into the glass (`GlassCard`).
     private func section<Content: View>(_ title: String, icon: GameIcon, @ViewBuilder content: () -> Content) -> some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Label(title, icon: icon)
-                .font(HUDStyle.font(14))
-                .foregroundStyle(HUDStyle.gold)
-            content()
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(spacing: 8) {
+                Label(title, icon: icon)
+                    .font(HUDStyle.font(13))
+                    .foregroundStyle(HUDStyle.gold)
+                    .fixedSize()
+                HUDStyle.gold.opacity(0.3).frame(height: 1)
+            }
+            .accessibilityElement(children: .combine)
+            .accessibilityAddTraits(.isHeader)
+            VStack(alignment: .leading, spacing: 10, content: content)
+                .padding(12)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(GlassCard())
         }
-        .padding(12)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(GlassCard())
     }
 
     private static var version: String {

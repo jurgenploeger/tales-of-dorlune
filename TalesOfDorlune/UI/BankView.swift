@@ -79,8 +79,8 @@ struct BankPanel: View {
         let bag = ItemFinder.arrange(session.bagItems, search: "", sort: bagSort, session: session)
         VStack(alignment: .leading, spacing: 10) {
             HStack {
+                // Its gold rule runs on to the button.
                 SectionTitle(text: L("Bag {used}/{slots}", ["used": session.bagSlotsUsed, "slots": GameSession.bagSlots]))
-                Spacer()
                 Button(L("Deposit all")) {
                     session.depositAll()
                     session.save()

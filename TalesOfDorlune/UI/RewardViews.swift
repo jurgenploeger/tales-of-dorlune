@@ -105,15 +105,18 @@ struct BountiesSection: View {
     var body: some View {
         let board = session.data.bounties
         VStack(alignment: .leading, spacing: 8) {
+            let bounties = board?.bounties ?? []
             HStack {
-                SectionTitle(text: L("Today's bounties"))
-                Spacer()
+                SectionTitle(text: L("Today's bounties"),
+                             detail: bounties.isEmpty ? nil : "\(bounties.filter(\.isDone).count)/\(bounties.count)")
                 Text(L("New ones each day"))
                     .font(HUDStyle.font(10))
                     .foregroundStyle(HUDStyle.dim)
+                    .fixedSize()
             }
-            ForEach(Array((board?.bounties ?? []).enumerated()), id: \.offset) { index, bounty in
-                BountyRow(session: session, bounty: bounty, index: index)
+            // One group (`GroupedRows`), as every list is (the user, 2026-11-11).
+            GroupedRows(Array(bounties.enumerated()), id: \.offset) { entry in
+                BountyRow(session: session, bounty: entry.element, index: entry.offset)
             }
             if let board, !board.bounties.isEmpty {
                 bonus(claimed: board.bonusClaimed)
@@ -214,8 +217,8 @@ private struct BountyRow: View {
                     .buttonStyle(PixelButtonStyle(tint: HUDStyle.gold, compact: true))
             }
         }
-        .padding(8)
-        .background(GlassCard(lit: bounty.isDone && !bounty.claimed, gold: bounty.isDone && !bounty.claimed))
+        // Gold while it's done and waiting to be claimed.
+        .groupRow(gold: bounty.isDone && !bounty.claimed)
     }
 
     private var icon: GameIcon {
@@ -243,13 +246,7 @@ struct TitlesSection: View {
         let earned = titles.filter { session.hasEarned($0) }
         let ahead = titles.filter { !session.hasEarned($0) }.sorted { fraction($0) > fraction($1) }
         VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                SectionTitle(text: L("Titles"))
-                Spacer()
-                Text(L("{count} of {total}", ["count": earned.count, "total": titles.count]))
-                    .font(HUDStyle.font(11))
-                    .foregroundStyle(HUDStyle.gold)
-            }
+            SectionTitle(text: L("Titles"), detail: L("{count} of {total}", ["count": earned.count, "total": titles.count]))
             if earned.isEmpty {
                 Text(L("Earn titles as you go: levels, lands, monsters, bosses and more. Wear one over your name."))
                     .font(HUDStyle.font(11))
@@ -285,8 +282,12 @@ struct TitlesSection: View {
                     }
                 }
             }
-            ForEach(showsAll ? ahead : Array(ahead.prefix(4))) { title in
-                TitleGoalRow(session: session, title: title)
+            if !ahead.isEmpty {
+                // Still to earn: one group (`GroupedRows`), as every list is (the user, 2026-11-11).
+                SectionTitle(text: L("To earn"))
+                GroupedRows(showsAll ? ahead : Array(ahead.prefix(4))) { title in
+                    TitleGoalRow(session: session, title: title)
+                }
             }
             if ahead.count > 4 {
                 Button(showsAll ? L("Show fewer") : L("Show all {count} to earn", ["count": ahead.count])) {
@@ -330,8 +331,7 @@ private struct TitleGoalRow: View {
                 GlossyBar(fraction: CGFloat(min(progress.have, progress.need)) / CGFloat(max(1, progress.need)), color: HUDStyle.gold, height: 5)
             }
         }
-        .padding(8)
-        .background(GlassCard(radius: 8))
+        .groupRow()
         .accessibilityElement(children: .combine)
     }
 }

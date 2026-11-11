@@ -129,10 +129,11 @@ struct NPCDialogView: View {
             .padding(.top, 10)
             .padding(.bottom, 14)
         }
-        // At least as tall as most of the character standing by it: a line or two left it a strip under
-        // their feet (0.9.74's floor, at 1.2 times their room, was lower than the window already was).
-        // Held on its side, no more than most of the room it has.
-        .frame(minHeight: min(speakerRoom * 1.6, maxHeight * 0.8), alignment: .top)
+        // As tall as the character standing by it (their room is half their height): a line or two left
+        // it a strip under their feet. 0.9.74's floor (1.2 times their room) and 0.9.75's (1.6) were
+        // about as tall as the window already was, so it didn't grow (0.9.76, the user's call). Held on
+        // its side, no more than most of the room it has.
+        .frame(minHeight: min(speakerRoom * 2, maxHeight * 0.8), alignment: .top)
         .frame(maxWidth: .infinity, alignment: .leading)
         .foregroundStyle(HUDStyle.cream)
         .clipShape(window)
@@ -425,64 +426,71 @@ private struct ShopPanel: View {
         }
     }
 
+    /// The wares by kind, as the Bag's shelves are (items, gear, materials), each a group of its own
+    /// (the user, 2026-11-11: "I like this grouping of content to make everything more scannable").
     private var buyList: some View {
-        ForEach(stock.compactMap { session.content.item($0) }) { item in
-            HStack(spacing: 10) {
-                Button { info = item } label: {
-                    HStack(spacing: 10) {
-                        // How many you have already, as the Bag shows it: a badge on the icon.
-                        ItemIcon(item: item, size: 36)
-                            .overlay(alignment: .topTrailing) {
-                                let owned = session.count(of: item.id)
-                                if owned > 0 {
-                                    CountBadge(count: owned)
-                                        .offset(x: 6, y: -6)
-                                        .accessibilityLabel(L("own {count}", ["count": owned]))
-                                }
-                            }
-                        VStack(alignment: .leading, spacing: 1) {
-                            Text(item.name)
-                            let detail = item.type == .consumable ? (item.description ?? "") : "\(item.type.displayName) · \(item.stats?.bonusSummary ?? "")"
-                            // Two lines at most: a tap opens the card with all of it.
-                            Text(detail).font(HUDStyle.font(10)).foregroundStyle(HUDStyle.green).lineLimit(2)
-                            if item.type != .consumable, let issue = session.equipIssue(item) {
-                                Text(issue).font(HUDStyle.font(10)).foregroundStyle(HUDStyle.orange)
+        ForEach(WareShelf.of(stock.compactMap { session.content.item($0) })) { shelf in
+            SectionTitle(text: shelf.shelf.title, detail: "\(shelf.items.count)")
+            GroupedRows(shelf.items) { buyRow($0) }
+        }
+    }
+
+    private func buyRow(_ item: ItemDef) -> some View {
+        HStack(spacing: 10) {
+            Button { info = item } label: {
+                HStack(spacing: 10) {
+                    // How many you have already, as the Bag shows it: a badge on the icon.
+                    ItemIcon(item: item, size: 36)
+                        .overlay(alignment: .topTrailing) {
+                            let owned = session.count(of: item.id)
+                            if owned > 0 {
+                                CountBadge(count: owned)
+                                    .offset(x: 6, y: -6)
+                                    .accessibilityLabel(L("own {count}", ["count": owned]))
                             }
                         }
-                        Spacer(minLength: 0)
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text(item.name)
+                        let detail = item.type == .consumable ? (item.description ?? "") : "\(item.type.displayName) · \(item.stats?.bonusSummary ?? "")"
+                        // Two lines at most: a tap opens the card with all of it.
+                        Text(detail).font(HUDStyle.font(10)).foregroundStyle(HUDStyle.green).lineLimit(2)
+                        if item.type != .consumable, let issue = session.equipIssue(item) {
+                            Text(issue).font(HUDStyle.font(10)).foregroundStyle(HUDStyle.orange)
+                        }
                     }
-                    .contentShape(Rectangle())
+                    Spacer(minLength: 0)
                 }
-                .buttonStyle(.plain)
-                .accessibilityHint(L("Shows what it does and who can use it"))
-                let short = item.price - session.data.gold
-                VStack(spacing: 3) {
-                    Button(L("{gold}g", ["gold": item.price])) {
-                        // A potion or material, with coins and room for more than one: how many first.
-                        if GameSession.sellsInBulk(item) && session.affordable(at: item.price) > 1 {
-                            deal = ShopDeal(item: item, selling: false)
-                        } else {
-                            reply = Self.buy(item, 1, session: session)
-                        }
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityHint(L("Shows what it does and who can use it"))
+            let short = item.price - session.data.gold
+            VStack(spacing: 3) {
+                Button(L("{gold}g", ["gold": item.price])) {
+                    // A potion or material, with coins and room for more than one: how many first.
+                    if GameSession.sellsInBulk(item) && session.affordable(at: item.price) > 1 {
+                        deal = ShopDeal(item: item, selling: false)
+                    } else {
+                        reply = Self.buy(item, 1, session: session)
                     }
-                    .buttonStyle(PixelButtonStyle(tint: short <= 0 ? HUDStyle.gold : HUDStyle.dim, compact: true))
-                    .accessibilityHint(short > 0 ? L("Need {gold} more gold", ["gold": short]) : "")
-                    // Why its price is grey, short and quiet under it (0.9.74's orange line under the
-                    // name, on nearly every row at low gold, doubled the rows and turned the shop orange).
-                    if short > 0 {
-                        Text(L("Need {gold}", ["gold": short]))
-                            .font(HUDStyle.font(10))
-                            .monospacedDigit()
-                            .foregroundStyle(HUDStyle.dim)
-                            .lineLimit(1)
-                            .fixedSize()
-                            .accessibilityHidden(true)
-                    }
+                }
+                .buttonStyle(PixelButtonStyle(tint: short <= 0 ? HUDStyle.gold : HUDStyle.dim, compact: true))
+                .accessibilityHint(short > 0 ? L("Need {gold} more gold", ["gold": short]) : "")
+                // Why its price is grey, short and quiet under it (0.9.74's orange line under the
+                // name, on nearly every row at low gold, doubled the rows and turned the shop orange).
+                if short > 0 {
+                    Text(L("Need {gold}", ["gold": short]))
+                        .font(HUDStyle.font(10))
+                        .monospacedDigit()
+                        .foregroundStyle(HUDStyle.dim)
+                        .lineLimit(1)
+                        .fixedSize()
+                        .accessibilityHidden(true)
                 }
             }
-            .font(HUDStyle.font(12))
-            .rowCard()
         }
+        .font(HUDStyle.font(12))
+        .groupRow()
     }
 
     /// Everything in your bag the shop will take, at half price. What you're wearing stays on.
@@ -494,7 +502,7 @@ private struct ShopPanel: View {
                 .font(HUDStyle.font(11))
                 .foregroundStyle(HUDStyle.dim)
         }
-        ForEach(items) { item in
+        GroupedRows(items) { item in
             HStack(spacing: 10) {
                 Button { info = item } label: {
                     HStack(spacing: 10) {
@@ -522,8 +530,25 @@ private struct ShopPanel: View {
                 .buttonStyle(PixelButtonStyle(tint: HUDStyle.gold, compact: true))
             }
             .font(HUDStyle.font(12))
-            .rowCard()
+            .groupRow()
         }
+    }
+}
+
+/// One kind of a shop's wares (`ItemShelf`: items, gear, materials), in the order the shop has them.
+private struct WareShelf: Identifiable {
+    let shelf: ItemShelf
+    let items: [ItemDef]
+    var id: ItemShelf { shelf }
+
+    /// `items` by kind, the kinds that have none left out; anything that's neither gear nor a
+    /// material with the items.
+    static func of(_ items: [ItemDef]) -> [WareShelf] {
+        let gear = items.filter { ItemShelf.gear.holds($0) }
+        let materials = items.filter { ItemShelf.materials.holds($0) }
+        let rest = items.filter { !ItemShelf.gear.holds($0) && !ItemShelf.materials.holds($0) }
+        return [WareShelf(shelf: .items, items: rest), WareShelf(shelf: .gear, items: gear),
+                WareShelf(shelf: .materials, items: materials)].filter { !$0.items.isEmpty }
     }
 }
 
