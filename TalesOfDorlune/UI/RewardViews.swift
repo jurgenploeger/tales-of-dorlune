@@ -190,14 +190,30 @@ private struct BountyRow: View {
     let index: Int
 
     var body: some View {
-        HStack(spacing: 10) {
+        HStack(alignment: .top, spacing: 10) {
             IconImage(icon, size: 18)
                 .foregroundStyle(HUDStyle.gold)
-                .frame(width: 24)
+                .frame(width: 24, height: 24)
             VStack(alignment: .leading, spacing: 4) {
-                Text(session.describe(bounty))
-                    .font(HUDStyle.font(12))
-                    .fixedSize(horizontal: false, vertical: true)
+                // Claimed or Claim on the line with what it asks, so the bar under it runs the row's
+                // whole width whatever its state (the user, 2026-11-11: "Can we have the progress bars
+                // here stay the same width, so it doesn't change when there is a button or when it's
+                // completed").
+                HStack(alignment: .center, spacing: 8) {
+                    Text(session.describe(bounty))
+                        .font(HUDStyle.font(12))
+                        .fixedSize(horizontal: false, vertical: true)
+                    Spacer(minLength: 6)
+                    if bounty.claimed {
+                        IconImage(.check, size: 16)
+                            .foregroundStyle(HUDStyle.green)
+                            .accessibilityLabel(L("Claimed"))
+                    } else if bounty.isDone {
+                        Button(L("Claim")) { session.claimBounty(index) }
+                            .buttonStyle(PixelButtonStyle(tint: HUDStyle.gold, compact: true))
+                    }
+                }
+                .frame(minHeight: 24)
                 GlossyBar(fraction: CGFloat(bounty.progress) / CGFloat(max(1, bounty.count)),
                           color: bounty.isDone ? HUDStyle.green : HUDStyle.gold, height: GlossyBar.progress)
                 // A label that doesn't fit moves whole onto the next row (`WrapRows`).
@@ -208,15 +224,6 @@ private struct BountyRow: View {
                 }
                 .font(HUDStyle.font(10))
                 .foregroundStyle(HUDStyle.dim)
-            }
-            Spacer(minLength: 6)
-            if bounty.claimed {
-                IconImage(.check, size: 16)
-                    .foregroundStyle(HUDStyle.green)
-                    .accessibilityLabel(L("Claimed"))
-            } else if bounty.isDone {
-                Button(L("Claim")) { session.claimBounty(index) }
-                    .buttonStyle(PixelButtonStyle(tint: HUDStyle.gold, compact: true))
             }
         }
         // Gold while it's done and waiting to be claimed.
