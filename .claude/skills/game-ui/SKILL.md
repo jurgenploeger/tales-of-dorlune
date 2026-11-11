@@ -119,6 +119,12 @@ windows"). A window's content is groups set into the glass, never one flat blue 
 over a speech window: its close button and Dye gear button showed round it, until 0.9.74). A card over a
 menu window is fine: the menu is a backdrop.
 
+**The world map is a map first** (2026-11-11, the user: "a bit messy now"): its canvas clear, the
+compass small in the top right, where you are, your coordinates and the time together at the bottom
+left, and every control in one column at the bottom right within a thumb's reach, as map apps do:
+what's shown (a dropdown, `filterMenu`, gold when it isn't All), zoom, where you are. Map buttons 40
+points, 44 to tap. Nothing that takes a touch floats over the middle of the map.
+
 **Fits a phone held either way.** Every window fits portrait and landscape; the part that scrolls gives way
 first (`FitOrScroll`, a `ScrollView` under fixed tabs and title). Menu windows are as big as the HUD's
 margins allow (`menuWindowMargins()`: 8 pt from the sides and top). Check both orientations, every time.

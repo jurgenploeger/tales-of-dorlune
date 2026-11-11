@@ -23,6 +23,8 @@ struct WorldAtlas: View {
     private let topLeading: AnyView
     private let bottomLeading: AnyView
     @State private var selected: String?
+    /// The filter's dropdown (`filterMenu`) open.
+    @State private var filtering = false
     @State private var pulse = false
     /// Which badges show (playtesting 2026-10-30: "Add filters to the map so you can quickly see
     /// stuff"), kept for the next time the map opens.
@@ -174,13 +176,12 @@ struct WorldAtlas: View {
         .background(Self.sea)
         // Touches go through to the map under them.
         .overlay(alignment: .top) {
-            VStack(alignment: .leading, spacing: 8) {
-                topLeading
-                    .allowsHitTesting(false)
-                // The filters under the title, the one thing up here that takes a touch.
-                filterChips
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
+            // Nothing that takes a touch up here: the map's controls are together at the bottom
+            // right (the user, 2026-11-11: "Can we have the filter pills show in a dropdown closer to
+            // the bottom right controls? ... it's a bit messy now").
+            topLeading
+                .allowsHitTesting(false)
+                .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.bottom, 30)
             .background { edgeBand(.top, marks: shown).allowsHitTesting(false) }
         }
@@ -188,8 +189,8 @@ struct WorldAtlas: View {
             bottomLeading
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.leading, 18)
-                // Clear of the zoom buttons on the right.
-                .padding(.trailing, 62)
+                // Clear of the map's buttons on the right.
+                .padding(.trailing, 76)
                 .padding(.top, 30)
                 // Level with the Where you are button beside it, as far in from the corner.
                 .padding(.bottom, 22)
@@ -506,17 +507,23 @@ struct WorldAtlas: View {
         Button {
             turnByCompass()
         } label: {
-            MapCompass(heading: .radians(Double(framing.rotation)), squash: framing.squash)
+            // Smaller than the minimap's own, out of the way in the corner.
+        MapCompass(size: 56, heading: .radians(Double(framing.rotation)), squash: framing.squash)
         }
         .buttonStyle(.plain)
         .accessibilityLabel(isNorthUp ? L("Turn the map as you see the land") : L("Turn the map north up"))
     }
 
+    /// Every control of the map in one column at the bottom right, in reach of a thumb, as map apps
+    /// keep theirs: what's shown (a dropdown, `filterMenu`), zoom, and where you are.
     private var controls: some View {
-        VStack(spacing: 6) {
-            mapButton(Text("+").font(HUDStyle.font(16)), label: L("Zoom in")) { zoom(by: 1.6) }
-            mapButton(Text("−").font(HUDStyle.font(16)), label: L("Zoom out")) { zoom(by: 1 / 1.6) }
-            mapButton(IconImage(.user, size: 14), label: L("Where you are")) { centreOnHere() }
+        VStack(alignment: .trailing, spacing: 10) {
+            filterMenu
+            VStack(spacing: 6) {
+                mapButton(Text("+").font(HUDStyle.font(18)), label: L("Zoom in")) { zoom(by: 1.6) }
+                mapButton(Text("−").font(HUDStyle.font(18)), label: L("Zoom out")) { zoom(by: 1 / 1.6) }
+            }
+            mapButton(IconImage(.user, size: 16), label: L("Where you are")) { centreOnHere() }
         }
         // Well in from the window's rounded corner (playtesting 2026-10-30: 6 points left them
         // squeezed into it).
@@ -543,12 +550,106 @@ struct WorldAtlas: View {
         Button(action: action) {
             face
                 .foregroundStyle(HUDStyle.ink)
-                .frame(width: 30, height: 30)
+                // 40 points across, 44 to tap (Apple's least: they were 30).
+                .frame(width: 40, height: 40)
                 .background(Circle().fill(HUDStyle.plate))
                 .overlay(Circle().strokeBorder(HUDStyle.ink.opacity(0.6), lineWidth: 1.5))
+                .shadow(color: .black.opacity(0.3), radius: 2, x: 0, y: 1)
+                .frame(width: 44, height: 44)
+                .contentShape(Circle())
         }
         .buttonStyle(.plain)
         .accessibilityLabel(label)
+    }
+
+    /// What the map's badges show, a dropdown over the zoom buttons: the one shown on its face (gold
+    /// once it isn't All), the rest in a panel opening up and to the left of it, a tick by the one
+    /// shown. A tap anywhere else closes it. Kept for the next time the map opens.
+    private var filterMenu: some View {
+        Button {
+            SoundEffects.shared.play(.tap, volume: 0.7)
+            withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) { filtering.toggle() }
+        } label: {
+            HStack(spacing: 6) {
+                Text(filter == .all ? L("Show all") : filter.title)
+                    .lineLimit(1)
+                IconImage(.chevronUp, size: 10)
+                    .rotationEffect(.degrees(filtering ? 180 : 0))
+            }
+            .font(HUDStyle.font(12))
+            .foregroundStyle(HUDStyle.ink)
+            .padding(.horizontal, 14)
+            .frame(minHeight: 40)
+            .background(Capsule().fill(filter == .all ? HUDStyle.plate : HUDStyle.gold))
+            .overlay(Capsule().strokeBorder(HUDStyle.ink.opacity(0.6), lineWidth: 1.5))
+            .shadow(color: .black.opacity(0.3), radius: 2, x: 0, y: 1)
+            .fixedSize()
+            .frame(minHeight: 44)
+            .contentShape(Capsule())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(L("Show on the map"))
+        .accessibilityValue(filter.title)
+        // Anywhere else closes it: a tap catcher round the button, under the panel.
+        .background {
+            if filtering {
+                Color.clear
+                    .frame(width: 4000, height: 4000)
+                    .contentShape(Rectangle())
+                    .onTapGesture { closeFilter() }
+                    .accessibilityHidden(true)
+            }
+        }
+        .overlay(alignment: .bottomTrailing) {
+            if filtering {
+                filterPanel
+                    .offset(y: -50)
+                    .transition(.scale(scale: 0.6, anchor: .bottomTrailing).combined(with: .opacity))
+            }
+        }
+    }
+
+    private func closeFilter() {
+        withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) { filtering = false }
+    }
+
+    private var filterPanel: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            ForEach(MapFilter.allCases, id: \.self) { kind in
+                let selected = kind == filter
+                Button {
+                    SoundEffects.shared.play(.tap, volume: 0.7)
+                    withAnimation(.easeOut(duration: 0.2)) { filter = kind }
+                    closeFilter()
+                } label: {
+                    HStack(spacing: 8) {
+                        IconImage(.check, size: 14)
+                            .foregroundStyle(HUDStyle.gold)
+                            .opacity(selected ? 1 : 0)
+                        Text(kind.title)
+                            .font(HUDStyle.font(13))
+                            .foregroundStyle(selected ? HUDStyle.gold : .white)
+                            .shadow(color: HUDStyle.frameDark, radius: 0, x: 1, y: 1)
+                            .lineLimit(1)
+                        Spacer(minLength: 0)
+                    }
+                    .padding(.horizontal, 8)
+                    .frame(minHeight: 36)
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(PressScaleStyle())
+                .accessibilityAddTraits(selected ? .isSelected : [])
+            }
+        }
+        .padding(.vertical, 6)
+        .padding(.horizontal, 4)
+        .frame(minWidth: 170, alignment: .leading)
+        .background(HUDStyle.panelSurface(RoundedRectangle(cornerRadius: 14)))
+        .shadow(color: .black.opacity(0.35), radius: 3, x: 0, y: 2)
+        .fixedSize()
+        .accessibilityElement(children: .contain)
+        .accessibilityAddTraits(.isModal)
+        .accessibilityAction(.escape) { closeFilter() }
     }
 
     private func tap(at location: CGPoint, in size: CGSize) {
@@ -655,20 +756,6 @@ struct WorldAtlas: View {
             let sum = group.reduce(CGPoint.zero) { CGPoint(x: $0.x + $1.spot.x, y: $0.y + $1.spot.y) }
             leader.spot = CGPoint(x: sum.x / CGFloat(group.count), y: sum.y / CGFloat(group.count))
             return leader
-        }
-    }
-
-    /// The filters, a chip each, one on at a time: as the Bag's kinds are.
-    private var filterChips: some View {
-        SideScroll {
-            HStack(spacing: 6) {
-                ForEach(MapFilter.allCases, id: \.self) { kind in
-                    FilterChip(title: kind.title, on: filter == kind) {
-                        withAnimation(.easeOut(duration: 0.2)) { filter = kind }
-                    }
-                }
-            }
-            .padding(.horizontal, 16)
         }
     }
 
