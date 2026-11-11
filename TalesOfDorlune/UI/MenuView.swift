@@ -1298,26 +1298,31 @@ private struct FriendRow: View {
     }
 }
 
-/// A friend's status, in a small badge: with you, waiting for you, near you, online or offline.
+/// A friend's status, in a small badge: waiting for you, near you, online or offline. None for one
+/// at your side: the Party group says so (the user, 2026-11-11: "The with you labels are not
+/// needed").
 private struct FriendStatusBadge: View {
     let session: GameSession
     let friend: Adventurer
 
+    private var status: (text: String, color: Color)? {
+        if session.isInParty(friend) {
+            return session.whereabouts(of: friend) != nil ? (L("Waiting"), HUDStyle.orange) : nil
+        }
+        if session.adventurersAround.contains(friend.id) { return (L("Nearby"), HUDStyle.green) }
+        return session.status(of: friend) == .offline ? (L("Offline"), HUDStyle.dim) : (L("Online"), HUDStyle.green)
+    }
+
     var body: some View {
-        let (text, color): (String, Color) = {
-            if session.isInParty(friend) {
-                return session.whereabouts(of: friend) != nil ? (L("Waiting"), HUDStyle.orange) : (L("With you"), HUDStyle.gold)
-            }
-            if session.adventurersAround.contains(friend.id) { return (L("Nearby"), HUDStyle.green) }
-            return session.status(of: friend) == .offline ? (L("Offline"), HUDStyle.dim) : (L("Online"), HUDStyle.green)
-        }()
-        Text(text.uppercased())
-            .font(HUDStyle.font(9))
-            .foregroundStyle(HUDStyle.ink)
-            .padding(.horizontal, 7)
-            .padding(.vertical, 2)
-            .background(Capsule().fill(color))
-            .fixedSize()
+        if let status {
+            Text(status.text.uppercased())
+                .font(HUDStyle.font(9))
+                .foregroundStyle(HUDStyle.ink)
+                .padding(.horizontal, 7)
+                .padding(.vertical, 2)
+                .background(Capsule().fill(status.color))
+                .fixedSize()
+        }
     }
 }
 

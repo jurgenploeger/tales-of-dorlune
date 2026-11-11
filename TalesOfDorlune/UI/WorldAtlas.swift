@@ -186,7 +186,8 @@ struct WorldAtlas: View {
                 .padding(.bottom, 16)
                 .background { edgeBand(.top, marks: shown).allowsHitTesting(false) }
         }
-        .overlay(alignment: .topTrailing) { compass.padding(10) }
+        // As far in from the corner as everything else over the map (16).
+        .overlay(alignment: .topTrailing) { compass.padding(.top, 10).padding(.trailing, 16) }
         // The controls along the bottom: what's shown at the left, the buttons in a row at the right
         // ("The filter dropdown should be bottom left. The three controls on the bottom right should
         // be horizontal with the user first, then minus, then plus").
@@ -197,9 +198,9 @@ struct WorldAtlas: View {
                 Spacer(minLength: 8)
                 controls
             }
-            .padding(.horizontal, 14)
+            .padding(.horizontal, 16)
             .padding(.top, 16)
-            .padding(.bottom, 14)
+            .padding(.bottom, 16)
             .background { edgeBand(.bottom, marks: shown).allowsHitTesting(false) }
         }
         .onAppear {
