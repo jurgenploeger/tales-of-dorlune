@@ -82,6 +82,7 @@ struct LeaveBehindCard: View {
             if let newcomer { session.leaveBehind(newcomer.id) }
             onDone()
         }
+        .popIn()
         .padding(20)
     }
 }

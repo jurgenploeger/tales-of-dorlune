@@ -39,7 +39,9 @@ modal with `.gameWindow()`, never a background of its own.
 
 **Every window has a title bar** (`WindowBar`, since 0.9.74; the user, 2026-11-10: "We can have the title
 bars with the tabs"): the frame's own bevel along the window's top, out to the frame, as Figma's `UI /
-Window` has it. On it, the window's name in white with a hard dark shadow (`WindowTitle`), or its pages'
+Window` has it. On it, the window's name in dark ink (`HUDStyle.barText`, white in Dark Mode; white on the light bar was
+1.1 : 1, 2026-11-11) with a pale 1-point highlight (`WindowTitle`), on the bevel's light half only
+(`HUDStyle.barGradient`: ending in its dark it merged with the glass under it), or its pages'
 tabs (`PageTabs`). Put the title or tabs first in the window's `VStack(spacing: 0)`, flush to its top, with
 no padding round them, or the bar stops short. The world map too, its atlas under the bar (0.9.76; the
 user: "update the map with the new modal header"); `bar: false` (gold, no bar) is for a title laid
@@ -49,6 +51,11 @@ over a picture, which nothing now is.
 `WindowTitle` with `onClose`), hanging 9 pt past it (2026-10-25: "Put all the close buttons overlayed top
 right of the modals"). Keep `OrangeCloseButton.room` clear along the top. Orange means closing, losses and
 warnings, nothing else.
+
+**Contrast.** Text at least 4.5 : 1 against what's behind it, 3 : 1 for large bold text (14 pt bold and
+up: titles), WCAG 1.4.3; a 1-point shadow doesn't count toward it. Measure it (relative luminance) for
+any text on a gradient at the gradient's worst point, and in both looks. Neighbouring surfaces (a bar
+and the glass under it) at least 3 : 1 apart, or a line between them, or they merge.
 
 **Colour on glass.** Text cream (`HUDStyle.cream`); headings and the tab you're on gold (`gold`); minor text
 `dim`; good news and bonuses `green`; dark ink (`ink`) only on light buttons, plates and the gold tab. The
@@ -75,7 +82,7 @@ chips, swatches, hairstyles) is a `SideScroll`, never a bare `ScrollView(.horizo
 the one you're on is the window's own glass (`HUDStyle.glassTop`) with its name in gold, joined to the page
 under it, its foot flaring out into the bar in corners rounded the other way (`FlaredTab`, the user,
 2026-11-11); their top corners concentric with the window's (`TabEdge.radius`: the window's 22 less the
-tabs' 10-point inset from its top and side; the user, 2026-11-11); the others are sunk into the bar, white. One with something waiting wears the gold dot. Each of Character, Companions, Friends, Bag, Quests and Settings is
+tabs' 10-point inset from its top and side; the user, 2026-11-11); the others are sunk into the bar, their names in the bar's ink. One with something waiting wears the gold dot. Each of Character, Companions, Friends, Bag, Quests and Settings is
 a window of its own, opened from the HUD menu (2026-10-25: "The menu items hero etc should become their
 own modal window"), so a window's tabs are its own pages, never the other windows.
 
@@ -93,6 +100,13 @@ windows"). A window's content is groups set into the glass, never one flat blue 
   `rowCard()`; a panel (a settings section, a stat) a `GlassCard` background. Never a hand-rolled
   `RoundedRectangle().fill(.white.opacity(…))`.
 - What a group's title says, its rows don't repeat (no IN PARTY badge in the Party group).
+- A long list (friends, quests, the Bag) gets search, sort and filter at its top: `ItemSearchField`
+  and `SortMenu` in a row, `FilterChip`s in a `SideScroll` under it (Friends: All, Online, Offline;
+  online first, last seen, name, level, first met). A person's row: their sprite in a fixed column 16
+  points from the text, their status in a badge at the top right (`FriendStatusBadge`), a tap for
+  more in a window over it (`FriendMapWindow`: where they are, on their land's map).
+- How many a window holds goes in a count badge after its title (`WindowTitle(badge:)`, the Friends
+  window), not again on a section title under it; a window of one group needs no section title.
 - A row shows the least that tells it apart; the rest opens in a window of its own over the list,
   with Back on its title bar (a quest: the giver's round face, its number, small, over its name; tapped, `QuestWindow` with
   who asked, how far along, its story and rewards). The user, 2026-11-11: "The quest items show too
@@ -112,6 +126,12 @@ windows"). A window's content is groups set into the glass, never one flat blue 
 over a speech window: its close button and Dye gear button showed round it, until 0.9.74). A card over a
 menu window is fine: the menu is a backdrop.
 
+**The world map is a map first** (2026-11-11, the user: "a bit messy now"): its canvas clear, the
+compass small in the top right, where you are, your coordinates and the time together at the bottom
+left, and every control in one column at the bottom right within a thumb's reach, as map apps do:
+what's shown (a dropdown, `filterMenu`, gold when it isn't All), zoom, where you are. Map buttons 40
+points, 44 to tap. Nothing that takes a touch floats over the middle of the map.
+
 **Fits a phone held either way.** Every window fits portrait and landscape; the part that scrolls gives way
 first (`FitOrScroll`, a `ScrollView` under fixed tabs and title). Menu windows are as big as the HUD's
 margins allow (`menuWindowMargins()`: 8 pt from the sides and top). Check both orientations, every time.
@@ -121,11 +141,20 @@ off by the screen's edge, over a window running the screen's width; the window's
 them (`speakerRoom`). A narrow bubble beside them with a tail was tried and dropped (2026-10-26). Their
 name is the window's title.
 
-**Motion.** A window pops in from a touch smaller (`popIn()`); its backdrop only fades. What a tap opens
+**Motion.** Every window opens the same way, all through the game (the user, 2026-11-11: "Not all
+modals have the same opening animation yet"): it pops in from a touch smaller (`popIn()`, after
+`gameWindow()` and its `windowCloseButton`), and is presented with `.transition(.opacity)`, its backdrop
+only fading. Never a scale or slide of its own at the call site: with `popIn` it doubled up. A HUD
+button or pad (not a window) may grow from where it's anchored. What a tap opens
 under a row unrolls (`.transition(.reveal)` with `Reveal.animation`). Respect Reduce Motion.
 
 **Dark Mode.** Light surfaces (frames, plates, buttons, portraits) are `Color.adaptive(light:dark:)`; the
 glass goes deeper; lettering keeps its colours. Check both looks (debug flag `dark` / `light`).
+
+**Labels never break inside themselves.** A row of labels (a quest's rewards, a bounty's pay) is a
+`WrapRows`: one that doesn't fit moves whole onto the next row (the user, 2026-11-11: "+1 skill point"
+broke onto two lines beside the EXP). Give each the same `frame(height:)` so a row's labels line up.
+Progress bars are `GlossyBar.progress` (9) tall.
 
 **Words.** Every visible string goes through `L("…")` and is translated into all ten other languages
 (`tools/i18n.py missing <code>`, `merge`). Leave room: German and French run a third longer than English,

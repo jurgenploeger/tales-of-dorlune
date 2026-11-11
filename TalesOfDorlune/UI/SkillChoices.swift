@@ -357,6 +357,7 @@ struct LevelUpCard: View {
         .gameWindow()
         // Closing it is Decide later: unspent points wait in the Character menu.
         .windowCloseButton(onDone)
+        .popIn()
         .padding(20)
     }
 }

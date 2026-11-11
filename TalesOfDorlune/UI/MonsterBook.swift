@@ -144,7 +144,7 @@ struct MonsterBook: View {
                     Text(L("At {count} kinds: {reward}", ["count": next.count, "reward": reward]))
                         .font(HUDStyle.font(11))
                         .fixedSize(horizontal: false, vertical: true)
-                    GlossyBar(fraction: CGFloat(min(seenCount, next.count)) / CGFloat(max(1, next.count)), color: HUDStyle.gold, height: 5)
+                    GlossyBar(fraction: CGFloat(min(seenCount, next.count)) / CGFloat(max(1, next.count)), color: HUDStyle.gold, height: GlossyBar.progress)
                 }
             }
             .padding(8)

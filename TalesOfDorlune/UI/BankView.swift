@@ -38,6 +38,7 @@ struct BankView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .gameWindow()
+            .popIn()
             .menuWindowMargins()
 
             if let picked {

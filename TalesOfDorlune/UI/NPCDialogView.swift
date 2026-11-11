@@ -141,6 +141,8 @@ struct NPCDialogView: View {
         .background(window.fill(HUDStyle.glass).shadow(color: .black.opacity(0.35), radius: 3, x: 0, y: 2))
         .overlay(HUDStyle.frame(window))
         .windowCloseButton(onClose)
+        // Opens as every window does.
+        .popIn()
     }
 
     /// What everyone but a quest giver says, and what they do for you under it.
@@ -1020,7 +1022,7 @@ private struct QuestCompleteCard: View {
                 .onTapGesture {}
             if levelUp, let level = finished.newLevel {
                 LevelUpCard(session: session, level: level, onDone: onDone)
-                    .transition(.scale(scale: 0.9).combined(with: .opacity))
+                    .transition(.opacity)
             } else {
                 card
             }
@@ -1066,6 +1068,7 @@ private struct QuestCompleteCard: View {
         .gameWindow()
         // Closing it is Continue: the rewards are already yours.
         .windowCloseButton(advance)
+        .popIn()
         .padding(20)
     }
 

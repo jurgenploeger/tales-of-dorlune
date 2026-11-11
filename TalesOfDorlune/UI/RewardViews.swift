@@ -47,6 +47,7 @@ struct DailyGiftCard: View {
             }
             .frame(maxWidth: 340)
             .gameWindow()
+            .popIn()
             .padding(16)
         }
         .foregroundStyle(HUDStyle.cream)
@@ -137,8 +138,8 @@ struct BountiesSection: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(L("Claim them all for a bonus"))
                     .font(HUDStyle.font(12))
-                HStack(spacing: 8) {
-                    Label(L("{exp} EXP", ["exp": exp]), icon: .star, size: 12)
+                WrapRows(spacing: 8) {
+                    Label(L("{exp} EXP", ["exp": exp]), icon: .star, size: 12).frame(height: 22)
                     ForEach(RewardList.group(rules.items ?? [], in: session), id: \.item.id) { entry in
                         ItemIcon(item: entry.item, size: 20, count: entry.count)
                             .accessibilityLabel(entry.item.name)
@@ -189,32 +190,40 @@ private struct BountyRow: View {
     let index: Int
 
     var body: some View {
-        HStack(spacing: 10) {
+        HStack(alignment: .top, spacing: 10) {
             IconImage(icon, size: 18)
                 .foregroundStyle(HUDStyle.gold)
-                .frame(width: 24)
+                .frame(width: 24, height: 24)
             VStack(alignment: .leading, spacing: 4) {
-                Text(session.describe(bounty))
-                    .font(HUDStyle.font(12))
-                    .fixedSize(horizontal: false, vertical: true)
+                // Claimed or Claim on the line with what it asks, so the bar under it runs the row's
+                // whole width whatever its state (the user, 2026-11-11: "Can we have the progress bars
+                // here stay the same width, so it doesn't change when there is a button or when it's
+                // completed").
+                HStack(alignment: .center, spacing: 8) {
+                    Text(session.describe(bounty))
+                        .font(HUDStyle.font(12))
+                        .fixedSize(horizontal: false, vertical: true)
+                    Spacer(minLength: 6)
+                    if bounty.claimed {
+                        IconImage(.check, size: 16)
+                            .foregroundStyle(HUDStyle.green)
+                            .accessibilityLabel(L("Claimed"))
+                    } else if bounty.isDone {
+                        Button(L("Claim")) { session.claimBounty(index) }
+                            .buttonStyle(PixelButtonStyle(tint: HUDStyle.gold, compact: true))
+                    }
+                }
+                .frame(minHeight: 24)
                 GlossyBar(fraction: CGFloat(bounty.progress) / CGFloat(max(1, bounty.count)),
-                          color: bounty.isDone ? HUDStyle.green : HUDStyle.gold, height: 6)
-                HStack(spacing: 10) {
-                    Text("\(bounty.progress)/\(bounty.count)")
-                    GoldPill(amount: bounty.gold, size: 10)
-                    Label(L("{exp} EXP", ["exp": bounty.exp]), icon: .star, size: 12)
+                          color: bounty.isDone ? HUDStyle.green : HUDStyle.gold, height: GlossyBar.progress)
+                // A label that doesn't fit moves whole onto the next row (`WrapRows`).
+                WrapRows(spacing: 10) {
+                    Text("\(bounty.progress)/\(bounty.count)").frame(height: 20)
+                    GoldPill(amount: bounty.gold, size: 10).frame(height: 20)
+                    Label(L("{exp} EXP", ["exp": bounty.exp]), icon: .star, size: 12).frame(height: 20)
                 }
                 .font(HUDStyle.font(10))
                 .foregroundStyle(HUDStyle.dim)
-            }
-            Spacer(minLength: 6)
-            if bounty.claimed {
-                IconImage(.check, size: 16)
-                    .foregroundStyle(HUDStyle.green)
-                    .accessibilityLabel(L("Claimed"))
-            } else if bounty.isDone {
-                Button(L("Claim")) { session.claimBounty(index) }
-                    .buttonStyle(PixelButtonStyle(tint: HUDStyle.gold, compact: true))
             }
         }
         // Gold while it's done and waiting to be claimed.
@@ -250,7 +259,7 @@ struct TitlesSection: View {
             // many of all there are (the user, 2026-11-11: "Make improvements to the skills and titles").
             SectionTitle(text: L("Earned"), detail: L("{count} of {total}", ["count": earned.count, "total": titles.count]))
             VStack(alignment: .leading, spacing: 8) {
-                GlossyBar(fraction: CGFloat(earned.count) / CGFloat(max(1, titles.count)), color: HUDStyle.gold, height: 6)
+                GlossyBar(fraction: CGFloat(earned.count) / CGFloat(max(1, titles.count)), color: HUDStyle.gold, height: GlossyBar.progress)
                 if earned.isEmpty {
                     Text(L("Earn titles as you go: levels, lands, monsters, bosses and more. Wear one over your name."))
                         .font(HUDStyle.font(11))
@@ -336,7 +345,7 @@ private struct TitleGoalRow: View {
                 Text(session.titleRequirement(title))
                     .font(HUDStyle.font(10))
                     .foregroundStyle(HUDStyle.dim)
-                GlossyBar(fraction: CGFloat(min(progress.have, progress.need)) / CGFloat(max(1, progress.need)), color: HUDStyle.gold, height: 5)
+                GlossyBar(fraction: CGFloat(min(progress.have, progress.need)) / CGFloat(max(1, progress.need)), color: HUDStyle.gold, height: GlossyBar.progress)
             }
         }
         .groupRow()

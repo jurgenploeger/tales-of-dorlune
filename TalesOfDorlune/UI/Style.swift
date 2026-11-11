@@ -87,6 +87,18 @@ enum HUDStyle {
 
     static let bevel = LinearGradient(colors: [frameLight, frameMid, frameDark], startPoint: .top, endPoint: .bottom)
 
+    /// A window's title bar (`WindowBar`): the bevel's light half only, so its foot stays clear of the
+    /// glass under it (the user, 2026-11-11: "make the gradient less dark at the bottom, because now
+    /// it almost looks like it merges with the darker bg below"). Ending in the bevel's dark, it was
+    /// 1.1 : 1 against the glass's top; ending in its middle blue, 4.2 : 1.
+    static let barGradient = LinearGradient(colors: [frameLight, frameMid], startPoint: .top, endPoint: .bottom)
+    /// Lettering on the title bar: dark ink on its light blue (7.5 : 1 or more; white was 1.1 : 1 at
+    /// its top, under the 3 : 1 large text needs, WCAG 1.4.3: "when the header just has a white
+    /// title, the contrast is not enough"); white in Dark Mode, where the bar is a deeper blue.
+    static let barText = Color.adaptive(light: ink, dark: .white)
+    /// Its 1-point shadow: a pale highlight under dark ink (pressed into the bar), a dark one under white.
+    static let barTextShadow = Color.adaptive(light: .white.opacity(0.55), dark: frameDark)
+
     /// The deep-blue glass of the windows (deeper still, nearly midnight, in Dark Mode).
     static let glass = LinearGradient(
         colors: [Color.adaptive(light: glassTopLight.opacity(0.93), dark: glassTopDark.opacity(0.95)),
@@ -212,6 +224,11 @@ struct GlossyBar: View {
     let color: Color
     var height: CGFloat = 11
 
+    /// How tall a progress bar is (a quest's, a bounty's, a title's, the Book's next milestone): 9
+    /// (the user, 2026-11-11: "anywhere we show this progress bar, make them a bit taller"; they were
+    /// 5 and 6).
+    static let progress: CGFloat = 9
+
     var body: some View {
         GeometryReader { proxy in
             ZStack(alignment: .leading) {
@@ -246,10 +263,14 @@ struct WindowTitle: View {
     var bar = true
     /// Room kept clear at the title's right, under the bar (the character a speech window's stands by).
     var trailingRoom: CGFloat = 0
+    /// How many the window holds, in a count badge trailing the title (the user, 2026-11-11: "The
+    /// number of friends can be shown as a badge count trailing the header title").
+    var badge: Int?
 
     init(_ title: String, detail: String? = nil, detailTint: Color? = nil, bar: Bool = true, trailingRoom: CGFloat = 0,
-         onClose: (() -> Void)? = nil) {
+         badge: Int? = nil, onClose: (() -> Void)? = nil) {
         self.title = title
+        self.badge = badge
         self.detail = detail
         self.detailTint = detailTint
         self.bar = bar
@@ -259,19 +280,34 @@ struct WindowTitle: View {
 
     private var text: Text {
         guard let detail else { return Text(title) }
-        let tint = detailTint ?? (bar ? Color.white.opacity(0.85) : HUDStyle.dim)
+        let tint = detailTint ?? (bar ? HUDStyle.barText.opacity(0.75) : HUDStyle.dim)
         return Text(title) + Text("  " + detail).font(HUDStyle.font(13)).foregroundStyle(tint)
     }
 
     var body: some View {
-        text
-            .font(HUDStyle.font(bar ? 17 : 18))
-            .foregroundStyle(bar ? Color.white : HUDStyle.gold)
-            .shadow(color: HUDStyle.frameDark, radius: 0, x: 1, y: 1)
-            .lineLimit(2)
-            .minimumScaleFactor(0.8)
-            .fixedSize(horizontal: false, vertical: true)
-            .frame(maxWidth: .infinity, alignment: .leading)
+        HStack(spacing: 8) {
+            text
+                .font(HUDStyle.font(bar ? 17 : 18))
+                .foregroundStyle(bar ? HUDStyle.barText : HUDStyle.gold)
+                .shadow(color: bar ? HUDStyle.barTextShadow : HUDStyle.frameDark, radius: 0, x: 0, y: 1)
+                .lineLimit(2)
+                .minimumScaleFactor(0.8)
+                .fixedSize(horizontal: false, vertical: true)
+            if let badge {
+                // White on the bar's own deep blue, as an app's badge is.
+                Text("\(badge)")
+                    .font(HUDStyle.font(12))
+                    .monospacedDigit()
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 2)
+                    .frame(minWidth: 24)
+                    .background(Capsule().fill(HUDStyle.frameDark))
+                    .fixedSize()
+                    .accessibilityLabel(L("{count} in all", ["count": badge]))
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.leading, 16)
             // The close button sits over the window's corner (playtesting 2026-10-25: "Put all the
             // close buttons overlayed top right of the modals"): its room kept clear here.
@@ -289,7 +325,7 @@ struct WindowTitle: View {
 /// the tabs"). A window's name sits on it in white (`WindowTitle`), or its pages' tabs (`PageTabs`).
 struct WindowBar: View {
     var body: some View {
-        HUDStyle.bevel
+        HUDStyle.barGradient
             .overlay(alignment: .bottom) { HUDStyle.frameDark.opacity(0.85).frame(height: 1) }
     }
 }
@@ -862,6 +898,9 @@ extension View {
 /// A modal window popping in: from a touch smaller to full size. Only the window scales; the
 /// modal's dimmed backdrop just fades (present the modal with `.transition(.opacity)`), so the
 /// backdrop covers the whole screen from the first frame instead of shrinking with the window.
+/// Every window opens with it (the user, 2026-11-11: "Not all modals have the same opening animation
+/// yet. This should be consistent throughout the whole app"): after `gameWindow()` and its
+/// `windowCloseButton`, so the close button grows with it, and before the margins round it.
 private struct PopIn: ViewModifier {
     @State private var shown = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion

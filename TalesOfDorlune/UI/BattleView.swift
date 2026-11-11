@@ -128,7 +128,8 @@ struct BattleView: View {
                     }
                 }
             }
-            .transition(.scale(scale: 0.8, anchor: .bottomTrailing).combined(with: .opacity))
+            // Fades in, its window popping in as every window does (`popIn`).
+            .transition(.opacity)
         case .stones:
             // Capture with more than one kind of Seal Stone: which to throw, with what each brings.
             ChoiceCard(title: L("Seal Stones"), onBack: controller.back) {
@@ -143,7 +144,8 @@ struct BattleView: View {
                     }
                 }
             }
-            .transition(.scale(scale: 0.8, anchor: .bottomTrailing).combined(with: .opacity))
+            // Fades in, its window popping in as every window does (`popIn`).
+            .transition(.opacity)
         case .target:
             HStack(spacing: 10) {
                 IconImage(.tap, size: 18).foregroundStyle(HUDStyle.gold)
@@ -1517,6 +1519,7 @@ private struct ChoiceCard<Content: View>: View {
         }
         .frame(width: 300)
         .gameWindow()
+        .popIn()
     }
 }
 
@@ -1631,22 +1634,22 @@ private struct ResultPanel: View {
             case .story:
                 if let story = result.story {
                     BossStoryCard(story: story, onDone: advance)
-                        .transition(.scale(scale: 0.9).combined(with: .opacity))
+                        .transition(.opacity)
                 }
             case .summary:
                 summary
             case .release:
                 LeaveBehindCard(session: session, onDone: advance)
-                    .transition(.scale(scale: 0.9).combined(with: .opacity))
+                    .transition(.opacity)
             case .levelUp:
                 if let level = result.newLevel {
                     LevelUpCard(session: session, level: level, onDone: advance)
-                        .transition(.scale(scale: 0.9).combined(with: .opacity))
+                        .transition(.opacity)
                 }
             case .companionLevelUp:
                 if let companion, let petID = companion.petID {
                     LevelUpCard(session: session, level: companion.level, onDone: onContinue, owner: petID, name: companion.name)
-                        .transition(.scale(scale: 0.9).combined(with: .opacity))
+                        .transition(.opacity)
                 }
             }
         }
@@ -1691,6 +1694,7 @@ private struct ResultPanel: View {
         .gameWindow()
         // Closing it is Continue: the pay is already in your bag.
         .windowCloseButton(advance)
+        .popIn()
         .padding(20)
     }
 
@@ -1780,6 +1784,7 @@ private struct BossStoryCard: View {
         .onTapGesture { revealAll() }
         // Closing it skips the rest of the story, on to the rewards.
         .windowCloseButton(onDone)
+        .popIn()
         .padding(20)
         .task { await tell() }
     }

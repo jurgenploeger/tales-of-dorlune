@@ -38,5 +38,6 @@ struct LanguagePanel: View {
         }
         .frame(maxWidth: 640)
         .gameWindow()
+        .popIn()
     }
 }

@@ -49,25 +49,30 @@ struct MapOverlay: View {
                     }
                 } else {
                     WindowTitle(L("World map"), onClose: onClose)
+                    // The map clear at the top; where you are, your coordinates and the time together
+                    // at the bottom left, the map's controls at the bottom right (the user,
+                    // 2026-11-11: "it's a bit messy now").
                     WorldAtlas(session: session) {
-                        pills
-                            .padding(.horizontal, 16)
-                            .padding(.top, 10)
+                        EmptyView()
                     } bottomLeading: {
-                        // The land you're in.
-                        Text(session.mapName)
-                            .font(HUDStyle.font(15))
-                            .foregroundStyle(HUDStyle.cream)
-                            .shadow(color: .black.opacity(0.8), radius: 0, x: 1, y: 1)
-                            .lineLimit(2)
-                            .fixedSize(horizontal: false, vertical: true)
-                            .accessibilityLabel(L("You are in {place}", ["place": session.mapName]))
+                        VStack(alignment: .leading, spacing: 6) {
+                            // The land you're in.
+                            Text(session.mapName)
+                                .font(HUDStyle.font(15))
+                                .foregroundStyle(HUDStyle.cream)
+                                .shadow(color: .black.opacity(0.8), radius: 0, x: 1, y: 1)
+                                .lineLimit(2)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .accessibilityLabel(L("You are in {place}", ["place": session.mapName]))
+                            pills
+                        }
                     }
                 }
             }
             // As big as a menu window, the map filling what's left under the title.
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .gameWindow()
+            .popIn()
             .menuWindowMargins()
         }
     }
