@@ -335,14 +335,20 @@ private struct BarberPanel: View {
         let race = session.heroRace
         let current = session.data.hero.look ?? .standard
         let changed = look.hair != current.hair || GameSession.style(for: look, race: race) != GameSession.style(for: current, race: race)
-        VStack(alignment: .leading, spacing: 10) {
-            HStack(alignment: .top, spacing: 10) {
-                TurntablePreview(look: look, race: race, size: 92)
-                VStack(alignment: .leading, spacing: 8) {
-                    StylePicker(look: $look, race: race)
-                    SwatchPicker(title: L("Hair"), presets: session.content.appearance.hair, selection: $look.hair)
-                }
-            }
+        // Down the window's height, as it has the room (the user, 2026-11-11: "This should use more
+        // of the vertical space"): your hero big and turning, then every style and every colour at
+        // once, each on a plate of its own, then the fee.
+        VStack(alignment: .leading, spacing: 12) {
+            TurntablePreview(look: look, race: race, size: 168)
+                .frame(maxWidth: .infinity)
+            StylePicker(look: $look, race: race, wraps: true)
+                .padding(12)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(GlassCard())
+            SwatchPicker(title: L("Hair"), presets: session.content.appearance.hair, selection: $look.hair, wraps: true)
+                .padding(12)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(GlassCard())
             HStack {
                 GoldPill(amount: session.data.gold, size: 12)
                 Spacer()
