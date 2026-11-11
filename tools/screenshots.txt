@@ -424,6 +424,8 @@ battle_party | newgame,level=43,class=fighter,pet=pineapple,friends=4,map=sunny_
 battle_lockin | newgame,level=43,class=fighter,pet=pineapple,friends=4,map=sunny_meadow,battle=3,turntimer=40 | 15
 battle_crowd | newgame,level=43,class=fighter,pet=pineapple,friends=4,map=sunny_meadow,battle=5 | 15
 party_menu   | newgame,level=43,class=fighter,pet=pineapple,friends=4,menu=friends | 8
+# A friend tapped: their land's map, where they are (0.9.78).
+friend_map   | newgame,level=60,pals=10,menu=friends,weather=clear,hour=12,friendmap | 10
 # A fourth friend joins through their card's buttons (debug invite=n), in town and in a cave.
 invite_town  | newgame,level=49,class=fighter,pet=pineapple,friends=3,map=goldburg,invite=1 | 12
 invite_cave  | newgame,level=49,class=fighter,pet=pineapple,friends=3,map=rat_cavern,invite=1 | 12

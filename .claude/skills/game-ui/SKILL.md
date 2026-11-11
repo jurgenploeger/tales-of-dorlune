@@ -100,6 +100,11 @@ windows"). A window's content is groups set into the glass, never one flat blue 
   `rowCard()`; a panel (a settings section, a stat) a `GlassCard` background. Never a hand-rolled
   `RoundedRectangle().fill(.white.opacity(…))`.
 - What a group's title says, its rows don't repeat (no IN PARTY badge in the Party group).
+- A long list (friends, quests, the Bag) gets search, sort and filter at its top: `ItemSearchField`
+  and `SortMenu` in a row, `FilterChip`s in a `SideScroll` under it (Friends: All, Online, Offline;
+  online first, last seen, name, level, first met). A person's row: their sprite in a fixed column 16
+  points from the text, their status in a badge at the top right (`FriendStatusBadge`), a tap for
+  more in a window over it (`FriendMapWindow`: where they are, on their land's map).
 - How many a window holds goes in a count badge after its title (`WindowTitle(badge:)`, the Friends
   window), not again on a section title under it; a window of one group needs no section title.
 - A row shows the least that tells it apart; the rest opens in a window of its own over the list,

@@ -29,6 +29,21 @@ extension GameSession {
         return .online(mapID: land)
     }
 
+    /// When a friend was last online, and in which land: now while they are; else the end of the
+    /// last spell (`friendSpell`) they were, looking back a day and a half. Nil: not in that time.
+    /// For the Friends window's "Last seen" and its sort (the user, 2026-11-11).
+    func lastSeen(_ friend: Adventurer, at date: Date = Date()) -> (date: Date, mapID: String)? {
+        if case let .online(mapID) = status(of: friend, at: date) { return (date, mapID) }
+        let spell = (date.timeIntervalSince1970 / Self.friendSpell).rounded(.down)
+        for back in 1...36 {
+            let start = (spell - Double(back)) * Self.friendSpell
+            if case let .online(mapID) = status(of: friend, at: Date(timeIntervalSince1970: start + 1)) {
+                return (Date(timeIntervalSince1970: start + Self.friendSpell), mapID)
+            }
+        }
+        return nil
+    }
+
     /// Your friends in a land now, not in your party: its crowd brings them in.
     func friendsIn(_ mapID: String) -> [Adventurer] {
         friends.filter { !isInParty($0) && status(of: $0) == .online(mapID: mapID) }

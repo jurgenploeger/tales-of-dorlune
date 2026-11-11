@@ -33,6 +33,8 @@ struct MenuView: View {
     @State private var inspecting: ItemDef? = DebugLaunch.changingSlot == nil ? DebugLaunch.inspectedItem.flatMap { Content.shared.item($0) } : nil
     /// A tap on a quest in the Quests list: its window, over the menu. Debug `questcard=<quest>` opens one.
     @State private var openQuest: QuestDef? = DebugLaunch.openedQuest.flatMap { Content.shared.quest($0) }
+    /// A tap on a friend: where they are, in a window over the menu (`FriendMapWindow`).
+    @State private var openFriend: Adventurer?
 
     init(session: GameSession, window: MenuTab, onClose: @escaping () -> Void, onQuitToTitle: (() -> Void)? = nil) {
         self.session = session
@@ -80,6 +82,14 @@ struct MenuView: View {
                 .zIndex(1)
             }
 
+            if let friend = openFriend ?? (DebugLaunch.opensFriendMap ? session.friends.first : nil) {
+                FriendMapWindow(session: session, friend: friend) {
+                    withAnimation(.easeOut(duration: 0.2)) { openFriend = nil }
+                }
+                .transition(.opacity)
+                .zIndex(1)
+            }
+
             if let quest = openQuest {
                 QuestWindow(session: session, quest: quest) {
                     withAnimation(.easeOut(duration: 0.2)) { openQuest = nil }
@@ -121,7 +131,10 @@ extension MenuView {
                             withAnimation(.spring(response: 0.3, dampingFraction: 0.86)) { changing = slot }
                         }
                     case .companions: CompanionsTab(session: session, page: $companionsPage)
-                    case .friends: FriendsTab(session: session)
+                    case .friends:
+                        FriendsTab(session: session) { friend in
+                            withAnimation(.spring(response: 0.3, dampingFraction: 0.86)) { openFriend = friend }
+                        }
                     case .bag:
                         BagTab(session: session, note: $bagNote, hatchRequest: $hatchRequest,
                                onInspect: { item in withAnimation(.spring(response: 0.3, dampingFraction: 0.86)) { inspecting = item } })
@@ -1050,21 +1063,60 @@ private struct CompanionsTab: View {
 // MARK: - Friends
 
 /// The adventurers you've befriended, and who of them travels with you; the guests in your party
-/// (asked along without befriending them) first.
+/// (asked along without befriending them) first. The rest found by name, sorted and filtered (the
+/// user, 2026-11-11: "add search, sort and filter options at the top. For example filter by
+/// online/offline, sort by last seen"); a tap on one shows where they are (`FriendMapWindow`).
 private struct FriendsTab: View {
     let session: GameSession
+    /// A tap on a friend: where they are, in a window over the menu.
+    var onOpen: (Adventurer) -> Void = { _ in }
+    @State private var search = ""
+    @AppStorage("friendSort") private var sort: FriendSort = .online
+    @State private var shelf: FriendShelf = .all
 
-    /// Your party first (its guests, then your friends in it), then whoever's near enough to ask
-    /// along, then those online elsewhere, then those away; each in the order you met them.
-    private var listed: [Adventurer] {
-        func rank(_ friend: Adventurer) -> Int {
-            if session.isInParty(friend) { return 0 }
-            if session.adventurersAround.contains(friend.id) { return 1 }
-            return session.status(of: friend) == .offline ? 3 : 2
+    /// Your party: its guests, then your friends in it, in the order you met them.
+    private var party: [Adventurer] {
+        (session.partyGuests + session.friends).filter { session.isInParty($0) }
+    }
+
+    /// Your other friends, as you've narrowed and sorted them. Online first: whoever's near enough
+    /// to ask along, then those online elsewhere, then those away; each in the order you met them.
+    private var others: [Adventurer] {
+        let query = search.trimmingCharacters(in: .whitespacesAndNewlines)
+        let content = session.content
+        let found = session.friends.filter { friend in
+            guard !session.isInParty(friend) else { return false }
+            let online = session.status(of: friend) != .offline
+            switch shelf {
+            case .all: break
+            case .online: if !online { return false }
+            case .offline: if online { return false }
+            }
+            guard !query.isEmpty else { return true }
+            var words = [friend.name, content.race(friend.raceID).name, content.classDef(friend.classID).name]
+            if case let .online(mapID) = session.status(of: friend) { words.append(content.map(mapID)?.name ?? "") }
+            return words.contains { $0.localizedStandardContains(query) }
         }
-        return (session.partyGuests + session.friends).enumerated()
-            .sorted { (rank($0.element), $0.offset) < (rank($1.element), $1.offset) }
-            .map { $0.element }
+        let ordered = Array(found.enumerated())
+        switch sort {
+        case .met:
+            return found
+        case .online:
+            func rank(_ friend: Adventurer) -> Int {
+                if session.adventurersAround.contains(friend.id) { return 0 }
+                return session.status(of: friend) == .offline ? 2 : 1
+            }
+            return ordered.sorted { (rank($0.element), $0.offset) < (rank($1.element), $1.offset) }.map(\.element)
+        case .lastSeen:
+            // The most recently seen first; those not seen lately last, in the order you met them.
+            let seen = Dictionary(uniqueKeysWithValues: found.map { ($0.id, session.lastSeen($0)?.date ?? .distantPast) })
+            return ordered.sorted { (seen[$0.element.id] ?? .distantPast, -$0.offset) > (seen[$1.element.id] ?? .distantPast, -$1.offset) }
+                .map(\.element)
+        case .name:
+            return found.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
+        case .level:
+            return ordered.sorted { ($0.element.level, -$0.offset) > ($1.element.level, -$1.offset) }.map(\.element)
+        }
     }
 
     var body: some View {
@@ -1072,11 +1124,11 @@ private struct FriendsTab: View {
                                     + "\n" + L("They don't always say yes, and after a while they head off on their own. You can also ask whoever leads a group of adventurers to let you join them, and follow them about.")
                                     + "\n" + L("You don't have to be friends to party up: invite anyone you meet from their card."),
                                     open: session.friends.isEmpty)
-        let everyone = listed
-        let party = everyone.filter { session.isInParty($0) }
-        let others = everyone.filter { !session.isInParty($0) }
+        let party = self.party
+        let others = self.others
+        let anyone = !session.friends.isEmpty || !session.partyGuests.isEmpty
         return VStack(alignment: .leading, spacing: 10) {
-            if everyone.isEmpty {
+            if !anyone {
                 howItWorks
                 EmptyNote(L("No friends yet.\nSay hi to the adventurers you meet!"))
             }
@@ -1084,38 +1136,100 @@ private struct FriendsTab: View {
             // everything more scannable"): who travels with you, how many of how many, then the rest.
             if !party.isEmpty {
                 SectionTitle(text: L("Party"), detail: "\(party.count)/\(GameSession.maxAllies)")
-                GroupedRows(party) { FriendRow(session: session, friend: $0) }
+                GroupedRows(party) { FriendRow(session: session, friend: $0, onOpen: onOpen) }
             }
-            if !others.isEmpty {
+            if !session.friends.isEmpty {
                 // Named only under a Party to tell them apart; how many is the window title's badge.
                 if !party.isEmpty { SectionTitle(text: L("Friends")) }
-                GroupedRows(others) { FriendRow(session: session, friend: $0) }
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack(spacing: 8) {
+                        ItemSearchField(text: $search)
+                        SortMenu(sort: $sort, options: FriendSort.allCases, title: { $0.title })
+                    }
+                    // The sort's panel over the chips.
+                    .zIndex(1)
+                    SideScroll {
+                        HStack(spacing: 6) {
+                            ForEach(FriendShelf.allCases, id: \.self) { kind in
+                                FilterChip(title: kind.title, on: shelf == kind) { shelf = kind }
+                            }
+                        }
+                    }
+                }
+                // The sort's panel over the friends under it.
+                .zIndex(1)
+                if others.isEmpty {
+                    Text(L("No friends match.")).font(HUDStyle.font(11)).foregroundStyle(HUDStyle.dim)
+                } else {
+                    GroupedRows(others) { FriendRow(session: session, friend: $0, onOpen: onOpen) }
+                }
             }
             // The page opens on your friends; how it works after.
-            if !everyone.isEmpty {
+            if anyone {
                 howItWorks.padding(.top, 6)
             }
         }
     }
 }
 
+/// The Friends window's orders (`FriendsTab`).
+private nonisolated enum FriendSort: String, CaseIterable {
+    /// Near enough to ask along first, then online elsewhere, then away.
+    case online
+    /// The most recently online first (`GameSession.lastSeen`).
+    case lastSeen
+    case name
+    /// The highest first.
+    case level
+    /// The order you met them.
+    case met
+
+    var title: String {
+        switch self {
+        case .online: L("Online first")
+        case .lastSeen: L("Last seen")
+        case .name: L("Name")
+        case .level: L("Level")
+        case .met: L("First met")
+        }
+    }
+}
+
+/// Which friends the Friends window shows (`FriendsTab`).
+private nonisolated enum FriendShelf: String, CaseIterable {
+    case all, online, offline
+
+    var title: String {
+        switch self {
+        case .all: L("All")
+        case .online: L("Online")
+        case .offline: L("Offline")
+        }
+    }
+}
+
+/// A friend's row: them and their companion in a column of their own, who they are and where, their
+/// status in a badge at the top right (the user, 2026-11-11: "They should have a status badge at the
+/// top right of their cards ... more of a gap between the hero + companion on the left and the
+/// content"), and what you can do with them under it. A tap shows where they are (`FriendMapWindow`).
 private struct FriendRow: View {
     let session: GameSession
     let friend: Adventurer
+    let onOpen: (Adventurer) -> Void
 
     var body: some View {
         let inParty = session.isInParty(friend)
         let pet = friend.petSpecies.flatMap(session.content.monster)
-        HStack(spacing: 10) {
-            // Their companion at their feet.
+        HStack(alignment: .top, spacing: 16) {
+            // Their companion at their feet, in a column as wide for everyone.
             SpriteImage(art: session.artID(for: friend), size: 44)
                 .overlay(alignment: .bottomTrailing) {
                     if let pet {
                         SpriteImage(art: pet.art, size: 24).offset(x: 12, y: 4)
                     }
                 }
+                .frame(width: 56, height: 52)
             VStack(alignment: .leading, spacing: 2) {
-                // In your party or not, the group they're listed in says (`FriendsTab`).
                 HStack(spacing: 6) {
                     Text(friend.name)
                     NameBadge(badge: .bot)
@@ -1128,58 +1242,223 @@ private struct FriendRow: View {
                         .font(HUDStyle.font(10))
                         .foregroundStyle(HUDStyle.green)
                 }
-                if let place = session.whereabouts(of: friend) {
-                    Text(L("Waiting for you at {map}", ["map": place]))
-                        .font(HUDStyle.font(10))
-                        .foregroundStyle(HUDStyle.orange)
-                } else if !inParty, friend.guest != true {
-                    presence
-                }
+                place
             }
-            Spacer()
-            if inParty {
-                // Theirs to leave, not yours: "Leave" read as you leaving (playtesting 2026-11-01).
-                Button(L("Remove")) { session.leaveParty(friend.id) }
-                    .buttonStyle(PixelButtonStyle(compact: true))
-            } else if !session.adventurersAround.contains(friend.id) {
-                // Friends have to be near you to join you: where they are says where to find them.
-                EmptyView()
-            } else if !session.partyIsFull {
-                Button(L("Invite")) { session.askAlong(friend.id) }
-                    .buttonStyle(PixelButtonStyle(tint: HUDStyle.gold, compact: true))
-            } else {
-                Text(L("Party full"))
-                    .font(HUDStyle.font(10))
-                    .foregroundStyle(HUDStyle.dim)
+            Spacer(minLength: 6)
+            VStack(alignment: .trailing, spacing: 8) {
+                FriendStatusBadge(session: session, friend: friend)
+                action(inParty: inParty)
             }
         }
         .font(HUDStyle.font(12))
         .groupRow()
+        .contentShape(Rectangle())
+        .onTapGesture {
+            SoundEffects.shared.play(.tap, volume: 0.7)
+            onOpen(friend)
+        }
+        .accessibilityAction(named: L("Where they are")) { onOpen(friend) }
     }
 
-    /// Whether they're online, and where: a green dot and the land they're in (here, if it's yours),
-    /// or a grey one, away (`GameSession.status(of:)`).
-    private var presence: some View {
-        let status = session.status(of: friend)
-        let online: Bool
-        let text: String
-        switch status {
-        case .offline:
-            online = false
-            text = L("Offline")
-        case let .online(mapID):
-            online = true
-            text = mapID == session.data.mapID ? L("Online here")
+    @ViewBuilder
+    private func action(inParty: Bool) -> some View {
+        if inParty {
+            // Theirs to leave, not yours: "Leave" read as you leaving (playtesting 2026-11-01).
+            Button(L("Remove")) { session.leaveParty(friend.id) }
+                .buttonStyle(PixelButtonStyle(compact: true))
+        } else if !session.adventurersAround.contains(friend.id) {
+            // Friends have to be near you to join you: where they are says where to find them.
+            EmptyView()
+        } else if !session.partyIsFull {
+            Button(L("Invite")) { session.askAlong(friend.id) }
+                .buttonStyle(PixelButtonStyle(tint: HUDStyle.gold, compact: true))
+        } else {
+            Text(L("Party full"))
+                .font(HUDStyle.font(10))
+                .foregroundStyle(HUDStyle.dim)
+        }
+    }
+
+    /// Where they are (the badge says whether they're online): the land they're in, where they wait
+    /// for you, or when you last saw them online and where.
+    @ViewBuilder
+    private var place: some View {
+        if let spot = session.whereabouts(of: friend) {
+            Text(L("Waiting for you at {map}", ["map": spot]))
+                .font(HUDStyle.font(10))
+                .foregroundStyle(HUDStyle.orange)
+        } else if !session.isInParty(friend) {
+            Text(FriendMapWindow.whereabouts(of: friend, session: session))
+                .font(HUDStyle.font(10))
+                .foregroundStyle(session.status(of: friend) == .offline ? HUDStyle.dim : HUDStyle.green)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+}
+
+/// A friend's status, in a small badge: with you, waiting for you, near you, online or offline.
+private struct FriendStatusBadge: View {
+    let session: GameSession
+    let friend: Adventurer
+
+    var body: some View {
+        let (text, color): (String, Color) = {
+            if session.isInParty(friend) {
+                return session.whereabouts(of: friend) != nil ? (L("Waiting"), HUDStyle.orange) : (L("With you"), HUDStyle.gold)
+            }
+            if session.adventurersAround.contains(friend.id) { return (L("Nearby"), HUDStyle.green) }
+            return session.status(of: friend) == .offline ? (L("Offline"), HUDStyle.dim) : (L("Online"), HUDStyle.green)
+        }()
+        Text(text.uppercased())
+            .font(HUDStyle.font(9))
+            .foregroundStyle(HUDStyle.ink)
+            .padding(.horizontal, 7)
+            .padding(.vertical, 2)
+            .background(Capsule().fill(color))
+            .fixedSize()
+    }
+}
+
+/// A friend tapped in the Friends window: where they are, on their land's own map, in a window over
+/// the list (the user, 2026-11-11: "When you tap on the card it should open a little map preview (in
+/// a new modal overlayed) of where they are"). A land's map shows where it lies, not who's where in
+/// it, so the mark is at the land's heart; what's under the map says where and when.
+struct FriendMapWindow: View {
+    let session: GameSession
+    let friend: Adventurer
+    let onClose: () -> Void
+    @State private var pulse = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let overview = WorldOverview.shared
+
+    /// Where they are, in words: in a land now, or last seen there and when.
+    static func whereabouts(of friend: Adventurer, session: GameSession) -> String {
+        if case let .online(mapID) = session.status(of: friend) {
+            return mapID == session.data.mapID ? L("Online here")
                 : L("Online in {map}", ["map": session.content.map(mapID)?.name ?? L("somewhere")])
         }
-        return HStack(spacing: 4) {
-            Circle()
-                .fill(online ? HUDStyle.green : HUDStyle.dim)
-                .frame(width: 7, height: 7)
-            Text(text)
-                .font(HUDStyle.font(10))
-                .foregroundStyle(online ? HUDStyle.green : HUDStyle.dim)
+        guard let seen = session.lastSeen(friend) else { return L("Not seen lately") }
+        return L("Last seen {time} in {map}", ["time": seen.date.formatted(.relative(presentation: .named).locale(Localizer.shared.locale)),
+                                              "map": session.content.map(seen.mapID)?.name ?? L("somewhere")])
+    }
+
+    /// The land to show: where they wait, where they are, or where they were last.
+    private var mapID: String? {
+        if session.isInParty(friend) { return friend.waitingAt?.mapID ?? session.data.mapID }
+        if case let .online(mapID) = session.status(of: friend) { return mapID }
+        return session.lastSeen(friend)?.mapID
+    }
+
+    private var caption: String {
+        if let spot = session.whereabouts(of: friend) { return L("Waiting for you at {map}", ["map": spot]) }
+        if session.isInParty(friend) { return L("With you in {map}", ["map": session.mapName]) }
+        return Self.whereabouts(of: friend, session: session)
+    }
+
+    var body: some View {
+        ZStack {
+            Color.black.opacity(0.45)
+                .ignoresSafeArea()
+                .onTapGesture(perform: onClose)
+            VStack(alignment: .leading, spacing: 0) {
+                WindowTitle(friend.name, onClose: onClose)
+                VStack(alignment: .leading, spacing: 12) {
+                    HStack(spacing: 12) {
+                        SpriteImage(art: session.artID(for: friend), size: 44)
+                            .frame(width: 48, height: 48)
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text(L("Lv {level} {race} {class}", ["level": friend.level, "race": session.content.race(friend.raceID).name, "class": session.content.classDef(friend.classID).name]))
+                                .font(HUDStyle.font(11))
+                                .foregroundStyle(HUDStyle.dim)
+                            Text(caption)
+                                .font(HUDStyle.font(12))
+                                .foregroundStyle(HUDStyle.cream)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                        Spacer(minLength: 0)
+                        FriendStatusBadge(session: session, friend: friend)
+                    }
+                    if let mapID, let def = session.content.map(mapID) {
+                        landMap(def)
+                            .frame(height: 220)
+                        Text(def.name)
+                            .font(HUDStyle.font(12))
+                            .foregroundStyle(HUDStyle.gold)
+                            .frame(maxWidth: .infinity)
+                    }
+                }
+                .padding(14)
+            }
+            .frame(maxWidth: 380)
+            .gameWindow()
+            .popIn()
+            .padding(24)
         }
+        .foregroundStyle(HUDStyle.cream)
+        .accessibilityAction(.escape, onClose)
+        .onAppear {
+            if let mapID { overview.prepare(first: [mapID]) }
+            if !reduceMotion {
+                withAnimation(.easeInOut(duration: 0.9).repeatForever(autoreverses: false)) { pulse = true }
+            }
+        }
+    }
+
+    /// The land's own map (`WorldOverview`, a pixel a cell, north up) fitted in, a dark one only as
+    /// far as you've explored it, the mark pulsing at its heart.
+    @ViewBuilder
+    private func landMap(_ def: MapDef) -> some View {
+        let sea = WorldMap.seaColor
+        let shape = RoundedRectangle(cornerRadius: 12, style: .continuous)
+        GeometryReader { proxy in
+            let width = CGFloat(max(1, def.width)), height = CGFloat(max(1, def.height))
+            let scale = min(proxy.size.width / width, proxy.size.height / height)
+            let middle = session.content.regions[def.id]?.middle ?? GridPoint(col: def.width / 2, row: def.height / 2)
+            if let image = picture(of: def) {
+                ZStack(alignment: .topLeading) {
+                    Image(decorative: image, scale: 1)
+                        .interpolation(.none)
+                        .resizable()
+                        .frame(width: width * scale, height: height * scale)
+                    mark
+                        .position(x: (CGFloat(middle.col) + 0.5) * scale, y: (height - CGFloat(middle.row) - 0.5) * scale)
+                }
+                .frame(width: width * scale, height: height * scale)
+                .frame(width: proxy.size.width, height: proxy.size.height)
+            } else {
+                ProgressView()
+                    .tint(HUDStyle.cream)
+                    .frame(width: proxy.size.width, height: proxy.size.height)
+            }
+        }
+        .background(Color(red: Double(sea.r) / 255, green: Double(sea.g) / 255, blue: Double(sea.b) / 255))
+        .clipShape(shape)
+        .overlay(shape.strokeBorder(HUDStyle.frameDark.opacity(0.8), lineWidth: 1.5))
+        .accessibilityLabel(caption)
+    }
+
+    private func picture(of def: MapDef) -> CGImage? {
+        guard let image = overview.images[def.id] else { return nil }
+        if def.ambience?.darkness != nil,
+           let fogged = WorldScene.fog(UIImage(cgImage: image), seen: session.explored(def.id), columns: def.width, rows: def.height).cgImage {
+            return fogged
+        }
+        return image
+    }
+
+    private var mark: some View {
+        ZStack {
+            Circle()
+                .stroke(HUDStyle.gold, lineWidth: 2)
+                .frame(width: 18, height: 18)
+                .scaleEffect(pulse ? 2.2 : 1)
+                .opacity(pulse ? 0 : 0.9)
+            Circle()
+                .fill(HUDStyle.gold)
+                .frame(width: 12, height: 12)
+                .overlay(Circle().strokeBorder(HUDStyle.ink, lineWidth: 1.5))
+        }
+        .accessibilityHidden(true)
     }
 }
 
