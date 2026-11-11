@@ -94,7 +94,7 @@ windows"). A window's content is groups set into the glass, never one flat blue 
   `RoundedRectangle().fill(.white.opacity(…))`.
 - What a group's title says, its rows don't repeat (no IN PARTY badge in the Party group).
 - A row shows the least that tells it apart; the rest opens in a window of its own over the list,
-  with Back on its title bar (a quest: its number, small, over its name; tapped, `QuestWindow` with
+  with Back on its title bar (a quest: the giver's round face, its number, small, over its name; tapped, `QuestWindow` with
   who asked, how far along, its story and rewards). The user, 2026-11-11: "The quest items show too
   much information."
 - A grid of tiles is a group too: on a `GlassCard` plate under its `SectionTitle` (the Skills page:

@@ -1906,7 +1906,8 @@ private struct QuestNumber: View {
 /// A quest in the Quests list: its number, small, over its name, and nothing else (the user,
 /// 2026-11-11: "The quest items show too much information. It should just show the name of the
 /// quest, with the number as a small label above it. Then when you tap on it, it shows a new modal
-/// with a back button that shows more of the story and the rewards"). Gold when it's done and waiting
+/// with a back button that shows more of the story and the rewards"), beside the round face of who
+/// asked. Gold when it's done and waiting
 /// for you to report back; dim once it's finished. A tap opens it (`QuestWindow`).
 private struct QuestListRow: View {
     let session: GameSession
@@ -1921,6 +1922,11 @@ private struct QuestListRow: View {
             onOpen(quest)
         } label: {
             HStack(spacing: 10) {
+                // Who asked, in their round portrait (the user, 2026-11-11: "The quest list should
+                // still show the circle avatar of the character, so it's nicer to look at"), faded
+                // with the rest of the row once it's done.
+                GiverFace(npcID: quest.giver, size: 40)
+                    .opacity(finished ? 0.6 : 1)
                 VStack(alignment: .leading, spacing: 2) {
                     QuestNumber(number: session.questNumber(quest))
                     Text(quest.title)
