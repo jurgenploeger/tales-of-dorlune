@@ -142,8 +142,11 @@ Russian too; Chinese, Japanese and Korean shorter but taller. Never fix a width 
 4. **Build it from the pieces above.** Change a shared piece (`PageTabs`, `SectionTitle`, the frame) and
    every window follows; don't restyle one window by hand. New piece: put it in Style.swift (or the
    window's file if only it uses it), document it as the others are, and add it to Figma's 07 Game UI.
-5. **Swift care.** Nothing compiles a `claude/**` branch; `.github/workflows/testflight.yml` builds `main`.
-   Read every changed line for what the compiler would catch.
+5. **Swift care.** Nothing compiles a `claude/**` branch by itself; `.github/workflows/testflight.yml`
+   builds `main`, and the Screenshots workflow builds a branch when started. Read every changed line for
+   what the compiler would catch. The game has a type named `Content` (`Content.shared`): in a
+   `ViewModifier` write `func body(content: Self.Content)`, as the others do (0.9.76's first build failed
+   on a bare `Content`).
 6. **Pass the review below**, then say plainly what wasn't seen running.
 
 ## The review

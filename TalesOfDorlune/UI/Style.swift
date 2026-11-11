@@ -365,7 +365,7 @@ struct ListRow: ViewModifier {
     var gold = false
 
     @ViewBuilder
-    func body(content: Content) -> some View {
+    func body(content: Self.Content) -> some View {
         if grouped {
             content.groupRow(lit: lit, gold: gold)
         } else {
