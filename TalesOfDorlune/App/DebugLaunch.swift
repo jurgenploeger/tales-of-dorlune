@@ -231,6 +231,8 @@ enum DebugLaunch {
     /// `change=armor`: the Character tab opens with that slot's list of things to wear.
     static var changingSlot: ItemType? { flags["change"].flatMap(ItemType.init(rawValue:)) }
     static var inspectedItem: String? { flags["inspect"] }
+    /// `questcard=<quest>`: with menu=quests, that quest's window opens over the list (`QuestWindow`).
+    static var openedQuest: String? { flags["questcard"] }
     /// `itemwindow=drop` or `trade`: with menu=bag and inspect, that window over the item's card.
     static var itemWindow: String? { flags["itemwindow"] }
     /// `sortopen`: a list's Sort button (the Bag's, the bank's, the Quests') opens with its panel out.

@@ -356,24 +356,6 @@ extension GroupedRows where Data.Element: Identifiable, ID == Data.Element.ID {
     }
 }
 
-/// A row laid out as one of a list's (`groupRow()`, in a `GroupedRows`) or on a plate of its own
-/// (`rowCard()`), for a row that's used both ways (a quest: in the Quests list, and as its giver
-/// offers it).
-struct ListRow: ViewModifier {
-    let grouped: Bool
-    var lit = false
-    var gold = false
-
-    @ViewBuilder
-    func body(content: Self.Content) -> some View {
-        if grouped {
-            content.groupRow(lit: lit, gold: gold)
-        } else {
-            content.rowCard(lit: lit, gold: gold)
-        }
-    }
-}
-
 /// The line between two rows of a `GroupedRows`.
 struct Hairline: View {
     var body: some View {

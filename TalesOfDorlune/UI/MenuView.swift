@@ -31,6 +31,8 @@ struct MenuView: View {
     /// A tap on something in the Bag: its card, over the menu. Debug `inspect=<item>` opens one
     /// (unless it's for the gear grid, `change=`).
     @State private var inspecting: ItemDef? = DebugLaunch.changingSlot == nil ? DebugLaunch.inspectedItem.flatMap { Content.shared.item($0) } : nil
+    /// A tap on a quest in the Quests list: its window, over the menu. Debug `questcard=<quest>` opens one.
+    @State private var openQuest: QuestDef? = DebugLaunch.openedQuest.flatMap { Content.shared.quest($0) }
 
     init(session: GameSession, window: MenuTab, onClose: @escaping () -> Void, onQuitToTitle: (() -> Void)? = nil) {
         self.session = session
@@ -78,6 +80,14 @@ struct MenuView: View {
                 .zIndex(1)
             }
 
+            if let quest = openQuest {
+                QuestWindow(session: session, quest: quest) {
+                    withAnimation(.easeOut(duration: 0.2)) { openQuest = nil }
+                }
+                .transition(.opacity)
+                .zIndex(1)
+            }
+
             // Over the item's card when it's opened from there: the card shows again once it closes,
             // unless the last of it is gone.
             if let item = picking {
@@ -115,7 +125,10 @@ extension MenuView {
                     case .bag:
                         BagTab(session: session, note: $bagNote, hatchRequest: $hatchRequest,
                                onInspect: { item in withAnimation(.spring(response: 0.3, dampingFraction: 0.86)) { inspecting = item } })
-                    case .quests: QuestsTab(session: session, page: $questsPage)
+                    case .quests:
+                        QuestsTab(session: session, page: $questsPage) { quest in
+                            withAnimation(.spring(response: 0.3, dampingFraction: 0.86)) { openQuest = quest }
+                        }
                     case .settings: SettingsView(session: session, onQuitToTitle: onQuitToTitle, page: settingsPage)
                     }
                 }
@@ -1643,6 +1656,8 @@ private nonisolated enum QuestShelf: String, CaseIterable {
 private struct QuestsTab: View {
     let session: GameSession
     @Binding var page: QuestsPage
+    /// A tap on a quest: its window, over the menu (`QuestWindow`).
+    var onOpen: (QuestDef) -> Void = { _ in }
     /// Finding a quest (playtesting 2026-10-18): what you typed, the order, which ones, and only
     /// those given in the land you're in.
     @State private var search = ""
@@ -1701,7 +1716,7 @@ private struct QuestsTab: View {
             } else if active.isEmpty {
                 Text(L("No quests match.")).font(HUDStyle.font(11)).foregroundStyle(HUDStyle.dim)
             } else {
-                GroupedRows(active) { QuestRow(session: session, quest: $0, showsGiver: true, grouped: true) }
+                GroupedRows(active) { QuestListRow(session: session, quest: $0, onOpen: onOpen) }
             }
         }
         if !completed.isEmpty || shelf == .done {
@@ -1709,7 +1724,7 @@ private struct QuestsTab: View {
             if completed.isEmpty {
                 Text(L("No quests match.")).font(HUDStyle.font(11)).foregroundStyle(HUDStyle.dim)
             } else {
-                GroupedRows(completed) { CompletedQuestRow(session: session, quest: $0) }
+                GroupedRows(completed) { QuestListRow(session: session, quest: $0, onOpen: onOpen) }
             }
         }
     }
@@ -1771,8 +1786,6 @@ struct QuestRow: View {
     var showsGiver = false
     /// Its story (not on the last page of a conversation with its giver, who's just told it).
     var showsDescription = true
-    /// One of a list's rows (`GroupedRows`), not on a plate of its own.
-    var grouped = false
     @State private var expanded = false
 
     var body: some View {
@@ -1821,7 +1834,7 @@ struct QuestRow: View {
             }
         }
         // Gold when it's done, waiting for you to report back.
-        .modifier(ListRow(grouped: grouped, lit: expanded, gold: isReady))
+        .rowCard(lit: expanded, gold: isReady)
         .contentShape(Rectangle())
         .onTapGesture {
             guard showsGiver else { return }
@@ -1885,41 +1898,149 @@ private struct QuestNumber: View {
     }
 }
 
-/// A finished quest: who gave it and its name; a tap shows what it said and what you earned.
-private struct CompletedQuestRow: View {
+/// A quest in the Quests list: its number, small, over its name, and nothing else (the user,
+/// 2026-11-11: "The quest items show too much information. It should just show the name of the
+/// quest, with the number as a small label above it. Then when you tap on it, it shows a new modal
+/// with a back button that shows more of the story and the rewards"). Gold when it's done and waiting
+/// for you to report back; dim once it's finished. A tap opens it (`QuestWindow`).
+private struct QuestListRow: View {
     let session: GameSession
     let quest: QuestDef
-    @State private var expanded = false
+    let onOpen: (QuestDef) -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            HStack(spacing: 8) {
-                GiverFace(npcID: quest.giver, size: 24)
-                QuestNumber(number: session.questNumber(quest))
-                Label(quest.title, icon: .badgeCheck)
-                    .font(HUDStyle.font(12))
-                    .foregroundStyle(HUDStyle.dim)
-                Spacer()
-                IconImage(.chevronDown, size: 12)
-                    .foregroundStyle(HUDStyle.dim)
-                    .rotationEffect(.degrees(expanded ? 180 : 0))
-            }
-            if expanded {
-                VStack(alignment: .leading, spacing: 6) {
-                    Text(quest.description).font(HUDStyle.font(11)).foregroundStyle(HUDStyle.dim)
-                    QuestRewardsView(session: session, quest: quest, earned: true)
+        let status = session.status(of: quest)
+        let finished = status == .completed
+        Button {
+            SoundEffects.shared.play(.tap, volume: 0.7)
+            onOpen(quest)
+        } label: {
+            HStack(spacing: 10) {
+                VStack(alignment: .leading, spacing: 2) {
+                    QuestNumber(number: session.questNumber(quest))
+                    Text(quest.title)
+                        .font(HUDStyle.font(13))
+                        .foregroundStyle(finished ? HUDStyle.dim : HUDStyle.cream)
+                        .multilineTextAlignment(.leading)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
-                .padding(.leading, 32)
-                .transition(.reveal)
+                Spacer(minLength: 6)
+                if finished {
+                    IconImage(.badgeCheck, size: 14).foregroundStyle(HUDStyle.green)
+                }
+                IconImage(.chevronDown, size: 11)
+                    .rotationEffect(.degrees(-90))
+                    .foregroundStyle(HUDStyle.dim)
+            }
+            .groupRow(gold: status == .ready)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityValue(status == .ready ? L("Done! Report back") : finished ? L("Completed") : "")
+        .accessibilityHint(L("Shows its story and rewards"))
+    }
+}
+
+/// A quest from the Quests list, in a window of its own over the menu, Back on its title bar: its
+/// number and how hard it is, its name, who asked and where they live, how far along you are, all of
+/// its story, and its rewards (what you earned, once it's done). A tap outside it goes back too.
+struct QuestWindow: View {
+    let session: GameSession
+    let quest: QuestDef
+    let onBack: () -> Void
+
+    var body: some View {
+        ZStack {
+            Color.black.opacity(0.45)
+                .ignoresSafeArea()
+                .onTapGesture(perform: onBack)
+            VStack(alignment: .leading, spacing: 0) {
+                HStack {
+                    Button(action: onBack) {
+                        Label(L("Back"), icon: .arrowLeft, size: 12)
+                    }
+                    .buttonStyle(PixelButtonStyle(compact: true))
+                    Spacer(minLength: 0)
+                }
+                .padding(.horizontal, 12)
+                .padding(.vertical, 8)
+                .background(WindowBar())
+                // Scrolls only when it can't all fit (a phone on its side, a long story).
+                FitOrScroll {
+                    VStack(alignment: .leading, spacing: 12) {
+                        header
+                        progress
+                        Text(quest.description)
+                            .font(HUDStyle.font(12))
+                            .foregroundStyle(HUDStyle.cream)
+                            .fixedSize(horizontal: false, vertical: true)
+                        SectionTitle(text: L("Rewards"))
+                        QuestRewardsView(session: session, quest: quest, earned: session.status(of: quest) == .completed)
+                    }
+                    .padding(16)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                }
+            }
+            .frame(maxWidth: 420, alignment: .leading)
+            .gameWindow()
+            .padding(24)
+            .popIn()
+        }
+        .foregroundStyle(HUDStyle.cream)
+        .accessibilityAction(.escape, onBack)
+    }
+
+    /// Its number and how hard it is, its name, and who asked and where they live.
+    private var header: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(spacing: 6) {
+                QuestNumber(number: session.questNumber(quest))
+                DifficultyBadge(difficulty: session.difficulty(of: quest))
+            }
+            Text(quest.title)
+                .font(HUDStyle.font(18))
+                .foregroundStyle(HUDStyle.gold)
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityAddTraits(.isHeader)
+            if let giver = session.content.npc(quest.giver) {
+                let home = session.content.home(ofNPC: quest.giver)?.name
+                HStack(spacing: 8) {
+                    GiverFace(npcID: quest.giver, size: 32)
+                    Text(home.map { L("From {name} · {place}", ["name": giver.name, "place": $0]) } ?? L("From {name}", ["name": giver.name]))
+                        .font(HUDStyle.font(11))
+                        .foregroundStyle(HUDStyle.gold.opacity(0.85))
+                }
             }
         }
-        // A row of the Completed group (`GroupedRows`).
-        .groupRow(lit: expanded)
-        .contentShape(Rectangle())
-        .onTapGesture { withAnimation(Reveal.animation) { expanded.toggle() } }
-        .accessibilityElement(children: .combine)
-        .accessibilityAddTraits(.isButton)
-        .accessibilityHint(expanded ? L("Hides what you earned") : L("Shows what you earned"))
+    }
+
+    /// How far along it is: a count and a bar, who to take it to, ready to report, or done.
+    @ViewBuilder
+    private var progress: some View {
+        switch session.status(of: quest) {
+        case .active where quest.objective.type == .deliver:
+            Text(L("Take it to {name}", ["name": quest.objective.target.flatMap(session.content.npc)?.name ?? ""]))
+                .font(HUDStyle.font(12))
+                .foregroundStyle(HUDStyle.gold)
+        case .active(let done, let goal):
+            HStack(spacing: 8) {
+                GlossyBar(fraction: CGFloat(done) / CGFloat(max(goal, 1)), color: HUDStyle.gold, height: 6)
+                Text("\(done)/\(goal)")
+                    .font(HUDStyle.font(12))
+                    .monospacedDigit()
+                    .foregroundStyle(HUDStyle.gold)
+            }
+        case .ready:
+            Text(L("Done! Report back"))
+                .font(HUDStyle.font(12))
+                .foregroundStyle(HUDStyle.green)
+        case .completed:
+            Label(L("Completed"), icon: .badgeCheck, size: 12)
+                .font(HUDStyle.font(12))
+                .foregroundStyle(HUDStyle.green)
+        default:
+            EmptyView()
+        }
     }
 }
 

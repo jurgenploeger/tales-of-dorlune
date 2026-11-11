@@ -91,6 +91,10 @@ windows"). A window's content is groups set into the glass, never one flat blue 
   `rowCard()`; a panel (a settings section, a stat) a `GlassCard` background. Never a hand-rolled
   `RoundedRectangle().fill(.white.opacity(…))`.
 - What a group's title says, its rows don't repeat (no IN PARTY badge in the Party group).
+- A row shows the least that tells it apart; the rest opens in a window of its own over the list,
+  with Back on its title bar (a quest: its number, small, over its name; tapped, `QuestWindow` with
+  who asked, how far along, its story and rewards). The user, 2026-11-11: "The quest items show too
+  much information."
 - How it works goes at the end once you know the ropes (`HowItWorks`), at the top only while the
   window is empty.
 - How many you own goes on the icon as a `CountBadge`, as the Bag shows it. A control that can't be
