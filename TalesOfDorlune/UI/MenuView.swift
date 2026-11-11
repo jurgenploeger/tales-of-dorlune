@@ -247,7 +247,9 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
                 // Faded at an edge with more tabs past it (`SideScroll`).
                 SideScroll {
                     // Standing on the bar's foot, the one you're on a little taller.
-                    HStack(alignment: .bottom, spacing: 3) {
+                    // Far enough apart that the flare at the foot of the one you're on (`FlaredTab`)
+                    // meets no other.
+                    HStack(alignment: .bottom, spacing: FlaredTab.flare) {
                         ForEach(Array(Page.allCases), id: \.self) { item in
                             tab(item)
                                 .id(item)
@@ -283,12 +285,26 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
                 .shadow(color: HUDStyle.frameDark.opacity(selected ? 0 : 1), radius: 0, x: 1, y: 1)
                 .padding(.horizontal, 13)
                 .padding(.vertical, selected ? 9 : 7)
-                .background(Self.tabShape.fill(selected ? HUDStyle.glassTop : HUDStyle.frameDark.opacity(0.3)))
+                .background {
+                    // The one you're on flares out at its foot, its bottom corners rounded the other way
+                    // into the bar (the user, 2026-11-11: "The bottom of the tabs should have rounded
+                    // corners that are inverted to the other side"), so it runs into the page as a
+                    // folder's tab does.
+                    if selected {
+                        FlaredTab().fill(HUDStyle.glassTop).padding(.horizontal, -FlaredTab.flare)
+                    } else {
+                        Self.tabShape.fill(HUDStyle.frameDark.opacity(0.3))
+                    }
+                }
                 .overlay {
-                    // A light edge up its sides and over its top; none along its foot, where it's the page's.
-                    // One you're not on edged faintly in the bar's dark, so it reads as a tab of its own.
-                    TabEdge().stroke(selected ? HUDStyle.frameLight.opacity(0.8) : HUDStyle.frameDark.opacity(0.35),
-                                     lineWidth: selected ? 1.5 : 1)
+                    // A light edge up its sides, over its top and out along its flares; none along its
+                    // foot, where it's the page's. One you're not on edged faintly in the bar's dark.
+                    if selected {
+                        FlaredTab(open: true).stroke(HUDStyle.frameLight.opacity(0.8), lineWidth: 1.5)
+                            .padding(.horizontal, -FlaredTab.flare)
+                    } else {
+                        TabEdge().stroke(HUDStyle.frameDark.opacity(0.35), lineWidth: 1)
+                    }
                 }
                 .overlay(alignment: .topTrailing) {
                     if marked {
@@ -312,6 +328,32 @@ extension PageTabs {
     fileprivate static var tabShape: UnevenRoundedRectangle {
         UnevenRoundedRectangle(topLeadingRadius: TabEdge.radius, bottomLeadingRadius: 0, bottomTrailingRadius: 0,
                                topTrailingRadius: TabEdge.radius, style: .continuous)
+    }
+}
+
+/// The tab you're on (`PageTabs`), drawn `flare` wider on each side than the tab: round at the top,
+/// and at its foot its corners rounded the other way, curving out into the bar it stands on. `open`:
+/// its edge only, for the stroke, with no line along its foot.
+private nonisolated struct FlaredTab: Shape {
+    static let flare: CGFloat = 6
+    var open = false
+
+    func path(in rect: CGRect) -> Path {
+        let flare = Self.flare, radius = TabEdge.radius
+        // Inside by half the stroke's width at the top and sides, so a stroke stays on it.
+        let left = rect.minX + flare + 0.75, right = rect.maxX - flare - 0.75, top = rect.minY + 0.75
+        let bottom = rect.maxY
+        var path = Path()
+        path.move(to: CGPoint(x: rect.minX, y: bottom))
+        path.addQuadCurve(to: CGPoint(x: left, y: bottom - flare), control: CGPoint(x: left, y: bottom))
+        path.addLine(to: CGPoint(x: left, y: top + radius))
+        path.addQuadCurve(to: CGPoint(x: left + radius, y: top), control: CGPoint(x: left, y: top))
+        path.addLine(to: CGPoint(x: right - radius, y: top))
+        path.addQuadCurve(to: CGPoint(x: right, y: top + radius), control: CGPoint(x: right, y: top))
+        path.addLine(to: CGPoint(x: right, y: bottom - flare))
+        path.addQuadCurve(to: CGPoint(x: rect.maxX, y: bottom), control: CGPoint(x: right, y: bottom))
+        if !open { path.closeSubpath() }
+        return path
     }
 }
 

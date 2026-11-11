@@ -72,7 +72,8 @@ doesn't fit, there should just be a horizontal scroll"), faded out at an edge wi
 at first and the left too once scrolled (`SideScroll`, 2026-11-11). Every sideways row in a window (filter
 chips, swatches, hairstyles) is a `SideScroll`, never a bare `ScrollView(.horizontal)`. They're folder tabs standing on the title bar:
 the one you're on is the window's own glass (`HUDStyle.glassTop`) with its name in gold, joined to the page
-under it; the others are sunk into the bar, white. One with something waiting wears the gold dot. Each of Character, Companions, Friends, Bag, Quests and Settings is
+under it, its foot flaring out into the bar in corners rounded the other way (`FlaredTab`, the user,
+2026-11-11); the others are sunk into the bar, white. One with something waiting wears the gold dot. Each of Character, Companions, Friends, Bag, Quests and Settings is
 a window of its own, opened from the HUD menu (2026-10-25: "The menu items hero etc should become their
 own modal window"), so a window's tabs are its own pages, never the other windows.
 
