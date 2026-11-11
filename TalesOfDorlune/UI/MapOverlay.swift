@@ -49,21 +49,21 @@ struct MapOverlay: View {
                     }
                 } else {
                     WindowTitle(L("World map"), onClose: onClose)
-                    // The map clear at the top; where you are, your coordinates and the time together
-                    // at the bottom left, the map's controls at the bottom right (the user,
-                    // 2026-11-11: "it's a bit messy now").
+                    // Where you are, your coordinates and the time together at the top left; the map's
+                    // controls along the bottom (the user, 2026-11-11).
+                    // The land you're in: its name as the game shows it, else as the content has it (the
+                    // game's is set once you've walked into a land; till then it was empty, and the
+                    // map showed no name, 2026-11-11).
+                    let here = session.mapName.isEmpty ? (session.content.map(session.data.mapID)?.name ?? "") : session.mapName
                     WorldAtlas(session: session) {
-                        EmptyView()
-                    } bottomLeading: {
                         VStack(alignment: .leading, spacing: 6) {
-                            // The land you're in.
-                            Text(session.mapName)
+                            Text(here)
                                 .font(HUDStyle.font(15))
                                 .foregroundStyle(HUDStyle.cream)
                                 .shadow(color: .black.opacity(0.8), radius: 0, x: 1, y: 1)
                                 .lineLimit(2)
                                 .fixedSize(horizontal: false, vertical: true)
-                                .accessibilityLabel(L("You are in {place}", ["place": session.mapName]))
+                                .accessibilityLabel(L("You are in {place}", ["place": here]))
                             pills
                         }
                     }

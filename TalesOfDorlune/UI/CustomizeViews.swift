@@ -107,6 +107,9 @@ private struct GenderPicker: View {
 struct StylePicker: View {
     @Binding var look: Look
     let race: RaceDef
+    /// Every style at once, in rows that wrap, bigger (the barber's window, which has the room: the
+    /// user, 2026-11-11: "This should use more of the vertical space"); else one row that scrolls.
+    var wraps = false
 
     private var styles: [HairStyle] { Content.shared.appearance.styles(for: race.sheet(for: look.gender)) }
     private var current: String { GameSession.style(for: look, race: race) }
@@ -117,35 +120,46 @@ struct StylePicker: View {
                 Text(L("Hairstyle")).font(HUDStyle.font(11)).foregroundStyle(HUDStyle.dim)
                 Text(styles.first { $0.id == current }?.name ?? "").font(HUDStyle.font(11)).foregroundStyle(HUDStyle.gold)
             }
-            // Every style suits everyone now (nine and counting), more than fit across: the row
-            // scrolls, like the colours below, and opens on the one you're wearing.
-            ScrollViewReader { proxy in
-                SideScroll {
-                    HStack(spacing: 8) {
-                        ForEach(styles) { style in
-                            let selected = style.id == current
-                            Button {
-                                look.style = style.id
-                            } label: {
-                                Image(uiImage: portrait(style))
-                                    .interpolation(.none)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 44, height: 44)
-                                    .background(RoundedRectangle(cornerRadius: 8).fill(.white.opacity(0.08)))
-                                    .overlay(RoundedRectangle(cornerRadius: 8)
-                                        .strokeBorder(selected ? HUDStyle.gold : .white.opacity(0.4), lineWidth: selected ? 3 : 1.5))
-                                    .padding(2)
-                            }
-                            .buttonStyle(PressScaleStyle())
-                            .accessibilityLabel(L("Hairstyle {style}", ["style": style.name]))
-                            .accessibilityAddTraits(selected ? .isSelected : [])
-                            .id(style.id)
+            if wraps {
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 64), spacing: 10)], alignment: .leading, spacing: 10) {
+                    tiles(size: 58)
+                }
+            } else {
+                // Every style suits everyone now (nine and counting), more than fit across: the row
+                // scrolls, like the colours below, and opens on the one you're wearing.
+                ScrollViewReader { proxy in
+                    SideScroll {
+                        HStack(spacing: 8) {
+                            tiles(size: 44)
                         }
                     }
+                    .onAppear { proxy.scrollTo(current, anchor: .center) }
                 }
-                .onAppear { proxy.scrollTo(current, anchor: .center) }
             }
+        }
+    }
+
+    /// Each style on your hero, `size` across, the one you're wearing ringed in gold.
+    private func tiles(size: CGFloat) -> some View {
+        ForEach(styles) { style in
+            let selected = style.id == current
+            Button {
+                look.style = style.id
+            } label: {
+                Image(uiImage: portrait(style))
+                    .interpolation(.none)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: size, height: size)
+                    .background(RoundedRectangle(cornerRadius: 8).fill(.white.opacity(0.08)))
+                    .overlay(RoundedRectangle(cornerRadius: 8)
+                        .strokeBorder(selected ? HUDStyle.gold : .white.opacity(0.4), lineWidth: selected ? 3 : 1.5))
+                    .padding(2)
+            }
+            .buttonStyle(PressScaleStyle())
+            .accessibilityLabel(L("Hairstyle {style}", ["style": style.name]))
+            .accessibilityAddTraits(selected ? .isSelected : [])
+            .id(style.id)
         }
     }
 
@@ -161,6 +175,8 @@ struct SwatchPicker: View {
     let title: String
     let presets: [LookPreset]
     @Binding var selection: String
+    /// Every colour at once, in rows that wrap (the barber's window); else one row that scrolls.
+    var wraps = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
@@ -168,31 +184,42 @@ struct SwatchPicker: View {
                 Text(title).font(HUDStyle.font(11)).foregroundStyle(HUDStyle.dim)
                 Text(presets.first { $0.id == selection }?.name ?? "").font(HUDStyle.font(11)).foregroundStyle(HUDStyle.gold)
             }
-            SideScroll {
-                HStack(spacing: 8) {
-                    ForEach(presets) { preset in
-                        let selected = preset.id == selection
-                        Button {
-                            selection = preset.id
-                        } label: {
-                            Circle()
-                                .fill(Color(uiColor: UIColor(hex: preset.swatch) ?? .white))
-                                .frame(width: 30, height: 30)
-                                .overlay(Circle().strokeBorder(.white.opacity(0.7), lineWidth: 1.5))
-                                .overlay(Circle().strokeBorder(selected ? HUDStyle.gold : .clear, lineWidth: 3).padding(-4))
-                                .overlay {
-                                    if selected {
-                                        IconImage(.check, size: 13).foregroundStyle(HUDStyle.ink)
-                                    }
-                                }
-                                .padding(4)
-                        }
-                        .buttonStyle(PressScaleStyle())
-                        .accessibilityLabel("\(title) \(preset.name)")
-                        .accessibilityAddTraits(selected ? .isSelected : [])
+            if wraps {
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 44), spacing: 6)], alignment: .leading, spacing: 6) {
+                    swatches
+                }
+            } else {
+                SideScroll {
+                    HStack(spacing: 8) {
+                        swatches
                     }
                 }
             }
+        }
+    }
+
+    /// A round swatch a colour, a tick on the one chosen.
+    private var swatches: some View {
+        ForEach(presets) { preset in
+            let selected = preset.id == selection
+            Button {
+                selection = preset.id
+            } label: {
+                Circle()
+                    .fill(Color(uiColor: UIColor(hex: preset.swatch) ?? .white))
+                    .frame(width: 30, height: 30)
+                    .overlay(Circle().strokeBorder(.white.opacity(0.7), lineWidth: 1.5))
+                    .overlay(Circle().strokeBorder(selected ? HUDStyle.gold : .clear, lineWidth: 3).padding(-4))
+                    .overlay {
+                        if selected {
+                            IconImage(.check, size: 13).foregroundStyle(HUDStyle.ink)
+                        }
+                    }
+                    .padding(4)
+            }
+            .buttonStyle(PressScaleStyle())
+            .accessibilityLabel("\(title) \(preset.name)")
+            .accessibilityAddTraits(selected ? .isSelected : [])
         }
     }
 }

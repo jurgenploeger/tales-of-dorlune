@@ -17,11 +17,9 @@ import SwiftUI
 /// so you can't get stuck).
 struct WorldAtlas: View {
     let session: GameSession
-    /// Over the map's top left and bottom left corners, on the window's own blue melting into the
-    /// map over a blur that deepens toward the edge (`edgeBand`): the window's title, the time and
-    /// where you are (`MapOverlay`).
+    /// Over the map's top left corner, on the window's own blue melting into the map over a blur
+    /// that deepens toward the edge (`edgeBand`): where you are and the time (`MapOverlay`).
     private let topLeading: AnyView
-    private let bottomLeading: AnyView
     @State private var selected: String?
     /// The filter's dropdown (`filterMenu`) open.
     @State private var filtering = false
@@ -139,10 +137,9 @@ struct WorldAtlas: View {
         return (low, high.col - low.col, high.row - low.row)
     }
 
-    init(session: GameSession, @ViewBuilder topLeading: () -> some View, @ViewBuilder bottomLeading: () -> some View) {
+    init(session: GameSession, @ViewBuilder topLeading: () -> some View) {
         self.session = session
         self.topLeading = AnyView(topLeading())
-        self.bottomLeading = AnyView(bottomLeading())
     }
 
     private static let seaColor = WorldMap.seaColor
@@ -175,31 +172,37 @@ struct WorldAtlas: View {
         .frame(minHeight: 260, maxHeight: .infinity)
         .background(Self.sea)
         // Touches go through to the map under them.
+        // Where you are, and when, over the top left; the band under it only as tall as that (the
+        // user, 2026-11-11: "The top gradient is too tall. The bottom left content should move to top
+        // left"). Nothing up here takes a touch but the compass.
         .overlay(alignment: .top) {
-            // Nothing that takes a touch up here: the map's controls are together at the bottom
-            // right (the user, 2026-11-11: "Can we have the filter pills show in a dropdown closer to
-            // the bottom right controls? ... it's a bit messy now").
             topLeading
                 .allowsHitTesting(false)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.bottom, 30)
-            .background { edgeBand(.top, marks: shown).allowsHitTesting(false) }
-        }
-        .overlay(alignment: .bottom) {
-            bottomLeading
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.leading, 18)
-                // Clear of the map's buttons on the right.
+                .padding(.leading, 16)
+                // Clear of the compass on the right.
                 .padding(.trailing, 76)
-                .padding(.top, 30)
-                // Level with the Where you are button beside it, as far in from the corner.
-                .padding(.bottom, 22)
-                .background { edgeBand(.bottom, marks: shown) }
-                .allowsHitTesting(false)
+                .padding(.top, 12)
+                .padding(.bottom, 16)
+                .background { edgeBand(.top, marks: shown).allowsHitTesting(false) }
         }
-        .overlay(alignment: .topTrailing) { compass.padding(10) }
-        // Over everything else: the edges, their blur and the land's name.
-        .overlay(alignment: .bottomTrailing) { controls }
+        // As far in from the corner as everything else over the map (16).
+        .overlay(alignment: .topTrailing) { compass.padding(.top, 10).padding(.trailing, 16) }
+        // The controls along the bottom: what's shown at the left, the buttons in a row at the right
+        // ("The filter dropdown should be bottom left. The three controls on the bottom right should
+        // be horizontal with the user first, then minus, then plus").
+        .overlay(alignment: .bottom) {
+            // Centred on one line: bottom-aligned, the round buttons sat a few points over the filter.
+            HStack(alignment: .center, spacing: 8) {
+                filterMenu
+                Spacer(minLength: 8)
+                controls
+            }
+            .padding(.horizontal, 16)
+            .padding(.top, 16)
+            .padding(.bottom, 16)
+            .background { edgeBand(.bottom, marks: shown).allowsHitTesting(false) }
+        }
         .onAppear {
             overview.prepare()
             withAnimation(.easeInOut(duration: 0.8).repeatForever(autoreverses: true)) { pulse = true }
@@ -514,16 +517,13 @@ struct WorldAtlas: View {
         .accessibilityLabel(isNorthUp ? L("Turn the map as you see the land") : L("Turn the map north up"))
     }
 
-    /// Every control of the map in one column at the bottom right, in reach of a thumb, as map apps
-    /// keep theirs: what's shown (a dropdown, `filterMenu`), zoom, and where you are.
+    /// The map's buttons in a row at the bottom right, in reach of a thumb: where you are, zoom out,
+    /// zoom in.
     private var controls: some View {
-        VStack(alignment: .trailing, spacing: 10) {
-            filterMenu
-            VStack(spacing: 6) {
-                mapButton(Text("+").font(HUDStyle.font(18)), label: L("Zoom in")) { zoom(by: 1.6) }
-                mapButton(Text("−").font(HUDStyle.font(18)), label: L("Zoom out")) { zoom(by: 1 / 1.6) }
-            }
+        HStack(spacing: 6) {
             mapButton(IconImage(.user, size: 16), label: L("Where you are")) { centreOnHere() }
+            mapButton(Text("−").font(HUDStyle.font(18)), label: L("Zoom out")) { zoom(by: 1 / 1.6) }
+            mapButton(Text("+").font(HUDStyle.font(18)), label: L("Zoom in")) { zoom(by: 1.6) }
         }
         // Well in from the window's rounded corner (playtesting 2026-10-30: 6 points left them
         // squeezed into it).
@@ -552,7 +552,9 @@ struct WorldAtlas: View {
                 .foregroundStyle(HUDStyle.ink)
                 // 40 points across, 44 to tap (Apple's least: they were 30).
                 .frame(width: 40, height: 40)
-                .background(Circle().fill(HUDStyle.plate))
+                // Gold, as the filter's button is ("Those three controls should have the same color
+                // as the filter dropdown button").
+                .background(Circle().fill(HUDStyle.gold))
                 .overlay(Circle().strokeBorder(HUDStyle.ink.opacity(0.6), lineWidth: 1.5))
                 .shadow(color: .black.opacity(0.3), radius: 2, x: 0, y: 1)
                 .frame(width: 44, height: 44)
@@ -562,9 +564,8 @@ struct WorldAtlas: View {
         .accessibilityLabel(label)
     }
 
-    /// What the map's badges show, a dropdown over the zoom buttons: the one shown on its face (gold
-    /// once it isn't All), the rest in a panel opening up and to the left of it, a tick by the one
-    /// shown. A tap anywhere else closes it. Kept for the next time the map opens.
+    /// What the map's badges show, a dropdown at the bottom left: the one shown on its face, the rest
+    /// in a panel opening up and to the right of it, a tick by the one shown. A tap anywhere else closes it. Kept for the next time the map opens.
     private var filterMenu: some View {
         Button {
             SoundEffects.shared.play(.tap, volume: 0.7)
@@ -580,7 +581,8 @@ struct WorldAtlas: View {
             .foregroundStyle(HUDStyle.ink)
             .padding(.horizontal, 14)
             .frame(minHeight: 40)
-            .background(Capsule().fill(filter == .all ? HUDStyle.plate : HUDStyle.gold))
+            // Gold, as the map's buttons are; which filter is on is its face.
+            .background(Capsule().fill(HUDStyle.gold))
             .overlay(Capsule().strokeBorder(HUDStyle.ink.opacity(0.6), lineWidth: 1.5))
             .shadow(color: .black.opacity(0.3), radius: 2, x: 0, y: 1)
             .fixedSize()
@@ -600,11 +602,11 @@ struct WorldAtlas: View {
                     .accessibilityHidden(true)
             }
         }
-        .overlay(alignment: .bottomTrailing) {
+        .overlay(alignment: .bottomLeading) {
             if filtering {
                 filterPanel
                     .offset(y: -50)
-                    .transition(.scale(scale: 0.6, anchor: .bottomTrailing).combined(with: .opacity))
+                    .transition(.scale(scale: 0.6, anchor: .bottomLeading).combined(with: .opacity))
             }
         }
     }
