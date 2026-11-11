@@ -105,15 +105,18 @@ struct BountiesSection: View {
     var body: some View {
         let board = session.data.bounties
         VStack(alignment: .leading, spacing: 8) {
+            let bounties = board?.bounties ?? []
             HStack {
-                SectionTitle(text: L("Today's bounties"))
-                Spacer()
+                SectionTitle(text: L("Today's bounties"),
+                             detail: bounties.isEmpty ? nil : "\(bounties.filter(\.isDone).count)/\(bounties.count)")
                 Text(L("New ones each day"))
                     .font(HUDStyle.font(10))
                     .foregroundStyle(HUDStyle.dim)
+                    .fixedSize()
             }
-            ForEach(Array((board?.bounties ?? []).enumerated()), id: \.offset) { index, bounty in
-                BountyRow(session: session, bounty: bounty, index: index)
+            // One group (`GroupedRows`), as every list is (the user, 2026-11-11).
+            GroupedRows(Array(bounties.enumerated()), id: \.offset) { entry in
+                BountyRow(session: session, bounty: entry.element, index: entry.offset)
             }
             if let board, !board.bounties.isEmpty {
                 bonus(claimed: board.bonusClaimed)
@@ -214,8 +217,8 @@ private struct BountyRow: View {
                     .buttonStyle(PixelButtonStyle(tint: HUDStyle.gold, compact: true))
             }
         }
-        .padding(8)
-        .background(GlassCard(lit: bounty.isDone && !bounty.claimed, gold: bounty.isDone && !bounty.claimed))
+        // Gold while it's done and waiting to be claimed.
+        .groupRow(gold: bounty.isDone && !bounty.claimed)
     }
 
     private var icon: GameIcon {
@@ -243,50 +246,56 @@ struct TitlesSection: View {
         let earned = titles.filter { session.hasEarned($0) }
         let ahead = titles.filter { !session.hasEarned($0) }.sorted { fraction($0) > fraction($1) }
         VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                SectionTitle(text: L("Titles"))
-                Spacer()
-                Text(L("{count} of {total}", ["count": earned.count, "total": titles.count]))
-                    .font(HUDStyle.font(11))
-                    .foregroundStyle(HUDStyle.gold)
-            }
-            if earned.isEmpty {
-                Text(L("Earn titles as you go: levels, lands, monsters, bosses and more. Wear one over your name."))
-                    .font(HUDStyle.font(11))
-                    .foregroundStyle(HUDStyle.dim)
-                    .fixedSize(horizontal: false, vertical: true)
-            } else {
-                Text(L("Tap a title to wear it over your name."))
-                    .font(HUDStyle.font(10))
-                    .foregroundStyle(HUDStyle.dim)
-                WrapRows(spacing: 6) {
-                    ForEach(earned) { title in
-                        let worn = session.data.title == title.id
-                        Button {
-                            session.wear(worn ? nil : title)
-                        } label: {
-                            // Each in its badge; the one you wear ringed in cream, with a tick.
-                            TitleBadge(title: title, size: 11)
-                                .padding(4)
-                                .overlay(Capsule().strokeBorder(HUDStyle.cream.opacity(worn ? 0.9 : 0), lineWidth: 2))
-                                .overlay(alignment: .topTrailing) {
-                                    if worn {
-                                        IconImage(.check, size: 9)
-                                            .foregroundStyle(HUDStyle.ink)
-                                            .padding(3)
-                                            .background(Circle().fill(HUDStyle.cream))
-                                            .offset(x: 2, y: -2)
+            // Earned: the badges, to wear one over your name, on a plate of their own under how
+            // many of all there are (the user, 2026-11-11: "Make improvements to the skills and titles").
+            SectionTitle(text: L("Earned"), detail: L("{count} of {total}", ["count": earned.count, "total": titles.count]))
+            VStack(alignment: .leading, spacing: 8) {
+                GlossyBar(fraction: CGFloat(earned.count) / CGFloat(max(1, titles.count)), color: HUDStyle.gold, height: 6)
+                if earned.isEmpty {
+                    Text(L("Earn titles as you go: levels, lands, monsters, bosses and more. Wear one over your name."))
+                        .font(HUDStyle.font(11))
+                        .foregroundStyle(HUDStyle.dim)
+                        .fixedSize(horizontal: false, vertical: true)
+                } else {
+                    WrapRows(spacing: 6) {
+                        ForEach(earned) { title in
+                            let worn = session.data.title == title.id
+                            Button {
+                                session.wear(worn ? nil : title)
+                            } label: {
+                                // Each in its badge; the one you wear ringed in cream, with a tick.
+                                TitleBadge(title: title, size: 11)
+                                    .padding(4)
+                                    .overlay(Capsule().strokeBorder(HUDStyle.cream.opacity(worn ? 0.9 : 0), lineWidth: 2))
+                                    .overlay(alignment: .topTrailing) {
+                                        if worn {
+                                            IconImage(.check, size: 9)
+                                                .foregroundStyle(HUDStyle.ink)
+                                                .padding(3)
+                                                .background(Circle().fill(HUDStyle.cream))
+                                                .offset(x: 2, y: -2)
+                                        }
                                     }
-                                }
+                            }
+                            .buttonStyle(PressScaleStyle())
+                            .accessibilityAddTraits(worn ? .isSelected : [])
+                            .accessibilityHint(worn ? L("Takes it off") : L("Wears it over your name"))
                         }
-                        .buttonStyle(PressScaleStyle())
-                        .accessibilityAddTraits(worn ? .isSelected : [])
-                        .accessibilityHint(worn ? L("Takes it off") : L("Wears it over your name"))
                     }
+                    Text(L("Tap a title to wear it over your name."))
+                        .font(HUDStyle.font(10))
+                        .foregroundStyle(HUDStyle.dim)
                 }
             }
-            ForEach(showsAll ? ahead : Array(ahead.prefix(4))) { title in
-                TitleGoalRow(session: session, title: title)
+            .padding(12)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(GlassCard())
+            if !ahead.isEmpty {
+                // Still to earn, the closest first: one group (`GroupedRows`), as every list is.
+                SectionTitle(text: L("To earn"), detail: "\(ahead.count)")
+                GroupedRows(showsAll ? ahead : Array(ahead.prefix(4))) { title in
+                    TitleGoalRow(session: session, title: title)
+                }
             }
             if ahead.count > 4 {
                 Button(showsAll ? L("Show fewer") : L("Show all {count} to earn", ["count": ahead.count])) {
@@ -330,8 +339,7 @@ private struct TitleGoalRow: View {
                 GlossyBar(fraction: CGFloat(min(progress.have, progress.need)) / CGFloat(max(1, progress.need)), color: HUDStyle.gold, height: 5)
             }
         }
-        .padding(8)
-        .background(GlassCard(radius: 8))
+        .groupRow()
         .accessibilityElement(children: .combine)
     }
 }

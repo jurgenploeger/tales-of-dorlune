@@ -272,7 +272,10 @@ struct WorldAtlas: View {
         let size = viewSize
         return GeometryReader { band in
             ZStack {
-                if framing.scale > 0, size.width > 0, size.height > 0 {
+                // Not while two fingers pinch or twist it: each blurred copy draws the whole map again,
+                // every frame of the gesture (six more maps), and the glass alone holds the edge till
+                // they lift.
+                if framing.scale > 0, size.width > 0, size.height > 0, fingers == nil {
                     // Only the marks under the band.
                     let near = marks.filter { mark in
                         let y = point(of: mark.spot, in: size).y
@@ -346,9 +349,11 @@ struct WorldAtlas: View {
     }
 
     /// The continent's cell under a point in a view of `size`, however the map's turned.
-    private func cell(at location: CGPoint, in size: CGSize) -> GridPoint {
+    private func cell(at location: CGPoint, in size: CGSize) -> GridPoint? {
         let (low, _, rows) = bounds
         let spot = framing.spot(at: CGPoint(x: location.x - size.width / 2, y: location.y - size.height / 2))
+        // `Int` of a number that isn't one traps.
+        guard spot.x.isFinite, spot.y.isFinite, abs(spot.x) < 1e6, abs(spot.y) < 1e6 else { return nil }
         return GridPoint(col: low.col + Int(spot.x.rounded(.down)), row: low.row + Int((CGFloat(rows) - spot.y).rounded(.down)))
     }
 
@@ -359,8 +364,14 @@ struct WorldAtlas: View {
         return min(Self.maxScale, max(min(whole, Self.minScale), value))
     }
 
-    /// Keeps the middle of the view over the continent.
+    /// Keeps the middle of the view over the continent. A framing with a number that isn't one (a
+    /// zoom, turn or middle gone infinite or NaN, from a pinch or twist of a view that has no size
+    /// mid-turn) is refused and the map stays as it lay: the next tap on it made a cell of it, and
+    /// `Int` of NaN traps (the user, 2026-11-11: "The map sometimes crashes when you rotate/zoom in
+    /// out").
     private func clampedFocus(_ value: Framing) -> Framing {
+        guard value.scale.isFinite, value.scale > 0, value.rotation.isFinite,
+              value.focus.x.isFinite, value.focus.y.isFinite else { return framing }
         let (_, columns, rows) = bounds
         var kept = value
         kept.focus = CGPoint(x: min(CGFloat(columns), max(0, value.focus.x)), y: min(CGFloat(rows), max(0, value.focus.y)))
@@ -555,7 +566,7 @@ struct WorldAtlas: View {
             selected = cave.place
             return
         }
-        selected = Continent.owner(atWorld: cell(at: location, in: size))?.id
+        selected = cell(at: location, in: size).flatMap { Continent.owner(atWorld: $0) }?.id
     }
 
     // MARK: Marks
@@ -617,6 +628,8 @@ struct WorldAtlas: View {
         for pile in session.lostPiles where filter.shows(.lost) {
             guard let land = lands.first(where: { $0.def.id == pile.mapID }), let position = pile.position, position.count == 2 else { continue }
             let grid = WorldMap.unproject(CGPoint(x: position[0], y: position[1]))
+            // `Int` of a number that isn't one traps.
+            guard grid.x.isFinite, grid.y.isFinite else { continue }
             found.append(Mark(id: "lost \(pile.id)", kind: .badge, place: pile.mapID,
                               cell: GridPoint(col: land.origin.col + Int((grid.x / WorldMap.tileSize).rounded(.down)),
                                               row: land.origin.row + Int((grid.y / WorldMap.tileSize).rounded(.down))),
@@ -678,7 +691,10 @@ struct WorldAtlas: View {
             }
         }
         if let here = hereCell { marks.append(Mark(id: "here", kind: .here, place: session.data.mapID, cell: here)) }
-        return spotted(marks)
+        // Each mark once (two roads from a land into the same cave would make two of one id, and
+        // SwiftUI's ForEach can fall over on a repeated id as the marks change with the zoom).
+        var seen = Set<String>()
+        return spotted(marks.filter { seen.insert($0.id).inserted })
     }
 
     /// Where a road leaves a land through `exit`, on the continent: where it crosses the land's border

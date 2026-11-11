@@ -26,9 +26,10 @@ struct MapOverlay: View {
                 .ignoresSafeArea()
                 .onTapGesture(perform: onClose)
 
-            // The game's window, like every other. A cave's: its title along the top, the time and
-            // where you are under it, its map below. The world's: the atlas out to the frame, its
-            // title and where you are over it (playtesting 2026-10-26).
+            // The game's window, like every other: its title on the title bar along the top (the user,
+            // 2026-11-11: "Also update the map with the new modal header"). A cave's: the time and
+            // where you are under it, its map below. The world's: the atlas under the bar out to the
+            // frame, the time and where you are over its top (playtesting 2026-10-26).
             VStack(spacing: 0) {
                 if let cave, !showsWorld {
                     WindowTitle(level?.name ?? session.mapName, onClose: onClose)
@@ -47,11 +48,11 @@ struct MapOverlay: View {
                         }
                     }
                 } else {
+                    WindowTitle(L("World map"), onClose: onClose)
                     WorldAtlas(session: session) {
-                        VStack(alignment: .leading, spacing: 6) {
-                            WindowTitle(L("World map"), bar: false, onClose: onClose)
-                            pills.padding(.horizontal, 16)
-                        }
+                        pills
+                            .padding(.horizontal, 16)
+                            .padding(.top, 10)
                     } bottomLeading: {
                         // The land you're in.
                         Text(session.mapName)

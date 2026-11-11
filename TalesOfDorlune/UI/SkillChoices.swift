@@ -19,6 +19,10 @@ struct SkillChoices: View {
     /// Whose skills: the hero's (nil) or a companion's, by its id (the Companions page: playtesting
     /// 2026-11-01, "When they level up we should also be able to choose their skills").
     var owner: UUID? = nil
+    /// In groups (the Character screen's Skills page): what you know on a plate of its own under its
+    /// name and count, what's still to learn on another, with where to learn it (the user, 2026-11-11:
+    /// "Make improvements to the skills and titles"; every window's content in groups, 0.9.76).
+    var grouped = false
 
     var body: some View {
         let learnable = session.learnableSkills(owner: owner)
@@ -40,6 +44,8 @@ struct SkillChoices: View {
                 // way first so the skill tapped and its button still show.
                 .frame(maxHeight: gridHeight)
                 .layoutPriority(-1)
+            } else if grouped {
+                groups(learnable: learnable, known: known, shown: shown)
             } else {
                 grid(learnable: learnable, known: known, shown: shown)
             }
@@ -67,31 +73,74 @@ struct SkillChoices: View {
         VStack(alignment: .leading, spacing: 10) {
             LazyVGrid(columns: Self.columns, alignment: .leading, spacing: 10) {
                 if owner != nil { toLearn(learnable, shown: shown) }
-                ForEach(Array(known.enumerated()), id: \.element.id) { index, skill in
-                    SkillTileButton(session: session, skill: skill, isNew: false, isSelected: skill.id == shown?.id, owner: owner) { selected = skill.id }
-                        // Held and dragged onto another, it takes that one's place: your order is the
-                        // battle row's (`GameSession.heroSkills`).
-                        .draggable(skill.id) { SkillIcon(skill: skill, size: 54) }
-                        .dropDestination(for: String.self) { ids, _ in
-                            guard let id = ids.first else { return false }
-                            return move(id, onto: skill.id)
-                        }
-                        .accessibilityAction(named: L("Move earlier")) {
-                            if index > 0 { move(skill.id, onto: known[index - 1].id) }
-                        }
-                        .accessibilityAction(named: L("Move later")) {
-                            if index + 1 < known.count { move(skill.id, onto: known[index + 1].id) }
-                        }
-                }
+                knownTiles(known, shown: shown)
                 if owner == nil { toLearn(learnable, shown: shown) }
             }
-            if known.count > 1 {
-                Text(owner == nil ? L("Hold a skill and drag it to reorder. In battle the first ones are buttons of their own; the rest wait behind More.")
-                     : L("Hold a skill and drag it to reorder: in battle its row shows them in this order."))
-                    .font(HUDStyle.font(10))
-                    .foregroundStyle(HUDStyle.dim)
-                    .fixedSize(horizontal: false, vertical: true)
+            if known.count > 1 { reorderHint }
+        }
+    }
+
+    /// The skills you know, each held and dragged to reorder.
+    @ViewBuilder
+    private func knownTiles(_ known: [SkillDef], shown: SkillDef?) -> some View {
+        ForEach(Array(known.enumerated()), id: \.element.id) { index, skill in
+            SkillTileButton(session: session, skill: skill, isNew: false, isSelected: skill.id == shown?.id, owner: owner) { selected = skill.id }
+                // Held and dragged onto another, it takes that one's place: your order is the
+                // battle row's (`GameSession.heroSkills`).
+                .draggable(skill.id) { SkillIcon(skill: skill, size: 54) }
+                .dropDestination(for: String.self) { ids, _ in
+                    guard let id = ids.first else { return false }
+                    return move(id, onto: skill.id)
+                }
+                .accessibilityAction(named: L("Move earlier")) {
+                    if index > 0 { move(skill.id, onto: known[index - 1].id) }
+                }
+                .accessibilityAction(named: L("Move later")) {
+                    if index + 1 < known.count { move(skill.id, onto: known[index + 1].id) }
+                }
+        }
+    }
+
+    /// How to reorder, under the tiles you know.
+    private var reorderHint: some View {
+        Text(owner == nil ? L("Hold a skill and drag it to reorder. In battle the first ones are buttons of their own; the rest wait behind More.")
+             : L("Hold a skill and drag it to reorder: in battle its row shows them in this order."))
+            .font(HUDStyle.font(10))
+            .foregroundStyle(HUDStyle.dim)
+            .fixedSize(horizontal: false, vertical: true)
+    }
+
+    /// `grouped`: what you know, under its name and count on a plate sunk into the glass
+    /// (`GlassCard`), then what's still to learn on another, with where to learn it.
+    @ViewBuilder
+    private func groups(learnable: [SkillDef], known: [SkillDef], shown: SkillDef?) -> some View {
+        if !known.isEmpty {
+            SectionTitle(text: L("Known"), detail: "\(known.count)")
+            VStack(alignment: .leading, spacing: 10) {
+                LazyVGrid(columns: Self.columns, alignment: .leading, spacing: 10) {
+                    knownTiles(known, shown: shown)
+                }
+                if known.count > 1 { reorderHint }
             }
+            .padding(12)
+            .background(GlassCard())
+        }
+        if !learnable.isEmpty {
+            SectionTitle(text: L("To learn"), detail: "\(learnable.count)")
+            VStack(alignment: .leading, spacing: 10) {
+                LazyVGrid(columns: Self.columns, alignment: .leading, spacing: 10) {
+                    toLearn(learnable, shown: shown)
+                }
+                if owner == nil {
+                    // Your hero's new skills come from the guild master (greyed till then).
+                    Text(L("New skills are learned at your guild, a skill point each. {hint}", ["hint": session.guildHint]))
+                        .font(HUDStyle.font(10))
+                        .foregroundStyle(HUDStyle.dim)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+            .padding(12)
+            .background(GlassCard())
         }
     }
 
@@ -251,9 +300,9 @@ private struct SkillDetail: View {
             }
         }
         .font(HUDStyle.font(12))
-        .padding(10)
-        .background(RoundedRectangle(cornerRadius: 8).fill(HUDStyle.gold.opacity(isNew ? 0.16 : 0.1)))
-        .overlay(RoundedRectangle(cornerRadius: 8).strokeBorder(HUDStyle.gold.opacity(0.35), lineWidth: 1))
+        .padding(12)
+        // On a plate sunk into the glass, as every group is, rimmed in gold: the one you tapped.
+        .background(GlassCard(gold: true))
     }
 }
 

@@ -31,6 +31,8 @@ struct MenuView: View {
     /// A tap on something in the Bag: its card, over the menu. Debug `inspect=<item>` opens one
     /// (unless it's for the gear grid, `change=`).
     @State private var inspecting: ItemDef? = DebugLaunch.changingSlot == nil ? DebugLaunch.inspectedItem.flatMap { Content.shared.item($0) } : nil
+    /// A tap on a quest in the Quests list: its window, over the menu. Debug `questcard=<quest>` opens one.
+    @State private var openQuest: QuestDef? = DebugLaunch.openedQuest.flatMap { Content.shared.quest($0) }
 
     init(session: GameSession, window: MenuTab, onClose: @escaping () -> Void, onQuitToTitle: (() -> Void)? = nil) {
         self.session = session
@@ -78,6 +80,14 @@ struct MenuView: View {
                 .zIndex(1)
             }
 
+            if let quest = openQuest {
+                QuestWindow(session: session, quest: quest) {
+                    withAnimation(.easeOut(duration: 0.2)) { openQuest = nil }
+                }
+                .transition(.opacity)
+                .zIndex(1)
+            }
+
             // Over the item's card when it's opened from there: the card shows again once it closes,
             // unless the last of it is gone.
             if let item = picking {
@@ -115,7 +125,10 @@ extension MenuView {
                     case .bag:
                         BagTab(session: session, note: $bagNote, hatchRequest: $hatchRequest,
                                onInspect: { item in withAnimation(.spring(response: 0.3, dampingFraction: 0.86)) { inspecting = item } })
-                    case .quests: QuestsTab(session: session, page: $questsPage)
+                    case .quests:
+                        QuestsTab(session: session, page: $questsPage) { quest in
+                            withAnimation(.spring(response: 0.3, dampingFraction: 0.86)) { openQuest = quest }
+                        }
                     case .settings: SettingsView(session: session, onQuitToTitle: onQuitToTitle, page: settingsPage)
                     }
                 }
@@ -247,7 +260,9 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
                 // Faded at an edge with more tabs past it (`SideScroll`).
                 SideScroll {
                     // Standing on the bar's foot, the one you're on a little taller.
-                    HStack(alignment: .bottom, spacing: 3) {
+                    // Far enough apart that the flare at the foot of the one you're on (`FlaredTab`)
+                    // meets no other.
+                    HStack(alignment: .bottom, spacing: FlaredTab.flare) {
                         ForEach(Array(Page.allCases), id: \.self) { item in
                             tab(item)
                                 .id(item)
@@ -283,12 +298,26 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
                 .shadow(color: HUDStyle.frameDark.opacity(selected ? 0 : 1), radius: 0, x: 1, y: 1)
                 .padding(.horizontal, 13)
                 .padding(.vertical, selected ? 9 : 7)
-                .background(Self.tabShape.fill(selected ? HUDStyle.glassTop : HUDStyle.frameDark.opacity(0.3)))
+                .background {
+                    // The one you're on flares out at its foot, its bottom corners rounded the other way
+                    // into the bar (the user, 2026-11-11: "The bottom of the tabs should have rounded
+                    // corners that are inverted to the other side"), so it runs into the page as a
+                    // folder's tab does.
+                    if selected {
+                        FlaredTab().fill(HUDStyle.glassTop).padding(.horizontal, -FlaredTab.flare)
+                    } else {
+                        Self.tabShape.fill(HUDStyle.frameDark.opacity(0.3))
+                    }
+                }
                 .overlay {
-                    // A light edge up its sides and over its top; none along its foot, where it's the page's.
-                    // One you're not on edged faintly in the bar's dark, so it reads as a tab of its own.
-                    TabEdge().stroke(selected ? HUDStyle.frameLight.opacity(0.8) : HUDStyle.frameDark.opacity(0.35),
-                                     lineWidth: selected ? 1.5 : 1)
+                    // A light edge up its sides, over its top and out along its flares; none along its
+                    // foot, where it's the page's. One you're not on edged faintly in the bar's dark.
+                    if selected {
+                        FlaredTab(open: true).stroke(HUDStyle.frameLight.opacity(0.8), lineWidth: 1.5)
+                            .padding(.horizontal, -FlaredTab.flare)
+                    } else {
+                        TabEdge().stroke(HUDStyle.frameDark.opacity(0.35), lineWidth: 1)
+                    }
                 }
                 .overlay(alignment: .topTrailing) {
                     if marked {
@@ -312,6 +341,32 @@ extension PageTabs {
     fileprivate static var tabShape: UnevenRoundedRectangle {
         UnevenRoundedRectangle(topLeadingRadius: TabEdge.radius, bottomLeadingRadius: 0, bottomTrailingRadius: 0,
                                topTrailingRadius: TabEdge.radius, style: .continuous)
+    }
+}
+
+/// The tab you're on (`PageTabs`), drawn `flare` wider on each side than the tab: round at the top,
+/// and at its foot its corners rounded the other way, curving out into the bar it stands on. `open`:
+/// its edge only, for the stroke, with no line along its foot.
+private nonisolated struct FlaredTab: Shape {
+    static let flare: CGFloat = 6
+    var open = false
+
+    func path(in rect: CGRect) -> Path {
+        let flare = Self.flare, radius = TabEdge.radius
+        // Inside by half the stroke's width at the top and sides, so a stroke stays on it.
+        let left = rect.minX + flare + 0.75, right = rect.maxX - flare - 0.75, top = rect.minY + 0.75
+        let bottom = rect.maxY
+        var path = Path()
+        path.move(to: CGPoint(x: rect.minX, y: bottom))
+        path.addQuadCurve(to: CGPoint(x: left, y: bottom - flare), control: CGPoint(x: left, y: bottom))
+        path.addLine(to: CGPoint(x: left, y: top + radius))
+        path.addQuadCurve(to: CGPoint(x: left + radius, y: top), control: CGPoint(x: left, y: top))
+        path.addLine(to: CGPoint(x: right - radius, y: top))
+        path.addQuadCurve(to: CGPoint(x: right, y: top + radius), control: CGPoint(x: right, y: top))
+        path.addLine(to: CGPoint(x: right, y: bottom - flare))
+        path.addQuadCurve(to: CGPoint(x: rect.maxX, y: bottom), control: CGPoint(x: right, y: bottom))
+        if !open { path.closeSubpath() }
+        return path
     }
 }
 
@@ -373,14 +428,24 @@ private struct HowItWorks: View {
     }
 }
 
+/// A group's name over it, in gold capitals, and how many it holds (`detail`: "Party · 3/4"), a
+/// faint gold rule running on after it so the window reads as groups (the user, 2026-11-11).
 struct SectionTitle: View {
     let text: String
+    var detail: String? = nil
 
     var body: some View {
-        Text(text.uppercased())
-            .font(HUDStyle.font(11))
-            .foregroundStyle(HUDStyle.gold)
-            .padding(.top, 4)
+        HStack(spacing: 8) {
+            Text((detail.map { text + " · " + $0 } ?? text).uppercased())
+                .font(HUDStyle.font(11))
+                .foregroundStyle(HUDStyle.gold)
+                .monospacedDigit()
+                .fixedSize()
+            HUDStyle.gold.opacity(0.3).frame(height: 1)
+        }
+        .padding(.top, 4)
+        .accessibilityElement(children: .combine)
+        .accessibilityAddTraits(.isHeader)
     }
 }
 
@@ -461,47 +526,47 @@ private struct CharacterTab: View {
         let upcoming = session.heroClass.skills.filter { $0.level > hero.level }
         return VStack(alignment: .leading, spacing: 10) {
             if session.canSpendSkillPoint {
+                // In a gold pill, as it's something to do: tap a skill you know, then raise it.
                 Text(session.unspentSkillPoints == 1 ? L("1 skill point to spend") : L("{count} skill points to spend", ["count": session.unspentSkillPoints]))
                     .font(HUDStyle.font(11))
-                    .foregroundStyle(HUDStyle.gold)
+                    .monospacedDigit()
+                    .foregroundStyle(HUDStyle.ink)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 4)
+                    .background(Capsule().fill(HUDStyle.gold))
             } else if session.unspentSkillPoints > 0 {
                 // Everything known is mastered: points wait for the next skill the class unlocks.
                 Text(L("{count} saved for your next skill", ["count": session.unspentSkillPoints]))
                     .font(HUDStyle.font(11))
                     .foregroundStyle(HUDStyle.dim)
             }
-            // New skills come from your guild master (greyed below till then).
-            if !session.learnableSkills.isEmpty {
-                Text(L("New skills are learned at your guild, a skill point each. {hint}", ["hint": session.guildHint]))
-                    .font(HUDStyle.font(10))
-                    .foregroundStyle(HUDStyle.dim)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
             if session.heroSkills.isEmpty && session.learnableSkills.isEmpty {
                 EmptyNote(session.skillHint, size: 11)
             }
-            SkillChoices(session: session)
+            // What you know and what's still to learn at your guild, each a group of its own.
+            SkillChoices(session: session, grouped: true)
             if !upcoming.isEmpty {
-                SectionTitle(text: L("Coming up"))
-            }
-            ForEach(showsAllUpcoming ? upcoming : Array(upcoming.prefix(2)), id: \.skill) { unlock in
-                if let skill = session.content.skill(unlock.skill) {
-                    // Still locked: a faded tile, with the level it unlocks at.
-                    HStack(spacing: 8) {
-                        SkillIcon(skill: skill, size: 28)
-                            .saturation(0.2)
-                            .opacity(0.55)
-                        Text(skill.name)
-                            .foregroundStyle(HUDStyle.dim)
-                        Spacer()
-                        Text(L("Lv {level}", ["level": unlock.level]))
-                            .font(HUDStyle.font(10))
-                            .foregroundStyle(HUDStyle.ink)
-                            .padding(.horizontal, 6)
-                            .padding(.vertical, 2)
-                            .background(Capsule().fill(HUDStyle.dim))
+                SectionTitle(text: L("Coming up"), detail: "\(upcoming.count)")
+                // Still locked: one group (`GroupedRows`), each a faded tile with the level it unlocks at.
+                GroupedRows(showsAllUpcoming ? upcoming : Array(upcoming.prefix(2)), id: \.skill) { unlock in
+                    if let skill = session.content.skill(unlock.skill) {
+                        HStack(spacing: 10) {
+                            SkillIcon(skill: skill, size: 28)
+                                .saturation(0.2)
+                                .opacity(0.55)
+                            Text(skill.name)
+                                .foregroundStyle(HUDStyle.dim)
+                            Spacer()
+                            Text(L("Lv {level}", ["level": unlock.level]))
+                                .font(HUDStyle.font(10))
+                                .foregroundStyle(HUDStyle.ink)
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 2)
+                                .background(Capsule().fill(HUDStyle.dim))
+                        }
+                        .font(HUDStyle.font(11))
+                        .groupRow()
                     }
-                    .font(HUDStyle.font(11))
                 }
             }
             if upcoming.count > 2 {
@@ -534,8 +599,8 @@ struct StatsPanel: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(alignment: .firstTextBaseline) {
+                // Its gold rule runs on to the level.
                 SectionTitle(text: L("Stats"))
-                Spacer()
                 Text(level).font(HUDStyle.font(15))
             }
             bar(L("HP"), hp, stats.hp, HUDStyle.hp)
@@ -958,7 +1023,7 @@ private struct CompanionsTab: View {
             if let active {
                 CompanionCard(session: session, pet: active, featured: true)
                 if !others.isEmpty {
-                    SectionTitle(text: L("Other companions")).padding(.top, 6)
+                    SectionTitle(text: L("Other companions"), detail: "\(others.count)").padding(.top, 6)
                 }
             }
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 250), spacing: 10)], spacing: 10) {
@@ -995,16 +1060,31 @@ private struct FriendsTab: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HowItWorks(L("Befriend adventurers you meet (walk up to one). Up to {count} friends can travel and fight with you, and they bring their companions. They fight on if you faint, and wait where you fell; a friend who faints wakes up at their own checkpoint. Walk up to them to set off together again.", ["count": GameSession.maxAllies])
-                       + "\n" + L("They don't always say yes, and after a while they head off on their own. You can also ask whoever leads a group of adventurers to let you join them, and follow them about.")
-                       + "\n" + L("You don't have to be friends to party up: invite anyone you meet from their card."),
-                       open: session.friends.isEmpty)
-            if session.friends.isEmpty && session.partyGuests.isEmpty {
+        let howItWorks = HowItWorks(L("Befriend adventurers you meet (walk up to one). Up to {count} friends can travel and fight with you, and they bring their companions. They fight on if you faint, and wait where you fell; a friend who faints wakes up at their own checkpoint. Walk up to them to set off together again.", ["count": GameSession.maxAllies])
+                                    + "\n" + L("They don't always say yes, and after a while they head off on their own. You can also ask whoever leads a group of adventurers to let you join them, and follow them about.")
+                                    + "\n" + L("You don't have to be friends to party up: invite anyone you meet from their card."),
+                                    open: session.friends.isEmpty)
+        let everyone = listed
+        let party = everyone.filter { session.isInParty($0) }
+        let others = everyone.filter { !session.isInParty($0) }
+        return VStack(alignment: .leading, spacing: 10) {
+            if everyone.isEmpty {
+                howItWorks
                 EmptyNote(L("No friends yet.\nSay hi to the adventurers you meet!"))
             }
-            ForEach(listed) { friend in
-                FriendRow(session: session, friend: friend)
+            // Grouped (the user, 2026-11-11, on a mock-up: "I like this grouping of content to make
+            // everything more scannable"): who travels with you, how many of how many, then the rest.
+            if !party.isEmpty {
+                SectionTitle(text: L("Party"), detail: "\(party.count)/\(GameSession.maxAllies)")
+                GroupedRows(party) { FriendRow(session: session, friend: $0) }
+            }
+            if !others.isEmpty {
+                SectionTitle(text: L("Friends"), detail: "\(others.count)")
+                GroupedRows(others) { FriendRow(session: session, friend: $0) }
+            }
+            // The page opens on your friends; how it works after.
+            if !everyone.isEmpty {
+                howItWorks.padding(.top, 6)
             }
         }
     }
@@ -1026,17 +1106,10 @@ private struct FriendRow: View {
                     }
                 }
             VStack(alignment: .leading, spacing: 2) {
+                // In your party or not, the group they're listed in says (`FriendsTab`).
                 HStack(spacing: 6) {
                     Text(friend.name)
                     NameBadge(badge: .bot)
-                    if inParty {
-                        Text(L("IN PARTY"))
-                            .font(HUDStyle.font(9))
-                            .foregroundStyle(HUDStyle.ink)
-                            .padding(.horizontal, 6)
-                            .padding(.vertical, 2)
-                            .background(Capsule().fill(HUDStyle.green))
-                    }
                 }
                 Text(L("Lv {level} {race} {class}", ["level": friend.level, "race": session.content.race(friend.raceID).name, "class": session.content.classDef(friend.classID).name]))
                     .font(HUDStyle.font(10))
@@ -1072,7 +1145,7 @@ private struct FriendRow: View {
             }
         }
         .font(HUDStyle.font(12))
-        .rowCard()
+        .groupRow()
     }
 
     /// Whether they're online, and where: a green dot and the land they're in (here, if it's yours),
@@ -1331,10 +1404,11 @@ private struct CompanionCard: View {
         }
         .padding(10)
         .frame(maxWidth: .infinity, alignment: .leading)
+        // On a plate sunk into the glass, as every group is (`GlassCard`); green round the one with you.
         .background(
-            RoundedRectangle(cornerRadius: 8)
-                .fill(.white.opacity(isActive ? 0.1 : 0.05))
-                .overlay(RoundedRectangle(cornerRadius: 8).strokeBorder(isActive ? HUDStyle.green.opacity(0.7) : .clear, lineWidth: 2))
+            GlassCard(lit: isActive)
+                .overlay(RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .strokeBorder(isActive ? HUDStyle.green.opacity(0.7) : .clear, lineWidth: 2))
         )
     }
 }
@@ -1582,6 +1656,8 @@ private nonisolated enum QuestShelf: String, CaseIterable {
 private struct QuestsTab: View {
     let session: GameSession
     @Binding var page: QuestsPage
+    /// A tap on a quest: its window, over the menu (`QuestWindow`).
+    var onOpen: (QuestDef) -> Void = { _ in }
     /// Finding a quest (playtesting 2026-10-18): what you typed, the order, which ones, and only
     /// those given in the land you're in.
     @State private var search = ""
@@ -1634,23 +1710,21 @@ private struct QuestsTab: View {
         // The sort's panel over the quests under it.
         .zIndex(1)
         if shelf != .done {
-            SectionTitle(text: L("Active"))
+            SectionTitle(text: L("Active"), detail: active.isEmpty ? nil : "\(active.count)")
             if session.activeQuests.isEmpty {
                 EmptyNote(L("No active quests. Elder Oak in Meadowbrook always needs help."))
             } else if active.isEmpty {
                 Text(L("No quests match.")).font(HUDStyle.font(11)).foregroundStyle(HUDStyle.dim)
-            }
-            ForEach(active) { quest in
-                QuestRow(session: session, quest: quest, showsGiver: true)
+            } else {
+                GroupedRows(active) { QuestListRow(session: session, quest: $0, onOpen: onOpen) }
             }
         }
         if !completed.isEmpty || shelf == .done {
-            SectionTitle(text: L("Completed"))
+            SectionTitle(text: L("Completed"), detail: completed.isEmpty ? nil : "\(completed.count)")
             if completed.isEmpty {
                 Text(L("No quests match.")).font(HUDStyle.font(11)).foregroundStyle(HUDStyle.dim)
-            }
-            ForEach(completed) { quest in
-                CompletedQuestRow(session: session, quest: quest)
+            } else {
+                GroupedRows(completed) { QuestListRow(session: session, quest: $0, onOpen: onOpen) }
             }
         }
     }
@@ -1759,9 +1833,8 @@ struct QuestRow: View {
                 }
             }
         }
-        .padding(8)
-        // Rimmed in gold when it's done, waiting for you to report back.
-        .background(GlassCard(lit: expanded, gold: isReady))
+        // Gold when it's done, waiting for you to report back.
+        .rowCard(lit: expanded, gold: isReady)
         .contentShape(Rectangle())
         .onTapGesture {
             guard showsGiver else { return }
@@ -1825,43 +1898,149 @@ private struct QuestNumber: View {
     }
 }
 
-/// A finished quest: who gave it and its name; a tap shows what it said and what you earned.
-private struct CompletedQuestRow: View {
+/// A quest in the Quests list: its number, small, over its name, and nothing else (the user,
+/// 2026-11-11: "The quest items show too much information. It should just show the name of the
+/// quest, with the number as a small label above it. Then when you tap on it, it shows a new modal
+/// with a back button that shows more of the story and the rewards"). Gold when it's done and waiting
+/// for you to report back; dim once it's finished. A tap opens it (`QuestWindow`).
+private struct QuestListRow: View {
     let session: GameSession
     let quest: QuestDef
-    @State private var expanded = false
+    let onOpen: (QuestDef) -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            HStack(spacing: 8) {
-                GiverFace(npcID: quest.giver, size: 24)
-                QuestNumber(number: session.questNumber(quest))
-                Label(quest.title, icon: .badgeCheck)
-                    .font(HUDStyle.font(12))
-                    .foregroundStyle(HUDStyle.dim)
-                Spacer()
-                IconImage(.chevronDown, size: 12)
-                    .foregroundStyle(HUDStyle.dim)
-                    .rotationEffect(.degrees(expanded ? 180 : 0))
-            }
-            if expanded {
-                VStack(alignment: .leading, spacing: 6) {
-                    Text(quest.description).font(HUDStyle.font(11)).foregroundStyle(HUDStyle.dim)
-                    QuestRewardsView(session: session, quest: quest, earned: true)
+        let status = session.status(of: quest)
+        let finished = status == .completed
+        Button {
+            SoundEffects.shared.play(.tap, volume: 0.7)
+            onOpen(quest)
+        } label: {
+            HStack(spacing: 10) {
+                VStack(alignment: .leading, spacing: 2) {
+                    QuestNumber(number: session.questNumber(quest))
+                    Text(quest.title)
+                        .font(HUDStyle.font(13))
+                        .foregroundStyle(finished ? HUDStyle.dim : HUDStyle.cream)
+                        .multilineTextAlignment(.leading)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
-                .padding(.leading, 32)
-                .transition(.reveal)
+                Spacer(minLength: 6)
+                if finished {
+                    IconImage(.badgeCheck, size: 14).foregroundStyle(HUDStyle.green)
+                }
+                IconImage(.chevronDown, size: 11)
+                    .rotationEffect(.degrees(-90))
+                    .foregroundStyle(HUDStyle.dim)
+            }
+            .groupRow(gold: status == .ready)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityValue(status == .ready ? L("Done! Report back") : finished ? L("Completed") : "")
+        .accessibilityHint(L("Shows its story and rewards"))
+    }
+}
+
+/// A quest from the Quests list, in a window of its own over the menu, Back on its title bar: its
+/// number and how hard it is, its name, who asked and where they live, how far along you are, all of
+/// its story, and its rewards (what you earned, once it's done). A tap outside it goes back too.
+struct QuestWindow: View {
+    let session: GameSession
+    let quest: QuestDef
+    let onBack: () -> Void
+
+    var body: some View {
+        ZStack {
+            Color.black.opacity(0.45)
+                .ignoresSafeArea()
+                .onTapGesture(perform: onBack)
+            VStack(alignment: .leading, spacing: 0) {
+                HStack {
+                    Button(action: onBack) {
+                        Label(L("Back"), icon: .arrowLeft, size: 12)
+                    }
+                    .buttonStyle(PixelButtonStyle(compact: true))
+                    Spacer(minLength: 0)
+                }
+                .padding(.horizontal, 12)
+                .padding(.vertical, 8)
+                .background(WindowBar())
+                // Scrolls only when it can't all fit (a phone on its side, a long story).
+                FitOrScroll {
+                    VStack(alignment: .leading, spacing: 12) {
+                        header
+                        progress
+                        Text(quest.description)
+                            .font(HUDStyle.font(12))
+                            .foregroundStyle(HUDStyle.cream)
+                            .fixedSize(horizontal: false, vertical: true)
+                        SectionTitle(text: L("Rewards"))
+                        QuestRewardsView(session: session, quest: quest, earned: session.status(of: quest) == .completed)
+                    }
+                    .padding(16)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                }
+            }
+            .frame(maxWidth: 420, alignment: .leading)
+            .gameWindow()
+            .padding(24)
+            .popIn()
+        }
+        .foregroundStyle(HUDStyle.cream)
+        .accessibilityAction(.escape, onBack)
+    }
+
+    /// Its number and how hard it is, its name, and who asked and where they live.
+    private var header: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(spacing: 6) {
+                QuestNumber(number: session.questNumber(quest))
+                DifficultyBadge(difficulty: session.difficulty(of: quest))
+            }
+            Text(quest.title)
+                .font(HUDStyle.font(18))
+                .foregroundStyle(HUDStyle.gold)
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityAddTraits(.isHeader)
+            if let giver = session.content.npc(quest.giver) {
+                let home = session.content.home(ofNPC: quest.giver)?.name
+                HStack(spacing: 8) {
+                    GiverFace(npcID: quest.giver, size: 32)
+                    Text(home.map { L("From {name} · {place}", ["name": giver.name, "place": $0]) } ?? L("From {name}", ["name": giver.name]))
+                        .font(HUDStyle.font(11))
+                        .foregroundStyle(HUDStyle.gold.opacity(0.85))
+                }
             }
         }
-        // On a card as every row is (`GlassCard`), a slim one: the list's long.
-        .padding(.horizontal, 10)
-        .padding(.vertical, 6)
-        .background(GlassCard(radius: 8, lit: expanded))
-        .contentShape(Rectangle())
-        .onTapGesture { withAnimation(Reveal.animation) { expanded.toggle() } }
-        .accessibilityElement(children: .combine)
-        .accessibilityAddTraits(.isButton)
-        .accessibilityHint(expanded ? L("Hides what you earned") : L("Shows what you earned"))
+    }
+
+    /// How far along it is: a count and a bar, who to take it to, ready to report, or done.
+    @ViewBuilder
+    private var progress: some View {
+        switch session.status(of: quest) {
+        case .active where quest.objective.type == .deliver:
+            Text(L("Take it to {name}", ["name": quest.objective.target.flatMap(session.content.npc)?.name ?? ""]))
+                .font(HUDStyle.font(12))
+                .foregroundStyle(HUDStyle.gold)
+        case .active(let done, let goal):
+            HStack(spacing: 8) {
+                GlossyBar(fraction: CGFloat(done) / CGFloat(max(goal, 1)), color: HUDStyle.gold, height: 6)
+                Text("\(done)/\(goal)")
+                    .font(HUDStyle.font(12))
+                    .monospacedDigit()
+                    .foregroundStyle(HUDStyle.gold)
+            }
+        case .ready:
+            Text(L("Done! Report back"))
+                .font(HUDStyle.font(12))
+                .foregroundStyle(HUDStyle.green)
+        case .completed:
+            Label(L("Completed"), icon: .badgeCheck, size: 12)
+                .font(HUDStyle.font(12))
+                .foregroundStyle(HUDStyle.green)
+        default:
+            EmptyView()
+        }
     }
 }
 

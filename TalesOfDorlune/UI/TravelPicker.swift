@@ -20,7 +20,8 @@ struct TravelPicker: View {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 8) {
                         header
-                        ForEach(travel.places(in: session), id: \.self) { place in row(place) }
+                        // One group (`GroupedRows`), as every list is (the user, 2026-11-11).
+                        GroupedRows(travel.places(in: session), id: \.self) { place in row(place) }
                     }
                     .padding(14)
                 }
@@ -85,8 +86,7 @@ struct TravelPicker: View {
                     Text(L("Checkpoint")).font(HUDStyle.font(10)).foregroundStyle(HUDStyle.gold)
                 }
             }
-            .padding(8)
-            .background(GlassCard(radius: 8))
+            .groupRow()
             .contentShape(Rectangle())
         }
         .buttonStyle(PressScaleStyle())
