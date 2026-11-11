@@ -41,8 +41,9 @@ modal with `.gameWindow()`, never a background of its own.
 bars with the tabs"): the frame's own bevel along the window's top, out to the frame, as Figma's `UI /
 Window` has it. On it, the window's name in white with a hard dark shadow (`WindowTitle`), or its pages'
 tabs (`PageTabs`). Put the title or tabs first in the window's `VStack(spacing: 0)`, flush to its top, with
-no padding round them, or the bar stops short. Only a title laid over something else (the world map's,
-over its atlas) goes without (`bar: false`, gold).
+no padding round them, or the bar stops short. The world map too, its atlas under the bar (0.9.76; the
+user: "update the map with the new modal header"); `bar: false` (gold, no bar) is for a title laid
+over a picture, which nothing now is.
 
 **The close button is always orange and always over the top-right corner** (`windowCloseButton`, or a
 `WindowTitle` with `onClose`), hanging 9 pt past it (2026-10-25: "Put all the close buttons overlayed top
@@ -187,6 +188,11 @@ Add what each UI change teaches, dated, with the case and what to do instead.
 - 2026-11-10: Figma's `UI / Window` had a bevelled title bar the code had dropped for a gold title on the
   glass; the user chose the bar, with the tabs on it (0.9.74). Figma's page still lacks the folder tabs and
   `rowCard`: add them when the file is next open.
+- 2026-11-11: the world map "sometimes crashes when you rotate/zoom in out", with no crash log to
+  go on. Hardened what a pinch or twist touches: a framing that isn't finite is refused
+  (`clampedFocus`), a cell is never made of NaN (`cell(at:)`, lost piles), marks are unique by id,
+  and the blurred edge copies (six more maps a frame) wait while two fingers are down. Ask for the
+  crash log (TestFlight → the build → Crashes, or Xcode → Organizer) before guessing again.
 - 2026-11-11: 0.9.75's raised cards (white at 9% over the glass) were too faint to group anything; the
   user picked a mock-up's darker sunk plates with hairline rows and gold-ruled section titles, for
   every window (0.9.76). The Screenshots workflow cancels a branch's run when another starts on it
