@@ -201,9 +201,16 @@ struct BankControls: View {
         let held = self.held
         let count = min(max(1, amount), max(1, held))
         VStack(alignment: .leading, spacing: 10) {
-            Text(side == .bag ? L("In your bag: {count}", ["count": held]) : L("In the bank: {count}", ["count": held]))
-                .font(HUDStyle.font(11))
-                .foregroundStyle(HUDStyle.dim)
+            // What the stepper under it sets, and how many there are to take, on one line.
+            HStack {
+                Text(L("How many"))
+                    .font(HUDStyle.font(11))
+                    .foregroundStyle(HUDStyle.gold)
+                Spacer(minLength: 8)
+                Text(side == .bag ? L("In your bag: {count}", ["count": held]) : L("In the bank: {count}", ["count": held]))
+                    .font(HUDStyle.font(11))
+                    .foregroundStyle(HUDStyle.dim)
+            }
             AmountPicker(amount: $amount, typing: $typing, maximum: held)
             if movable < count {
                 Text(movable == 0 ? L("Your bag is full. Put something in the bank first.")
@@ -225,13 +232,16 @@ struct BankControls: View {
 
     /// Delete and Deposit or Withdraw, side by side at the right (playtesting 2026-10-26: Delete
     /// behind a "…" was one tap too many). Delete still asks first.
+    /// The way it goes (Deposit or Withdraw) the card's main button, gold at the right; Delete small
+    /// at the far left, away from it, as a destructive action is kept from the one you mean (it still
+    /// asks first).
     private func buttons(count: Int) -> some View {
         HStack(spacing: 10) {
-            Spacer(minLength: 0)
             if deletable {
                 Button(L("Delete")) { confirmingDelete = true }
-                    .buttonStyle(PixelButtonStyle(tint: HUDStyle.orange))
+                    .buttonStyle(PixelButtonStyle(tint: HUDStyle.orange, compact: true))
             }
+            Spacer(minLength: 0)
             Button(side == .bag ? L("Deposit {count}", ["count": count]) : L("Withdraw {count}", ["count": count])) {
                 move(count)
             }

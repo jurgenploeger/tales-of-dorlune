@@ -44,7 +44,8 @@ struct AmountPicker: View {
                 digits = ""
                 typing = true
             } label: {
-                plate(count, border: HUDStyle.plateDark, size: 17, height: 34)
+                // As tall as the buttons beside it (40), so the row reads as one control.
+                plate(count, border: HUDStyle.plateDark, size: 17, height: 40)
             }
             .buttonStyle(PressScaleStyle())
             .accessibilityLabel(coins ? L("Price: {gold}g", ["gold": count]) : L("Amount: {count}", ["count": count]))
