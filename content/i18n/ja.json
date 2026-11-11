@@ -902,6 +902,7 @@
     "You're missing some materials. Monsters out in the wilds drop them.": "素材が足りないな。野外のモンスターが落とすよ。",
     "{item}  ·  Lv {level}": "{item}  ・  Lv {level}",
     "{name} throws a Seal Stone!": "{name}は封印石を投げた！",
+    "{count} in all": "全部で{count}",
     "bot": "ボット",
     "Better than yours": "今の装備より強い",
     "Title: {title}": "称号：{title}",

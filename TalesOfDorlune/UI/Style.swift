@@ -258,10 +258,14 @@ struct WindowTitle: View {
     var bar = true
     /// Room kept clear at the title's right, under the bar (the character a speech window's stands by).
     var trailingRoom: CGFloat = 0
+    /// How many the window holds, in a count badge trailing the title (the user, 2026-11-11: "The
+    /// number of friends can be shown as a badge count trailing the header title").
+    var badge: Int?
 
     init(_ title: String, detail: String? = nil, detailTint: Color? = nil, bar: Bool = true, trailingRoom: CGFloat = 0,
-         onClose: (() -> Void)? = nil) {
+         badge: Int? = nil, onClose: (() -> Void)? = nil) {
         self.title = title
+        self.badge = badge
         self.detail = detail
         self.detailTint = detailTint
         self.bar = bar
@@ -276,14 +280,29 @@ struct WindowTitle: View {
     }
 
     var body: some View {
-        text
-            .font(HUDStyle.font(bar ? 17 : 18))
-            .foregroundStyle(bar ? HUDStyle.barText : HUDStyle.gold)
-            .shadow(color: bar ? HUDStyle.barTextShadow : HUDStyle.frameDark, radius: 0, x: 0, y: 1)
-            .lineLimit(2)
-            .minimumScaleFactor(0.8)
-            .fixedSize(horizontal: false, vertical: true)
-            .frame(maxWidth: .infinity, alignment: .leading)
+        HStack(spacing: 8) {
+            text
+                .font(HUDStyle.font(bar ? 17 : 18))
+                .foregroundStyle(bar ? HUDStyle.barText : HUDStyle.gold)
+                .shadow(color: bar ? HUDStyle.barTextShadow : HUDStyle.frameDark, radius: 0, x: 0, y: 1)
+                .lineLimit(2)
+                .minimumScaleFactor(0.8)
+                .fixedSize(horizontal: false, vertical: true)
+            if let badge {
+                // White on the bar's own deep blue, as an app's badge is.
+                Text("\(badge)")
+                    .font(HUDStyle.font(12))
+                    .monospacedDigit()
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 2)
+                    .frame(minWidth: 24)
+                    .background(Capsule().fill(HUDStyle.frameDark))
+                    .fixedSize()
+                    .accessibilityLabel(L("{count} in all", ["count": badge]))
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.leading, 16)
             // The close button sits over the window's corner (playtesting 2026-10-25: "Put all the
             // close buttons overlayed top right of the modals"): its room kept clear here.

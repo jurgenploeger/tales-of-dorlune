@@ -902,6 +902,7 @@
     "You're missing some materials. Monsters out in the wilds drop them.": "Te faltan materiales. Los sueltan los monstruos de la naturaleza.",
     "{item}  ·  Lv {level}": "{item}  ·  Nv {level}",
     "{name} throws a Seal Stone!": "¡{name} lanza una Piedra Sello!",
+    "{count} in all": "{count} en total",
     "bot": "bot",
     "Better than yours": "Mejor que el tuyo",
     "Title: {title}": "Título: {title}",

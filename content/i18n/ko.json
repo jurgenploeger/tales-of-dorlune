@@ -902,6 +902,7 @@
     "You're missing some materials. Monsters out in the wilds drop them.": "재료가 부족해. 야외의 몬스터들이 떨어뜨린단다.",
     "{item}  ·  Lv {level}": "{item}  ·  Lv {level}",
     "{name} throws a Seal Stone!": "{name}이(가) 봉인석을 던졌어요!",
+    "{count} in all": "모두 {count}",
     "bot": "봇",
     "Better than yours": "지금 것보다 좋아요",
     "Title: {title}": "칭호: {title}",

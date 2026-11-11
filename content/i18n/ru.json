@@ -902,6 +902,7 @@
     "You're missing some materials. Monsters out in the wilds drop them.": "Не хватает материалов. Их роняют монстры в диких краях.",
     "{item}  ·  Lv {level}": "{item}  ·  Ур. {level}",
     "{name} throws a Seal Stone!": "{name} бросает Камень печати!",
+    "{count} in all": "Всего: {count}",
     "bot": "бот",
     "Better than yours": "Лучше твоего",
     "Title: {title}": "Титул: {title}",

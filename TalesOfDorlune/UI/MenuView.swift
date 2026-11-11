@@ -173,7 +173,8 @@ extension MenuView {
         case .settings:
             PageTabs(page: $settingsPage, title: { $0.title })
         case .friends:
-            WindowTitle(window.menuTitle)
+            // How many friends you have, a badge after the name.
+            WindowTitle(window.menuTitle, badge: session.friends.isEmpty ? nil : session.friends.count)
                 .padding(.bottom, 2)
         case .bag:
             // How full the bag is after its name (playtesting 2026-10-26: "add the x/50 behind the big
@@ -1086,7 +1087,8 @@ private struct FriendsTab: View {
                 GroupedRows(party) { FriendRow(session: session, friend: $0) }
             }
             if !others.isEmpty {
-                SectionTitle(text: L("Friends"), detail: "\(others.count)")
+                // Named only under a Party to tell them apart; how many is the window title's badge.
+                if !party.isEmpty { SectionTitle(text: L("Friends")) }
                 GroupedRows(others) { FriendRow(session: session, friend: $0) }
             }
             // The page opens on your friends; how it works after.

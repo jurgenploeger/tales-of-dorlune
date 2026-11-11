@@ -902,6 +902,7 @@
     "You're missing some materials. Monsters out in the wilds drop them.": "你還缺一些材料。野外的怪物會掉落。",
     "{item}  ·  Lv {level}": "{item}  ·  Lv {level}",
     "{name} throws a Seal Stone!": "{name}丟出了封印石！",
+    "{count} in all": "共{count}",
     "bot": "BOT",
     "Better than yours": "比你的更好",
     "Title: {title}": "稱號：{title}",

@@ -100,6 +100,8 @@ windows"). A window's content is groups set into the glass, never one flat blue 
   `rowCard()`; a panel (a settings section, a stat) a `GlassCard` background. Never a hand-rolled
   `RoundedRectangle().fill(.white.opacity(…))`.
 - What a group's title says, its rows don't repeat (no IN PARTY badge in the Party group).
+- How many a window holds goes in a count badge after its title (`WindowTitle(badge:)`, the Friends
+  window), not again on a section title under it; a window of one group needs no section title.
 - A row shows the least that tells it apart; the rest opens in a window of its own over the list,
   with Back on its title bar (a quest: the giver's round face, its number, small, over its name; tapped, `QuestWindow` with
   who asked, how far along, its story and rewards). The user, 2026-11-11: "The quest items show too
