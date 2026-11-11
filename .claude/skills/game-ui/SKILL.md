@@ -151,6 +151,11 @@ under a row unrolls (`.transition(.reveal)` with `Reveal.animation`). Respect Re
 **Dark Mode.** Light surfaces (frames, plates, buttons, portraits) are `Color.adaptive(light:dark:)`; the
 glass goes deeper; lettering keeps its colours. Check both looks (debug flag `dark` / `light`).
 
+**Labels never break inside themselves.** A row of labels (a quest's rewards, a bounty's pay) is a
+`WrapRows`: one that doesn't fit moves whole onto the next row (the user, 2026-11-11: "+1 skill point"
+broke onto two lines beside the EXP). Give each the same `frame(height:)` so a row's labels line up.
+Progress bars are `GlossyBar.progress` (9) tall.
+
 **Words.** Every visible string goes through `L("…")` and is translated into all ten other languages
 (`tools/i18n.py missing <code>`, `merge`). Leave room: German and French run a third longer than English,
 Russian too; Chinese, Japanese and Korean shorter but taller. Never fix a width to English text.

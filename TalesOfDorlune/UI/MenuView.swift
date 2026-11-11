@@ -2320,7 +2320,7 @@ struct QuestWindow: View {
                 .foregroundStyle(HUDStyle.gold)
         case .active(let done, let goal):
             HStack(spacing: 8) {
-                GlossyBar(fraction: CGFloat(done) / CGFloat(max(goal, 1)), color: HUDStyle.gold, height: 6)
+                GlossyBar(fraction: CGFloat(done) / CGFloat(max(goal, 1)), color: HUDStyle.gold, height: GlossyBar.progress)
                 Text("\(done)/\(goal)")
                     .font(HUDStyle.font(12))
                     .monospacedDigit()
@@ -2433,15 +2433,20 @@ struct QuestRewardsView: View {
                     .font(HUDStyle.font(10))
                     .foregroundStyle(HUDStyle.gold)
             }
-            HStack(spacing: 12) {
+            // A label that doesn't fit moves whole onto the next row, never breaking inside itself (the
+            // user, 2026-11-11: "+1 skill point" wrapped onto two lines beside the EXP).
+            WrapRows(spacing: 12) {
                 if pay.gold > 0 {
                     GoldPill(amount: pay.gold, size: 13)
+                        .frame(height: 28)
                 }
                 if pay.exp > 0 {
                     Label(L("{exp} EXP", ["exp": pay.exp]), icon: .star, size: 14)
+                        .frame(height: 28)
                 }
                 if session.givesSkillPoint(quest) {
                     Label(L("+1 skill point"), icon: .sparkles, size: 14)
+                        .frame(height: 28)
                 }
             }
             .font(HUDStyle.font(12))

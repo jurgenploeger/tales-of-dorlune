@@ -224,6 +224,11 @@ struct GlossyBar: View {
     let color: Color
     var height: CGFloat = 11
 
+    /// How tall a progress bar is (a quest's, a bounty's, a title's, the Book's next milestone): 9
+    /// (the user, 2026-11-11: "anywhere we show this progress bar, make them a bit taller"; they were
+    /// 5 and 6).
+    static let progress: CGFloat = 9
+
     var body: some View {
         GeometryReader { proxy in
             ZStack(alignment: .leading) {
