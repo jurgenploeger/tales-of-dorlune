@@ -86,7 +86,7 @@ struct TravelPicker: View {
                 }
             }
             .padding(8)
-            .background(RoundedRectangle(cornerRadius: 8).fill(.white.opacity(0.08)))
+            .background(GlassCard(radius: 8))
             .contentShape(Rectangle())
         }
         .buttonStyle(PressScaleStyle())

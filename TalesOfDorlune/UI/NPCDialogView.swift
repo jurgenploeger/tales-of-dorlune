@@ -35,7 +35,8 @@ struct NPCDialogView: View {
             // edge of the screen, over the window they talk from, which runs the width of the screen
             // (playtesting 2026-10-26: a speech bubble beside them, its tail pointing at them, was
             // narrow). What's in the window keeps clear of them (`speakerRoom`).
-            let portrait = min(proxy.size.width * 0.42, proxy.size.height * 0.55, 280)
+            // Big, as Fairyland Online's were (0.9.75: at 42% of the width they stood small by a strip).
+            let portrait = min(proxy.size.width * 0.48, proxy.size.height * 0.55, 280)
             let bottom = max(16, proxy.safeAreaInsets.bottom)
             ZStack(alignment: .bottomTrailing) {
                 Color.black.opacity(0.35)
@@ -129,8 +130,9 @@ struct NPCDialogView: View {
             .padding(.bottom, 14)
         }
         // At least as tall as most of the character standing by it: a line or two left it a strip under
-        // their feet.
-        .frame(minHeight: speakerRoom * 1.2, alignment: .top)
+        // their feet (0.9.74's floor, at 1.2 times their room, was lower than the window already was).
+        // Held on its side, no more than most of the room it has.
+        .frame(minHeight: min(speakerRoom * 1.6, maxHeight * 0.8), alignment: .top)
         .frame(maxWidth: .infinity, alignment: .leading)
         .foregroundStyle(HUDStyle.cream)
         .clipShape(window)
@@ -428,7 +430,16 @@ private struct ShopPanel: View {
             HStack(spacing: 10) {
                 Button { info = item } label: {
                     HStack(spacing: 10) {
+                        // How many you have already, as the Bag shows it: a badge on the icon.
                         ItemIcon(item: item, size: 36)
+                            .overlay(alignment: .topTrailing) {
+                                let owned = session.count(of: item.id)
+                                if owned > 0 {
+                                    CountBadge(count: owned)
+                                        .offset(x: 6, y: -6)
+                                        .accessibilityLabel(L("own {count}", ["count": owned]))
+                                }
+                            }
                         VStack(alignment: .leading, spacing: 1) {
                             Text(item.name)
                             let detail = item.type == .consumable ? (item.description ?? "") : "\(item.type.displayName) · \(item.stats?.bonusSummary ?? "")"
@@ -437,11 +448,6 @@ private struct ShopPanel: View {
                             if item.type != .consumable, let issue = session.equipIssue(item) {
                                 Text(issue).font(HUDStyle.font(10)).foregroundStyle(HUDStyle.orange)
                             }
-                            // Why its price is grey: how much you're short.
-                            if session.data.gold < item.price {
-                                Text(L("Need {gold} more gold", ["gold": item.price - session.data.gold]))
-                                    .font(HUDStyle.font(10)).foregroundStyle(HUDStyle.orange)
-                            }
                         }
                         Spacer(minLength: 0)
                     }
@@ -449,18 +455,30 @@ private struct ShopPanel: View {
                 }
                 .buttonStyle(.plain)
                 .accessibilityHint(L("Shows what it does and who can use it"))
-                if session.count(of: item.id) > 0 {
-                    Text(L("own {count}", ["count": session.count(of: item.id)])).font(HUDStyle.font(10)).foregroundStyle(HUDStyle.dim)
-                }
-                Button(L("{gold}g", ["gold": item.price])) {
-                    // A potion or material, with coins and room for more than one: how many first.
-                    if GameSession.sellsInBulk(item) && session.affordable(at: item.price) > 1 {
-                        deal = ShopDeal(item: item, selling: false)
-                    } else {
-                        reply = Self.buy(item, 1, session: session)
+                let short = item.price - session.data.gold
+                VStack(spacing: 3) {
+                    Button(L("{gold}g", ["gold": item.price])) {
+                        // A potion or material, with coins and room for more than one: how many first.
+                        if GameSession.sellsInBulk(item) && session.affordable(at: item.price) > 1 {
+                            deal = ShopDeal(item: item, selling: false)
+                        } else {
+                            reply = Self.buy(item, 1, session: session)
+                        }
+                    }
+                    .buttonStyle(PixelButtonStyle(tint: short <= 0 ? HUDStyle.gold : HUDStyle.dim, compact: true))
+                    .accessibilityHint(short > 0 ? L("Need {gold} more gold", ["gold": short]) : "")
+                    // Why its price is grey, short and quiet under it (0.9.74's orange line under the
+                    // name, on nearly every row at low gold, doubled the rows and turned the shop orange).
+                    if short > 0 {
+                        Text(L("Need {gold}", ["gold": short]))
+                            .font(HUDStyle.font(10))
+                            .monospacedDigit()
+                            .foregroundStyle(HUDStyle.dim)
+                            .lineLimit(1)
+                            .fixedSize()
+                            .accessibilityHidden(true)
                     }
                 }
-                .buttonStyle(PixelButtonStyle(tint: session.data.gold >= item.price ? HUDStyle.gold : HUDStyle.dim, compact: true))
             }
             .font(HUDStyle.font(12))
             .rowCard()
@@ -1064,7 +1082,7 @@ private struct QuestCompleteCard: View {
                 .foregroundStyle(HUDStyle.cream)
                 .padding(10)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(RoundedRectangle(cornerRadius: 12).fill(.white.opacity(0.06)))
+                .background(GlassCard(radius: 12))
             }
         }
     }

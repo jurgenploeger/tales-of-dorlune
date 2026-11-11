@@ -647,7 +647,7 @@ struct WorldAtlas: View {
 
     /// The filters, a chip each, one on at a time: as the Bag's kinds are.
     private var filterChips: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
+        SideScroll {
             HStack(spacing: 6) {
                 ForEach(MapFilter.allCases, id: \.self) { kind in
                     FilterChip(title: kind.title, on: filter == kind) {
@@ -657,7 +657,6 @@ struct WorldAtlas: View {
             }
             .padding(.horizontal, 16)
         }
-        .scrollBounceBehavior(.basedOnSize, axes: .horizontal)
     }
 
     private var marks: [Mark] {

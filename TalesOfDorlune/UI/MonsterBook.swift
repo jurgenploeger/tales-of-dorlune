@@ -43,7 +43,7 @@ struct MonsterBook: View {
             }
             // The sort's panel over the chips.
             .zIndex(1)
-            ScrollView(.horizontal, showsIndicators: false) {
+            SideScroll {
                 HStack(spacing: 6) {
                     chip(nil)
                     ForEach(Element.allCases.filter { $0 != .neutral }, id: \.self) { chip($0) }
@@ -485,7 +485,7 @@ private struct MonsterPage: View {
         }
         .padding(8)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(RoundedRectangle(cornerRadius: 8).fill(.white.opacity(0.06)))
+        .background(GlassCard(radius: 8))
     }
 
     @ViewBuilder

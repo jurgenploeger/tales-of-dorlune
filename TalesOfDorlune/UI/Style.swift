@@ -294,12 +294,92 @@ struct WindowBar: View {
     }
 }
 
+/// A card on a window's glass (`rowCard()`, a settings section, a stat): a shade lighter than the
+/// glass, lit along its top edge and a hair darker along its foot, as the window's own bevel is, so
+/// it reads as a raised panel and not a smudge (0.9.75: flat white at 5% barely showed). `lit` for
+/// one that's open or wants you (an unrolled quest, a bounty to claim): a little brighter. `gold` for
+/// the one that's yours or ready (what you can afford to forge): rimmed in gold.
+struct GlassCard: View {
+    var radius: CGFloat = 10
+    var lit = false
+    var gold = false
+
+    var body: some View {
+        let shape = RoundedRectangle(cornerRadius: radius, style: .continuous)
+        shape
+            .fill(LinearGradient(colors: [.white.opacity(lit ? 0.15 : 0.09), .white.opacity(lit ? 0.08 : 0.04)],
+                                 startPoint: .top, endPoint: .bottom))
+            .overlay {
+                if gold {
+                    shape.strokeBorder(HUDStyle.gold.opacity(0.75), lineWidth: 1.5)
+                } else {
+                    shape.strokeBorder(LinearGradient(colors: [.white.opacity(0.24), .white.opacity(0.05), .black.opacity(0.22)],
+                                                      startPoint: .top, endPoint: .bottom), lineWidth: 1)
+                }
+            }
+    }
+}
+
 extension View {
-    /// A row on a card of its own, a shade lighter than the glass (a friend, something a shop sells):
-    /// a list's rows read apart, each one thing to tap.
-    func rowCard() -> some View {
-        padding(8)
-            .background(RoundedRectangle(cornerRadius: 8).fill(.white.opacity(0.05)))
+    /// A row on a card of its own (`GlassCard`: a friend, something a shop sells, a quest): a list's
+    /// rows read apart, each one thing to tap.
+    func rowCard(lit: Bool = false, gold: Bool = false) -> some View {
+        padding(.horizontal, 10)
+            .padding(.vertical, 8)
+            .background(GlassCard(radius: 10, lit: lit, gold: gold))
+    }
+}
+
+/// A row that scrolls sideways when it doesn't all fit (tabs, filter chips, swatches), faded out at
+/// an edge where there's more past it: the right at first, the left too once it's scrolled (the user,
+/// 2026-11-11: "when the tabs don't fit horizontally, there should be a gradient mask. When you
+/// scroll horizontally, the gradient mask also shows on the left"). When it all fits, no fade.
+struct SideScroll<Content: View>: View {
+    /// How wide the fade is.
+    var fade: CGFloat = 28
+    @ViewBuilder let content: () -> Content
+    @State private var contentWidth: CGFloat = 0
+    @State private var viewWidth: CGFloat = 0
+    /// How far it's scrolled right.
+    @State private var scrolled: CGFloat = 0
+    @State private var space = UUID()
+
+    init(fade: CGFloat = 28, @ViewBuilder content: @escaping () -> Content) {
+        self.fade = fade
+        self.content = content
+    }
+
+    private var overflows: Bool { contentWidth > viewWidth + 1 }
+    private var moreLeft: Bool { overflows && scrolled > 2 }
+    private var moreRight: Bool { overflows && scrolled < contentWidth - viewWidth - 2 }
+
+    var body: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            content()
+                .background(GeometryReader { proxy in
+                    let frame = proxy.frame(in: .named(space))
+                    Color.clear
+                        .onAppear { contentWidth = frame.width; scrolled = -frame.minX }
+                        .onChange(of: frame) { _, frame in
+                            contentWidth = frame.width
+                            scrolled = -frame.minX
+                        }
+                })
+        }
+        .coordinateSpace(name: space)
+        .scrollBounceBehavior(.basedOnSize, axes: .horizontal)
+        .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { viewWidth = $0 }
+        .mask(
+            HStack(spacing: 0) {
+                LinearGradient(colors: [moreLeft ? .clear : .black, .black], startPoint: .leading, endPoint: .trailing)
+                    .frame(width: fade)
+                Color.black
+                LinearGradient(colors: [.black, moreRight ? .clear : .black], startPoint: .leading, endPoint: .trailing)
+                    .frame(width: fade)
+            }
+            .animation(.easeOut(duration: 0.15), value: moreLeft)
+            .animation(.easeOut(duration: 0.15), value: moreRight)
+        )
     }
 }
 
