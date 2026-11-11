@@ -74,7 +74,8 @@ at first and the left too once scrolled (`SideScroll`, 2026-11-11). Every sidewa
 chips, swatches, hairstyles) is a `SideScroll`, never a bare `ScrollView(.horizontal)`. They're folder tabs standing on the title bar:
 the one you're on is the window's own glass (`HUDStyle.glassTop`) with its name in gold, joined to the page
 under it, its foot flaring out into the bar in corners rounded the other way (`FlaredTab`, the user,
-2026-11-11); the others are sunk into the bar, white. One with something waiting wears the gold dot. Each of Character, Companions, Friends, Bag, Quests and Settings is
+2026-11-11); their top corners concentric with the window's (`TabEdge.radius`: the window's 22 less the
+tabs' 10-point inset from its top and side; the user, 2026-11-11); the others are sunk into the bar, white. One with something waiting wears the gold dot. Each of Character, Companions, Friends, Bag, Quests and Settings is
 a window of its own, opened from the HUD menu (2026-10-25: "The menu items hero etc should become their
 own modal window"), so a window's tabs are its own pages, never the other windows.
 
@@ -93,7 +94,7 @@ windows"). A window's content is groups set into the glass, never one flat blue 
   `RoundedRectangle().fill(.white.opacity(…))`.
 - What a group's title says, its rows don't repeat (no IN PARTY badge in the Party group).
 - A row shows the least that tells it apart; the rest opens in a window of its own over the list,
-  with Back on its title bar (a quest: its number, small, over its name; tapped, `QuestWindow` with
+  with Back on its title bar (a quest: the giver's round face, its number, small, over its name; tapped, `QuestWindow` with
   who asked, how far along, its story and rewards). The user, 2026-11-11: "The quest items show too
   much information."
 - A grid of tiles is a group too: on a `GlassCard` plate under its `SectionTitle` (the Skills page:

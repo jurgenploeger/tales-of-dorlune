@@ -268,8 +268,10 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
                                 .id(item)
                         }
                     }
-                    .padding(.horizontal, 10)
-                    .padding(.top, 8)
+                    // As far in from the window's side as from its top, so the first tab's corner sits
+                    // in the window's own, the same distance off all round (`TabEdge.radius`).
+                    .padding(.horizontal, TabEdge.inset)
+                    .padding(.top, TabEdge.inset)
                 }
                 .onAppear { reader.scrollTo(page, anchor: .center) }
                 .onChange(of: page) {
@@ -340,7 +342,7 @@ extension PageTabs {
     /// A folder tab: round at the top, square where it stands on the bar's foot.
     fileprivate static var tabShape: UnevenRoundedRectangle {
         UnevenRoundedRectangle(topLeadingRadius: TabEdge.radius, bottomLeadingRadius: 0, bottomTrailingRadius: 0,
-                               topTrailingRadius: TabEdge.radius, style: .continuous)
+                               topTrailingRadius: TabEdge.radius, style: .circular)
     }
 }
 
@@ -357,14 +359,13 @@ private nonisolated struct FlaredTab: Shape {
         let left = rect.minX + flare + 0.75, right = rect.maxX - flare - 0.75, top = rect.minY + 0.75
         let bottom = rect.maxY
         var path = Path()
+        // Round arcs, as the window's corners are, the flares as the top's turned the other way.
         path.move(to: CGPoint(x: rect.minX, y: bottom))
-        path.addQuadCurve(to: CGPoint(x: left, y: bottom - flare), control: CGPoint(x: left, y: bottom))
-        path.addLine(to: CGPoint(x: left, y: top + radius))
-        path.addQuadCurve(to: CGPoint(x: left + radius, y: top), control: CGPoint(x: left, y: top))
-        path.addLine(to: CGPoint(x: right - radius, y: top))
-        path.addQuadCurve(to: CGPoint(x: right, y: top + radius), control: CGPoint(x: right, y: top))
-        path.addLine(to: CGPoint(x: right, y: bottom - flare))
-        path.addQuadCurve(to: CGPoint(x: rect.maxX, y: bottom), control: CGPoint(x: right, y: bottom))
+        path.addArc(tangent1End: CGPoint(x: left, y: bottom), tangent2End: CGPoint(x: left, y: top), radius: flare)
+        path.addArc(tangent1End: CGPoint(x: left, y: top), tangent2End: CGPoint(x: right, y: top), radius: radius)
+        path.addArc(tangent1End: CGPoint(x: right, y: top), tangent2End: CGPoint(x: right, y: bottom), radius: radius)
+        path.addArc(tangent1End: CGPoint(x: right, y: bottom), tangent2End: CGPoint(x: rect.maxX, y: bottom), radius: flare)
+        path.addLine(to: CGPoint(x: rect.maxX, y: bottom))
         if !open { path.closeSubpath() }
         return path
     }
@@ -373,17 +374,21 @@ private nonisolated struct FlaredTab: Shape {
 /// A folder tab's edge (`PageTabs`): up its left side, over its top and down its right, open along
 /// its foot.
 private nonisolated struct TabEdge: Shape {
-    static let radius: CGFloat = 10
+    /// How far the tabs stand in from the window's top and side.
+    static let inset: CGFloat = 10
+    /// A tab's top corners: the window's own (`HUDStyle.windowRadius`, 22) less how far in the tabs
+    /// stand (`inset`), so the first tab's corner runs alongside the window's, the same distance off
+    /// all the way round (the user, 2026-11-11: "Have the tabs rounded corners the right corner based
+    /// on the inset in the modal").
+    static let radius: CGFloat = 22 - TabEdge.inset
 
     func path(in rect: CGRect) -> Path {
         // Inside the tab by half the line's width, so the stroke stays on it.
         let left = rect.minX + 0.75, right = rect.maxX - 0.75, top = rect.minY + 0.75, radius = Self.radius
         var path = Path()
         path.move(to: CGPoint(x: left, y: rect.maxY))
-        path.addLine(to: CGPoint(x: left, y: top + radius))
-        path.addQuadCurve(to: CGPoint(x: left + radius, y: top), control: CGPoint(x: left, y: top))
-        path.addLine(to: CGPoint(x: right - radius, y: top))
-        path.addQuadCurve(to: CGPoint(x: right, y: top + radius), control: CGPoint(x: right, y: top))
+        path.addArc(tangent1End: CGPoint(x: left, y: top), tangent2End: CGPoint(x: right, y: top), radius: radius)
+        path.addArc(tangent1End: CGPoint(x: right, y: top), tangent2End: CGPoint(x: right, y: rect.maxY), radius: radius)
         path.addLine(to: CGPoint(x: right, y: rect.maxY))
         return path
     }
@@ -1901,7 +1906,8 @@ private struct QuestNumber: View {
 /// A quest in the Quests list: its number, small, over its name, and nothing else (the user,
 /// 2026-11-11: "The quest items show too much information. It should just show the name of the
 /// quest, with the number as a small label above it. Then when you tap on it, it shows a new modal
-/// with a back button that shows more of the story and the rewards"). Gold when it's done and waiting
+/// with a back button that shows more of the story and the rewards"), beside the round face of who
+/// asked. Gold when it's done and waiting
 /// for you to report back; dim once it's finished. A tap opens it (`QuestWindow`).
 private struct QuestListRow: View {
     let session: GameSession
@@ -1916,6 +1922,11 @@ private struct QuestListRow: View {
             onOpen(quest)
         } label: {
             HStack(spacing: 10) {
+                // Who asked, in their round portrait (the user, 2026-11-11: "The quest list should
+                // still show the circle avatar of the character, so it's nicer to look at"), faded
+                // with the rest of the row once it's done.
+                GiverFace(npcID: quest.giver, size: 40)
+                    .opacity(finished ? 0.6 : 1)
                 VStack(alignment: .leading, spacing: 2) {
                     QuestNumber(number: session.questNumber(quest))
                     Text(quest.title)
@@ -1974,8 +1985,10 @@ struct QuestWindow: View {
                             .font(HUDStyle.font(12))
                             .foregroundStyle(HUDStyle.cream)
                             .fixedSize(horizontal: false, vertical: true)
-                        SectionTitle(text: L("Rewards"))
-                        QuestRewardsView(session: session, quest: quest, earned: session.status(of: quest) == .completed)
+                        // The section's title says which: what it pays, or what you earned.
+                        let earned = session.status(of: quest) == .completed
+                        SectionTitle(text: earned ? L("You earned") : L("Rewards"))
+                        QuestRewardsView(session: session, quest: quest, earned: earned, heading: false)
                     }
                     .padding(16)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -2092,6 +2105,9 @@ struct QuestRewardsView: View {
     let session: GameSession
     let quest: QuestDef
     let earned: Bool
+    /// Its own small heading (Reward, You earned); off under a `SectionTitle` that already says it
+    /// (`QuestWindow`).
+    var heading = true
 
     private struct RewardItem: Identifiable {
         let item: ItemDef
@@ -2129,9 +2145,11 @@ struct QuestRewardsView: View {
     var body: some View {
         let pay = earned ? session.paid(for: quest) : session.questPay(quest)
         VStack(alignment: .leading, spacing: 6) {
-            Text(earned ? L("You earned") : L("Reward"))
-                .font(HUDStyle.font(10))
-                .foregroundStyle(HUDStyle.gold)
+            if heading {
+                Text(earned ? L("You earned") : L("Reward"))
+                    .font(HUDStyle.font(10))
+                    .foregroundStyle(HUDStyle.gold)
+            }
             HStack(spacing: 12) {
                 if pay.gold > 0 {
                     GoldPill(amount: pay.gold, size: 13)
