@@ -526,47 +526,47 @@ private struct CharacterTab: View {
         let upcoming = session.heroClass.skills.filter { $0.level > hero.level }
         return VStack(alignment: .leading, spacing: 10) {
             if session.canSpendSkillPoint {
+                // In a gold pill, as it's something to do: tap a skill you know, then raise it.
                 Text(session.unspentSkillPoints == 1 ? L("1 skill point to spend") : L("{count} skill points to spend", ["count": session.unspentSkillPoints]))
                     .font(HUDStyle.font(11))
-                    .foregroundStyle(HUDStyle.gold)
+                    .monospacedDigit()
+                    .foregroundStyle(HUDStyle.ink)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 4)
+                    .background(Capsule().fill(HUDStyle.gold))
             } else if session.unspentSkillPoints > 0 {
                 // Everything known is mastered: points wait for the next skill the class unlocks.
                 Text(L("{count} saved for your next skill", ["count": session.unspentSkillPoints]))
                     .font(HUDStyle.font(11))
                     .foregroundStyle(HUDStyle.dim)
             }
-            // New skills come from your guild master (greyed below till then).
-            if !session.learnableSkills.isEmpty {
-                Text(L("New skills are learned at your guild, a skill point each. {hint}", ["hint": session.guildHint]))
-                    .font(HUDStyle.font(10))
-                    .foregroundStyle(HUDStyle.dim)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
             if session.heroSkills.isEmpty && session.learnableSkills.isEmpty {
                 EmptyNote(session.skillHint, size: 11)
             }
-            SkillChoices(session: session)
+            // What you know and what's still to learn at your guild, each a group of its own.
+            SkillChoices(session: session, grouped: true)
             if !upcoming.isEmpty {
-                SectionTitle(text: L("Coming up"))
-            }
-            ForEach(showsAllUpcoming ? upcoming : Array(upcoming.prefix(2)), id: \.skill) { unlock in
-                if let skill = session.content.skill(unlock.skill) {
-                    // Still locked: a faded tile, with the level it unlocks at.
-                    HStack(spacing: 8) {
-                        SkillIcon(skill: skill, size: 28)
-                            .saturation(0.2)
-                            .opacity(0.55)
-                        Text(skill.name)
-                            .foregroundStyle(HUDStyle.dim)
-                        Spacer()
-                        Text(L("Lv {level}", ["level": unlock.level]))
-                            .font(HUDStyle.font(10))
-                            .foregroundStyle(HUDStyle.ink)
-                            .padding(.horizontal, 6)
-                            .padding(.vertical, 2)
-                            .background(Capsule().fill(HUDStyle.dim))
+                SectionTitle(text: L("Coming up"), detail: "\(upcoming.count)")
+                // Still locked: one group (`GroupedRows`), each a faded tile with the level it unlocks at.
+                GroupedRows(showsAllUpcoming ? upcoming : Array(upcoming.prefix(2)), id: \.skill) { unlock in
+                    if let skill = session.content.skill(unlock.skill) {
+                        HStack(spacing: 10) {
+                            SkillIcon(skill: skill, size: 28)
+                                .saturation(0.2)
+                                .opacity(0.55)
+                            Text(skill.name)
+                                .foregroundStyle(HUDStyle.dim)
+                            Spacer()
+                            Text(L("Lv {level}", ["level": unlock.level]))
+                                .font(HUDStyle.font(10))
+                                .foregroundStyle(HUDStyle.ink)
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 2)
+                                .background(Capsule().fill(HUDStyle.dim))
+                        }
+                        .font(HUDStyle.font(11))
+                        .groupRow()
                     }
-                    .font(HUDStyle.font(11))
                 }
             }
             if upcoming.count > 2 {

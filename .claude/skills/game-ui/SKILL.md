@@ -95,6 +95,10 @@ windows"). A window's content is groups set into the glass, never one flat blue 
   with Back on its title bar (a quest: its number, small, over its name; tapped, `QuestWindow` with
   who asked, how far along, its story and rewards). The user, 2026-11-11: "The quest items show too
   much information."
+- A grid of tiles is a group too: on a `GlassCard` plate under its `SectionTitle` (the Skills page:
+  Known, To learn with where to learn it, Coming up as `GroupedRows`; Titles: Earned with its bar and
+  badges, To earn). `SkillChoices(grouped: true)` on the Character screen only; the Level Up card and a
+  companion's skills keep the one grid.
 - How it works goes at the end once you know the ropes (`HowItWorks`), at the top only while the
   window is empty.
 - How many you own goes on the icon as a `CountBadge`, as the Bag shows it. A control that can't be
