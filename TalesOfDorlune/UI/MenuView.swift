@@ -1138,7 +1138,9 @@ private struct FriendsTab: View {
                 SectionTitle(text: L("Party"), detail: "\(party.count)/\(GameSession.maxAllies)")
                 GroupedRows(party) { FriendRow(session: session, friend: $0, onOpen: onOpen) }
             }
-            if !session.friends.isEmpty {
+            // Only with friends not in your party: with all of them in it, a search over none read "No
+            // friends match." under the Party group (0.9.78).
+            if session.friends.contains(where: { !session.isInParty($0) }) {
                 // Named only under a Party to tell them apart; how many is the window title's badge.
                 if !party.isEmpty { SectionTitle(text: L("Friends")) }
                 VStack(alignment: .leading, spacing: 8) {
