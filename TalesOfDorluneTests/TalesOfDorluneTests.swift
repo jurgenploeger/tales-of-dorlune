@@ -1225,9 +1225,13 @@ struct RulesTests {
     /// it can raise a skill you know.
     @Test func newSkillsAreMarkedTillLearnedAtTheGuild() {
         let session = GameSession.newGame(name: "Test", raceID: "human")
-        session.data.hero.level = Content.shared.classChoiceLevel
+        // Levelled up as a Novice, as in play: Bash (level 4) and First Aid (8) unlock on the way and are
+        // marked NEW then (set straight to the level, nothing unlocked on the way and nothing was marked).
+        while session.data.hero.level < Content.shared.classChoiceLevel {
+            session.gainHeroEXP(GameSession.expToNext(level: session.data.hero.level))
+        }
         session.chooseClass("fighter")
-        // Joining the guild unlocks the Fighter's first skills: NEW, to learn from Captain Brann.
+        // The Fighter's first skills stay NEW after joining the guild, to learn from Captain Brann.
         #expect(session.isNewSkill("bash"))
         #expect(session.hasNewSkills)
         #expect(session.guildMaster?.npc.id == "guild_warrior")
@@ -4112,12 +4116,13 @@ struct RulesTests {
         let sheet = try #require(plate.sheets?["human"])
         let style = GameSession.style(for: look, race: race)
         let bare = GameSession.layers(race: race, look: look, armor: plate)
-        #expect(bare.map(\.id) == [sheet, "head_human_female", "locks_human_female", "hair_\(style)_human_female"])
+        // A neck under the armour (0.9.70), so no gap shows between its collar and the head.
+        #expect(bare.map(\.id) == ["neck_human_female", sheet, "head_human_female", "locks_human_female", "hair_\(style)_human_female"])
         let helmed = GameSession.layers(race: race, look: look, armor: plate, hat: helm)
-        #expect(helmed.map(\.id) == ["nape_\(style)_human_female", sheet, "head_human_female", "napeback_\(style)_human_female",
-                                     "hat_iron_plate_human", "locks_human_female"])
+        #expect(helmed.map(\.id) == ["nape_\(style)_human_female", "neck_human_female", sheet, "head_human_female",
+                                     "napeback_\(style)_human_female", "hat_iron_plate_human", "locks_human_female"])
         #expect(helmed.first?.recolor?.isEmpty == false)
-        #expect(helmed[3].recolor?.isEmpty == false)
+        #expect(helmed.first { $0.id.hasPrefix("napeback_") }?.recolor?.isEmpty == false)
         for layer in bare + helmed { #expect(ArtLibrary.shared.artImage(layer.id) != nil, "art/sprites/\(layer.id).png is missing") }
         // Every armour that drew something on the head has a hat for it, whose art is there for every race.
         for armour in content.items where armour.type == .armor && (armour.sheets != nil || armour.wear == "cloak") {
