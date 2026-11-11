@@ -49,12 +49,9 @@ struct MapOverlay: View {
                     }
                 } else {
                     WindowTitle(L("World map"), onClose: onClose)
-                    // The map clear at the top; where you are, your coordinates and the time together
-                    // at the bottom left, the map's controls at the bottom right (the user,
-                    // 2026-11-11: "it's a bit messy now").
+                    // Where you are, your coordinates and the time together at the top left; the map's
+                    // controls along the bottom (the user, 2026-11-11).
                     WorldAtlas(session: session) {
-                        EmptyView()
-                    } bottomLeading: {
                         VStack(alignment: .leading, spacing: 6) {
                             // The land you're in.
                             Text(session.mapName)
