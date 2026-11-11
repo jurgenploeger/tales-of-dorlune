@@ -197,6 +197,9 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
 - `tools/coin_art.py`: the coins in the Bag (`item_coins_1` to `_4`, a bigger pile the more you carry,
   `CoinsTile`), drawn with `pixel_kit` in the clean look at 64 pixels. The bag holds 50 slots (`GameSession+Bank.swift`); the
   rest goes in a bank (`tools/building_art.py` `bank`, NPC role `bank`), the only place nothing is lost.
+- `tools/hud_icon_art.py`: the pictures on the HUD's pills beside the gold's coin (`ArtPill`): the world map's
+  sun and moon (`pill_sun`, `pill_moon`) and map pin (`pill_pin`), with `pixel_kit` in the clean look at 64 pixels, as
+  the coins are. `--sheet out.png` previews them.
 - `tools/lair_art.py`: the pieces of the bosses' lairs no sprite had (a standing stone, a brazier, a gold hoard, a
   warning post, the Rat King's junk throne, a heap of bones, a hunter's torn tent, a broken pillar), drawn with
   `pixel_kit` and scored as scenery. A boss's lair is maps.json `lair` on the boss: pieces round it, its way in to
