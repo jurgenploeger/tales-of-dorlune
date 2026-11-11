@@ -72,6 +72,7 @@ struct MapOverlay: View {
             // As big as a menu window, the map filling what's left under the title.
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .gameWindow()
+            .popIn()
             .menuWindowMargins()
         }
     }

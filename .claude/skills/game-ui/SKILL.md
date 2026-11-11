@@ -134,7 +134,11 @@ off by the screen's edge, over a window running the screen's width; the window's
 them (`speakerRoom`). A narrow bubble beside them with a tail was tried and dropped (2026-10-26). Their
 name is the window's title.
 
-**Motion.** A window pops in from a touch smaller (`popIn()`); its backdrop only fades. What a tap opens
+**Motion.** Every window opens the same way, all through the game (the user, 2026-11-11: "Not all
+modals have the same opening animation yet"): it pops in from a touch smaller (`popIn()`, after
+`gameWindow()` and its `windowCloseButton`), and is presented with `.transition(.opacity)`, its backdrop
+only fading. Never a scale or slide of its own at the call site: with `popIn` it doubled up. A HUD
+button or pad (not a window) may grow from where it's anchored. What a tap opens
 under a row unrolls (`.transition(.reveal)` with `Reveal.animation`). Respect Reduce Motion.
 
 **Dark Mode.** Light surfaces (frames, plates, buttons, portraits) are `Color.adaptive(light:dark:)`; the

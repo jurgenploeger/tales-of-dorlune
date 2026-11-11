@@ -61,6 +61,7 @@ struct TradeView: View {
             }
             .frame(maxWidth: 520, maxHeight: 560)
             .gameWindow()
+            .popIn()
             .padding(14)
 
             if let info {

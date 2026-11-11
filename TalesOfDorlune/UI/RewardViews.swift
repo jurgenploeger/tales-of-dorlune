@@ -47,6 +47,7 @@ struct DailyGiftCard: View {
             }
             .frame(maxWidth: 340)
             .gameWindow()
+            .popIn()
             .padding(16)
         }
         .foregroundStyle(HUDStyle.cream)

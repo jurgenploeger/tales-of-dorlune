@@ -198,6 +198,7 @@ struct TitleView: View {
         .frame(maxWidth: 720, maxHeight: .infinity)
         .gameWindow()
         .windowCloseButton(closeSettings)
+        .popIn()
         // A language switch (General) rebuilds its text in place.
         .id(localizer.language)
     }
@@ -346,6 +347,7 @@ struct TitleView: View {
         .foregroundStyle(HUDStyle.cream)
         .frame(maxWidth: 640)
         .gameWindow()
+        .popIn()
     }
 }
 
@@ -405,6 +407,7 @@ private struct ChangelogPanel: View {
         .foregroundStyle(HUDStyle.cream)
         .frame(maxWidth: 720, maxHeight: .infinity)
         .gameWindow()
+        .popIn()
     }
 
     /// This page's releases.

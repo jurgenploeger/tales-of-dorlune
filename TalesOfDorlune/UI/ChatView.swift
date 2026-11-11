@@ -64,6 +64,7 @@ struct ChatView: View {
             // the other modals"): out to the HUD's own margins (`HUDMargins`).
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .gameWindow()
+            .popIn()
             .padding(.horizontal, HUDMargins.side)
             .padding(.top, HUDMargins.side)
             .padding(.bottom, HUDMargins.bottom(onItsSide: verticalSizeClass == .compact))

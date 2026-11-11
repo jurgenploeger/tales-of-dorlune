@@ -874,6 +874,9 @@ extension View {
 /// A modal window popping in: from a touch smaller to full size. Only the window scales; the
 /// modal's dimmed backdrop just fades (present the modal with `.transition(.opacity)`), so the
 /// backdrop covers the whole screen from the first frame instead of shrinking with the window.
+/// Every window opens with it (the user, 2026-11-11: "Not all modals have the same opening animation
+/// yet. This should be consistent throughout the whole app"): after `gameWindow()` and its
+/// `windowCloseButton`, so the close button grows with it, and before the margins round it.
 private struct PopIn: ViewModifier {
     @State private var shown = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
