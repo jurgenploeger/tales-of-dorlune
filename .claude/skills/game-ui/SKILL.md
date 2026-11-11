@@ -115,8 +115,10 @@ windows"). A window's content is groups set into the glass, never one flat blue 
   Known, To learn with where to learn it, Coming up as `GroupedRows`; Titles: Earned with its bar and
   badges, To earn). `SkillChoices(grouped: true)` on the Character screen only; the Level Up card and a
   companion's skills keep the one grid.
-- How it works goes at the end once you know the ropes (`HowItWorks`), at the top only while the
-  window is empty.
+- How it works goes at the end once you know the ropes (`HowItWorks`): a gold link that opens the
+  explanation in a small window over the menu (`ExplainWindow`, the user, 2026-11-11: "should open a
+  smaller overlayed modal"), never text unrolling in the page; on the page itself only while the window
+  is empty and it's all there is to show. Every explanation works this way.
 - How many you own goes on the icon as a `CountBadge`, as the Bag shows it. A control that can't be
   used says why, short and quiet beside it (a price you can't pay: "Need 30" in `dim` under the grey
   price, the full sentence for VoiceOver), never just grey; orange only for a real warning ("Only

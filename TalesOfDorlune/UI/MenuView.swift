@@ -35,6 +35,8 @@ struct MenuView: View {
     @State private var openQuest: QuestDef? = DebugLaunch.openedQuest.flatMap { Content.shared.quest($0) }
     /// A tap on a friend: where they are, in a window over the menu (`FriendMapWindow`).
     @State private var openFriend: Adventurer?
+    /// How it works, tapped: its text in a small window over the menu (`ExplainWindow`).
+    @State private var explaining: String?
 
     init(session: GameSession, window: MenuTab, onClose: @escaping () -> Void, onQuitToTitle: (() -> Void)? = nil) {
         self.session = session
@@ -78,6 +80,14 @@ struct MenuView: View {
                              extraAction: fromBag ? dyeAction(for: item, close: close) : nil,
                              note: fromBag ? bagNote(for: item) : nil,
                              fromBag: fromBag)
+                .transition(.opacity)
+                .zIndex(1)
+            }
+
+            if let text = explaining {
+                ExplainWindow(text: text) {
+                    withAnimation(.easeOut(duration: 0.2)) { explaining = nil }
+                }
                 .transition(.opacity)
                 .zIndex(1)
             }
@@ -130,11 +140,12 @@ extension MenuView {
                         CharacterTab(session: session, page: $characterPage) { slot in
                             withAnimation(.spring(response: 0.3, dampingFraction: 0.86)) { changing = slot }
                         }
-                    case .companions: CompanionsTab(session: session, page: $companionsPage)
+                    case .companions:
+                        CompanionsTab(session: session, page: $companionsPage, onExplain: explain)
                     case .friends:
-                        FriendsTab(session: session) { friend in
+                        FriendsTab(session: session, onOpen: { friend in
                             withAnimation(.spring(response: 0.3, dampingFraction: 0.86)) { openFriend = friend }
-                        }
+                        }, onExplain: explain)
                     case .bag:
                         BagTab(session: session, note: $bagNote, hatchRequest: $hatchRequest,
                                onInspect: { item in withAnimation(.spring(response: 0.3, dampingFraction: 0.86)) { inspecting = item } })
@@ -156,6 +167,11 @@ extension MenuView {
 
     private func close() {
         onClose()
+    }
+
+    /// Opens an explanation (`HowItWorks`) in a small window over the menu.
+    private func explain(_ text: String) {
+        withAnimation(.spring(response: 0.3, dampingFraction: 0.86)) { explaining = text }
     }
 
     /// The window's tabs: its pages, or its own name alone when it has just the one.
@@ -410,42 +426,85 @@ private nonisolated struct TabEdge: Shape {
     }
 }
 
-/// A tab's explanation, folded away once you know the ropes: open while you have none of what it
-/// explains (no companions yet, no friends), a tap away after that.
+/// A window's explanation. While you have none of what it explains (no companions yet, no friends)
+/// it's there on the page; after that a gold "How it works" opens it in a small window over the menu
+/// (`ExplainWindow`; the user, 2026-11-11: "The How it works should open a smaller overlayed
+/// modal"), where it unrolled in the page before.
 private struct HowItWorks: View {
     let text: String
-    @State private var open: Bool
+    /// Shown on the page, as there's nothing else to show.
+    let open: Bool
+    /// Opens the text in a window over the menu (`MenuView`'s `explaining`).
+    let onOpen: (String) -> Void
 
-    init(_ text: String, open: Bool) {
+    init(_ text: String, open: Bool, onOpen: @escaping (String) -> Void) {
         self.text = text
-        _open = State(initialValue: open)
+        self.open = open
+        self.onOpen = onOpen
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        if open {
+            Text(text)
+                .font(HUDStyle.font(11))
+                .foregroundStyle(HUDStyle.dim)
+                .fixedSize(horizontal: false, vertical: true)
+        } else {
             Button {
-                withAnimation(Reveal.animation) { open.toggle() }
+                SoundEffects.shared.play(.tap, volume: 0.7)
+                onOpen(text)
             } label: {
                 HStack(spacing: 5) {
                     IconImage(.book, size: 13)
                     Text(L("How it works"))
                     IconImage(.chevronDown, size: 11)
-                        .rotationEffect(.degrees(open ? 180 : 0))
+                        .rotationEffect(.degrees(-90))
                 }
                 .font(HUDStyle.font(11))
                 .foregroundStyle(HUDStyle.gold)
+                .frame(minHeight: 34)
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
-            .accessibilityHint(open ? L("Hides the explanation") : L("Shows the explanation"))
-            if open {
-                Text(text)
-                    .font(HUDStyle.font(11))
-                    .foregroundStyle(HUDStyle.dim)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .transition(.reveal)
-            }
+            .accessibilityHint(L("Shows the explanation"))
         }
+    }
+}
+
+/// An explanation (`HowItWorks`) in a small window of its own over the menu: its title on the bar,
+/// the text under it, scrolling only if it can't all fit.
+struct ExplainWindow: View {
+    let text: String
+    let onClose: () -> Void
+
+    var body: some View {
+        ZStack {
+            Color.black.opacity(0.45)
+                .ignoresSafeArea()
+                .onTapGesture(perform: onClose)
+            VStack(alignment: .leading, spacing: 0) {
+                WindowTitle(L("How it works"), onClose: onClose)
+                FitOrScroll {
+                    VStack(alignment: .leading, spacing: 10) {
+                        // A paragraph a line of the text, apart.
+                        ForEach(Array(text.split(separator: "\n").enumerated()), id: \.offset) { _, paragraph in
+                            Text(String(paragraph))
+                                .font(HUDStyle.font(12))
+                                .foregroundStyle(HUDStyle.cream)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                    }
+                    .padding(16)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                }
+            }
+            .frame(maxWidth: 360, alignment: .leading)
+            .gameWindow()
+            .popIn()
+            .padding(24)
+        }
+        .foregroundStyle(HUDStyle.cream)
+        .accessibilityAction(.escape, onClose)
     }
 }
 
@@ -1020,6 +1079,8 @@ private nonisolated enum CompanionsPage: String, CaseIterable {
 private struct CompanionsTab: View {
     let session: GameSession
     @Binding var page: CompanionsPage
+    /// How it works, in a window over the menu (`ExplainWindow`).
+    var onExplain: (String) -> Void = { _ in }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -1032,7 +1093,7 @@ private struct CompanionsTab: View {
 
     private var companions: some View {
         let howItWorks = HowItWorks(L("Companions fight beside you and earn a share of battle EXP. Throw a Seal Stone at a wild monster with Capture to befriend it (up to {count}): any monster, at any HP, but the weaker it is, the better the odds. Each throw uses a stone up, and stronger stones hold more often. Trader Bo in Meadowbrook sells Seal Stones.", ["count": GameSession.maxPets]),
-                                    open: session.data.pets.isEmpty)
+                                    open: session.data.pets.isEmpty, onOpen: onExplain)
         return VStack(alignment: .leading, spacing: 10) {
             if session.data.pets.isEmpty {
                 howItWorks
@@ -1070,6 +1131,8 @@ private struct FriendsTab: View {
     let session: GameSession
     /// A tap on a friend: where they are, in a window over the menu.
     var onOpen: (Adventurer) -> Void = { _ in }
+    /// How it works, in a window over the menu (`ExplainWindow`).
+    var onExplain: (String) -> Void = { _ in }
     @State private var search = ""
     @AppStorage("friendSort") private var sort: FriendSort = .online
     @State private var shelf: FriendShelf = .all
@@ -1123,7 +1186,7 @@ private struct FriendsTab: View {
         let howItWorks = HowItWorks(L("Befriend adventurers you meet (walk up to one). Up to {count} friends can travel and fight with you, and they bring their companions. They fight on if you faint, and wait where you fell; a friend who faints wakes up at their own checkpoint. Walk up to them to set off together again.", ["count": GameSession.maxAllies])
                                     + "\n" + L("They don't always say yes, and after a while they head off on their own. You can also ask whoever leads a group of adventurers to let you join them, and follow them about.")
                                     + "\n" + L("You don't have to be friends to party up: invite anyone you meet from their card."),
-                                    open: session.friends.isEmpty)
+                                    open: session.friends.isEmpty, onOpen: onExplain)
         let party = self.party
         let others = self.others
         let anyone = !session.friends.isEmpty || !session.partyGuests.isEmpty
