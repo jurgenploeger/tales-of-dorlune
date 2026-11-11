@@ -191,7 +191,8 @@ struct WorldAtlas: View {
         // ("The filter dropdown should be bottom left. The three controls on the bottom right should
         // be horizontal with the user first, then minus, then plus").
         .overlay(alignment: .bottom) {
-            HStack(alignment: .bottom, spacing: 8) {
+            // Centred on one line: bottom-aligned, the round buttons sat a few points over the filter.
+            HStack(alignment: .center, spacing: 8) {
                 filterMenu
                 Spacer(minLength: 8)
                 controls
