@@ -954,3 +954,7 @@ friends_list         | newgame,level=60,pals=10,menu=friends,weather=clear,hour=
 # cross, and horizontal stripes showed in the grass round it): by day and with the sun low.
 fairy_ring_downs     | newgame,level=12,map=northern_grassland,ring=0,weather=clear,hour=12 | 8
 fairy_ring_downs_eve | newgame,level=12,map=northern_grassland,ring=0,weather=clear,hour=18 | 8
+# Briarmere's snow meets the rock next door over a few cells, not a checkerboard across the land
+# (playtesting 2026-11-11: "The land in briarmere looks glitched").
+briarmere_border | newgame,level=150,map=rosen_lake,border=moonglow,weather=clear,hour=12 | 8
+briarmere_shrine | newgame,level=150,map=rosen_lake,border=water_temple,weather=clear,hour=12 | 8
