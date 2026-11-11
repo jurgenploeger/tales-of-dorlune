@@ -1979,8 +1979,10 @@ struct QuestWindow: View {
                             .font(HUDStyle.font(12))
                             .foregroundStyle(HUDStyle.cream)
                             .fixedSize(horizontal: false, vertical: true)
-                        SectionTitle(text: L("Rewards"))
-                        QuestRewardsView(session: session, quest: quest, earned: session.status(of: quest) == .completed)
+                        // The section's title says which: what it pays, or what you earned.
+                        let earned = session.status(of: quest) == .completed
+                        SectionTitle(text: earned ? L("You earned") : L("Rewards"))
+                        QuestRewardsView(session: session, quest: quest, earned: earned, heading: false)
                     }
                     .padding(16)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -2097,6 +2099,9 @@ struct QuestRewardsView: View {
     let session: GameSession
     let quest: QuestDef
     let earned: Bool
+    /// Its own small heading (Reward, You earned); off under a `SectionTitle` that already says it
+    /// (`QuestWindow`).
+    var heading = true
 
     private struct RewardItem: Identifiable {
         let item: ItemDef
@@ -2134,9 +2139,11 @@ struct QuestRewardsView: View {
     var body: some View {
         let pay = earned ? session.paid(for: quest) : session.questPay(quest)
         VStack(alignment: .leading, spacing: 6) {
-            Text(earned ? L("You earned") : L("Reward"))
-                .font(HUDStyle.font(10))
-                .foregroundStyle(HUDStyle.gold)
+            if heading {
+                Text(earned ? L("You earned") : L("Reward"))
+                    .font(HUDStyle.font(10))
+                    .foregroundStyle(HUDStyle.gold)
+            }
             HStack(spacing: 12) {
                 if pay.gold > 0 {
                     GoldPill(amount: pay.gold, size: 13)
