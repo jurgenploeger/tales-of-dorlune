@@ -215,7 +215,7 @@ private struct BountyRow: View {
             }
         }
         .padding(8)
-        .background(RoundedRectangle(cornerRadius: 6).fill(.white.opacity(bounty.isDone && !bounty.claimed ? 0.12 : 0.05)))
+        .background(GlassCard(lit: bounty.isDone && !bounty.claimed, gold: bounty.isDone && !bounty.claimed))
     }
 
     private var icon: GameIcon {
@@ -331,7 +331,7 @@ private struct TitleGoalRow: View {
             }
         }
         .padding(8)
-        .background(RoundedRectangle(cornerRadius: 6).fill(.white.opacity(0.04)))
+        .background(GlassCard(radius: 8))
         .accessibilityElement(children: .combine)
     }
 }

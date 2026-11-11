@@ -120,7 +120,7 @@ struct StylePicker: View {
             // Every style suits everyone now (nine and counting), more than fit across: the row
             // scrolls, like the colours below, and opens on the one you're wearing.
             ScrollViewReader { proxy in
-                ScrollView(.horizontal, showsIndicators: false) {
+                SideScroll {
                     HStack(spacing: 8) {
                         ForEach(styles) { style in
                             let selected = style.id == current
@@ -168,7 +168,7 @@ struct SwatchPicker: View {
                 Text(title).font(HUDStyle.font(11)).foregroundStyle(HUDStyle.dim)
                 Text(presets.first { $0.id == selection }?.name ?? "").font(HUDStyle.font(11)).foregroundStyle(HUDStyle.gold)
             }
-            ScrollView(.horizontal, showsIndicators: false) {
+            SideScroll {
                 HStack(spacing: 8) {
                     ForEach(presets) { preset in
                         let selected = preset.id == selection
@@ -239,7 +239,7 @@ struct CompanionEditor: View {
             }
         }
         .padding(10)
-        .background(RoundedRectangle(cornerRadius: 10).fill(.white.opacity(0.06)))
+        .background(GlassCard())
     }
 
     private func save() {

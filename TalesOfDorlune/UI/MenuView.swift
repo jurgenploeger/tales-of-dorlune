@@ -244,7 +244,8 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
     var body: some View {
         HStack(spacing: 0) {
             ScrollViewReader { reader in
-                ScrollView(.horizontal, showsIndicators: false) {
+                // Faded at an edge with more tabs past it (`SideScroll`).
+                SideScroll {
                     // Standing on the bar's foot, the one you're on a little taller.
                     HStack(alignment: .bottom, spacing: 3) {
                         ForEach(Array(Page.allCases), id: \.self) { item in
@@ -255,7 +256,6 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
                     .padding(.horizontal, 10)
                     .padding(.top, 8)
                 }
-                .scrollBounceBehavior(.basedOnSize, axes: .horizontal)
                 .onAppear { reader.scrollTo(page, anchor: .center) }
                 .onChange(of: page) {
                     withAnimation(.easeOut(duration: 0.2)) { reader.scrollTo(page, anchor: .center) }
@@ -286,7 +286,9 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
                 .background(Self.tabShape.fill(selected ? HUDStyle.glassTop : HUDStyle.frameDark.opacity(0.3)))
                 .overlay {
                     // A light edge up its sides and over its top; none along its foot, where it's the page's.
-                    if selected { TabEdge().stroke(HUDStyle.frameLight.opacity(0.8), lineWidth: 1.5) }
+                    // One you're not on edged faintly in the bar's dark, so it reads as a tab of its own.
+                    TabEdge().stroke(selected ? HUDStyle.frameLight.opacity(0.8) : HUDStyle.frameDark.opacity(0.35),
+                                     lineWidth: selected ? 1.5 : 1)
                 }
                 .overlay(alignment: .topTrailing) {
                     if marked {
@@ -584,7 +586,7 @@ struct StatCell: View {
         .font(HUDStyle.font(size))
         .padding(.horizontal, size * 0.7)
         .padding(.vertical, size * 0.45)
-        .background(RoundedRectangle(cornerRadius: size * 0.45).fill(.white.opacity(0.06)))
+        .background(GlassCard(radius: size * 0.45))
     }
 }
 
@@ -1426,7 +1428,7 @@ private struct BagTab: View {
             }
             // The sort's panel over the chips.
             .zIndex(1)
-            ScrollView(.horizontal, showsIndicators: false) {
+            SideScroll {
                 HStack(spacing: 6) {
                     ForEach(Shelf.allCases, id: \.self) { kind in
                         FilterChip(title: kind.title, on: shelf == kind) { shelf = kind }
@@ -1510,7 +1512,7 @@ private struct HatchView: View {
         }
         .frame(maxWidth: .infinity)
         .padding(14)
-        .background(RoundedRectangle(cornerRadius: 12).fill(.white.opacity(0.08)))
+        .background(GlassCard(radius: 12))
         .task {
             stage = 1
             try? await Task.sleep(for: .seconds(1.1))
@@ -1620,7 +1622,7 @@ private struct QuestsTab: View {
             }
             // The sort's panel over the chips.
             .zIndex(1)
-            ScrollView(.horizontal, showsIndicators: false) {
+            SideScroll {
                 HStack(spacing: 6) {
                     ForEach(QuestShelf.allCases, id: \.self) { kind in
                         FilterChip(title: kind.title, on: shelf == kind) { shelf = kind }
@@ -1758,7 +1760,8 @@ struct QuestRow: View {
             }
         }
         .padding(8)
-        .background(RoundedRectangle(cornerRadius: 6).fill(.white.opacity(expanded ? 0.09 : 0.05)))
+        // Rimmed in gold when it's done, waiting for you to report back.
+        .background(GlassCard(lit: expanded, gold: isReady))
         .contentShape(Rectangle())
         .onTapGesture {
             guard showsGiver else { return }
@@ -1766,6 +1769,11 @@ struct QuestRow: View {
         }
         .accessibilityAddTraits(showsGiver ? .isButton : [])
         .accessibilityHint(showsGiver ? (expanded ? L("Hides the reward") : L("Shows the reward")) : "")
+    }
+
+    private var isReady: Bool {
+        if case .ready = session.status(of: quest) { return true }
+        return false
     }
 }
 
@@ -1845,7 +1853,10 @@ private struct CompletedQuestRow: View {
                 .transition(.reveal)
             }
         }
-        .padding(.vertical, expanded ? 6 : 0)
+        // On a card as every row is (`GlassCard`), a slim one: the list's long.
+        .padding(.horizontal, 10)
+        .padding(.vertical, 6)
+        .background(GlassCard(radius: 8, lit: expanded))
         .contentShape(Rectangle())
         .onTapGesture { withAnimation(Reveal.animation) { expanded.toggle() } }
         .accessibilityElement(children: .combine)

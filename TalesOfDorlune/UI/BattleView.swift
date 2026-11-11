@@ -1887,7 +1887,7 @@ struct LootGrid: View {
         }
         .padding(10)
         .frame(maxWidth: .infinity)
-        .background(RoundedRectangle(cornerRadius: 12).fill(.white.opacity(0.06)))
+        .background(GlassCard(radius: 12))
     }
 }
 

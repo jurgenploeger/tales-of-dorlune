@@ -89,7 +89,7 @@ struct MapOverlay: View {
 
     /// One chip a level, gold for the one shown.
     private var levelChips: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
+        SideScroll {
             HStack(spacing: 6) {
                 ForEach(levels) { option in
                     FilterChip(title: option.name, on: option.id == (level?.id ?? session.data.mapID)) { show(option) }

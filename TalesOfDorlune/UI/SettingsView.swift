@@ -268,7 +268,7 @@ struct SettingsView: View {
         }
         .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(RoundedRectangle(cornerRadius: 8).fill(.white.opacity(0.06)))
+        .background(GlassCard())
     }
 
     private static var version: String {
@@ -309,10 +309,9 @@ private struct PillChoices<Value: Hashable>: View {
     var body: some View {
         ViewThatFits(in: .horizontal) {
             row(filling: true)
-            ScrollView(.horizontal, showsIndicators: false) {
+            SideScroll {
                 row(filling: false)
             }
-            .scrollBounceBehavior(.basedOnSize, axes: .horizontal)
         }
     }
 

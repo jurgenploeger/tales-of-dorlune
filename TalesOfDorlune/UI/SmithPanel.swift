@@ -45,12 +45,11 @@ struct SmithPanel: View {
         VStack(alignment: .leading, spacing: 8) {
             // The weapon lines in a row, each name whole, scrolling sideways when they don't all fit
             // (playtesting 2026-10-26: "If it doesn't fit, there should just be a horizontal scroll").
-            ScrollView(.horizontal, showsIndicators: false) {
+            SideScroll {
                 HStack(spacing: 6) {
                     ForEach(Self.lines) { tab($0, chosen: chosen) }
                 }
             }
-            .scrollBounceBehavior(.basedOnSize, axes: .horizontal)
             if shown.isEmpty {
                 EmptyNote(L("Nothing to forge in this line at your level."))
             }
@@ -103,6 +102,8 @@ private struct SmithRecipeRow: View {
             .padding(.leading, 46)
         }
         .font(HUDStyle.font(12))
+        // Rimmed in gold when you have all it takes.
+        .rowCard(gold: ready)
     }
 
     private func forge(ready: Bool) -> some View {

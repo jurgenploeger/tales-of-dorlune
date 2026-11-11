@@ -68,15 +68,23 @@ vector glyphs below that.
 
 **Tabs** (`PageTabs`): a window's pages' names and nothing else, in full, never truncated; the row scrolls
 sideways when they don't fit (2026-10-26: "The tabs don't need icons and shouldn't get truncated. If it
-doesn't fit, there should just be a horizontal scroll"). They're folder tabs standing on the title bar:
+doesn't fit, there should just be a horizontal scroll"), faded out at an edge with more past it, the right
+at first and the left too once scrolled (`SideScroll`, 2026-11-11). Every sideways row in a window (filter
+chips, swatches, hairstyles) is a `SideScroll`, never a bare `ScrollView(.horizontal)`. They're folder tabs standing on the title bar:
 the one you're on is the window's own glass (`HUDStyle.glassTop`) with its name in gold, joined to the page
 under it; the others are sunk into the bar, white. One with something waiting wears the gold dot. Each of Character, Companions, Friends, Bag, Quests and Settings is
 a window of its own, opened from the HUD menu (2026-10-25: "The menu items hero etc should become their
 own modal window"), so a window's tabs are its own pages, never the other windows.
 
-**Rows sit on cards** (`rowCard()`): anything in a list you can tap or act on (a friend, something a shop
-sells) is a row on its own slightly lighter card, so a long list reads as separate things. A control that
-can't be used says why beside it, in orange (a price you can't pay: "Need 30 more gold"), never just grey.
+**Rows and panels sit on cards** (`GlassCard`, `rowCard()`): anything in a list you can tap or act on (a
+friend, something a shop sells, a quest, a recipe, a bounty) is a row on its own card, and a group of
+settings or stats is a panel on one: a shade lighter than the glass, lit along its top edge and darker at
+its foot, so it reads as raised (flat white at 5% barely showed, 0.9.74). `lit` for one that's open or
+wants you; `gold` rims the one that's ready (a quest to report, a recipe you can forge, a bounty to claim).
+Never a hand-rolled `RoundedRectangle().fill(.white.opacity(…))`. How many you own goes on the icon as a
+`CountBadge`, as the Bag shows it. A control that can't be used says why, short and quiet beside it (a
+price you can't pay: "Need 30" in `dim` under the grey price, the full sentence for VoiceOver), never just
+grey; orange only for a real warning ("Only for Fighter"): a line on every row turned the shop orange.
 
 **A window over a window hides what's under it** where both would show through each other (the dye window
 over a speech window: its close button and Dye gear button showed round it, until 0.9.74). A card over a
@@ -133,7 +141,7 @@ A UI change ships when every line holds, in portrait and landscape, light and da
 longest translation (usually German):
 
 - It uses `gameWindow()`, a title bar with `WindowTitle` or `PageTabs` flush at its top, the orange close
-  button over the corner, `rowCard()` for list rows,
+  button over the corner, `rowCard()` / `GlassCard` for rows and panels, `SideScroll` for sideways rows,
   `PixelButtonStyle` / `FLIconButton` for buttons, `SectionTitle` for sections, `EmptyNote` for nothing.
 - Colours only from `HUDStyle`; no brand sky, midnight or Luckiest Guy inside a window.
 - Text 10 pt or more, cream on glass, gold headings; dark ink only on light faces.
@@ -155,6 +163,10 @@ Add what each UI change teaches, dated, with the case and what to do instead.
 - 2026-11-10: Figma's `UI / Window` had a bevelled title bar the code had dropped for a gold title on the
   glass; the user chose the bar, with the tabs on it (0.9.74). Figma's page still lacks the folder tabs and
   `rowCard`: add them when the file is next open.
+- 2026-11-11: 0.9.74's after-shots: "Need X more gold" in orange under the name showed on nearly every row
+  at low gold, doubling the rows; the speech window's new floor was lower than it already was, so it
+  didn't grow; Settings' last tab ran hard into the close button's room. Fixed in 0.9.75 (a quiet
+  "Need 30" under the price, a taller floor and bigger speaker, `SideScroll`'s fades).
 - 2026-11-10: fresh shots (0.9.73) showed a first mock-up's "now" was wrong: Friends and Settings rows
   were already on cards. Six real findings came from the shots instead (rows not alike, a grey price with
   no reason, a window showing under another, empty glass, the speech window a strip, the bar). Shoot first.

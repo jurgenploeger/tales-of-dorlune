@@ -124,7 +124,7 @@ struct BankPanel: View {
             }
             // The sort's panel over the chips.
             .zIndex(1)
-            ScrollView(.horizontal, showsIndicators: false) {
+            SideScroll {
                 HStack(spacing: 6) {
                     ForEach(ItemShelf.allCases, id: \.self) { kind in
                         FilterChip(title: kind.title, on: shelf == kind) { shelf = kind }
