@@ -571,6 +571,11 @@ nonisolated struct MapDef: Decodable, Identifiable, Sendable {
         /// What lines stretches of its roads here and there (not caves; a town's only out in its
         /// countryside).
         let roadside: [Roadside]?
+        /// How far either side of its borders its ground and a land next door's mix, in cells
+        /// (`Seam.blend`, 14, when not given; a border takes the narrower of its two lands'). Snow
+        /// beside rock mixed over 28 cells read as a glitch, a checkerboard of pink and blue
+        /// (playtesting 2026-11-11, Briarmere).
+        let blend: Double?
     }
 
     /// What lines a stretch of a land's road (`LandPlanner.planRoadsides`), on the cells beside it.

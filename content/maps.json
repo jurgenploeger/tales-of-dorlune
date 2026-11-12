@@ -4988,6 +4988,7 @@
       ],
       "theme": {
         "ground": "tile_snow",
+        "blend": 5,
         "path": "tile_snow_path",
         "accent": "tile_grass",
         "accentPatches": 45,
@@ -16679,6 +16680,7 @@
       ],
       "theme": {
         "ground": "tile_snow",
+        "blend": 5,
         "path": "tile_snow_path",
         "accent": "tile_grass",
         "accentPatches": 20,

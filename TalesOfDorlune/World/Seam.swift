@@ -19,6 +19,9 @@ nonisolated struct Seam: Sendable {
     /// 1 where this land is the first of the two by id, else -1: the patches are the first land's
     /// noise, turned over for the second.
     let sign: Double
+    /// How far either side of the border the two lands' ground mixes, in cells: the narrower of the
+    /// two lands' (`Neighbourhood.blend(between:and:)`), `blend` at most.
+    let reach: Double
     /// The window it's worked out over (the land's box and `margin` round it).
     private let margin: Int
     private let width: Int
@@ -28,9 +31,10 @@ nonisolated struct Seam: Sendable {
     /// land; below 0 on the other land's side; infinite on neither.
     private let sides: [Float]
 
-    /// How far either side of the border the two lands' ground mixes, in cells.
+    /// How far either side of the border two lands' ground mixes, in cells, unless either says less
+    /// (maps.json theme `blend`).
     static let blend: Double = 14
-    /// How far in from the border the band can reach.
+    /// How far in from the border the band can reach, however wide it is.
     static let depth = Int(blend) + 1
 
     /// The band between the land `here` (an index into `blend.around.lands`) and the land `there`.
@@ -40,6 +44,7 @@ nonisolated struct Seam: Sendable {
         neighbour = other
         origin = around.origin
         sign = around.lands[here] < other ? 1 : -1
+        reach = around.blend(between: here, and: there)
         margin = around.margin
         width = around.width
         height = around.height
@@ -65,15 +70,15 @@ nonisolated struct Seam: Sendable {
     }
 
     /// How much of the ground is the other land's `side` cells this side of the border, the band
-    /// `blend` either side of it: none `blend` in, half on the line, all of it `blend` past.
-    static func share(at side: Double) -> Double {
-        let t = min(1, max(0, (blend - side) / (2 * blend)))
+    /// `width` either side of it: none `width` in, half on the line, all of it `width` past.
+    static func share(at side: Double, over width: Double = blend) -> Double {
+        let t = min(1, max(0, (width - side) / (2 * width)))
         return t * t * (3 - 2 * t)
     }
 
     /// How much of the ground at a cell is the other land's (nil off both lands).
     func share(_ cell: GridPoint) -> Double? {
-        side(cell).map(Self.share)
+        side(cell).map { Self.share(at: $0, over: reach) }
     }
 
     /// Whether a cell is near enough the border, on either side, for the band to reach it.
@@ -230,7 +235,7 @@ nonisolated struct Blend: Sendable {
         var best: (land: Int, share: Double)?
         for land in touching[holder] {
             // As `Seam.side` has it on the holder's cells.
-            let share = Seam.share(at: Double(distances[land][index] - 0.5))
+            let share = Seam.share(at: Double(distances[land][index] - 0.5), over: around.blend(between: holder, and: land))
             let sign: Double = around.lands[holder] < around.lands[land] ? 1 : -1
             guard share > best?.share ?? 0, Seam.patches(share: share, at: world, sign: sign) else { continue }
             best = (land, share)

@@ -192,10 +192,11 @@ struct WorldAtlas: View {
                 Spacer(minLength: 8)
                 controls
             }
-            .padding(16)
-            // As far from the window's foot as from its sides (the user, 2026-11-11: "The margins
-            // around the dropdown and bottom controls is not the same from the modal edges"): the
-            // safe area's inset had added some 15 points under them.
+            // 14 round the row and each button's 2-point tap margin: every edge you see 16 from the
+            // window's, foot and sides alike (the user, 2026-11-11: "The margins around the dropdown
+            // and bottom controls is not the same from the modal edges"; the safe area's inset and
+            // a second padding round the buttons had put the row 33 from the foot).
+            .padding(14)
             .ignoresSafeArea()
         }
         .onAppear {
@@ -471,9 +472,6 @@ struct WorldAtlas: View {
             mapButton(Text("−").font(HUDStyle.font(18)), label: L("Zoom out")) { zoom(by: 1 / 1.6) }
             mapButton(Text("+").font(HUDStyle.font(18)), label: L("Zoom in")) { zoom(by: 1.6) }
         }
-        // Well in from the window's rounded corner (playtesting 2026-10-30: 6 points left them
-        // squeezed into it).
-        .padding(16)
     }
 
     /// Zooms about the middle of the view.
@@ -532,7 +530,8 @@ struct WorldAtlas: View {
             .overlay(Capsule().strokeBorder(HUDStyle.ink.opacity(0.6), lineWidth: 1.5))
             .shadow(color: .black.opacity(0.3), radius: 2, x: 0, y: 1)
             .fixedSize()
-            .frame(minHeight: 44)
+            // 44 to tap, its face 2 in all round as the round buttons' is, so the row's edges line up.
+            .padding(2)
             .contentShape(Capsule())
         }
         .buttonStyle(.plain)
