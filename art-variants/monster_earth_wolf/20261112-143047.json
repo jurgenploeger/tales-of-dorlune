@@ -1,0 +1,27 @@
+{
+  "request": {
+    "num_images": 3,
+    "prompt": "sandy-brown wolf pup with a mossy green ruff and little pebbles along its back, rocky grey paws, bright amber eyes, brave little growl, chibi, cute monster",
+    "prompt_style": "rd_plus__low_res",
+    "width": 40,
+    "height": 40,
+    "remove_bg": true
+  },
+  "result": {
+    "created_at": 1794493845,
+    "credit_cost": 6,
+    "balance_cost": 0.18,
+    "output_urls": [],
+    "model": "rd_plus",
+    "remaining_credits": 0,
+    "remaining_balance": 7.601,
+    "request_id": "89fc6a55-e24e-482d-8650-dd00dbaf06ea",
+    "outputs_retained_until": 1794580240,
+    "billing": {
+      "reason": "no_plan",
+      "source": "balance",
+      "balance_left": 7.601,
+      "balance_charged": 0.18
+    }
+  }
+}
