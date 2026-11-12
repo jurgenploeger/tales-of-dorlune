@@ -7761,33 +7761,13 @@
     {
       "id": "monster_earth_wolf",
       "kind": "monster",
-      "derive": {
-        "from": "boss_big_bad_wolf",
-        "recolor": [
-          {
-            "hue": [
-              0,
-              360
-            ],
-            "minSaturation": 0,
-            "maxSaturation": 0.25,
-            "to": 28,
-            "saturation": 5,
-            "value": 0.85
-          },
-          {
-            "hue": [
-              330,
-              40
-            ],
-            "minSaturation": 0.25,
-            "to": 30,
-            "saturation": 0.8,
-            "value": 0.8
-          }
-        ]
-      },
-      "scale": 0.65
+      "request": {
+        "prompt": "sandy-brown wolf pup with a mossy green ruff and little pebbles along its back, rocky grey paws, bright amber eyes, brave little growl, chibi, cute monster",
+        "prompt_style": "rd_plus__low_res",
+        "width": 40,
+        "height": 40,
+        "remove_bg": true
+      }
     },
     {
       "id": "monster_flame_wolf",
