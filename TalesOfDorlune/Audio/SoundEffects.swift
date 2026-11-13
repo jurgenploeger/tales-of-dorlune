@@ -65,6 +65,8 @@ final class SoundEffects {
         case hit, crit, magic, heal, potion, shield = "guard", capture, breakFree = "break_free", run, poof, faint, lose
         case levelUp = "level_up", coins, questAccept = "quest_accept", questDone = "quest_done"
         case chest, hatch, equip, learn, whoosh, encounter
+        // The Found card filling slot by slot (`LootGrid`): a pop each, a chime for a rare find.
+        case lootPop = "loot_pop", lootRare = "loot_rare", lootLegend = "loot_legend"
         // Skills in battle: blows, each element's spells, buffs and curses, and the swell and the
         // grand chord of the strongest.
         case strike, spellFire = "spell_fire", spellWater = "spell_water", spellWood = "spell_wood"

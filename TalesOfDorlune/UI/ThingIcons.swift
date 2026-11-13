@@ -7,6 +7,8 @@ struct IconTile: View {
     var size: CGFloat = 32
     /// Pixel art shown instead of the icon when there is some.
     var picture: UIImage? = nil
+    /// Its light rim in a colour of its own (an item's rarity, `Rarity.color`), a little bolder.
+    var rim: Color? = nil
 
     /// The dark edge round it, thicker on a bigger tile.
     private var edge: CGFloat { max(1, (size * 0.035).rounded()) }
@@ -19,7 +21,8 @@ struct IconTile: View {
             // A dark edge round it, then its light rim just inside (playtesting 2026-10-31: "the items
             // should have a bit more border contrast"): on the windows' blue a pale rim alone washed out.
             .overlay(RoundedRectangle(cornerRadius: size * 0.26).strokeBorder(HUDStyle.ink.opacity(0.9), lineWidth: edge))
-            .overlay(RoundedRectangle(cornerRadius: size * 0.26).inset(by: edge).strokeBorder(.white.opacity(0.85), lineWidth: 1.5))
+            .overlay(RoundedRectangle(cornerRadius: size * 0.26).inset(by: edge)
+                .strokeBorder(rim ?? .white.opacity(0.85), lineWidth: rim == nil ? 1.5 : max(2, size * 0.055)))
             .overlay(alignment: .top) {
                 // Glossy top, like Fairyland Online's inventory icons.
                 Capsule().fill(.white.opacity(0.28)).frame(height: size * 0.22).padding(.horizontal, size * 0.14).padding(.top, size * 0.08)
@@ -53,21 +56,20 @@ struct ItemIcon: View {
     var upgrade = false
 
     var body: some View {
-        // A quest treasure (`Content.questGiving`) has a gold frame, and a sparkle once there's room.
+        // Its rarity on its rim (the user picked it from a mock-up, 2026-11-13, after SpriteCook's
+        // inventory article): none for a common one, a sparkle in the corner from rare up, a warm glow
+        // round a legendary one. A quest treasure (`Content.questGiving`) is epic, and keeps its badge
+        // once there's room.
         let treasure = Content.shared.isTreasure(item.id)
+        let rarity = Content.shared.rarity(of: item.id)
         IconTile(icon: item.icon.flatMap(GameIcon.init) ?? .gift, tint: tint, size: size,
-                 picture: item.art.flatMap(ArtLibrary.shared.artImage))
-            .overlay {
-                if treasure {
-                    RoundedRectangle(cornerRadius: size * 0.26)
-                        .strokeBorder(LinearGradient(colors: [HUDStyle.gold, Color(red: 1, green: 0.6, blue: 0.85), HUDStyle.gold],
-                                                     startPoint: .topLeading, endPoint: .bottomTrailing),
-                                      lineWidth: max(1.5, size * 0.07))
-                        .shadow(color: HUDStyle.gold.opacity(0.6), radius: size * 0.08)
-                }
-            }
+                 picture: item.art.flatMap(ArtLibrary.shared.artImage), rim: rarity.color)
+            .shadow(color: rarity == .legendary ? Rarity.legendaryGlow : .clear, radius: rarity == .legendary ? size * 0.18 : 0)
             .overlay(alignment: .bottomLeading) {
                 if treasure && size >= 28 { TreasureBadge(size: min(17, size * 0.36)).offset(x: -4, y: 4) }
+            }
+            .overlay(alignment: .bottomTrailing) {
+                if rarity >= .rare, !treasure, size >= 28, let color = rarity.color { RaritySparkle(color: color, size: min(16, size * 0.34)) }
             }
             .overlay(alignment: .topTrailing) {
                 if count > 1 { CountBadge(count: count).offset(x: 5, y: -5) }
@@ -198,6 +200,49 @@ struct ArtPill: View {
                 .frame(width: picture, height: picture)
                 .shadow(color: .black.opacity(0.4), radius: 0, x: 0, y: 1)
             }
+    }
+}
+
+extension Rarity {
+    /// Its name, as the item's card says it.
+    var name: String {
+        switch self {
+        case .common: L("Common")
+        case .uncommon: L("Uncommon")
+        case .rare: L("Rare")
+        case .epic: L("Epic")
+        case .legendary: L("Legendary")
+        }
+    }
+
+    /// Its slot's rim and its name's colour, light enough to read on the glass: none for a common
+    /// one, which looks as every slot did.
+    var color: Color? {
+        switch self {
+        case .common: nil
+        case .uncommon: Color(red: 0.45, green: 0.86, blue: 0.42)
+        case .rare: Color(red: 0.42, green: 0.7, blue: 1)
+        case .epic: Color(red: 0.88, green: 0.5, blue: 0.94)
+        case .legendary: Color(red: 1, green: 0.74, blue: 0.24)
+        }
+    }
+
+    /// The warm glow round a legendary slot.
+    static let legendaryGlow = Color(red: 1, green: 0.75, blue: 0.25).opacity(0.75)
+}
+
+/// A rare find's sparkle in the corner of its slot (`ItemIcon`), in its rarity's colour.
+struct RaritySparkle: View {
+    let color: Color
+    var size: CGFloat = 14
+
+    var body: some View {
+        IconImage(.sparkles, size: size)
+            .foregroundStyle(color)
+            .shadow(color: .white.opacity(0.9), radius: 1.5)
+            .shadow(color: HUDStyle.ink.opacity(0.6), radius: 0, x: 0, y: 1)
+            .offset(x: 4, y: 4)
+            .accessibilityHidden(true)
     }
 }
 
