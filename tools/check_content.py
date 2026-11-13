@@ -1459,6 +1459,18 @@ for sound in sounds:
 for stray in sorted(sound_files - set(sounds)):
     errors.append(f"sound/{stray}.wav → not a SoundEffects.Sound, so the game never plays it")
 
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+# Trees and bushes in the wind (art/wind.json, tools/wind_art.py): each rig still fits its sprite,
+# so a redrawn tree isn't torn apart by clumps cut from the old one.
+try:
+    import wind_art  # noqa: E402
+except ImportError:
+    wind_art = None
+if wind_art:
+    errors += wind_art.check()
+else:
+    check((ROOT / "art" / "wind.json").exists(), "art/wind.json is missing: run tools/wind_art.py")
+
 # Translations (content/i18n): every listed language has a table, placeholders survive, and every
 # L() in the code has a literal key. Missing translations only show in English, so they're reported
 # by `python3 tools/i18n.py status`, not here.

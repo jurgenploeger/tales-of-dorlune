@@ -1339,6 +1339,10 @@ final class Content {
         let chestTreasures: [String: String]
         /// Every item some shop stocks (`isStocked`).
         let stocked: Set<String>
+        /// Every item a rare monster or a boss drops as its own (`rarity`).
+        let rareDrops: Set<String>
+        /// The level of the best gear there is (`rarity`: what's that high is legendary).
+        let topGearLevel: Int
     }
 
     private let bundle: Bundle
@@ -1398,6 +1402,7 @@ final class Content {
         }
         let classFile: ClassesFile = load("classes")
         let mapFile: MapsFile = load("maps")
+        let monsters = (load("monsters") as MonstersFile).monsters
         let musicFile: MusicFile = load("music")
         // Where each monster lives, at its gentlest: the middle of the lowest band of levels it
         // turns up in, or a boss's own level.
@@ -1452,7 +1457,7 @@ final class Content {
             races: classFile.races,
             classes: classFile.classes,
             skills: (load("skills") as SkillsFile).skills,
-            monsters: (load("monsters") as MonstersFile).monsters,
+            monsters: monsters,
             items: items,
             quests: quests,
             maps: mapFile.maps,
@@ -1471,7 +1476,9 @@ final class Content {
             cardLevels: cardLevels,
             questTreasures: questTreasures,
             chestTreasures: chestTreasures,
-            stocked: stocked
+            stocked: stocked,
+            rareDrops: Set(monsters.filter { $0.rare == true || $0.boss == true }.flatMap { $0.drops ?? [] }.map(\.item)),
+            topGearLevel: items.filter { ItemType.equipmentSlots.contains($0.type) }.compactMap(\.level).max() ?? .max
         )
     }
 
@@ -1617,6 +1624,22 @@ final class Content {
         isQuestTreasure(itemID) || loaded.chestTreasures[ItemDef.baseID(of: itemID)] != nil || prize(for: itemID) != nil
     }
 
+    /// How rare an item is, from how it's got (it has no field of its own, and a new item takes its
+    /// rarity by itself): the best gear there is and the Wishing Seal legendary; a quest's or a chest's
+    /// treasure, a weaver's cape or a festive season's hat epic; a rare monster's or a boss's own
+    /// spoils rare; what no shop sells (dropped, forged, made by hand) uncommon; what a shop sells, and a
+    /// quest's own pieces, common. A dyed piece is as rare as its piece.
+    func rarity(of itemID: String) -> Rarity {
+        let id = ItemDef.baseID(of: itemID)
+        guard let item = loaded.items.first(where: { $0.id == id }) else { return .common }
+        let gear = ItemType.equipmentSlots.contains(item.type)
+        if item.sure == true || (gear && (item.level ?? 0) >= loaded.topGearLevel && !isStocked(id)) { return .legendary }
+        if isTreasure(id) || isFestive(id) { return .epic }
+        if loaded.rareDrops.contains(id) { return .rare }
+        if isStocked(id) || item.material == "quest" { return .common }
+        return .uncommon
+    }
+
     /// Whether some shop sells it (an NPC's `stock`); one none does, shops only buy.
     func isStocked(_ itemID: String) -> Bool { loaded.stocked.contains(ItemDef.baseID(of: itemID)) }
 
@@ -1629,4 +1652,12 @@ final class Content {
 
     /// The same level, or nil for a monster that lives nowhere.
     func habitatLevel(_ monsterID: String) -> Int? { loaded.cardLevels[monsterID] }
+}
+
+/// How rare an item is (`Content.rarity(of:)`, from how it's got), commonest first: its slot's rim
+/// shows it (`ItemIcon`), and a rare find is made a fuss of on the Found card (`LootGrid`).
+nonisolated enum Rarity: Int, Comparable, CaseIterable, Sendable {
+    case common, uncommon, rare, epic, legendary
+
+    static func < (a: Rarity, b: Rarity) -> Bool { a.rawValue < b.rawValue }
 }

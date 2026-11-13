@@ -1865,27 +1865,53 @@ private struct BossStoryCard: View {
     }
 }
 
-/// What a win (or a quest) turned up, as little item tiles with how many and the name underneath.
+/// What a win (or a quest) turned up, as little item tiles with how many and the name underneath,
+/// each slot filling in turn with a pop (after SpriteCook's inventory article; the user picked it from
+/// a mock-up, 2026-11-13): a rare find flashes sparkles in its rarity's colour and chimes, a
+/// legendary one lights a warm glow behind the card. All at once with Reduce Motion.
 struct LootGrid: View {
     let loot: [(id: String, count: Int)]
     var title = L("Found")
+
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    /// How many slots have filled so far, the one whose sparkles are flying, and the legendary glow.
+    @State private var shown = 0
+    @State private var burst: Int?
+    @State private var glow = 0.0
 
     var body: some View {
         VStack(spacing: 6) {
             Text(title).font(HUDStyle.font(11)).foregroundStyle(HUDStyle.gold)
             CenteredRows(spacing: 8, rowSpacing: 8) {
-                ForEach(Array(loot.enumerated()), id: \.offset) { _, entry in
+                ForEach(Array(loot.enumerated()), id: \.offset) { index, entry in
                     if let item = Content.shared.item(entry.id) {
+                        let rarity = Content.shared.rarity(of: entry.id)
                         VStack(spacing: 3) {
-                            ItemIcon(item: item, size: 40, count: entry.count)
+                            ZStack {
+                                // The empty slot it fills.
+                                RoundedRectangle(cornerRadius: 40 * 0.26)
+                                    .strokeBorder(.white.opacity(0.18), style: StrokeStyle(lineWidth: 1, dash: [3, 3]))
+                                    .frame(width: 40, height: 40)
+                                    .opacity(index < shown ? 0 : 1)
+                                if index < shown {
+                                    ItemIcon(item: item, size: 40, count: entry.count)
+                                        .transition(.scale(scale: 0.4).combined(with: .opacity))
+                                }
+                                if burst == index, let color = rarity.color {
+                                    SparkleBurst(color: color)
+                                }
+                            }
+                            .frame(width: 40, height: 40)
                             Text(item.name)
                                 .font(HUDStyle.font(10))
                                 .foregroundStyle(HUDStyle.cream)
                                 .lineLimit(2)
                                 .multilineTextAlignment(.center)
+                                .opacity(index < shown ? 1 : 0)
                         }
                         .frame(width: 78)
                         .accessibilityElement(children: .combine)
+                        .accessibilityValue(rarity == .common ? "" : rarity.name)
                     }
                 }
             }
@@ -1893,6 +1919,57 @@ struct LootGrid: View {
         .padding(10)
         .frame(maxWidth: .infinity)
         .background(GlassCard(radius: 12))
+        .background {
+            // A legendary find's warm glow behind the card.
+            RadialGradient(colors: [Rarity.legendaryGlow, .clear], center: .center, startRadius: 10, endRadius: 190)
+                .padding(-40)
+                .opacity(glow)
+                .allowsHitTesting(false)
+        }
+        .task { await reveal() }
+    }
+
+    /// Fills the slots one after another, a pop each, longer over a rare find's chime.
+    private func reveal() async {
+        guard shown == 0 else { return }
+        guard !reduceMotion else {
+            shown = loot.count
+            return
+        }
+        try? await Task.sleep(for: .milliseconds(250))
+        for index in loot.indices {
+            let rarity = Content.shared.rarity(of: loot[index].id)
+            withAnimation(.spring(response: 0.28, dampingFraction: 0.55)) { shown = index + 1 }
+            SoundEffects.shared.play(rarity == .legendary ? .lootLegend : rarity >= .rare ? .lootRare : .lootPop)
+            if rarity >= .rare { burst = index }
+            if rarity == .legendary {
+                withAnimation(.easeOut(duration: 0.3)) { glow = 1 }
+                withAnimation(.easeIn(duration: 1.6).delay(0.6)) { glow = 0.3 }
+            }
+            try? await Task.sleep(for: .milliseconds(rarity >= .rare ? 320 : 120))
+        }
+    }
+}
+
+/// Sparkles flying out of a slot as a rare find fills it (`LootGrid`), in its rarity's colour and white.
+private struct SparkleBurst: View {
+    let color: Color
+    @State private var out = false
+
+    var body: some View {
+        ZStack {
+            ForEach(0..<6, id: \.self) { k in
+                let angle = Double(k) / 6 * 2 * Double.pi - Double.pi / 2
+                IconImage(.sparkles, size: k % 2 == 0 ? 12 : 9)
+                    .foregroundStyle(k % 2 == 0 ? color : Color.white)
+                    .offset(x: out ? CGFloat(cos(angle) * 30) : 0, y: out ? CGFloat(sin(angle) * 30) : 0)
+                    .scaleEffect(out ? 1 : 0.4)
+                    .opacity(out ? 0 : 1)
+            }
+        }
+        .allowsHitTesting(false)
+        .accessibilityHidden(true)
+        .onAppear { withAnimation(.easeOut(duration: 0.7)) { out = true } }
     }
 }
 

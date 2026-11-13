@@ -867,6 +867,36 @@ def quest_done():
     return space(at(tines + strum + [(0.38, glitter * 0.2)]), "hall", wet=0.32, predelay=0.02)
 
 
+@sound(-19.0, longest=0.3, fade_out=0.08)
+def loot_pop():
+    """A slot filling on the Found card: a soft glassy pop on a felt tick, one for each thing found."""
+    s = 0.3
+    thock = np.sin(2 * np.pi * 420 * t(s)) * env(s, 0.0008, 0.012)
+    blip = glock(note("E6"), s, ring=0.06, mallet=2600.0)
+    return space(at([(0, lowpass(wood(900, s, ring=0.02, mallet=1800.0) + thock * 0.3, 5000) * 0.6), (0.004, blip * 0.7)]),
+                 "room", wet=0.1, predelay=0.003)
+
+
+@sound(-12.0, longest=0.95, fade_out=0.3)
+def loot_rare():
+    """A rare find (Rare or Epic): a quick rising celesta, G C E, and a glint of sparkles."""
+    notes = (("G6", 0.0, -0.2), ("C7", 0.06, 0.0), ("E7", 0.12, 0.2))
+    rise = [(when, pan(glock(note(n), 0.9, ring=0.22, mallet=5000.0), place) * (1 - 0.15 * i))
+            for i, (n, when, place) in enumerate(notes)]
+    glitter = sparkles(0.5, 8, note("C7"), note("C8"), ring=0.07)
+    return space(at(rise + [(0.14, glitter * 0.35)]), "hall", wet=0.28, predelay=0.015)
+
+
+@sound(-10.0, longest=1.5, fade_out=0.45)
+def loot_legend():
+    """A legendary find: chimes ring out a bright C chord over a soft choir, and sparkles shower down."""
+    bells = [(0.0, pan(chime(note("C7"), 1.5, ring=0.6), 0.0)), (0.03, pan(chime(note("G6"), 1.5, ring=0.6), -0.25) * 0.8),
+             (0.06, pan(handbell(note("E6"), 1.5, ring=0.55), 0.25) * 0.7)]
+    glitter = sparkles(0.9, 16, note("C7"), note("C8"), ring=0.1)
+    pad = choir((note("C4"), note("G4"), note("C5"), note("E5")), 1.3, "ah", attack=0.2, release=0.6)
+    return space(at(bells + [(0.08, glitter * 0.4), (0.0, pad * 0.25), (0.1, shimmer(1.0) * 0.12)]), "hall", wet=0.35, predelay=0.02)
+
+
 @sound(-9.2, longest=1.35, fade_out=0.35)
 def chest():
     """A chest opening: the wooden lid creaks, settles with a clunk, and a chime rings out."""

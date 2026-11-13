@@ -705,6 +705,42 @@ final class ArtLibrary {
         return texture.cgImage()
     }
 
+    /// Each texture's wind frames (`windFrames`), cut from one strip so a grove still draws together.
+    private struct WindStrip {
+        weak var texture: SKTexture?
+        let frames: [SKTexture]?
+    }
+    private var windStrips: [ObjectIdentifier: WindStrip] = [:]
+
+    /// The rig `id` moves in the wind by (art/wind.json): its own, or, for a palette swap with no
+    /// PNG of its own (`big_tree`, `frost_pine`), its base's. Nil for anything that doesn't.
+    private func windRig(_ id: String, depth: Int = 0) -> WindRig? {
+        if pngURL(id) != nil { return WindBook.shared?.rigs[id] }
+        guard depth < 3, let derive = asset(id)?.derive, derive.layers == nil else { return nil }
+        return windRig(derive.from, depth: depth + 1)
+    }
+
+    /// The frames sprite `id` moves in the wind by, cut from `texture` as it's drawn (graded for
+    /// its land, or a land next door's): nil for anything that doesn't (tools/wind_art.py).
+    func windFrames(_ id: String, texture: SKTexture) -> [SKTexture]? {
+        let key = ObjectIdentifier(texture)
+        if let known = windStrips[key], known.texture === texture { return known.frames }
+        var frames: [SKTexture]?
+        if let book = WindBook.shared, let rig = windRig(id), let strip = book.strip(picture(of: texture), rig: rig) {
+            let sheet = SKTexture(cgImage: strip)
+            sheet.filteringMode = .nearest
+            let count = rig.frames.count
+            frames = (0..<count).map { f in
+                let frame = SKTexture(rect: CGRect(x: CGFloat(f) / CGFloat(count), y: 0, width: 1 / CGFloat(count), height: 1), in: sheet)
+                frame.filteringMode = .nearest
+                return frame
+            }
+        }
+        if windStrips.count > 256 { windStrips = windStrips.filter { $0.value.texture != nil } }
+        windStrips[key] = WindStrip(texture: texture, frames: frames)
+        return frames
+    }
+
     private func remember(_ image: CGImage, for texture: SKTexture) {
         sources[ObjectIdentifier(texture)] = Source(texture: texture, image: image)
         if sources.count > sourcesPrunedAt {

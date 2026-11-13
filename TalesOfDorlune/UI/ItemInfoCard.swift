@@ -174,9 +174,18 @@ struct ItemInfoCard: View {
                 Text(item.name)
                     .font(HUDStyle.font(17))
                     .foregroundStyle(HUDStyle.gold)
-                Text(kind)
-                    .font(HUDStyle.font(11))
-                    .foregroundStyle(HUDStyle.dim)
+                // Its rarity in its colour before what kind it is (a common one says nothing).
+                let rarity = Content.shared.rarity(of: item.id)
+                HStack(spacing: 5) {
+                    if let color = rarity.color {
+                        Text(rarity.name)
+                            .font(HUDStyle.font(11))
+                            .foregroundStyle(color)
+                    }
+                    Text(kind)
+                        .font(HUDStyle.font(11))
+                        .foregroundStyle(HUDStyle.dim)
+                }
             }
             Spacer(minLength: 0)
         }

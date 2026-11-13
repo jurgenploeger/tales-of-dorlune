@@ -302,13 +302,38 @@ final class LandStage {
     /// graded as it is there).
     @discardableResult
     private func addScenery(_ placement: Placement, sprite: SpriteArt? = nil) -> SKSpriteNode {
-        addScenery(sprite ?? art.sprite(placement.art), at: placement.cell, nudge: placement.nudge, sway: placement.sway, scale: placement.scale)
+        let drawn = sprite ?? art.sprite(placement.art)
+        let node = addScenery(drawn, at: placement.cell, nudge: placement.nudge, sway: placement.sway, scale: placement.scale,
+                              wind: placement.art)
+        // Lit by a lamp nearby at night (`LampLight`): not a light itself, nor what moves in the wind
+        // (its picture changes, the light's copy wouldn't).
+        if !lamps.isEmpty, node.texture === drawn.texture, placement.art != "street_lamp", placement.prop?.glow == nil {
+            LampLight.shared.light(node, picture: art.picture(of: drawn.texture), key: "\(placement.art)@\(placement.land?.id ?? def.id)",
+                                   from: lamps)
+        }
+        return node
     }
 
+    /// Its lights at night (`LampLight`): its town's street lamps, where their glow is, and its props
+    /// that glow (lanterns, crystals, glowing mushrooms), in their glow's colour.
+    private lazy var lamps: [LampLight.Lamp] = {
+        var lamps: [LampLight.Lamp] = []
+        for decor in plan.streetDecor where decor.art == "street_lamp" {
+            lamps.append(LampLight.Lamp(point: map.center(of: decor.cell) + CGVector(dx: 0, dy: 34), color: (r: 1, g: 0.85, b: 0.5)))
+        }
+        for prop in plan.props + plan.decor + plan.localProps {
+            guard let hex = prop.prop?.glow, let color = Lighting.rgb(hex) else { continue }
+            lamps.append(LampLight.Lamp(point: map.center(of: prop.cell) + CGVector(dx: 0, dy: 16), color: color))
+        }
+        return lamps
+    }()
+
     /// As `WorldScene.addScenery`: on its cell, nudged, up on the ground there, shaded on a hill's
-    /// shaded side (by the midday sun, for now), swaying.
+    /// shaded side (by the midday sun, for now), moving in the wind if it's a tree or bush with a rig
+    /// (`wind`, its art: `WindField`), else swaying if asked.
     @discardableResult
-    private func addScenery(_ sprite: SpriteArt, at cell: GridPoint, nudge: CGVector? = nil, sway: Placement.Sway? = nil, scale: CGFloat = 1) -> SKSpriteNode {
+    private func addScenery(_ sprite: SpriteArt, at cell: GridPoint, nudge: CGVector? = nil, sway: Placement.Sway? = nil, scale: CGFloat = 1,
+                            wind: String? = nil) -> SKSpriteNode {
         let node = SKSpriteNode(texture: sprite.texture, size: CGSize(width: sprite.size.width * scale, height: sprite.size.height * scale))
         node.anchorPoint = CGPoint(x: 0.5, y: min(0.5, 0.05 + foot(of: sprite.texture)))
         var position = map.base(of: cell)
@@ -321,7 +346,10 @@ final class LandStage {
         node.position = position
         node.zPosition = -ground
         shade(node, standingOn: cell)
-        if let sway {
+        if let wind, let frames = art.windFrames(wind, texture: sprite.texture) {
+            // Timed by where it stands on the continent, so the wind runs on across the border.
+            WindField.shared.add(node, frames: frames, at: CGPoint(x: position.x + shift.dx, y: position.y + shift.dy))
+        } else if let sway {
             let left = SKAction.rotate(toAngle: sway.lean, duration: sway.duration, shortestUnitArc: true)
             let right = SKAction.rotate(toAngle: -sway.lean, duration: sway.duration, shortestUnitArc: true)
             left.timingMode = .easeInEaseOut

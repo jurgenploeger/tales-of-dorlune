@@ -77,6 +77,8 @@ moonglow     | newgame,map=moonglow              | 15
 continent_meadow | newgame,map=sunny_meadow,landscape,weather=clear,hour=12 | 8
 continent_border | newgame,map=sunny_meadow,near=meadowbrook,landscape,weather=clear,hour=12 | 8
 continent_coast | newgame,map=pineapple_shore,at=-10_-47,landscape,weather=clear,hour=12 | 8
+# The street lamps' light on the houses round them at night (LampLight, 0.9.85).
+town_night_lamps | newgame,map=meadowbrook,weather=clear,hour=22 | 8
 # Walking over the line into Meadowbrook: no card, no wait, its name at the top as you arrive.
 continent_crossing | newgame,map=sunny_meadow,near=meadowbrook,crossing,landscape,weather=clear,hour=12 | 1
 # Over the line before Meadowbrook's laid out, onto its plain ground, which it's laid out round.
@@ -327,6 +329,9 @@ quest_little_crab | newgame,class=fighter,level=125,map=hachoo_island,npc=little
 # Quest treasures: gear only a quest gives. Its card (gold frame, where it comes from), the treasures
 # a save that finished those quests gets by post, in the Bag and on the map, and one on offer.
 treasure_card    | newgame,class=fighter,level=100,menu=bag,bag=oxhide_mail,inspect=oxhide_mail | 8
+# Rarity on each slot's rim (0.9.86): common, uncommon, rare, epic and legendary side by side, and a rare item's card.
+rarity_bag   | newgame,class=fighter,level=200,menu=bag,bag=potion+iron_longsword+toy_bear+lioras_hat+goldleaf_blade+wishing_seal+star_seal+oxhide_mail+bronze_sword+pet_egg | 8
+rarity_card  | newgame,class=fighter,level=200,menu=bag,bag=toy_bear+potion,inspect=toy_bear | 8
 # A potion's card in the Bag: Drop, Trade and Use under it (playtesting 2026-10-26), and the window
 # each opens over it: how many to drop; a price and how many to put up for trade; who gets it, and how
 # many; upright and on its side.
