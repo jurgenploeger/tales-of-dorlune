@@ -3,9 +3,12 @@ import Observation
 
 /// Looks `english` up in the chosen language's table (content/i18n/<code>.json) and fills its
 /// `{name}` placeholders from `args`. A string with no translation yet stays English. Keys are the
-/// English text itself, so `tools/i18n.py extract` finds every `L("…")` in the code.
+/// English text itself, so `tools/i18n.py extract` finds every `L("…")` in the code. A key may end
+/// in `||` and a word for translators, the same English said of something else that another
+/// language says differently ("Epic" a skill's rank, "Epic||item" an item's rarity: Spanish épica
+/// for a skill, épico for an item); the English shown leaves it off.
 nonisolated func L(_ english: String, _ args: [String: Any] = [:]) -> String {
-    var text = Strings.table[english] ?? english
+    var text = Strings.table[english] ?? english.components(separatedBy: "||")[0]
     for (key, value) in args {
         text = text.replacingOccurrences(of: "{\(key)}", with: "\(value)")
     }

@@ -204,14 +204,14 @@ struct ArtPill: View {
 }
 
 extension Rarity {
-    /// Its name, as the item's card says it.
+    /// Its name, as the item's card says it (`||item`: said of an item, `L`).
     var name: String {
         switch self {
-        case .common: L("Common")
-        case .uncommon: L("Uncommon")
-        case .rare: L("Rare")
-        case .epic: L("Epic")
-        case .legendary: L("Legendary")
+        case .common: L("Common||item")
+        case .uncommon: L("Uncommon||item")
+        case .rare: L("Rare||item")
+        case .epic: L("Epic||item")
+        case .legendary: L("Legendary||item")
         }
     }
 
