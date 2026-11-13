@@ -57,6 +57,10 @@ final class Sky {
         GameSettings.dayAndNight ? GameClock.hours(since: start).truncatingRemainder(dividingBy: 24) : 12
     }
 
+    /// How dark it's grown, 0 by day to 1 at night (the night's shade's green, 0.47 at its deepest):
+    /// the lamps' light on what stands round them fades in with it (`LampLight`).
+    var darkness: CGFloat { CGFloat(max(0, min(1, (1 - color.g) / 0.5))) }
+
     /// Where the sun (or the moon) is at this hour: the hills' light and the shadows follow it.
     var sun: Sun { Sun(hour: hour) }
 

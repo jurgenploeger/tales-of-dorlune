@@ -77,6 +77,8 @@ moonglow     | newgame,map=moonglow              | 15
 continent_meadow | newgame,map=sunny_meadow,landscape,weather=clear,hour=12 | 8
 continent_border | newgame,map=sunny_meadow,near=meadowbrook,landscape,weather=clear,hour=12 | 8
 continent_coast | newgame,map=pineapple_shore,at=-10_-47,landscape,weather=clear,hour=12 | 8
+# The street lamps' light on the houses round them at night (LampLight, 0.9.85).
+town_night_lamps | newgame,map=meadowbrook,weather=clear,hour=22 | 8
 # Walking over the line into Meadowbrook: no card, no wait, its name at the top as you arrive.
 continent_crossing | newgame,map=sunny_meadow,near=meadowbrook,crossing,landscape,weather=clear,hour=12 | 1
 # Over the line before Meadowbrook's laid out, onto its plain ground, which it's laid out round.

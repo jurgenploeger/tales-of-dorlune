@@ -302,9 +302,31 @@ final class LandStage {
     /// graded as it is there).
     @discardableResult
     private func addScenery(_ placement: Placement, sprite: SpriteArt? = nil) -> SKSpriteNode {
-        addScenery(sprite ?? art.sprite(placement.art), at: placement.cell, nudge: placement.nudge, sway: placement.sway, scale: placement.scale,
-                   wind: placement.art)
+        let drawn = sprite ?? art.sprite(placement.art)
+        let node = addScenery(drawn, at: placement.cell, nudge: placement.nudge, sway: placement.sway, scale: placement.scale,
+                              wind: placement.art)
+        // Lit by a lamp nearby at night (`LampLight`): not a light itself, nor what moves in the wind
+        // (its picture changes, the light's copy wouldn't).
+        if !lamps.isEmpty, node.texture === drawn.texture, placement.art != "street_lamp", placement.prop?.glow == nil {
+            LampLight.shared.light(node, picture: art.picture(of: drawn.texture), key: "\(placement.art)@\(placement.land?.id ?? def.id)",
+                                   from: lamps)
+        }
+        return node
     }
+
+    /// Its lights at night (`LampLight`): its town's street lamps, where their glow is, and its props
+    /// that glow (lanterns, crystals, glowing mushrooms), in their glow's colour.
+    private lazy var lamps: [LampLight.Lamp] = {
+        var lamps: [LampLight.Lamp] = []
+        for decor in plan.streetDecor where decor.art == "street_lamp" {
+            lamps.append(LampLight.Lamp(point: map.center(of: decor.cell) + CGVector(dx: 0, dy: 34), color: (r: 1, g: 0.85, b: 0.5)))
+        }
+        for prop in plan.props + plan.decor + plan.localProps {
+            guard let hex = prop.prop?.glow, let color = Lighting.rgb(hex) else { continue }
+            lamps.append(LampLight.Lamp(point: map.center(of: prop.cell) + CGVector(dx: 0, dy: 16), color: color))
+        }
+        return lamps
+    }()
 
     /// As `WorldScene.addScenery`: on its cell, nudged, up on the ground there, shaded on a hill's
     /// shaded side (by the midday sun, for now), moving in the wind if it's a tree or bush with a rig

@@ -344,6 +344,8 @@ final class ContinentScene: SKScene {
                 let eased = air.mood + (goal - air.mood) * CGFloat(min(1, dt / 0.6))
                 air.set(mood: abs(goal - eased) < 0.01 ? goal : eased)
             }
+            // The lamps' light round you (`LampLight`), as dark as it is in the land you're in.
+            if id == here?.id { LampLight.shared.setNight(air.sky?.darkness ?? 0) }
             guard air.mood > 0 else { continue }
             if let sky = air.sky {
                 sky.update(dt)

@@ -174,6 +174,12 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   instead of swaying, caves keep the old sway (their depth of field swaps textures). Rerun it after
   redrawing a rigged sprite (`check_content.py` checks each rig fits); `--sheet` shows the clumps, `--gif`
   a grove in the wind.
+- `TalesOfDorlune/Art/LampLight.swift`: street lamps and glowing props light what stands round them at night,
+  after SpriteCook's normal-map article: which way each pixel faces from the sprite's outline alone
+  (`OutlineNormals`: how far in from a clear pixel, a 5-pixel bevel, a little of its brightness), lit from the
+  nearest lamp's way (one of eight) in three hard steps, a copy added over the sprite as its child, faded in by
+  `Sky.darkness`, gone by day (so the drawn top-left light is never doubled). Not on what moves in the wind or
+  on the lamps themselves (`LandStage.addScenery`). `tools/normal_art.py out.png [ids]` mirrors it.
 - `tools/building_art.py`: town houses and shops drawn in code with `pixel_kit`, so the towns don't build only
   with RD's few buildings and their recolours: a thatched and a timber-framed cottage, a stone townhouse, a
   round cottage, a teapot house, a garden cottage, and weapon, armour, tailor, flower, tea and book shops; and
