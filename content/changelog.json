@@ -2,7 +2,7 @@
   "_note": "Newest first, one entry per big update with at most five lines that sum it up. The top version must match MARKETING_VERSION in project.yml (tools/check_content.py checks): a small change moves the top entry's version and date along and adds a line only if it's big enough to tell players. 1.0.0 is the App Store release.",
   "releases": [
     {
-      "version": "0.9.83",
+      "version": "0.9.84",
       "date": "2026-11-13",
       "title": "A fresh look",
       "notes": [
@@ -10,7 +10,7 @@
         "Dye your gear: mix a dye from a gem and a sheepskin, then ask the weaver or a barber to colour your armour or a weapon, and its trim in a second colour.",
         "Battle buttons sit in one row along the bottom, your skills line up side by side, and chat waits until the fight is over.",
         "Windows open bigger with a title bar and folder tabs, their lists in tidy groups; the world map shows the time and where you are.",
-        "Everyone blinks and breathes as they stand, trees and bushes rustle in the wind, gloves and boots show on every hero, dyes keep a piece's shading, and Other is back as a gender."
+        "Everyone blinks and breathes as they stand, trees rustle in the wind, waves roll in to the shore, gloves and boots show on every hero, dyes keep a piece's shading, and Other is back as a gender."
       ]
     },
     {

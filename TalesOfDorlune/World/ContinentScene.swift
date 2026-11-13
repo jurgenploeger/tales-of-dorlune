@@ -1949,12 +1949,47 @@ final class ContinentScene: SKScene {
         return seaGroups[row * seaCells + col]
     }
 
-    /// The sea paler along the coast, in bands out from the land (`shallowTiles`): the water shallow
-    /// where the land runs down into it, palest at the waterline, under the cut edge of the land's
-    /// cells along it too. None in a chunk all land or all sea.
-    private func shallows(in chunk: GridPoint) -> SKTileMapNode? {
-        let size = World.chunkSize, tile = WorldMap.tileSize
-        let reach = Self.shallowTiles.count - 1
+    /// The sea along the coast, drawn from how far each spot of it lies from the land (a distance
+    /// field, after SpriteCook's "2D water shorelines with a distance field"): paler toward the land
+    /// in bands that follow every bay and round every point, palest at the waterline and under the
+    /// cut edge of the land's cells along it, and waves rolling in toward the shore, broken into
+    /// crests, that die away before they reach it. The distances are worked out here,
+    /// `shallowSamples` a cell (`shallowField`); the shader (`shallowShader`) draws them on the sea's
+    /// own pixels. None in a chunk all land or all sea.
+    private func shallows(in chunk: GridPoint) -> SKSpriteNode? {
+        let field: SKTexture?
+        if let known = shallowFields[chunk] {
+            field = known
+        } else {
+            field = shallowField(of: chunk)
+            // A long walk round the coast: let those far behind go (each is worked out again if need be).
+            if shallowFields.count >= 96 { shallowFields.removeAll(keepingCapacity: true) }
+            shallowFields[chunk] = .some(field)
+        }
+        guard let field else { return nil }
+        let side = CGFloat(World.chunkSize) * WorldMap.tileSize
+        let node = SKSpriteNode(texture: field, size: CGSize(width: side, height: side))
+        node.anchorPoint = .zero
+        node.zPosition = 1
+        node.shader = Self.shallowShader
+        return node
+    }
+
+    /// Each chunk's distances from the land (`shallowField`), worked out once: nil where it has no coast.
+    private var shallowFields: [GridPoint: SKTexture?] = [:]
+    /// Spots a cell along each side the distances are worked out at; the shader eases between them.
+    private static let shallowSamples = 4
+    /// Cells out from the land the distances reach (and under it, `shallowUnder`): past them, open sea.
+    private static let shallowReach = 5
+    private static let shallowUnder = 0.75
+
+    /// How far each spot of a chunk lies from the land, in cells (under the land, how far in, as less
+    /// than none): at `shallowSamples` spots a cell, from the chunk's south-west corner to its far
+    /// edge, so two chunks share the spots along their seam and the bands run on across it. Each spot
+    /// as near as it is to the nearest cell of land (of sea, under the land), a square, so the bands
+    /// round its corners. Its red, from `shallowUnder` in to `shallowReach` out.
+    private func shallowField(of chunk: GridPoint) -> SKTexture? {
+        let size = World.chunkSize, reach = Self.shallowReach, per = Self.shallowSamples
         // Which cells are land, over the chunk and `reach` round it.
         let low = GridPoint(col: chunk.col * size - reach, row: chunk.row * size - reach), side = size + 2 * reach
         var land = [Bool](repeating: false, count: side * side)
@@ -1962,40 +1997,76 @@ final class ContinentScene: SKScene {
             for col in 0..<side { land[row * side + col] = store.land(at: GridPoint(col: low.col + col, row: low.row + row)) != nil }
         }
         guard land.contains(true), land.contains(false) else { return nil }
-        let map = SKTileMapNode(tileSet: SKTileSet(tileGroups: Self.shallowTiles), columns: size, rows: size,
-                                tileSize: CGSize(width: tile, height: tile))
-        map.anchorPoint = .zero
-        map.zPosition = 1
-        var any = false
-        for row in 0..<size {
-            for col in 0..<size {
-                let isLand = land[(row + reach) * side + col + reach]
-                // How far it lies out from the land, in cells (0: the land's own cell, at the waterline).
-                var nearest = Double(reach) + 1
-                for dr in -reach...reach {
-                    for dc in -reach...reach where (dc != 0 || dr != 0) && land[(row + reach + dr) * side + col + reach + dc] != isLand {
-                        nearest = min(nearest, Double(dc * dc + dr * dr).squareRoot())
+        let spots = size * per + 1
+        let span = Double(reach) + Self.shallowUnder
+        var bytes = [UInt8](repeating: 255, count: spots * spots * 4)
+        for j in 0..<spots {
+            for i in 0..<spots {
+                // The spot, in cells from the margin's corner.
+                let x = Double(i) / Double(per) + Double(reach), y = Double(j) / Double(per) + Double(reach)
+                let col = min(side - 1, Int(x)), row = min(side - 1, Int(y))
+                let inside = land[row * side + col]
+                // Under the land only the first stretch in counts; out at sea, all `reach`.
+                let around = inside ? 1 : reach
+                var nearest = inside ? Self.shallowUnder : Double(reach)
+                for r in max(0, row - around)...min(side - 1, row + around) {
+                    let dy = max(0, Double(r) - y, y - Double(r + 1))
+                    guard dy < nearest else { continue }
+                    for c in max(0, col - around)...min(side - 1, col + around) where land[r * side + c] != inside {
+                        let dx = max(0, Double(c) - x, x - Double(c + 1))
+                        nearest = min(nearest, (dx * dx + dy * dy).squareRoot())
                     }
                 }
-                let band: Int? = isLand ? (nearest < 1.5 ? 0 : nil) : Int(nearest.rounded(.up))
-                guard let band, band <= reach else { continue }
-                map.setTileGroup(Self.shallowTiles[band], forColumn: col, row: row)
-                any = true
+                let out = inside ? -nearest : nearest
+                let value = UInt8(max(0, min(255, ((out + Self.shallowUnder) / span * 255).rounded())))
+                // Image rows run north to south; the spots count up from the south.
+                let index = ((spots - 1 - j) * spots + i) * 4
+                bytes[index] = value
+                bytes[index + 1] = value
+                bytes[index + 2] = value
             }
         }
-        return any ? map : nil
+        guard let provider = CGDataProvider(data: Data(bytes) as CFData),
+              let image = CGImage(width: spots, height: spots, bitsPerComponent: 8, bitsPerPixel: 32, bytesPerRow: spots * 4,
+                                  space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue),
+                                  provider: provider, decode: nil, shouldInterpolate: true, intent: .defaultIntent)
+        else { return nil }
+        let texture = SKTexture(cgImage: image)
+        texture.filteringMode = .linear
+        return texture
     }
 
-    /// The shallows' bands, palest first: a pale sea green over the water, less of it each cell out.
-    private static let shallowTiles: [SKTileGroup] = [0.42, 0.3, 0.18, 0.08].map { alpha in
-        let color = UIColor(red: 0.8, green: 0.96, blue: 0.95, alpha: alpha)
-        let image = UIGraphicsImageRenderer(size: CGSize(width: 4, height: 4)).image { context in
-            color.setFill()
-            context.fill(CGRect(x: 0, y: 0, width: 4, height: 4))
+    /// The coast's water from its distances (`shallowField`), on the sea's own pixels (32 a cell,
+    /// `tools/water_art.py`), so its bands step as the sea's art does: a pale sea green, less of it in
+    /// six steps out to 3.4 cells; and crests a pixel or two wide every 0.95 cells, rolling in at a
+    /// fifth of a cell a second, broken up a different way for each wave, fading in 2.8 cells out and
+    /// gone before 0.3 (the bank's foam is at the waterline). Mirrored in `tools/shore_art.py`.
+    private static let shallowShader: SKShader = {
+        let size = Float(World.chunkSize)
+        let shader = SKShader(source: """
+        void main() {
+            vec2 pixel = floor(v_tex_coord * u_pixels) + 0.5;
+            vec2 at = (pixel / u_pixels * u_samples + 0.5) / (u_samples + 1.0);
+            float d = texture2D(u_texture, at).r * u_span - u_under;
+            float pale = floor(clamp(1.0 - d / 3.4, 0.0, 1.0) * 6.0) / 6.0 * 0.44;
+            float phase = d / 0.95 + u_time * 0.22;
+            float swell = mod(floor(phase), 61.0);
+            float crest = 1.0 - step(0.085, fract(phase));
+            float gap = fract(sin(dot(floor(pixel / 10.0) + swell * 3.17, vec2(12.9898, 78.233))) * 43758.5453);
+            float reach = clamp((2.8 - d) / 0.9, 0.0, 1.0) * clamp((d - 0.3) / 0.45, 0.0, 1.0);
+            float wave = crest * step(0.35, gap) * reach * 0.5;
+            vec4 water = vec4(vec3(0.8, 0.96, 0.95) * pale, pale);
+            gl_FragColor = vec4(wave) + water * (1.0 - wave);
         }
-        let size = CGSize(width: WorldMap.tileSize, height: WorldMap.tileSize)
-        return SKTileGroup(tileDefinition: SKTileDefinition(texture: SKTexture(image: image), size: size))
-    }
+        """)
+        shader.uniforms = [
+            SKUniform(name: "u_pixels", float: size * 32),
+            SKUniform(name: "u_samples", float: size * Float(ContinentScene.shallowSamples)),
+            SKUniform(name: "u_span", float: Float(Double(ContinentScene.shallowReach) + ContinentScene.shallowUnder)),
+            SKUniform(name: "u_under", float: Float(ContinentScene.shallowUnder)),
+        ]
+        return shader
+    }()
 
     /// A chunk's ground, made afresh: each land's cells in it with that land's tiles, or in its plain
     /// ground till it's laid out. Each time the continent's back on screen after a battle or a cave,

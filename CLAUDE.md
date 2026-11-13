@@ -42,7 +42,10 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   anything set down by hand; `--preview out.png` draws it. The game lays the rivers where they're painted, a bridge
   wherever a road crosses one (`WorldMap.layRivers`) along a row or column, so the tool runs each river straight along the other
   where a road crosses it (`SQUARE_REACH`; aslant, its bridge crossed it askew); the land slopes down to the sea and into the lakes
-  (`WorldMap.shore`, drawn sunk by `HillArt`, darker the lower it lies; the sea paler in the shallows, `ContinentScene.shallows`). `TalesOfDorlune/World/Region.swift` is a land's shape; `Continent.swift` reads
+  (`WorldMap.shore`, drawn sunk by `HillArt`, darker the lower it lies; the sea paler in the shallows, `ContinentScene.shallows`:
+  a distance field, after SpriteCook's shoreline article, each chunk's distances from the land worked out once,
+  `shallowField`, 4 spots a cell, and drawn by `shallowShader` on the sea's own pixels, bands that round every bay and
+  point and broken crests rolling in; `tools/shore_art.py` mirrors it, before and after or `--gif`). `TalesOfDorlune/World/Region.swift` is a land's shape; `Continent.swift` reads
   them: neighbours where shapes touch, open and walled borders (a border opens along its length once a road you can
   take joins the two lands, so none skips a quest), and the sea all round, each cell drawn by the nearest land
   (`BorderArt` draws the fences, rocks and city walls along the cell edges). Boxes overlap: a land lays out and
