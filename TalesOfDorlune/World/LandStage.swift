@@ -302,13 +302,16 @@ final class LandStage {
     /// graded as it is there).
     @discardableResult
     private func addScenery(_ placement: Placement, sprite: SpriteArt? = nil) -> SKSpriteNode {
-        addScenery(sprite ?? art.sprite(placement.art), at: placement.cell, nudge: placement.nudge, sway: placement.sway, scale: placement.scale)
+        addScenery(sprite ?? art.sprite(placement.art), at: placement.cell, nudge: placement.nudge, sway: placement.sway, scale: placement.scale,
+                   wind: placement.art)
     }
 
     /// As `WorldScene.addScenery`: on its cell, nudged, up on the ground there, shaded on a hill's
-    /// shaded side (by the midday sun, for now), swaying.
+    /// shaded side (by the midday sun, for now), moving in the wind if it's a tree or bush with a rig
+    /// (`wind`, its art: `WindField`), else swaying if asked.
     @discardableResult
-    private func addScenery(_ sprite: SpriteArt, at cell: GridPoint, nudge: CGVector? = nil, sway: Placement.Sway? = nil, scale: CGFloat = 1) -> SKSpriteNode {
+    private func addScenery(_ sprite: SpriteArt, at cell: GridPoint, nudge: CGVector? = nil, sway: Placement.Sway? = nil, scale: CGFloat = 1,
+                            wind: String? = nil) -> SKSpriteNode {
         let node = SKSpriteNode(texture: sprite.texture, size: CGSize(width: sprite.size.width * scale, height: sprite.size.height * scale))
         node.anchorPoint = CGPoint(x: 0.5, y: min(0.5, 0.05 + foot(of: sprite.texture)))
         var position = map.base(of: cell)
@@ -321,7 +324,10 @@ final class LandStage {
         node.position = position
         node.zPosition = -ground
         shade(node, standingOn: cell)
-        if let sway {
+        if let wind, let frames = art.windFrames(wind, texture: sprite.texture) {
+            // Timed by where it stands on the continent, so the wind runs on across the border.
+            WindField.shared.add(node, frames: frames, at: CGPoint(x: position.x + shift.dx, y: position.y + shift.dy))
+        } else if let sway {
             let left = SKAction.rotate(toAngle: sway.lean, duration: sway.duration, shortestUnitArc: true)
             let right = SKAction.rotate(toAngle: -sway.lean, duration: sway.duration, shortestUnitArc: true)
             left.timingMode = .easeInEaseOut

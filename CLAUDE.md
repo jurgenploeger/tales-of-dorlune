@@ -161,6 +161,16 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   gnarled dark tree, an autumn oak, a maple, a birch, a frosted bare tree, a willow, a jacaranda, candy trees,
   and ten bushes (a fir sapling, a tumbleweed, a bramble...), and the fir under snow for the snow lands. Each writes its own PNG, which wins over the
   asset's `derive`; its `big_` twin, derived from it, follows. `--sheet out.png` previews them.
+- `tools/wind_art.py`: trees and bushes in the wind (`art/wind.json`, `TalesOfDorlune/Art/Wind.swift`), after
+  SpriteCook's wind article: the trunk stays put and the crown moves in leaf clumps (cut by colour, then
+  flooded out from each bright spot to the dark crevices), a whole pixel at a time, over a darker copy of the
+  crown so a gap shows shade; a calm loop timed by where each tree stands (a ripple runs across a grove), and
+  gusts in patches that bow the crown downwind and let it spring back, bounce and settle. Only pixels move,
+  so RD's art stays as drawn, and the game cuts the frames from the sprite as it's graded
+  (`ArtLibrary.windFrames`, `WindField` keeps the clock, `LandStage.addScenery`); a rigged sprite moves
+  instead of swaying, caves keep the old sway (their depth of field swaps textures). Rerun it after
+  redrawing a rigged sprite (`check_content.py` checks each rig fits); `--sheet` shows the clumps, `--gif`
+  a grove in the wind.
 - `tools/building_art.py`: town houses and shops drawn in code with `pixel_kit`, so the towns don't build only
   with RD's few buildings and their recolours: a thatched and a timber-framed cottage, a stone townhouse, a
   round cottage, a teapot house, a garden cottage, and weapon, armour, tailor, flower, tea and book shops; and

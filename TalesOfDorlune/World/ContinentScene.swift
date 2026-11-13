@@ -437,6 +437,8 @@ final class ContinentScene: SKScene {
     override func update(_ currentTime: TimeInterval) {
         let dt = lastUpdate == 0 ? 0 : min(currentTime - lastUpdate, 1.0 / 8)
         lastUpdate = currentTime
+        // The trees and bushes in the wind (`WindField`), on its own clock: it stops while the scene does.
+        WindField.shared.tick(dt)
         let stick = input.move
         // In a party you've joined you go where it goes: the stick and taps do nothing till you
         // leave it (the HUD's Leave party).
