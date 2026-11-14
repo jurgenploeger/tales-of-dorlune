@@ -446,12 +446,16 @@ final class ContinentScene: SKScene {
         // leave it (the HUD's Leave party).
         let following = session.joinedParty != nil
         if following { player.path = [] }
+        let pushed = stick.length > 0.15 && !following && !isInputLocked
+        // Held two seconds, the stick breaks the hero into a run (`InputState.pace`).
+        let pace = input.pace(dt: dt, pushed: pushed)
+        player.pace = pace
         if isInputLocked {
             player.setWalking(false)
-        } else if stick.length > 0.15, !following {
+        } else if pushed {
             player.path = []
             talkTarget = nil
-            let step = stick * (walkSpeed * CGFloat(dt))
+            let step = stick * (walkSpeed * pace * CGFloat(dt))
             var next = player.position
             // Each axis on its own, so you slide along what you can't walk through.
             let alongX = CGPoint(x: next.x + step.dx, y: next.y)
