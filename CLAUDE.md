@@ -86,8 +86,9 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   in hard steps (core, a one-pixel rim, flecks of light where the leaves part) and multiplied over the ground
   as the night's shade is, by one cool tint in every land (`CanopyShade.lean`: each palette's own shadow
   colour turned a desert red), stopping at a town's wall (`blocks`, `WorldMap.fenceCells`); drawn a `LandStage` chunk at a time while shown, again as the sun moves (`follow`,
-  every half second from `ContinentScene.updateAir`, which casts walkers' shadows too, as long for their
-  height as the trees': `Walker.shine`, `Lighting.Shadow.shape`'s `tall`). On a
+  every half second from `ContinentScene.updateAir`, which casts walkers' shadows too: `Walker.shine`). A
+  walker's shadow is its own frame laid the same way, as long for its height (`Walker.figure`, a dark copy
+  of the sprite's texture each frame, kept just over the ground, `figureDepth`), with a soft round at its feet. On a
   hill or the sunk shore, and in caves, a prop keeps its round `Lighting.Shadow`. Keep the tool and the Swift in step.
 - `content/*.json`: all game data (maps, monsters, skills, items, quests, music, looks, crowd, announcements, the chat's
   filter (`moderation.json`, `ChatFilter`: what you type is starred out where it matches), titles,
