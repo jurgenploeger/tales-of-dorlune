@@ -242,17 +242,23 @@ def oak(colour, seed=21, ragged=False):
 
 
 def maple():
-    """red_maple: wider than tall, a crown of flat, overlapping tiers like the lobes of its leaves."""
+    """red_maple: a broad crown, wider than tall, of big round clumps of red leaves, as RD's own tree is
+    (about ten clumps, each lit on its top left with a dark crevice under it), on a short dark trunk.
+    It was three flat tiers of small puffs, and lost blind to RD's tree: it read as a bonsai or a pagoda
+    (2026-11-14, docs/pixel-style.md Learned). Fewer, bigger clumps make the form; the light makes them
+    round."""
     s = scene()
-    bark, leaves = Material("#5e3e30", texture=0.07), foliage("#d0383c")
-    trunk(s, 32, 60, 40, 6, bark, roots=3)
-    branch(s, [(32, 44), (18, 36)], 3, bark)
-    branch(s, [(32, 44), (46, 36)], 3, bark)
+    bark = Material("#5e3e30", texture=0.07)
+    # Its own warm ramp, as RD's lights lean to yellow (rule 3): an orange-red lit side, crimson in the
+    # middle, a deep wine shade; through shade_of the light went pale pink.
+    leaves = [Material(c, texture=0.03, shades=6, variety=1.5) for c in ("#ee5e30", "#cc3428", "#93202c", "#f8844a")]
+    trunk(s, 32, 60, 40, 7, bark, roots=3)
+    branch(s, [(32, 44), (20, 34)], 3.2, bark)
+    branch(s, [(32, 44), (45, 34)], 3.2, bark)
     crown = len(s.shapes)
-    for (cx, cy, rx, ry, n, seed, size) in ((32, 12, 8, 3, 3, 31, 6.0), (32, 22, 16, 3, 5, 32, 6.5),
-                                            (32, 32, 24, 3, 7, 33, 6.0)):
-        puffs(s, cx, cy, rx, ry, leaves, n, size, seed, flat=0.7)
-    lower(s, crown, 5)
+    puffs(s, 32, 21, 19, 16, leaves, 12, 10.5, 36, flat=0.95, bulge=3.2)
+    centred(s, crown, 32)
+    lower(s, crown, 4)
     return s
 
 
@@ -495,10 +501,12 @@ def snow_conifer():
 
 
 def shrub(colour, seed):
-    """golden_bush: a tall rounded shrub, taller than wide, in tufts."""
+    """golden_bush: a rounded shrub, a little taller than wide, in a few big clumps, each lit on its top
+    left over the shadow of the one behind. It was forty small tufts, an even noise, and lost blind to
+    RD's bushes (2026-11-14): form first, then a little texture."""
     s = scene(32)
-    leaves = foliage(colour)
-    puffs(s, 16, 16, 10, 10, leaves, 40, 3.4, seed, bulge=2.0)
+    leaves = [Material(c, texture=0.03, shades=6, variety=1.5) for c in ("#f4c236", "#d89020", "#8c4e16", "#fcd862")]
+    puffs(s, 16, 16, 10.5, 10.5, leaves, 13, 5.0, seed, bulge=2.6)
     return s
 
 

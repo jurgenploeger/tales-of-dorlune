@@ -835,6 +835,21 @@ The `pixel_style.py` bands passed all of these: the numbers measure texture and 
 thing reads or has form. A band for value contrast (the lit side to the shade, the subject to the
 grass) and a 1× silhouette check would have caught some; the eye catches the rest.
 
+**No number caught them (2026-11-14).** Tried on round 1's sprites before adding any band: form (the
+share of light and dark in big shapes, not pixel noise), median saturation, how much of a sprite
+matches the map's green, the lit top left against the shaded bottom right, how much of its box the
+silhouette fills, and the brightness range. On every one, the code sprites the user rejected sit inside
+RD's own range (form 0.27 against RD's 0.09 to 0.49; saturation 0.53 against 0.15 to 0.71; brightness
+range 0.60 against 0.47 to 0.76). Whether a thing reads, and whether its colours sit right together, are
+what the eye judges; no band was added, as one that passes bad art gives false comfort. The blind
+review is the gate for "as good as RD". The bands still catch broken pixels.
+
+**Five props redrawn after round 1 (2026-11-14):** the red maple a dome of a dozen big clumps on a warm
+ramp of its own (orange-red light, wine shade) instead of flat tiers; the golden bush thirteen clumps,
+not forty tufts; the gold hoard a big bright mound with coin discs, gems and glints; the torn tent an
+A-frame with a bright front, a dark doorway and a torn side; the lost pile a sack standing up, tied,
+with the sword leaning on it. Judged in the next blind round.
+
 - **2026-11-02 (roofs and pillars):** "Roof should still have basic geometry, same for pillars" (the
   user): the bend is for walls and stone. Roofs, spires, domes, cornices, columns and pilasters keep to
   the ruler (`Build.ruled()`, and `@ruled` on `gable`, `gable_roof`, `eaves_roof`, `dome`,

@@ -630,37 +630,40 @@ def draw_waystone():
 
 def draw_lost_pile():
     """What you lost when you fell, left where you fell (`LostPile`, `GameSession.loseBelongings`): a
-    burlap sack slumped on its side, its neck open and its tie loose, coins spilled out of it, a red
-    potion and a sword lying by it. Drawn with tools/pixel_kit.py as the lairs' pieces are (lit from
-    the top left, hue-shifted ramps, a tinted outline) and scored as scenery."""
+    fat sack standing up, tied at the neck, gold coins spilled in front of it, a red potion and a sword
+    leaning on it. Drawn with tools/pixel_kit.py as the lairs' pieces are (lit from the top left,
+    hue-shifted ramps, a tinted outline) and scored as scenery. It was a pale sack slumped on its side,
+    small and grainy, and lost blind to RD's props (2026-11-14): standing up and tied, a sack reads as
+    one at 1x, as the item icons' bags do."""
     from pixel_kit import Material, Sprite
 
-    burlap = Material("#b08a52", shades=5, texture=0.09, grain=1.0)
-    tie = Material("#8a5a2c", shades=4, texture=0.03)
-    gold = Material("#f2c444", shades=5, texture=0.02, gloss=0.6)
-    rim = Material("#b07a1c", shades=4, texture=0.02)
-    glass = Material("#d83a3a", shades=5, texture=0.0, gloss=0.8)
-    cork = Material("#9a7046", shades=3, texture=0.04)
-    steel = Material("#c4ccd8", shades=5, texture=0.02, gloss=0.6)
-    hilt = Material("#7a4a26", shades=4, texture=0.03)
+    burlap = Material("#c4904a", shades=5, texture=0.03)
+    tie = Material("#7a3e1e", shades=4, texture=0.02)
+    gold = Material("#ffd24a", shades=5, texture=0.0, gloss=0.6)
+    rim = Material("#b0700e", shades=4, texture=0.0)
+    glass = Material("#e83a40", shades=5, texture=0.0, gloss=0.9)
+    cork = Material("#a87848", shades=3, texture=0.03)
+    steel = Material("#d4dce8", shades=5, texture=0.0, gloss=0.7)
+    hilt = Material("#7a4a26", shades=4, texture=0.02)
     s = Sprite(40, 32)
-    # The little sword behind, lying back to front.
-    s.stroke([(9, 13.5), (22, 6)], 2.6, steel)
-    s.stroke([(7.5, 11), (10.5, 16)], 1.6, hilt)
-    s.stroke([(4.5, 16.5), (8.5, 14.2)], 1.8, hilt)
-    # The sack: a fat body, its neck to the right, open.
-    s.ellipse(16, 21, 10.5, 7.5, burlap)
-    s.poly([(23, 16), (30, 13.5), (32, 18), (25, 24)], burlap, bulge=0.7)
-    s.ellipse(31, 16, 2.6, 3.2, tie, profile="flat", rot=-25)
-    s.stroke([(24, 17.5), (26, 21.5)], 1.4, tie)
-    # Coins spilled from its mouth: back to front, the nearer over the farther.
-    for cx, cy in ((34, 20), (29.5, 24.5), (35.5, 25.5), (31.5, 28.5)):
-        s.ellipse(cx, cy + 1.1, 3.4, 2.0, rim, profile="flat")
-        s.ellipse(cx, cy, 3.4, 2.0, gold)
-    # A red potion in front of the sack.
-    s.ellipse(11, 27, 3.4, 3.1, glass)
-    s.poly([(10, 21.5), (12, 21.5), (12, 24.5), (10, 24.5)], glass, bulge=0.5)
-    s.poly([(9.7, 20), (12.3, 20), (12.3, 21.8), (9.7, 21.8)], cork, profile="flat")
+    # The sword, leaning on the sack's far side.
+    s.stroke([(27, 26), (33, 4)], 2.4, steel)
+    s.stroke([(24.5, 21.5), (31, 23.5)], 1.6, hilt)
+    s.stroke([(27, 26), (26, 29.5)], 1.8, hilt)
+    # The sack, standing: a fat body, a pinched neck, its mouth flaring above the tie.
+    s.ellipse(17, 21, 10, 8.5, burlap, bulge=2.2)
+    s.poly([(13.5, 13), (20.5, 13), (19, 9.5), (15, 9.5)], burlap, bulge=0.8)
+    s.ellipse(17, 8.5, 4.6, 2.2, burlap)
+    s.stroke([(12.8, 13), (21.2, 13)], 1.6, tie)
+    s.stroke([(21, 13), (23.5, 16)], 1.0, tie)
+    # Coins spilled in front, the nearer over the farther.
+    for cx, cy in ((8, 27.5), (27, 28.5), (13.5, 29.5), (22, 30)):
+        s.ellipse(cx, cy + 1.0, 3.0, 1.7, rim, profile="flat")
+        s.ellipse(cx, cy, 3.0, 1.7, gold)
+    # A red potion standing by it.
+    s.ellipse(34, 26.5, 3.4, 3.4, glass)
+    s.poly([(33, 20.5), (35, 20.5), (35, 23.5), (33, 23.5)], glass, bulge=0.5)
+    s.poly([(32.7, 19), (35.3, 19), (35.3, 20.8), (32.7, 20.8)], cork, profile="flat")
     image = s.render(outline="tinted")
     canvas = Canvas(image.width, image.height)
     canvas.px = [[image.getpixel((x, y)) if image.getpixel((x, y))[3] else None for x in range(image.width)]
