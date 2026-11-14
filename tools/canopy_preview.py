@@ -89,7 +89,7 @@ def canopy(hour, flecks_phase=(0.0, 0.0)):
         H, W = img.shape[:2]
         core = np.zeros((H, W), bool)
         for art, spr, x0, y0, w, h, walker, _ in drawn:
-            if walker or not props.get(art, {}).get('shadow'): continue
+            if walker or h < 12: continue   # everything that stands casts it, but a speck (CanopyShade.shortest)
             mask = spr[..., 3] > 0.5
             rows = np.where(mask.any(1))[0]
             if not len(rows): continue
