@@ -100,6 +100,10 @@ tell what reads as a closed eye.
    don't move, and no row is stretched.
 9. No Retro Diffusion pixel outside an eye box is changed, and nothing is redrawn.
 10. The Swift and `eyes.py` agree: a change to either's rules goes into the other in the same commit.
+11. **Still air is still.** An idle motion that runs all the time (a sway, a bob) rests between beats
+    or shrinks to nothing when there's nothing driving it: a small constant movement reads as jitter.
+    Timed by where a thing stands, not at random, so neighbours move one after another (SpriteCook's
+    wind article, as `tools/wind_art.py` does it).
 
 When a check fails, fix the data or the rule. Never loosen the check to get green, and never
 switch the guard off for one sprite.
