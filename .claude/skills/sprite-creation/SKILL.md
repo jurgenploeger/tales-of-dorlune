@@ -164,6 +164,35 @@ show (4× or more), and say which route made it and what it cost. For paid art, 
 say which you'd pick and why. The user's eye is the final judge, and what they say is worth more than
 any number.
 
+## Drawing as well as Retro Diffusion
+
+The goal (the user, 2026-11-14): "eventually I want our skill to draw pixel art just as good as these,
+so we don't need to depend on them". Retro Diffusion's art in the game stays as it is (never redrawn,
+CLAUDE.md); this is about new art not needing it. "As good as" is the user's verdict, judged blind,
+kind by kind, never a claim of ours or a number alone.
+
+**The measure:** `tools/blind_review.py sheet OUT.png --kind <kind> --pairs 8` pairs sprites drawn in
+code with Retro Diffusion's of the same kind and nearest size, sides shuffled, labelled only A and B;
+its key goes in a file beside the sheet, unopened till the user has answered (keep it in the
+scratchpad, not the repo, and never in what you show them). `score KEY ANSWERS` says how often code was
+picked or tied. A kind is won when, over 16 rows or more, code is picked or tied in half or more.
+Record every round below.
+
+**The stages, easiest first:**
+1. **Baseline:** blind rounds on what's drawn both ways today, buildings and props.
+2. **Things:** props, buildings, ground tiles (cut and finished from the game's own, as the Wang tiles
+   are), until a new one never needs Retro Diffusion. Fix what lost rounds, in `pixel_kit` and the
+   family's tool, and run another round with a new seed.
+3. **Creatures as parts:** a rig of lit `pixel_kit` parts (body, head, eyes, limbs, horns, wings,
+   shells) combined and recoloured, one family at a time, a slime or beetle first, held to the creature
+   bands and the Pixel Heroes marks (`sprite_check.py check --new`), then judged blind beside Retro
+   Diffusion's of its size.
+4. **People last:** new bodies, hairstyles and outfits for the paper doll in four directions, judged as
+   the creatures are. Faces at 10 pixels wide are the hardest thing the game draws: no shortcuts there.
+
+| Date | Kind | Seed | Rows | Code picked or tied | Notes |
+|---|---|---|---|---|---|
+
 ## Improving this skill
 
 Each sprite made should leave the next one easier:

@@ -308,6 +308,10 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   the land next door meet the original, as before). Keep it, the Swift and `palette_preview.py` in
   step; `check` holds every edge of a field to the tile's own seams, `--preview out.png` shows before
   and after, near and zoomed out.
+- `tools/blind_review.py`: is code's art as good as Retro Diffusion's? Pairs of one drawn in code and
+  one of RD's of the same kind, sides shuffled, the key in a file of its own the user doesn't see
+  till they've picked; `score` tallies. The goal and its stages: the sprite-creation skill, *Drawing as
+  well as Retro Diffusion*.
 - `tools/pixel_scale.py`: how big each sprite's art pixels are on the map, in points (its PNG times its
   `scale`; a ground tile 44 points over 32 pixels), against a walker's 1, and the props planted at a
   random size (maps.json theme props' `size`); `--sheet out.png` lines them up at game size. Its rule:

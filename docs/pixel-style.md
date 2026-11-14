@@ -61,6 +61,13 @@ These are the rules the numbers measure. A sprite that keeps them looks like Tal
     instead of it (`light_masses`), and the whole house holds about 18 to 35 colours (`colour_density`
     capped as well as floored): every face its own seven shades made ours a hundred colours of grain.
 
+## The goal: as good as Retro Diffusion (2026-11-14)
+
+The user wants code to draw new pixel art as well as Retro Diffusion does, so new art needn't come from
+it. It's judged blind, kind by kind (`tools/blind_review.py`), and the stages and every round's result
+live in the sprite-creation skill, *Drawing as well as Retro Diffusion*. What a lost round teaches
+goes in *Learned* below.
+
 ## Effects on the pixel grid (2026-11-14)
 
 From SpriteCook's hit feel and pixel-perfect articles (docs/spritecook-notes.md). What moves or flashes
