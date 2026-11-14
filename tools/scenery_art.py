@@ -47,12 +47,14 @@ def foliage(hexcode, texture=0.03):
     return [Material(shade_of(hexcode, k), texture=texture, shades=6, variety=1.5) for k in (1.2, 1.0, 0.78, 1.42)]
 
 
-def puffs(s, cx, cy, rx, ry, mats, count, size, seed, flat=1.0, skip=None, bulge=3.0):
+def puffs(s, cx, cy, rx, ry, mats, count, size, seed, flat=1.0, skip=None, bulge=3.0, sheen=0.42, lean=(1.0, 1.0)):
     """A canopy as RD paints one: clusters of leaves, each a small dome lit on its own, scattered over an
     ellipse from the back (top) to the front (bottom), so each lower cluster overlaps the one behind it
     and casts its shadow on it. Clusters toward the canopy's lower right take its shadow material
     (`mats`: light, middle, shadow, sheen; foliage()); a cluster in the light gets a paler patch toward
-    its top left, as RD's do. `flat` squashes the clusters; `skip(x, y)` leaves a gap."""
+    its top left, as RD's do (`sheen`, its size against the cluster's). `flat` squashes the clusters;
+    `skip(x, y)` leaves a gap. `lean` weighs across and down in which clusters fall in shade: (1, 1) the
+    lower right, more across than down to keep a crown's front clumps lit as RD's tree does."""
     # On a jittered grid a cluster apart, so the crown is full and even, never lopsided; at most `count`,
     # the nearest the middle.
     r = rng(seed)
@@ -70,11 +72,11 @@ def puffs(s, cx, cy, rx, ry, mats, count, size, seed, flat=1.0, skip=None, bulge
     spots = sorted(spots, key=lambda p: ((p[0] - cx) / max(1, rx)) ** 2 + ((p[1] - cy) / max(1, ry)) ** 2)[:count]
     for x, y in sorted(spots, key=lambda p: p[1]):
         k = r.uniform(0.8, 1.15)
-        side = ((x - cx) / max(1, rx) + (y - cy) / max(1, ry)) / 2
+        side = (lean[0] * (x - cx) / max(1, rx) + lean[1] * (y - cy) / max(1, ry)) / 2
         mat = mats[0] if side < -0.2 else mats[2] if side > 0.3 else mats[1]
         s.ellipse(x, y, size * k, size * k * 0.82 * flat, mat, bulge=bulge)
         if side < 0.3 and len(mats) > 3:
-            rr = size * k * 0.42
+            rr = size * k * sheen
             s.ellipse(x - rr * 0.7, y - rr * 0.7 * flat, rr, rr * 0.8 * flat, mats[3], profile="flat")
     return s
 
@@ -251,12 +253,12 @@ def maple():
     bark = Material("#5e3e30", texture=0.07)
     # Its own warm ramp, as RD's lights lean to yellow (rule 3): an orange-red lit side, crimson in the
     # middle, a deep wine shade; through shade_of the light went pale pink.
-    leaves = [Material(c, texture=0.03, shades=6, variety=1.5) for c in ("#ee5e30", "#cc3428", "#93202c", "#f8844a")]
+    leaves = [Material(c, texture=0.03, shades=6, variety=1.5) for c in ("#ee5e30", "#cc3428", "#93202c", "#f2703a")]
     trunk(s, 32, 60, 40, 7, bark, roots=3)
     branch(s, [(32, 44), (20, 34)], 3.2, bark)
     branch(s, [(32, 44), (45, 34)], 3.2, bark)
     crown = len(s.shapes)
-    puffs(s, 32, 21, 19, 16, leaves, 12, 10.5, 36, flat=0.95, bulge=3.2)
+    puffs(s, 32, 23, 16, 13, leaves, 11, 9.5, 36, flat=0.95, bulge=3.2, sheen=0.28, lean=(1.5, 0.35))
     centred(s, crown, 32)
     lower(s, crown, 4)
     return s
@@ -622,6 +624,14 @@ def main(argv):
             bad.append(f"{item}: {gap} pixels of sky between its trunk and its crown")
         if abs(off) > CROWN_OFF_MAX and item not in LEANS:
             bad.append(f"{item}: its crown's middle is {off:+.1f} pixels off its trunk's (at most {CROWN_OFF_MAX})")
+    for item, img in out.items():
+        # Nothing may touch the frame's edge: a crown that does is cut off in the game (the red maple's
+        # was, by its top row: the user, 2026-11-14).
+        a = np.asarray(img)[..., 3] > 0
+        edges = {"top": a[0].sum(), "left": a[:, 0].sum(), "right": a[:, -1].sum()}
+        for side, n in edges.items():
+            if n:
+                print(f"WARN {item}: {n} pixels on the frame's {side} edge, so it's cut off there")
     for line in bad:
         print("FAIL " + line)
     if sheet:
