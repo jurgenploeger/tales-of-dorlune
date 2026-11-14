@@ -353,6 +353,13 @@ final class ContinentScene: SKScene {
                 if follow { air.lighting?.follow(sky.sun) }
             }
         }
+        // The shade under the trees in every land near you, and everyone's shadow, cast away from
+        // the sun over the land you're in (all lands share the clock): midday where it has no sky.
+        if follow {
+            let sun = here.flatMap { airs[$0.id]?.sky?.sun } ?? .noon
+            for id in nearLands { lands[id]?.stage.follow(sun) }
+            if Walker.sun != sun { Walker.shine(sun) }
+        }
     }
 
     override func didMove(to view: SKView) {
@@ -448,11 +455,12 @@ final class ContinentScene: SKScene {
         if following { player.path = [] }
         let pushed = stick.length > 0.15 && !following && !isInputLocked
         // Held two seconds, the stick breaks the hero into a run (`InputState.pace`).
-        let pace = input.pace(dt: dt, pushed: pushed)
+        let pace = input.pace(dt: dt, pushed: pushed, canRun: session.data.hero.mp > 0)
         player.pace = pace
         if isInputLocked {
             player.setWalking(false)
         } else if pushed {
+            if input.spendRunning(pace: pace, dt: dt, session: session) { player.say(L("Out of MP: too tired to run.")) }
             player.path = []
             talkTarget = nil
             let step = stick * (walkSpeed * pace * CGFloat(dt))

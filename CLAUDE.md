@@ -78,6 +78,13 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   you stand each step; cave scenery, its lit copies made the first time the light reaches it. Not the
   rock's blocks: lit one by one, every seam between them glowed and their light fell on whoever stood
   behind them).
+- Shade under the trees (`CanopyShade`, the user's pick from `tools/canopy_preview.py`, 2026-11-14): on the
+  continent each flat-ground prop with `shadow` lays its own outline on the ground away from the sun, a round
+  slice per row of it, the top of the crown farthest (short at midday, long at evening), all merged into one
+  in hard steps (core, a one-pixel rim, flecks of light where the leaves part) and multiplied over the ground
+  as the night's shade is; drawn a `LandStage` chunk at a time while shown, again as the sun moves (`follow`,
+  every half second from `ContinentScene.updateAir`, which casts walkers' shadows too: `Walker.shine`). On a
+  hill or the sunk shore, and in caves, a prop keeps its round `Lighting.Shadow`. Keep the tool and the Swift in step.
 - `content/*.json`: all game data (maps, monsters, skills, items, quests, music, looks, crowd, announcements, the chat's
   filter (`moderation.json`, `ChatFilter`: what you type is starred out where it matches), titles,
   rewards: the daily gift, bounties, Monster Book milestones, monster cards, the weaver's status capes and the
