@@ -850,6 +850,12 @@ not forty tufts; the gold hoard a big bright mound with coin discs, gems and gli
 A-frame with a bright front, a dark doorway and a torn side; the lost pile a sack standing up, tied,
 with the sword leaning on it. Judged in the next blind round.
 
+**No spot in the middle of a clump (2026-11-14).** A small paler disc on each round clump of leaves (the
+`puffs` sheen) read as a dot, a nipple, in the middle of each ball (the user, on the red maple), and
+harsh when paler than a step off the lit clump. A rounder dome of light on the clump itself (`bulge`)
+lights it from its top left with no spot; where a sheen is wanted, keep it broad and at the rim, never
+a dot inside.
+
 - **2026-11-02 (roofs and pillars):** "Roof should still have basic geometry, same for pillars" (the
   user): the bend is for walls and stone. Roofs, spires, domes, cornices, columns and pilasters keep to
   the ruler (`Build.ruled()`, and `@ruled` on `gable`, `gable_roof`, `eaves_roof`, `dome`,

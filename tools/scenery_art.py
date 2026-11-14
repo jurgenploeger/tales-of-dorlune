@@ -252,13 +252,15 @@ def maple():
     s = scene()
     bark = Material("#5e3e30", texture=0.07)
     # Its own warm ramp, as RD's lights lean to yellow (rule 3): an orange-red lit side, crimson in the
-    # middle, a deep wine shade; through shade_of the light went pale pink.
-    leaves = [Material(c, texture=0.03, shades=6, variety=1.5) for c in ("#ee5e30", "#cc3428", "#93202c", "#f2703a")]
+    # middle, a deep wine shade; through shade_of the light went pale pink. No sheen patch: on each
+    # clump it read as a dot in the middle of a ball (the user, 2026-11-14); a rounder dome of light
+    # (`bulge`) lights each one from its top left instead.
+    leaves = [Material(c, texture=0.03, shades=6, variety=1.5) for c in ("#f26a34", "#cc3428", "#93202c")]
     trunk(s, 32, 60, 40, 7, bark, roots=3)
     branch(s, [(32, 44), (20, 34)], 3.2, bark)
     branch(s, [(32, 44), (45, 34)], 3.2, bark)
     crown = len(s.shapes)
-    puffs(s, 32, 23, 16, 13, leaves, 11, 9.5, 36, flat=0.95, bulge=3.2, sheen=0.28, lean=(1.5, 0.35))
+    puffs(s, 32, 23, 16, 13, leaves, 11, 9.5, 36, flat=0.95, bulge=4.5, lean=(1.5, 0.35))
     centred(s, crown, 32)
     lower(s, crown, 4)
     return s
