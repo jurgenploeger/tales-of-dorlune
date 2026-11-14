@@ -47,17 +47,25 @@ def foliage(hexcode, texture=0.03):
     return [Material(shade_of(hexcode, k), texture=texture, shades=6, variety=1.5) for k in (1.2, 1.0, 0.78, 1.42)]
 
 
-def puffs(s, cx, cy, rx, ry, mats, count, size, seed, flat=1.0, skip=None, bulge=3.0, sheen=0.42, lean=(1.0, 1.0)):
+# How much rounder a cluster's dome of light is with no sheen patch on it (puffs).
+ROUNDER = 1.45
+
+
+def puffs(s, cx, cy, rx, ry, mats, count, size, seed, flat=1.0, skip=None, bulge=3.0, sheen=0.0, lean=(1.0, 1.0)):
     """A canopy as RD paints one: clusters of leaves, each a small dome lit on its own, scattered over an
     ellipse from the back (top) to the front (bottom), so each lower cluster overlaps the one behind it
     and casts its shadow on it. Clusters toward the canopy's lower right take its shadow material
     (`mats`: light, middle, shadow, sheen; foliage()); a cluster in the light gets a paler patch toward
-    its top left, as RD's do (`sheen`, its size against the cluster's). `flat` squashes the clusters;
+    its top left (`sheen`, its size against the cluster's; none by default: on every tree and bush it
+    read as a dot in the middle of each ball, the user, 2026-11-14), so with none each cluster's own
+    dome of light is made rounder (`bulge`, half again) to light it from its top left instead. `flat` squashes the clusters;
     `skip(x, y)` leaves a gap. `lean` weighs across and down in which clusters fall in shade: (1, 1) the
     lower right, more across than down to keep a crown's front clumps lit as RD's tree does."""
     # On a jittered grid a cluster apart, so the crown is full and even, never lopsided; at most `count`,
     # the nearest the middle.
     r = rng(seed)
+    if sheen <= 0:
+        bulge *= ROUNDER
     step = size * 1.1
     spots = []
     for j, gy in enumerate(np.arange(cy - ry, cy + ry + 0.01, step * 0.8 * flat)):
@@ -75,7 +83,7 @@ def puffs(s, cx, cy, rx, ry, mats, count, size, seed, flat=1.0, skip=None, bulge
         side = (lean[0] * (x - cx) / max(1, rx) + lean[1] * (y - cy) / max(1, ry)) / 2
         mat = mats[0] if side < -0.2 else mats[2] if side > 0.3 else mats[1]
         s.ellipse(x, y, size * k, size * k * 0.82 * flat, mat, bulge=bulge)
-        if side < 0.3 and len(mats) > 3:
+        if sheen > 0 and side < 0.3 and len(mats) > 3:
             rr = size * k * sheen
             s.ellipse(x - rr * 0.7, y - rr * 0.7 * flat, rr, rr * 0.8 * flat, mats[3], profile="flat")
     return s
@@ -260,7 +268,7 @@ def maple():
     branch(s, [(32, 44), (20, 34)], 3.2, bark)
     branch(s, [(32, 44), (45, 34)], 3.2, bark)
     crown = len(s.shapes)
-    puffs(s, 32, 23, 16, 13, leaves, 11, 9.5, 36, flat=0.95, bulge=4.5, lean=(1.5, 0.35))
+    puffs(s, 32, 23, 16, 13, leaves, 11, 9.5, 36, flat=0.95, bulge=3.1, lean=(1.5, 0.35))
     centred(s, crown, 32)
     lower(s, crown, 4)
     return s
