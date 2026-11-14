@@ -389,6 +389,8 @@ class Sprite:
                     best = vals2[np.argmax(counts2)]
                 idx[ty, tx] = best
                 val[ty, tx] = light[ty * SS:(ty + 1) * SS, tx * SS:(tx + 1) * SS][block == best].mean()
+        # Which shape shows at each pixel, for a caller painting over one shape only (building_art's panes).
+        self.shown = idx
         # Clean edges (the guides' "jaggies"): shrinking leaves one-pixel notches in straight edges and
         # one-pixel spurs on them. A gap with three or four of its neighbours filled is filled from them;
         # a pixel with one neighbour or none, sticking out of an edge, goes.
