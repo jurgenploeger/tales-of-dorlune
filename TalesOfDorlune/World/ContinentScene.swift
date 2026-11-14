@@ -448,11 +448,12 @@ final class ContinentScene: SKScene {
         if following { player.path = [] }
         let pushed = stick.length > 0.15 && !following && !isInputLocked
         // Held two seconds, the stick breaks the hero into a run (`InputState.pace`).
-        let pace = input.pace(dt: dt, pushed: pushed)
+        let pace = input.pace(dt: dt, pushed: pushed, canRun: session.data.hero.mp > 0)
         player.pace = pace
         if isInputLocked {
             player.setWalking(false)
         } else if pushed {
+            if input.spendRunning(pace: pace, dt: dt, session: session) { player.say(L("Out of MP: too tired to run.")) }
             player.path = []
             talkTarget = nil
             let step = stick * (walkSpeed * pace * CGFloat(dt))

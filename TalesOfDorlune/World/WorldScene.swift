@@ -12,13 +12,40 @@ final class InputState {
     /// How much faster a run is than a walk, and how long the hero takes to speed up into it.
     static let runPace: CGFloat = 1.6
     static let runEase: TimeInterval = 0.35
+    /// Running costs MP (the user, 2026-11-14: "when you're running, it should use your MP"): this
+    /// share of the hero's max MP a second at a full run, so a full bar lasts about 50 seconds at any
+    /// level. None comes back by itself (potions, a level, a healer, as before); at 0 MP you walk.
+    static let runCost = 0.02
+    /// What running has cost and not been taken yet, as a share of max MP, and how long since MP was
+    /// last taken: in whole points, at most twice a second, so the HUD isn't redrawn every frame.
+    private var owed: Double = 0
+    private var sinceSpent: TimeInterval = 0
 
     /// The hero's pace this frame: 1 walking, rising to `runPace` once the stick has been held
-    /// `runAfter` seconds; back to a walk as soon as it's let go. Call once a frame.
-    func pace(dt: TimeInterval, pushed: Bool) -> CGFloat {
+    /// `runAfter` seconds; back to a walk as soon as it's let go. Call once a frame. `canRun` false
+    /// (no MP left) keeps it to a walk, held at the edge of a run, so a potion has you running again.
+    func pace(dt: TimeInterval, pushed: Bool, canRun: Bool = true) -> CGFloat {
         heldFor = pushed ? heldFor + dt : 0
+        if !canRun { heldFor = min(heldFor, Self.runAfter) }
         let into = min(1, max(0, (heldFor - Self.runAfter) / Self.runEase))
         return 1 + (Self.runPace - 1) * CGFloat(into)
+    }
+
+    /// Takes what running at `pace` for `dt` has cost (`runCost`) from the hero's MP. True when
+    /// that has just taken the last of it.
+    func spendRunning(pace: CGFloat, dt: TimeInterval, session: GameSession) -> Bool {
+        guard pace > 1 else { return false }
+        owed += Self.runCost * Double((pace - 1) / (Self.runPace - 1)) * dt
+        sinceSpent += dt
+        guard sinceSpent >= 0.5 else { return false }
+        sinceSpent = 0
+        let maximum = session.heroStats.mp
+        let whole = Int(owed * Double(maximum))
+        guard whole > 0 else { return false }
+        owed -= Double(whole) / Double(maximum)
+        let before = session.data.hero.mp
+        session.data.hero.mp = max(0, before - whole)
+        return before > 0 && session.data.hero.mp == 0
     }
 }
 
@@ -2550,9 +2577,10 @@ final class WorldScene: SKScene {
         let following = session.joinedParty != nil
         if following { player.path = [] }
         let pushed = stick.length > 0.15 && !following
-        let pace = input.pace(dt: dt, pushed: pushed)
+        let pace = input.pace(dt: dt, pushed: pushed, canRun: session.data.hero.mp > 0)
         player.pace = pace
         if pushed {
+            if input.spendRunning(pace: pace, dt: dt, session: session) { player.say(L("Out of MP: too tired to run.")) }
             player.path = []
             talkTarget = nil
             let step = stick * (walkSpeed * pace * CGFloat(dt))
