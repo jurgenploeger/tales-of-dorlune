@@ -39,8 +39,12 @@ final class LandStage {
     private var layers: [GridPoint: [CGFloat: SKNode]] = [:]
     private var shownChunks: (low: GridPoint, high: GridPoint)?
     private var feet: [ObjectIdentifier: CGFloat] = [:]
-    /// Shadows cast by its scenery (`Lighting.Shadow`).
+    /// Shadows cast by its scenery on a hill or the sunk shore (`Lighting.Shadow`).
     private var shadows: [Lighting.Shadow] = []
+    /// The shade cast by its scenery on flat ground (`CanopyShade`), away from the sun (`follow`).
+    private lazy var canopy = CanopyShade(size: Self.chunkSize, palette: def.theme.palette) { [unowned self] point in
+        self.layer(at: point)
+    }
     /// The walls along its borders that come down once you can cross (`placeBorders`): the border,
     /// and what's taken away (a gate's bar, or the whole fence).
     private var gates: [(neighbour: Continent.Neighbour, bar: [SKNode])] = []
@@ -159,6 +163,12 @@ final class LandStage {
                              width: screen.width * scale, height: screen.height * scale)
         critters?.update(dt: dt, player: you, visible: visible, flocks: isHere) { [map] in map.isWalkable(map.rawCell(at: $0)) }
         show(around: camera, scale: scale, screen: screen)
+        canopy.draw(budget: 1)
+    }
+
+    /// Lays the shade under its scenery away from `sun` (`CanopyShade.follow`).
+    func follow(_ sun: Sun) {
+        canopy.follow(sun)
     }
 
     /// Its people's quest marks (`!` news, `?` done), opened chests and beaten bosses, and its
@@ -286,6 +296,7 @@ final class LandStage {
         let high = Self.key(local.x + reach.width, local.y + reach.height)
         if let shown = shownChunks, shown.low == low, shown.high == high { return }
         shownChunks = (low, high)
+        canopy.show(low: low, high: high)
         for (spot, node) in chunks {
             let near = spot.col >= low.col && spot.col <= high.col && spot.row >= low.row && spot.row <= high.row
             if near, node.parent == nil {
@@ -706,8 +717,10 @@ final class LandStage {
                 // On the shore, over the sunk ground it stands on (`HillArt.sunkenDepth`).
                 let strip = HillArt.strip(at: -node.zPosition, depth: HillArt.sunkenDepth)
                 shadows.append(Lighting.Shadow(under: node, in: chunk(at: node.position), layers: [(from: strip.start, z: strip.z)]))
+            } else if let texture = node.texture {
+                // On flat ground, the shade under the trees, merged and cast away from the sun.
+                canopy.add(node, picture: art.picture(of: texture))
             } else {
-                // On flat ground, under everything that stands.
                 shadows.append(Lighting.Shadow(under: node, in: layer(at: node.position)))
             }
         }

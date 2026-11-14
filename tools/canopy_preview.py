@@ -13,7 +13,8 @@ the crown's top falling farthest, so it's short at midday and long in the evenin
 shade merged into one (shade doesn't darken twice where two overlap), in hard steps (a core and
 a one-pixel paler rim), the ground under it pulled toward the palette's shadow colour, and flecks
 of light where the leaves part. Only the ground is shaded: walkers and scenery keep their colours,
-so they read as before. Nothing in the game uses this yet.
+so they read as before. The game draws it (`TalesOfDorlune/World/CanopyShade.swift`, on the
+continent's flat ground); keep the two in step.
 """
 import argparse, math
 import numpy as np
@@ -39,6 +40,7 @@ RIM = 0.32      # the one-pixel rim round it
 REACH = 0.55    # how long the shade is next to real geometry (real shadows read far too long at midday)
 LONGEST = 2.2   # at most this many times the sprite's height (the low evening sun)
 FLECKS = 0.035   # the share of the shade where the leaves part
+FLECK_CUT = 0.875  # the noise over which that share lies: fixed, so chunks meet (CanopyShade.fleckCut)
 
 def value_noise(H, W, cell, seed, phase=(0.0, 0.0)):
     rng = np.random.default_rng(seed)
@@ -97,8 +99,7 @@ def canopy(hour, flecks_phase=(0.0, 0.0)):
         inner = core.copy()
         for dx, dy in ((4, 0), (-4, 0), (0, 3), (0, -3)):
             inner &= np.roll(np.roll(core, dy, 0), dx, 1)
-        cut = np.quantile(n[inner], 1 - FLECKS) if inner.any() else 2
-        fleck = inner & (n > cut)
+        fleck = inner & (n > FLECK_CUT)
         rim = np.zeros_like(core)
         for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
             rim |= np.roll(np.roll(core, dy, 0), dx, 1)

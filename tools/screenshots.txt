@@ -963,3 +963,8 @@ fairy_ring_downs_eve | newgame,level=12,map=northern_grassland,ring=0,weather=cl
 # (playtesting 2026-11-11: "The land in briarmere looks glitched").
 briarmere_border | newgame,level=150,map=rosen_lake,border=moonglow,weather=clear,hour=12 | 8
 briarmere_shrine | newgame,level=150,map=rosen_lake,border=water_temple,weather=clear,hour=12 | 8
+# The shade under the trees (`CanopyShade`, 2026-11-14): short at midday, stretched long at evening,
+# merged into one under the woods with flecks of light; the clearing and path in the sun.
+canopy_noon     | newgame,map=snow_white_forest,landscape,weather=clear,hour=12 | 10
+canopy_evening  | newgame,map=snow_white_forest,landscape,weather=clear,hour=17 | 10
+canopy_forest   | newgame,map=smiling_forest,landscape,weather=clear,hour=16 | 10

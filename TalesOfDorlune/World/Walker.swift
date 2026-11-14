@@ -74,6 +74,14 @@ final class Walker: SKNode {
     /// Where the light over the map comes from now, for anyone set down after it last moved
     /// (`WorldScene.follow`).
     static var sun = Sun.noon
+    /// Every walker there is, held weakly, so a new sun reaches them all (`shine`).
+    private static let everyone = NSHashTable<Walker>.weakObjects()
+
+    /// Casts everyone's shadow away from `sun` from now on, and anyone's set down later.
+    static func shine(_ sun: Sun) {
+        self.sun = sun
+        for walker in everyone.allObjects { walker.cast(from: sun) }
+    }
 
     override var position: CGPoint {
         didSet { settle() }
@@ -118,6 +126,7 @@ final class Walker: SKNode {
         shadow.zPosition = -1
         addChild(shadow)
         cast(from: Self.sun)
+        Self.everyone.add(self)
         addChild(turn)
         turn.addChild(sprite)
         // It starts out looking the way its picture does.
