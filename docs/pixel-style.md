@@ -856,6 +856,12 @@ harsh when paler than a step off the lit clump. A rounder dome of light on the c
 lights it from its top left with no spot; where a sheen is wanted, keep it broad and at the rim, never
 a dot inside.
 
+**Bark in broad bands, not streaks (2026-11-14).** `trunk()` ran a near-white and a near-black streak a
+pixel wide the whole height of every trunk, and pale lines along every root: stark vertical lines (the
+user). RD's trunk is a broad lit band down its left, a step darker on its right, a groove or two short
+and soft, a little grain. Bark is smooth now (`texture` at most 0.025), a lit band, a shade band, two
+short soft grooves.
+
 - **2026-11-02 (roofs and pillars):** "Roof should still have basic geometry, same for pillars" (the
   user): the bend is for walls and stone. Roofs, spires, domes, cornices, columns and pilasters keep to
   the ruler (`Build.ruled()`, and `@ruled` on `gable`, `gable_roof`, `eaves_roof`, `dome`,

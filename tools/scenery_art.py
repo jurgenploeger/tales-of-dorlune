@@ -96,6 +96,8 @@ def trunk(s, base_x, base_y, top_y, width, mat, lean=0.0, roots=2):
     that stood out from the land (playtesting 2026-10-23)."""
     w = width
     tx = base_x + lean
+    # Smooth bark, as RD's: its light and shade in broad bands, a little grain, not a speckle.
+    mat = Material(mat.base, shades=mat.shades, texture=min(mat.texture, 0.025), grain=mat.grain, variety=1.5)
 
     def at(t):
         """The trunk's middle and half-width at t (0 at its foot, 1 at its top)."""
@@ -125,12 +127,17 @@ def trunk(s, base_x, base_y, top_y, width, mat, lean=0.0, roots=2):
                profile="flat", tone=0.58 if side < 0 else 0.4)
         s.stroke([(root_x - side * 0.4, start_y), (mid[0] - side * 0.3, mid[1] - 0.5), (tip[0] - side * 0.5, tip[1] - 0.6)],
                  0.8, mat, profile="flat")
-        s.shapes[-1][3]["tone"] = 0.86 if side < 0 else 0.62
-    # Bark: the side away from the light in shadow, streaks of light down the left and middle, grooves.
+        s.shapes[-1][3]["tone"] = 0.64 if side < 0 else 0.54
+    # Bark as RD's: the lit left a broad soft band a step lighter, the side away from the light a step
+    # darker, a groove or two short and soft. Full-length streaks a near-white and a near-black pixel
+    # wide read as stark vertical lines (the user, 2026-11-14).
     shade = [(x + h * 0.35, y) for x, y, h in (at(t) for t in ts)]
-    s.poly(shade + right[::-1], mat, profile="flat", tone=0.28)
-    for off, tone, width_ in ((-0.55, 0.92, 0.9), (-0.1, 0.72, 0.8), (0.3, 0.12, 0.7)):
-        line = [(x + h * off, y) for x, y, h in (at(t) for t in np.linspace(0.04, 0.92, 6))]
+    s.poly(shade + right[::-1], mat, profile="flat", tone=0.3)
+    lit = [(x - h * 0.75, y) for x, y, h in (at(t) for t in ts)]
+    mid = [(x - h * 0.15, y) for x, y, h in (at(t) for t in ts)]
+    s.poly(lit + mid[::-1], mat, profile="flat", tone=0.68)
+    for off, tone, width_, span in ((0.12, 0.42, 0.8, (0.15, 0.55)), (-0.35, 0.44, 0.7, (0.5, 0.85))):
+        line = [(x + h * off, y) for x, y, h in (at(t) for t in np.linspace(*span, 4))]
         s.stroke(line, width_, mat, profile="flat")
         s.shapes[-1][3]["tone"] = tone
     return s
