@@ -185,8 +185,9 @@ def bundles(region, a, d, seed=10):
     return base + strand
 
 
-# Style 2 (2026-11-14, prototyping): the roofs' materials in big rounded parts, not a fine texture.
-STYLE2 = False
+# Style 2 (2026-11-14, every building since; the user: "Apply to all"): the roofs' materials in big rounded parts,
+# not a fine texture, thick eaves, rounded corners, soft glowing grid windows, and `soften` for RD's gentler contrast.
+STYLE2 = True
 CHUNKY = {"thatch": bundles, "tiles": lambda r, a, d: lumps(r, a, d, w=8, h=6, seed=4),
           "slate": lambda r, a, d: lumps(r, a, d, w=10, h=5, seed=6),
           "shingles": lambda r, a, d: shingles(r, a, d, w=12, h=7, seed=8) * 1.2}
