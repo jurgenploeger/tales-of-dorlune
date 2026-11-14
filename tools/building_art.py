@@ -361,7 +361,9 @@ class Build:
 
 # A lit pane's colours, from RD's snow cabin's own windows (sampled 2026-11-14): its frame, the orange rim
 # inside it, a deeper yellow along the lower right, the light warm yellow of the pane.
-PANE = {"frame": (122, 74, 44), "rim": (215, 142, 74), "band": (230, 205, 79), "pane": (247, 243, 144)}
+PANE = {"frame": (122, 74, 44), "rim": (215, 142, 74), "band": (230, 205, 79), "pane": (247, 243, 144),
+        # The glazing bars: a soft warm brown a little under the rim, not the near-black that read harsh.
+        "bar": (184, 112, 58)}
 
 
 def paint_panes(img, panes, shown):
@@ -386,6 +388,15 @@ def paint_panes(img, panes, shown):
         fill(X0 + 1, Y0 + 1, X1 - 1, Y1 - 1, PANE["rim"])
         fill(X0 + 2, Y0 + 2, X1 - 2, Y1 - 2, PANE["band"])
         fill(X0 + 2, Y0 + 2, X1 - 3, Y1 - 3, PANE["pane"])
+        # A grid of bars across the glass (the user, 2026-11-14: "the houses can still have a grid window"),
+        # where there's room: each pane at least two pixels.
+        gx0, gx1, gy0, gy1 = X0 + 2, X1 - 2, Y0 + 2, Y1 - 2
+        if gx1 - gx0 >= 5:
+            mx = (gx0 + gx1) // 2
+            fill(mx, gy0, mx + 1, gy1, PANE["bar"])
+        if gy1 - gy0 >= 5:
+            my = (gy0 + gy1) // 2
+            fill(gx0, my, gx1, my + 1, PANE["bar"])
     return Image.fromarray(a, "RGBA")
 
 
