@@ -1792,46 +1792,10 @@ HAND_DRAWN = ("thatched_cottage", "timber_house", "stone_townhouse", "garden_cot
               "tailor_shop", "flower_shop", "tea_house", "book_shop")
 
 
-def on_ground(draw):
-    """`draw` standing on a patch of ground, as RD's buildings do (`grounds`: grass a little wider than
-    its walls, tufts and stones round it, a path from its door) with its shadow on it (`ground_shadow`),
-    unless it lays its own. Slid under everything it draws. Most of ours stood straight on the field and
-    lost blind to RD's (2026-11-14, docs/pixel-style.md Learned)."""
-    def drawn(b):
-        draw(b)
-        if b.has_ground or not b.s.shapes:
-            return
-        if b.walls:
-            x0, x1 = min(w[0] for w in b.walls), max(w[1] for w in b.walls)
-            top = min(w[2] for w in b.walls)
-        else:
-            # Drawn without `box` (a round cottage, a teapot, a yurt): its own width, back in the drawing's
-            # coordinates, a little in from what sticks out.
-            left, top_px, right, _ = b.extent()
-            back = lambda v: b.cx + (v - b.size / 2) / b.k
-            # grounds() spreads 9 pixels past what it's given each side: kept inside the drawing's own
-            # width, so it doesn't make the drawing wider and fit() shrink it (the tents came out small).
-            x0, x1 = back(left) + 9, back(right) - 12          # grounds() also shifts 3 right
-            top = GROUND + (top_px - b.foot) / b.k
-        n = len(b.s.shapes)
-        # Textured, so it reads as grass, not a flat disc (a flat one failed the teapot house's `flat` band).
-        grounds(b, x0 - 2, x1 + 2, path=b.doors[0] if b.doors else None, deep=7.0, grass=0.5)
-        if b.walls:
-            # Its shadow on the patch, down and to the right; not for one drawn without walls, whose
-            # width is already its own (a tent's poles): the shadow ran past the frame and fit() shrank it.
-            ground_shadow(b, x0, x1, GROUND - top)
-        patch = b.s.shapes[n:]
-        del b.s.shapes[n:]
-        b.s.shapes[:0] = patch
-    return drawn
-
-
 def fit(draw, width=76, height=76):
     """`draw` (a function of a Build) redrawn scaled about its foot so it fills `width` × `height` of the
-    frame, centred, as RD's buildings fill theirs (about 70 to 80 pixels each way), on its ground
-    (`on_ground`)."""
+    frame, centred, as RD's buildings fill theirs (about 70 to 80 pixels each way)."""
     organic, size, wave = getattr(draw, "organic", 0.0), getattr(draw, "size", SIZE), getattr(draw, "wave", 1.0)
-    draw = on_ground(draw)
     first = Build(organic=organic, wave=wave)
     draw(first)
     left, top, right, bottom = first.extent()
