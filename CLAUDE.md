@@ -63,6 +63,12 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   (`WorldOverview.isHeld`). You walk anywhere with no loading card; the land you're in
   (`here`) brings its music, air and encounters. Caves are scenes of their own (`WorldScene`), behind the card;
   `GameCoordinator.mapScene` is whichever you're in.
+- How a blow lands in battle (`BattleScene.impact`, after SpriteCook's hit feel article): attacker and
+  target stand still 5 frames (9 on a killing blow, `hitStop`: the two nodes paused, the stage plays
+  on), the target white for 2 (`whiteFlash`, a shader: a tint can't light a dark outline), then pushed
+  away and back in whole points (`knockback`) as its red tint plays; a critical or a killing blow
+  shakes the field in whole points (`shake`, not with Reduce Motion). docs/pixel-style.md *Effects on
+  the pixel grid*.
 - `content/*.json`: all game data (maps, monsters, skills, items, quests, music, looks, crowd, announcements, the chat's
   filter (`moderation.json`, `ChatFilter`: what you type is starred out where it matches), titles,
   rewards: the daily gift, bounties, Monster Book milestones, monster cards, the weaver's status capes and the

@@ -779,7 +779,7 @@ final class BattleScene: SKScene {
             if fighter?.raceID == "elf", let target {
                 SkillEffects.burst(at: target.center, color: UIColor(red: 0.55, green: 0.95, blue: 0.45, alpha: 1), count: 8, speed: 55, in: self.stage)
             }
-            self.impact(hit, heal: false)
+            self.impact(hit, heal: false, from: actorID)
         }
         switch fighter?.classID ?? "" {
         case "mage":
@@ -1249,12 +1249,25 @@ final class BattleScene: SKScene {
         for hit in hits { impact(hit, heal: heal) }
     }
 
-    private func impact(_ hit: Hit, heal: Bool) {
+    /// A blow lands (after SpriteCook's hit feel article, docs/spritecook-notes.md): whoever struck it
+    /// (`attacker`, a plain attack's) and whoever took it stand still a moment (`hitStop`), longer on a
+    /// killing blow, while the target flashes white and the burst, the number and the shake run on;
+    /// then it's knocked back and the red tint plays. A critical or a killing blow shakes the field.
+    private func impact(_ hit: Hit, heal: Bool, from attacker: Int? = nil) {
         guard let target = actors[hit.target] else { return }
         if heal {
             SkillEffects.sparkles(on: target, color: SkillEffects.healGreen, level: 2, in: stage)
             Effects.damageBurst("+\(hit.amount)", style: .heal, at: target.top, in: stage)
             return
+        }
+        // The blow has been applied (`controller.apply`) before it's shown, so a target out of HP fell to it.
+        let kill = controller.combatants.first(where: { $0.id == hit.target })?.isAlive == false
+        hitStop([hit.target] + (attacker.map { [$0] } ?? []), frames: kill ? 9 : 5)
+        flashWhite(target)
+        if kill {
+            shake(strength: 4)
+        } else if hit.critical {
+            shake(strength: 3)
         }
         if let flare = flareLight {
             SkillEffects.impactFlare(on: target, color: flare.color, level: flare.level, in: stage)
@@ -1265,16 +1278,100 @@ final class BattleScene: SKScene {
         } else if hit.effectiveness < 1 {
             Effects.floatingText(L("Resisted"), color: UIColor(white: 0.85, alpha: 1), at: target.top + CGVector(dx: 0, dy: 22), in: stage, size: 11)
         }
+        // On the target, so both wait out the hit stop: the red tint, and the push away from the blow.
         target.sprite.flash(.red)
-        target.run(.sequence([.moveBy(x: 6, y: 0, duration: 0.04), .moveBy(x: -12, y: 0, duration: 0.06), .moveBy(x: 6, y: 0, duration: 0.04)]))
+        target.run(Self.knockback(away(target, from: attacker), distance: 5 * (target.isBoss ? 3 : 2)))
     }
 
+    /// How many hit stops each fighter is held by (two blows can land inside one).
+    private var stopped: [Int: Int] = [:]
+
+    /// Hit stop: these fighters stand still for `frames` (at 60 a second, on the field's pace), their
+    /// own actions paused (a lunge, the idle motion, the red tint), while everything on the stage
+    /// plays on. Only they stop: a stop of everything reads as the game catching its breath.
+    private func hitStop(_ ids: [Int], frames: Int) {
+        let held = Array(Set(ids)).filter { actors[$0] != nil }
+        guard !held.isEmpty else { return }
+        for id in held {
+            stopped[id, default: 0] += 1
+            actors[id]?.isPaused = true
+        }
+        run(.sequence([.wait(forDuration: Double(frames) / 60), .run { [weak self] in self?.release(held) }]))
+    }
+
+    private func release(_ ids: [Int]) {
+        for id in ids {
+            let left = (stopped[id] ?? 1) - 1
+            stopped[id] = left > 0 ? left : nil
+            if left <= 0 { actors[id]?.isPaused = false }
+        }
+    }
+
+    /// Every pixel of a sprite white, its shape kept (the texture is premultiplied, so white is its
+    /// alpha): a tint multiplies, and the dark outline would stay dark.
+    private static let whiteFlash = SKShader(source: """
+    void main() {
+        vec4 colour = texture2D(u_texture, v_tex_coord);
+        gl_FragColor = vec4(colour.a, colour.a, colour.a, colour.a) * v_color_mix.a;
+    }
+    """)
+
+    /// The target white for two frames as the blow lands, through the hit stop (the scene times it).
+    private func flashWhite(_ target: BattleActor) {
+        target.sprite.shader = Self.whiteFlash
+        run(.sequence([.wait(forDuration: 2.0 / 60), .run { [weak target] in target?.sprite.shader = nil }]),
+            withKey: "white\(target.fighterID)")
+    }
+
+    /// Which way a blow pushes its target: away from whoever struck it, else from the other side.
+    private func away(_ target: BattleActor, from attacker: Int?) -> CGVector {
+        var source: CGPoint
+        if let attacker, attacker != target.fighterID, let striker = actors[attacker] {
+            source = striker.home
+        } else {
+            let side = controller.combatants.first(where: { $0.id == target.fighterID })?.side
+            let others = controller.combatants.filter { $0.side != side }.compactMap { actors[$0.id]?.home }
+            guard !others.isEmpty else { return CGVector(dx: 1, dy: 0) }
+            source = .zero
+            for point in others {
+                source.x += point.x / CGFloat(others.count)
+                source.y += point.y / CGFloat(others.count)
+            }
+        }
+        let direction = target.home - source
+        return direction.length > 0 ? direction.normalized : CGVector(dx: 1, dy: 0)
+    }
+
+    /// Knocked back: `distance` points along `direction` over 8 frames, fast at first (a cubic
+    /// ease-out), and home again over 10, a frame at a time in whole points so the pixels don't
+    /// shimmer. It ends exactly where it began.
+    private static func knockback(_ direction: CGVector, distance: CGFloat) -> SKAction {
+        let out = CGVector(dx: (direction.dx * distance).rounded(), dy: (direction.dy * distance).rounded())
+        func steps(_ count: Int, from: CGVector, to: CGVector, _ ease: (Double) -> Double) -> [SKAction] {
+            var moves: [SKAction] = []
+            var done = from
+            for step in 1...count {
+                let k = CGFloat(ease(Double(step) / Double(count)))
+                let goal = CGVector(dx: (from.dx + (to.dx - from.dx) * k).rounded(), dy: (from.dy + (to.dy - from.dy) * k).rounded())
+                moves.append(.moveBy(x: goal.dx - done.dx, y: goal.dy - done.dy, duration: 1.0 / 60))
+                done = goal
+            }
+            return moves
+        }
+        let push = steps(8, from: .zero, to: out) { 1 - pow(1 - $0, 3) }
+        let back = steps(10, from: out, to: .zero) { $0 * $0 * (3 - 2 * $0) }
+        return .sequence(push + back)
+    }
+
+    /// The field shakes side to side in whole points, smaller each time, and ends where it was.
+    /// Not with Reduce Motion on.
     private func shake(strength: CGFloat) {
+        guard !UIAccessibility.isReduceMotionEnabled else { return }
         stage.removeAction(forKey: "shake")
         stage.position = .zero
         var moves: [SKAction] = []
         for index in 0..<6 {
-            let amount = strength * CGFloat(6 - index) / 6
+            let amount = (strength * CGFloat(6 - index) / 6).rounded()
             moves.append(.moveTo(x: index % 2 == 0 ? amount : -amount, duration: 0.035))
         }
         moves.append(.moveTo(x: 0, duration: 0.03))
