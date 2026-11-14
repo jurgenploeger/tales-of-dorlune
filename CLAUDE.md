@@ -69,6 +69,11 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   away and back in whole points (`knockback`) as its red tint plays; a critical or a killing blow
   shakes the field in whole points (`shake`, not with Reduce Motion). docs/pixel-style.md *Effects on
   the pixel grid*.
+- A cave's light stops at its rock (`WorldScene.castLight`, after SpriteCook's shadowcasting
+  article): `Shadowcast.visible` (recursive shadowcasting on the cave's cells, recast as you step into
+  another cell) says which cells round you the light sees; `Lantern.shade` lays soft dark over the rest
+  inside its circle, and the cave's map fills in only with what it saw. `tools/shadowcast.py` mirrors
+  it with the article's tests; keep the two in step.
 - `content/*.json`: all game data (maps, monsters, skills, items, quests, music, looks, crowd, announcements, the chat's
   filter (`moderation.json`, `ChatFilter`: what you type is starred out where it matches), titles,
   rewards: the daily gift, bounties, Monster Book milestones, monster cards, the weaver's status capes and the

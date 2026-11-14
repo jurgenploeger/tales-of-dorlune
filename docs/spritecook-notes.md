@@ -625,7 +625,22 @@ Beginner walkthrough with placeholder rectangles first, art later. Nothing to do
 
 ## Proposals
 
-Nothing below is built. Each waits for the user's yes.
+The user picked (2026-11-14): features 1 to 4, all four rules and the outline-gap report, and not
+the silhouette (7). Built the same day, on this branch, none of it compiled or seen in the game yet:
+
+- **Rules:** *Effects on the pixel grid* and *Ground versions differ at their edges* in
+  docs/pixel-style.md, *One art pixel, one size* in docs/sprite-acceptance.md, *Still air is still* in
+  the idle-animation skill; `sprite_check.py` warns of a scaled-up PNG and reports light pixels in a
+  dark outline (`gaps OUT ID` shows them).
+- **1, hit feel:** `BattleScene.impact` (hit stop, white flash by shader, eased knockback in whole
+  points, whole-point shake on criticals and kills, off under Reduce Motion).
+- **2, Wang ground:** `ArtLibrary.wangTile`, `GroundTiles.wang`, `tools/wang_art.py` (its `check`
+  passes on every ground; repetition at one tile drops from about 0.65 to 0.33), `palette_preview.py`.
+- **3, pixel scale audit:** `tools/pixel_scale.py` (findings above). The pinch zoom is unchanged.
+- **4, cave light:** `Shadowcast.swift`, `Lantern.shade`, `WorldScene.castLight`; `tools/shadowcast.py`
+  passes the article's tests. No hard bands: the lantern keeps its soft edge.
+
+The original proposals follow as written.
 
 ### Rules to write down
 
