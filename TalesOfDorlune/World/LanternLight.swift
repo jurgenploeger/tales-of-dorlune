@@ -1,7 +1,8 @@
 import SpriteKit
 
 /// Your lantern's light on what stands round you in a cave (`WorldScene`): the side of a rock, a
-/// crystal, a crate or a block of the cave's wall turned toward you catches it, the far side stays in
+/// crystal or a crate turned toward you catches it (not the cave's own rock: lit block by block, every
+/// seam between its blocks glowed), the far side stays in
 /// the dark, as the street lamps light a town at night (`LampLight`, after SpriteCook's normal-map
 /// article: which way each pixel faces, from the sprite's outline alone, lit in three hard steps).
 /// The lamps stand still and are worked out once; your light moves, so each time you step into
@@ -11,8 +12,7 @@ import SpriteKit
 final class LanternLight {
     private final class Thing {
         weak var node: SKSpriteNode?
-        /// Made the first time the light reaches it, so a cave's thousands of rock blocks cost nothing
-        /// till you come near.
+        /// Made the first time the light reaches it, so what's far off costs nothing till you come near.
         var copy: SKSpriteNode?
         let key: String
         let cell: GridPoint

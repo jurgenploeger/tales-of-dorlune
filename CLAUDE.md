@@ -75,8 +75,9 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   inside its circle, and the cave's map fills in only with what it saw. `tools/shadowcast.py` mirrors
   it with the article's tests; keep the two in step. What it sees also catches the light on its side
   toward you (`LanternLight`: the street lamps' outline normals, `LampLight.copy`, re-aimed from where
-  you stand each step; cave scenery and the rock's blocks, `CaveWalls.blocks`, their lit copies made
-  the first time the light reaches them).
+  you stand each step; cave scenery, its lit copies made the first time the light reaches it. Not the
+  rock's blocks: lit one by one, every seam between them glowed and their light fell on whoever stood
+  behind them).
 - `content/*.json`: all game data (maps, monsters, skills, items, quests, music, looks, crowd, announcements, the chat's
   filter (`moderation.json`, `ChatFilter`: what you type is starred out where it matches), titles,
   rewards: the daily gift, bounties, Monster Book milestones, monster cards, the weaver's status capes and the

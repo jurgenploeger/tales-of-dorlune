@@ -263,13 +263,9 @@ final class WorldScene: SKScene {
         await reached(0.45, progress)
         if let cave = def.theme.cave {
             caveWalls = CaveWalls(map: map, cave: cave, world: world, art: art, margin: Self.surroundingsMargin)
-            // The rock's faces turned toward you catch your light too.
-            if let walls = caveWalls, let lanternLight {
-                for block in walls.blocks {
-                    guard let texture = block.node.texture else { continue }
-                    lanternLight.add(block.node, key: "wall\(ObjectIdentifier(texture).hashValue)", cell: block.cell) { texture.cgImage() }
-                }
-            }
+            // Not the rock's blocks: lit one by one from their outlines, every seam between two blocks
+            // glowed in a grid over the rock, and their light fell on whoever stood behind them
+            // (Screenshots, 2026-11-14). The rock is shaded as it's drawn (`CaveWalls`).
             await reached(0.55, progress)
         } else if !map.crags.isEmpty {
             placeCrags()
