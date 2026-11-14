@@ -11,6 +11,9 @@ import SpriteKit
 /// flat raised layer underneath. Walls stay solid: whoever walks behind one is hidden, and their
 /// name tag shows where they are.
 final class CaveWalls {
+    /// Every block of rock drawn and the cell it stands for, so the lantern can light the faces
+    /// turned toward you (`LanternLight`).
+    private(set) var blocks: [(node: SKSpriteNode, cell: GridPoint)] = []
     /// Faces, edges and soft shadows (in points) around each block's texture.
     private static let pad: CGFloat = 10
     /// The tops of the walls are in shadow, so they stand apart from the lit floor.
@@ -113,6 +116,7 @@ final class CaveWalls {
             node.position = center + CGVector(dx: 0, dy: -half)
             node.zPosition = block.z
             world.addChild(node)
+            blocks.append((node, block.cell))
         }
 
         let squash = SKNode()

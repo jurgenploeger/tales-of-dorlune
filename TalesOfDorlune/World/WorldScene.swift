@@ -79,6 +79,8 @@ final class WorldScene: SKScene {
     private var sky: Sky?
     /// On a dark map (a cave): the light round the hero, and the dark beyond it.
     private var lantern: Lantern?
+    /// On a dark map: your light on the sides of what stands round you (`LanternLight`).
+    private var lanternLight: LanternLight?
     /// The minimap with only what you've seen, and which sighting it was drawn for.
     private var fogged: (version: Int, image: UIImage)?
     /// The minimap with what's round the land (`minimapPicture`), and what it was drawn from.
@@ -247,7 +249,11 @@ final class WorldScene: SKScene {
         lands.addChild(world)
         addChild(cam)
         camera = cam
-        if let darkness = def.ambience?.darkness { lantern = Lantern(darkness, in: world) }
+        if let darkness = def.ambience?.darkness {
+            let made = Lantern(darkness, in: world)
+            lantern = made
+            lanternLight = LanternLight(color: Lighting.rgb(darkness.light) ?? (r: 1, g: 0.85, b: 0.6), reach: made.radius)
+        }
         await reached(0.05, progress)
 
         world.addChild(await makeGround())
@@ -257,6 +263,13 @@ final class WorldScene: SKScene {
         await reached(0.45, progress)
         if let cave = def.theme.cave {
             caveWalls = CaveWalls(map: map, cave: cave, world: world, art: art, margin: Self.surroundingsMargin)
+            // The rock's faces turned toward you catch your light too.
+            if let walls = caveWalls, let lanternLight {
+                for block in walls.blocks {
+                    guard let texture = block.node.texture else { continue }
+                    lanternLight.add(block.node, key: "wall\(ObjectIdentifier(texture).hashValue)", cell: block.cell) { texture.cgImage() }
+                }
+            }
             await reached(0.55, progress)
         } else if !map.crags.isEmpty {
             placeCrags()
@@ -1515,6 +1528,10 @@ final class WorldScene: SKScene {
         chunk(at: node.position).addChild(node)
         focus.add(node)
         see.note(node)
+        if let lanternLight {
+            let texture = sprite.texture, library = art
+            lanternLight.add(node, key: "scenery\(ObjectIdentifier(texture).hashValue)", cell: cell) { library.picture(of: texture) }
+        }
         return node
     }
 
@@ -1706,6 +1723,8 @@ final class WorldScene: SKScene {
         }
         let across = WorldMap.tileSize * CGFloat(2).squareRoot()
         lantern.shade(dark, size: CGSize(width: across, height: across / 2))
+        let seen = lightSeen
+        lanternLight?.shine(from: player.position) { seen.contains($0) }
     }
 
     /// Everyone else on this map, for the minimap: the adventurers walking about, the folk who live
