@@ -4,6 +4,22 @@ import SpriteKit
 final class InputState {
     /// -1...1 on each axis, y up.
     var move: CGVector = .zero
+    /// How long the stick has been held over without a break, for breaking into a run.
+    private var heldFor: TimeInterval = 0
+
+    /// Held this long, the hero breaks into a run.
+    static let runAfter: TimeInterval = 2
+    /// How much faster a run is than a walk, and how long the hero takes to speed up into it.
+    static let runPace: CGFloat = 1.6
+    static let runEase: TimeInterval = 0.35
+
+    /// The hero's pace this frame: 1 walking, rising to `runPace` once the stick has been held
+    /// `runAfter` seconds; back to a walk as soon as it's let go. Call once a frame.
+    func pace(dt: TimeInterval, pushed: Bool) -> CGFloat {
+        heldFor = pushed ? heldFor + dt : 0
+        let into = min(1, max(0, (heldFor - Self.runAfter) / Self.runEase))
+        return 1 + (Self.runPace - 1) * CGFloat(into)
+    }
 }
 
 /// A land's own layer of the scene (`WorldScene.world`). It knows its land, so whoever stands on
@@ -2393,6 +2409,7 @@ final class WorldScene: SKScene {
         lastUpdate = currentTime
 
         if isInputLocked {
+            player.pace = input.pace(dt: dt, pushed: false)
             player.setWalking(false)
         } else {
             movePlayer(dt)
@@ -2486,10 +2503,13 @@ final class WorldScene: SKScene {
         // leave it (the HUD's Leave party).
         let following = session.joinedParty != nil
         if following { player.path = [] }
-        if stick.length > 0.15, !following {
+        let pushed = stick.length > 0.15 && !following
+        let pace = input.pace(dt: dt, pushed: pushed)
+        player.pace = pace
+        if pushed {
             player.path = []
             talkTarget = nil
-            let step = stick * (walkSpeed * CGFloat(dt))
+            let step = stick * (walkSpeed * pace * CGFloat(dt))
             var next = player.position
             // Try each axis separately so you slide along walls instead of sticking.
             let alongX = CGPoint(x: next.x + step.dx, y: next.y)

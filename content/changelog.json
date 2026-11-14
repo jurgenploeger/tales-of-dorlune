@@ -2,14 +2,15 @@
   "_note": "Newest first, one entry per big update with at most five lines that sum it up. The top version must match MARKETING_VERSION in project.yml (tools/check_content.py checks): a small change moves the top entry's version and date along and adds a line only if it's big enough to tell players. 1.0.0 is the App Store release.",
   "releases": [
     {
-      "version": "0.9.86",
-      "date": "2026-11-13",
+      "version": "0.9.88",
+      "date": "2026-11-14",
       "title": "A living world",
       "notes": [
         "Trees and bushes rustle in the wind: a breeze ripples through the woods and gusts bend the treetops.",
         "Waves roll in to the shore over shallows that follow every bay.",
         "At night the street lamps light up the houses round them.",
-        "Items have a rarity, from Uncommon to Legendary, on their slot; a rare find sparkles as it turns up."
+        "Items have a rarity, from Uncommon to Legendary, on their slot; a rare find sparkles as it turns up.",
+        "Hold the joystick for a couple of seconds and you break into a run."
       ]
     },
     {

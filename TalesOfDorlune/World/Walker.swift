@@ -8,6 +8,10 @@ final class Walker: SKNode {
     var walkSpeed: CGFloat = 88
     /// Waypoints still to walk, in world coordinates (tap-to-move).
     var path: [CGPoint] = []
+    /// How fast its legs go: 1 walking, more running (`InputState.pace`).
+    var pace: CGFloat = 1 {
+        didSet { if pace != oldValue { sprite.action(forKey: "walk")?.speed = pace } }
+    }
 
     private(set) var facing: Direction = .down
     private(set) var isWalking = false
@@ -509,6 +513,7 @@ final class Walker: SKNode {
             down.timingMode = .easeIn
             sprite.run(.repeatForever(.sequence([up, down])), withKey: "walk")
         }
+        sprite.action(forKey: "walk")?.speed = pace
     }
 
     /// Standing still: breathing for people, a squish, hop or sway for monsters. A walk sheet

@@ -60,10 +60,16 @@ struct AdventurerCard: View {
                     Button { coordinator.trade(with: adventurer) } label: { word(L("Trade")) }
                         .buttonStyle(PixelButtonStyle(compact: true))
                 }
-                if danger {
+                if danger, session.canChallenge(adventurer) {
                     Button { coordinator.challenge(adventurer) } label: { word(L("Duel")) }
                         .buttonStyle(PixelButtonStyle(tint: Color(red: 1, green: 0.55, blue: 0.5), compact: true))
                 }
+            }
+            // In a party, only whoever leads it takes up a duel, for them all.
+            if danger, !session.canChallenge(adventurer), let leader = session.nearbyLeader {
+                Text(L("To duel this party, challenge its leader, {name}.", ["name": leader.name]))
+                    .font(HUDStyle.font(10)).foregroundStyle(HUDStyle.dim)
+                    .fixedSize(horizontal: false, vertical: true)
             }
             // Anyone can come along, friend or not (playtesting 2026-10-26).
             if !adventurer.hostile, !session.isInParty(adventurer) {

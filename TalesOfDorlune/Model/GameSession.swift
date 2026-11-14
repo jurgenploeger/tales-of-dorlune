@@ -29,6 +29,15 @@ final class GameSession {
     var nearbyGroup: [Adventurer] = []
     /// How many travel together with them, them among them: 1 on their own.
     var nearbyGroupSize: Int { max(1, nearbyGroup.count) }
+    /// Who leads the adventurer you're next to, when they travel with others.
+    var nearbyLeader: Adventurer? { nearbyGroup.count > 1 ? nearbyGroup.first : nil }
+    /// Whether you can challenge `adventurer` to a duel: on their own, or leading their party, and
+    /// then the duel is with the whole party (playtesting 2026-11-14: "You can only challenge the
+    /// leader of another party for a duel").
+    func canChallenge(_ adventurer: Adventurer) -> Bool {
+        guard let leader = nearbyLeader, nearbyGroup.contains(where: { $0.id == adventurer.id }) else { return true }
+        return leader.id == adventurer.id
+    }
     /// The adventurers' party you've joined (`askToJoin`), if any: you follow them about, and they
     /// fight beside you.
     var joinedParty: JoinedParty?
