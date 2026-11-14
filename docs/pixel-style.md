@@ -868,6 +868,16 @@ dark tree on three sides). Each is now drawn with room all round (`Sprite.pad`) 
 frame about its foot, two pixels clear past its outline (`scenery_art.framed`), before it's lit, so
 it stays crisp; the tool fails any drawing that still touches an edge.
 
+**Buildings after round 1 (2026-11-14), in `building_art.py`.** Every building stands on a patch of
+ground with a path to its door and its shadow on it (`on_ground`, slid under what it draws; the ten
+that laid their own keep theirs), as RD's do. The cottages and shops are drawn by hand (`HAND_DRAWN`,
+`by_hand`), not ruler-straight. The tall ones are squatter under bigger roofs: the stone townhouse two
+floors, not three, in warm stone, with a dormer, a flower box and ivy (`ivy`); the armour, tailor and
+book shops shorter with roofs half again taller. Stone warmer throughout. A drawing without `box`
+walls gets a patch inside its own width and no shadow: a shadow past the frame made `fit` shrink the
+tents. Fewer fail the building bands than before (13 of 29, from 17), but the bands don't judge what
+the eye does: the next blind round does.
+
 - **2026-11-02 (roofs and pillars):** "Roof should still have basic geometry, same for pillars" (the
   user): the bend is for walls and stone. Roofs, spires, domes, cornices, columns and pilasters keep to
   the ruler (`Build.ruled()`, and `@ruled` on `gable`, `gable_roof`, `eaves_roof`, `dome`,

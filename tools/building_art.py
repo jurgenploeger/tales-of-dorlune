@@ -201,6 +201,9 @@ class Build:
         self.organic, self.wave = organic, wave
         # Inside `ruled()`, shapes keep to the ruler whatever the bend.
         self.keeps_ruled = False
+        # Its walls' spans, its doors and whether it lays its own ground (`grounds`), for `fit` to give
+        # it a patch of ground if it doesn't.
+        self.walls, self.doors, self.has_ground = [], [], False
 
     def t(self, points, closed=True, straight=False):
         pts = [(self.size / 2 + (x - self.cx) * self.k, self.foot + (y - GROUND) * self.k) for x, y in points]
@@ -317,6 +320,7 @@ def box(b, x0, x1, height, wall, side=None, pattern="plaster", side_pattern=None
     """The walls: a front from x0 to x1, `height` tall, and the right side going back `depth` of a
     wall's depth; `curve` shades the front round (a tower). Returns the wall's top."""
     top = ground - height
+    b.walls.append((x0, x1, top))
     dx, dy = DX * depth, DY * depth
     # The side going back, turned from the light; the front lit from the upper left, both in the roof's
     # shadow under the eaves and the ground's at their foot.
@@ -431,6 +435,7 @@ def door(b, cx, w=10, h=15, colour="#7a4e2e", ground=GROUND, frame="#5a3a24", ar
     """A plank door, arched or square, in a frame, with a step before it; `deep`, set back in the wall,
     the reveal's shadow down its right and under its head."""
     x0, x1, y0 = cx - w / 2, cx + w / 2, ground - h
+    b.doors.append(cx)
     if arched:
         arc = [(cx + (w / 2 + 1.2) * math.cos(a), y0 + w / 2 - (w / 2 + 1.2) * math.sin(a)) for a in np.linspace(0, math.pi, 11)]
         b.poly([(x1 + 1.2, ground)] + arc + [(x0 - 1.2, ground)], frame, texture=0.03)
@@ -488,6 +493,15 @@ def flowers(b, x0, x1, y, colours, seed=1):
     for x in np.arange(x0 + 1, x1, 3.1):
         b.ellipse(x + rng.uniform(-0.6, 0.6), y - 1.5 + rng.uniform(-0.5, 0.5), 1.1, 1.0,
                   colours[int(rng.integers(len(colours)))], profile="flat")
+
+
+def ivy(b, x, y0, y1, lean=1.0, seed=1):
+    """Ivy climbing a wall from its foot (y0) up to y1 near x, in leafy clumps that thin as they climb:
+    one of the small stories RD's houses tell (2026-11-14, docs/pixel-style.md Learned)."""
+    rng = np.random.default_rng(seed)
+    for k, y in enumerate(np.linspace(y0, y1, 7)):
+        r = 2.6 - k * 0.22
+        b.ellipse(x + rng.uniform(-1.2, 1.2) + lean * k * 0.4, y, r, r * 0.85, "#4e8a3a" if k % 2 else "#5aa043")
 
 
 # --------------------------------------------------------------------------------------- the emblems
@@ -553,6 +567,7 @@ def thatched_cottage(b):
     window(b, 55, top + 10, shutters="#5a7ab0", box="#f07aa8")
     window(b, 25.5, top + 10, w=6, shutters="#5a7ab0")
     flowers(b, 44, 50, GROUND - 1, ["#f8d84a", "#f07aa8", "#ffffff"], seed=3)
+    ivy(b, x0 + 1.5, GROUND - 2, top + 6, seed=4)
     return b
 
 
@@ -584,16 +599,19 @@ def timber_house(b):
 
 
 def stone_townhouse(b):
-    x0, x1 = 28, 60
-    top = box(b, x0, x1, 44, "#b8b2aa", pattern="blocks", depth=0.9)
-    eaves_roof(b, x0, x1, top, "#4a5a7a", "slate", rise=16, over=3, depth=0.9, wall="#b8b2aa", wall_pattern="blocks")
-    chimney(b, x0 + 2, top - 6, h=10, colour="#8a7a72")
-    chimney(b, x1 + 4, top - 10, h=9, colour="#8a7a72")
-    for row, y in enumerate((top + 9, top + 23)):
-        window(b, x0 + 8, y, w=7, h=9, frame="#e8e2d8", arched=row == 0)
-        window(b, x1 - 8, y, w=7, h=9, frame="#e8e2d8", arched=row == 0)
-    door(b, (x0 + x1) / 2, w=9, h=14, colour="#2e7a4e", frame="#e8e2d8")
-    b.ellipse((x0 + x1) / 2, GROUND - 17, 1.4, 1.4, "#e8c050", gloss=0.6)          # a lamp over the door
+    # Two floors under a big slate roof, warm stone: three floors under a thin roof read stiff and tall
+    # beside RD's houses (2026-11-14).
+    x0, x1 = 26, 62
+    stone = "#c8b9a2"
+    top = box(b, x0, x1, 32, stone, pattern="blocks", depth=0.9)
+    eaves_roof(b, x0, x1, top, "#4a5a7a", "slate", rise=24, over=4, depth=0.9, wall=stone, wall_pattern="blocks")
+    chimney(b, x1 + 4, top - 14, h=10, colour="#9a8274")
+    window(b, x0 + 8, top + 9, w=7, h=9, frame="#f0e8da", arched=True, box="#f07aa8")
+    window(b, x1 - 8, top + 9, w=7, h=9, frame="#f0e8da", arched=True)
+    window(b, (x0 + x1) / 2, top - 9, w=6, h=6, frame="#f0e8da", arched=True)        # a dormer in the roof
+    door(b, (x0 + x1) / 2, w=10, h=15, colour="#2e7a4e", frame="#f0e8da")
+    b.ellipse((x0 + x1) / 2, GROUND - 18, 1.4, 1.4, "#e8c050", gloss=0.6)          # a lamp over the door
+    ivy(b, x0 + 2, GROUND - 2, top + 4, seed=2)
     return b
 
 
@@ -692,7 +710,7 @@ def shop(b, wall, wall_pattern, roof, roof_pattern, emblem, board="#c8945a", awn
             b.stroke([(x, GROUND - 3), (x, top)], 2.2, frame)
         b.stroke([(x0, top + 1), (x1, top + 1)], 2.2, frame)
         if upper:
-            b.stroke([(x0, GROUND - 24), (x1, GROUND - 24)], 2.2, frame)
+            b.stroke([(x0, top + 13), (x1, top + 13)], 2.2, frame)        # under the upper floor's windows
     if gabled:
         gable(b, x0, x1, top, wall, wall_pattern, rise=rise)
         gable_roof(b, x0, x1, top, roof, roof_pattern, rise=rise)
@@ -734,7 +752,7 @@ def wares(colours, shape="round"):
 
 
 def weapon_shop(b):
-    shop(b, "#c8beb2", "blocks", "#b8423a", "tiles", sword_emblem, board="#d8b070", gabled=True, rise=22,
+    shop(b, "#cfbfa8", "blocks", "#b8423a", "tiles", sword_emblem, board="#d8b070", gabled=True, rise=22,
              display=wares(["#d8dee8", "#c0c8d4", "#d8dee8", "#e0c070"], "blade"))
     # A rack of spears by the door.
     for x in (8, 11, 14):
@@ -745,7 +763,7 @@ def weapon_shop(b):
 
 
 def armour_shop(b):
-    shop(b, "#a8a4a0", "blocks", "#3a5a9a", "slate", shield_emblem, board="#c8945a", height=46, upper=2, rise=14,
+    shop(b, "#c0b2a0", "blocks", "#3a5a9a", "slate", shield_emblem, board="#c8945a", height=34, upper=2, rise=22,
              display=wares(["#7a8aa0", "#b0b8c8", "#7a8aa0"], "round"))
     # A suit of armour on a stand by the door.
     b.stroke([(11, GROUND), (11, GROUND - 6)], 1.4, "#6a4a2e")
@@ -756,7 +774,7 @@ def armour_shop(b):
 
 
 def tailor_shop(b):
-    shop(b, "#eccad8", "plaster", "#9a6ac8", "tiles", thread_emblem, board="#e8d0b0", height=44, upper=3,
+    shop(b, "#eccad8", "plaster", "#9a6ac8", "tiles", thread_emblem, board="#e8d0b0", height=36, upper=2, rise=22,
          frame="#5a3a4a", x0=18, x1=62,
              awning_colours=["#b88ae0", "#f4f0ea"], door_colour="#6a4a8a",
              display=wares(["#e85a7a", "#5a8ae8", "#f8d84a", "#5ab87a"], "tall"))
@@ -798,7 +816,7 @@ def tea_house(b):
 
 def book_shop(b):
     shop(b, "#c8a888", "planks", "#7a4a2e", "slate", book_emblem, board="#e8d8b8", door_colour="#4a3a6a",
-         height=48, upper=2, x0=24, x1=58, rise=20,
+         height=36, upper=1, x0=22, x1=60, rise=24,
              display=wares(["#a83a3a", "#3a6aa8", "#4a8a4a", "#d8a83a", "#7a4aa8", "#a83a3a"], "tall"))
     # A reading bench by the door.
     b.rect(3, GROUND - 6, 17, GROUND - 4, "#8a5a3a", texture=0.03)
@@ -1046,25 +1064,26 @@ def crystal_cottage(b):
 
 
 
-def grounds(b, x0, x1, colour="#6a9a40", stone="#9a948a", path=None, earth="#c8a878", seed=3):
+def grounds(b, x0, x1, colour="#6a9a40", stone="#9a948a", path=None, earth="#c8a878", seed=3, deep=5.0):
     """The patch of ground a building stands on, as RD's do: a rounded spread of ground a little wider than
     its walls, tufts round its edge, a few stones, and a path of trodden earth from its door (`path`, the
     door's x)."""
+    b.has_ground = True
     rng = np.random.default_rng(seed)
     cx, rx = (x0 + x1) / 2 + 3, (x1 - x0) / 2 + 9
-    b.poly([(cx + rx * math.cos(t), GROUND + 1 + 5 * math.sin(t)) for t in np.linspace(0, 2 * math.pi, 28)[:-1]], colour,
+    b.poly([(cx + rx * math.cos(t), GROUND + 1 + deep * math.sin(t)) for t in np.linspace(0, 2 * math.pi, 28)[:-1]], colour,
            texture=0.05, profile="flat", tone=0.55)
     if path is not None:
-        b.poly([(path - 4, GROUND), (path + 4, GROUND), (path + 6, GROUND + 5.5), (path - 6, GROUND + 5.5)], earth,
+        b.poly([(path - 4, GROUND), (path + 4, GROUND), (path + 6, GROUND + deep + 0.5), (path - 6, GROUND + deep + 0.5)], earth,
                texture=0.04, profile="flat", tone=0.6)
     for t in np.linspace(0.15, 2 * math.pi - 0.15, 9):
         if math.sin(t) < -0.2:
             continue
-        x, y = cx + (rx - 1) * math.cos(t), GROUND + 1 + 4.5 * math.sin(t)
+        x, y = cx + (rx - 1) * math.cos(t), GROUND + 1 + (deep - 0.5) * math.sin(t)
         b.stroke([(x, y), (x + rng.uniform(-1, 1), y - rng.uniform(2, 3.5))], 1.0, shade(colour, 0.8))
     for k in range(3):
         t = rng.uniform(0.3, math.pi - 0.3)
-        b.ellipse(cx + (rx - 3) * math.cos(t) * rng.choice([-1, 1]), GROUND + 2 + 2.5 * math.sin(t), 1.6, 1.1, stone)
+        b.ellipse(cx + (rx - 3) * math.cos(t) * rng.choice([-1, 1]), GROUND + 2 + deep / 2 * math.sin(t), 1.6, 1.1, stone)
 
 
 @by_hand
@@ -1768,10 +1787,50 @@ BUILDINGS = {
 }
 
 
+# Drawn by hand (`by_hand`): the cottages and shops, whose walls stood ruler-straight beside RD's.
+HAND_DRAWN = ("thatched_cottage", "timber_house", "stone_townhouse", "garden_cottage", "weapon_shop", "armour_shop",
+              "tailor_shop", "flower_shop", "tea_house", "book_shop")
+
+
+def on_ground(draw):
+    """`draw` standing on a patch of ground, as RD's buildings do (`grounds`: grass a little wider than
+    its walls, tufts and stones round it, a path from its door) with its shadow on it (`ground_shadow`),
+    unless it lays its own. Slid under everything it draws. Most of ours stood straight on the field and
+    lost blind to RD's (2026-11-14, docs/pixel-style.md Learned)."""
+    def drawn(b):
+        draw(b)
+        if b.has_ground or not b.s.shapes:
+            return
+        if b.walls:
+            x0, x1 = min(w[0] for w in b.walls), max(w[1] for w in b.walls)
+            top = min(w[2] for w in b.walls)
+        else:
+            # Drawn without `box` (a round cottage, a teapot, a yurt): its own width, back in the drawing's
+            # coordinates, a little in from what sticks out.
+            left, top_px, right, _ = b.extent()
+            back = lambda v: b.cx + (v - b.size / 2) / b.k
+            # grounds() spreads 9 pixels past what it's given each side: kept inside the drawing's own
+            # width, so it doesn't make the drawing wider and fit() shrink it (the tents came out small).
+            x0, x1 = back(left) + 9, back(right) - 12          # grounds() also shifts 3 right
+            top = GROUND + (top_px - b.foot) / b.k
+        n = len(b.s.shapes)
+        grounds(b, x0 - 2, x1 + 2, path=b.doors[0] if b.doors else None, deep=7.0)
+        if b.walls:
+            # Its shadow on the patch, down and to the right; not for one drawn without walls, whose
+            # width is already its own (a tent's poles): the shadow ran past the frame and fit() shrank it.
+            ground_shadow(b, x0, x1, GROUND - top)
+        patch = b.s.shapes[n:]
+        del b.s.shapes[n:]
+        b.s.shapes[:0] = patch
+    return drawn
+
+
 def fit(draw, width=76, height=76):
     """`draw` (a function of a Build) redrawn scaled about its foot so it fills `width` × `height` of the
-    frame, centred, as RD's buildings fill theirs (about 70 to 80 pixels each way)."""
+    frame, centred, as RD's buildings fill theirs (about 70 to 80 pixels each way), on its ground
+    (`on_ground`)."""
     organic, size, wave = getattr(draw, "organic", 0.0), getattr(draw, "size", SIZE), getattr(draw, "wave", 1.0)
+    draw = on_ground(draw)
     first = Build(organic=organic, wave=wave)
     draw(first)
     left, top, right, bottom = first.extent()
@@ -1788,6 +1847,11 @@ def fit(draw, width=76, height=76):
     b = Build(k, (left + right) / 2, organic, size, wave)
     draw(b)
     return b
+
+
+for _name in HAND_DRAWN:
+    if not getattr(BUILDINGS[_name], "organic", 0.0):
+        by_hand(BUILDINGS[_name])
 
 
 def main(argv):
