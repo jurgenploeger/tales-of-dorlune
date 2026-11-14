@@ -804,6 +804,21 @@ in a loose arc, its end trailing off thin along the bottom; never coiled.
 
 ## Learned
 
+**Buildings lose blind to RD's, 1 of 8 (2026-11-14, `tools/blind_review.py`, the first round).** Side
+by side, what RD's have that ours don't, worst first:
+- *A silhouette of its own.* RD's are a bulging mushroom cap, a crooked wizard's hat, a dome, a windmill's
+  sails: you'd know each from its shadow. Ours are a front-and-side box with a roof on, shop after shop.
+- *Storybook proportions.* RD's are chunky: a big roof (half the height or more), short walls, a door
+  big for the house. Ours are tall and realistic, which reads stiff at 96 pixels.
+- *Small stories.* Vines up a wall, a crooked chimney, a worn step, a lantern, one window unlike the
+  others. Ours repeat one window in a grid, so the eye has nothing to find.
+- *Standing on the ground.* RD's sit on a patch of grass or a path with a soft contact shadow; several
+  of ours float on the field.
+- *Round things lit round.* RD shades a cap or a dome from its lit top-left to its dark foot; we shade
+  flat faces.
+The one that won, the garden cottage, has most of these: a low roof, a fence and flowers, a door path.
+Fix these in `building_art.py` (and `pixel_kit` where it's the kit's) before the next round.
+
 - **2026-11-02 (roofs and pillars):** "Roof should still have basic geometry, same for pillars" (the
   user): the bend is for walls and stone. Roofs, spires, domes, cornices, columns and pilasters keep to
   the ruler (`Build.ruled()`, and `@ruled` on `gable`, `gable_roof`, `eaves_roof`, `dome`,

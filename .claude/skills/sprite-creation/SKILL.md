@@ -192,6 +192,7 @@ Record every round below.
 
 | Date | Kind | Seed | Rows | Code picked or tied | Notes |
 |---|---|---|---|---|---|
+| 2026-11-14 | building | 531819751 | 8 | 1 (12%) | Only the garden cottage won (over the blacksmith's forge). Lost to RD's house, magic tower, mushroom house, bakery, windmill, town gate, adobe house. Answers ran AAAAABBB, so watch for a side habit; 7 to 1 holds anyway. Why: docs/pixel-style.md *Learned*, 2026-11-14. |
 
 ## Improving this skill
 
