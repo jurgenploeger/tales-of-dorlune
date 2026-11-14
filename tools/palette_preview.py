@@ -365,10 +365,11 @@ def focus_blur(s, sy, h, W, H, amb):
     out[..., :3] /= np.maximum(out[..., 3:], 1e-4)
     return out.clip(0, 1), pad, True
 
-def draw_scene(mid, palette, kinds, items, W=420, H=300, seed=3, tint=True, organic=True, light=True, origin=(0, 0), lighting=True, focus=True):
+def draw_scene(mid, palette, kinds, items, W=420, H=300, seed=3, tint=True, organic=True, light=True, origin=(0, 0), lighting=True, focus=True, shade=None):
     """items: (art, col, row, scale). Walkers (walk sheets) keep their colours, lit by the map's light.
     lighting=True adds what Lighting.swift does: ground colour patches, light pools, prop shadows and
-    glows, sunbeams, haze and the sun flare."""
+    glows, sunbeams, haze and the sun flare. shade(img, drawn, props, palette), if given, lays the
+    shadows instead of the round ones (tools/canopy_preview.py)."""
     m = maps[mid]; rng = random.Random(seed); N = len(kinds); Wd = len(kinds[0])
     amb = m.get('ambience') or {}
     props = {p['art']: p for p in m['theme']['props']}
@@ -419,7 +420,9 @@ def draw_scene(mid, palette, kinds, items, W=420, H=300, seed=3, tint=True, orga
             foot = (h - 1 - rows[-1]) / h if len(rows) else 0
         x0 = int(sx - w / 2 + (0 if walker else rng.randint(-7, 7))); y0 = int(sy - h * (0.95 - min(0.45, foot)))
         drawn.append((art, s, x0, y0, w, h, walker, 0))
-    if lighting:
+    if lighting and shade:
+        shade(img, drawn, props, palette)
+    elif lighting:
         for art, s, x0, y0, w, h, walker, _ in drawn:   # shadows lie under everything that stands
             if props.get(art, {}).get('shadow'):
                 sw = w * 0.8
@@ -467,7 +470,7 @@ def draw_scene(mid, palette, kinds, items, W=420, H=300, seed=3, tint=True, orga
             img[..., :3] *= (1 - f)[..., None]
     return Image.fromarray((img[..., :3].clip(0, 1) * 255).astype(np.uint8))
 
-def render(mid, palette, W=420, H=300, seed=3, tint=True, organic=True, light=True, sizes=True):
+def render(mid, palette, W=420, H=300, seed=3, tint=True, organic=True, light=True, sizes=True, shade=None):
     """A small made-up patch of the map: a winding path, an accent patch, a pond, props and the hero."""
     m = maps[mid]; th = m['theme']; rng = random.Random(seed)
     N = 16
@@ -499,7 +502,7 @@ def render(mid, palette, W=420, H=300, seed=3, tint=True, organic=True, light=Tr
         lo, hi = p.get('size', [1, 1]) if sizes else (1, 1)
         items.append((p['art'], c, r, rng.uniform(lo, hi)))
     items.append(('player_walk', N // 2 - 1, N // 2, 1))
-    return draw_scene(mid, palette, kinds, items, W, H, seed, tint, organic, light)
+    return draw_scene(mid, palette, kinds, items, W, H, seed, tint, organic, light, shade=shade)
 
 if __name__ == '__main__':
     import argparse
