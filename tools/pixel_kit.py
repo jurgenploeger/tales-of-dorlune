@@ -164,6 +164,9 @@ def outline_deep(a):
 class Sprite:
     def __init__(self, size=32, height=None):
         self.w, self.h = size, height or size
+        # Room past the frame on every side, in pixels: the canvas is this much bigger all round and a
+        # drawing's coordinates are the frame's, so what overflows it isn't cut off (scenery_art.framed).
+        self.pad = 0
         self.shapes = []         # (mask hi-res bool, material, profile, extra)
         # Shapes stacked on each other cast contact shadows and get a seam where they meet; regions that
         # only touch (a restyled drawing's) don't. Rim light runs round each shape, or the silhouette.
@@ -205,7 +208,7 @@ class Sprite:
 
     def _grid(self):
         ys, xs = np.mgrid[0:self.h * SS, 0:self.w * SS]
-        return (xs + 0.5) / SS, (ys + 0.5) / SS
+        return (xs + 0.5) / SS - self.pad, (ys + 0.5) / SS - self.pad
 
     def snapped(self, cx, cy, rx, ry):
         """An ellipse's centre and radii on the pixel grid, if the sprite snaps (`snap`): a whole number of

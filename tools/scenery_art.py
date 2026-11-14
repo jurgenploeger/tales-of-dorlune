@@ -157,9 +157,66 @@ def centred(s, start, x):
     for mask, *_ in s.shapes[start:]:
         union |= mask
     cols = np.nonzero(union.any(axis=0))[0]
-    dx = round(x - (cols.min() + cols.max() + 1) / 2 / SS)
+    dx = round(x - ((cols.min() + cols.max() + 1) / 2 / SS - s.pad))
     shift(s, start, dx, 0)
     return dx
+
+
+def framed(s, margin=2):
+    """`s` (drawn with room round its frame, `PAD`) fitted into its frame: if it overflows a side or the
+    top, scaled down about its foot, and moved sideways back in if it only leans out, so it keeps a pixel
+    clear all round past its outline (which adds a pixel round each shape), and short enough to stand
+    on the row `grounded` puts its foot on; then the room cut away. Its shapes are scaled before they're lit and drawn, so the
+    pixels stay crisp. Eight trees and bushes ran off their frames and were cut off in the game (the
+    sapling's top by 16 pixels: the user, 2026-11-14)."""
+    p, n = s.pad, s.frame
+    if not p or not s.shapes:
+        return s
+    union = np.zeros_like(s.shapes[0][0])
+    for mask, *_ in s.shapes:
+        union |= mask
+    rows, cols = np.nonzero(union.any(axis=1))[0], np.nonzero(union.any(axis=0))[0]
+    top, bottom = rows.min() / SS - p, (rows.max() + 1) / SS - p
+    left, right = cols.min() / SS - p, (cols.max() + 1) / SS - p
+    ax, ay = (left + right) / 2, bottom
+    ground = 59 if n == 64 else 28
+    k = min(1.0, (n - 2 * margin) / (right - left), (ground - 1 - margin) / max(1e-6, ay - top))   # the outline and rounding take a pixel or two more
+    half = (right - left) * k / 2
+    tx = min(max(ax, margin + half), n - margin - half)
+    if k < 1 or abs(tx - ax) > 1e-6:
+        H, W = s.shapes[0][0].shape
+        ys, xs = np.mgrid[0:H, 0:W]
+        sx = np.floor((ax + ((xs + 0.5) / SS - p - tx) / k + p) * SS).astype(int)
+        sy = np.floor((ay + ((ys + 0.5) / SS - p - ay) / k + p) * SS).astype(int)
+        ok = (sx >= 0) & (sx < W) & (sy >= 0) & (sy < H)
+        sxc, syc = np.clip(sx, 0, W - 1), np.clip(sy, 0, H - 1)
+
+        def moved(a, fill):
+            return np.where(ok, a[syc, sxc], fill)
+        for i, (mask, mat, profile, extra) in enumerate(s.shapes):
+            extra = dict(extra)
+            if "centre" in extra:
+                cx, cy = extra["centre"]
+                extra["centre"] = (tx + (cx - ax) * k, ay + (cy - ay) * k)
+            if extra.get("bulge") is not None:
+                extra["bulge"] = extra["bulge"] * k
+            if extra.get("axis_dist") is not None:
+                extra["axis_dist"] = moved(extra["axis_dist"], np.inf)
+            if extra.get("height") is not None:
+                extra["height"] = moved(extra["height"], 0.0) * k
+            if extra.get("detail") is not None and np.ndim(extra["detail"]) == 2:
+                extra["detail"] = moved(extra["detail"], 0.0)
+            s.shapes[i] = (moved(mask, False), mat, profile, extra)
+    cut = slice(p * SS, (p + n) * SS)
+    for i, (mask, mat, profile, extra) in enumerate(s.shapes):
+        extra = dict(extra)
+        for key in ("axis_dist", "height", "detail"):
+            if extra.get(key) is not None and np.ndim(extra[key]) == 2:
+                extra[key] = extra[key][cut, cut]
+        s.shapes[i] = (mask[cut, cut], mat, profile, extra)
+    s.w = s.h = n
+    s.pad = 0
+    return s
 
 
 def shift(s, start, dx, dy):
@@ -196,10 +253,16 @@ BARK = "#7a5232"                 # RD's own tree trunk, warmer and lighter than 
 SIDE_LIGHT = np.array([-0.45, -0.55, 0.7]) / np.linalg.norm([-0.45, -0.55, 0.7])
 
 
+# Room drawn past each scenery sprite's frame (main sets it), so nothing that overflows is cut off before
+# `framed` fits it in.
+PAD = 0
+
+
 def scene(size=64):
     """A sprite lit as scenery is: from the top left, lower than the icons' light, so each cluster of
     leaves is a ball lit on one side; edges darken only where they turn from it."""
-    s = Sprite(size)
+    s = Sprite(size + 2 * PAD)
+    s.pad, s.frame = PAD, size
     s.light, s.rim = SIDE_LIGHT, "lower"
     s.seams = False         # clusters part by their shadows, not by drawn lines (RD's have none)
     return s
@@ -626,8 +689,11 @@ def main(argv):
     drawings = {**TREES, **BUSHES}
     ids = argv or sorted(drawings)
     out = {}
+    global PAD
     for item in ids:
-        drawn = drawings[item]()
+        PAD = 16
+        drawn = framed(drawings[item]())
+        PAD = 0
         img = grounded(getattr(drawn, "finish", lambda i: i)(drawn.render(outline="tinted")))
         img.save(SPRITES / f"{item}.png")
         out[item] = img
@@ -648,7 +714,7 @@ def main(argv):
         edges = {"top": a[0].sum(), "left": a[:, 0].sum(), "right": a[:, -1].sum()}
         for side, n in edges.items():
             if n:
-                print(f"WARN {item}: {n} pixels on the frame's {side} edge, so it's cut off there")
+                bad.append(f"{item}: {n} pixels on the frame's {side} edge, so it's cut off there (framed should have fitted it)")
     for line in bad:
         print("FAIL " + line)
     if sheet:

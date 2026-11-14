@@ -862,6 +862,12 @@ user). RD's trunk is a broad lit band down its left, a step darker on its right,
 and soft, a little grain. Bark is smooth now (`texture` at most 0.025), a lit band, a shade band, two
 short soft grooves.
 
+**Nothing runs off its frame (2026-11-14).** Eight trees and bushes in `scenery_art.py` were drawn past
+their 32- or 64-pixel frame and cut off in the game (the sapling's top by 16 pixels, the firs' tips, the
+dark tree on three sides). Each is now drawn with room all round (`Sprite.pad`) and fitted into its
+frame about its foot, two pixels clear past its outline (`scenery_art.framed`), before it's lit, so
+it stays crisp; the tool fails any drawing that still touches an edge.
+
 - **2026-11-02 (roofs and pillars):** "Roof should still have basic geometry, same for pillars" (the
   user): the bend is for walls and stone. Roofs, spires, domes, cornices, columns and pilasters keep to
   the ruler (`Build.ruled()`, and `@ruled` on `gable`, `gable_roof`, `eaves_roof`, `dome`,
