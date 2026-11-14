@@ -635,13 +635,15 @@ class Sprite:
 # region's lighting, and the finish that goes with it (gloss, texture). Patterns follow the region:
 # its top, left and long axis.
 
-def soften(img, lift=0.16, gamma=0.88, joint=0.45, line=0.2):
+def soften(img, lift=0.0, gamma=0.8, joint=0.5, line=0.12):
     """The finish RD's buildings and scenery have and ours lacked (2026-11-14, the user: "softer in pixel
     contrast [...] we can still have bright colors"): measured, ours had twice RD's hard steps between
     neighbouring pixels, twice its near-black pixels inside, darker outlines and a darker mean. A line a
     pixel darker than its neighbours by more than `line` (a joint, a seam, mortar, a beam) is drawn
-    `joint` of the way back toward them; then every pixel's value is lifted off the floor (`lift`) and
-    brightened a little (`gamma`), hue and saturation kept, so the darks go deep but not black."""
+    `joint` of the way back toward them; then every pixel's value is brightened (`gamma`), its mids and
+    lights most, hue and saturation kept. Not lifted off the floor (`lift` 0): lifting the darks shrank
+    the light-to-dark range RD keeps (0.55, ours 0.55; lifted, 0.50) and read as washed out (the user,
+    2026-11-14); the big shadows stay deep, only the thin dark lines ease."""
     a = np.asarray(img).astype(float)
     rgb, alpha = a[..., :3] / 255.0, a[..., 3]
     solid = alpha > 0
