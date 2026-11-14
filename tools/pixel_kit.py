@@ -633,6 +633,38 @@ class Sprite:
 # region's lighting, and the finish that goes with it (gloss, texture). Patterns follow the region:
 # its top, left and long axis.
 
+def soften(img, lift=0.16, gamma=0.88, joint=0.45, line=0.2):
+    """The finish RD's buildings and scenery have and ours lacked (2026-11-14, the user: "softer in pixel
+    contrast [...] we can still have bright colors"): measured, ours had twice RD's hard steps between
+    neighbouring pixels, twice its near-black pixels inside, darker outlines and a darker mean. A line a
+    pixel darker than its neighbours by more than `line` (a joint, a seam, mortar, a beam) is drawn
+    `joint` of the way back toward them; then every pixel's value is lifted off the floor (`lift`) and
+    brightened a little (`gamma`), hue and saturation kept, so the darks go deep but not black."""
+    a = np.asarray(img).astype(float)
+    rgb, alpha = a[..., :3] / 255.0, a[..., 3]
+    solid = alpha > 0
+    mx, mn = rgb.max(-1), rgb.min(-1)
+    v = mx
+    s = np.where(mx > 0, (mx - mn) / np.maximum(mx, 1e-9), 0.0)
+    # Hue, kept, as the colour's direction from its grey.
+    grey = rgb - mn[..., None]
+    span = np.maximum(mx - mn, 1e-9)[..., None]
+    hue_dir = grey / span
+    p = np.pad(np.where(solid, v, np.nan), 1, constant_values=np.nan)
+    near = np.stack([p[:-2, 1:-1], p[2:, 1:-1], p[1:-1, :-2], p[1:-1, 2:]])
+    with np.errstate(all="ignore"):
+        mean = np.nan_to_num(np.nanmean(np.where(np.isnan(near), np.nan, near), axis=0) if near.size else v, nan=0.0)
+    count = (~np.isnan(near)).sum(axis=0)
+    inside = solid & (count == 4)
+    dark_line = inside & (mean - v > line)
+    v = np.where(dark_line, v + joint * (mean - v), v)
+    v = lift + (1 - lift) * np.power(np.clip(v, 0, 1), gamma)
+    mn2 = v * (1 - s)
+    out = mn2[..., None] + hue_dir * (v - mn2)[..., None]
+    a[..., :3] = np.where(solid[..., None], np.clip(out, 0, 1) * 255, a[..., :3])
+    return Image.fromarray(np.round(a).astype(np.uint8), "RGBA")
+
+
 def limit_palette(img, n):
     """`img` (PIL RGBA) with at most `n` colours: the two closest (by a rough perceptual distance) merge
     into the commoner of them, over and over, so the colours that stay are ones the sprite already had
