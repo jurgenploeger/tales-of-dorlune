@@ -643,7 +643,9 @@ final class GameCoordinator {
         mapScene.adventurerSays([L("See you around!"), L("Take care out there!"), L("Bye for now!")].randomElement() ?? L("See you around!"), leader.id)
     }
 
+    /// A duel with an adventurer on their own, or with a party through whoever leads it (`GameSession.canChallenge`).
     func challenge(_ adventurer: Adventurer) {
+        guard session.canChallenge(adventurer) else { return }
         mapScene.startDuel(with: adventurer)
     }
 

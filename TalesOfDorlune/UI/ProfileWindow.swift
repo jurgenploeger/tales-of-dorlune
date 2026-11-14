@@ -207,10 +207,16 @@ struct ProfileWindow: View {
                         Button { coordinator.trade(with: person) } label: { word(L("Trade")) }
                             .buttonStyle(PixelButtonStyle(compact: true))
                     }
-                    if danger {
+                    if danger, session.canChallenge(person) {
                         Button { onClose(); coordinator.challenge(person) } label: { word(L("Duel")) }
                             .buttonStyle(PixelButtonStyle(tint: Color(red: 1, green: 0.55, blue: 0.5), compact: true))
                     }
+                }
+                // In a party, only whoever leads it takes up a duel, for them all.
+                if danger, !session.canChallenge(person), let leader = session.nearbyLeader {
+                    Text(L("To duel this party, challenge its leader, {name}.", ["name": leader.name]))
+                        .font(HUDStyle.font(10)).foregroundStyle(HUDStyle.dim)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
                 if !person.hostile, !session.isInParty(person) {
                     if session.partyIsFull {
