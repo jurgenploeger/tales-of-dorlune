@@ -61,6 +61,13 @@ These are the rules the numbers measure. A sprite that keeps them looks like Tal
     instead of it (`light_masses`), and the whole house holds about 18 to 35 colours (`colour_density`
     capped as well as floored): every face its own seven shades made ours a hundred colours of grain.
 
+## The goal: as good as Retro Diffusion (2026-11-14)
+
+The user wants code to draw new pixel art as well as Retro Diffusion does, so new art needn't come from
+it. It's judged blind, kind by kind (`tools/blind_review.py`), and the stages and every round's result
+live in the sprite-creation skill, *Drawing as well as Retro Diffusion*. What a lost round teaches
+goes in *Learned* below.
+
 ## Effects on the pixel grid (2026-11-14)
 
 From SpriteCook's hit feel and pixel-perfect articles (docs/spritecook-notes.md). What moves or flashes
@@ -796,6 +803,83 @@ in a loose arc, its end trailing off thin along the bottom; never coiled.
   5. Animation: walk cycles stay RD's for now (`sprite-acceptance.md`).
 
 ## Learned
+
+**Buildings lose blind to RD's, 1 of 8 (2026-11-14, `tools/blind_review.py`, the first round).** Side
+by side, what RD's have that ours don't, worst first:
+- *A silhouette of its own.* RD's are a bulging mushroom cap, a crooked wizard's hat, a dome, a windmill's
+  sails: you'd know each from its shadow. Ours are a front-and-side box with a roof on, shop after shop.
+- *Storybook proportions.* RD's are chunky: a big roof (half the height or more), short walls, a door
+  big for the house. Ours are tall and realistic, which reads stiff at 96 pixels.
+- *Small stories.* Vines up a wall, a crooked chimney, a worn step, a lantern, one window unlike the
+  others. Ours repeat one window in a grid, so the eye has nothing to find.
+- *Standing on the ground.* RD's sit on a patch of grass or a path with a soft contact shadow; several
+  of ours float on the field.
+- *Round things lit round.* RD shades a cap or a dome from its lit top-left to its dark foot; we shade
+  flat faces.
+The one that won, the garden cottage, has most of these: a low roof, a fence and flowers, a door path.
+Fix these in `building_art.py` (and `pixel_kit` where it's the kit's) before the next round.
+
+**Props lose blind to RD's, 0 of 8 (2026-11-14, the same day).** Together with the buildings, 1 of 16:
+code isn't as good as RD yet on the two kinds we thought were closest. What the props showed:
+- *It doesn't read at 1×.* The gold hoard, the lost pile and the torn tent are brown lumps you have to
+  be told about; RD's crystal, flower and palm say what they are from their shadow. Before anything
+  else, a prop must read at 1× on the map's green.
+- *Muddy colour.* Ours sit in dull mid-tones with little between light and dark; RD's are clean and
+  saturated, a bright lit side and a clearly darker shade, the subject standing off the grass.
+- *Texture, not form.* The golden bush and the moss are an even noise; RD's tree is a few big round
+  clumps, each lit from the top left with a dark underside. Form first, a little texture on top, never
+  texture for form.
+- *Flat stacked shapes.* The red maple is flat layers stacked, read as a bonsai or a pagoda; a crown
+  is round clumps. A trunk is a trunk (the lemon candy tree's striped pole read as a barber's pole).
+The `pixel_style.py` bands passed all of these: the numbers measure texture and outline, not whether a
+thing reads or has form. A band for value contrast (the lit side to the shade, the subject to the
+grass) and a 1× silhouette check would have caught some; the eye catches the rest.
+
+**No number caught them (2026-11-14).** Tried on round 1's sprites before adding any band: form (the
+share of light and dark in big shapes, not pixel noise), median saturation, how much of a sprite
+matches the map's green, the lit top left against the shaded bottom right, how much of its box the
+silhouette fills, and the brightness range. On every one, the code sprites the user rejected sit inside
+RD's own range (form 0.27 against RD's 0.09 to 0.49; saturation 0.53 against 0.15 to 0.71; brightness
+range 0.60 against 0.47 to 0.76). Whether a thing reads, and whether its colours sit right together, are
+what the eye judges; no band was added, as one that passes bad art gives false comfort. The blind
+review is the gate for "as good as RD". The bands still catch broken pixels.
+
+**Five props redrawn after round 1 (2026-11-14):** the red maple a dome of a dozen big clumps on a warm
+ramp of its own (orange-red light, wine shade) instead of flat tiers; the golden bush thirteen clumps,
+not forty tufts; the gold hoard a big bright mound with coin discs, gems and glints; the torn tent an
+A-frame with a bright front, a dark doorway and a torn side; the lost pile a sack standing up, tied,
+with the sword leaning on it. Judged in the next blind round.
+
+**No spot in the middle of a clump (2026-11-14).** A small paler disc on each round clump of leaves (the
+`puffs` sheen) read as a dot, a nipple, in the middle of each ball (the user, on the red maple), and
+harsh when paler than a step off the lit clump. A rounder dome of light on the clump itself (`bulge`)
+lights it from its top left with no spot; where a sheen is wanted, keep it broad and at the rim, never
+a dot inside.
+
+**Bark in broad bands, not streaks (2026-11-14).** `trunk()` ran a near-white and a near-black streak a
+pixel wide the whole height of every trunk, and pale lines along every root: stark vertical lines (the
+user). RD's trunk is a broad lit band down its left, a step darker on its right, a groove or two short
+and soft, a little grain. Bark is smooth now (`texture` at most 0.025), a lit band, a shade band, two
+short soft grooves.
+
+**Nothing runs off its frame (2026-11-14).** Eight trees and bushes in `scenery_art.py` were drawn past
+their 32- or 64-pixel frame and cut off in the game (the sapling's top by 16 pixels, the firs' tips, the
+dark tree on three sides). Each is now drawn with room all round (`Sprite.pad`) and fitted into its
+frame about its foot, two pixels clear past its outline (`scenery_art.framed`), before it's lit, so
+it stays crisp; the tool fails any drawing that still touches an edge.
+
+**Buildings after round 1 (2026-11-14), in `building_art.py`.** The cottages and shops are drawn by
+hand (`HAND_DRAWN`, `by_hand`), not ruler-straight. The tall ones are squatter under bigger roofs: the
+stone townhouse two floors, not three, in warm stone, with a dormer, a flower box and ivy (`ivy`); the
+armour, tailor and book shops shorter with roofs half again taller. Stone warmer throughout. A patch of
+grass under each was tried and taken out (the user: not needed; what's missing is that they look flat).
+
+**Lit windows as RD paints them (2026-11-14).** Ours were a near-white pane in a near-black frame with a
+cross of glazing bars: harsh and contrasty beside RD's soft, whimsical ones (the user). RD's snow cabin's,
+sampled: a mid-brown frame (`#7a4a2c`), an orange rim a pixel inside it (`#d78e4a`), a deeper yellow
+along the pane's lower right (`#e6cd4f`), the pane a light warm yellow (`#f7f390`), no bars. Drawn as
+shapes, a pale yellow went olive through the lit, hue-shifted ramp and the hand-drawn wobble bent it, so
+style 2 paints panes in exact colours on the finished pixels (`paint_panes`).
 
 - **2026-11-02 (roofs and pillars):** "Roof should still have basic geometry, same for pillars" (the
   user): the bend is for walls and stone. Roofs, spires, domes, cornices, columns and pilasters keep to

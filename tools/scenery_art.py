@@ -47,15 +47,25 @@ def foliage(hexcode, texture=0.03):
     return [Material(shade_of(hexcode, k), texture=texture, shades=6, variety=1.5) for k in (1.2, 1.0, 0.78, 1.42)]
 
 
-def puffs(s, cx, cy, rx, ry, mats, count, size, seed, flat=1.0, skip=None, bulge=3.0):
+# How much rounder a cluster's dome of light is with no sheen patch on it (puffs).
+ROUNDER = 1.45
+
+
+def puffs(s, cx, cy, rx, ry, mats, count, size, seed, flat=1.0, skip=None, bulge=3.0, sheen=0.0, lean=(1.0, 1.0)):
     """A canopy as RD paints one: clusters of leaves, each a small dome lit on its own, scattered over an
     ellipse from the back (top) to the front (bottom), so each lower cluster overlaps the one behind it
     and casts its shadow on it. Clusters toward the canopy's lower right take its shadow material
     (`mats`: light, middle, shadow, sheen; foliage()); a cluster in the light gets a paler patch toward
-    its top left, as RD's do. `flat` squashes the clusters; `skip(x, y)` leaves a gap."""
+    its top left (`sheen`, its size against the cluster's; none by default: on every tree and bush it
+    read as a dot in the middle of each ball, the user, 2026-11-14), so with none each cluster's own
+    dome of light is made rounder (`bulge`, half again) to light it from its top left instead. `flat` squashes the clusters;
+    `skip(x, y)` leaves a gap. `lean` weighs across and down in which clusters fall in shade: (1, 1) the
+    lower right, more across than down to keep a crown's front clumps lit as RD's tree does."""
     # On a jittered grid a cluster apart, so the crown is full and even, never lopsided; at most `count`,
     # the nearest the middle.
     r = rng(seed)
+    if sheen <= 0:
+        bulge *= ROUNDER
     step = size * 1.1
     spots = []
     for j, gy in enumerate(np.arange(cy - ry, cy + ry + 0.01, step * 0.8 * flat)):
@@ -70,11 +80,11 @@ def puffs(s, cx, cy, rx, ry, mats, count, size, seed, flat=1.0, skip=None, bulge
     spots = sorted(spots, key=lambda p: ((p[0] - cx) / max(1, rx)) ** 2 + ((p[1] - cy) / max(1, ry)) ** 2)[:count]
     for x, y in sorted(spots, key=lambda p: p[1]):
         k = r.uniform(0.8, 1.15)
-        side = ((x - cx) / max(1, rx) + (y - cy) / max(1, ry)) / 2
+        side = (lean[0] * (x - cx) / max(1, rx) + lean[1] * (y - cy) / max(1, ry)) / 2
         mat = mats[0] if side < -0.2 else mats[2] if side > 0.3 else mats[1]
         s.ellipse(x, y, size * k, size * k * 0.82 * flat, mat, bulge=bulge)
-        if side < 0.3 and len(mats) > 3:
-            rr = size * k * 0.42
+        if sheen > 0 and side < 0.3 and len(mats) > 3:
+            rr = size * k * sheen
             s.ellipse(x - rr * 0.7, y - rr * 0.7 * flat, rr, rr * 0.8 * flat, mats[3], profile="flat")
     return s
 
@@ -86,6 +96,8 @@ def trunk(s, base_x, base_y, top_y, width, mat, lean=0.0, roots=2):
     that stood out from the land (playtesting 2026-10-23)."""
     w = width
     tx = base_x + lean
+    # Smooth bark, as RD's: its light and shade in broad bands, a little grain, not a speckle.
+    mat = Material(mat.base, shades=mat.shades, texture=min(mat.texture, 0.025), grain=mat.grain, variety=1.5)
 
     def at(t):
         """The trunk's middle and half-width at t (0 at its foot, 1 at its top)."""
@@ -115,12 +127,17 @@ def trunk(s, base_x, base_y, top_y, width, mat, lean=0.0, roots=2):
                profile="flat", tone=0.58 if side < 0 else 0.4)
         s.stroke([(root_x - side * 0.4, start_y), (mid[0] - side * 0.3, mid[1] - 0.5), (tip[0] - side * 0.5, tip[1] - 0.6)],
                  0.8, mat, profile="flat")
-        s.shapes[-1][3]["tone"] = 0.86 if side < 0 else 0.62
-    # Bark: the side away from the light in shadow, streaks of light down the left and middle, grooves.
+        s.shapes[-1][3]["tone"] = 0.64 if side < 0 else 0.54
+    # Bark as RD's: the lit left a broad soft band a step lighter, the side away from the light a step
+    # darker, a groove or two short and soft. Full-length streaks a near-white and a near-black pixel
+    # wide read as stark vertical lines (the user, 2026-11-14).
     shade = [(x + h * 0.35, y) for x, y, h in (at(t) for t in ts)]
-    s.poly(shade + right[::-1], mat, profile="flat", tone=0.28)
-    for off, tone, width_ in ((-0.55, 0.92, 0.9), (-0.1, 0.72, 0.8), (0.3, 0.12, 0.7)):
-        line = [(x + h * off, y) for x, y, h in (at(t) for t in np.linspace(0.04, 0.92, 6))]
+    s.poly(shade + right[::-1], mat, profile="flat", tone=0.3)
+    lit = [(x - h * 0.75, y) for x, y, h in (at(t) for t in ts)]
+    mid = [(x - h * 0.15, y) for x, y, h in (at(t) for t in ts)]
+    s.poly(lit + mid[::-1], mat, profile="flat", tone=0.68)
+    for off, tone, width_, span in ((0.12, 0.42, 0.8, (0.15, 0.55)), (-0.35, 0.44, 0.7, (0.5, 0.85))):
+        line = [(x + h * off, y) for x, y, h in (at(t) for t in np.linspace(*span, 4))]
         s.stroke(line, width_, mat, profile="flat")
         s.shapes[-1][3]["tone"] = tone
     return s
@@ -140,9 +157,66 @@ def centred(s, start, x):
     for mask, *_ in s.shapes[start:]:
         union |= mask
     cols = np.nonzero(union.any(axis=0))[0]
-    dx = round(x - (cols.min() + cols.max() + 1) / 2 / SS)
+    dx = round(x - ((cols.min() + cols.max() + 1) / 2 / SS - s.pad))
     shift(s, start, dx, 0)
     return dx
+
+
+def framed(s, margin=2):
+    """`s` (drawn with room round its frame, `PAD`) fitted into its frame: if it overflows a side or the
+    top, scaled down about its foot, and moved sideways back in if it only leans out, so it keeps a pixel
+    clear all round past its outline (which adds a pixel round each shape), and short enough to stand
+    on the row `grounded` puts its foot on; then the room cut away. Its shapes are scaled before they're lit and drawn, so the
+    pixels stay crisp. Eight trees and bushes ran off their frames and were cut off in the game (the
+    sapling's top by 16 pixels: the user, 2026-11-14)."""
+    p, n = s.pad, s.frame
+    if not p or not s.shapes:
+        return s
+    union = np.zeros_like(s.shapes[0][0])
+    for mask, *_ in s.shapes:
+        union |= mask
+    rows, cols = np.nonzero(union.any(axis=1))[0], np.nonzero(union.any(axis=0))[0]
+    top, bottom = rows.min() / SS - p, (rows.max() + 1) / SS - p
+    left, right = cols.min() / SS - p, (cols.max() + 1) / SS - p
+    ax, ay = (left + right) / 2, bottom
+    ground = 59 if n == 64 else 28
+    k = min(1.0, (n - 2 * margin) / (right - left), (ground - 1 - margin) / max(1e-6, ay - top))   # the outline and rounding take a pixel or two more
+    half = (right - left) * k / 2
+    tx = min(max(ax, margin + half), n - margin - half)
+    if k < 1 or abs(tx - ax) > 1e-6:
+        H, W = s.shapes[0][0].shape
+        ys, xs = np.mgrid[0:H, 0:W]
+        sx = np.floor((ax + ((xs + 0.5) / SS - p - tx) / k + p) * SS).astype(int)
+        sy = np.floor((ay + ((ys + 0.5) / SS - p - ay) / k + p) * SS).astype(int)
+        ok = (sx >= 0) & (sx < W) & (sy >= 0) & (sy < H)
+        sxc, syc = np.clip(sx, 0, W - 1), np.clip(sy, 0, H - 1)
+
+        def moved(a, fill):
+            return np.where(ok, a[syc, sxc], fill)
+        for i, (mask, mat, profile, extra) in enumerate(s.shapes):
+            extra = dict(extra)
+            if "centre" in extra:
+                cx, cy = extra["centre"]
+                extra["centre"] = (tx + (cx - ax) * k, ay + (cy - ay) * k)
+            if extra.get("bulge") is not None:
+                extra["bulge"] = extra["bulge"] * k
+            if extra.get("axis_dist") is not None:
+                extra["axis_dist"] = moved(extra["axis_dist"], np.inf)
+            if extra.get("height") is not None:
+                extra["height"] = moved(extra["height"], 0.0) * k
+            if extra.get("detail") is not None and np.ndim(extra["detail"]) == 2:
+                extra["detail"] = moved(extra["detail"], 0.0)
+            s.shapes[i] = (moved(mask, False), mat, profile, extra)
+    cut = slice(p * SS, (p + n) * SS)
+    for i, (mask, mat, profile, extra) in enumerate(s.shapes):
+        extra = dict(extra)
+        for key in ("axis_dist", "height", "detail"):
+            if extra.get(key) is not None and np.ndim(extra[key]) == 2:
+                extra[key] = extra[key][cut, cut]
+        s.shapes[i] = (mask[cut, cut], mat, profile, extra)
+    s.w = s.h = n
+    s.pad = 0
+    return s
 
 
 def shift(s, start, dx, dy):
@@ -179,10 +253,16 @@ BARK = "#7a5232"                 # RD's own tree trunk, warmer and lighter than 
 SIDE_LIGHT = np.array([-0.45, -0.55, 0.7]) / np.linalg.norm([-0.45, -0.55, 0.7])
 
 
+# Room drawn past each scenery sprite's frame (main sets it), so nothing that overflows is cut off before
+# `framed` fits it in.
+PAD = 0
+
+
 def scene(size=64):
     """A sprite lit as scenery is: from the top left, lower than the icons' light, so each cluster of
     leaves is a ball lit on one side; edges darken only where they turn from it."""
-    s = Sprite(size)
+    s = Sprite(size + 2 * PAD)
+    s.pad, s.frame = PAD, size
     s.light, s.rim = SIDE_LIGHT, "lower"
     s.seams = False         # clusters part by their shadows, not by drawn lines (RD's have none)
     return s
@@ -242,17 +322,25 @@ def oak(colour, seed=21, ragged=False):
 
 
 def maple():
-    """red_maple: wider than tall, a crown of flat, overlapping tiers like the lobes of its leaves."""
+    """red_maple: a broad crown, wider than tall, of big round clumps of red leaves, as RD's own tree is
+    (about ten clumps, each lit on its top left with a dark crevice under it), on a short dark trunk.
+    It was three flat tiers of small puffs, and lost blind to RD's tree: it read as a bonsai or a pagoda
+    (2026-11-14, docs/pixel-style.md Learned). Fewer, bigger clumps make the form; the light makes them
+    round."""
     s = scene()
-    bark, leaves = Material("#5e3e30", texture=0.07), foliage("#d0383c")
-    trunk(s, 32, 60, 40, 6, bark, roots=3)
-    branch(s, [(32, 44), (18, 36)], 3, bark)
-    branch(s, [(32, 44), (46, 36)], 3, bark)
+    bark = Material("#5e3e30", texture=0.07)
+    # Its own warm ramp, as RD's lights lean to yellow (rule 3): an orange-red lit side, crimson in the
+    # middle, a deep wine shade; through shade_of the light went pale pink. No sheen patch: on each
+    # clump it read as a dot in the middle of a ball (the user, 2026-11-14); a rounder dome of light
+    # (`bulge`) lights each one from its top left instead.
+    leaves = [Material(c, texture=0.03, shades=6, variety=1.5) for c in ("#f26a34", "#cc3428", "#93202c")]
+    trunk(s, 32, 60, 40, 7, bark, roots=3)
+    branch(s, [(32, 44), (20, 34)], 3.2, bark)
+    branch(s, [(32, 44), (45, 34)], 3.2, bark)
     crown = len(s.shapes)
-    for (cx, cy, rx, ry, n, seed, size) in ((32, 12, 8, 3, 3, 31, 6.0), (32, 22, 16, 3, 5, 32, 6.5),
-                                            (32, 32, 24, 3, 7, 33, 6.0)):
-        puffs(s, cx, cy, rx, ry, leaves, n, size, seed, flat=0.7)
-    lower(s, crown, 5)
+    puffs(s, 32, 23, 16, 13, leaves, 11, 9.5, 36, flat=0.95, bulge=3.1, lean=(1.5, 0.35))
+    centred(s, crown, 32)
+    lower(s, crown, 4)
     return s
 
 
@@ -495,10 +583,12 @@ def snow_conifer():
 
 
 def shrub(colour, seed):
-    """golden_bush: a tall rounded shrub, taller than wide, in tufts."""
+    """golden_bush: a rounded shrub, a little taller than wide, in a few big clumps, each lit on its top
+    left over the shadow of the one behind. It was forty small tufts, an even noise, and lost blind to
+    RD's bushes (2026-11-14): form first, then a little texture."""
     s = scene(32)
-    leaves = foliage(colour)
-    puffs(s, 16, 16, 10, 10, leaves, 40, 3.4, seed, bulge=2.0)
+    leaves = [Material(c, texture=0.03, shades=6, variety=1.5) for c in ("#f4c236", "#d89020", "#8c4e16", "#fcd862")]
+    puffs(s, 16, 16, 10.5, 10.5, leaves, 13, 5.0, seed, bulge=2.6)
     return s
 
 
@@ -599,8 +689,11 @@ def main(argv):
     drawings = {**TREES, **BUSHES}
     ids = argv or sorted(drawings)
     out = {}
+    global PAD
     for item in ids:
-        drawn = drawings[item]()
+        PAD = 16
+        drawn = framed(drawings[item]())
+        PAD = 0
         img = grounded(getattr(drawn, "finish", lambda i: i)(drawn.render(outline="tinted")))
         img.save(SPRITES / f"{item}.png")
         out[item] = img
@@ -614,6 +707,14 @@ def main(argv):
             bad.append(f"{item}: {gap} pixels of sky between its trunk and its crown")
         if abs(off) > CROWN_OFF_MAX and item not in LEANS:
             bad.append(f"{item}: its crown's middle is {off:+.1f} pixels off its trunk's (at most {CROWN_OFF_MAX})")
+    for item, img in out.items():
+        # Nothing may touch the frame's edge: a crown that does is cut off in the game (the red maple's
+        # was, by its top row: the user, 2026-11-14).
+        a = np.asarray(img)[..., 3] > 0
+        edges = {"top": a[0].sum(), "left": a[:, 0].sum(), "right": a[:, -1].sum()}
+        for side, n in edges.items():
+            if n:
+                bad.append(f"{item}: {n} pixels on the frame's {side} edge, so it's cut off there (framed should have fitted it)")
     for line in bad:
         print("FAIL " + line)
     if sheet:

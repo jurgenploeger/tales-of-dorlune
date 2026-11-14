@@ -73,7 +73,11 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   article): `Shadowcast.visible` (recursive shadowcasting on the cave's cells, recast as you step into
   another cell) says which cells round you the light sees; `Lantern.shade` lays soft dark over the rest
   inside its circle, and the cave's map fills in only with what it saw. `tools/shadowcast.py` mirrors
-  it with the article's tests; keep the two in step.
+  it with the article's tests; keep the two in step. What it sees also catches the light on its side
+  toward you (`LanternLight`: the street lamps' outline normals, `LampLight.copy`, re-aimed from where
+  you stand each step; cave scenery, its lit copies made the first time the light reaches it. Not the
+  rock's blocks: lit one by one, every seam between them glowed and their light fell on whoever stood
+  behind them).
 - `content/*.json`: all game data (maps, monsters, skills, items, quests, music, looks, crowd, announcements, the chat's
   filter (`moderation.json`, `ChatFilter`: what you type is starred out where it matches), titles,
   rewards: the daily gift, bounties, Monster Book milestones, monster cards, the weaver's status capes and the
@@ -305,6 +309,10 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   the land next door meet the original, as before). Keep it, the Swift and `palette_preview.py` in
   step; `check` holds every edge of a field to the tile's own seams, `--preview out.png` shows before
   and after, near and zoomed out.
+- `tools/blind_review.py`: is code's art as good as Retro Diffusion's? Pairs of one drawn in code and
+  one of RD's of the same kind, sides shuffled, the key in a file of its own the user doesn't see
+  till they've picked; `score` tallies. The goal and its stages: the sprite-creation skill, *Drawing as
+  well as Retro Diffusion*.
 - `tools/pixel_scale.py`: how big each sprite's art pixels are on the map, in points (its PNG times its
   `scale`; a ground tile 44 points over 32 pixels), against a walker's 1, and the props planted at a
   random size (maps.json theme props' `size`); `--sheet out.png` lines them up at game size. Its rule:

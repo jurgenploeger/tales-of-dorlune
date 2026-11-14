@@ -67,27 +67,32 @@ def brazier():
 
 
 def gold_hoard():
-    """A heap of gold coins, a goblet and gems in it: a dragon's, or a greedy brute's. Coins lie on it
-    in rows of flat discs, each lit along its top, so it reads as coins, not a lump of gold."""
+    """A heap of gold coins, a goblet and gems in it: a dragon's, or a greedy brute's. A big bright mound,
+    lit gold on its top left and deep orange at its foot, coins standing out of it as discs each with a
+    dark lower rim, a goblet on top, a ruby and a sapphire, and a glint or two. It was a low lump in the
+    corner of its frame and lost blind to RD's props (2026-11-14): it has to read as gold at 1x."""
     s = scene(32, 32)
-    gold, deep = Material("#e8b630", texture=0.03, gloss=0.5), Material("#b8801a", texture=0.03)
-    coin, coin_dark = Material("#f6d258", texture=0.0), Material("#c8901e", texture=0.0)
-    s.ellipse(15, 25, 12, 5, deep)
-    s.ellipse(14, 22.5, 9.5, 5.5, gold, bulge=1.4)
-    r = rng(5)
-    for y in (18.5, 21, 23.5, 26):
-        half = 9 - abs(y - 21) * 1.2
-        for x in np.arange(14 - half + r.uniform(0, 1.5), 14 + half, 2.6):
-            s.ellipse(x, y, 1.3, 0.7, coin if x < 15 else coin_dark, profile="flat")
-    for x, y in ((25, 27), (28, 28), (4, 28)):                       # coins spilled on the ground
-        s.ellipse(x, y, 1.4, 0.8, coin, profile="flat")
-    s.stroke([(24, 26), (24, 20)], 1.2, gold)                          # a goblet beside it
-    s.poly([(21, 14), (27, 14), (26, 19), (22, 19)], gold)
-    s.ellipse(24, 14, 3, 0.9, Material("#6a3e10", texture=0.0), profile="flat")
-    s.ellipse(22.5, 26.5, 3, 0.9, gold, profile="flat")
-    s.ellipse(9, 20, 1.6, 1.6, Material("#d8304a", texture=0.0, gloss=0.8))
-    s.ellipse(17, 18, 1.5, 1.5, Material("#3ab0e0", texture=0.0, gloss=0.8))
-    s.ellipse(13, 24.5, 1.4, 1.4, Material("#5ad070", texture=0.0, gloss=0.8))
+    gold, deep = Material("#f4c430", texture=0.02, gloss=0.6), Material("#c27a18", texture=0.02)
+    coin, rim = Material("#ffe27a", texture=0.0), Material("#a8640e", texture=0.0)
+    s.ellipse(16, 26.5, 14, 4.2, deep)
+    s.ellipse(16, 22, 12.5, 7.5, gold, bulge=2.0)
+    s.ellipse(14.5, 16.5, 7.5, 5.5, gold, bulge=1.8)
+    for x, y in ((8, 21), (12, 18.5), (17, 14.5), (20, 19), (24, 23), (10, 25), (15, 23.5), (19.5, 25.5)):
+        s.ellipse(x, y + 0.7, 1.9, 1.0, rim, profile="flat")
+        s.ellipse(x, y, 1.9, 1.0, coin, profile="flat")
+    for x, y in ((3.5, 29), (28, 28.5), (25.5, 30)):                    # spilled on the ground
+        s.ellipse(x, y + 0.6, 1.7, 0.9, rim, profile="flat")
+        s.ellipse(x, y, 1.7, 0.9, coin, profile="flat")
+    s.stroke([(22, 15), (22, 11.5)], 1.3, gold)                          # a goblet standing on top
+    s.poly([(19, 6.5), (25, 6.5), (24, 11.5), (20, 11.5)], gold, bulge=0.8)
+    s.ellipse(22, 6.6, 3, 0.9, Material("#7a3e0a", texture=0.0), profile="flat")
+    s.ellipse(22, 15.3, 2.6, 0.8, deep, profile="flat")
+    s.ellipse(9.5, 17.5, 2.0, 1.9, Material("#e0304a", texture=0.0, gloss=0.9))
+    s.ellipse(18, 21, 1.7, 1.6, Material("#3aa8f0", texture=0.0, gloss=0.9))
+    s.overlay = np.zeros((32, 32, 4), np.uint8)
+    for x, y in ((13, 13), (6, 19)):                                     # glints, a small cross each
+        for dx, dy in ((0, 0), (1, 0), (-1, 0), (0, 1), (0, -1)):
+            s.overlay[y + dy, x + dx] = (255, 252, 230, 255)
     return s
 
 
@@ -167,21 +172,25 @@ def bone_pile():
 
 
 def torn_tent():
-    """A hunter's tent by a lair, torn open and fallen in on one side: a canvas ridge on two poles,
-    a ragged hole in its side, a pack and a snapped spear left in front. Someone came this way."""
+    """A hunter's tent by a lair, torn: an A-frame of pale canvas seen from its front corner, its front a
+    bright triangle with a dark doorway (so it reads as a tent at 1x), its side in shade with a ragged
+    hole torn in it and a flap hanging, the poles crossed above its peak, a pack by the door. It was a
+    dull brown heap and lost blind to RD's props (2026-11-14)."""
     s = scene(32, 32)
-    canvas, shade = Material("#c8b48a", texture=0.05), Material("#9a8460", texture=0.05)
-    pole, dark = Material("#6a4a2e", texture=0.05), Material("#2e2420", texture=0.0)
-    s.poly([(3, 27), (14, 9), (22, 13), (29, 27)], shade, profile="flat", tone=0.4)           # its far side
-    s.poly([(3, 27), (14, 9), (17, 27)], canvas, bulge=0.8)                                   # its near side
-    s.poly([(17, 27), (14, 9), (22, 13), (24, 20), (21, 27)], shade, bulge=0.6)
-    s.poly([(8, 25), (10, 18), (13, 21), (12, 26)], dark, profile="flat")                      # the tear
-    s.poly([(12, 20), (15, 23), (13, 26)], canvas, profile="flat", tone=0.7)                   # its flap hanging
-    s.stroke([(14, 28), (14, 7)], 1.2, pole)
-    s.stroke([(22, 28), (23, 12), (21, 9)], 1.2, pole)                                         # the back pole, snapped
-    s.ellipse(25, 27, 3, 2.2, Material("#7a5a3a", texture=0.05))                               # a pack
-    s.stroke([(2, 29), (11, 26)], 0.9, pole)                                                   # a snapped spear
-    s.poly([(11, 25.3), (13.5, 25.2), (11.6, 26.8)], Material("#9a9aa6", texture=0.0, gloss=0.6), profile="flat")
+    canvas, side = Material("#ecd8a8", texture=0.03), Material("#b8946a", texture=0.03)
+    pole, dark = Material("#6a4a2e", texture=0.04), Material("#2e2024", texture=0.0)
+    s.poly([(12, 7), (23, 10), (31, 27), (19, 28)], side, profile="flat", tone=0.42)                           # its side, in shade
+    s.poly([(2, 28), (12, 7), (20, 28)], canvas, profile="flat", tone=0.82)                                     # its lit front
+    s.poly([(12, 13), (8, 28), (16, 28)], dark, profile="flat")                                 # the doorway
+    s.poly([(12, 13), (16, 28), (18, 26)], canvas, profile="flat", tone=0.45)                   # its flap pinned back
+    s.poly([(22, 15), (26, 14), (28, 21), (25, 24), (23, 20)], dark, profile="flat")             # the tear
+    s.poly([(26, 14), (29, 16), (28.5, 22), (27, 20)], side, profile="flat", tone=0.75)          # torn flap hanging
+    s.stroke([(10, 3.5), (14, 9)], 1.2, pole)                                                   # poles crossed at the peak
+    s.stroke([(14.5, 3.5), (10.5, 9)], 1.2, pole)
+    s.stroke([(23, 10), (24.5, 6.5)], 1.2, pole)
+    s.stroke([(2, 28), (0.5, 30.5)], 0.7, pole, profile="flat")                                 # a peg
+    s.ellipse(25, 28.5, 3.2, 2.4, Material("#8a5a32", texture=0.04))                            # a pack
+    s.stroke([(23.5, 27), (26.5, 26.5)], 0.8, Material("#c8a060", texture=0.0), profile="flat")
     return s
 
 

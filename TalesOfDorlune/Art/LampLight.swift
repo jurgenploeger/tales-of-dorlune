@@ -43,16 +43,7 @@ final class LampLight {
         // Eight ways round, as a lamp's light reaches it on screen.
         let angle = atan2(lamp.point.y - middle.y, lamp.point.x - middle.x)
         let way = (Int((angle / (.pi / 4)).rounded()) % 8 + 8) % 8
-        let colorKey = String(format: "%.2f,%.2f,%.2f", lamp.color.r, lamp.color.g, lamp.color.b)
-        let copyKey = "\(key)#\(way)#\(colorKey)"
-        let texture: SKTexture?
-        if let known = copies[copyKey] {
-            texture = known
-        } else {
-            texture = makeCopy(of: picture, way: way, color: lamp.color)
-            copies[copyKey] = .some(texture)
-        }
-        guard let texture else { return }
+        guard let texture = copy(of: picture, key: key, way: way, color: lamp.color) else { return }
         let copy = SKSpriteNode(texture: texture, size: node.size)
         copy.anchorPoint = node.anchorPoint
         copy.blendMode = .add
@@ -69,6 +60,18 @@ final class LampLight {
             lit.removeAll { $0.node == nil }
             prunedAt = max(1024, lit.count * 2)
         }
+    }
+
+    /// `picture` (known by `key`) lit from `way` (0 the right, counting round toward the top) in
+    /// `color`, kept for the next ask: the lamps' and the cave lantern's (`LanternLight`). Nil where
+    /// nothing of it faces that way.
+    func copy(of picture: CGImage, key: String, way: Int, color: (r: Double, g: Double, b: Double)) -> SKTexture? {
+        let colorKey = String(format: "%.2f,%.2f,%.2f", color.r, color.g, color.b)
+        let copyKey = "\(key)#\(way)#\(colorKey)"
+        if let known = copies[copyKey] { return known }
+        let made = makeCopy(of: picture, way: way, color: color)
+        copies[copyKey] = .some(made)
+        return made
     }
 
     /// How dark it's grown, 0 by day to 1 at night (`Sky.darkness`): the lamps' light fades in with it.

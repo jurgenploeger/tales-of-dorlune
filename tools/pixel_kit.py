@@ -164,6 +164,9 @@ def outline_deep(a):
 class Sprite:
     def __init__(self, size=32, height=None):
         self.w, self.h = size, height or size
+        # Room past the frame on every side, in pixels: the canvas is this much bigger all round and a
+        # drawing's coordinates are the frame's, so what overflows it isn't cut off (scenery_art.framed).
+        self.pad = 0
         self.shapes = []         # (mask hi-res bool, material, profile, extra)
         # Shapes stacked on each other cast contact shadows and get a seam where they meet; regions that
         # only touch (a restyled drawing's) don't. Rim light runs round each shape, or the silhouette.
@@ -205,7 +208,7 @@ class Sprite:
 
     def _grid(self):
         ys, xs = np.mgrid[0:self.h * SS, 0:self.w * SS]
-        return (xs + 0.5) / SS, (ys + 0.5) / SS
+        return (xs + 0.5) / SS - self.pad, (ys + 0.5) / SS - self.pad
 
     def snapped(self, cx, cy, rx, ry):
         """An ellipse's centre and radii on the pixel grid, if the sprite snaps (`snap`): a whole number of
@@ -386,6 +389,8 @@ class Sprite:
                     best = vals2[np.argmax(counts2)]
                 idx[ty, tx] = best
                 val[ty, tx] = light[ty * SS:(ty + 1) * SS, tx * SS:(tx + 1) * SS][block == best].mean()
+        # Which shape shows at each pixel, for a caller painting over one shape only (building_art's panes).
+        self.shown = idx
         # Clean edges (the guides' "jaggies"): shrinking leaves one-pixel notches in straight edges and
         # one-pixel spurs on them. A gap with three or four of its neighbours filled is filled from them;
         # a pixel with one neighbour or none, sticking out of an edge, goes.
@@ -629,6 +634,41 @@ class Sprite:
 # of light and shade at the sprite's own pixels (so it lands crisp, not averaged away), laid over a
 # region's lighting, and the finish that goes with it (gloss, texture). Patterns follow the region:
 # its top, left and long axis.
+
+def soften(img, lift=0.0, gamma=0.8, joint=0.5, line=0.12):
+    """The finish RD's buildings and scenery have and ours lacked (2026-11-14, the user: "softer in pixel
+    contrast [...] we can still have bright colors"): measured, ours had twice RD's hard steps between
+    neighbouring pixels, twice its near-black pixels inside, darker outlines and a darker mean. A line a
+    pixel darker than its neighbours by more than `line` (a joint, a seam, mortar, a beam) is drawn
+    `joint` of the way back toward them; then every pixel's value is brightened (`gamma`), its mids and
+    lights most, hue and saturation kept. Not lifted off the floor (`lift` 0): lifting the darks shrank
+    the light-to-dark range RD keeps (0.55, ours 0.55; lifted, 0.50) and read as washed out (the user,
+    2026-11-14); the big shadows stay deep, only the thin dark lines ease."""
+    a = np.asarray(img).astype(float)
+    rgb, alpha = a[..., :3] / 255.0, a[..., 3]
+    solid = alpha > 0
+    mx, mn = rgb.max(-1), rgb.min(-1)
+    v = mx
+    s = np.where(mx > 0, (mx - mn) / np.maximum(mx, 1e-9), 0.0)
+    # Hue, kept, as the colour's direction from its grey.
+    grey = rgb - mn[..., None]
+    span = np.maximum(mx - mn, 1e-9)[..., None]
+    hue_dir = grey / span
+    p = np.pad(np.where(solid, v, np.nan), 1, constant_values=np.nan)
+    near = np.stack([p[:-2, 1:-1], p[2:, 1:-1], p[1:-1, :-2], p[1:-1, 2:]])
+    # The mean of each pixel's solid neighbours (none: 0, and it's not inside anyway).
+    have = ~np.isnan(near)
+    mean = np.where(have, near, 0.0).sum(axis=0) / np.maximum(have.sum(axis=0), 1)
+    count = (~np.isnan(near)).sum(axis=0)
+    inside = solid & (count == 4)
+    dark_line = inside & (mean - v > line)
+    v = np.where(dark_line, v + joint * (mean - v), v)
+    v = lift + (1 - lift) * np.power(np.clip(v, 0, 1), gamma)
+    mn2 = v * (1 - s)
+    out = mn2[..., None] + hue_dir * (v - mn2)[..., None]
+    a[..., :3] = np.where(solid[..., None], np.clip(out, 0, 1) * 255, a[..., :3])
+    return Image.fromarray(np.round(a).astype(np.uint8), "RGBA")
+
 
 def limit_palette(img, n):
     """`img` (PIL RGBA) with at most `n` colours: the two closest (by a rough perceptual distance) merge
