@@ -819,6 +819,22 @@ by side, what RD's have that ours don't, worst first:
 The one that won, the garden cottage, has most of these: a low roof, a fence and flowers, a door path.
 Fix these in `building_art.py` (and `pixel_kit` where it's the kit's) before the next round.
 
+**Props lose blind to RD's, 0 of 8 (2026-11-14, the same day).** Together with the buildings, 1 of 16:
+code isn't as good as RD yet on the two kinds we thought were closest. What the props showed:
+- *It doesn't read at 1×.* The gold hoard, the lost pile and the torn tent are brown lumps you have to
+  be told about; RD's crystal, flower and palm say what they are from their shadow. Before anything
+  else, a prop must read at 1× on the map's green.
+- *Muddy colour.* Ours sit in dull mid-tones with little between light and dark; RD's are clean and
+  saturated, a bright lit side and a clearly darker shade, the subject standing off the grass.
+- *Texture, not form.* The golden bush and the moss are an even noise; RD's tree is a few big round
+  clumps, each lit from the top left with a dark underside. Form first, a little texture on top, never
+  texture for form.
+- *Flat stacked shapes.* The red maple is flat layers stacked, read as a bonsai or a pagoda; a crown
+  is round clumps. A trunk is a trunk (the lemon candy tree's striped pole read as a barber's pole).
+The `pixel_style.py` bands passed all of these: the numbers measure texture and outline, not whether a
+thing reads or has form. A band for value contrast (the lit side to the shade, the subject to the
+grass) and a 1× silhouette check would have caught some; the eye catches the rest.
+
 - **2026-11-02 (roofs and pillars):** "Roof should still have basic geometry, same for pillars" (the
   user): the bend is for walls and stone. Roofs, spires, domes, cornices, columns and pilasters keep to
   the ruler (`Build.ruled()`, and `@ruled` on `gable`, `gable_roof`, `eaves_roof`, `dome`,
