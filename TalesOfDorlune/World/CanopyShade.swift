@@ -7,8 +7,9 @@ import UIKit
 /// that"; then "every building and other object in the game should also have the shadow"). Each
 /// thing's own outline is laid on the ground away from the sun (`Sun`), its top falling farthest,
 /// so it's short at midday and long in the evening; all of it is merged into one, so where two
-/// shadows overlap it doesn't darken twice, in hard steps (a core and a one-pixel paler rim), with
-/// flecks of light where the leaves part. It multiplies the ground, as the night's shade does
+/// shadows overlap it doesn't darken twice, deepest at the foot and fading toward the tip, with a
+/// soft, blurred edge (in hard steps it was too stark, playtesting 2026-11-14) and soft flecks of
+/// light where the leaves part. It multiplies the ground, as the night's shade does
 /// (`Sky`): an opaque picture, white where there's no shade, so its texture still shows, a little
 /// cool (`CanopyPainter.lean`, the same in every land: leaning toward each palette's own shadow
 /// colour turned a desert's sand red, playtesting 2026-11-14). It stops at a town's wall: it doesn't
@@ -219,9 +220,15 @@ final class CanopyShade {
 
 /// The shade's drawing (`CanopyShade`), on any thread: only values in and pixels out.
 nonisolated enum CanopyPainter {
-    /// How far the ground is pulled into shade, and the one-pixel rim round it.
-    static let core = 0.72
-    static let rim = 0.32
+    /// How far the ground is pulled into shade at its darkest, by an object's foot (playtesting
+    /// 2026-11-14: in hard steps, a core and a one-pixel rim, it was too stark).
+    static let core = 0.62
+    /// How much lighter it is at the far end, the tip of the shade, than at the foot: it fades along it.
+    static let tipFade: Float = 0.65
+    /// How soft its edge is: two box blurs this many pixels round, about twice that across.
+    static let softness = 2
+    /// How much of the shade a fleck of light where the leaves part leaves.
+    static let fleckShade: Float = 0.3
     /// How long the shade is next to real geometry (real shadows read far too long at midday), and
     /// the longest it gets, in heights of what casts it (the low evening sun).
     static let reach = 0.55
@@ -279,55 +286,47 @@ nonisolated enum CanopyPainter {
         // The picture's top left corner, in the land's points (y up), and each pixel a point.
         let left = job.left - CGFloat(m)
         let top = job.bottom + CGFloat(side + m)
-        var mask = [Bool](repeating: false, count: full * full)
+        // How deep the shade lies at each pixel, 0 to 1: the deepest of any shade falling there, so
+        // two overlapping don't darken twice.
+        var mask = [Float](repeating: 0, count: full * full)
         var any = false
         for caster in job.casters {
             let stop = reachBeforeWall(caster, job: job)
+            let tallest = max(1, caster.tallest)
             for slice in caster.slices where slice.up <= stop {
                 // Each run of the outline is a slice of a round crown: its shade a round on the
                 // ground (an ellipse half as tall as it's wide, as `WorldMap.project` draws it),
-                // moved along the ground by the slice's height above the foot.
+                // moved along the ground by the slice's height above the foot, and lighter the
+                // higher the slice, so the shade fades toward its tip.
                 let cx = caster.foot.x + slice.dx + job.fall.dx * slice.up - left
                 let cy = top - (caster.foot.y + job.fall.dy * slice.up)
-                if fill(&mask, side: full, cx: cx, cy: cy, rx: slice.half, ry: max(0.5, slice.half / 2)) { any = true }
+                let depth = 1 - tipFade * Float(min(1, slice.up / tallest))
+                if fill(&mask, side: full, cx: cx, cy: cy, rx: slice.half, ry: max(0.5, slice.half / 2), depth: depth) { any = true }
             }
         }
         guard any else { return nil }
         // Flecks of light where the leaves part: only well inside the shade, so a fleck never
-        // opens onto its edge.
-        var fleck = [Bool](repeating: false, count: full * full)
+        // opens onto its edge; softened with the rest below.
         for y in 3..<(full - 3) {
-            for x in 4..<(full - 4) where mask[y * full + x] {
-                guard mask[y * full + x - 4], mask[y * full + x + 4], mask[(y - 3) * full + x], mask[(y + 3) * full + x] else { continue }
-                if noise(Double(left) + Double(x) + 0.5, Double(top) - Double(y) - 0.5) > fleckCut { fleck[y * full + x] = true }
+            for x in 4..<(full - 4) where mask[y * full + x] > 0 {
+                guard mask[y * full + x - 4] > 0, mask[y * full + x + 4] > 0, mask[(y - 3) * full + x] > 0, mask[(y + 3) * full + x] > 0
+                else { continue }
+                if noise(Double(left) + Double(x) + 0.5, Double(top) - Double(y) - 0.5) > fleckCut { mask[y * full + x] *= fleckShade }
             }
         }
+        // A soft edge: blurred twice (near enough a gaussian), within the border round the picture.
+        blur(&mask, side: full, radius: softness)
+        blur(&mask, side: full, radius: softness)
         var pixels = [UInt8](repeating: 255, count: side * side * 4)
         let power = job.strength
-        // Each step's colour, worked out once.
-        func shaded(_ shade: Double) -> (UInt8, UInt8, UInt8) {
-            let a = shade * power
-            return (UInt8((255 * (1 - a * (1 - lean.r))).rounded()), UInt8((255 * (1 - a * (1 - lean.g))).rounded()),
-                    UInt8((255 * (1 - a * (1 - lean.b))).rounded()))
-        }
-        let coreColour = shaded(core), rimColour = shaded(rim)
         for y in 0..<side {
             for x in 0..<side {
-                let i = (y + m) * full + x + m
-                let colour: (UInt8, UInt8, UInt8)
-                if mask[i] {
-                    // A fleck is lit, with a rim of half shade round it, in steps as the shade's own edge.
-                    if fleck[i] { continue }
-                    colour = fleck[i - 1] || fleck[i + 1] || fleck[i - full] || fleck[i + full] ? rimColour : coreColour
-                } else if mask[i - 1] || mask[i + 1] || mask[i - full] || mask[i + full] {
-                    colour = rimColour
-                } else {
-                    continue
-                }
-                let o = (y * side + x) * 4
-                pixels[o] = colour.0
-                pixels[o + 1] = colour.1
-                pixels[o + 2] = colour.2
+                let depth = mask[(y + m) * full + x + m]
+                guard depth > 0.004 else { continue }
+                let a = Double(depth) * core * power, o = (y * side + x) * 4
+                pixels[o] = UInt8((255 * (1 - a * (1 - lean.r))).rounded())
+                pixels[o + 1] = UInt8((255 * (1 - a * (1 - lean.g))).rounded())
+                pixels[o + 2] = UInt8((255 * (1 - a * (1 - lean.b))).rounded())
             }
         }
         return pixels
@@ -350,10 +349,33 @@ nonisolated enum CanopyPainter {
         return .greatestFiniteMagnitude
     }
 
-    /// Fills an ellipse into `mask` (`side` pixels square, row 0 at the top): its middle at (`cx`,
-    /// `cy`) in pixels from the top left, `rx` and `ry` its half width and height. Whether it
-    /// touched the mask at all.
-    private static func fill(_ mask: inout [Bool], side: Int, cx: CGFloat, cy: CGFloat, rx: CGFloat, ry: CGFloat) -> Bool {
+    /// Blurs `mask` (`side` pixels square) with a box `radius` pixels round, across then down.
+    private static func blur(_ mask: inout [Float], side: Int, radius: Int) {
+        var across = [Float](repeating: 0, count: mask.count)
+        let scale = 1 / Float(2 * radius + 1)
+        for y in 0..<side {
+            let row = y * side
+            var sum: Float = 0
+            for x in -radius...radius { sum += mask[row + min(max(x, 0), side - 1)] }
+            for x in 0..<side {
+                across[row + x] = sum * scale
+                sum += mask[row + min(x + radius + 1, side - 1)] - mask[row + max(x - radius, 0)]
+            }
+        }
+        for x in 0..<side {
+            var sum: Float = 0
+            for y in -radius...radius { sum += across[min(max(y, 0), side - 1) * side + x] }
+            for y in 0..<side {
+                mask[y * side + x] = sum * scale
+                sum += across[min(y + radius + 1, side - 1) * side + x] - across[max(y - radius, 0) * side + x]
+            }
+        }
+    }
+
+    /// Fills an ellipse into `mask` (`side` pixels square, row 0 at the top) to `depth` where it's
+    /// shallower: its middle at (`cx`, `cy`) in pixels from the top left, `rx` and `ry` its half
+    /// width and height. Whether it touched the mask at all.
+    private static func fill(_ mask: inout [Float], side: Int, cx: CGFloat, cy: CGFloat, rx: CGFloat, ry: CGFloat, depth: Float) -> Bool {
         let extent = CGFloat(side)
         guard cx + rx >= 0, cx - rx <= extent, cy + ry >= 0, cy - ry <= extent else { return false }
         let first = max(0, Int((cy - ry - 0.5).rounded(.up))), last = min(side - 1, Int((cy + ry - 0.5).rounded(.down)))
@@ -366,7 +388,7 @@ nonisolated enum CanopyPainter {
             let half = rx * left.squareRoot()
             let from = max(0, Int((cx - half - 0.5).rounded(.up))), to = min(side - 1, Int((cx + half - 0.5).rounded(.down)))
             guard from <= to else { continue }
-            for x in from...to { mask[row * side + x] = true }
+            for x in from...to where mask[row * side + x] < depth { mask[row * side + x] = depth }
             touched = true
         }
         return touched

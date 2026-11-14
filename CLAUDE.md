@@ -82,13 +82,13 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   continent everything `LandStage.addScenery` sets down on flat ground (trees, buildings, lamps, rocks; not
   under 12 points) lays its own outline on the ground away from the sun, each chunk's pixels worked out off
   the main thread (`CanopyPainter.render`: on it, the game went slow), a round
-  slice per row of it, the top of the crown farthest (short at midday, long at evening), all merged into one
-  in hard steps (core, a one-pixel rim, flecks of light where the leaves part) and multiplied over the ground
+  slice per row of it, the top of the crown farthest (short at midday, long at evening), all merged into one,
+  deepest at the foot and fading toward the tip, its edge blurred (`softness`; in hard steps it was too stark), soft flecks of light where the leaves part, and multiplied over the ground
   as the night's shade is, by one cool tint in every land (`CanopyShade.lean`: each palette's own shadow
   colour turned a desert red), stopping at a town's wall (`blocks`, `WorldMap.fenceCells`); drawn a `LandStage` chunk at a time while shown, again as the sun moves (`follow`,
   every half second from `ContinentScene.updateAir`, which casts walkers' shadows too: `Walker.shine`). A
   walker's shadow is its own frame laid the same way, as long for its height (`Walker.figure`, a dark copy
-  of the sprite's texture each frame, kept just over the ground, `figureDepth`), with a soft round at its feet. On a
+  of the sprite's texture each frame, softened and fading toward its head by `Walker.soften`, kept just over the ground, `figureDepth`), with a soft round at its feet. On a
   hill or the sunk shore, and in caves, a prop keeps its round `Lighting.Shadow`. Keep the tool and the Swift in step.
 - `content/*.json`: all game data (maps, monsters, skills, items, quests, music, looks, crowd, announcements, the chat's
   filter (`moderation.json`, `ChatFilter`: what you type is starred out where it matches), titles,
