@@ -287,6 +287,10 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   body, helmet) from `hero_layers.py`'s heads, into `art-variants/_masks/`, outside `art/` so they never ship. `tools/icons.py`: vendors Iconaut icons (MIT), plus our own drawings in
   `art/icons/` where Iconaut has no shape that works (fire's three-tongued flame).
   `tools/check_content.py`: validates the game data.
+- `tools/pixel_scale.py`: how big each sprite's art pixels are on the map, in points (its PNG times its
+  `scale`; a ground tile 44 points over 32 pixels), against a walker's 1, and the props planted at a
+  random size (maps.json theme props' `size`); `--sheet out.png` lines them up at game size. Its rule:
+  docs/sprite-acceptance.md *One art pixel, one size*.
 - `tools/deslab.py`: cuts the raised slab of ground some generated buildings came with (`inn`, `magic_tower`) out
   of their sprites, so they stand on the map's ground; rerun it after regenerating one of them.
 - `tools/rd_fixes.py`: exact pixel fixes to RD sprites for what RD got wrong and the user asked to have fixed

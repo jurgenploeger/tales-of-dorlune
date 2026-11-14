@@ -175,8 +175,16 @@ covers (the gcd of every run of equal pixels).
   ground's pixels are about a third bigger than the hero's. `docs/pixel-style.md` already caught this
   once (the butterflies, 3× everyone else's). Nobody has measured it across the game.
 
-**What it would take.** A measuring tool first (small): for every sprite as the game draws it, points
-per art pixel, grouped by kind, outliers listed. Then a decision on zoom: snapping the pinch to steps
+**Measured (2026-11-14, `tools/pixel_scale.py`).** Against a walker's 1 point per art pixel: monsters
+and most props 1; ground tiles 1.375 (32 pixels in a 44-point cell); 64 of the 75 buildings 1.35, the
+fairy tree houses 1.6 and the great tree 2.1; 13 props at 1.7 and 26 between 0.45 and 0.9. On top of
+that the map plants its scenery at a random size: 599 theme props in maps.json carry a `size` range
+(most often 0.75 to 1.25), and `LandPlan` sizes a lair's natural ring, rocks and reeds at random too.
+So two trees of one kind side by side have pixels up to two thirds apart, and the ground and houses
+have pixels about a third bigger than the people walking past them. The variety in size is on purpose,
+and changing it is a design decision, not a fix.
+
+**What it would take.** The measuring tool is built (above). Then a decision on zoom: snapping the pinch to steps
 where art pixels land on whole screen pixels would steady the picture. That one changes how the pinch
 feels, so it's for the user to try. **For players:** a steadier, more coherent picture. Low drama,
 real polish.
