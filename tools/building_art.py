@@ -1064,7 +1064,7 @@ def crystal_cottage(b):
 
 
 
-def grounds(b, x0, x1, colour="#6a9a40", stone="#9a948a", path=None, earth="#c8a878", seed=3, deep=5.0):
+def grounds(b, x0, x1, colour="#6a9a40", stone="#9a948a", path=None, earth="#c8a878", seed=3, deep=5.0, grass=0.05):
     """The patch of ground a building stands on, as RD's do: a rounded spread of ground a little wider than
     its walls, tufts round its edge, a few stones, and a path of trodden earth from its door (`path`, the
     door's x)."""
@@ -1072,7 +1072,7 @@ def grounds(b, x0, x1, colour="#6a9a40", stone="#9a948a", path=None, earth="#c8a
     rng = np.random.default_rng(seed)
     cx, rx = (x0 + x1) / 2 + 3, (x1 - x0) / 2 + 9
     b.poly([(cx + rx * math.cos(t), GROUND + 1 + deep * math.sin(t)) for t in np.linspace(0, 2 * math.pi, 28)[:-1]], colour,
-           texture=0.05, profile="flat", tone=0.55)
+           texture=grass, profile="flat", tone=0.55)
     if path is not None:
         b.poly([(path - 4, GROUND), (path + 4, GROUND), (path + 6, GROUND + deep + 0.5), (path - 6, GROUND + deep + 0.5)], earth,
                texture=0.04, profile="flat", tone=0.6)
@@ -1814,7 +1814,8 @@ def on_ground(draw):
             x0, x1 = back(left) + 9, back(right) - 12          # grounds() also shifts 3 right
             top = GROUND + (top_px - b.foot) / b.k
         n = len(b.s.shapes)
-        grounds(b, x0 - 2, x1 + 2, path=b.doors[0] if b.doors else None, deep=7.0)
+        # Textured, so it reads as grass, not a flat disc (a flat one failed the teapot house's `flat` band).
+        grounds(b, x0 - 2, x1 + 2, path=b.doors[0] if b.doors else None, deep=7.0, grass=0.5)
         if b.walls:
             # Its shadow on the patch, down and to the right; not for one drawn without walls, whose
             # width is already its own (a tent's poles): the shadow ran past the frame and fit() shrank it.

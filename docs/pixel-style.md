@@ -875,7 +875,8 @@ that laid their own keep theirs), as RD's do. The cottages and shops are drawn b
 floors, not three, in warm stone, with a dormer, a flower box and ivy (`ivy`); the armour, tailor and
 book shops shorter with roofs half again taller. Stone warmer throughout. A drawing without `box`
 walls gets a patch inside its own width and no shadow: a shadow past the frame made `fit` shrink the
-tents. Fewer fail the building bands than before (13 of 29, from 17), but the bands don't judge what
+tents; an added patch is textured grass, as a flat one failed the teapot house's `flat` band. Fewer fail
+the building bands than before (15 of 29, from 17; none newly), but the bands don't judge what
 the eye does: the next blind round does.
 
 - **2026-11-02 (roofs and pillars):** "Roof should still have basic geometry, same for pillars" (the
