@@ -400,6 +400,10 @@ skills       | newgame,level=60,class=fighter,learn=bash+first_aid+power_strike+
 skills_learn | newgame,level=20,class=mage,menu=character,sub=skills             | 8
 boss_oak     | newgame,level=28,map=smiling_forest,at=-66_-36,npc=oak_grove   | 15
 boss_emerald | newgame,level=190,map=emerald_road,at=30_-25                   | 10
+# The Silverfang Warden in the Whispering Hollow (playtesting 2026-11-12: "I already searched the
+# whole cave"): you a few cells south of where he stands, (0, 14) from the middle.
+boss_silverfang | newgame,level=190,map=mysterious_cave,at=0_9,weather=clear,hour=12 | 10
+boss_silverfang_land | newgame,level=190,map=mysterious_cave,at=0_9,weather=clear,hour=12,landscape | 10
 boss_fight   | newgame,level=60,class=fighter,map=rat_cavern,boss=rat_throne | 25
 boss_wave    | newgame,level=60,class=fighter,map=rat_cavern,boss=rat_throne,wave=3 | 25
 boss_wave_land | newgame,level=60,class=fighter,map=rat_cavern,boss=rat_throne,wave=3,landscape | 25
