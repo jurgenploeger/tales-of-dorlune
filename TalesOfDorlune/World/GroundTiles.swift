@@ -64,7 +64,8 @@ final class GroundTiles {
 
     private func group(_ key: String, _ texture: () -> SKTexture) -> SKTileGroup {
         if let known = groups[key] { return known }
-        let picture = texture()
+        // Graded with this land's palette, whatever land the library was grading for when asked.
+        let picture = art.grading(palette: theme.palette, for: map.def.id, texture)
         let made = SKTileGroup(tileDefinition: SKTileDefinition(texture: picture, size: tileSize))
         groups[key] = made
         pictures[ObjectIdentifier(made)] = picture

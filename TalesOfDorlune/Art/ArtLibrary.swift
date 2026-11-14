@@ -140,6 +140,18 @@ final class ArtLibrary {
         variantCache = kept?.variants ?? [:]
     }
 
+    /// `make` run grading for `map` with `palette`, then back to whichever map it was grading for:
+    /// for art graded lazily, whoever asks for it, so it never takes the palette of whatever land's
+    /// work happened to run last (`GroundTiles`; playtesting 2026-11-14 saw a block of Emerald
+    /// Road's ground pale, as if graded with another land's palette).
+    func grading<T>(palette: MapPalette?, for map: String, _ make: () -> T) -> T {
+        guard map != paletteMap else { return make() }
+        let previous = paletteMap, previousPalette = self.palette
+        use(palette: palette, for: map)
+        defer { if let previous { use(palette: previousPalette, for: previous) } }
+        return make()
+    }
+
     /// Lets go of a map's graded art: nothing of it is on screen any more.
     func release(map: String) {
         guard map != paletteMap else { return }
