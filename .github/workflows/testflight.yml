@@ -96,11 +96,16 @@ jobs:
       - name: Clear old CI signing certificates
         # Each fresh runner's cloud signing makes a new development certificate when none is installed
         # (above); Apple caps them per account, so revoke the ones earlier runs left (only those the API
-        # key made). With DEV_CERT_P12 set there are none to revoke.
+        # key made). With DEV_CERT_P12 set there are none to revoke, so it's skipped. Only tidying: when
+        # App Store Connect refuses the list (403 Forbidden on 2026-11-13, three runs of 0.9.86 stopped
+        # here before building), the build goes on.
+        continue-on-error: true
         env:
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID || vars.ASC_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID || vars.ASC_ISSUER_ID }}
+          DEV_CERT_P12: ${{ secrets.DEV_CERT_P12 }}
         run: |
+          [ -z "$DEV_CERT_P12" ] || { echo "DEV_CERT_P12 is installed: no CI certificates to revoke."; exit 0; }
           python3 -m pip install --quiet --break-system-packages pyjwt cryptography 2>/dev/null \
             || python3 -m pip install --quiet pyjwt cryptography
           python3 tools/asc_dev_certs.py "$RUNNER_TEMP/keys/AuthKey_$ASC_KEY_ID.p8" "$ASC_KEY_ID" "$ASC_ISSUER_ID"
