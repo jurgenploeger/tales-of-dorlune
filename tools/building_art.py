@@ -158,6 +158,40 @@ def shingles(region, a, d, w=8, h=5, seed=8):
     return np.where(foot, -0.42, 0.32 * (0.5 - (yo + 0.5) / h) + 0.06 - 0.2 * u ** 2) + tone
 
 
+def lumps(region, a, d, w=9, h=6, seed=9):
+    """Big parts, each lit as a rounded lump (after SpriteCook's normal-map article: which way a pixel faces
+    from how far it lies from its part's edge): a bright rim along its top and left, a dark rim along its
+    bottom and right, its middle graded from light to shade, and a deep joint between it and the next
+    (the wind article's darker layer showing through a gap), in staggered rows. What makes RD's roofs
+    read as shingles and its walls as logs, where a fine texture on a flat plane read as surface noise
+    (2026-11-14, docs/pixel-style.md Learned)."""
+    A, D = _grid(region, a, d)
+    row = D // h
+    off = (row % 2) * (w // 2)
+    xo, yo = (A + off) % w, D % h
+    tone = (_table(seed)[row % 64, ((A + off) // w) % 64] - 0.5) * 0.14
+    joint = (yo == h - 1) | (xo == w - 1)
+    lit = (yo == 0) | (xo == 0)
+    dark = (yo == h - 2) | (xo == w - 2)
+    body = 0.24 * (0.5 - (yo + 0.5) / (h - 1)) + 0.1 * (0.5 - (xo + 0.5) / (w - 1))
+    return np.where(joint, -0.62, np.where(lit & ~dark, 0.34, np.where(dark, -0.28, body))) + tone
+
+
+def bundles(region, a, d, seed=10):
+    """Thatch in big combed bundles: shingles' rounded tongues, twice the size, with a strand or two in each."""
+    A, D = _grid(region, a, d)
+    base = shingles(region, a, d, w=12, h=7, seed=seed) * 1.25
+    strand = ((A * 5 + D // 7 * 3) % 6 == 0) * -0.1
+    return base + strand
+
+
+# Style 2 (2026-11-14, prototyping): the roofs' materials in big rounded parts, not a fine texture.
+STYLE2 = False
+CHUNKY = {"thatch": bundles, "tiles": lambda r, a, d: lumps(r, a, d, w=8, h=6, seed=4),
+          "slate": lambda r, a, d: lumps(r, a, d, w=10, h=5, seed=6),
+          "shingles": lambda r, a, d: shingles(r, a, d, w=12, h=7, seed=8) * 1.2}
+
+
 PATTERNS = {"blocks": blocks, "rubble": rubble, "shingles": shingles, "plaster": plaster, "planks": planks,
             "boards": lambda r, a, d: planks(r, a, d, vertical=True),
             "tiles": tiles, "thatch": thatch, "slate": slate, "bricks": lambda r, a, d: blocks(r, a, d, w=5, h=3)}
@@ -271,7 +305,8 @@ class Build:
             u = np.clip((xx - left) / np.maximum(right - left, 1) * 2 - 1, -1, 1)
             detail = detail + curve * (0.35 - 0.75 * ((u + 0.3) / 1.3) ** 2)
         if pattern:
-            detail = detail + np.where(region, PATTERNS[pattern](region, a_, d_), 0.0)
+            pick = CHUNKY.get(pattern) if STYLE2 else None
+            detail = detail + np.where(region, (pick or PATTERNS[pattern])(region, a_, d_), 0.0)
         if eave or foot:
             depth = d_ - d_[region].min()
             height = d_[region].max() - d_[region].min()
@@ -310,10 +345,37 @@ class Build:
 
     def render(self):
         img = self.s.render(outline="tinted")
+        if STYLE2:
+            img = rounded(img)
         size = int((np.asarray(img)[..., 3] > 0).sum())
         # The palette's cap grows with the canvas: a grand building's 160 pixels hold nearly three houses.
         cap = int(PALETTE * (self.size / SIZE) ** 2)
         return limit_palette(img, max(16, min(cap, int(size * DENSITY / 100))))
+
+
+def rounded(img, bevel=2.0, step=0.12):
+    """A building's outline rounded off (after SpriteCook's normal-map article, a small bevel for something
+    boxy, as it warns a big one makes a pillow): each pixel within `bevel` of the silhouette's edge lit by
+    which way it faces, from how far it lies from a clear pixel, a step lighter facing the top left and a
+    step darker facing the bottom right; the outline itself left as it is (2026-11-14)."""
+    a = np.asarray(img).astype(float)
+    solid = a[..., 3] > 0
+    h, w = solid.shape
+    dist = np.where(solid, bevel + 1, 0.0)
+    for _ in range(int(bevel) + 1):                       # a few passes of a city-block distance, capped
+        p = np.pad(dist, 1)
+        near = np.minimum.reduce([p[:-2, 1:-1], p[2:, 1:-1], p[1:-1, :-2], p[1:-1, 2:]]) + 1
+        dist = np.where(solid, np.minimum(dist, near), 0.0)
+    hgt = np.minimum(dist, bevel + 1)
+    gy, gx = np.gradient(hgt)
+    facing = (-gx * -0.6 + -gy * -0.8)                    # toward the top left, light from there
+    edge = solid & (dist >= 2) & (dist <= bevel + 0.5)     # inside the outline's own pixel
+    k = np.clip(facing, -1, 1) * step
+    rgb = a[..., :3]
+    rgb = np.where((edge & (k > 0))[..., None], rgb + (255 - rgb) * k[..., None], rgb)
+    rgb = np.where((edge & (k < 0))[..., None], rgb * (1 + k[..., None]), rgb)
+    a[..., :3] = rgb
+    return Image.fromarray(np.clip(np.round(a), 0, 255).astype(np.uint8), "RGBA")
 
 
 def box(b, x0, x1, height, wall, side=None, pattern="plaster", side_pattern=None, ground=GROUND, depth=1.0, curve=0.0):
@@ -324,10 +386,11 @@ def box(b, x0, x1, height, wall, side=None, pattern="plaster", side_pattern=None
     dx, dy = DX * depth, DY * depth
     # The side going back, turned from the light; the front lit from the upper left, both in the roof's
     # shadow under the eaves and the ground's at their foot.
+    eave = 10 if STYLE2 else 6           # a thick roof casts a deeper shadow on the wall under it
     b.surface([(x1, ground), (x1 + dx, ground + dy), (x1 + dx, top + dy), (x1, top)], side or wall,
-              side_pattern or pattern, tone=-0.4, slope=(-0.004, -0.006), axes=(SIDEWAYS, DOWN), eave=6, foot=4)
+              side_pattern or pattern, tone=-0.4, slope=(-0.004, -0.006), axes=(SIDEWAYS, DOWN), eave=eave, foot=4)
     b.surface([(x0, ground), (x1, ground), (x1, top), (x0, top)], wall, pattern, slope=(-0.008, -0.006),
-              eave=6, foot=4, curve=curve)
+              eave=eave, foot=4, curve=curve)
     b.stroke([(x1, ground - 3), (x1, top + 4)], 0.9, shade(wall, 1.12))          # the corner catches the light
     return top
 
@@ -364,7 +427,15 @@ def gable_roof(b, x0, x1, top, colour, pattern="tiles", rise=20, over=3, depth=1
               colour, pattern, tone=-0.2, slope=(0.0, -0.006), axes=(SIDEWAYS, down))
     # The barge boards along the gable's two slopes, so the roof's edge reads.
     left_eave = (x0 - over, top + 2)
-    b.stroke([left_eave, apex, right_eave], 2.6, colour)
+    if STYLE2:
+        # Thick barge boards, rounded: their underside in shade, a lit top (2026-11-14).
+        b.stroke([(left_eave[0], left_eave[1] + 1.6), (apex[0], apex[1] + 1.6), (right_eave[0], right_eave[1] + 1.6)], 3.4,
+                 shade(colour, 0.6))
+        b.stroke([left_eave, apex, right_eave], 3.4, colour)
+        b.stroke([(left_eave[0], left_eave[1] - 0.9), (apex[0], apex[1] - 0.9), (right_eave[0], right_eave[1] - 0.9)], 1.1,
+                 shade(colour, 1.12))
+    else:
+        b.stroke([left_eave, apex, right_eave], 2.6, colour)
     return apex
 
 
@@ -394,8 +465,14 @@ def eaves_roof(b, x0, x1, top, colour, pattern="tiles", rise=16, over=3, depth=1
     b.stroke([(ridge_r[0] + over * 0.6, ridge_r[1]), (x1 + dx + over * 0.6, top + dy + 2)], 2.4, colour)
     b.stroke([(ridge_l[0], ridge_l[1]), (ridge_r[0] + over, ridge_r[1])], 2.4, shade(colour, 1.1))   # the ridge
     # The roof's thickness along its eave, the edge of the tiles seen from the front, in their shadow.
-    b.surface([(x0 - over, top + 3), (x1 + over, top + 3), (x1 + over, top + 5), (x0 - over, top + 5)],
-              shade(colour, 0.62), None, tone=-0.1)
+    if STYLE2:
+        # Thick, as RD's are: a lit lip, the edge in shade below it, rounded under (2026-11-14).
+        b.surface([(x0 - over, top + 3), (x1 + over, top + 3), (x1 + over, top + 7.5), (x0 - over, top + 7)],
+                  shade(colour, 0.7), None, tone=-0.05, slope=(0.0, 0.05))
+        b.stroke([(x0 - over, top + 3.2), (x1 + over, top + 3.2)], 1.2, shade(colour, 1.08))
+    else:
+        b.surface([(x0 - over, top + 3), (x1 + over, top + 3), (x1 + over, top + 5), (x0 - over, top + 5)],
+                  shade(colour, 0.62), None, tone=-0.1)
     return ridge_l, ridge_r
 
 
@@ -403,6 +480,8 @@ def window(b, cx, cy, w=8, h=9, frame="#6b4a32", glass="#ffd27a", arched=False, 
     """A lit window: frame, warm glass with a cross of glazing bars, a sill; `shutters` a colour,
     `box` a flower box's flowers' colour; `deep`, set back in the wall: the reveal's shadow along its top
     and right inside the frame, and the sill's on the wall under it."""
+    if STYLE2:
+        w, h = w * 1.25, h * 1.2              # bigger panes, as RD's (2026-11-14)
     x0, x1, y0, y1 = cx - w / 2, cx + w / 2, cy - h / 2, cy + h / 2
     if shutters:
         b.rect(x0 - 3.5, y0, x0 - 0.5, y1, shutters, texture=0.04)
@@ -416,9 +495,16 @@ def window(b, cx, cy, w=8, h=9, frame="#6b4a32", glass="#ffd27a", arched=False, 
     if arched:
         gpts += [(cx + w / 2 * math.cos(a), y0 + 2 - w / 2 * math.sin(a)) for a in np.linspace(0, math.pi, 9)]
     gpts += [(x0, y0 + (2 if arched else 0))]
-    b.poly(gpts, glass, texture=0.0, profile="flat")
-    b.rect(cx - 0.5, y0, cx + 0.5, y1, frame, texture=0.0)
-    b.rect(x0, cy - 0.5, x1, cy + 0.5, frame, texture=0.0)
+    if STYLE2:
+        # Lit from inside, as RD's: one bright pane, a warmer band along its lower right, no glazing bars:
+        # bars and a glow in rings left an 8-pixel pane a muddle (2026-11-14).
+        b.poly(gpts, "#f4b24c", texture=0.0, profile="flat")
+        b.poly([(x0, y0 + (2 if arched else 0)), (x1 - 1.6, y0 + (2 if arched else 0)), (x1 - 1.6, y1 - 1.6), (x0, y1 - 1.6)],
+               "#ffe07a", texture=0.0, profile="flat")
+    else:
+        b.poly(gpts, glass, texture=0.0, profile="flat")
+        b.rect(cx - 0.5, y0, cx + 0.5, y1, frame, texture=0.0)
+        b.rect(x0, cy - 0.5, x1, cy + 0.5, frame, texture=0.0)
     if deep:
         reveal = shade(frame, 0.55)
         b.poly([(x0, y0 + (2 if arched else 0)), (x1, y0 + (2 if arched else 0)), (x1, y1), (x1 - 1.4, y1),
