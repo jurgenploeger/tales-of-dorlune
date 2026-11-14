@@ -35,7 +35,10 @@ def sun(hour):
     return x / n, y / n, z / n, (1 if day else 0.6)
 
 # ---------- the shade ----------
-CORE = 0.72     # how far the ground is pulled into shade
+CORE = 0.62     # deepest, at an object's foot (CanopyPainter.core)
+TIP_FADE = 0.65  # how much lighter at the shade's far end (CanopyPainter.tipFade)
+SOFTNESS = 2     # two box blurs this many pixels round (CanopyPainter.softness)
+FLECK_SHADE = 0.3     # how far the ground is pulled into shade
 RIM = 0.32      # the one-pixel rim round it
 REACH = 0.55    # how long the shade is next to real geometry (real shadows read far too long at midday)
 LONGEST = 2.2   # at most this many times the sprite's height (the low evening sun)
@@ -70,51 +73,44 @@ def cast(mask, foot_x, foot_y, foot_row, s, H, W):
     im = Image.new('L', (W, H), 0)
     d = ImageDraw.Draw(im)
     h, w = mask.shape
-    for i in range(h):
+    tallest = max(1, foot_row)
+    for i in range(h):   # row 0 is the top: the tip's slices first, so the foot's deeper shade wins
         hs = foot_row - i
         if hs < 0: continue
         cols = np.where(mask[i])[0]
         if not len(cols): continue
+        depth = 1 - TIP_FADE * min(1, hs / tallest)
         runs = np.split(cols, np.where(np.diff(cols) > 1)[0] + 1)
         for run in runs:
             half = (run[-1] - run[0] + 1) / 2
             cx = foot_x - w / 2 + (run[0] + run[-1]) / 2 + ox * hs
             cy = foot_y + dy * hs
-            d.ellipse((cx - half, cy - half / 2, cx + half, cy + half / 2), fill=255)
-    return np.asarray(im) > 127
+            d.ellipse((cx - half, cy - half / 2, cx + half, cy + half / 2), fill=int(255 * depth))
+    return np.asarray(im).astype(float) / 255
 
 def canopy(hour, flecks_phase=(0.0, 0.0)):
     s = sun(hour)
     def shade(img, drawn, props, palette):
         H, W = img.shape[:2]
-        core = np.zeros((H, W), bool)
+        depth = np.zeros((H, W))
         for art, spr, x0, y0, w, h, walker, _ in drawn:
             if walker or h < 12: continue   # everything that stands casts it, but a speck (CanopyShade.shortest)
             mask = spr[..., 3] > 0.5
             rows = np.where(mask.any(1))[0]
             if not len(rows): continue
-            core |= cast(mask, x0 + w / 2, y0 + rows[-1], rows[-1], s, H, W)
-        if not core.any(): return
-        # Flecks of light where the leaves part: blobs of a few pixels, only well inside the shade.
+            depth = np.maximum(depth, cast(mask, x0 + w / 2, y0 + rows[-1], rows[-1], s, H, W))
+        if not depth.any(): return
+        core = depth > 0
         n = value_noise(H, W, 9, 11, flecks_phase)
         inner = core.copy()
         for dx, dy in ((4, 0), (-4, 0), (0, 3), (0, -3)):
             inner &= np.roll(np.roll(core, dy, 0), dx, 1)
-        fleck = inner & (n > FLECK_CUT)
-        rim = np.zeros_like(core)
-        for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-            rim |= np.roll(np.roll(core, dy, 0), dx, 1)
-        rim &= ~core
-        # A fleck is light with a rim of half shade round it, in steps as the shade's own edge.
-        fleck_rim = np.zeros_like(fleck)
-        for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-            fleck_rim |= np.roll(np.roll(fleck, dy, 0), dx, 1)
-        fleck_rim &= ~fleck
-        a = np.where(core, CORE, 0.0) + np.where(rim, RIM, 0.0)
-        a = np.where(fleck_rim, RIM, a)
-        a = np.where(fleck, 0.0, a) * s[3]
-        # Darker and a little cool, the same in every land (CanopyShade.lean): leaning toward each
-        # palette's own shadow colour turned a desert's sand red (playtesting 2026-11-14).
+        depth = np.where(inner & (n > FLECK_CUT), depth * FLECK_SHADE, depth)
+        from PIL import ImageFilter
+        im = Image.fromarray((depth * 255).astype(np.uint8))
+        im = im.filter(ImageFilter.BoxBlur(SOFTNESS)).filter(ImageFilter.BoxBlur(SOFTNESS))
+        a = np.asarray(im).astype(float) / 255 * CORE * s[3]
+        # Darker and a little cool, the same in every land (CanopyShade.lean).
         shaded = img[..., :3] * LEAN
         img[..., :3] = img[..., :3] * (1 - a[..., None]) + shaded * a[..., None]
     return shade

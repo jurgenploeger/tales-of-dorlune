@@ -82,6 +82,26 @@ final class Walker: SKNode {
     /// under the trees (-99,300), under all that stands, so a long shadow at evening runs over the
     /// ground, not over a tree behind.
     private static let figureDepth: CGFloat = -99_250
+    /// Softens the figure (playtesting 2026-11-14: "a bit more softer and blurred gradient at the
+    /// end, it's too stark"): each pixel's alpha taken from a few round it, so its edge is soft, and
+    /// fading toward its head, the shadow's far end. `a_frame`: the frame's bottom and height in its
+    /// texture, and a texel and a bit across and up (`showFrame`). Drawn in the figure's colour.
+    private static let soften: SKShader = {
+        let shader = SKShader(source: """
+        void main() {
+            vec2 d = a_frame.zw;
+            float a = texture2D(u_texture, v_tex_coord).a * 0.36
+                + (texture2D(u_texture, v_tex_coord + vec2(d.x, 0.0)).a + texture2D(u_texture, v_tex_coord - vec2(d.x, 0.0)).a
+                 + texture2D(u_texture, v_tex_coord + vec2(0.0, d.y)).a + texture2D(u_texture, v_tex_coord - vec2(0.0, d.y)).a) * 0.16;
+            float t = clamp((v_tex_coord.y - a_frame.x) / a_frame.y, 0.0, 1.0);
+            a *= (1.0 - 0.75 * t) * v_color_mix.a;
+            gl_FragColor = vec4(u_shade.rgb * a, a);
+        }
+        """)
+        shader.uniforms = [SKUniform(name: "u_shade", vectorFloat4: SIMD4<Float>(0.06, 0.08, 0.16, 1))]
+        shader.attributes = [SKAttribute(name: "a_frame", type: .vectorFloat4)]
+        return shader
+    }()
     /// Where the light over the map comes from now, for anyone set down after it last moved
     /// (`WorldScene.follow`).
     static var sun = Sun.noon
@@ -132,10 +152,21 @@ final class Walker: SKNode {
         figure.alpha = Self.figureDarkness * CGFloat(fall.strength)
     }
 
+    /// The figure shows the sprite's frame, and the shader where that frame lies in its texture
+    /// (`soften`).
+    private func showFrame() {
+        figure.texture = sprite.texture
+        guard let texture = sprite.texture else { return }
+        let rect = texture.textureRect(), size = texture.size()
+        let frame = SIMD4<Float>(Float(rect.minY), Float(max(rect.height, 0.0001)),
+                                 Float(rect.width / max(1, size.width) * 1.3), Float(rect.height / max(1, size.height) * 1.3))
+        figure.setValue(SKAttributeValue(vectorFloat4: frame), forAttribute: "a_frame")
+    }
+
     /// The figure shows the frame the sprite shows, and lies just over the ground (`figureDepth`)
     /// wherever the walker stands in the scene's depth. Every frame.
     private func followFigure() {
-        if figure.texture !== sprite.texture { figure.texture = sprite.texture }
+        if figure.texture !== sprite.texture { showFrame() }
         guard scene is ContinentScene || scene is WorldScene else {
             figure.zPosition = -1
             return
@@ -164,7 +195,8 @@ final class Walker: SKNode {
         figure.anchorPoint = sprite.anchorPoint
         figure.color = Self.figureColor
         figure.colorBlendFactor = 1
-        figure.texture = sprite.texture
+        figure.shader = Self.soften
+        showFrame()
         figure.zPosition = -1
         addChild(figure)
         figure.run(.repeatForever(.customAction(withDuration: 1) { [weak self] _, _ in self?.followFigure() }))
