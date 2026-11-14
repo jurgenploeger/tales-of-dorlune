@@ -30,6 +30,10 @@ final class LampLight {
     private var prunedAt = 1024
     /// The light's copies by sprite picture, the way it comes from (one of eight) and its colour.
     private var copies: [String: SKTexture?] = [:]
+    /// Each picture's pixels and which way each faces, by its key: worked out once, not again for
+    /// each way the light comes from (the cave lantern asks for a new way at nearly every step, and
+    /// working the normals out each time made walking in a cave stutter, playtesting 2026-11-14).
+    private var surfaces: [String: (pixels: [UInt8], normals: [Float])] = [:]
 
     /// Lights `node` (showing `picture`, standing at `node.position`) from the nearest of `lamps`
     /// within reach, if any: a copy of it, lit from that way, over it.
@@ -69,7 +73,15 @@ final class LampLight {
         let colorKey = String(format: "%.2f,%.2f,%.2f", color.r, color.g, color.b)
         let copyKey = "\(key)#\(way)#\(colorKey)"
         if let known = copies[copyKey] { return known }
-        let made = makeCopy(of: picture, way: way, color: color)
+        let surface: (pixels: [UInt8], normals: [Float])
+        if let known = surfaces[key] {
+            surface = known
+        } else {
+            guard let pixels = PixelImage.pixels(of: picture, width: picture.width, height: picture.height) else { return nil }
+            surface = (pixels, OutlineNormals.normals(pixels, width: picture.width, height: picture.height))
+            surfaces[key] = surface
+        }
+        let made = makeCopy(surface, width: picture.width, height: picture.height, way: way, color: color)
         copies[copyKey] = .some(made)
         return made
     }
@@ -88,10 +100,9 @@ final class LampLight {
 
     /// `picture` lit from `way` (0 the right, counting round toward the top) in `color`: each pixel's
     /// colour times the light it catches, in three steps (none where it faces away).
-    private func makeCopy(of picture: CGImage, way: Int, color: (r: Double, g: Double, b: Double)) -> SKTexture? {
-        let width = picture.width, height = picture.height
-        guard let pixels = PixelImage.pixels(of: picture, width: width, height: height) else { return nil }
-        let normals = OutlineNormals.normals(pixels, width: width, height: height)
+    private func makeCopy(_ surface: (pixels: [UInt8], normals: [Float]), width: Int, height: Int, way: Int,
+                          color: (r: Double, g: Double, b: Double)) -> SKTexture? {
+        let pixels = surface.pixels, normals = surface.normals
         let angle = Double(way) * .pi / 4
         // Image rows run down: the light's up is their minus.
         var lx = cos(angle), ly = -sin(angle), lz = 0.55
