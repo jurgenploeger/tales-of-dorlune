@@ -238,6 +238,9 @@ class Build:
         # Its walls' spans, its doors and whether it lays its own ground (`grounds`), for `fit` to give
         # it a patch of ground if it doesn't.
         self.walls, self.doors, self.has_ground = [], [], False
+        # Style 2's window panes, painted in exact colours on the finished pixels (`render`): drawn as
+        # shapes, every colour went through a lit, hue-shifted ramp and a pale yellow came out olive.
+        self.panes = []
 
     def t(self, points, closed=True, straight=False):
         pts = [(self.size / 2 + (x - self.cx) * self.k, self.foot + (y - GROUND) * self.k) for x, y in points]
@@ -347,10 +350,39 @@ class Build:
         img = self.s.render(outline="tinted")
         if STYLE2:
             img = rounded(img)
+            img = paint_panes(img, self.panes)
         size = int((np.asarray(img)[..., 3] > 0).sum())
         # The palette's cap grows with the canvas: a grand building's 160 pixels hold nearly three houses.
         cap = int(PALETTE * (self.size / SIZE) ** 2)
         return limit_palette(img, max(16, min(cap, int(size * DENSITY / 100))))
+
+
+# A lit pane's colours, from RD's snow cabin's own windows (sampled 2026-11-14): its frame, the orange rim
+# inside it, a deeper yellow along the lower right, the light warm yellow of the pane.
+PANE = {"frame": (122, 74, 44), "rim": (215, 142, 74), "band": (230, 205, 79), "pane": (247, 243, 144)}
+
+
+def paint_panes(img, panes):
+    """Each pane (x0, y0, x1, y1 in the canvas's pixels, frame included) painted as RD paints a lit window:
+    a frame a pixel wide, an orange rim a pixel inside it, a band of deeper yellow along the lower right,
+    and the pane's light yellow over the rest."""
+    a = np.asarray(img).copy()
+    h, w = a.shape[:2]
+    for x0, y0, x1, y1 in panes:
+        X0, Y0, X1, Y1 = int(round(x0)), int(round(y0)), int(round(x1)), int(round(y1))
+        if X1 - X0 < 4 or Y1 - Y0 < 4:
+            continue
+
+        def fill(l, t_, r, b_, colour):
+            l, t_, r, b_ = max(0, l), max(0, t_), min(w, r), min(h, b_)
+            if r > l and b_ > t_:
+                a[t_:b_, l:r, :3] = colour
+                a[t_:b_, l:r, 3] = 255
+        fill(X0, Y0, X1, Y1, PANE["frame"])
+        fill(X0 + 1, Y0 + 1, X1 - 1, Y1 - 1, PANE["rim"])
+        fill(X0 + 2, Y0 + 2, X1 - 2, Y1 - 2, PANE["band"])
+        fill(X0 + 2, Y0 + 2, X1 - 3, Y1 - 3, PANE["pane"])
+    return Image.fromarray(a, "RGBA")
 
 
 def rounded(img, bevel=2.0, step=0.12):
@@ -482,6 +514,9 @@ def window(b, cx, cy, w=8, h=9, frame="#6b4a32", glass="#ffd27a", arched=False, 
     and right inside the frame, and the sill's on the wall under it."""
     if STYLE2:
         w, h = w * 1.25, h * 1.2              # bigger panes, as RD's (2026-11-14)
+        # A frame not much darker than the wall, as RD's sit in theirs: near-black it outlined the pane
+        # harshly (the user, 2026-11-14: "too harsh and contrasty").
+        frame = shade(frame, 1.45)
     x0, x1, y0, y1 = cx - w / 2, cx + w / 2, cy - h / 2, cy + h / 2
     if shutters:
         b.rect(x0 - 3.5, y0, x0 - 0.5, y1, shutters, texture=0.04)
@@ -498,9 +533,13 @@ def window(b, cx, cy, w=8, h=9, frame="#6b4a32", glass="#ffd27a", arched=False, 
     if STYLE2:
         # Lit from inside, as RD's: one bright pane, a warmer band along its lower right, no glazing bars:
         # bars and a glow in rings left an 8-pixel pane a muddle (2026-11-14).
-        b.poly(gpts, "#f4b24c", texture=0.0, profile="flat")
-        b.poly([(x0, y0 + (2 if arched else 0)), (x1 - 1.6, y0 + (2 if arched else 0)), (x1 - 1.6, y1 - 1.6), (x0, y1 - 1.6)],
-               "#ffe07a", texture=0.0, profile="flat")
+        # Soft and warm, in RD's snow cabin's own colours: an orange rim inside the frame, a deeper yellow
+        # along the lower right, a light warm yellow pane (paler, it read as beige wall).
+        # Painted on the finished pixels in exact colours (`Build.render`), ruler-straight: as shapes
+        # they went olive in the ramp's light and the hand-drawn wobble ran a staircase across them.
+        b.poly(gpts, "#d78e4a", texture=0.0, profile="flat", tone=0.5, straight=True)
+        (px0, py0), (px1, py1) = b.t([(x0 - 1, y0 - 1), (x1 + 1, y1 + 1)], straight=True)
+        b.panes.append((px0, py0, px1, py1))
     else:
         b.poly(gpts, glass, texture=0.0, profile="flat")
         b.rect(cx - 0.5, y0, cx + 0.5, y1, frame, texture=0.0)

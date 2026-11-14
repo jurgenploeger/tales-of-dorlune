@@ -874,6 +874,13 @@ stone townhouse two floors, not three, in warm stone, with a dormer, a flower bo
 armour, tailor and book shops shorter with roofs half again taller. Stone warmer throughout. A patch of
 grass under each was tried and taken out (the user: not needed; what's missing is that they look flat).
 
+**Lit windows as RD paints them (2026-11-14).** Ours were a near-white pane in a near-black frame with a
+cross of glazing bars: harsh and contrasty beside RD's soft, whimsical ones (the user). RD's snow cabin's,
+sampled: a mid-brown frame (`#7a4a2c`), an orange rim a pixel inside it (`#d78e4a`), a deeper yellow
+along the pane's lower right (`#e6cd4f`), the pane a light warm yellow (`#f7f390`), no bars. Drawn as
+shapes, a pale yellow went olive through the lit, hue-shifted ramp and the hand-drawn wobble bent it, so
+style 2 paints panes in exact colours on the finished pixels (`paint_panes`).
+
 - **2026-11-02 (roofs and pillars):** "Roof should still have basic geometry, same for pillars" (the
   user): the bend is for walls and stone. Roofs, spires, domes, cornices, columns and pilasters keep to
   the ruler (`Build.ruled()`, and `@ruled` on `gable`, `gable_roof`, `eaves_roof`, `dome`,
