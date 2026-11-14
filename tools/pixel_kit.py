@@ -652,8 +652,9 @@ def soften(img, lift=0.16, gamma=0.88, joint=0.45, line=0.2):
     hue_dir = grey / span
     p = np.pad(np.where(solid, v, np.nan), 1, constant_values=np.nan)
     near = np.stack([p[:-2, 1:-1], p[2:, 1:-1], p[1:-1, :-2], p[1:-1, 2:]])
-    with np.errstate(all="ignore"):
-        mean = np.nan_to_num(np.nanmean(np.where(np.isnan(near), np.nan, near), axis=0) if near.size else v, nan=0.0)
+    # The mean of each pixel's solid neighbours (none: 0, and it's not inside anyway).
+    have = ~np.isnan(near)
+    mean = np.where(have, near, 0.0).sum(axis=0) / np.maximum(have.sum(axis=0), 1)
     count = (~np.isnan(near)).sum(axis=0)
     inside = solid & (count == 4)
     dark_line = inside & (mean - v > line)
