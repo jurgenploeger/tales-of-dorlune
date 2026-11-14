@@ -41,8 +41,9 @@ final class LandStage {
     private var feet: [ObjectIdentifier: CGFloat] = [:]
     /// Shadows cast by its scenery on a hill or the sunk shore (`Lighting.Shadow`).
     private var shadows: [Lighting.Shadow] = []
-    /// The shade cast by its scenery on flat ground (`CanopyShade`), away from the sun (`follow`).
-    private lazy var canopy = CanopyShade(size: Self.chunkSize, palette: def.theme.palette) { [unowned self] point in
+    /// The shade cast by everything it sets down on flat ground (`CanopyShade`), away from the sun
+    /// (`follow`), stopping at its town's wall or fence (`WorldMap.fenceCells`).
+    private lazy var canopy = CanopyShade(size: Self.chunkSize, walls: Set(map.fenceCells), map: map) { [unowned self] point in
         self.layer(at: point)
     }
     /// The walls along its borders that come down once you can cross (`placeBorders`): the border,
@@ -163,7 +164,7 @@ final class LandStage {
                              width: screen.width * scale, height: screen.height * scale)
         critters?.update(dt: dt, player: you, visible: visible, flocks: isHere) { [map] in map.isWalkable(map.rawCell(at: $0)) }
         show(around: camera, scale: scale, screen: screen)
-        canopy.draw(budget: 1)
+        canopy.draw()
     }
 
     /// Lays the shade under its scenery away from `sun` (`CanopyShade.follow`).
@@ -370,6 +371,11 @@ final class LandStage {
         }
         chunk(at: node.position).addChild(node)
         see.note(node)
+        // Everything set down on flat ground casts shade, merged and cast away from the sun (on a hill
+        // or the sunk shore, a prop with `shadow` keeps its round one: `plant`).
+        if map.hillIndex(at: cell) == nil, !map.isSunken(cell) {
+            canopy.add(node, picture: art.picture(of: sprite.texture))
+        }
         return node
     }
 
@@ -717,12 +723,8 @@ final class LandStage {
                 // On the shore, over the sunk ground it stands on (`HillArt.sunkenDepth`).
                 let strip = HillArt.strip(at: -node.zPosition, depth: HillArt.sunkenDepth)
                 shadows.append(Lighting.Shadow(under: node, in: chunk(at: node.position), layers: [(from: strip.start, z: strip.z)]))
-            } else if let texture = node.texture {
-                // On flat ground, the shade under the trees, merged and cast away from the sun.
-                canopy.add(node, picture: art.picture(of: texture))
-            } else {
-                shadows.append(Lighting.Shadow(under: node, in: layer(at: node.position)))
             }
+            // On flat ground its shade is laid as everything's is (`addScenery`, `CanopyShade`).
         }
         if let hex = placement.glow, let color = UIColor(hex: hex), let glow = planted.glow {
             // A light isn't darkened on a hill's shaded side (`shade`).

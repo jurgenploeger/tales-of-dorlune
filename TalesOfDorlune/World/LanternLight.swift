@@ -51,7 +51,7 @@ final class LanternLight {
             let middle = CGPoint(x: node.position.x, y: node.position.y + node.size.height * (0.5 - node.anchorPoint.y))
             let distance = hypot(point.x - middle.x, point.y - middle.y)
             guard distance < reach, distance > 4, sees(thing.cell) else {
-                thing.copy?.isHidden = true
+                Self.fadeOut(thing.copy)
                 continue
             }
             let angle = atan2(point.y - middle.y, point.x - middle.x)
@@ -64,7 +64,7 @@ final class LanternLight {
                 pictures[thing.key] = picture
             }
             guard let texture = LampLight.shared.copy(of: picture, key: thing.key, way: way, color: color) else {
-                thing.copy?.isHidden = true
+                Self.fadeOut(thing.copy)
                 continue
             }
             let copy: SKSpriteNode
@@ -72,6 +72,7 @@ final class LanternLight {
                 copy = made
             } else {
                 copy = SKSpriteNode(texture: texture, size: node.size)
+                copy.alpha = 0
                 copy.blendMode = .add
                 copy.zPosition = 0.01
                 // Its child, so it sways, hides and goes with it.
@@ -82,8 +83,23 @@ final class LanternLight {
             copy.size = node.size
             copy.anchorPoint = node.anchorPoint
             let near = 1 - distance / reach
-            copy.alpha = LampLight.brightest * (near * 3).rounded(.up) / 3
-            copy.isHidden = false
+            // Eased to its new brightness as you walk, not snapped to it at each step; back from fading out.
+            copy.removeAction(forKey: "out")
+            if copy.isHidden {
+                copy.alpha = 0
+                copy.isHidden = false
+            }
+            copy.run(.fadeAlpha(to: LampLight.brightest * (near * 3).rounded(.up) / 3, duration: Self.fade), withKey: "fade")
         }
+    }
+
+    /// How long the light takes to come to a thing, change, or leave it.
+    static let fade: TimeInterval = 0.2
+
+    /// Fades a lit copy out, then hides it.
+    private static func fadeOut(_ copy: SKSpriteNode?) {
+        guard let copy, !copy.isHidden, copy.action(forKey: "out") == nil else { return }
+        copy.removeAction(forKey: "fade")
+        copy.run(.sequence([.fadeAlpha(to: 0, duration: fade), .hide()]), withKey: "out")
     }
 }

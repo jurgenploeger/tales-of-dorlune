@@ -69,8 +69,19 @@ final class Walker: SKNode {
     private var goingRight = false
     /// How high the ground under it stands (`WorldScene.groundHeight(at:)`).
     private(set) var lift: CGFloat = 0
-    /// Its shadow on the ground, cast away from the sun like the scenery's (`cast(from:)`).
+    /// A soft round of shade right under its feet, where it touches the ground.
     private let shadow = SKSpriteNode(texture: SoftTextures.glow)
+    /// Its shadow: its own picture, frame by frame, laid on the ground away from the sun, as long for
+    /// its height as the shade under the trees and buildings (`CanopyShade`; the user, 2026-11-14:
+    /// "the hero and all other characters should have shadows as well"), mirrored as it is.
+    private let figure = SKSpriteNode()
+    /// The figure's colour and how dark it lies, by full sunlight (fainter by moonlight).
+    private static let figureColor = UIColor(red: 0.06, green: 0.08, blue: 0.16, alpha: 1)
+    private static let figureDarkness: CGFloat = 0.4
+    /// Where the figure lies among everything in a map's scene: just over the ground and the shade
+    /// under the trees (-99,300), under all that stands, so a long shadow at evening runs over the
+    /// ground, not over a tree behind.
+    private static let figureDepth: CGFloat = -99_250
     /// Where the light over the map comes from now, for anyone set down after it last moved
     /// (`WorldScene.follow`).
     static var sun = Sun.noon
@@ -104,14 +115,38 @@ final class Walker: SKNode {
         if node === body { super.addChild(node) } else { body.addChild(node) }
     }
 
-    /// Lays its shadow on the ground away from `sun`, as the scenery's (`Lighting.Shadow.shape`):
-    /// a soft round under its feet, stretched the lower the sun, fainter by moonlight.
+    /// Lays its shadow on the ground away from `sun`, as the scenery's: its figure along the way the
+    /// shade falls (`CanopyShade.falling`), as long for its height, and a soft round under its feet
+    /// (`Lighting.Shadow.shape`), fainter by moonlight.
     func cast(from sun: Sun) {
-        let (middle, size, turn) = Lighting.Shadow.shape(wide: Double(cycle.size.width) * 0.9, sun: sun)
+        let (middle, size, turn) = Lighting.Shadow.shape(wide: Double(cycle.size.width) * 0.75, sun: sun)
         shadow.position = CGPoint(x: middle.dx, y: middle.dy)
         shadow.size = size
         shadow.zRotation = turn
-        shadow.alpha = 0.34 * CGFloat(sun.strength)
+        shadow.alpha = 0.26 * CGFloat(sun.strength)
+        let fall = CanopyShade.falling(from: sun)
+        let length = (fall.fall.dx * fall.fall.dx + fall.fall.dy * fall.fall.dy).squareRoot()
+        // Its up turned to the way the shade falls, and as long as the shade is for its height.
+        figure.zRotation = atan2(fall.fall.dy, fall.fall.dx) - .pi / 2
+        figure.yScale = max(0.25, length)
+        figure.alpha = Self.figureDarkness * CGFloat(fall.strength)
+    }
+
+    /// The figure shows the frame the sprite shows, and lies just over the ground (`figureDepth`)
+    /// wherever the walker stands in the scene's depth. Every frame.
+    private func followFigure() {
+        if figure.texture !== sprite.texture { figure.texture = sprite.texture }
+        guard scene is ContinentScene || scene is WorldScene else {
+            figure.zPosition = -1
+            return
+        }
+        var depth = zPosition + body.zPosition
+        var node = parent
+        while let above = node {
+            depth += above.zPosition
+            node = above.parent
+        }
+        figure.zPosition = Self.figureDepth - depth
     }
 
     /// `badge`: BOT after the name.
@@ -125,6 +160,14 @@ final class Walker: SKNode {
         shadow.colorBlendFactor = 1
         shadow.zPosition = -1
         addChild(shadow)
+        figure.size = cycle.size
+        figure.anchorPoint = sprite.anchorPoint
+        figure.color = Self.figureColor
+        figure.colorBlendFactor = 1
+        figure.texture = sprite.texture
+        figure.zPosition = -1
+        addChild(figure)
+        figure.run(.repeatForever(.customAction(withDuration: 1) { [weak self] _, _ in self?.followFigure() }))
         cast(from: Self.sun)
         Self.everyone.add(self)
         addChild(turn)
@@ -146,6 +189,7 @@ final class Walker: SKNode {
     func setCycle(_ cycle: WalkCycle) {
         self.cycle = cycle
         sprite.size = cycle.size
+        figure.size = cycle.size
         mirror()
         animate()
         blink()
@@ -188,6 +232,7 @@ final class Walker: SKNode {
 
     private func mirror() {
         turn.xScale = cycle.mirrors && goingRight != cycle.facesRight ? -1 : 1
+        figure.xScale = turn.xScale
     }
 
     /// Shows the weapon in hand.

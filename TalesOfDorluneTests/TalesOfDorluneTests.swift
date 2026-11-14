@@ -3982,16 +3982,16 @@ struct RulesTests {
         // Over a month of in-game days the swamp sees more than one kind.
         #expect(seen.count > 1)
         #expect(seen.isSubset(of: [.clear, .cloudy, .rain, .storm, .fog]))
-        // The light follows the clock: the fractional hours agree with the calendar's hour. Nine
-        // daylight minutes bring 18hr; then the night's hours go by half again as fast.
-        let evening = start.addingTimeInterval(9.5 * 60)
+        // The light follows the clock: the fractional hours agree with the calendar's hour. From a
+        // new game's 9hr, 22.5 daylight minutes bring 18hr; then the night's hours go by at 1.5 a minute.
+        let evening = start.addingTimeInterval(23 * 60)
         #expect(GameClock.moment(at: evening, since: start).hour == 18)
         #expect(abs(GameClock.hours(at: evening, since: start) - 18.75) < 0.001)
     }
 
     @Test func nightsAreShortAndShowersBlowOver() throws {
         let start = Date(timeIntervalSince1970: 1_800_000_000)
-        // A day is twelve real minutes of daylight and an eight-minute night.
+        // A day is thirty real minutes of daylight and an eight-minute night.
         var night = 0
         for second in 0..<Int(GameClock.dayMinutes * 60) {
             if !GameClock.moment(at: start.addingTimeInterval(Double(second)), since: start).isDaytime { night += 1 }

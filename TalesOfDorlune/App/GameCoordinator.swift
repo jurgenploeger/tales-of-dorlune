@@ -414,6 +414,11 @@ final class GameCoordinator {
                     waystone: String? = nil) {
         // The map you're leaving stays on screen under the card for a moment: nothing more happens on it.
         mapScene.isInputLocked = true
+        // Time skips ahead behind the card (not in a debug launch: its screenshots are at the hour asked).
+        if !DebugLaunch.isActive {
+            session.skipTimeOnTravel()
+            continent?.retime()
+        }
         loadingMapName = map.name
         loadingStarted = Date()
         resetLoad(to: 0)

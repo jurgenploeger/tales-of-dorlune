@@ -14,7 +14,16 @@ final class Lantern {
     /// The dark over the cells inside the light that it can't see past the rock (`shade`), and its
     /// colour and depth, the dark's own.
     private let shadows = SKNode()
-    private var pool: [SKSpriteNode] = []
+    /// The dark over each cell, by where its middle is, and the blobs free to use again.
+    private var dark: [Spot: SKSpriteNode] = [:]
+    private var spare: [SKSpriteNode] = []
+    private struct Spot: Hashable {
+        let x: Int
+        let y: Int
+    }
+    /// How long a cell's dark takes to come or go as you walk (playtesting 2026-11-14: snapped at each
+    /// step, the light didn't move smoothly).
+    private static let fade: TimeInterval = 0.2
     private let shadeColor: UIColor
     private let shadeDepth: CGFloat
 
@@ -81,24 +90,43 @@ final class Lantern {
     /// The rock stops the light (after SpriteCook's shadowcasting article): a soft dark over each of
     /// `cells` (world points of the middles of cells inside the light that it can't see,
     /// `WorldScene.castLight`), `size` a cell's diamond on screen. Blobs that overlap make the dark
-    /// solid, and their soft edges a penumbra along the rock's shadow. Reuses its sprites.
+    /// solid, and their soft edges a penumbra along the rock's shadow. Each cell's dark stays where
+    /// it is while the cell stays dark, and fades in or out as it comes or goes (`fade`). Reuses its
+    /// sprites.
     func shade(_ cells: [CGPoint], size: CGSize) {
-        while pool.count < cells.count {
-            let blob = SKSpriteNode(texture: SoftTextures.glow)
-            blob.color = shadeColor
-            blob.colorBlendFactor = 1
-            shadows.addChild(blob)
-            pool.append(blob)
-        }
-        for (index, blob) in pool.enumerated() {
-            guard index < cells.count else {
-                blob.isHidden = true
+        let blobSize = CGSize(width: size.width * 1.7, height: size.height * 1.7)
+        var wanted = Set<Spot>()
+        for point in cells {
+            let spot = Spot(x: Int(point.x.rounded()), y: Int(point.y.rounded()))
+            wanted.insert(spot)
+            if let blob = dark[spot] {
+                blob.run(.fadeAlpha(to: shadeDepth, duration: Self.fade), withKey: "fade")
                 continue
             }
+            let blob: SKSpriteNode
+            if let free = spare.popLast() {
+                blob = free
+            } else {
+                blob = SKSpriteNode(texture: SoftTextures.glow)
+                blob.color = shadeColor
+                blob.colorBlendFactor = 1
+                shadows.addChild(blob)
+            }
+            blob.removeAllActions()
+            blob.position = point
+            blob.size = blobSize
+            blob.alpha = 0
             blob.isHidden = false
-            blob.position = cells[index]
-            blob.size = CGSize(width: size.width * 1.7, height: size.height * 1.7)
-            blob.alpha = shadeDepth
+            blob.run(.fadeAlpha(to: shadeDepth, duration: Self.fade), withKey: "fade")
+            dark[spot] = blob
+        }
+        for (spot, blob) in dark where !wanted.contains(spot) {
+            dark[spot] = nil
+            // Back among the spare ones once it's faded out.
+            blob.run(.sequence([.fadeAlpha(to: 0, duration: Self.fade), .hide(), .run { [weak self, weak blob] in
+                guard let self, let blob else { return }
+                self.spare.append(blob)
+            }]), withKey: "fade")
         }
     }
 

@@ -1493,6 +1493,15 @@ final class GameSession {
         return nil
     }
 
+    /// Behind the loading card (a cave's mouth, its stairs, a feather, a shard, a waystone, a ship,
+    /// waking at your checkpoint) the clock skips ahead: an hour by day, three at night
+    /// (`GameClock.skippedMinutes`), so a night out exploring isn't long.
+    func skipTimeOnTravel() {
+        let start = data.startedAt ?? GameClock.origin
+        let hour = GameClock.hours(since: start).truncatingRemainder(dividingBy: 24)
+        data.startedAt = start.addingTimeInterval(-GameClock.skippedMinutes(atHour: hour) * 60)
+    }
+
     /// Walking into a town makes its square your checkpoint, and the friends at your side save there
     /// with you. Wild maps don't: waking up at the edge of a zone too hard for you could leave you
     /// fainting there over and over.

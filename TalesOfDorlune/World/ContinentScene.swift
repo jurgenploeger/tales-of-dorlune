@@ -229,6 +229,13 @@ final class ContinentScene: SKScene {
     /// The air of each land you've been in (`Air`), by its id.
     private var airs: [String: Air] = [:]
     private var sunTimer: TimeInterval = 0
+
+    /// The clock skipped ahead behind the loading card (`GameSession.skipTimeOnTravel`): every
+    /// land's sky shows the new hour at once, and the shade and shadows follow it on the next frame.
+    func retime() {
+        for air in airs.values { air.sky?.retime(session.data.startedAt) }
+        sunTimer = 0
+    }
     /// Whether you've been put somewhere on it (`place`): till then it draws nothing.
     private var placed = false
     /// Lands laid out already (`adopt`: the one a save starts in, laid out off the main thread as
