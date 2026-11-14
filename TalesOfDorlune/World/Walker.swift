@@ -107,7 +107,8 @@ final class Walker: SKNode {
     /// Lays its shadow on the ground away from `sun`, as the scenery's (`Lighting.Shadow.shape`):
     /// a soft round under its feet, stretched the lower the sun, fainter by moonlight.
     func cast(from sun: Sun) {
-        let (middle, size, turn) = Lighting.Shadow.shape(wide: Double(cycle.size.width) * 0.9, sun: sun)
+        let (middle, size, turn) = Lighting.Shadow.shape(wide: Double(cycle.size.width) * 0.9, sun: sun,
+                                                         tall: Double(cycle.size.height) * 0.8)
         shadow.position = CGPoint(x: middle.dx, y: middle.dy)
         shadow.size = size
         shadow.zRotation = turn

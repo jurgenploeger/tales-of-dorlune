@@ -40,6 +40,7 @@ RIM = 0.32      # the one-pixel rim round it
 REACH = 0.55    # how long the shade is next to real geometry (real shadows read far too long at midday)
 LONGEST = 2.2   # at most this many times the sprite's height (the low evening sun)
 FLECKS = 0.035   # the share of the shade where the leaves part
+LEAN = np.array([0.42, 0.5, 0.72])   # what full shade multiplies the ground by (CanopyShade.lean)
 FLECK_CUT = 0.875  # the noise over which that share lies: fixed, so chunks meet (CanopyShade.fleckCut)
 
 def value_noise(H, W, cell, seed, phase=(0.0, 0.0)):
@@ -112,10 +113,9 @@ def canopy(hour, flecks_phase=(0.0, 0.0)):
         a = np.where(core, CORE, 0.0) + np.where(rim, RIM, 0.0)
         a = np.where(fleck_rim, RIM, a)
         a = np.where(fleck, 0.0, a) * s[3]
-        dark = pp.hexrgb((palette or {}).get('shadow', '#2A3A55'))
-        # Shade multiplies the ground (keeps its texture) and leans it toward the shadow colour.
-        lean = dark / max(1e-3, dark @ np.array([0.299, 0.587, 0.114])) * 0.5
-        shaded = img[..., :3] * np.clip(lean, 0.25, 1.0)
+        # Darker and a little cool, the same in every land (CanopyShade.lean): leaning toward each
+        # palette's own shadow colour turned a desert's sand red (playtesting 2026-11-14).
+        shaded = img[..., :3] * LEAN
         img[..., :3] = img[..., :3] * (1 - a[..., None]) + shaded * a[..., None]
     return shade
 

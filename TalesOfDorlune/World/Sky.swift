@@ -13,7 +13,7 @@ final class Sky {
     /// The weather's rain, fog or snow, faded with the map's mood (`setMood`).
     private let weatherLayer = SKNode()
     private let map: MapDef
-    private let start: Date?
+    private var start: Date?
     private(set) var weather: Weather?
     private var layer: SKNode?
     private var color: (r: Double, g: Double, b: Double) = (1, 1, 1)
@@ -129,6 +129,17 @@ final class Sky {
         self.strength = strength
         weatherLayer.alpha = strength
         weatherLayer.isHidden = strength <= 0.01
+        apply()
+    }
+
+    /// The clock skipped ahead behind the loading card (`GameSession.skipTimeOnTravel`): the hour
+    /// and weather from `start` now, shown at once rather than eased into.
+    func retime(_ start: Date?) {
+        self.start = start
+        let now = Weather.on(map, since: start)
+        if now != weather { turn(to: now, fade: 0) }
+        color = target()
+        sunlight = sunGoal()
         apply()
     }
 

@@ -968,3 +968,5 @@ briarmere_shrine | newgame,level=150,map=rosen_lake,border=water_temple,weather=
 canopy_noon     | newgame,map=snow_white_forest,landscape,weather=clear,hour=12 | 10
 canopy_evening  | newgame,map=snow_white_forest,landscape,weather=clear,hour=17 | 10
 canopy_forest   | newgame,map=smiling_forest,landscape,weather=clear,hour=16 | 10
+# The shade in a walled desert town at 8hr: darker sand, not red, and stopping at the town's wall.
+canopy_town     | newgame,map=goldburg,landscape,weather=clear,hour=8 | 10

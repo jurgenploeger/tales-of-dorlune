@@ -232,9 +232,18 @@ final class Lighting {
         /// stretched along the ground the lower the sun (by a quarter of the width at midday, at most
         /// 1.4 widths), drawn as `WorldMap.project` draws the ground. Its middle from the foot, its
         /// size on screen and its turn. Scenery's (`fall(from:)`) and the characters' (`Walker.cast`).
-        static func shape(wide: Double, sun: Sun) -> (middle: CGVector, size: CGSize, turn: CGFloat) {
+        /// `tall`: how tall it stands, and then as long as the shade under the trees is for that
+        /// height (`CanopyShade.reach`, `longest`), so a walker's shadow stretches with theirs.
+        static func shape(wide: Double, sun: Sun, tall: Double? = nil) -> (middle: CGVector, size: CGSize, turn: CGFloat) {
             let level = (sun.x * sun.x + sun.y * sun.y).squareRoot()
-            let length = level > 1e-6 ? min(1.4 * wide, 0.18 * wide * level / sun.z) : 0
+            let length: Double
+            if level <= 1e-6 {
+                length = 0
+            } else if let tall {
+                length = min(CanopyShade.longest * tall, CanopyShade.reach * tall * level / (0.866 * max(sun.z, 0.05)))
+            } else {
+                length = min(1.4 * wide, 0.18 * wide * level / sun.z)
+            }
             let away = level > 1e-6 ? (x: -sun.x / level, y: -sun.y / level) : (x: 1.0, y: 0.0)
             let along = 0.285 * wide + length / 2, side = 0.285 * wide
             func screen(_ x: Double, _ y: Double) -> (x: Double, y: Double) { (0.70710678 * (x - y), 0.35355339 * (x + y)) }

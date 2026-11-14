@@ -1241,6 +1241,11 @@ the Wishing Seal, which stays the Monster Book's last reward.
   - Us (since 0.3.65, asked for in playtesting 2026-10-07): night was too long at twelve real minutes, and
     showers lasted their whole six-minute spell. By day an in-game hour is still a real minute; from 18hr to
     6hr the clock runs at `GameClock.nightPace` (1.5×), so night takes eight minutes of a twenty-minute day.
+    Since 0.9.94 (the user, 2026-11-14: "the time goes too fast", the trees' shade swinging round as you
+    watched) daylight is slower, `GameClock.dayPace` 0.4 hours a real minute, half an hour of daylight and
+    the same eight-minute night; and the clock skips ahead behind every loading card (a cave's mouth or
+    stairs, a feather, a shard, a waystone, a ship, waking at your checkpoint), an hour by day and three
+    at night (`GameClock.skippedMinutes`, `GameSession.skipTimeOnTravel`), so a night isn't long dark.
     Rain and storms stop after a real minute and leave the rest of their spell cloudy. Settings has a switch
     for each (asked for the same day): with night and day off the light stays at midday, the HUD shows the
     sun and there are no dawn or dusk notices (the calendar still runs); with the weather off it's always

@@ -42,9 +42,15 @@ final class LandStage {
     /// Shadows cast by its scenery on a hill or the sunk shore (`Lighting.Shadow`).
     private var shadows: [Lighting.Shadow] = []
     /// The shade cast by its scenery on flat ground (`CanopyShade`), away from the sun (`follow`).
-    private lazy var canopy = CanopyShade(size: Self.chunkSize, palette: def.theme.palette) { [unowned self] point in
-        self.layer(at: point)
-    }
+    /// The shade stops at its town's wall or fence (`WorldMap.fenceCells`).
+    private lazy var canopy: CanopyShade = {
+        let walls = Set(map.fenceCells)
+        let map = self.map
+        let blocks: ((CGPoint) -> Bool)? = walls.isEmpty ? nil : { point in walls.contains(map.cell(at: point)) }
+        return CanopyShade(size: Self.chunkSize, blocks: blocks) { [unowned self] point in
+            self.layer(at: point)
+        }
+    }()
     /// The walls along its borders that come down once you can cross (`placeBorders`): the border,
     /// and what's taken away (a gate's bar, or the whole fence).
     private var gates: [(neighbour: Continent.Neighbour, bar: [SKNode])] = []

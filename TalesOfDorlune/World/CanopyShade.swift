@@ -8,8 +8,10 @@ import UIKit
 /// so it's short at midday and long in the evening; all of it is merged into one, so where two
 /// trees' shade overlaps it doesn't darken twice, in hard steps (a core and a one-pixel paler rim),
 /// with flecks of light where the leaves part. It multiplies the ground, as the night's shade does
-/// (`Sky`): an opaque picture, white where there's no shade, so its texture still shows, leaning
-/// toward the land's palette shadow colour. Walkers and scenery stand over it in their own colours.
+/// (`Sky`): an opaque picture, white where there's no shade, so its texture still shows, a little
+/// cool (`lean`, the same in every land: leaning toward each palette's own shadow colour turned a
+/// desert's sand red, playtesting 2026-11-14). It stops at a town's wall (`blocks`): it doesn't
+/// fall on past it. Walkers and scenery stand over it in their own colours.
 ///
 /// Drawn one of `LandStage`'s chunks at a time, a pixel a point, only while the chunk is shown,
 /// a couple of chunks a frame, and again once the sun has moved on far enough to show. Each chunk's
@@ -58,10 +60,12 @@ final class CanopyShade {
     /// The chunks' size in points (`LandStage.chunkSize`), and in pixels.
     private let size: CGFloat
     private let side: Int
-    /// What a shaded pixel multiplies the ground by, at full shade, per channel.
-    private let lean: (r: Double, g: Double, b: Double)
+    /// What a shaded pixel multiplies the ground by, at full shade, per channel: darker, a little cool.
+    private static let lean = (r: 0.42, g: 0.5, b: 0.72)
     /// The layer of `LandStage`'s chunk at a point where the ground's shadows lie.
     private let layer: (CGPoint) -> SKNode
+    /// Whether a point stands in a town's wall, which the shade stops at; nil where there's none.
+    private let blocks: ((CGPoint) -> Bool)?
     private var casters: [GridPoint: [Caster]] = [:]
     private var outlines: [Outline: [Slice]] = [:]
     private var nodes: [GridPoint: SKSpriteNode] = [:]
@@ -75,13 +79,10 @@ final class CanopyShade {
     private var fall: CGVector
     private var strength: Double
 
-    init(size: CGFloat, palette: MapPalette?, layer: @escaping (CGPoint) -> SKNode) {
+    init(size: CGFloat, blocks: ((CGPoint) -> Bool)?, layer: @escaping (CGPoint) -> SKNode) {
         self.size = size
         side = Int(size)
-        let dark = Lighting.rgb(palette?.shadow) ?? (r: 0.165, g: 0.227, b: 0.333)
-        let luma = max(0.001, 0.299 * dark.r + 0.587 * dark.g + 0.114 * dark.b)
-        func toward(_ channel: Double) -> Double { min(1, max(0.25, channel / luma * 0.5)) }
-        lean = (toward(dark.r), toward(dark.g), toward(dark.b))
+        self.blocks = blocks
         self.layer = layer
         let noon = CanopyShade.falling(from: .noon)
         fall = noon.fall
@@ -175,7 +176,8 @@ final class CanopyShade {
             for dr in -Self.reachChunks...Self.reachChunks {
                 guard let near = casters[GridPoint(col: spot.col + dc, row: spot.row + dr)] else { continue }
                 for caster in near {
-                    for slice in caster.slices {
+                    let stop = reachBeforeWall(from: caster)
+                    for slice in caster.slices where slice.up <= stop {
                         // Each run of the outline is a slice of a round crown: its shade a round on the
                         // ground (an ellipse half as tall as it's wide, as `WorldMap.project` draws it),
                         // moved along the ground by the slice's height above the foot.
@@ -202,7 +204,7 @@ final class CanopyShade {
             }
         }
         var pixels = [UInt8](repeating: 255, count: side * side * 4)
-        let power = strength
+        let power = strength, lean = Self.lean
         for y in 0..<side {
             for x in 0..<side {
                 let i = (y + m) * full + x + m
@@ -249,6 +251,23 @@ final class CanopyShade {
         node.texture = texture
         node.size = CGSize(width: size, height: size)
         node.isHidden = false
+    }
+
+    /// How high up `caster` its shade can come from before it would fall past a town's wall: the
+    /// shade is followed from its foot away from the sun, a few points at a time, to the first point
+    /// in a wall. Unlimited where the land has no wall.
+    private func reachBeforeWall(from caster: Caster) -> CGFloat {
+        guard let blocks else { return .greatestFiniteMagnitude }
+        let length = (fall.dx * fall.dx + fall.dy * fall.dy).squareRoot()
+        guard length > 0.01, let tallest = caster.slices.map(\.up).max() else { return .greatestFiniteMagnitude }
+        let reach = tallest * length, step: CGFloat = 4
+        var along: CGFloat = step
+        while along <= reach {
+            let point = CGPoint(x: caster.foot.x + fall.dx / length * along, y: caster.foot.y + fall.dy / length * along)
+            if blocks(point) { return along / length }
+            along += step
+        }
+        return .greatestFiniteMagnitude
     }
 
     /// Fills an ellipse into `mask` (`side` pixels square, row 0 at the top): its middle at (`cx`,
