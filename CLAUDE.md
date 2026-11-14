@@ -287,6 +287,13 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   body, helmet) from `hero_layers.py`'s heads, into `art-variants/_masks/`, outside `art/` so they never ship. `tools/icons.py`: vendors Iconaut icons (MIT), plus our own drawings in
   `art/icons/` where Iconaut has no shape that works (fire's three-tongued flame).
   `tools/check_content.py`: validates the game data.
+- `tools/wang_art.py`: the land's plain ground as edge Wang tiles (`ArtLibrary.wangTile`,
+  `GroundTiles.wang`, after SpriteCook's Wang tiles article): 16 versions of each ground tile, each edge
+  the tile's own strip or a shifted one, hashed from where it lies in the world, and the tile's own
+  strip wherever the cell across isn't plain ground of the same tile (roads, ponds, patches, shores and
+  the land next door meet the original, as before). Keep it, the Swift and `palette_preview.py` in
+  step; `check` holds every edge of a field to the tile's own seams, `--preview out.png` shows before
+  and after, near and zoomed out.
 - `tools/pixel_scale.py`: how big each sprite's art pixels are on the map, in points (its PNG times its
   `scale`; a ground tile 44 points over 32 pixels), against a walker's 1, and the props planted at a
   random size (maps.json theme props' `size`); `--sheet out.png` lines them up at game size. Its rule:

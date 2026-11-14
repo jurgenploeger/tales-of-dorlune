@@ -425,6 +425,127 @@ final class ArtLibrary {
         return texture
     }
 
+    /// Edge Wang tile `index` (0 to 15) of a ground tile, for a cell of plain ground (`GroundTiles.wang`),
+    /// after SpriteCook's Wang tiles article: each edge is colour 0 or 1 (`index` is north + 2·east +
+    /// 4·south + 8·west), colour 0 the tile's own pixels along it and colour 1 the tile shifted, the same
+    /// shift on both sides of the edge, so two cells continue one patch of it. The four versions all kept
+    /// the original's frame, so it repeated along every cell edge and a field showed its grid.
+    /// Mirrored by `tools/wang_art.py` (its `check` holds every edge of a field to the tile's own seams).
+    func wangTile(_ id: String, _ index: Int) -> SKTexture {
+        let key = "wang|\(id)|\(index & 15)"
+        if let cached = blended[key] { return cached }
+        let size = max(tileImage(id).width, 16)
+        let pixelKey = "wang|\(id)|\(index & 15)|\(size)"
+        let made: [UInt8]
+        if let cached = variantCache[pixelKey] {
+            made = cached
+        } else {
+            made = Self.wangPixels(of: Self.pixels(tileImage(id), size: size), index & 15, size: size)
+            variantCache[pixelKey] = made
+        }
+        let texture = makeTexture(made, size: size)
+        blended[key] = texture
+        return texture
+    }
+
+    /// The pixels of `wangTile` (rows from the north edge): a middle of its own (the tile shifted), each
+    /// edge's strip (the tile itself for colour 0, shifted for colour 1) over it out to a cut along the
+    /// least-difference path, 2 to a quarter of the tile deep (image quilting's minimum error boundary
+    /// cut), each pixel to the strip of the edge nearest it; and each corner, where four cells meet, the
+    /// tile itself. No pixel is mixed: every one is one of the tile's own.
+    nonisolated private static func wangPixels(of source: [UInt8], _ index: Int, size n: Int) -> [UInt8] {
+        guard source.count == n * n * 4 else { return source }
+        // Pixel (x, y) of the tile moved by (dx, dy), as it wraps.
+        func at(_ x: Int, _ y: Int, _ shift: (dx: Int, dy: Int)) -> Int {
+            (((y + shift.dy) % n) * n + (x + shift.dx) % n) * 4
+        }
+        let q = max(1, n / 8)
+        let middle: (dx: Int, dy: Int) = index == 0 ? (n / 8 * 3, n / 8 * 5) : ((3 + 5 * index) * q % n, (1 + 3 * index) * q % n)
+        var out = [UInt8](repeating: 0, count: source.count)
+        for y in 0..<n {
+            for x in 0..<n {
+                let from = at(x, y, middle), to = (y * n + x) * 4
+                for c in 0..<4 { out[to + c] = source[from + c] }
+            }
+        }
+        // Each pixel's nearest edge: north, east, south, west, the first on a tie.
+        func nearest(_ x: Int, _ y: Int) -> Int {
+            let distances = [y, n - 1 - x, n - 1 - y, x]
+            var best = 0
+            for side in 1..<4 where distances[side] < distances[best] { best = side }
+            return best
+        }
+        // Side `side`'s pixel `depth` in from its edge, `along` it.
+        func place(_ side: Int, depth d: Int, along p: Int) -> (x: Int, y: Int) {
+            switch side {
+            case 0: return (p, d)
+            case 1: return (n - 1 - d, p)
+            case 2: return (n - 1 - p, n - 1 - d)
+            default: return (d, n - 1 - p)
+            }
+        }
+        let band = max(3, n / 4)
+        let depths = Array(2...band)
+        for side in 0..<4 {
+            let colour = (index >> side) & 1
+            let strip: (dx: Int, dy: Int) = colour == 0 ? (0, 0) : (side % 2 == 0 ? (n / 2, n / 2) : (n / 4, n * 3 / 4))
+            // How different strip and middle are at each depth along the edge.
+            func error(_ d: Int, _ p: Int) -> Int {
+                let spot = place(side, depth: d, along: p)
+                let a = at(spot.x, spot.y, strip), b = at(spot.x, spot.y, middle)
+                var sum = 0
+                for c in 0..<3 { sum += abs(Int(source[a + c]) - Int(source[b + c])) }
+                return sum
+            }
+            // The cut: a depth for each pixel along the edge, moving at most one from one to the next,
+            // with the least difference summed along it.
+            var total = [[Int]](repeating: [Int](repeating: 0, count: depths.count), count: n)
+            var back = [[Int]](repeating: [Int](repeating: 0, count: depths.count), count: n)
+            for k in depths.indices { total[0][k] = error(depths[k], 0) }
+            if n > 1 {
+                for p in 1..<n {
+                    for k in depths.indices {
+                        var best = Int.max, pick = k
+                        for j in [k - 1, k, k + 1] where depths.indices.contains(j) && total[p - 1][j] < best {
+                            best = total[p - 1][j]
+                            pick = j
+                        }
+                        total[p][k] = best + error(depths[k], p)
+                        back[p][k] = pick
+                    }
+                }
+            }
+            var k = 0
+            for j in depths.indices where total[n - 1][j] < total[n - 1][k] { k = j }
+            var cut = [Int](repeating: 0, count: n)
+            for p in stride(from: n - 1, through: 0, by: -1) {
+                cut[p] = depths[k]
+                k = back[p][k]
+            }
+            for p in 0..<n {
+                for d in 0..<cut[p] {
+                    let spot = place(side, depth: d, along: p)
+                    guard nearest(spot.x, spot.y) == side else { continue }
+                    let from = at(spot.x, spot.y, strip), to = (spot.y * n + spot.x) * 4
+                    for c in 0..<4 { out[to + c] = source[from + c] }
+                }
+            }
+        }
+        // The corners: the tile itself, in all four cells that meet there, so they agree.
+        let corner = max(2, n / 10)
+        for y0 in [0, n - corner] {
+            for x0 in [0, n - corner] {
+                for y in y0..<(y0 + corner) {
+                    for x in x0..<(x0 + corner) {
+                        let i = (y * n + x) * 4
+                        for c in 0..<4 { out[i + c] = source[i + c] }
+                    }
+                }
+            }
+        }
+        return out
+    }
+
     private func variantPixels(_ id: String, _ index: Int, size: Int) -> [UInt8] {
         let key = "\(id)|\(index % 4)|\(size)"
         if let cached = variantCache[key] { return cached }

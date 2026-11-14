@@ -71,6 +71,11 @@ keeps the art's pixels as they are:
   never lights.
 - **Movement in whole pixels.** A screen shake moves in whole points, side to side, smaller each step,
   and ends at exactly where it started. A push is eased over several frames, never one jump.
+- **Ground versions differ at their edges.** Variety in a ground tile comes from versions whose edges
+  differ in a known pattern (edge Wang tiles, `tools/wang_art.py`), never from versions that share one
+  frame: a frame every version shares repeats along every cell edge and shows the grid (the four
+  framed versions before 2026-11-14 repeated at one tile nearly twice as strongly). No cross-fades: a
+  version holds only the tile's own colours.
 - **No squash and stretch by scaling a sprite.** It changes the size of its pixels. Draw it as frames, or
   move whole pixels as the idle motions do.
 
