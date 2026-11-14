@@ -63,6 +63,17 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   (`WorldOverview.isHeld`). You walk anywhere with no loading card; the land you're in
   (`here`) brings its music, air and encounters. Caves are scenes of their own (`WorldScene`), behind the card;
   `GameCoordinator.mapScene` is whichever you're in.
+- How a blow lands in battle (`BattleScene.impact`, after SpriteCook's hit feel article): attacker and
+  target stand still 5 frames (9 on a killing blow, `hitStop`: the two nodes paused, the stage plays
+  on), the target white for 2 (`whiteFlash`, a shader: a tint can't light a dark outline), then pushed
+  away and back in whole points (`knockback`) as its red tint plays; a critical or a killing blow
+  shakes the field in whole points (`shake`, not with Reduce Motion). docs/pixel-style.md *Effects on
+  the pixel grid*.
+- A cave's light stops at its rock (`WorldScene.castLight`, after SpriteCook's shadowcasting
+  article): `Shadowcast.visible` (recursive shadowcasting on the cave's cells, recast as you step into
+  another cell) says which cells round you the light sees; `Lantern.shade` lays soft dark over the rest
+  inside its circle, and the cave's map fills in only with what it saw. `tools/shadowcast.py` mirrors
+  it with the article's tests; keep the two in step.
 - `content/*.json`: all game data (maps, monsters, skills, items, quests, music, looks, crowd, announcements, the chat's
   filter (`moderation.json`, `ChatFilter`: what you type is starred out where it matches), titles,
   rewards: the daily gift, bounties, Monster Book milestones, monster cards, the weaver's status capes and the
@@ -287,6 +298,17 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   body, helmet) from `hero_layers.py`'s heads, into `art-variants/_masks/`, outside `art/` so they never ship. `tools/icons.py`: vendors Iconaut icons (MIT), plus our own drawings in
   `art/icons/` where Iconaut has no shape that works (fire's three-tongued flame).
   `tools/check_content.py`: validates the game data.
+- `tools/wang_art.py`: the land's plain ground as edge Wang tiles (`ArtLibrary.wangTile`,
+  `GroundTiles.wang`, after SpriteCook's Wang tiles article): 16 versions of each ground tile, each edge
+  the tile's own strip or a shifted one, hashed from where it lies in the world, and the tile's own
+  strip wherever the cell across isn't plain ground of the same tile (roads, ponds, patches, shores and
+  the land next door meet the original, as before). Keep it, the Swift and `palette_preview.py` in
+  step; `check` holds every edge of a field to the tile's own seams, `--preview out.png` shows before
+  and after, near and zoomed out.
+- `tools/pixel_scale.py`: how big each sprite's art pixels are on the map, in points (its PNG times its
+  `scale`; a ground tile 44 points over 32 pixels), against a walker's 1, and the props planted at a
+  random size (maps.json theme props' `size`); `--sheet out.png` lines them up at game size. Its rule:
+  docs/sprite-acceptance.md *One art pixel, one size*.
 - `tools/deslab.py`: cuts the raised slab of ground some generated buildings came with (`inn`, `magic_tower`) out
   of their sprites, so they stand on the map's ground; rerun it after regenerating one of them.
 - `tools/rd_fixes.py`: exact pixel fixes to RD sprites for what RD got wrong and the user asked to have fixed

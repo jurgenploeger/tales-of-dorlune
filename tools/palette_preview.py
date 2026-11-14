@@ -132,6 +132,10 @@ _X = (_px + 0.5) / _S - 0.5; _Y = 0.5 - (_py + 0.5) / _S
 _WOBBLE = 0.045 * np.sin(2 * np.pi * (2 * _X + _Y)) + 0.03 * np.sin(2 * np.pi * (3 * _Y - _X) + 1.3)
 RADIUS = {'road': 0.36, 'patch': 0.42, 'water': 0.5}
 
+import importlib.util as _ilu
+_spec = _ilu.spec_from_file_location('wang_art', __import__('os').path.join(__import__('os').path.dirname(__file__), 'wang_art.py'))
+_wang = _ilu.module_from_spec(_spec); _spec.loader.exec_module(_wang)
+
 M64 = (1 << 64) - 1
 def variant_of(col, row):
     """Mirrors WorldScene.variant(of:)."""
@@ -251,6 +255,17 @@ def ground_tiles(m, kinds, palette, col0=0, row0=0):
                 hit = kinds[rr][cc] == k if 0 <= rr < N and 0 <= cc < Wd else (own and k != 'w')
                 if hit: bits |= 1 << ((1 - dy) * 3 + dx + 1)
         return bits
+    def base_of(r, c):
+        k = kinds[r][c]
+        if k == 'g': return 'g'
+        if k == 'b': return 'b' if 'b' in tex else 'g'
+        if k == 'a' and not patch_accent: return 'a'
+        return 'b' if ('b' in tex and mask(r, c, 'b') & 0b010101010) else 'g'
+    def plain(r, c):
+        # GroundTiles.plainBase: no road, pond or patch in it (the preview has no sea or land next door).
+        if not (0 <= r < N and 0 <= c < Wd): return None
+        if mask(r, c, 'p') or mask(r, c, 'w') or (patch_accent and mask(r, c, 'a')): return None
+        return base_of(r, c)
     cache = {}; out = np.zeros((N, Wd, _S, _S, 4))
     for r in range(N):
         for c in range(Wd):
@@ -270,11 +285,15 @@ def ground_tiles(m, kinds, palette, col0=0, row0=0):
             if pond == 511 and natural and pool_mask(r, c) == (1 << 25) - 1: key = ('deep', v)
             elif pond == 511 and not natural: key = ('w', v)
             elif road == 511 and pond == 0: key = ('p', v)
-            elif not layers: key = (base, v)
+            elif not layers:
+                # GroundTiles.wang: an edge Wang tile, edges hashed in the world (tools/wang_art.py).
+                key = ('wang', base, _wang.wang_index(c + col0, r + row0, lambda cc, rr: plain(rr - row0, cc - col0) == base))
             elif patch == 511 and road == 0 and pond == 0: key = ('a', v)
             else: key = (base, tuple(layers), (c, r, v) if pond else None)
             if key not in cache:
-                if key[0] == 'deep':
+                if key[0] == 'wang':
+                    cache[key] = _wang.wang_tile(tex[key[1]], key[2])
+                elif key[0] == 'deep':
                     t = tile_variant(tex['w'], v).copy(); t[..., :3] *= 1 - deep_shade(np.ones(1))[0]; cache[key] = t
                 elif len(key) == 2: cache[key] = tile_variant(tex[key[0]], v)
                 else:

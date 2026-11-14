@@ -130,7 +130,8 @@ check <ids> --new` for the first six (a palette swap scored in its own colours);
    `request`, its `derive` or a tool that draws it. Nothing hand-edited that a rerun would undo.
 2. **Its kind's size.** Monsters 40 or 64, walk sheets 192 (48 a frame), tiles 32, items 64,
    buildings 96 (160 or 192 for a grand one), props at their family's size. One art pixel to one of
-   the world's, never scaled by a fraction.
+   the world's, never scaled by a fraction: `check` measures the art pixel's width in the PNG
+   (`pixel_size`, 1 unless it was scaled up; docs/sprite-acceptance.md *One art pixel, one size*).
 3. **Hard pixels on a clear background.** No half-transparent pixel (a light-drawn icon aside), and no
    ground or slab under it unless it's a tile.
 4. **The house look**, by number: `pixel_style.py check --kind <kind>` within the bands RD's own art
@@ -144,7 +145,8 @@ check <ids> --new` for the first six (a palette swap scored in its own colours);
 7. **It reads at 1×:** you can tell what it is from its silhouette alone, at the size it's drawn.
 8. **It belongs beside its neighbours:** on `sprite_check.py review`'s sheet, at 1× and 4×, on the
    map's green and on the dark battle field, it looks like the same game. Detail on a par, the
-   outline the same weight, colours from the same families.
+   outline the same weight, colours from the same families. If `check` warns of light pixels in its
+   dark outline, look at `sprite_check.py gaps OUT <id>`: a gap gets closed, a highlight stays.
 9. **Every case, not one:** worn gear on all six bodies, four directions, every armour and every skin
    tone (`tools/gear_preview.py`, sprite-acceptance.md); a recolour on every base it's applied to.
 10. **Seen in the game** before calling it done: a screenshot of a scene that shows it

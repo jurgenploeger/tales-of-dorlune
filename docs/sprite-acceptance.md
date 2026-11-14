@@ -29,6 +29,20 @@ Every criterion holds on **all nine bodies** (human, elf and dwarf, each gender:
 snow cloak, plate, dragon mail) and **every skin tone** (fair, rosy, tan, brown, deep). A fix that's right on
 one body and wrong on another isn't done.
 
+### One art pixel, one size (2026-11-14)
+
+A new sprite's PNG is at its own size (`sprite_check.py`: every run of equal pixels a multiple of 1, so
+nothing upscaled), and in the game its art pixels are the same size on screen as those of what stands
+beside it. A sprite shown bigger than its neighbours' scale is a mixel, however well its colours match
+(the butterflies were three times everyone else's, docs/pixel-style.md *Small sprites*). From
+SpriteCook's pixel-perfect article (docs/spritecook-notes.md); every non-empty sprite shipped on
+2026-11-14 passes the first half.
+
+A light pixel in a dark outline is reported (`sprite_check.py check` warns; `gaps OUT ID` shows each
+boxed at 6x): a gap background removal left, or a highlight drawn on purpose. On 2026-11-14 nearly every
+one of the 31 sprites it found was drawn on purpose (rim lights, a white hem, thorn tips), so the eye
+decides. A real gap in RD art is fixed pixel by pixel in `tools/rd_fixes.py` with the user's OK.
+
 ### Characters and creatures: the Pixel Heroes look (2026-10-25)
 
 The target for every new hero, townsperson, monster and boss, and for icon and store art of them

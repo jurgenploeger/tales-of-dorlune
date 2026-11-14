@@ -196,6 +196,71 @@ final class GroundTiles {
         }
     }
 
+    /// What shows between the soft shapes at a cell: its own ground, or for a road, pond or patch
+    /// cell the ground around it.
+    private func baseTile(_ cell: GridPoint, _ kind: Ground) -> String {
+        switch kind {
+        case .ground: theme.ground
+        case .border: theme.border ?? theme.ground
+        case .accent where !patchAccent: theme.accent ?? theme.ground
+        default: mask(cell, .border) & Self.sides != 0 ? (theme.border ?? theme.ground) : theme.ground
+        }
+    }
+
+    /// Which cells are plain ground, by `plainBase`.
+    private var plainCache: [GridPoint: String?] = [:]
+
+    /// The tile a cell shows if it's only plain ground, as `pick` draws it with no layers (no road,
+    /// pond, patch, shore or a land next door's ground in it), else nil; nil off the land's box too.
+    private func plainBase(_ cell: GridPoint) -> String? {
+        if let known = plainCache[cell] { return known }
+        var found: String? = nil
+        if map.contains(cell) {
+            let kind = map.ground[cell.row][cell.col]
+            if kind != .sea, kind != .away, mask(cell, .path) == 0, mask(cell, .water) == 0,
+               !(patchAccent && theme.accent != nil && mask(cell, .accent) != 0) {
+                let base = baseTile(cell, kind)
+                let band = map.seams.isEmpty ? nil : grounds(cell, base: base)
+                let near = sea.isEmpty ? 0 : seaPool(cell)
+                if band?.isEmpty ?? true, near == 0 || shore(cell) == 0 { found = base }
+            }
+        }
+        plainCache[cell] = .some(found)
+        return found
+    }
+
+    /// The land's box's south-west cell on the continent (none in a cave), so an edge's colour is
+    /// hashed from where it lies in the world and two lands agree on the edges between them.
+    private lazy var origin: GridPoint = Continent.origin(of: map.def) ?? GridPoint(col: 0, row: 0)
+
+    /// A plain ground cell's edge Wang tile (`ArtLibrary.wangTile`, after SpriteCook's Wang tiles
+    /// article): each edge's colour hashed from its place in the world, and 0 (the tile's own pixels
+    /// along it) unless the cell across it is plain ground of the same tile, as everything else
+    /// (roads, ponds, patches, shores, the four versions) meets the tile's own edge. Mirrored by
+    /// `tools/wang_art.py` (`wang_index`).
+    private func wang(_ cell: GridPoint, base: String) -> SKTileGroup {
+        func open(_ dx: Int, _ dy: Int) -> Bool { plainBase(GridPoint(col: cell.col + dx, row: cell.row + dy)) == base }
+        let col = cell.col + origin.col, row = cell.row + origin.row
+        let north = open(0, 1) ? Self.edge(col, row + 1, horizontal: true) : 0
+        let east = open(1, 0) ? Self.edge(col + 1, row, horizontal: false) : 0
+        let south = open(0, -1) ? Self.edge(col, row, horizontal: true) : 0
+        let west = open(-1, 0) ? Self.edge(col, row, horizontal: false) : 0
+        let index = north + 2 * east + 4 * south + 8 * west
+        return group("wang|\(base)#\(index)") { art.wangTile(base, index) }
+    }
+
+    /// An edge's colour, 0 or 1: the edge on the south side of world cell (`col`, `row`) if
+    /// `horizontal`, else on its west side. A hash, so it has no pattern (`wang_art.edge_colour`).
+    static func edge(_ col: Int, _ row: Int, horizontal: Bool) -> Int {
+        var hash = UInt64(bitPattern: Int64(col)) &* 0x9E37_79B9_7F4A_7C15
+        hash ^= UInt64(bitPattern: Int64(row)) &* 0xC2B2_AE3D_27D4_EB4F
+        if horizontal { hash ^= 0x94D0_49BB_1331_11EB }
+        hash ^= hash >> 29
+        hash = hash &* 0xBF58_476D_1CE4_E5B9
+        hash ^= hash >> 32
+        return Int(hash & 1)
+    }
+
     /// The tile a cell of the land's box shows (none on the sea, or on a land next door's cell), and
     /// whether it's within two of the sea (its bank, `WorldScene.bank`).
     func pick(_ cell: GridPoint) -> (group: SKTileGroup?, nearSea: Bool) {
@@ -206,14 +271,7 @@ final class GroundTiles {
         let road = mask(cell, .path), pond = mask(cell, .water)
         let variant = WorldScene.variant(of: cell)
         let patch = patchAccent ? mask(cell, .accent) : 0
-        // What shows between the soft shapes: the cell's own ground, or for a road, pond or patch
-        // cell the ground around it.
-        let base: String = switch kind {
-        case .ground: theme.ground
-        case .border: theme.border ?? theme.ground
-        case .accent where !patchAccent: theme.accent ?? theme.ground
-        default: mask(cell, .border) & Self.sides != 0 ? (theme.border ?? theme.ground) : theme.ground
-        }
+        let base = baseTile(cell, kind)
         var layers: [ArtLibrary.GroundLayer] = []
         // The grounds across the band first, under everything of this land's.
         let band = map.seams.isEmpty ? nil : grounds(cell, base: base)
@@ -245,7 +303,7 @@ final class GroundTiles {
                 art.foreignTile(only.tile, palette: from.palette, from: from.land, variant: variant, base: base)
             }
         } else if layers.isEmpty {
-            chosen = plain(base, variant)
+            chosen = wang(cell, base: base)
         } else if let accent = theme.accent, patch == full, road == 0, pond == 0, coast == 0 {
             chosen = plain(accent, variant)
         } else {

@@ -16,6 +16,12 @@ Run from the repo root. Needs Pillow (and numpy, for tools/pixel_style.py).
         Each sprite at 1x and 4x beside four sprites of its kind the game already ships (or the
         ones given), on the map's green and on a dark battle field: the review by eye every sprite
         needs (docs/pixel-style.md, *Review by eye*).
+  sprite_check.py gaps OUT ID...
+        Each sprite at 6x on the map's green, every light pixel in its dark outline boxed in magenta
+        (`outline_notches`): a gap left by background removal, or a highlight drawn on purpose? On
+        2026-11-14, 31 of 760 shipped sprites had some, nearly all drawn on purpose (rim lights, a
+        white hem, thorn tips), so `check` only warns, and the eye decides. A real gap in RD art is
+        fixed pixel by pixel in tools/rd_fixes.py with the user's OK, never redrawn.
   sprite_check.py swap OUT BASE RULES.json
         Palette-swap candidates before any goes in art/assets.json: RULES.json maps a label to a
         `recolor` list ({"a": [...], "b": [...]}); each is drawn beside BASE at 1x and 4x, on the
@@ -178,6 +184,53 @@ def pixel_heroes_marks(im):
     }
 
 
+def pixel_size(im):
+    """How many image pixels wide one art pixel is (after SpriteCook's pixel-perfect article): the
+    largest size every run of equal pixels, across and down, is a multiple of. 1 for art at its own
+    size, 2 for art scaled up 2x. Every non-empty sprite shipped on 2026-11-14 is 1."""
+    import math
+    w, h = im.size
+    px = im.load()
+    size = 0
+    for across in (True, False):
+        for a in range(h if across else w):
+            run, n = 1, (w if across else h)
+            for b in range(1, n + 1):
+                here = b < n and (px[b, a] if across else px[a, b])
+                before = px[b - 1, a] if across else px[a, b - 1]
+                if here == before:
+                    run += 1
+                else:
+                    size = math.gcd(size, run)
+                    run = 1
+                if size == 1:
+                    return 1
+    return size
+
+
+def outline_notches(im):
+    """Light pixels (luma 0.4 or more) in a dark outline: on the edge (next to a clear pixel), with
+    two or more edge pixels round them and every one of those dark (luma under 0.25). Only for a
+    sprite whose edge is mostly dark (half or more); a pale-outlined one has no outline to break."""
+    px = im.load()
+    w, h = im.size
+    solid = {(x, y) for y in range(h) for x in range(w) if px[x, y][3] >= 128}
+    edge = {q for q in solid if any((q[0] + dx, q[1] + dy) not in solid for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)))}
+    if len(edge) < 8:
+        return []
+    dark = {q for q in edge if luma(px[q]) < 0.25}
+    if len(dark) < len(edge) / 2:
+        return []
+    out = []
+    for q in sorted(edge - dark, key=lambda q: (q[1], q[0])):
+        if luma(px[q]) < 0.4:
+            continue
+        round_it = [(q[0] + dx, q[1] + dy) for dy in (-1, 0, 1) for dx in (-1, 0, 1) if (dx or dy) and (q[0] + dx, q[1] + dy) in edge]
+        if len(round_it) >= 2 and all(r in dark for r in round_it):
+            out.append(q)
+    return out
+
+
 def check(ids, new):
     failures, warnings = [], []
 
@@ -222,6 +275,17 @@ def check(ids, new):
         partial = sum(1 for v in alphas if 0 < v < 255)
         if kind in HARD and partial and not (kind == "item" and ASSETS[i].get("glow")):
             fail(i, f"{partial} half-transparent pixels: pixel art has hard pixels only (docs/pixel-style.md rule 1)")
+        if kind in HARD and im.getbbox():
+            scale = pixel_size(im)
+            if scale > 1:
+                warn(i, f"its art pixels are {scale} image pixels wide: it was scaled up. Draw or generate it at its own size "
+                        "(docs/sprite-acceptance.md, *One art pixel, one size*)")
+        if kind in HARD and kind != "tile":
+            notches = outline_notches(front_frame(i, im))
+            if notches:
+                where = ", ".join(f"({x},{y})" for x, y in notches[:5]) + (" …" if len(notches) > 5 else "")
+                warnings.append(f"{i}: {len(notches)} light pixel(s) in its dark outline at {where}: a gap, or a highlight "
+                                f"drawn on purpose? Look: sprite_check.py gaps out.png {i}")
         if kind != "tile":
             w, h = im.size
             if any(im.getpixel(c)[3] for c in ((0, 0), (w - 1, 0), (0, h - 1), (w - 1, h - 1))):
@@ -302,6 +366,32 @@ def swap(out, base, rules_path):
     print("wrote", out, f"({base}, then each candidate)")
 
 
+def gaps(out, ids):
+    tiles = []
+    for i in ids:
+        im = art_png(i) if i in ASSETS else None
+        if im is None:
+            sys.exit(f"no such sprite (or no PNG yet): {i}")
+        im = front_frame(i, im)
+        z = 6
+        back = Image.new("RGBA", im.size, (112, 160, 88, 255))
+        back.alpha_composite(im)
+        big = back.resize((im.width * z, im.height * z), Image.NEAREST)
+        d = ImageDraw.Draw(big)
+        notches = outline_notches(im)
+        for x, y in notches:
+            d.rectangle([x * z - 2, y * z - 2, x * z + z + 1, y * z + z + 1], outline=(255, 0, 255, 255), width=2)
+        d.text((4, 4), f"{i}: {len(notches)}", fill=(255, 255, 255, 255))
+        tiles.append(big)
+    sheet = Image.new("RGBA", (sum(t.width + 10 for t in tiles), max(t.height for t in tiles)), (0, 0, 0, 255))
+    x = 0
+    for t in tiles:
+        sheet.alpha_composite(t, (x, 0))
+        x += t.width + 10
+    sheet.save(out)
+    print("wrote", out)
+
+
 def draw_sheet(out, rows):
     z = 4
     # Each row is laid out for its own sprites, so a 40-pixel monster isn't lost in a row sized for a ship.
@@ -338,6 +428,9 @@ def main():
     p.add_argument("out")
     p.add_argument("ids", nargs="+")
     p.add_argument("--with", dest="given", help="comma-separated ids to show beside it instead of picked ones")
+    p = sub.add_parser("gaps")
+    p.add_argument("out")
+    p.add_argument("ids", nargs="+")
     p = sub.add_parser("swap")
     p.add_argument("out")
     p.add_argument("base")
@@ -347,6 +440,8 @@ def main():
         sys.exit(check(a.ids, a.new))
     if a.cmd == "swap":
         return swap(a.out, a.base, a.rules)
+    if a.cmd == "gaps":
+        return gaps(a.out, a.ids)
     review(a.out, a.ids, a.given.split(",") if a.given else None)
 
 

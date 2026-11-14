@@ -1658,23 +1658,54 @@ final class WorldScene: SKScene {
         return foot
     }
 
-    /// On a dark map, notes the cells your light has fallen on, for the minimap.
+    /// On a dark map, notes the cells your light has fallen on, for the minimap: those it can see
+    /// (`castLight`), not the far side of the rock.
     private func explore() {
         guard let lantern else { return }
         let here = map.cell(at: player.position)
         let reach = lantern.radius * 0.85
         // Neighbouring cells' centres are at least 31 points apart on screen.
-        let span = Int(reach / 31) + 2
+        let span = Int(lantern.radius / 31) + 2
+        castLight(from: here, span: span)
         var cells: [GridPoint] = []
         for row in (here.row - span)...(here.row + span) {
             for col in (here.col - span)...(here.col + span) {
                 let cell = GridPoint(col: col, row: row)
-                if map.contains(cell), map.center(of: cell).distance(to: player.position) <= reach {
+                if map.contains(cell), lightSeen.contains(cell), map.center(of: cell).distance(to: player.position) <= reach {
                     cells.append(cell)
                 }
             }
         }
         session.explore(cells, on: def.id, columns: map.columns, rows: map.rows)
+    }
+
+    /// The cell the light was last cast from, and every cell it saw (`Shadowcast`).
+    private var lightCell: GridPoint?
+    private var lightSeen: Set<GridPoint> = []
+
+    /// The rock stops your light (after SpriteCook's shadowcasting article): each time you step into
+    /// another cell, which cells round you the light can see (`Shadowcast`, the rock lit where it
+    /// faces you), and the dark laid over the rest inside its circle (`Lantern.shade`). From the
+    /// nearest open cell if you're standing at the rock's edge.
+    private func castLight(from here: GridPoint, span: Int) {
+        guard here != lightCell, let lantern else { return }
+        lightCell = here
+        let rock = map.rock, columns = map.columns, rows = map.rows
+        let from = rock.contains(here) ? (map.nearestWalkable(to: here, within: 2) ?? here) : here
+        lightSeen = Shadowcast.visible(from: from, radius: span + 1) { cell in
+            cell.col < 0 || cell.row < 0 || cell.col >= columns || cell.row >= rows || rock.contains(cell)
+        }
+        var dark: [CGPoint] = []
+        for row in (here.row - span)...(here.row + span) {
+            for col in (here.col - span)...(here.col + span) {
+                let cell = GridPoint(col: col, row: row)
+                let middle = map.center(of: cell)
+                guard !lightSeen.contains(cell), middle.distance(to: map.center(of: here)) <= lantern.radius * 1.15 else { continue }
+                dark.append(middle)
+            }
+        }
+        let across = WorldMap.tileSize * CGFloat(2).squareRoot()
+        lantern.shade(dark, size: CGSize(width: across, height: across / 2))
     }
 
     /// Everyone else on this map, for the minimap: the adventurers walking about, the folk who live

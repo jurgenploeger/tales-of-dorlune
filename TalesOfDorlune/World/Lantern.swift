@@ -11,13 +11,24 @@ final class Lantern {
     let radius: CGFloat
     private let veil = SKNode()
     private let glints = SKNode()
+    /// The dark over the cells inside the light that it can't see past the rock (`shade`), and its
+    /// colour and depth, the dark's own.
+    private let shadows = SKNode()
+    private var pool: [SKSpriteNode] = []
+    private let shadeColor: UIColor
+    private let shadeDepth: CGFloat
 
     init(_ def: MapDef.Ambience.Darkness, in world: SKNode) {
         radius = CGFloat(def.radius ?? 190)
         let shade = def.color.flatMap { UIColor(hex: $0) } ?? UIColor(red: 0.01, green: 0.016, blue: 0.04, alpha: 1)
         let depth = CGFloat(def.alpha ?? 0.9)
+        shadeColor = shade
+        shadeDepth = depth
         veil.zPosition = 41_000
         world.addChild(veil)
+        // Just under the veil, so the dark past its edge isn't darkened twice there by much.
+        shadows.zPosition = 40_990
+        world.addChild(shadows)
 
         let hole = SKSpriteNode(texture: Self.hole, size: CGSize(width: radius * 2, height: radius * 2))
         hole.color = shade
@@ -65,6 +76,30 @@ final class Lantern {
     /// Keeps the light on the hero.
     func follow(_ point: CGPoint) {
         veil.position = point
+    }
+
+    /// The rock stops the light (after SpriteCook's shadowcasting article): a soft dark over each of
+    /// `cells` (world points of the middles of cells inside the light that it can't see,
+    /// `WorldScene.castLight`), `size` a cell's diamond on screen. Blobs that overlap make the dark
+    /// solid, and their soft edges a penumbra along the rock's shadow. Reuses its sprites.
+    func shade(_ cells: [CGPoint], size: CGSize) {
+        while pool.count < cells.count {
+            let blob = SKSpriteNode(texture: SoftTextures.glow)
+            blob.color = shadeColor
+            blob.colorBlendFactor = 1
+            shadows.addChild(blob)
+            pool.append(blob)
+        }
+        for (index, blob) in pool.enumerated() {
+            guard index < cells.count else {
+                blob.isHidden = true
+                continue
+            }
+            blob.isHidden = false
+            blob.position = cells[index]
+            blob.size = CGSize(width: size.width * 1.7, height: size.height * 1.7)
+            blob.alpha = shadeDepth
+        }
     }
 
     /// A glowing prop's light, shining faintly through the dark (and a little brighter in yours).

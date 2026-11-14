@@ -61,6 +61,24 @@ These are the rules the numbers measure. A sprite that keeps them looks like Tal
     instead of it (`light_masses`), and the whole house holds about 18 to 35 colours (`colour_density`
     capped as well as floored): every face its own seven shades made ours a hundred colours of grain.
 
+## Effects on the pixel grid (2026-11-14)
+
+From SpriteCook's hit feel and pixel-perfect articles (docs/spritecook-notes.md). What moves or flashes
+keeps the art's pixels as they are:
+
+- **A hit flashes by mixing, not tinting.** A sprite that flashes on a hit mixes its pixels toward the
+  flash's colour and keeps its alpha (a shader). A multiply tint leaves dark pixels dark, so the outline
+  never lights.
+- **Movement in whole pixels.** A screen shake moves in whole points, side to side, smaller each step,
+  and ends at exactly where it started. A push is eased over several frames, never one jump.
+- **Ground versions differ at their edges.** Variety in a ground tile comes from versions whose edges
+  differ in a known pattern (edge Wang tiles, `tools/wang_art.py`), never from versions that share one
+  frame: a frame every version shares repeats along every cell edge and shows the grid (the four
+  framed versions before 2026-11-14 repeated at one tile nearly twice as strongly). No cross-fades: a
+  version holds only the tile's own colours.
+- **No squash and stretch by scaling a sprite.** It changes the size of its pixels. Draw it as frames, or
+  move whole pixels as the idle motions do.
+
 ## Item icons: the clean look (2026-10-26)
 
 ### Acceptance criteria (the checklist)
