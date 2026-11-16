@@ -10,14 +10,18 @@ enum Profile: Equatable {
 
 /// The profile window's pages. Its raw value is the debug name (`sub=companion`).
 private nonisolated enum ProfilePage: String, CaseIterable {
-    /// Who they are: their stats, what they wear and their skills.
+    /// Who they are: their stats and what they wear.
     case hero
+    /// Their skills, on a page of their own as yours are (the user, 2026-11-16: "Skills should have its own
+    /// tab when viewing other as well").
+    case skills
     /// The companion they bring along.
     case companion
 
     var title: String {
         switch self {
         case .hero: L("Hero")
+        case .skills: L("Skills")
         case .companion: L("Companion")
         }
     }
@@ -77,19 +81,17 @@ struct ProfileWindow: View {
     private var window: some View {
         let species = companion
         return VStack(spacing: 0) {
-            if species != nil {
-                PageTabs(page: $page, title: { $0.title })
-            } else {
-                WindowTitle(person.name)
-                    .padding(.bottom, 2)
-            }
+            // Hero and Skills, and Companion when they bring one along.
+            PageTabs(page: $page, title: { $0.title },
+                     shown: species != nil ? ProfilePage.allCases : [.hero, .skills])
 
             ScrollView {
                 Group {
-                    if let species, page == .companion {
-                        companionPage(species)
-                    } else {
-                        heroPage
+                    switch page {
+                    case .companion:
+                        if let species { companionPage(species) } else { heroPage }
+                    case .skills: skillsPage
+                    case .hero: heroPage
                     }
                 }
                 .padding(HUDStyle.windowInset)
@@ -148,17 +150,23 @@ struct ProfileWindow: View {
                 StatsPanel(level: L("Level {level}", ["level": person.level]), exp: nil, expToNext: 0,
                            hp: min(stats.hp, friend?.hp ?? stats.hp), mp: min(stats.mp, friend?.mp ?? stats.mp), stats: stats)
             }
+        }
+    }
 
+    /// Their skills, on a plate as a group is.
+    @ViewBuilder
+    private var skillsPage: some View {
+        let skills = session.skills(of: person)
+        if skills.isEmpty {
+            EmptyNote(L("None yet"))
+        } else {
             VStack(alignment: .leading, spacing: 8) {
-                SectionTitle(text: L("Skills"))
-                let skills = session.skills(of: person)
-                if skills.isEmpty {
-                    Text(L("None yet")).font(HUDStyle.font(11)).foregroundStyle(HUDStyle.dim)
-                } else {
-                    LazyVGrid(columns: Self.tiles, alignment: .leading, spacing: 8) {
-                        ForEach(skills) { skill in tile(name: skill.name) { SkillIcon(skill: skill, size: 40) } }
-                    }
+                SectionTitle(text: L("Skills"), detail: "\(skills.count)")
+                LazyVGrid(columns: Self.tiles, alignment: .leading, spacing: 8) {
+                    ForEach(skills) { skill in tile(name: skill.name) { SkillIcon(skill: skill, size: 40) } }
                 }
+                .padding(12)
+                .background(GlassCard())
             }
         }
     }

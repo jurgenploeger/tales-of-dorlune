@@ -295,6 +295,9 @@ extension MenuView {
 struct PageTabs<Page: Hashable & CaseIterable>: View {
     @Binding var page: Page
     let title: (Page) -> String
+    /// The pages to show, in order, where not all of them are (someone's profile with no companion);
+    /// all of them when nil.
+    var shown: [Page]? = nil
     var waiting: (Page) -> Bool = { _ in false }
     /// Where each tab is in the strip as it shows now, for the chevrons to find the first hidden.
     @State private var frames: [Page: CGRect] = [:]
@@ -304,7 +307,7 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
     @State private var shownWidth: CGFloat = 0
 
     /// The pages in order.
-    private var pages: [Page] { Array(Page.allCases) }
+    private var pages: [Page] { shown ?? Array(Page.allCases) }
 
     var body: some View {
         ScrollViewReader { reader in
@@ -400,7 +403,7 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
     /// The nearest tab hidden past `edge`, under its chevron or beyond it.
     private func hidden(toward edge: HorizontalEdge) -> Page? {
         let room = SideScroll<EmptyView>.chevronRoom
-        let tabs = Array(Page.allCases)
+        let tabs = pages
         switch edge {
         case .trailing: return tabs.first { (frames[$0]?.maxX ?? 0) > shownWidth - room }
         case .leading: return tabs.last { (frames[$0]?.minX ?? 0) < room }
