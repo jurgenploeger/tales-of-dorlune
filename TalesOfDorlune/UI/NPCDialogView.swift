@@ -96,8 +96,13 @@ struct NPCDialogView: View {
 
                 if dyeing {
                     DyeWindow(session: session) { said in
-                        if let said { reply = said }
-                        dyeing = false
+                        // Closed, the conversation under it closes too; done dyeing, they say so in it.
+                        if let said {
+                            reply = said
+                            dyeing = false
+                        } else {
+                            onClose()
+                        }
                     }
                     .frame(width: proxy.size.width, height: proxy.size.height)
                     .transition(.opacity)
@@ -260,9 +265,11 @@ struct NPCDialogView: View {
     private func waresWindow(safeArea: EdgeInsets) -> some View {
         ZStack {
             Color.black.opacity(0.5)
-                .onTapGesture { browsing = false }
+                // Closing the wares closes the conversation under it too (the user, 2026-11-16: "When
+                // closing a modal like this, it should also close the conversation box with the character").
+                .onTapGesture(perform: onClose)
             VStack(spacing: 0) {
-                WindowTitle(npc.name, onClose: { browsing = false })
+                WindowTitle(npc.name, onClose: onClose)
                 ScrollView {
                     VStack(alignment: .leading, spacing: 12) {
                         if let reply {
