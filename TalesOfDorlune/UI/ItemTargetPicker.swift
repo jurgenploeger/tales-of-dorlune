@@ -47,7 +47,7 @@ struct ItemTargetPicker: View {
                             ForEach(pets) { pet in row(.pet(pet)) }
                         }
                     }
-                    .padding(14)
+                    .padding(HUDStyle.windowInset)
                 }
                 .scrollBounceBehavior(.basedOnSize)
             }

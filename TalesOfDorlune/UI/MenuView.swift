@@ -156,7 +156,7 @@ extension MenuView {
                     case .settings: SettingsView(session: session, onQuitToTitle: onQuitToTitle, page: settingsPage)
                     }
                 }
-                .padding(14)
+                .padding(HUDStyle.windowInset)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 // A page of its own for each tab, sliding in from its tab's side.
                 .pageSlide(shownPage)
@@ -1627,7 +1627,7 @@ struct FriendMapWindow: View {
                             .frame(maxWidth: .infinity)
                     }
                 }
-                .padding(14)
+                .padding(HUDStyle.windowInset)
             }
             .frame(maxWidth: 380)
             .gameWindow()

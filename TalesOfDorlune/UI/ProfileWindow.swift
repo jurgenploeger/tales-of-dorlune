@@ -92,7 +92,7 @@ struct ProfileWindow: View {
                         heroPage
                     }
                 }
-                .padding(14)
+                .padding(HUDStyle.windowInset)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 // Sliding in from its tab's side (`pageSlide`).
                 .pageSlide(page)

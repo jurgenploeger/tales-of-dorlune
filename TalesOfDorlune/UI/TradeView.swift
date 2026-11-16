@@ -56,7 +56,7 @@ struct TradeView: View {
                             .font(HUDStyle.font(10))
                             .foregroundStyle(HUDStyle.dim)
                     }
-                    .padding(14)
+                    .padding(HUDStyle.windowInset)
                 }
             }
             .frame(maxWidth: 520, maxHeight: 560)

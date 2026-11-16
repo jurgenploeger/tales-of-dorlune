@@ -1515,7 +1515,7 @@ private struct ChoiceCard<Content: View>: View {
             }
             .scrollBounceBehavior(.basedOnSize)
             .frame(height: min(max(contentHeight, 1), 220))
-            .padding(12)
+            .padding(HUDStyle.windowInset)
         }
         .frame(width: 300)
         .gameWindow()
@@ -1598,7 +1598,7 @@ private struct FittedScroll<Content: View>: View {
 
 private struct ResultPanel: View {
     /// The window's padding, which the rewards' scroll bar reaches out across to the edge.
-    private static let inset: CGFloat = 22
+    private static let inset: CGFloat = HUDStyle.windowInset
     let result: BattleResult
     let session: GameSession
     let onContinue: () -> Void
@@ -1777,7 +1777,7 @@ private struct BossStoryCard: View {
                 }
             }
         }
-        .padding(22)
+        .padding(HUDStyle.windowInset)
         .frame(maxWidth: verticalSizeClass == .compact ? 620 : 420)
         .gameWindow()
         .contentShape(HUDStyle.windowShape)

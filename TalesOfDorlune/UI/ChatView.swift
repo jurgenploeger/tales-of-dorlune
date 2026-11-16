@@ -26,7 +26,7 @@ struct ChatView: View {
                                     .id(line.id)
                             }
                         }
-                        .padding(12)
+                        .padding(HUDStyle.windowInset)
                     }
                     .defaultScrollAnchor(.bottom)
                     .onChange(of: session.chat.last?.id) {
@@ -57,7 +57,7 @@ struct ChatView: View {
                     .disabled(draft.trimmingCharacters(in: .whitespaces).isEmpty)
                     .accessibilityLabel(L("Send"))
                 }
-                .padding(10)
+                .padding(.horizontal, HUDStyle.windowInset).padding(.vertical, 10)
                 .background(HUDStyle.ink.opacity(0.6))
             }
             // As big as the menu's windows (playtesting 2026-10-25: "Make the chat modal the same size as

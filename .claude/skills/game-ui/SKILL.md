@@ -37,6 +37,8 @@ glass (`HUDStyle.glass`) in the same glossy light-blue bevel (`HUDStyle.frame`),
 continuous corners (at 10 "everything felt too sharp", 2026-10-26), a soft shadow under it. Build every
 modal with `.gameWindow()`, never a background of its own.
 
+**Every window's content stands `HUDStyle.windowInset` (16) in from its sides**, in line with its title (the user, 2026-11-16): never 12, 14, 20 or 22 of its own; cards inside it keep their own smaller padding.
+
 **Every window has a title bar** (`WindowBar`, since 0.9.74; the user, 2026-11-10: "We can have the title
 bars with the tabs"): the frame's own bevel along the window's top, out to the frame, as Figma's `UI /
 Window` has it. On it, the window's name in dark ink (`HUDStyle.barText`, white in Dark Mode; white on the light bar was
