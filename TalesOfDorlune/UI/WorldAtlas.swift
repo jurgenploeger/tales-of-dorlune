@@ -603,9 +603,17 @@ struct WorldAtlas: View {
     private func tap(at location: CGPoint, in size: CGSize) {
         guard framing.scale > 0 else { return }
         // A group of badges zooms in on it, its badges parting as they come apart.
+        // As far in as parts its badges in one go, a little past where they'd group (the user,
+        // 2026-11-16: "you should be able to tap on it, and then it expands into the icons"); all the
+        // way in, those still together fan out (`badges`).
         if let group = marks.first(where: { $0.count > 1 && point(of: $0.spot, in: size).distance(to: location) < Self.badgeSize }) {
+            var nearest = CGFloat.infinity
+            for (i, a) in group.members.enumerated() {
+                for b in group.members.dropFirst(i + 1) { nearest = min(nearest, a.distance(to: b)) }
+            }
+            let parting = nearest > 0.0001 && nearest.isFinite ? Self.groupReach * 1.2 / nearest : Self.maxScale
             var next = framing
-            next.scale = clamped(framing.scale * 2.5, in: viewSize)
+            next.scale = clamped(max(framing.scale * 1.5, min(Self.maxScale, parting)), in: viewSize)
             next.focus = group.spot
             glide(to: clampedFocus(next))
             return
@@ -635,6 +643,8 @@ struct WorldAtlas: View {
         var count = 1
         /// Its cell's middle on the picture (`spot(of:)`), filled in by `spotted`.
         var spot: CGPoint = .zero
+        /// A group's badges' spots, for how far in to zoom to part them (`tap`).
+        var members: [CGPoint] = []
     }
 
     /// The marks with their spots on the picture, the continent's bounds worked out once for them all.
@@ -695,6 +705,26 @@ struct WorldAtlas: View {
                 groups.append([mark])
             }
         }
+        // All the way in, no numbers (the user, 2026-11-16: "when you zoom all the way in, there are
+        // no numbers showing when two things are close together"): a group's badges fan out round
+        // where they are, just far enough apart on screen not to overlap.
+        let allIn = framing.scale >= Self.maxScale * 0.98
+        if allIn {
+            return groups.flatMap { group -> [Mark] in
+                guard group.count > 1 else { return group }
+                let sum = group.reduce(CGPoint.zero) { CGPoint(x: $0.x + $1.spot.x, y: $0.y + $1.spot.y) }
+                let middle = CGPoint(x: sum.x / CGFloat(group.count), y: sum.y / CGFloat(group.count))
+                // The view may squash the map up and down (`Framing.squash`): far enough apart that way too.
+                let apart = Self.groupReach / framing.scale / max(0.3, min(1, framing.squash))
+                let radius = apart / (2 * sin(.pi / CGFloat(group.count)))
+                return group.enumerated().map { index, mark in
+                    var fanned = mark
+                    let angle = -CGFloat.pi / 2 + 2 * .pi * CGFloat(index) / CGFloat(group.count)
+                    fanned.spot = CGPoint(x: middle.x + radius * cos(angle), y: middle.y + radius * sin(angle))
+                    return fanned
+                }
+            }
+        }
         return groups.map { group -> Mark in
             guard group.count > 1 else { return group[0] }
             var leader = group[0]
@@ -703,6 +733,7 @@ struct WorldAtlas: View {
             // Where its badges are, on average.
             let sum = group.reduce(CGPoint.zero) { CGPoint(x: $0.x + $1.spot.x, y: $0.y + $1.spot.y) }
             leader.spot = CGPoint(x: sum.x / CGFloat(group.count), y: sum.y / CGFloat(group.count))
+            leader.members = group.map(\.spot)
             return leader
         }
     }
