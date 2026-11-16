@@ -23,6 +23,12 @@ struct AdventurerCard: View {
                 Button { coordinator.open(.profile(.adventurer(adventurer))) } label: {
                     SpriteImage(art: session.artID(for: adventurer), size: 46)
                         .background(Circle().fill(.white.opacity(0.08)))
+                        // Their companion at their feet, as in the Friends window (the user, 2026-11-16).
+                        .overlay(alignment: .bottomTrailing) {
+                            if let pet = adventurer.petSpecies.flatMap(content.monster) {
+                                SpriteImage(art: pet.art, size: 24).offset(x: 10, y: 4)
+                            }
+                        }
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel(L("{name}'s stats", ["name": adventurer.name]))
