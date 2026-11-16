@@ -298,6 +298,9 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
     var waiting: (Page) -> Bool = { _ in false }
     /// Where each tab is in the strip as it shows now, for the chevrons to find the first hidden.
     @State private var frames: [Page: CGRect] = [:]
+    /// Where each tab is in the row of tabs itself (scrolling with it), for the one you're on's glass
+    /// (`highlight`).
+    @State private var places: [Page: CGRect] = [:]
     @State private var shownWidth: CGFloat = 0
 
     /// The pages in order.
@@ -318,6 +321,7 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
                         tab(item)
                             .id(item)
                             .onGeometryChange(for: CGRect.self) { $0.frame(in: .named(Self.strip)) } action: { frames[item] = $0 }
+                            .onGeometryChange(for: CGRect.self) { $0.frame(in: .named(Self.row)) } action: { places[item] = $0 }
                             .overlay(alignment: .trailing) {
                                 if index + 1 < pages.count, item != page, pages[index + 1] != page {
                                     HUDStyle.frameDark.opacity(0.4).frame(width: 1, height: 16)
@@ -331,6 +335,11 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
                 // tab, when it's the one you're on, flares out of the corner's round straight into its
                 // own (the user, 2026-11-16: "the first tab should be more inserted so it also shows the
                 // rounded corner in the bottom left"); the last clear of the close button's room.
+                .coordinateSpace(name: Self.row)
+                // The one you're on's glass, one piece that slides from tab to tab as you switch (the
+                // user, 2026-11-16: "The tabs should slide between each other when you click on one
+                // another"), under their names.
+                .background(alignment: .topLeading) { highlight }
                 .padding(.leading, PageFillet.side + FlaredTab.flare)
                 .padding(.trailing, OrangeCloseButton.room + 8)
                 .padding(.top, TabEdge.inset)
@@ -348,20 +357,10 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
         .background {
             WindowBar(foot: false)
                 .overlay {
-                    Canvas { context, size in
-                        let y = size.height - 0.75
-                        let from = PageFillet.side, to = size.width - PageFillet.side
-                        var runs = [(from, to)]
-                        if let tab = frames[page] {
-                            runs = [(from, min(to, tab.minX - FlaredTab.flare)), (max(from, tab.maxX + FlaredTab.flare), to)]
-                        }
-                        var path = Path()
-                        for (start, end) in runs where end > start {
-                            path.move(to: CGPoint(x: start, y: y))
-                            path.addLine(to: CGPoint(x: end, y: y))
-                        }
-                        context.stroke(path, with: .color(HUDStyle.frameLight.opacity(0.8)), lineWidth: 1.5)
-                    }
+                    // Its gap follows the tab you're on as it slides (`BarLine`).
+                    BarLine(gap: frames[page].map { $0.minX - FlaredTab.flare } ?? 0,
+                            gapEnd: frames[page].map { $0.maxX + FlaredTab.flare } ?? 0)
+                        .stroke(HUDStyle.frameLight.opacity(0.8), lineWidth: 1.5)
                     .allowsHitTesting(false)
                 }
         }
@@ -380,6 +379,23 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
 
     /// The strip as it shows, for the tabs' frames (`frames`).
     private static var strip: String { "PageTabs.strip" }
+    /// The row of tabs, for where each stands in it (`places`).
+    private static var row: String { "PageTabs.row" }
+
+    /// The glass of the tab you're on, where it stands in the row: flaring at its foot into the bar,
+    /// edged light up its sides and over its top.
+    @ViewBuilder
+    private var highlight: some View {
+        if let place = places[page] {
+            ZStack {
+                FlaredTab().fill(HUDStyle.glassTop)
+                FlaredTab(open: true).stroke(HUDStyle.frameLight.opacity(0.8), lineWidth: 1.5)
+            }
+            .frame(width: place.width + 2 * FlaredTab.flare, height: place.height)
+            .offset(x: place.minX - FlaredTab.flare, y: place.minY)
+            .allowsHitTesting(false)
+        }
+    }
 
     /// The nearest tab hidden past `edge`, under its chevron or beyond it.
     private func hidden(toward edge: HorizontalEdge) -> Page? {
@@ -426,19 +442,15 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
                     // into the bar (the user, 2026-11-11: "The bottom of the tabs should have rounded
                     // corners that are inverted to the other side"), so it runs into the page as a
                     // folder's tab does.
-                    // The others have none: their names on the bar (the user, 2026-11-16: "the inactive
-                    // tabs shouldn't have a tab fill, just transparent").
-                    if selected {
-                        FlaredTab().fill(HUDStyle.glassTop).padding(.horizontal, -FlaredTab.flare)
-                    }
+                    // None of its own: the one you're on's glass slides under it (`highlight`); the others
+                    // have none, their names on the bar (the user, 2026-11-16: "the inactive tabs
+                    // shouldn't have a tab fill, just transparent").
+                    EmptyView()
                 }
                 .overlay {
                     // A light edge up its sides, over its top and out along its flares; none along its
                     // foot, where it's the page's. One you're not on edged faintly in the bar's dark.
-                    if selected {
-                        FlaredTab(open: true).stroke(HUDStyle.frameLight.opacity(0.8), lineWidth: 1.5)
-                            .padding(.horizontal, -FlaredTab.flare)
-                    }
+                    EmptyView()
                 }
                 .overlay(alignment: .topTrailing) {
                     if marked {
@@ -517,6 +529,34 @@ extension View {
     @MainActor func pageSlide(_ page: some Hashable) -> some View {
         id(page)
             .transition(.push(from: PageSlide.shared.forward ? .trailing : .leading))
+    }
+}
+
+/// The page's light edge along the bar's foot under a window's tabs (`PageTabs`): from the page's top
+/// corners (`PageFillet.side` in from each side), with a gap from `gap` to `gapEnd` where the tab
+/// you're on stands, which slides as it does (`animatableData`). No gap where both are 0.
+private nonisolated struct BarLine: Shape {
+    var gap: CGFloat
+    var gapEnd: CGFloat
+
+    var animatableData: AnimatablePair<CGFloat, CGFloat> {
+        get { AnimatablePair(gap, gapEnd) }
+        set {
+            gap = newValue.first
+            gapEnd = newValue.second
+        }
+    }
+
+    func path(in rect: CGRect) -> Path {
+        let y = rect.maxY - 0.75
+        let from = PageFillet.side, to = rect.width - PageFillet.side
+        let runs = gapEnd > gap ? [(from, min(to, gap)), (max(from, gapEnd), to)] : [(from, to)]
+        var path = Path()
+        for (start, end) in runs where end > start {
+            path.move(to: CGPoint(x: start, y: y))
+            path.addLine(to: CGPoint(x: end, y: y))
+        }
+        return path
     }
 }
 
