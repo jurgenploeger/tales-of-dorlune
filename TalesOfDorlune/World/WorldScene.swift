@@ -346,6 +346,7 @@ final class WorldScene: SKScene {
         for rock in planner.plan.outcrops { addScenery(rock) }
         await breathe()
         await placeProps(planner.plan.props, seams: planner.plan.seamProps)
+        lightTheRoad()
         TownFence.placeRoadsides(planner.plan.roadsides, map: map, art: art) { node in
             self.chunk(at: node.position).addChild(node)
             if let sprite = node as? SKSpriteNode { self.see.note(sprite) }
@@ -1322,6 +1323,23 @@ final class WorldScene: SKScene {
             Lighting.glow(behind: node, color: color, in: chunk(at: node.position), alpha: glow.alpha, duration: glow.duration,
                           layers: layers)
             lantern?.glint(at: node.position + CGVector(dx: 0, dy: node.size.height * 0.4), color: color, width: node.size.width * 1.6)
+        }
+    }
+
+    /// A cave's road lit by torches on its walls (`WorldMap.wallTorchSpots`): each against the rock
+    /// behind its cell, up a little as if hung on it, its warm light shining through the dark round it
+    /// (`Lantern.glint`).
+    private func lightTheRoad() {
+        for spot in map.wallTorchSpots() {
+            // Toward the wall it hangs on, on screen: north up and left, east up and right.
+            let north = spot.wall.row > spot.cell.row
+            // Sorted where its cell is (nudged up as far, it sorted behind the rock and hid), then
+            // lifted onto the wall.
+            let toward = CGVector(dx: (north ? -0.32 : 0.32) * WorldMap.tileSize, dy: 2)
+            let node = addScenery(Placement(art: "wall_torch", cell: spot.cell, nudge: toward))
+            node.position.y += 12
+            lantern?.glint(at: node.position + CGVector(dx: 0, dy: node.size.height * 0.75),
+                           color: UIColor(red: 1, green: 0.62, blue: 0.25, alpha: 1), width: 190)
         }
     }
 
