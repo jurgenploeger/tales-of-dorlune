@@ -211,7 +211,18 @@ def broken_pillar():
     return s
 
 
-def wall_torch():
+# The torch's flame, frame by frame (the user, 2026-11-16: "The torches should move slightly like real
+# fire"): how tall each tongue stands, how far its tip leans, and where the sparks are. The game plays
+# them in turn (`WorldScene.lightTheRoad`); the iron and wood stay put.
+TORCH_FLAMES = [
+    dict(tall=1.00, lean=0.0, sparks=((13, 2), (19, 4), (16, 0))),
+    dict(tall=1.10, lean=0.8, sparks=((14, 1), (20, 3))),
+    dict(tall=0.92, lean=-0.6, sparks=((12, 3), (18, 1), (17, 5))),
+    dict(tall=1.05, lean=-0.2, sparks=((15, 0), (20, 2))),
+]
+
+
+def wall_torch(frame=0):
     """A torch on a cave's wall (the user, 2026-11-16: "In caves there should be fires on the wall on the
     main road to light the place a bit"): an iron plate on the rock, a bracket holding a wooden torch
     leaning out, its head wrapped and burning, sparks over it. Stands in front of the wall it's on
@@ -226,18 +237,21 @@ def wall_torch():
     s.ellipse(16, 24.5, 3.2, 1.5, iron)                                                    # its ring
     s.stroke([(16, 33), (16, 17)], 2.0, wood)                                              # the torch's handle
     s.ellipse(16, 16, 3.4, 2.6, wrap)                                                      # its wrapped head
+    flame = TORCH_FLAMES[frame % len(TORCH_FLAMES)]
     flames = [Material(c, texture=0.0, relief=0.0) for c in ("#e8502a", "#ff9a30", "#ffe070")]
     for scale, mat in zip((1.0, 0.66, 0.36), flames):
-        h, w = 13 * scale, 4.6 * scale
-        s.poly([(16, 15 - h), (16 + w * 0.7, 15 - h * 0.45), (16 + w, 14.5), (16 - w, 14.5), (16 - w * 0.6, 15 - h * 0.55)], mat,
+        h, w = 13 * scale * flame["tall"], 4.6 * scale
+        tip = 16 + flame["lean"] * scale * 2
+        s.poly([(tip, 15 - h), (16 + w * 0.7, 15 - h * 0.45), (16 + w, 14.5), (16 - w, 14.5), (16 - w * 0.6, 15 - h * 0.55)], mat,
                profile="flat", tone=0.6)
     s.overlay = np.zeros((48, 32, 4), np.uint8)
-    for x, y in ((13, 2), (19, 4), (16, 0)):
+    for x, y in flame["sparks"]:
         s.overlay[y, x] = (255, 214, 96, 255)                                              # sparks
     return s
 
 
-PROPS = {"standing_stone": standing_stone, "brazier": brazier, "wall_torch": wall_torch, "gold_hoard": gold_hoard, "warning_post": warning_post,
+PROPS = {"standing_stone": standing_stone, "brazier": brazier, "wall_torch": wall_torch,
+         "wall_torch_2": lambda: wall_torch(1), "wall_torch_3": lambda: wall_torch(2), "wall_torch_4": lambda: wall_torch(3), "gold_hoard": gold_hoard, "warning_post": warning_post,
          "junk_throne": junk_throne, "bone_pile": bone_pile, "torn_tent": torn_tent, "broken_pillar": broken_pillar}
 
 

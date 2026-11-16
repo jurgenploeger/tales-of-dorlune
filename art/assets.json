@@ -2281,6 +2281,18 @@
       "kind": "prop"
     },
     {
+      "id": "wall_torch_2",
+      "kind": "prop"
+    },
+    {
+      "id": "wall_torch_3",
+      "kind": "prop"
+    },
+    {
+      "id": "wall_torch_4",
+      "kind": "prop"
+    },
+    {
       "id": "gold_hoard",
       "kind": "prop"
     },
