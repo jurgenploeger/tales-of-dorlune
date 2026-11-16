@@ -114,7 +114,12 @@ final class LandStage {
         placeLilyPads(plan.lilyPads)
         placeBridges()
         placeHarbors()
-        for reed in plan.reeds { addScenery(reed) }
+        for reed in plan.reeds {
+            let node = addScenery(reed)
+            // The rocks cast one where the shade can't fall (the user, 2026-11-16: "The rocks in the water
+            // should also have the shadows"): a lake and its shore lie sunk.
+            if reed.art == "water_rock" || reed.art == "shore_stones" { roundShadow(under: node, at: reed.cell) }
+        }
         placeWaterfalls(plan.waterfalls)
         await pause()
         placeFence()
@@ -612,6 +617,23 @@ final class LandStage {
                     chunk(at: node.position).addChild(node)
                 }
             }
+        }
+    }
+
+    /// A round shadow (`Lighting.Shadow`) under what stands on a hill or on the sunk shore and lakes, where
+    /// the shade cast away from the sun isn't laid (`addScenery`), as `plant` gives a prop with `shadow`.
+    private func roundShadow(under node: SKSpriteNode, at cell: GridPoint) {
+        if map.hillIndex(at: cell) != nil {
+            let strip = HillArt.strip(at: -node.zPosition)
+            let layers: [(from: CGFloat, z: CGFloat)] = (0..<3).map { step in
+                let start = strip.start - CGFloat(step) * HillArt.stripHeight
+                return (from: start + map.height(at: CGPoint(x: node.position.x, y: start)),
+                        z: strip.z + CGFloat(step) * HillArt.stripHeight)
+            }
+            shadows.append(Lighting.Shadow(under: node, in: chunk(at: node.position), layers: layers))
+        } else if map.isSunken(cell) {
+            let strip = HillArt.strip(at: -node.zPosition, depth: HillArt.sunkenDepth)
+            shadows.append(Lighting.Shadow(under: node, in: chunk(at: node.position), layers: [(from: strip.start, z: strip.z)]))
         }
     }
 
