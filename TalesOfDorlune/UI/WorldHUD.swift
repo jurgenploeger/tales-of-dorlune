@@ -20,6 +20,8 @@ struct WorldHUD: View {
     /// toast ran under the minimap).
     @State private var facesHeight: CGFloat = 0
     @State private var minimapHeight: CGFloat = 0
+    /// How wide the buttons along the bottom are (Chat, the Bag, the menu), for the adventurer card over them.
+    @State private var toolbarWidth: CGFloat = 0
     private var toastGap: CGFloat {
         onItsSide ? 10 : max(10, minimapHeight + 8 - facesHeight - 6)
     }
@@ -137,7 +139,7 @@ struct WorldHUD: View {
                     .transition(.scale(scale: 0.7, anchor: .bottomTrailing).combined(with: .opacity))
                     .stepsAside(controlsHidden || following)
                 } else if let adventurer = session.nearbyAdventurer {
-                    AdventurerCard(coordinator: coordinator, adventurer: adventurer)
+                    AdventurerCard(coordinator: coordinator, adventurer: adventurer, width: toolbarWidth)
                         .transition(.scale(scale: 0.8, anchor: .bottomTrailing).combined(with: .opacity))
                         .stepsAside(controlsHidden || following)
                 }
@@ -170,6 +172,8 @@ struct WorldHUD: View {
                     .coachTarget(.toolbar)
                     .stepsAside(controlsHidden)
                 }
+                // How wide the buttons are, for the card over them to run to the menu button's edge.
+                .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { toolbarWidth = $0 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
             .padding(.bottom, bottomGap.buttons)

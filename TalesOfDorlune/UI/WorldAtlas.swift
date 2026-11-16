@@ -458,7 +458,7 @@ struct WorldAtlas: View {
             turnByCompass()
         } label: {
             // Smaller than the minimap's own, out of the way in the corner.
-        MapCompass(size: 56, heading: .radians(Double(framing.rotation)), squash: framing.squash)
+        MapCompass(size: 68, heading: .radians(Double(framing.rotation)), squash: framing.squash)
         }
         .buttonStyle(.plain)
         .accessibilityLabel(isNorthUp ? L("Turn the map as you see the land") : L("Turn the map north up"))
@@ -467,7 +467,9 @@ struct WorldAtlas: View {
     /// The map's buttons in a row at the bottom right, in reach of a thumb: where you are, zoom out,
     /// zoom in.
     private var controls: some View {
-        HStack(spacing: 6) {
+        // As far apart as the HUD's Chat, Bag and menu buttons (15 points between their faces; the user,
+        // 2026-11-16): 11 between their 44-point frames, each face 2 in from its frame's edge.
+        HStack(spacing: 11) {
             mapButton(IconImage(.user, size: 16), label: L("Where you are")) { centreOnHere() }
             mapButton(Text("−").font(HUDStyle.font(18)), label: L("Zoom out")) { zoom(by: 1 / 1.6) }
             mapButton(Text("+").font(HUDStyle.font(18)), label: L("Zoom in")) { zoom(by: 1.6) }

@@ -7,6 +7,9 @@ import SwiftUI
 struct AdventurerCard: View {
     let coordinator: GameCoordinator
     let adventurer: Adventurer
+    /// As wide as the HUD's buttons under it, to the menu button's right edge (the user, 2026-11-16),
+    /// and never narrower than its own content.
+    var width: CGFloat = 0
 
     private var session: GameSession { coordinator.session }
 
@@ -48,7 +51,8 @@ struct AdventurerCard: View {
                 }
             }
             StatBar(label: L("HP"), value: stats.hp, maximum: stats.hp, color: HUDStyle.hp, labelWidth: 20)
-                .frame(width: 190)
+            // What you can do, on one row, sharing its width (the user, 2026-11-16: "The buttons should
+            // be on one row. Trade should be the last one").
             HStack(spacing: 6) {
                 if adventurer.hostile {
                     Text(L("Looking for trouble!")).font(HUDStyle.font(10)).foregroundStyle(Color(uiColor: Crowd.hostileColor))
@@ -56,13 +60,18 @@ struct AdventurerCard: View {
                     Button { coordinator.befriend(adventurer) } label: { word(L("Befriend")) }
                         .buttonStyle(PixelButtonStyle(tint: HUDStyle.gold, compact: true))
                 }
-                if !adventurer.hostile {
-                    Button { coordinator.trade(with: adventurer) } label: { word(L("Trade")) }
-                        .buttonStyle(PixelButtonStyle(compact: true))
+                // Anyone can come along, friend or not (playtesting 2026-10-26).
+                if !adventurer.hostile, !session.isInParty(adventurer), !session.partyIsFull {
+                    Button { coordinator.invite(adventurer) } label: { word(L("Invite")) }
+                        .buttonStyle(PixelButtonStyle(tint: HUDStyle.gold, compact: true))
                 }
                 if danger, session.canChallenge(adventurer) {
                     Button { coordinator.challenge(adventurer) } label: { word(L("Duel")) }
                         .buttonStyle(PixelButtonStyle(tint: Color(red: 1, green: 0.55, blue: 0.5), compact: true))
+                }
+                if !adventurer.hostile {
+                    Button { coordinator.trade(with: adventurer) } label: { word(L("Trade")) }
+                        .buttonStyle(PixelButtonStyle(compact: true))
                 }
             }
             // In a party, only whoever leads it takes up a duel, for them all.
@@ -71,14 +80,9 @@ struct AdventurerCard: View {
                     .font(HUDStyle.font(10)).foregroundStyle(HUDStyle.dim)
                     .fixedSize(horizontal: false, vertical: true)
             }
-            // Anyone can come along, friend or not (playtesting 2026-10-26).
-            if !adventurer.hostile, !session.isInParty(adventurer) {
-                if session.partyIsFull {
-                    Text(L("Your party is full")).font(HUDStyle.font(10)).foregroundStyle(HUDStyle.dim)
-                } else {
-                    Button { coordinator.invite(adventurer) } label: { word(L("Invite to party")) }
-                        .buttonStyle(PixelButtonStyle(tint: HUDStyle.gold, compact: true))
-                }
+            // Why there's no Invite.
+            if !adventurer.hostile, !session.isInParty(adventurer), session.partyIsFull {
+                Text(L("Your party is full")).font(HUDStyle.font(10)).foregroundStyle(HUDStyle.dim)
             }
             // Travelling with friends: ask whoever leads to let you join them, and follow them about.
             if !adventurer.hostile, session.nearbyGroupSize > 1, session.joinedParty == nil {
@@ -87,8 +91,9 @@ struct AdventurerCard: View {
             }
         }
         .padding(10)
+        .frame(minWidth: max(260, width), alignment: .leading)
+        .fixedSize()
         .background(HUDStyle.panel)
-        .frame(maxWidth: 260)
     }
 
     /// A button's word, without an icon so three fit side by side: on one line, shrinking a little
@@ -98,5 +103,7 @@ struct AdventurerCard: View {
             .lineLimit(1)
             .minimumScaleFactor(0.7)
             .allowsTightening(true)
+            // The row's buttons share its width.
+            .frame(maxWidth: .infinity)
     }
 }
