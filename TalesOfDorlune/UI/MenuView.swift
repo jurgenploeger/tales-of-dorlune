@@ -667,7 +667,7 @@ private struct HowItWorks: View {
                 HStack(spacing: 5) {
                     IconImage(.book, size: 13)
                     Text(L("How it works"))
-                    IconImage(.chevronDown, size: 11)
+                    IconImage(.chevronDown, size: 14)
                         .rotationEffect(.degrees(-90))
                 }
                 .font(HUDStyle.font(11))
@@ -2500,7 +2500,7 @@ private struct QuestListRow: View {
                 if finished {
                     IconImage(.badgeCheck, size: 14).foregroundStyle(HUDStyle.green)
                 }
-                IconImage(.chevronDown, size: 11)
+                IconImage(.chevronDown, size: 14)
                     .rotationEffect(.degrees(-90))
                     .foregroundStyle(HUDStyle.dim)
             }
@@ -2652,7 +2652,7 @@ struct QuestRewardLine: View {
             }
             if more {
                 Spacer(minLength: 4)
-                IconImage(.chevronDown, size: 12)
+                IconImage(.chevronDown, size: 14)
             }
         }
         .font(HUDStyle.font(10))

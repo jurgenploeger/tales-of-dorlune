@@ -519,7 +519,7 @@ private struct SideChevron: View {
             SoundEffects.shared.play(.tap, volume: 0.6)
             action()
         } label: {
-            IconImage(.chevronUp, size: 12)
+            IconImage(.chevronUp, size: 14)
                 .rotationEffect(.degrees(edge == .leading ? -90 : 90))
                 .foregroundStyle(HUDStyle.barText)
                 .frame(width: 22, height: 22)

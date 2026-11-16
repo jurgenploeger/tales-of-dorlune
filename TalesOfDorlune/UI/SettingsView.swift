@@ -74,7 +74,7 @@ struct SettingsView: View {
                             Spacer(minLength: 6)
                             Text(choosingLanguage ? L("Done") : L("Change"))
                                 .foregroundStyle(HUDStyle.gold)
-                            IconImage(.chevronDown, size: 11)
+                            IconImage(.chevronDown, size: 14)
                                 .foregroundStyle(HUDStyle.gold)
                                 .rotationEffect(.degrees(choosingLanguage ? 180 : 0))
                         }
