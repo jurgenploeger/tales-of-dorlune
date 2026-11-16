@@ -75,9 +75,17 @@ final class Walker: SKNode {
     /// its height as the shade under the trees and buildings (`CanopyShade`; the user, 2026-11-14:
     /// "the hero and all other characters should have shadows as well"), mirrored as it is.
     private let figure = SKSpriteNode()
-    /// The figure's colour and how dark it lies, by full sunlight (fainter by moonlight).
-    private static let figureColor = UIColor(red: 0.06, green: 0.08, blue: 0.16, alpha: 1)
-    private static let figureDarkness: CGFloat = 0.4
+    /// The figure's colour and how dark it lies, by full sunlight (fainter by moonlight): the trees'
+    /// shade's own, multiplied over the ground as theirs is (`CanopyPainter.lean`, `core`), so a
+    /// walker's shadow is the same colour as a tree's in every land (playtesting 2026-11-16: black
+    /// beside the trees' cool shade on snow).
+    private static let figureColor = UIColor(red: CGFloat(CanopyPainter.lean.r), green: CGFloat(CanopyPainter.lean.g),
+                                                blue: CGFloat(CanopyPainter.lean.b), alpha: 1)
+    private static let figureDarkness = CGFloat(CanopyPainter.core)
+    /// How much wider than its frame the figure lies: a profile is a few pixels wide, and its shadow
+    /// read as a thin stick (playtesting 2026-11-16); a body's shadow is about as wide whichever way
+    /// it faces.
+    private static let figureWidth: (side: CGFloat, front: CGFloat) = (1.6, 1.15)
     /// Where the figure lies among everything in a map's scene: just over the ground and the shade
     /// under the trees (-99,300), under all that stands, so a long shadow at evening runs over the
     /// ground, not over a tree behind.
@@ -95,10 +103,12 @@ final class Walker: SKNode {
                  + texture2D(u_texture, v_tex_coord + vec2(0.0, d.y)).a + texture2D(u_texture, v_tex_coord - vec2(0.0, d.y)).a) * 0.16;
             float t = clamp((v_tex_coord.y - a_frame.x) / a_frame.y, 0.0, 1.0);
             a *= (1.0 - 0.75 * t) * v_color_mix.a;
+            // Multiplied over the ground (`blendMode`): the ground times 1 - a * (1 - shade).
             gl_FragColor = vec4(u_shade.rgb * a, a);
         }
         """)
-        shader.uniforms = [SKUniform(name: "u_shade", vectorFloat4: SIMD4<Float>(0.06, 0.08, 0.16, 1))]
+        shader.uniforms = [SKUniform(name: "u_shade", vectorFloat4: SIMD4<Float>(Float(CanopyPainter.lean.r), Float(CanopyPainter.lean.g),
+                                                                         Float(CanopyPainter.lean.b), 1))]
         shader.attributes = [SKAttribute(name: "a_frame", type: .vectorFloat4)]
         return shader
     }()
@@ -143,7 +153,7 @@ final class Walker: SKNode {
         shadow.position = CGPoint(x: middle.dx, y: middle.dy)
         shadow.size = size
         shadow.zRotation = turn
-        shadow.alpha = 0.26 * CGFloat(sun.strength)
+        shadow.alpha = 0.45 * CGFloat(sun.strength)
         let fall = CanopyShade.falling(from: sun)
         let length = (fall.fall.dx * fall.fall.dx + fall.fall.dy * fall.fall.dy).squareRoot()
         // Its up turned to the way the shade falls, and as long as the shade is for its height.
@@ -167,6 +177,8 @@ final class Walker: SKNode {
     /// wherever the walker stands in the scene's depth. Every frame.
     private func followFigure() {
         if figure.texture !== sprite.texture { showFrame() }
+        let wide = facing == .left || facing == .right ? Self.figureWidth.side : Self.figureWidth.front
+        if figure.xScale != turn.xScale * wide { figure.xScale = turn.xScale * wide }
         guard scene is ContinentScene || scene is WorldScene else {
             figure.zPosition = -1
             return
@@ -187,14 +199,17 @@ final class Walker: SKNode {
         sprite.anchorPoint = CGPoint(x: 0.5, y: 0.08)
         super.init()
         super.addChild(body)
-        shadow.color = .black
+        // The trees' shade's colour, multiplied over the ground as the figure is.
+        shadow.color = Self.figureColor
         shadow.colorBlendFactor = 1
+        shadow.blendMode = .multiply
         shadow.zPosition = -1
         addChild(shadow)
         figure.size = cycle.size
         figure.anchorPoint = sprite.anchorPoint
         figure.color = Self.figureColor
         figure.colorBlendFactor = 1
+        figure.blendMode = .multiply
         figure.shader = Self.soften
         showFrame()
         figure.zPosition = -1
@@ -264,7 +279,7 @@ final class Walker: SKNode {
 
     private func mirror() {
         turn.xScale = cycle.mirrors && goingRight != cycle.facesRight ? -1 : 1
-        figure.xScale = turn.xScale
+        figure.xScale = turn.xScale * (facing == .left || facing == .right ? Self.figureWidth.side : Self.figureWidth.front)
     }
 
     /// Shows the weapon in hand.

@@ -970,3 +970,15 @@ canopy_evening  | newgame,map=snow_white_forest,landscape,weather=clear,hour=17 
 canopy_forest   | newgame,map=smiling_forest,landscape,weather=clear,hour=16 | 10
 # The shade in a walled desert town at 8hr: darker sand, not red, and stopping at the town's wall.
 canopy_town     | newgame,map=goldburg,landscape,weather=clear,hour=8 | 10
+# Playtesting 2026-11-16: a house drawn on its own grass casts its shade from its walls, not out in
+# front of its grass; walkers' shadows the trees' shade's colour, wide in profile; a road running
+# straight out of each end of its bridge; and the bands where the swamp, the valley, the dark woods,
+# Puppet Hill and Swan Lake meet, at night, where a straight border showed a hard line.
+shade_houses_afternoon | newgame,level=30,map=meadowbrook,weather=clear,hour=16 | 8
+shade_walkers_snow | newgame,level=150,map=snow_white_forest,weather=clear,hour=15 | 8
+seam_swamp_valley_night | newgame,level=30,map=frog_swamp,border=valley_of_fear,weather=clear,hour=23 | 8
+seam_puppet_swan_night | newgame,level=60,map=puppet_hill,border=swan_lake,weather=clear,hour=23 | 8
+seam_valley_woods_night | newgame,level=60,map=valley_of_fear,border=twilight_woods,weather=clear,hour=23 | 8
+# The elf companion's face from the side under a hide hood (playtesting 2026-11-16: a gap in it).
+hood_elf_side | newgame,race=elf,gender=female,level=60,class=tamer,equip=amethyst_hide+amethyst_hide_hood,menu=character,facing=left | 8
+hood_elf_side_map | newgame,race=elf,gender=female,level=60,class=tamer,equip=amethyst_hide+amethyst_hide_hood,map=meadowbrook,facing=left,zoom=3,weather=clear,hour=12 | 8
