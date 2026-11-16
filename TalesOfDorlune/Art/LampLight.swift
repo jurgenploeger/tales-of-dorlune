@@ -74,7 +74,8 @@ final class LampLight {
         let copyKey = "\(key)#\(way)#\(colorKey)"
         if let known = copies[copyKey] { return known }
         let surface: (pixels: [UInt8], normals: [Float])
-        if let known = surfaces[key] {
+        // Only for a picture its size: read at another width, its rows come out sheared into stripes.
+        if let known = surfaces[key], known.pixels.count == picture.width * picture.height * 4 {
             surface = known
         } else {
             guard let pixels = PixelImage.pixels(of: picture, width: picture.width, height: picture.height) else { return nil }

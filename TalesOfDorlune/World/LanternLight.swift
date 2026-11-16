@@ -27,6 +27,11 @@ final class LanternLight {
     private var things: [Thing] = []
     /// Each picture read once, by its key.
     private var pictures: [String: CGImage] = [:]
+    /// The lit copies, this cave's own: its things are known by their textures, which another cave's
+    /// may take the place of once this one's are gone. In the lamps' cache, shared by every scene, a
+    /// cave came to light its floor with another cave's pictures read at the wrong width, sheared into
+    /// stripes (playtesting 2026-11-16).
+    private let copies = LampLight()
     private let color: (r: Double, g: Double, b: Double)
     /// How far the light catches a thing's side, in points: the lantern's own reach.
     private let reach: CGFloat
@@ -63,7 +68,7 @@ final class LanternLight {
                 picture = thing.picture()
                 pictures[thing.key] = picture
             }
-            guard let texture = LampLight.shared.copy(of: picture, key: thing.key, way: way, color: color) else {
+            guard let texture = copies.copy(of: picture, key: thing.key, way: way, color: color) else {
                 Self.fadeOut(thing.copy)
                 continue
             }

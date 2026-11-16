@@ -969,7 +969,7 @@ final class GameSession {
     /// costs one and each upgrade one; points in skills your class no longer has come back.
     var unspentSkillPoints: Int {
         let spent = heroSkills.reduce(0) { $0 + skillLevel($1.id) }
-        return max(0, data.hero.level - 1 + (data.hero.bonusSkillPoints ?? 0) + rewardSkillPoints - spent)
+        return max(0, data.hero.level - 1 + (data.hero.bonusSkillPoints ?? 0) + (data.hero.masteryPoints ?? 0) + rewardSkillPoints - spent)
     }
 
     /// Skill points besides the levels' (playtesting 2026-11-01, with more skills than points: "Skill
@@ -1029,12 +1029,18 @@ final class GameSession {
         data.hero.mp = stats.mp
     }
 
-    /// Adds EXP and returns how many levels the hero gained.
+    /// Mastery (the user, 2026-11-16: EXP at level 200 "doesn't make sense", and "Yes build the mastery
+    /// bar"): past the level cap EXP still counts, filling a bar as long as the last level's, and each
+    /// full bar is a skill point, as a level was. Skills grow to level 50, more than the levels give.
+    static let masteryBar = expToNext(level: levelCap - 1)
+
+    /// Adds EXP and returns how many levels the hero gained. At the level cap, it fills the mastery bar.
     @discardableResult
     func gainHeroEXP(_ amount: Int) -> Int {
         guard amount > 0 else { return 0 }
-        guard data.hero.level < Self.levelCap else { return 0 }
         data.hero.exp += amount
+        defer { gainMastery() }
+        guard data.hero.level < Self.levelCap else { return 0 }
         let unlocked = Set(learnableSkills.map(\.id))
         var levels = 0
         while data.hero.level < Self.levelCap, data.hero.exp >= Self.expToNext(level: data.hero.level) {
@@ -1047,6 +1053,16 @@ final class GameSession {
             markNewSkills(besides: unlocked)
         }
         return levels
+    }
+
+    /// At the level cap, a skill point for each full mastery bar of EXP (`masteryBar`), the rest kept
+    /// toward the next.
+    private func gainMastery() {
+        guard data.hero.level >= Self.levelCap, data.hero.exp >= Self.masteryBar else { return }
+        let points = data.hero.exp / Self.masteryBar
+        data.hero.exp %= Self.masteryBar
+        data.hero.masteryPoints = (data.hero.masteryPoints ?? 0) + points
+        post(L("Mastery! Skill points +{count}, for EXP earned past level {level}.", ["level": Self.levelCap, "count": points]), .reward)
     }
 
     /// Skills to learn now that weren't before (`unlocked`), marked NEW till learned at the guild.

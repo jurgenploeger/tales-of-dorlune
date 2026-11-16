@@ -1812,6 +1812,21 @@ struct RulesTests {
         #expect(session.data.hero.level == GameSession.levelCap)
     }
 
+    /// Past the cap, EXP fills the mastery bar: a skill point each time it's full, the rest kept.
+    @Test func masteryGivesSkillPointsAtTheCap() {
+        let session = GameSession.newGame(name: "Test", raceID: "human")
+        session.data.hero.level = GameSession.levelCap
+        session.data.hero.exp = 0
+        let before = session.unspentSkillPoints
+        session.gainHeroEXP(GameSession.masteryBar - 1)
+        #expect(session.data.hero.masteryPoints == nil && session.unspentSkillPoints == before)
+        session.gainHeroEXP(GameSession.masteryBar * 2)
+        #expect(session.data.hero.masteryPoints == 2 && session.data.hero.exp == GameSession.masteryBar - 1)
+        #expect(session.unspentSkillPoints == before + 2)
+        session.gainHeroEXP(1)
+        #expect(session.data.hero.masteryPoints == 3 && session.data.hero.exp == 0)
+    }
+
     @Test func oldSavesGetStretchedLevels() {
         let session = GameSession.newGame(name: "Test", raceID: "human")
         session.data.levelsRescaled = nil
@@ -2120,6 +2135,19 @@ struct RulesTests {
         #expect(session.data.gold == 40)
         // A quest's own things go in regardless.
         #expect(session.addItem("ether", force: true))
+    }
+
+    /// The bag grows as the hero levels: 50 at level 1, twice that at the cap, evenly between.
+    @Test func theBagGrowsWithLevel() {
+        #expect(GameSession.bagRoom(level: 1) == 50)
+        #expect(GameSession.bagRoom(level: 100) == 74)
+        #expect(GameSession.bagRoom(level: GameSession.levelCap) == 100)
+        #expect(GameSession.bagRoom(level: GameSession.levelCap + 5) == 100)
+        let levels = Array(1...GameSession.levelCap).map { GameSession.bagRoom(level: $0) }
+        #expect(zip(levels, levels.dropFirst()).allSatisfy { $1 - $0 <= 1 && $1 >= $0 })
+        let session = GameSession.newGame(name: "Test", raceID: "human")
+        session.data.hero.level = GameSession.levelCap
+        #expect(session.bagSize == 100 && session.bagSlotsFree == 97)
     }
 
     /// A bag from before every item took a slot, over 50, puts the rest in the bank as it loads, from

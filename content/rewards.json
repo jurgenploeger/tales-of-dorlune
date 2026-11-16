@@ -64,6 +64,7 @@
     {"item": "bossbane_cape", "kind": "bosses"},
     {"item": "wayfarer_cape", "kind": "lands"},
     {"item": "beastfriend_cape", "kind": "companion", "level": 200},
+    {"item": "legend_cape", "kind": "hero", "level": 200},
     {"item": "storyleaf_cape", "kind": "capes"}
   ],
   "cards": {

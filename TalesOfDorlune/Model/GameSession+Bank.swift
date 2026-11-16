@@ -1,7 +1,8 @@
 import Foundation
 
 /// The bag's room and the bank (playtesting 2026-10-25: "I want to add a bank to the game [...] so the
-/// item limit is 50 items you can hold"). The bag holds 50 things, each one a slot however many you
+/// item limit is 50 items you can hold"). The bag holds 50 things at level 1, more as you level, 100 at the
+/// level cap (the user, 2026-11-16: "at level 200 you can hold double"), each one a slot however many you
 /// carry of a kind ("repeated items should count to the inventory"). What doesn't fit is left behind
 /// (`addItem`). The bank, at a banker in each town and in Glimmerbough, holds everything else, and
 /// nothing there is ever lost. What you carry is: beaten by monsters you lose the bag, beaten in a duel
@@ -10,22 +11,34 @@ import Foundation
 /// don't need to deposit coins in bank anymore"): no slot, never banked, never lost (`gainGold`).
 
 extension GameSession {
+    /// The bag's room at level 1, and at the level cap: twice as much.
     static let bagSlots = 50
+    static let bagSlotsAtCap = 100
+
+    /// The bag's room at a level: 50 at level 1, a slot more every four levels or so, evenly, to 100
+    /// at the cap (74 at level 100).
+    static func bagRoom(level: Int) -> Int {
+        let level = min(max(level, 1), levelCap)
+        return bagSlots + (bagSlotsAtCap - bagSlots) * (level - 1) / max(1, levelCap - 1)
+    }
+
+    /// The hero's bag's room now.
+    var bagSize: Int { Self.bagRoom(level: data.hero.level) }
 
     /// Slots the bag's things take: every one of them one.
     var bagSlotsUsed: Int { data.inventory.values.reduce(0) { $0 + max(0, $1) } }
-    var bagSlotsFree: Int { max(0, Self.bagSlots - bagSlotsUsed) }
+    var bagSlotsFree: Int { max(0, bagSize - bagSlotsUsed) }
 
     /// Whether these would fit in the bag: a slot for each (three potions are three).
     func hasRoom(for ids: [String]) -> Bool {
         ids.count <= bagSlotsFree
     }
 
-    /// A bag over its 50 slots, from when each kind took one however many (before 0.8.8): what doesn't
+    /// A bag over its slots, from when each kind took one however many (before 0.8.8): what doesn't
     /// fit goes to the bank as the game loads, a thing at a time from the biggest pile, so you keep
     /// some of everything; what a quest you're on needs stays. Says so in the chat.
     func fitBag() {
-        var over = bagSlotsUsed - Self.bagSlots
+        var over = bagSlotsUsed - bagSize
         guard over > 0 else { return }
         let keep = questKeepsakes
         var moved = 0
@@ -37,7 +50,8 @@ extension GameSession {
             moved += 1
         }
         guard moved > 0 else { return }
-        post(L("Your bag holds 50 things now, every one a slot: {count} went to the bank.", ["count": moved]), .system)
+        post(L("Your bag holds {slots} things now, every one a slot: {count} went to the bank.",
+               ["slots": bagSize, "count": moved]), .system)
     }
 
     /// Coins into your purse: always room for them, however full the bag.

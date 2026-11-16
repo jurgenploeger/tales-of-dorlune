@@ -62,6 +62,9 @@ nonisolated struct Hero: Codable, Equatable, Sendable {
     var newSkills: [String]?
     /// Extra points, e.g. for skills older saves got for free.
     var bonusSkillPoints: Int?
+    /// Skill points from mastery: a full bar of EXP past the level cap each (`GameSession.masteryBar`);
+    /// `exp` at the cap is the bar's progress.
+    var masteryPoints: Int?
     /// Times reborn, from before rebirth was taken out (0.7.27): read once to give a reborn hero
     /// their level back (`GameSession.retireRebirthsIfNeeded`), then cleared.
     var rebirths: Int?

@@ -6207,6 +6207,23 @@
       "accent": "#F7E3A1"
     },
     {
+      "id": "legend_cape",
+      "icon": "shield-star",
+      "art": "item_legend_cape",
+      "name": "Legend's Cape",
+      "type": "cape",
+      "price": 0,
+      "stats": {
+        "defense": 12,
+        "hp": 90,
+        "attack": 8,
+        "speed": 6
+      },
+      "description": "For one who has reached level 200, as far as any hero goes. The road there is in every thread.",
+      "color": "#6B2FA0",
+      "accent": "#F2C14E"
+    },
+    {
       "id": "starlight_dust",
       "icon": "sparkles",
       "art": "item_starlight_dust",

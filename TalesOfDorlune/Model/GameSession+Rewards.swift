@@ -134,6 +134,10 @@ extension GameSession {
             let need = prize.level ?? Self.levelCap
             if (data.capesTold ?? []).contains(prize.item) { return (have: need, need: need) }
             return (have: min(need, data.pets.map(\.level).max() ?? 0), need: need)
+        case .hero:
+            // Your hero's level (the user, 2026-11-16: "There should be a cape reaching level 200").
+            let need = prize.level ?? Self.levelCap
+            return (have: min(need, data.hero.level), need: need)
         case .capes:
             let others = prizes.filter { $0.kind != .capes }
             return (have: others.filter { hasEarned($0) }.count, need: others.count)
@@ -181,6 +185,7 @@ extension GameSession {
         case .bosses: L("Beat every boss")
         case .lands: L("Set foot in every land")
         case .companion: L("Raise a companion to level {level}", ["level": prize.level ?? Self.levelCap])
+        case .hero: L("Reach level {count}", ["count": prize.level ?? Self.levelCap])
         case .capes: L("Earn every other cape")
         }
     }

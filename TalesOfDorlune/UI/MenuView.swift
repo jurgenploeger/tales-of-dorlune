@@ -221,9 +221,9 @@ extension MenuView {
         case .bag:
             // How full the bag is after its name (playtesting 2026-10-26: "add the x/50 behind the big
             // 'Inventory' title"): 50 slots, one for every item (`GameSession+Bank`); coins take none.
-            WindowTitle(window.menuTitle, detail: "\(session.bagSlotsUsed)/\(GameSession.bagSlots)",
+            WindowTitle(window.menuTitle, detail: "\(session.bagSlotsUsed)/\(session.bagSize)",
                         detailTint: session.bagSlotsFree == 0 ? HUDStyle.orange : nil)
-                .accessibilityValue(L("{used} of {slots} slots", ["used": session.bagSlotsUsed, "slots": GameSession.bagSlots]))
+                .accessibilityValue(L("{used} of {slots} slots", ["used": session.bagSlotsUsed, "slots": session.bagSize]))
                 .padding(.bottom, 2)
         }
     }
@@ -809,7 +809,9 @@ private struct CharacterTab: View {
             .frame(maxWidth: .infinity)
 
             StatsPanel(level: L("Level {level}", ["level": hero.level]),
-                       exp: hero.exp, expToNext: GameSession.expToNext(level: hero.level), hp: hero.hp, mp: hero.mp, stats: stats)
+                       exp: hero.exp, expToNext: GameSession.expToNext(level: hero.level), hp: hero.hp, mp: hero.mp, stats: stats,
+                       maxed: hero.level >= GameSession.levelCap,
+                       mastery: hero.level >= GameSession.levelCap ? hero.masteryPoints ?? 0 : nil)
         }
     }
 
@@ -884,6 +886,12 @@ struct StatsPanel: View {
     let hp: Int
     let mp: Int
     let stats: Stats
+    /// At the level cap (`GameSession.levelCap`): the EXP bar full, ∞ over it (the user, 2026-11-16: "If I'm
+    /// already lvl 200, it should show the bar fully green here with the infinity symbol in the middle").
+    var maxed = false
+    /// The hero's skill points from mastery at the cap: the EXP bar fills toward the next one
+    /// (`GameSession.masteryBar`), ∞ over it still. Nil for a companion's, which stands full.
+    var mastery: Int? = nil
 
     private static let digits: CGFloat = 13
     private static let attackTint = Color(red: 1, green: 0.5, blue: 0.35)
@@ -900,7 +908,24 @@ struct StatsPanel: View {
             // Companions without magic have no MP to show.
             if stats.mp > 0 { bar(L("MP"), mp, stats.mp, HUDStyle.mp) }
             // EXP last, under HP and MP, as the HUD's own block has it (playtesting 2026-11-01).
-            if let exp { bar(L("EXP"), exp, expToNext, HUDStyle.exp) }
+            if maxed, let mastery, let exp {
+                let percent = exp * 100 / max(1, GameSession.masteryBar)
+                VStack(alignment: .leading, spacing: 4) {
+                    StatBar(label: L("EXP"), value: exp, maximum: GameSession.masteryBar, color: HUDStyle.exp, labelWidth: 36, height: 20,
+                            labelSize: 15, numberSize: Self.digits, caption: "∞  \(percent)%")
+                        .accessibilityValue(L("Highest level, mastery {percent}%", ["percent": percent]))
+                    Text(L("Mastery: every full bar is a skill point ({count} so far).", ["count": mastery]))
+                        .font(HUDStyle.font(10))
+                        .foregroundStyle(HUDStyle.dim)
+                        .padding(.leading, 36)
+                }
+            } else if maxed {
+                StatBar(label: L("EXP"), value: 1, maximum: 1, color: HUDStyle.exp, labelWidth: 36, height: 20,
+                        labelSize: 15, numberSize: Self.digits, caption: "∞")
+                    .accessibilityValue(L("Highest level"))
+            } else if let exp {
+                bar(L("EXP"), exp, expToNext, HUDStyle.exp)
+            }
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], alignment: .leading, spacing: 8) {
                 StatCell(name: L("Attack"), value: stats.attack, size: 13, icon: .sword, tint: Self.attackTint, digits: Self.digits)
                 StatCell(name: L("Defense"), value: stats.defense, size: 13, icon: .shield, tint: HUDStyle.mp, digits: Self.digits)
@@ -1798,7 +1823,8 @@ private struct CompanionCard: View {
 
             VStack(alignment: .leading, spacing: 10) {
                 StatsPanel(level: L("Level {level}", ["level": pet.level]),
-                           exp: pet.exp, expToNext: GameSession.expToNext(level: pet.level), hp: pet.hp, mp: pet.mp, stats: stats)
+                           exp: pet.exp, expToNext: GameSession.expToNext(level: pet.level), hp: pet.hp, mp: pet.mp, stats: stats,
+                           maxed: pet.level >= GameSession.levelCap)
                 // Its skills, to learn and raise for its points as your hero's are, and drag about
                 // into its battle row's order (playtesting 2026-11-01).
                 skillPoints()

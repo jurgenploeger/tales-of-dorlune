@@ -236,7 +236,9 @@ private struct StatusCluster: View {
                         TaggedBar(tag: L("MP"), value: hero.mp, maximum: stats.mp, color: HUDStyle.mp, height: HeroFace.bar)
                         // XP to the next level under the bars, as tall as they are (playtesting 2026-10-24:
                         // it had a row of its own under the calendar; 2026-10-26: no thinner).
-                        ExpBar(value: hero.exp, maximum: GameSession.expToNext(level: hero.level), height: HeroFace.bar)
+                        // At the level cap, the mastery bar (`GameSession.masteryBar`): a skill point when full.
+                        ExpBar(value: hero.exp,
+                               maximum: hero.level >= GameSession.levelCap ? GameSession.masteryBar : GameSession.expToNext(level: hero.level), height: HeroFace.bar)
                     }
                     .padding(.top, 2)
                 }
