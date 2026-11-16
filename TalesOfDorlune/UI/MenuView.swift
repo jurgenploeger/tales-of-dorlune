@@ -158,6 +158,8 @@ extension MenuView {
                 }
                 .padding(14)
                 .frame(maxWidth: .infinity, alignment: .leading)
+                // A page of its own for each tab, sliding in from its tab's side.
+                .pageSlide(shownPage)
             }
             // Debug `bottom`: opens at the end of the page (screenshots of the skills).
             .defaultScrollAnchor(DebugLaunch.opensMenuAtBottom ? .bottom : nil)
@@ -167,6 +169,17 @@ extension MenuView {
 
     private func close() {
         onClose()
+    }
+
+    /// The window's page now, for its slide between tabs (`pageSlide`).
+    private var shownPage: String {
+        switch window {
+        case .character: "\(characterPage)"
+        case .companions: "\(companionsPage)"
+        case .quests: "\(questsPage)"
+        case .settings: "\(settingsPage)"
+        case .friends, .bag: "\(window)"
+        }
     }
 
     /// Opens an explanation (`HowItWorks`) in a small window over the menu.
@@ -384,7 +397,10 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
         return Button {
             guard !selected else { return }
             SoundEffects.shared.play(.tap, volume: 0.7)
-            page = item
+            // The page slides in from the side its tab is on (`pageSlide`).
+            let order = pages
+            PageSlide.forward = (order.firstIndex(of: item) ?? 0) > (order.firstIndex(of: page) ?? 0)
+            withAnimation(PageSlide.animation) { page = item }
         } label: {
             Text(title(item))
                 .font(HUDStyle.font(13))
@@ -470,6 +486,25 @@ private nonisolated struct FlaredTab: Shape {
         path.addLine(to: CGPoint(x: rect.maxX, y: bottom))
         if !open { path.closeSubpath() }
         return path
+    }
+}
+
+/// Which way a window's pages slide as you switch tabs (the user, 2026-11-16: "When switching the
+/// modal window tabs, can we have them move horizontally?"): `PageTabs` sets `forward` as you tap a tab
+/// right of the one you're on, and `pageSlide` slides the page in from that side.
+@MainActor enum PageSlide {
+    static var forward = true
+    static let animation = Animation.easeOut(duration: 0.28)
+}
+
+extension View {
+    /// What a window shows on its page `page` (`PageTabs`): a page of its own, sliding in from the side
+    /// of the tab you tapped (`PageSlide.forward`) as the one you're leaving fades. Its removal is
+    /// a fade, not a slide the other way: worked out before the tap, a slide could go the wrong way.
+    @MainActor func pageSlide(_ page: some Hashable) -> some View {
+        id(page)
+            .transition(.asymmetric(insertion: .move(edge: PageSlide.forward ? .trailing : .leading).combined(with: .opacity),
+                                    removal: .opacity))
     }
 }
 

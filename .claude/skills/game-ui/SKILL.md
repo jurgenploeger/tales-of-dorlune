@@ -158,7 +158,8 @@ name is the window's title.
 modals have the same opening animation yet"): it pops in from a touch smaller (`popIn()`, after
 `gameWindow()` and its `windowCloseButton`), and is presented with `.transition(.opacity)`, its backdrop
 only fading. Never a scale or slide of its own at the call site: with `popIn` it doubled up. A HUD
-button or pad (not a window) may grow from where it's anchored. What a tap opens
+button or pad (not a window) may grow from where it's anchored. Switching tabs, the new page slides in from the side its tab is on as the old one fades (`pageSlide`,
+`PageSlide`; the user, 2026-11-16). What a tap opens
 under a row unrolls (`.transition(.reveal)` with `Reveal.animation`). Respect Reduce Motion.
 
 **Dark Mode.** Light surfaces (frames, plates, buttons, portraits) are `Color.adaptive(light:dark:)`; the

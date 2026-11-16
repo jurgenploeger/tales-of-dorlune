@@ -192,6 +192,8 @@ struct TitleView: View {
                 }, page: settingsPage)
                 .padding(16)
                 .frame(maxWidth: .infinity, alignment: .leading)
+                // Sliding in from its tab's side (`pageSlide`).
+                .pageSlide(settingsPage)
             }
             .scrollBounceBehavior(.basedOnSize)
         }
