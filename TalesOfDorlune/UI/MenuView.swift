@@ -397,10 +397,19 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
         return Button {
             guard !selected else { return }
             SoundEffects.shared.play(.tap, volume: 0.7)
-            // The page slides in from the side its tab is on (`pageSlide`).
+            // The pages slide across toward the side its tab is on (`pageSlide`): the way set first,
+            // so the page you leave has it too, then the page a moment later.
             let order = pages
-            PageSlide.forward = (order.firstIndex(of: item) ?? 0) > (order.firstIndex(of: page) ?? 0)
-            withAnimation(PageSlide.animation) { page = item }
+            let forward = (order.firstIndex(of: item) ?? 0) > (order.firstIndex(of: page) ?? 0)
+            let turn = $page
+            if PageSlide.shared.forward == forward {
+                withAnimation(PageSlide.animation) { turn.wrappedValue = item }
+            } else {
+                PageSlide.shared.forward = forward
+                DispatchQueue.main.async {
+                    withAnimation(PageSlide.animation) { turn.wrappedValue = item }
+                }
+            }
         } label: {
             Text(title(item))
                 .font(HUDStyle.font(13))
@@ -490,21 +499,24 @@ private nonisolated struct FlaredTab: Shape {
 }
 
 /// Which way a window's pages slide as you switch tabs (the user, 2026-11-16: "When switching the
-/// modal window tabs, can we have them move horizontally?"): `PageTabs` sets `forward` as you tap a tab
-/// right of the one you're on, and `pageSlide` slides the page in from that side.
-@MainActor enum PageSlide {
-    static var forward = true
-    static let animation = Animation.easeOut(duration: 0.28)
+/// modal window tabs, can we have them move horizontally?", then "the tabs should move across
+/// horizontally, instead of this fade"): `PageTabs` sets `forward` as you tap a tab right of the one
+/// you're on, and `pageSlide` pushes the pages across that way. Observed, so a window's pages take
+/// the new way before the page changes (`PageTabs` changes it a moment later): the page leaving goes
+/// out the side the way says, not the way the last switch went.
+@MainActor @Observable final class PageSlide {
+    static let shared = PageSlide()
+    var forward = true
+    static let animation = Animation.easeInOut(duration: 0.3)
 }
 
 extension View {
-    /// What a window shows on its page `page` (`PageTabs`): a page of its own, sliding in from the side
-    /// of the tab you tapped (`PageSlide.forward`) as the one you're leaving fades. Its removal is
-    /// a fade, not a slide the other way: worked out before the tap, a slide could go the wrong way.
+    /// What a window shows on its page `page` (`PageTabs`): a page of its own, pushed across as you
+    /// switch tabs, the new one in from the side of the tab you tapped and the old one out the other
+    /// (`PageSlide.forward`).
     @MainActor func pageSlide(_ page: some Hashable) -> some View {
         id(page)
-            .transition(.asymmetric(insertion: .move(edge: PageSlide.forward ? .trailing : .leading).combined(with: .opacity),
-                                    removal: .opacity))
+            .transition(.push(from: PageSlide.shared.forward ? .trailing : .leading))
     }
 }
 
