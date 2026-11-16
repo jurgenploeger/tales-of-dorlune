@@ -197,31 +197,57 @@ struct SortMenu<Option: Hashable>: View {
             sort = option
             close()
         } label: {
-            // The one in use on a dark plate, white, its tick at the right end (the user, 2026-11-16:
-            // "The checkmark icon should always be on the right. Also the selected item should have a
-            // dark bg with white label + icon, instead of this yellow, because this is hard to read").
-            HStack(spacing: 8) {
-                Text(title(option))
-                    .font(HUDStyle.font(13))
-                    .foregroundStyle(.white)
-                    .shadow(color: selected ? .clear : HUDStyle.frameDark, radius: 0, x: 1, y: 1)
-                    .lineLimit(1)
-                Spacer(minLength: 12)
-                IconImage(.check, size: 14)
-                    .foregroundStyle(.white)
-                    .opacity(selected ? 1 : 0)
-            }
-            .padding(.horizontal, 10)
-            .padding(.vertical, 6)
-            .background {
-                if selected {
-                    RoundedRectangle(cornerRadius: 9, style: .continuous).fill(HUDStyle.ink.opacity(0.85))
-                }
-            }
-            .contentShape(Rectangle())
+            DropdownRow(title: title(option), selected: selected)
         }
         .buttonStyle(PressScaleStyle())
         .accessibilityAddTraits(selected ? .isSelected : [])
+    }
+}
+
+/// A row of a dropdown panel in the HUD menu's look (`SortMenu`, the world map's filter): its name in
+/// white, after `leading` if it has one; the one in use on a dark plate, its tick at the right end
+/// (the user, 2026-11-16: "The checkmark icon should always be on the right. Also the selected item
+/// should have a dark bg with white label + icon, instead of this yellow, because this is hard to
+/// read"; then "Same style should apply here", on the map's filter).
+struct DropdownRow<Leading: View>: View {
+    let title: String
+    let selected: Bool
+    let leading: Leading
+
+    init(title: String, selected: Bool, @ViewBuilder leading: () -> Leading) {
+        self.title = title
+        self.selected = selected
+        self.leading = leading()
+    }
+
+    var body: some View {
+        HStack(spacing: 8) {
+            leading
+            Text(title)
+                .font(HUDStyle.font(13))
+                .foregroundStyle(.white)
+                .shadow(color: selected ? .clear : HUDStyle.frameDark, radius: 0, x: 1, y: 1)
+                .lineLimit(1)
+            Spacer(minLength: 12)
+            IconImage(.check, size: 14)
+                .foregroundStyle(.white)
+                .opacity(selected ? 1 : 0)
+        }
+        .padding(.horizontal, 10)
+        .padding(.vertical, 6)
+        .frame(minHeight: 34)
+        .background {
+            if selected {
+                RoundedRectangle(cornerRadius: 9, style: .continuous).fill(HUDStyle.ink.opacity(0.85))
+            }
+        }
+        .contentShape(Rectangle())
+    }
+}
+
+extension DropdownRow where Leading == EmptyView {
+    init(title: String, selected: Bool) {
+        self.init(title: title, selected: selected) { EmptyView() }
     }
 }
 

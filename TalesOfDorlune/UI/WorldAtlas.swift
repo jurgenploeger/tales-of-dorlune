@@ -569,20 +569,19 @@ struct WorldAtlas: View {
                     withAnimation(.easeOut(duration: 0.2)) { filter = kind }
                     closeFilter()
                 } label: {
-                    HStack(spacing: 8) {
-                        IconImage(.check, size: 14)
-                            .foregroundStyle(HUDStyle.gold)
-                            .opacity(selected ? 1 : 0)
-                        Text(kind.title)
-                            .font(HUDStyle.font(13))
-                            .foregroundStyle(selected ? HUDStyle.gold : .white)
-                            .shadow(color: HUDStyle.frameDark, radius: 0, x: 1, y: 1)
-                            .lineLimit(1)
-                        Spacer(minLength: 0)
+                    // Led by the badge it shows on the map, so it's known at a glance (the user,
+                    // 2026-11-16); in the Sort menu's look (`DropdownRow`).
+                    DropdownRow(title: kind.title, selected: selected) {
+                        Group {
+                            if let badge = kind.badge {
+                                MinimapIcon(kind: badge, size: 20)
+                            } else {
+                                IconImage(.map, size: 16).foregroundStyle(.white)
+                            }
+                        }
+                        .frame(width: 22, height: 22)
                     }
-                    .padding(.horizontal, 8)
                     .frame(minHeight: 36)
-                    .contentShape(Rectangle())
                 }
                 .buttonStyle(PressScaleStyle())
                 .accessibilityAddTraits(selected ? .isSelected : [])
@@ -1038,6 +1037,18 @@ nonisolated enum MapFilter: String, CaseIterable {
         case .town: L("Town")
         case .waystones: L("Waystones")
         case .treasure: L("Treasure")
+        }
+    }
+
+    /// The badge it shows on the map, to lead its row in the filter (`WorldAtlas.filterPanel`); none
+    /// for all of them.
+    @MainActor var badge: GameSession.MinimapMark.Kind? {
+        switch self {
+        case .all: nil
+        case .quests: .questNew
+        case .town: .shop
+        case .waystones: .waystone
+        case .treasure: .chest
         }
     }
 
