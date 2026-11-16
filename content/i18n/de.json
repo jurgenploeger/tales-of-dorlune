@@ -913,6 +913,8 @@
     "{item}  ·  Lv {level}": "{item}  ·  Lv {level}",
     "{name} throws a Seal Stone!": "{name} wirft einen Siegelstein!",
     "{count} in all": "{count} insgesamt",
+    "Scroll left": "Nach links scrollen",
+    "Scroll right": "Nach rechts scrollen",
     "bot": "Bot",
     "Common||item": "Gewöhnlich",
     "Uncommon||item": "Ungewöhnlich",

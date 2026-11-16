@@ -283,12 +283,19 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
     @Binding var page: Page
     let title: (Page) -> String
     var waiting: (Page) -> Bool = { _ in false }
+    /// Where each tab is in the strip as it shows now, for the chevrons to find the first hidden.
+    @State private var frames: [Page: CGRect] = [:]
+    @State private var shownWidth: CGFloat = 0
 
     var body: some View {
         HStack(spacing: 0) {
             ScrollViewReader { reader in
-                // Faded at an edge with more tabs past it (`SideScroll`).
-                SideScroll {
+                // Faded at an edge with more tabs past it, a chevron there (`SideScroll`): tapped, the
+                // nearest tab hidden that way scrolls into the middle.
+                SideScroll(step: { edge in
+                    guard let next = hidden(toward: edge) else { return }
+                    withAnimation(.easeOut(duration: 0.25)) { reader.scrollTo(next, anchor: .center) }
+                }) {
                     // Standing on the bar's foot, the one you're on a little taller.
                     // Far enough apart that the flare at the foot of the one you're on (`FlaredTab`)
                     // meets no other.
@@ -296,6 +303,7 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
                         ForEach(Array(Page.allCases), id: \.self) { item in
                             tab(item)
                                 .id(item)
+                                .onGeometryChange(for: CGRect.self) { $0.frame(in: .named(Self.strip)) } action: { frames[item] = $0 }
                         }
                     }
                     // As far in from the window's side as from its top, so the first tab's corner sits
@@ -303,6 +311,8 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
                     .padding(.horizontal, TabEdge.inset)
                     .padding(.top, TabEdge.inset)
                 }
+                .coordinateSpace(name: Self.strip)
+                .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { shownWidth = $0 }
                 .onAppear { reader.scrollTo(page, anchor: .center) }
                 .onChange(of: page) {
                     withAnimation(.easeOut(duration: 0.2)) { reader.scrollTo(page, anchor: .center) }
@@ -312,6 +322,19 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
             Color.clear.frame(width: OrangeCloseButton.room, height: 34)
         }
         .background(WindowBar())
+    }
+
+    /// The strip as it shows, for the tabs' frames (`frames`).
+    private static var strip: String { "PageTabs.strip" }
+
+    /// The nearest tab hidden past `edge`, under its chevron or beyond it.
+    private func hidden(toward edge: HorizontalEdge) -> Page? {
+        let room = SideScroll<EmptyView>.chevronRoom
+        let tabs = Array(Page.allCases)
+        switch edge {
+        case .trailing: return tabs.first { (frames[$0]?.maxX ?? 0) > shownWidth - room }
+        case .leading: return tabs.last { (frames[$0]?.minX ?? 0) < room }
+        }
     }
 
     private func tab(_ item: Page) -> some View {

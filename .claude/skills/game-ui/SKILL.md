@@ -77,7 +77,10 @@ vector glyphs below that.
 **Tabs** (`PageTabs`): a window's pages' names and nothing else, in full, never truncated; the row scrolls
 sideways when they don't fit (2026-10-26: "The tabs don't need icons and shouldn't get truncated. If it
 doesn't fit, there should just be a horizontal scroll"), faded out at an edge with more past it, the right
-at first and the left too once scrolled (`SideScroll`, 2026-11-11). Every sideways row in a window (filter
+at first and the left too once scrolled (`SideScroll`, 2026-11-11), with no scrollbar, and a small
+glossy chevron button standing in the fade on each side with tabs hidden past it, only there; tapped, the
+nearest hidden tab scrolls into the middle (`SideScroll(step:)`, `PageTabs.hidden`; the user, 2026-11-16, after a
+Tabs design: "chevron buttons appear only on the sides with hidden tabs"). Every sideways row in a window (filter
 chips, swatches, hairstyles) is a `SideScroll`, never a bare `ScrollView(.horizontal)`. They're folder tabs standing on the title bar:
 the one you're on is the window's own glass (`HUDStyle.glassTop`) with its name in gold, joined to the page
 under it, its foot flaring out into the bar in corners rounded the other way (`FlaredTab`, the user,

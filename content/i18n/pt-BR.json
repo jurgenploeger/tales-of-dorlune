@@ -913,6 +913,8 @@
     "{item}  ·  Lv {level}": "{item}  ·  Nv {level}",
     "{name} throws a Seal Stone!": "{name} joga uma Pedra Selante!",
     "{count} in all": "{count} no total",
+    "Scroll left": "Rolar para a esquerda",
+    "Scroll right": "Rolar para a direita",
     "bot": "bot",
     "Common||item": "Comum",
     "Uncommon||item": "Incomum",

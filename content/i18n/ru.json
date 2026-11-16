@@ -913,6 +913,8 @@
     "{item}  ·  Lv {level}": "{item}  ·  Ур. {level}",
     "{name} throws a Seal Stone!": "{name} бросает Камень печати!",
     "{count} in all": "Всего: {count}",
+    "Scroll left": "Прокрутить влево",
+    "Scroll right": "Прокрутить вправо",
     "bot": "бот",
     "Common||item": "Обычный",
     "Uncommon||item": "Необычный",

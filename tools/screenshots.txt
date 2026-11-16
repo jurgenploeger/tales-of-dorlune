@@ -982,3 +982,6 @@ seam_valley_woods_night | newgame,level=60,map=valley_of_fear,border=twilight_wo
 # The elf companion's face from the side under a hide hood (playtesting 2026-11-16: a gap in it).
 hood_elf_side | newgame,race=elf,gender=female,level=60,class=tamer,equip=amethyst_hide+amethyst_hide_hood,menu=character,facing=left | 8
 hood_elf_side_map | newgame,race=elf,gender=female,level=60,class=tamer,equip=amethyst_hide+amethyst_hide_hood,map=meadowbrook,facing=left,zoom=3,weather=clear,hour=12 | 8
+# Tabs that don't fit: a chevron on each side with tabs hidden past it, only there (2026-11-16).
+tabs_chevron_ru | newgame,menu=settings,lang=ru | 8
+tabs_chevron_de | newgame,level=40,menu=character,lang=de | 8
