@@ -14,7 +14,6 @@ struct AdventurerCard: View {
     private var session: GameSession { coordinator.session }
 
     var body: some View {
-        let stats = session.stats(of: adventurer)
         let content = session.content
         let danger = coordinator.currentLand.danger == true
         VStack(alignment: .leading, spacing: 8) {
@@ -23,6 +22,12 @@ struct AdventurerCard: View {
                 Button { coordinator.open(.profile(.adventurer(adventurer))) } label: {
                     SpriteImage(art: session.artID(for: adventurer), size: 46)
                         .background(Circle().fill(.white.opacity(0.08)))
+                        // Their companion at their feet, as in the Friends window (the user, 2026-11-16).
+                        .overlay(alignment: .bottomTrailing) {
+                            if let pet = adventurer.petSpecies.flatMap(content.monster) {
+                                SpriteImage(art: pet.art, size: 24).offset(x: 10, y: 4)
+                            }
+                        }
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel(L("{name}'s stats", ["name": adventurer.name]))
@@ -41,16 +46,14 @@ struct AdventurerCard: View {
                     Text("\(content.race(adventurer.raceID).name) · \(content.classDef(adventurer.classID).name)")
                         .font(HUDStyle.font(10))
                         .foregroundStyle(HUDStyle.cream)
-                    if let pet = adventurer.petSpecies.flatMap(content.monster) {
-                        Text(L("with a {pet}", ["pet": pet.name])).font(HUDStyle.font(10)).foregroundStyle(HUDStyle.dim)
-                    }
                     // Travelling with friends, as you do with your party.
                     if session.nearbyGroupSize > 1 {
                         Text(L("In a party of {count}", ["count": session.nearbyGroupSize])).font(HUDStyle.font(10)).foregroundStyle(HUDStyle.dim)
                     }
                 }
             }
-            StatBar(label: L("HP"), value: stats.hp, maximum: stats.hp, color: HUDStyle.hp, labelWidth: 20)
+            // No HP bar, nor their companion's name: both are on their profile, a tap on their face
+            // away; the companion shows at their feet (the user, 2026-11-16).
             // What you can do, on one row, each as wide as its word (the user, 2026-11-16: "The buttons
             // should be on one row. Trade should be the last one", then "Make the buttons auto width
             // instead of the same width, so then this card can be a bit less wide").

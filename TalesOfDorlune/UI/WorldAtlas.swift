@@ -520,7 +520,7 @@ struct WorldAtlas: View {
             HStack(spacing: 6) {
                 Text(filter == .all ? L("Show all") : filter.title)
                     .lineLimit(1)
-                IconImage(.chevronUp, size: 10)
+                IconImage(.chevronUp, size: 14)
                     .rotationEffect(.degrees(filtering ? 180 : 0))
             }
             .font(HUDStyle.font(12))

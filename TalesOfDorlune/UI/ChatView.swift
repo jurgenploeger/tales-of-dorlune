@@ -10,6 +10,12 @@ struct ChatView: View {
     var coordinator: GameCoordinator? = nil
     /// The adventurer whose profile is open over the chat.
     @State private var profile: Adventurer?
+    /// How far down the list's foot is in the scroll view, and how tall the scroll view is: whether
+    /// the latest line is in sight (`atLatest`).
+    @State private var footY: CGFloat = 0
+    @State private var shownHeight: CGFloat = 0
+    /// Lines said since you scrolled up from the latest, counted on the button back down.
+    @State private var unseen = 0
     @State private var draft = ""
     @FocusState private var typing: Bool
     @Environment(\.verticalSizeClass) private var verticalSizeClass
@@ -31,9 +37,18 @@ struct ChatView: View {
                                 }
                                 .id(line.id)
                             }
+                            // The list's foot, to tell whether you've scrolled up from the latest.
+                            Color.clear
+                                .frame(height: 1)
+                                .onGeometryChange(for: CGFloat.self) { $0.frame(in: .named(Self.scroll)).minY } action: { footY = $0 }
                         }
                         .padding(HUDStyle.windowInset)
                     }
+                    .coordinateSpace(name: Self.scroll)
+                    .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { shownHeight = $0 }
+                    // What you type stands over the bottom of the lines, which scroll on under it (`composer`).
+                    .safeAreaInset(edge: .bottom, spacing: 0) { composer(reader) }
+                    .animation(.easeOut(duration: 0.2), value: atLatest)
                     // Short, it starts at the top (anchored to the bottom, a few lines sat at the foot
                     // under empty glass); opened, and as lines come in, it shows the latest (the user,
                     // 2026-11-16: "The chat should start from the top here. Then when new messages come
@@ -42,35 +57,21 @@ struct ChatView: View {
                         if let last = session.chat.last?.id { reader.scrollTo(last, anchor: .bottom) }
                     }
                     .onChange(of: session.chat.last?.id) {
-                        guard let last = session.chat.last?.id else { return }
-                        withAnimation(.easeOut(duration: 0.2)) { reader.scrollTo(last, anchor: .bottom) }
                         session.unreadChat = 0
+                        // Only while you're at the latest: scrolled up to read, a new line doesn't pull
+                        // you down, it's counted on the button back down (the user, 2026-11-16); what
+                        // you say yourself does take you down.
+                        let yours = session.chat.last?.kind == .you
+                        guard atLatest || yours, let last = session.chat.last?.id else {
+                            unseen += 1
+                            return
+                        }
+                        withAnimation(.easeOut(duration: 0.2)) { reader.scrollTo(last, anchor: .bottom) }
                     }
+                    .onChange(of: atLatest) { _, latest in if latest { unseen = 0 } }
                 }
                 .frame(maxHeight: .infinity)
 
-                HStack(spacing: 8) {
-                    TextField(L("Say something…"), text: $draft)
-                        .font(HUDStyle.font(13))
-                        .foregroundStyle(HUDStyle.ink)
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 8)
-                        .background(Capsule().fill(HUDStyle.cream))
-                        .focused($typing)
-                        .submitLabel(.send)
-                        .onSubmit(send)
-                    Button(action: send) {
-                        IconImage(.arrowRight, size: 18)
-                            .foregroundStyle(HUDStyle.ink)
-                            .frame(width: 38, height: 38)
-                            .background(Circle().fill(HUDStyle.gold).overlay(Circle().strokeBorder(.white.opacity(0.8), lineWidth: 1.5)))
-                    }
-                    .buttonStyle(PressScaleStyle())
-                    .disabled(draft.trimmingCharacters(in: .whitespaces).isEmpty)
-                    .accessibilityLabel(L("Send"))
-                }
-                .padding(HUDStyle.windowInset)
-                .background(HUDStyle.ink.opacity(0.6))
             }
             // As big as the menu's windows (playtesting 2026-10-25: "Make the chat modal the same size as
             // the other modals"): out to the HUD's own margins (`HUDMargins`).
@@ -94,6 +95,77 @@ struct ChatView: View {
         }
         .onAppear { session.unreadChat = 0 }
     }
+
+    /// What you type and Send, over the bottom of the lines on a blur that fades in from above (the
+    /// user, 2026-11-16: "There should be a progressive gradient blur behind the chat composer"), and,
+    /// scrolled up from the latest, a button back down over Send with how many lines came in since.
+    private func composer(_ reader: ScrollViewProxy) -> some View {
+        HStack(spacing: 8) {
+            TextField(L("Say something…"), text: $draft)
+                .font(HUDStyle.font(13))
+                .foregroundStyle(HUDStyle.ink)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 8)
+                .background(Capsule().fill(HUDStyle.cream))
+                .focused($typing)
+                .submitLabel(.send)
+                .onSubmit(send)
+            Button(action: send) {
+                IconImage(.arrowRight, size: 18)
+                    .foregroundStyle(HUDStyle.ink)
+                    .frame(width: 38, height: 38)
+                    .background(Circle().fill(HUDStyle.gold).overlay(Circle().strokeBorder(.white.opacity(0.8), lineWidth: 1.5)))
+            }
+            .buttonStyle(PressScaleStyle())
+            .disabled(draft.trimmingCharacters(in: .whitespaces).isEmpty)
+            .accessibilityLabel(L("Send"))
+        }
+        .padding(HUDStyle.windowInset)
+        .background(alignment: .bottom) {
+            // Blurred under the bar, fading out above it, and a little darker toward the foot.
+            Rectangle()
+                .fill(.ultraThinMaterial)
+                .overlay(LinearGradient(colors: [HUDStyle.ink.opacity(0), HUDStyle.ink.opacity(0.45)], startPoint: .top, endPoint: .bottom))
+                .mask(LinearGradient(stops: [.init(color: .clear, location: 0), .init(color: .black, location: 0.4),
+                                             .init(color: .black, location: 1)], startPoint: .top, endPoint: .bottom))
+                .padding(.top, -28)
+                .allowsHitTesting(false)
+        }
+        // Scrolled up, a button back down to the latest, over Send (the user, 2026-11-16: "When scrolling
+        // up in the chat, there should be an arrow down button in the bottom right (aligned with the
+        // send button)"), with how many lines came in since.
+        .overlay(alignment: .topTrailing) {
+            if !atLatest {
+                Button {
+                    guard let last = session.chat.last?.id else { return }
+                    withAnimation(.easeOut(duration: 0.25)) { reader.scrollTo(last, anchor: .bottom) }
+                } label: {
+                    IconImage(.arrowDown, size: 18)
+                        .foregroundStyle(HUDStyle.ink)
+                        .frame(width: 38, height: 38)
+                        .background(Circle().fill(HUDStyle.gold)
+                            .overlay(Circle().strokeBorder(.white.opacity(0.8), lineWidth: 1.5)))
+                        .shadow(color: .black.opacity(0.35), radius: 3, x: 0, y: 2)
+                        .overlay(alignment: .topTrailing) {
+                            if unseen > 0 { CountBadge(count: unseen).offset(x: 6, y: -6) }
+                        }
+                }
+                .buttonStyle(PressScaleStyle())
+                .padding(.trailing, HUDStyle.windowInset)
+                .offset(y: -46)
+                .transition(.scale(scale: 0.6).combined(with: .opacity))
+                .accessibilityLabel(L("Latest messages"))
+                .accessibilityValue(unseen > 0 ? "\(unseen)" : "")
+            }
+        }
+    }
+
+    /// The scroll view, for where the list's foot is in it.
+    private static var scroll: String { "ChatView.scroll" }
+
+    /// Whether the latest line is in sight: the list's foot no lower than the scroll view's own,
+    /// give or take a line's worth.
+    private var atLatest: Bool { shownHeight <= 0 || footY <= shownHeight + 60 }
 
     private func send() {
         let text = draft.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -145,41 +217,43 @@ struct ChatLineView: View {
     var body: some View {
         switch line.kind {
         case .system:
-            Text(line.text)
-                .font(HUDStyle.font(11))
-                .foregroundStyle(color)
-                .frame(maxWidth: .infinity)
+            ruled {
+                Text(line.text)
+                    .font(HUDStyle.font(11))
+                    .foregroundStyle(color)
+                    .multilineTextAlignment(.center)
+            }
         case .announcement:
             // The game's own notices: a gold banner, apart from what people say.
+            // Centred on a soft gold plate, no rim, as round as the window's cards (the user, 2026-11-16).
             HStack(alignment: .top, spacing: 7) {
                 IconImage(.sparkles, size: 14)
                     .foregroundStyle(HUDStyle.gold)
                 Text(line.text)
                     .font(HUDStyle.font(12))
                     .foregroundStyle(HUDStyle.gold)
+                    .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
             }
-            .padding(.horizontal, 10)
-            .padding(.vertical, 7)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(HUDStyle.gold.opacity(0.13))
-                    .overlay(RoundedRectangle(cornerRadius: 8).strokeBorder(HUDStyle.gold.opacity(0.75), lineWidth: 1))
-            )
+            .padding(.horizontal, 12)
+            .padding(.vertical, 9)
+            .frame(maxWidth: .infinity, alignment: .center)
+            .background(RoundedRectangle(cornerRadius: 12, style: .continuous).fill(HUDStyle.gold.opacity(0.15)))
             .accessibilityElement(children: .combine)
             .accessibilityLabel(L("Announcement: {text}", ["text": line.text]))
         case .notice:
             // What happened to you lately, toasted on the map first.
-            HStack(alignment: .firstTextBaseline, spacing: 6) {
-                IconImage(ChatLineView.icon(of: line.tone ?? .system), size: 11)
-                    .foregroundStyle(color)
-                Text(line.text)
-                    .font(HUDStyle.font(11))
-                    .foregroundStyle(color)
-                    .fixedSize(horizontal: false, vertical: true)
+            ruled {
+                HStack(alignment: .firstTextBaseline, spacing: 6) {
+                    IconImage(ChatLineView.icon(of: line.tone ?? .system), size: 11)
+                        .foregroundStyle(color)
+                    Text(line.text)
+                        .font(HUDStyle.font(11))
+                        .foregroundStyle(color)
+                        .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
         case .you, .adventurer, .villager, .npc:
             // Their face, then their name, BOT after it and the time at the right, and what they said
             // under it (the user, 2026-11-16). An adventurer's face and name open their profile.
@@ -212,6 +286,22 @@ struct ChatLineView: View {
             .padding(.vertical, 3)
             .accessibilityElement(children: .combine)
         }
+    }
+
+    /// What happened, not said by anyone (`.system`, `.notice`): centred between two thin rules in its
+    /// own colour, running out to the window's sides (the user, 2026-11-16: "add horizontal lines left
+    /// and right of those labels").
+    private func ruled<Label: View>(@ViewBuilder _ label: () -> Label) -> some View {
+        HStack(spacing: 8) {
+            rule
+            label().layoutPriority(1)
+            rule
+        }
+        .frame(maxWidth: .infinity)
+    }
+
+    private var rule: some View {
+        color.opacity(0.45).frame(minWidth: 12, maxWidth: .infinity).frame(height: 1)
     }
 
     /// Their face or name: a button to their profile, for an adventurer.

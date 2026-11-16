@@ -519,7 +519,7 @@ private struct SideChevron: View {
             SoundEffects.shared.play(.tap, volume: 0.6)
             action()
         } label: {
-            IconImage(.chevronUp, size: 12)
+            IconImage(.chevronUp, size: 14)
                 .rotationEffect(.degrees(edge == .leading ? -90 : 90))
                 .foregroundStyle(HUDStyle.barText)
                 .frame(width: 22, height: 22)
@@ -797,6 +797,20 @@ struct NameBadge: View {
     }
 }
 
+/// A button's icon and word (`PixelButtonStyle`): close together, and the icon a little nearer the
+/// button's edge than the word is to the other, as an icon's lighter edge looks farther in than a
+/// word's (the user, 2026-11-16: "The gap between the icon and the label is too big. Also the padding
+/// left of the arrow icon looks optically bigger than the right padding behind the label").
+struct ButtonLabelStyle: LabelStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        HStack(spacing: 5) {
+            configuration.icon
+            configuration.title
+        }
+        .padding(.leading, -2)
+    }
+}
+
 struct PixelButtonStyle: ButtonStyle {
     var tint: Color = HUDStyle.buttonFace
     var compact = false
@@ -805,6 +819,7 @@ struct PixelButtonStyle: ButtonStyle {
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
+            .labelStyle(ButtonLabelStyle())
             .font(HUDStyle.font(primary ? 18 : compact ? 11 : 13))
             .foregroundStyle(HUDStyle.ink)
             .padding(.horizontal, primary ? 24 : compact ? 12 : 16)
