@@ -1872,6 +1872,34 @@
       }
     },
     {
+      "id": "shore_grass",
+      "kind": "prop"
+    },
+    {
+      "id": "shore_stones",
+      "kind": "prop"
+    },
+    {
+      "id": "water_rock",
+      "kind": "prop"
+    },
+    {
+      "id": "waterfall",
+      "kind": "prop"
+    },
+    {
+      "id": "waterfall_2",
+      "kind": "prop"
+    },
+    {
+      "id": "waterfall_3",
+      "kind": "prop"
+    },
+    {
+      "id": "waterfall_4",
+      "kind": "prop"
+    },
+    {
       "id": "dead_tree",
       "kind": "prop",
       "request": {

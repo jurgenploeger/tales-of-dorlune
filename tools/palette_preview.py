@@ -187,6 +187,19 @@ def deep_shade(depth):
     t = np.clip((depth - 0.25) / 0.55, 0, 1)
     return 0.2 * t * t * (3 - 2 * t)
 
+def blade_reach(across):
+    """mirrors ArtLibrary.bladeReach: how far each blade of grass reaches over the water, in cells."""
+    blade = np.floor(across * 13).astype(np.int64)
+    h = ((blade * 668265263) & 0xFFFFFFFF) ^ 0x9E3779B9
+    h = ((h ^ (h >> 15)) * 2246822519) & 0xFFFFFFFF
+    h ^= h >> 13
+    h = (h * 3266489917) & 0xFFFFFFFF
+    h ^= h >> 16
+    gap = (h & 0xFFFF) / 65535
+    height = (h >> 16) / 65535
+    return np.where(gap < 0.7, 0.02 + 0.17 * height * height, -0.16)
+
+
 def organic_tile(base, layers, col=0, row=0):
     out = base.copy(); rim = 1.2 / _S
     for tex, mask, style in layers:
@@ -213,12 +226,20 @@ def organic_tile(base, layers, col=0, row=0):
             h = (np.arange(_S)[None, :] * 73856093 ^ np.arange(_S)[:, None] * 19349663 ^ col * 83492791 ^ row * 2654435761) & 0xFFFFFFFF
             h = ((h ^ (h >> 13)) * 1274126177) & 0xFFFFFFFF
             speck = ((h ^ (h >> 16)) & 0xFFFF) / 65535
+            # mirrors ArtLibrary.bladeReach and organicTile's grass in the outline
+            reach = blade_reach(col + _X - row - _Y) if natural else np.full(_X.shape, -1.0)
+            ground = out[..., :3]
+            grassy = (ground[..., 1] > ground[..., 0] + 8 / 255) & (ground[..., 1] > ground[..., 2] + 8 / 255)
+            blades = natural & grassy & (depth > -0.3) & (depth < reach)
+            shadowed = natural & grassy & (reach > 0) & (depth >= reach) & (depth < reach + 0.04)
+            blade_px = np.where((depth > reach - 0.035)[..., None], ground * 1.12, ground * 0.9).clip(0, 1)
             foam = np.where(depth < 0.05, np.where(speck < 0.75, 0.35, 0.12), np.where((depth < 0.1) & (speck < 0.12), 0.22, 0.0))[..., None]
             shallow = (0.3 * np.clip(1 - depth / 0.4, 0, 1) ** 1.5)[..., None] if natural else 0.0
             deep = deep_shade(depth)[..., None] if natural else 0.0
             water = tex[..., :3] * (1 - deep)
             water = water + (SHALLOWS - water) * shallow
             water = water * (1 - foam) + foam
+            water = np.where(shadowed[..., None], water * 0.7, water)
             out[on, :3] = water[on]
             lip = (depth <= 0) & (depth > -0.06)
             if natural:
@@ -231,6 +252,7 @@ def organic_tile(base, layers, col=0, row=0):
                 out[band, :3] = (out[..., :3] + (earth - out[..., :3]) * mix)[band]
             else:
                 out[lip, :3] *= 0.8
+            out[blades, :3] = blade_px[blades]
         out[on, 3] = 1
     return out
 

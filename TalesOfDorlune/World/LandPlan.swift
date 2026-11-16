@@ -30,6 +30,8 @@ struct LandPlan {
     /// Lily pads: the pond cell each floats on, and how far it's drifted off its middle.
     var lilyPads: [(cell: GridPoint, drift: CGVector)] = []
     var reeds: [Placement] = []
+    /// Waterfalls where the rivers spring (`planWaterfalls`), played frame by frame (`LandStage.placeWaterfalls`).
+    var waterfalls: [Placement] = []
     /// A town's houses, street lamps and benches, and the land's own buildings.
     var lots: [Placement] = []
     var streetDecor: [Placement] = []
@@ -152,9 +154,12 @@ final class LandPlanner {
         }
     }
 
-    /// Reeds here and there along the lakes' and the river's shores, where the water isn't frozen
-    /// or chocolate.
+    /// The lakes' and the river's shores dressed where the water isn't frozen or chocolate: reeds, tufts
+    /// of long grass and a few mossy stones on the bank, drawn out to the water's edge so they overlap
+    /// it (the user, 2026-11-16: "grass sprites on the sides, to make it look more natural [...] also
+    /// little details like rocks"; `tools/scenery_art.py` draws `shore_grass` and `shore_stones`).
     private func planReeds() {
+        planWaterfalls()
         let water = def.theme.water ?? ""
         guard !water.contains("ice"), !water.contains("chocolate"), !map.lakes.isEmpty || !map.river.isEmpty else { return }
         var reedRNG = SeededRandom(text: def.id + "/reeds")
@@ -164,11 +169,67 @@ final class LandPlanner {
                 for (dc, dr) in [(1, 0), (-1, 0), (0, 1), (0, -1)] {
                     let land = GridPoint(col: cell.col + dc, row: cell.row + dr)
                     guard map.contains(land), map.ground[land.row][land.col] != .water, seen.insert(land).inserted else { continue }
-                    guard Double.random(in: 0..<1, using: &reedRNG) < 0.18, map.isFreeForScenery(land, blocking: false) else { continue }
+                    guard Double.random(in: 0..<1, using: &reedRNG) < 0.55, map.isFreeForScenery(land, blocking: false) else { continue }
                     map.occupy(land, blocking: false)
+                    let pick = Double.random(in: 0..<1, using: &reedRNG)
+                    let art = pick < 0.35 ? "reeds" : pick < 0.82 ? "shore_grass" : "shore_stones"
                     let scale = CGFloat.random(in: 0.75...1, using: &reedRNG)
-                    plan.reeds.append(scenery("reeds", at: land, nudge: true, scale: scale))
+                    // Nudged as before (the plan's own random numbers drawn as they were, so nothing else
+                    // in the land moves), then set toward the water.
+                    var placement = scenery(art, at: land, nudge: true, scale: scale)
+                    // A third of a cell toward the water it borders, give or take, so it stands at the edge.
+                    let reach = WorldMap.tileSize * CGFloat.random(in: 0.26...0.4, using: &reedRNG)
+                    let toward = WorldMap.project(CGPoint(x: CGFloat(-dc) * reach, y: CGFloat(-dr) * reach))
+                    placement.nudge = CGVector(dx: toward.x + CGFloat.random(in: -5...5, using: &reedRNG), dy: toward.y)
+                    plan.reeds.append(placement)
                 }
+            }
+        }
+        // Mossy rocks standing in the shallows (the user, 2026-11-16: "We should also have some rocks"),
+        // a few to a lake, in the water just off its shore; not where a bridge or a lily pad is.
+        let pads = Set(plan.lilyPads.map(\.cell))
+        var rockRNG = SeededRandom(text: def.id + "/water-rocks")
+        for shore in map.lakes.map({ $0.water }) + [map.river] {
+            for cell in shore.sorted(by: WorldMap.inOrder) where !map.bridgeCells.contains(cell) && !pads.contains(cell) {
+                let banks = [(1, 0), (-1, 0), (0, 1), (0, -1)].filter { offset in
+                    let land = GridPoint(col: cell.col + offset.0, row: cell.row + offset.1)
+                    return map.contains(land) && map.ground[land.row][land.col] != .water
+                }
+                guard let bank = banks.first, Double.random(in: 0..<1, using: &rockRNG) < 0.07 else { continue }
+                var placement = Placement(art: "water_rock", cell: cell, scale: CGFloat.random(in: 0.85...1.25, using: &rockRNG))
+                // Toward the shore it's off, a little, so it stands in the shallows.
+                let reach = WorldMap.tileSize * 0.18
+                let toward = WorldMap.project(CGPoint(x: CGFloat(bank.0) * reach, y: CGFloat(bank.1) * reach))
+                placement.nudge = CGVector(dx: toward.x + CGFloat.random(in: -6...6, using: &rockRNG), dy: toward.y)
+                plan.reeds.append(placement)
+            }
+        }
+    }
+
+    /// A waterfall where each river springs in this land (the user, 2026-11-16: "We should also have some
+    /// waterfalls in the map"), not where its water is frozen or chocolate: a rocky ledge half a cell
+    /// back the way the river comes from, so it pours into the river's head (`tools/waterfall_art.py`).
+    /// Nothing else grows on the cells round it.
+    private func planWaterfalls() {
+        let water = def.theme.water ?? ""
+        guard let region = map.region, !water.contains("ice"), !water.contains("chocolate") else { return }
+        for line in region.rivers where line.count > 8 {
+            // Its first cell that's laid as river: the spring's own may be narrower than a cell.
+            guard let first = line.prefix(4).firstIndex(where: { point in
+                let cell = GridPoint(col: Int(point.x.rounded(.down)), row: Int(point.y.rounded(.down)))
+                return map.contains(cell) && map.owns(cell) && map.river.contains(cell)
+            }) else { continue }
+            let spring = line[first], ahead = line[first + 4]
+            let cell = GridPoint(col: Int(spring.x.rounded(.down)), row: Int(spring.y.rounded(.down)))
+            let back = CGVector(dx: spring.x - ahead.x, dy: spring.y - ahead.y)
+            let length = max(0.001, (back.dx * back.dx + back.dy * back.dy).squareRoot())
+            let reach = WorldMap.tileSize * 0.5 / length
+            let toward = WorldMap.project(CGPoint(x: back.dx * reach, y: back.dy * reach))
+            var placement = Placement(art: "waterfall", cell: cell, scale: 1.15)
+            placement.nudge = CGVector(dx: toward.x, dy: toward.y)
+            plan.waterfalls.append(placement)
+            for dc in -1...1 {
+                for dr in -1...1 { map.occupy(GridPoint(col: cell.col + dc, row: cell.row + dr), blocking: false) }
             }
         }
     }
