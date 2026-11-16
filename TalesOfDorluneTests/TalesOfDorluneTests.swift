@@ -1812,6 +1812,21 @@ struct RulesTests {
         #expect(session.data.hero.level == GameSession.levelCap)
     }
 
+    /// Past the cap, EXP fills the mastery bar: a skill point each time it's full, the rest kept.
+    @Test func masteryGivesSkillPointsAtTheCap() {
+        let session = GameSession.newGame(name: "Test", raceID: "human")
+        session.data.hero.level = GameSession.levelCap
+        session.data.hero.exp = 0
+        let before = session.unspentSkillPoints
+        session.gainHeroEXP(GameSession.masteryBar - 1)
+        #expect(session.data.hero.masteryPoints == nil && session.unspentSkillPoints == before)
+        session.gainHeroEXP(GameSession.masteryBar * 2)
+        #expect(session.data.hero.masteryPoints == 2 && session.data.hero.exp == GameSession.masteryBar - 1)
+        #expect(session.unspentSkillPoints == before + 2)
+        session.gainHeroEXP(1)
+        #expect(session.data.hero.masteryPoints == 3 && session.data.hero.exp == 0)
+    }
+
     @Test func oldSavesGetStretchedLevels() {
         let session = GameSession.newGame(name: "Test", raceID: "human")
         session.data.levelsRescaled = nil

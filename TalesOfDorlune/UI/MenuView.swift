@@ -810,7 +810,8 @@ private struct CharacterTab: View {
 
             StatsPanel(level: L("Level {level}", ["level": hero.level]),
                        exp: hero.exp, expToNext: GameSession.expToNext(level: hero.level), hp: hero.hp, mp: hero.mp, stats: stats,
-                       maxed: hero.level >= GameSession.levelCap)
+                       maxed: hero.level >= GameSession.levelCap,
+                       mastery: hero.level >= GameSession.levelCap ? hero.masteryPoints ?? 0 : nil)
         }
     }
 
@@ -888,6 +889,9 @@ struct StatsPanel: View {
     /// At the level cap (`GameSession.levelCap`): the EXP bar full, ∞ over it (the user, 2026-11-16: "If I'm
     /// already lvl 200, it should show the bar fully green here with the infinity symbol in the middle").
     var maxed = false
+    /// The hero's skill points from mastery at the cap: the EXP bar fills toward the next one
+    /// (`GameSession.masteryBar`), ∞ over it still. Nil for a companion's, which stands full.
+    var mastery: Int? = nil
 
     private static let digits: CGFloat = 13
     private static let attackTint = Color(red: 1, green: 0.5, blue: 0.35)
@@ -904,7 +908,18 @@ struct StatsPanel: View {
             // Companions without magic have no MP to show.
             if stats.mp > 0 { bar(L("MP"), mp, stats.mp, HUDStyle.mp) }
             // EXP last, under HP and MP, as the HUD's own block has it (playtesting 2026-11-01).
-            if maxed {
+            if maxed, let mastery, let exp {
+                let percent = exp * 100 / max(1, GameSession.masteryBar)
+                VStack(alignment: .leading, spacing: 4) {
+                    StatBar(label: L("EXP"), value: exp, maximum: GameSession.masteryBar, color: HUDStyle.exp, labelWidth: 36, height: 20,
+                            labelSize: 15, numberSize: Self.digits, caption: "∞  \(percent)%")
+                        .accessibilityValue(L("Highest level, mastery {percent}%", ["percent": percent]))
+                    Text(L("Mastery: every full bar is a skill point ({count} so far).", ["count": mastery]))
+                        .font(HUDStyle.font(10))
+                        .foregroundStyle(HUDStyle.dim)
+                        .padding(.leading, 36)
+                }
+            } else if maxed {
                 StatBar(label: L("EXP"), value: 1, maximum: 1, color: HUDStyle.exp, labelWidth: 36, height: 20,
                         labelSize: 15, numberSize: Self.digits, caption: "∞")
                     .accessibilityValue(L("Highest level"))
