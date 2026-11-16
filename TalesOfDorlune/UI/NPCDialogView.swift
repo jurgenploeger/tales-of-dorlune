@@ -1029,7 +1029,9 @@ private struct AroundSpeaker: Layout {
     let rise: CGFloat
     let minHeight: CGFloat
     private let spacing: CGFloat = 10
-    private let inset = EdgeInsets(top: 10, leading: 16, bottom: 14, trailing: 12)
+    /// Round what's said and done: as far from the window's foot as from its left (the user, 2026-11-16:
+    /// "Make sure the button has the same margin left and bottom of the block").
+    private let inset = EdgeInsets(top: 10, leading: 16, bottom: 16, trailing: 12)
 
     func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
         let width = proposal.width ?? 360
