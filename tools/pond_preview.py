@@ -15,6 +15,9 @@ motion turns a whole number of times:
 5. Back bank: its waterline dark, the bank mirrored 6 rows down in its own tones, a waterline that creeps.
 6. Drops rippling out, glints on the sky-lit water.
 
+Unlike the article, the water tile's own ripples stay over the tones (its texture above or below its soft
+average, added back): flat tones lost the game's water texture.
+
 The article works in art pixels; the game's are 44/32 points, so its distances are scaled by `PX`.
 
     python3 tools/pond_preview.py out.png [map]       # before | after
@@ -171,6 +174,7 @@ def layers(img, drawn, mask, tones, t, seed=7):
     """The six layers over the scene's ground (`img`, before anything standing is drawn on it)."""
     H, W = mask.shape
     rng = random.Random(seed)
+    water_before = img[..., :3].copy()
     ys, xs = np.mgrid[0:H, 0:W]
     land_dist = ndimage.distance_transform_edt(mask) / PX          # art pixels to the nearest land
     row = runs_from_far_shore(mask)
@@ -289,7 +293,13 @@ def layers(img, drawn, mask, tones, t, seed=7):
         middle = np.abs(xs - gx) <= PX * 0.7
         tone = np.where(on, np.where(middle & (life < 0.85), 6, 5), tone)
 
-    img[mask, :3] = tones[tone[mask]]
+    # The water tile's own ripples kept over the tones (the user, 2026-11-16: "the water itself is missing
+    # the water texture now"): what the tile has above or below its own soft average, added back, so the
+    # tones lie on the water as drawn, not on a flat fill.
+    lum = brightness(water_before) / 255
+    soft = ndimage.gaussian_filter(np.where(mask, lum, lum[mask].mean()), 3)
+    ripple = np.where(mask, lum - soft, 0)[..., None]
+    img[mask, :3] = np.clip(tones[tone[mask]] + ripple[mask] * 1.1, 0, 1)
 
 
 def frame(mid, t, kinds, items, mask, W, H):
