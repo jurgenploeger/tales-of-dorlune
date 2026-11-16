@@ -649,36 +649,39 @@ private struct GameMenu: View {
     private static let spring = Animation.spring(response: 0.34, dampingFraction: 0.78)
 
     var body: some View {
-        ZStack(alignment: .bottomTrailing) {
+        // The button stays where it is, and the menu opens over it, its foot just above the button
+        // (the user, 2026-11-16: "Show this menu above the hamburger menu"): a tap on the button
+        // again, or the menu's close button, closes it.
+        Button {
+            SoundEffects.shared.play(.tap, volume: 0.7)
+            open.toggle()
+        } label: {
+            MenuGlyph()
+                .frame(width: Self.button, height: Self.button)
+                .background(Self.surface(Circle()))
+                .overlay(alignment: .top) {
+                    // The button's gloss, an oval across its top.
+                    Ellipse().fill(.white.opacity(0.35))
+                        .frame(width: Self.button * 0.62, height: Self.button * 0.28)
+                        .padding(.top, 3)
+                        .allowsHitTesting(false)
+                }
+                .overlay(alignment: .topTrailing) {
+                    if !open, items.contains(where: badge) {
+                        Circle().fill(HUDStyle.gold).frame(width: 12, height: 12)
+                            .overlay(Circle().stroke(HUDStyle.ink, lineWidth: 1.5))
+                    }
+                }
+                .contentShape(Circle())
+        }
+        .buttonStyle(PressScaleStyle())
+        .accessibilityLabel(open ? L("Close menu") : L("Open menu"))
+        .overlay(alignment: .bottomTrailing) {
             if open {
                 panel
+                    .fixedSize()
+                    .padding(.bottom, Self.button + 10)
                     .transition(.scale(scale: 0.4, anchor: .bottomTrailing).combined(with: .opacity))
-            } else {
-                Button {
-                    SoundEffects.shared.play(.tap, volume: 0.7)
-                    open = true
-                } label: {
-                    MenuGlyph()
-                        .frame(width: Self.button, height: Self.button)
-                        .background(Self.surface(Circle()))
-                        .overlay(alignment: .top) {
-                            // The button's gloss, an oval across its top.
-                            Ellipse().fill(.white.opacity(0.35))
-                                .frame(width: Self.button * 0.62, height: Self.button * 0.28)
-                                .padding(.top, 3)
-                                .allowsHitTesting(false)
-                        }
-                        .overlay(alignment: .topTrailing) {
-                            if items.contains(where: badge) {
-                                Circle().fill(HUDStyle.gold).frame(width: 12, height: 12)
-                                    .overlay(Circle().stroke(HUDStyle.ink, lineWidth: 1.5))
-                            }
-                        }
-                        .contentShape(Circle())
-                }
-                .buttonStyle(PressScaleStyle())
-                .accessibilityLabel(L("Open menu"))
-                .transition(.opacity)
             }
         }
         .shadow(color: .black.opacity(0.35), radius: 2, x: 0, y: 2)
