@@ -1956,14 +1956,12 @@ private struct BagTab: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            // How full the bag is shows by the window's title (`MenuView.tabs`); here, the coins you
-            // carry (no slot of their own since 2026-10-30: "We don't need to deposit coins in bank
-            // anymore"), when it's full, what's up for trade (the coin on its slot), and what the last
-            // thing used did.
+            // How full the bag is shows by the window's title (`MenuView.tabs`); here, when it's full,
+            // what's up for trade (the coin on its slot), and what the last thing used did. Not the coins
+            // you carry: the HUD shows them (the user, 2026-11-16: "We don't need to show the money here").
             let full = session.bagSlotsFree == 0
-            HStack {
-                GoldPill(amount: session.data.gold, size: 13)
-                if full || !session.forTrade.isEmpty || note != nil {
+            if full || !session.forTrade.isEmpty || note != nil {
+                HStack {
                     if full {
                         Text(L("Full: bank something")).foregroundStyle(HUDStyle.orange)
                     }
@@ -1971,11 +1969,11 @@ private struct BagTab: View {
                         Label(L("{count} for trade", ["count": session.forTrade.count]), icon: .coins)
                             .foregroundStyle(HUDStyle.gold)
                     }
+                    Spacer()
+                    if let note { Text(note).foregroundStyle(HUDStyle.green) }
                 }
-                Spacer()
-                if let note { Text(note).foregroundStyle(HUDStyle.green) }
+                .font(HUDStyle.font(12))
             }
-            .font(HUDStyle.font(12))
 
             if hatching, let pet = hatched {
                 HatchView(session: session, pet: pet) { hatching = false }
