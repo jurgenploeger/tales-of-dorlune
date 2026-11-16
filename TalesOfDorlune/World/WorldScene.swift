@@ -323,8 +323,8 @@ final class WorldScene: SKScene {
         crowd = Crowd(def: def, map: map, world: world, heroLevel: session.data.hero.level,
                       friends: session.friendsIn(def.id), market: market,
                       locals: planner.plan.locals, hides: { [see, map] in see.hides($0, on: map) })
-        crowd?.onChat = { [weak session] speaker, text, kind in
-            session?.postChat(text, from: speaker, kind: kind)
+        crowd?.onChat = { [weak session] speaker, text, kind, art, adventurer in
+            session?.postChat(text, from: speaker, kind: kind, art: art, adventurer: adventurer)
         }
         crowd?.dares = { [weak session] rival in session?.dares(rival) ?? false }
         crowd?.onChallenge = { [weak self] rival in

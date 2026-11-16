@@ -725,7 +725,7 @@ final class GameCoordinator {
         self.overlay = overlay
         if case .npc = overlay { SoundEffects.shared.play(.talk) }
         if case .npc(let id) = overlay, let npc = Content.shared.npc(id), !npc.role.isObject {
-            session.postChat(npc.greeting, from: npc.name, kind: .npc)
+            session.postChat(npc.greeting, from: npc.name, kind: .npc, art: npc.art)
             session.unreadChat = max(0, session.unreadChat - 1)
         }
         mapScene.isInputLocked = true

@@ -7,8 +7,8 @@ import SwiftUI
 struct AdventurerCard: View {
     let coordinator: GameCoordinator
     let adventurer: Adventurer
-    /// As wide as the HUD's buttons under it, to the menu button's right edge (the user, 2026-11-16),
-    /// and never narrower than its own content.
+    /// At least as wide as the HUD's buttons under it, to the menu button's right edge (the user,
+    /// 2026-11-16), and as wide as its own content.
     var width: CGFloat = 0
 
     private var session: GameSession { coordinator.session }
@@ -51,8 +51,9 @@ struct AdventurerCard: View {
                 }
             }
             StatBar(label: L("HP"), value: stats.hp, maximum: stats.hp, color: HUDStyle.hp, labelWidth: 20)
-            // What you can do, on one row, sharing its width (the user, 2026-11-16: "The buttons should
-            // be on one row. Trade should be the last one").
+            // What you can do, on one row, each as wide as its word (the user, 2026-11-16: "The buttons
+            // should be on one row. Trade should be the last one", then "Make the buttons auto width
+            // instead of the same width, so then this card can be a bit less wide").
             HStack(spacing: 6) {
                 if adventurer.hostile {
                     Text(L("Looking for trouble!")).font(HUDStyle.font(10)).foregroundStyle(Color(uiColor: Crowd.hostileColor))
@@ -91,7 +92,7 @@ struct AdventurerCard: View {
             }
         }
         .padding(10)
-        .frame(minWidth: max(260, width), alignment: .leading)
+        .frame(minWidth: width, alignment: .leading)
         .fixedSize()
         .background(HUDStyle.panel)
     }
@@ -103,7 +104,5 @@ struct AdventurerCard: View {
             .lineLimit(1)
             .minimumScaleFactor(0.7)
             .allowsTightening(true)
-            // The row's buttons share its width.
-            .frame(maxWidth: .infinity)
     }
 }

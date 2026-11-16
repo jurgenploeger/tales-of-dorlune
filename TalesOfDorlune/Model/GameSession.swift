@@ -138,18 +138,24 @@ final class GameSession {
         /// A notice's kind of news (`LogLine.Kind`), for its colour.
         var tone: LogLine.Kind? = nil
         let time = Date()
+        /// Who said it, for their face by it in the chat (`ChatLineView`): their picture, and an
+        /// adventurer's profile, opened from it.
+        var art: String? = nil
+        var adventurer: Adventurer? = nil
     }
 
     private(set) var chat: [ChatLine] = []
     var unreadChat = 0
 
-    func postChat(_ text: String, from speaker: String, kind: ChatLine.Kind) {
+    func postChat(_ text: String, from speaker: String, kind: ChatLine.Kind, art: String? = nil, adventurer: Adventurer? = nil) {
         // Adventurers are computer-run for now, and say so.
         let badge: PlayerBadge? = switch kind {
         case .adventurer: .bot
         case .you, .villager, .npc, .system, .announcement, .notice: nil
         }
-        chat.append(ChatLine(speaker: speaker, text: text, kind: kind, badge: badge))
+        // Your own lines with your face.
+        let face = kind == .you ? Self.heroArt : art
+        chat.append(ChatLine(speaker: speaker, text: text, kind: kind, badge: badge, art: face, adventurer: adventurer))
         if chat.count > 80 { chat.removeFirst(chat.count - 80) }
         if kind != .you { unreadChat += 1 }
     }

@@ -145,9 +145,9 @@ final class LandStage {
                           market: market, locals: plan.locals, hides: { [see, map] in see.hides($0, on: map) })
         // Its locals stand where the plan put them: off to a spot nothing hides, if something does.
         crowd.moveOutOfHiding()
-        crowd.onChat = { [weak self, weak session] speaker, text, kind in
+        crowd.onChat = { [weak self, weak session] speaker, text, kind, art, adventurer in
             guard self?.isHere == true else { return }
-            session?.postChat(text, from: speaker, kind: kind)
+            session?.postChat(text, from: speaker, kind: kind, art: art, adventurer: adventurer)
         }
         crowd.dares = { [weak session] rival in session?.dares(rival) ?? false }
         self.crowd = crowd

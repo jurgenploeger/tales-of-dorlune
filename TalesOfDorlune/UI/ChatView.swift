@@ -6,6 +6,10 @@ struct ChatView: View {
     let session: GameSession
     let onSay: (String) -> Void
     let onClose: () -> Void
+    /// For an adventurer's profile, opened over the chat from their face or name.
+    var coordinator: GameCoordinator? = nil
+    /// The adventurer whose profile is open over the chat.
+    @State private var profile: Adventurer?
     @State private var draft = ""
     @FocusState private var typing: Bool
     @Environment(\.verticalSizeClass) private var verticalSizeClass
@@ -22,8 +26,10 @@ struct ChatView: View {
                     ScrollView {
                         LazyVStack(alignment: .leading, spacing: 6) {
                             ForEach(session.chat) { line in
-                                ChatLineView(line: line)
-                                    .id(line.id)
+                                ChatLineView(line: line) { person in
+                                    withAnimation(.easeOut(duration: 0.2)) { profile = person }
+                                }
+                                .id(line.id)
                             }
                         }
                         .padding(HUDStyle.windowInset)
@@ -76,6 +82,16 @@ struct ChatView: View {
             .padding(.bottom, HUDMargins.bottom(onItsSide: verticalSizeClass == .compact))
             .ignoresSafeArea(.container, edges: HUDMargins.bottomEdge(onItsSide: verticalSizeClass == .compact))
         }
+        // Their profile over the chat, which shows again as it closes (the user, 2026-11-16: "When
+        // tapping on the name and avatar, it should open their profile above the chat").
+        .overlay {
+            if let person = profile, let coordinator {
+                ProfileWindow(coordinator: coordinator, person: person) {
+                    withAnimation(.easeOut(duration: 0.2)) { profile = nil }
+                }
+                .transition(.opacity)
+            }
+        }
         .onAppear { session.unreadChat = 0 }
     }
 
@@ -89,6 +105,8 @@ struct ChatView: View {
 
 struct ChatLineView: View {
     let line: GameSession.ChatLine
+    /// An adventurer's face or name tapped: their profile.
+    var onProfile: (Adventurer) -> Void = { _ in }
 
     private var color: Color {
         switch line.kind {
@@ -163,14 +181,73 @@ struct ChatLineView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         case .you, .adventurer, .villager, .npc:
-            HStack(alignment: .firstTextBaseline, spacing: 4) {
-                if let badge = line.badge {
-                    NameBadge(badge: badge)
+            // Their face, then their name, BOT after it and the time at the right, and what they said
+            // under it (the user, 2026-11-16). An adventurer's face and name open their profile.
+            HStack(alignment: .top, spacing: 8) {
+                who { ChatFace(art: line.art, size: 30) }
+                VStack(alignment: .leading, spacing: 2) {
+                    HStack(alignment: .firstTextBaseline, spacing: 5) {
+                        who {
+                            Text(line.speaker)
+                                .font(HUDStyle.font(12))
+                                .foregroundStyle(color)
+                                .lineLimit(1)
+                        }
+                        if let badge = line.badge {
+                            NameBadge(badge: badge)
+                        }
+                        Spacer(minLength: 6)
+                        Text(line.time, format: .dateTime.hour().minute())
+                            .font(HUDStyle.font(10))
+                            .foregroundStyle(HUDStyle.dim)
+                            .monospacedDigit()
+                    }
+                    Text(line.text)
+                        .font(HUDStyle.font(12))
+                        .foregroundStyle(HUDStyle.cream)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                (Text("[\(line.speaker)] ").foregroundStyle(color) + Text(line.text).foregroundStyle(HUDStyle.cream))
-                    .font(HUDStyle.font(12))
-                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .padding(.vertical, 3)
+            .accessibilityElement(children: .combine)
+        }
+    }
+
+    /// Their face or name: a button to their profile, for an adventurer.
+    @ViewBuilder
+    private func who<Label: View>(@ViewBuilder _ label: () -> Label) -> some View {
+        if let person = line.adventurer {
+            Button { onProfile(person) } label: { label() }
+                .buttonStyle(.plain)
+                .accessibilityLabel(L("{name}'s stats", ["name": person.name]))
+        } else {
+            label()
+        }
+    }
+}
+
+/// Someone's face by what they said in the chat: their picture's head in a small round, as a quest
+/// giver's is (`GiverFace`); a plain round for someone with no picture.
+private struct ChatFace: View {
+    let art: String?
+    let size: CGFloat
+
+    var body: some View {
+        Group {
+            if let art {
+                Image(uiImage: ArtLibrary.shared.face(art))
+                    .interpolation(.none)
+                    .resizable()
+                    .scaledToFit()
+                    .padding(size * 0.08)
+            } else {
+                Color.clear
             }
         }
+        .frame(width: size, height: size)
+        .background(Circle().fill(HUDStyle.portrait.opacity(0.9)))
+        .clipShape(Circle())
+        .overlay(Circle().strokeBorder(HUDStyle.bevel, lineWidth: 1.5))
     }
 }
