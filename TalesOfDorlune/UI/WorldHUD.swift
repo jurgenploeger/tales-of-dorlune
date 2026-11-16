@@ -20,6 +20,8 @@ struct WorldHUD: View {
     /// toast ran under the minimap).
     @State private var facesHeight: CGFloat = 0
     @State private var minimapHeight: CGFloat = 0
+    /// How wide the buttons along the bottom are (Chat, the Bag, the menu), for the adventurer card over them.
+    @State private var toolbarWidth: CGFloat = 0
     private var toastGap: CGFloat {
         onItsSide ? 10 : max(10, minimapHeight + 8 - facesHeight - 6)
     }
@@ -80,6 +82,7 @@ struct WorldHUD: View {
                     cell: session.mapCell,
                     dots: session.minimapDots,
                     marks: session.minimapMarks,
+                    tint: session.skyTint,
                     onOpen: { coordinator.open(.worldMap) }
                 )
                 .coachTarget(.minimap)
@@ -136,7 +139,7 @@ struct WorldHUD: View {
                     .transition(.scale(scale: 0.7, anchor: .bottomTrailing).combined(with: .opacity))
                     .stepsAside(controlsHidden || following)
                 } else if let adventurer = session.nearbyAdventurer {
-                    AdventurerCard(coordinator: coordinator, adventurer: adventurer)
+                    AdventurerCard(coordinator: coordinator, adventurer: adventurer, width: toolbarWidth)
                         .transition(.scale(scale: 0.8, anchor: .bottomTrailing).combined(with: .opacity))
                         .stepsAside(controlsHidden || following)
                 }
@@ -169,6 +172,8 @@ struct WorldHUD: View {
                     .coachTarget(.toolbar)
                     .stepsAside(controlsHidden)
                 }
+                // How wide the buttons are, for the card over them to run to the menu button's edge.
+                .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { toolbarWidth = $0 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
             .padding(.bottom, bottomGap.buttons)
@@ -644,36 +649,39 @@ private struct GameMenu: View {
     private static let spring = Animation.spring(response: 0.34, dampingFraction: 0.78)
 
     var body: some View {
-        ZStack(alignment: .bottomTrailing) {
+        // The button stays where it is, and the menu opens over it, its foot just above the button
+        // (the user, 2026-11-16: "Show this menu above the hamburger menu"): a tap on the button
+        // again, or the menu's close button, closes it.
+        Button {
+            SoundEffects.shared.play(.tap, volume: 0.7)
+            open.toggle()
+        } label: {
+            MenuGlyph()
+                .frame(width: Self.button, height: Self.button)
+                .background(Self.surface(Circle()))
+                .overlay(alignment: .top) {
+                    // The button's gloss, an oval across its top.
+                    Ellipse().fill(.white.opacity(0.35))
+                        .frame(width: Self.button * 0.62, height: Self.button * 0.28)
+                        .padding(.top, 3)
+                        .allowsHitTesting(false)
+                }
+                .overlay(alignment: .topTrailing) {
+                    if !open, items.contains(where: badge) {
+                        Circle().fill(HUDStyle.gold).frame(width: 12, height: 12)
+                            .overlay(Circle().stroke(HUDStyle.ink, lineWidth: 1.5))
+                    }
+                }
+                .contentShape(Circle())
+        }
+        .buttonStyle(PressScaleStyle())
+        .accessibilityLabel(open ? L("Close menu") : L("Open menu"))
+        .overlay(alignment: .bottomTrailing) {
             if open {
                 panel
+                    .fixedSize()
+                    .padding(.bottom, Self.button + 10)
                     .transition(.scale(scale: 0.4, anchor: .bottomTrailing).combined(with: .opacity))
-            } else {
-                Button {
-                    SoundEffects.shared.play(.tap, volume: 0.7)
-                    open = true
-                } label: {
-                    MenuGlyph()
-                        .frame(width: Self.button, height: Self.button)
-                        .background(Self.surface(Circle()))
-                        .overlay(alignment: .top) {
-                            // The button's gloss, an oval across its top.
-                            Ellipse().fill(.white.opacity(0.35))
-                                .frame(width: Self.button * 0.62, height: Self.button * 0.28)
-                                .padding(.top, 3)
-                                .allowsHitTesting(false)
-                        }
-                        .overlay(alignment: .topTrailing) {
-                            if items.contains(where: badge) {
-                                Circle().fill(HUDStyle.gold).frame(width: 12, height: 12)
-                                    .overlay(Circle().stroke(HUDStyle.ink, lineWidth: 1.5))
-                            }
-                        }
-                        .contentShape(Circle())
-                }
-                .buttonStyle(PressScaleStyle())
-                .accessibilityLabel(L("Open menu"))
-                .transition(.opacity)
             }
         }
         .shadow(color: .black.opacity(0.35), radius: 2, x: 0, y: 2)
@@ -779,6 +787,9 @@ private struct MinimapWindow: View {
     let cell: GridPoint
     let dots: [GameSession.MinimapDot]
     let marks: [GameSession.MinimapMark]
+    /// The light over the land (`GameSession.skyTint`): its map darkens with it at dusk and night;
+    /// the dots and icons over it keep their colours, to read.
+    var tint = GameSession.SkyTint.day
     let onOpen: () -> Void
 
     private let size: CGFloat = 128
@@ -789,6 +800,7 @@ private struct MinimapWindow: View {
     var body: some View {
         ZStack {
             Color(red: 0.05, green: 0.12, blue: 0.22)
+                .colorMultiply(Color(red: tint.r, green: tint.g, blue: tint.b))
             // Turned and squashed like the world, so "up" on the minimap is "up" on screen.
             // The map rides in an overlay: an image bigger than the layer (maps over 84 tiles
             // wide) must not resize or re-centre it, or the hero's cell drifts off the marker.
@@ -799,6 +811,7 @@ private struct MinimapWindow: View {
                         .interpolation(.none)
                         .resizable()
                         .frame(width: CGFloat(picture.columns) * zoom, height: CGFloat(picture.rows) * zoom)
+                        .colorMultiply(Color(red: tint.r, green: tint.g, blue: tint.b))
                         .offset(
                             x: layer / 2 - (CGFloat(cell.col - picture.origin.col) + 0.5) * zoom,
                             y: layer / 2 - (CGFloat(picture.rows - 1 - (cell.row - picture.origin.row)) + 0.5) * zoom

@@ -74,6 +74,15 @@ final class GameSession {
     var minimapDots: [MinimapDot] = []
     /// Who does what on this map, as icons on the minimap.
     var minimapMarks: [MinimapMark] = []
+    /// The light over the land you're in, the colour the map is multiplied by (`Sky.tint`): the
+    /// minimap's map takes it too, so it darkens at dusk and night as the land does (the user,
+    /// 2026-11-16: "When it's evening, also update the mini map at the top with the same colors").
+    var skyTint = SkyTint.day
+
+    struct SkyTint: Equatable {
+        var r, g, b: Double
+        static let day = SkyTint(r: 1, g: 1, b: 1)
+    }
 
     /// Someone else on the minimap: an adventurer, a friend you've made, a red-named one looking for
     /// a fight, a friend in your party, or one of the folk who live there (villagers and locals).
@@ -129,18 +138,24 @@ final class GameSession {
         /// A notice's kind of news (`LogLine.Kind`), for its colour.
         var tone: LogLine.Kind? = nil
         let time = Date()
+        /// Who said it, for their face by it in the chat (`ChatLineView`): their picture, and an
+        /// adventurer's profile, opened from it.
+        var art: String? = nil
+        var adventurer: Adventurer? = nil
     }
 
     private(set) var chat: [ChatLine] = []
     var unreadChat = 0
 
-    func postChat(_ text: String, from speaker: String, kind: ChatLine.Kind) {
+    func postChat(_ text: String, from speaker: String, kind: ChatLine.Kind, art: String? = nil, adventurer: Adventurer? = nil) {
         // Adventurers are computer-run for now, and say so.
         let badge: PlayerBadge? = switch kind {
         case .adventurer: .bot
         case .you, .villager, .npc, .system, .announcement, .notice: nil
         }
-        chat.append(ChatLine(speaker: speaker, text: text, kind: kind, badge: badge))
+        // Your own lines with your face.
+        let face = kind == .you ? Self.heroArt : art
+        chat.append(ChatLine(speaker: speaker, text: text, kind: kind, badge: badge, art: face, adventurer: adventurer))
         if chat.count > 80 { chat.removeFirst(chat.count - 80) }
         if kind != .you { unreadChat += 1 }
     }
@@ -2490,6 +2505,18 @@ final class GameSession {
 
     func isBeatenHere(_ boss: NPCDef) -> Bool {
         bossesBeatenHere.contains(boss.id)
+    }
+
+    /// Bosses that have cornered you since arriving on this map (`corners`), so one you ran from or
+    /// lost to doesn't corner you again at once: next visit it does.
+    var bossesFacedHere: Set<String> = []
+
+    /// Whether walking up to `boss` corners you (the user, 2026-11-16: "when you come close to a boss,
+    /// it should automatically open a modal with the narrative of the boss, which you cannot close, so
+    /// you really have to go in a fight with them"): one you've never beaten, once a visit. Rematches
+    /// stay yours to ask for.
+    func corners(_ boss: NPCDef) -> Bool {
+        boss.role == .boss && !isDefeated(boss) && !isBeatenHere(boss) && !bossesFacedHere.contains(boss.id)
     }
 
     /// Every win rolls the boss's rare drops (the colour variants of top armour).

@@ -34,7 +34,7 @@ struct LanguagePanel: View {
         VStack(alignment: .leading, spacing: 0) {
             WindowTitle(L("Language"), onClose: onClose)
             LanguageList()
-                .padding(14)
+                .padding(HUDStyle.windowInset)
         }
         .frame(maxWidth: 640)
         .gameWindow()

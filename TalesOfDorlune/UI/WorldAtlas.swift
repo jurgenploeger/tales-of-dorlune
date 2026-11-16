@@ -458,7 +458,7 @@ struct WorldAtlas: View {
             turnByCompass()
         } label: {
             // Smaller than the minimap's own, out of the way in the corner.
-        MapCompass(size: 56, heading: .radians(Double(framing.rotation)), squash: framing.squash)
+        MapCompass(size: 68, heading: .radians(Double(framing.rotation)), squash: framing.squash)
         }
         .buttonStyle(.plain)
         .accessibilityLabel(isNorthUp ? L("Turn the map as you see the land") : L("Turn the map north up"))
@@ -467,7 +467,9 @@ struct WorldAtlas: View {
     /// The map's buttons in a row at the bottom right, in reach of a thumb: where you are, zoom out,
     /// zoom in.
     private var controls: some View {
-        HStack(spacing: 6) {
+        // Close together (the user, 2026-11-16: "The gaps between these buttons should be way smaller"):
+        // 8 points between their faces, each 2 in from its 44-point frame's edge.
+        HStack(spacing: 4) {
             mapButton(IconImage(.user, size: 16), label: L("Where you are")) { centreOnHere() }
             mapButton(Text("−").font(HUDStyle.font(18)), label: L("Zoom out")) { zoom(by: 1 / 1.6) }
             mapButton(Text("+").font(HUDStyle.font(18)), label: L("Zoom in")) { zoom(by: 1.6) }
@@ -569,27 +571,26 @@ struct WorldAtlas: View {
                     withAnimation(.easeOut(duration: 0.2)) { filter = kind }
                     closeFilter()
                 } label: {
-                    HStack(spacing: 8) {
-                        IconImage(.check, size: 14)
-                            .foregroundStyle(HUDStyle.gold)
-                            .opacity(selected ? 1 : 0)
-                        Text(kind.title)
-                            .font(HUDStyle.font(13))
-                            .foregroundStyle(selected ? HUDStyle.gold : .white)
-                            .shadow(color: HUDStyle.frameDark, radius: 0, x: 1, y: 1)
-                            .lineLimit(1)
-                        Spacer(minLength: 0)
+                    // Led by the badge it shows on the map, so it's known at a glance (the user,
+                    // 2026-11-16); in the Sort menu's look (`DropdownRow`).
+                    DropdownRow(title: kind.title, selected: selected) {
+                        Group {
+                            if let badge = kind.badge {
+                                MinimapIcon(kind: badge, size: 20)
+                            } else {
+                                IconImage(.map, size: 16).foregroundStyle(.white)
+                            }
+                        }
+                        .frame(width: 22, height: 22)
                     }
-                    .padding(.horizontal, 8)
-                    .frame(minHeight: 36)
-                    .contentShape(Rectangle())
                 }
                 .buttonStyle(PressScaleStyle())
                 .accessibilityAddTraits(selected ? .isSelected : [])
             }
         }
-        .padding(.vertical, 6)
-        .padding(.horizontal, 4)
+        // As far in all round, so the plate under the one in use is as far from the foot as from the
+        // sides (the user, 2026-11-16).
+        .padding(6)
         .frame(minWidth: 170, alignment: .leading)
         .background(HUDStyle.panelSurface(RoundedRectangle(cornerRadius: 14)))
         .shadow(color: .black.opacity(0.35), radius: 3, x: 0, y: 2)
@@ -602,9 +603,17 @@ struct WorldAtlas: View {
     private func tap(at location: CGPoint, in size: CGSize) {
         guard framing.scale > 0 else { return }
         // A group of badges zooms in on it, its badges parting as they come apart.
+        // As far in as parts its badges in one go, a little past where they'd group (the user,
+        // 2026-11-16: "you should be able to tap on it, and then it expands into the icons"); all the
+        // way in, those still together fan out (`badges`).
         if let group = marks.first(where: { $0.count > 1 && point(of: $0.spot, in: size).distance(to: location) < Self.badgeSize }) {
+            var nearest = CGFloat.infinity
+            for (i, a) in group.members.enumerated() {
+                for b in group.members.dropFirst(i + 1) { nearest = min(nearest, a.distance(to: b)) }
+            }
+            let parting = nearest > 0.0001 && nearest.isFinite ? Self.groupReach * 1.2 / nearest : Self.maxScale
             var next = framing
-            next.scale = clamped(framing.scale * 2.5, in: viewSize)
+            next.scale = clamped(max(framing.scale * 1.5, min(Self.maxScale, parting)), in: viewSize)
             next.focus = group.spot
             glide(to: clampedFocus(next))
             return
@@ -634,6 +643,8 @@ struct WorldAtlas: View {
         var count = 1
         /// Its cell's middle on the picture (`spot(of:)`), filled in by `spotted`.
         var spot: CGPoint = .zero
+        /// A group's badges' spots, for how far in to zoom to part them (`tap`).
+        var members: [CGPoint] = []
     }
 
     /// The marks with their spots on the picture, the continent's bounds worked out once for them all.
@@ -694,6 +705,26 @@ struct WorldAtlas: View {
                 groups.append([mark])
             }
         }
+        // All the way in, no numbers (the user, 2026-11-16: "when you zoom all the way in, there are
+        // no numbers showing when two things are close together"): a group's badges fan out round
+        // where they are, just far enough apart on screen not to overlap.
+        let allIn = framing.scale >= Self.maxScale * 0.98
+        if allIn {
+            return groups.flatMap { group -> [Mark] in
+                guard group.count > 1 else { return group }
+                let sum = group.reduce(CGPoint.zero) { CGPoint(x: $0.x + $1.spot.x, y: $0.y + $1.spot.y) }
+                let middle = CGPoint(x: sum.x / CGFloat(group.count), y: sum.y / CGFloat(group.count))
+                // The view may squash the map up and down (`Framing.squash`): far enough apart that way too.
+                let apart = Self.groupReach / framing.scale / max(0.3, min(1, framing.squash))
+                let radius = apart / (2 * sin(.pi / CGFloat(group.count)))
+                return group.enumerated().map { index, mark in
+                    var fanned = mark
+                    let angle = -CGFloat.pi / 2 + 2 * .pi * CGFloat(index) / CGFloat(group.count)
+                    fanned.spot = CGPoint(x: middle.x + radius * cos(angle), y: middle.y + radius * sin(angle))
+                    return fanned
+                }
+            }
+        }
         return groups.map { group -> Mark in
             guard group.count > 1 else { return group[0] }
             var leader = group[0]
@@ -702,6 +733,7 @@ struct WorldAtlas: View {
             // Where its badges are, on average.
             let sum = group.reduce(CGPoint.zero) { CGPoint(x: $0.x + $1.spot.x, y: $0.y + $1.spot.y) }
             leader.spot = CGPoint(x: sum.x / CGFloat(group.count), y: sum.y / CGFloat(group.count))
+            leader.members = group.map(\.spot)
             return leader
         }
     }
@@ -1038,6 +1070,18 @@ nonisolated enum MapFilter: String, CaseIterable {
         case .town: L("Town")
         case .waystones: L("Waystones")
         case .treasure: L("Treasure")
+        }
+    }
+
+    /// The badge it shows on the map, to lead its row in the filter (`WorldAtlas.filterPanel`); none
+    /// for all of them.
+    @MainActor var badge: GameSession.MinimapMark.Kind? {
+        switch self {
+        case .all: nil
+        case .quests: .questNew
+        case .town: .shop
+        case .waystones: .waystone
+        case .treasure: .chest
         }
     }
 

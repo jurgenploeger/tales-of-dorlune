@@ -350,7 +350,7 @@ struct LevelUpCard: View {
             Button(points > 0 ? L("Decide later") : L("Done"), action: onDone)
                 .buttonStyle(PixelButtonStyle(tint: points > 0 ? HUDStyle.cream : HUDStyle.gold))
         }
-        .padding(20)
+        .padding(HUDStyle.windowInset)
         .frame(maxWidth: 440)
         // Hugs the list, whose grid scrolls past 210 points, the skill tapped under it.
         .fitHeight()

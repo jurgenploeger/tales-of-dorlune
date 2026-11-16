@@ -184,6 +184,8 @@ final class ContinentScene: SKScene {
     private let talkRange: CGFloat = 50
     /// Walking up to someone opens their window; tapping a passer-by shows who they are.
     var onTalk: (@MainActor (NPCDef) -> Void)?
+    /// A boss you've walked up to that won't let you go (`GameSession.corners`).
+    var onCornered: (@MainActor (NPCDef) -> Void)?
     var onInspect: (@MainActor (Profile) -> Void)?
     /// A random battle with the land's monsters, and what was on screen for behind it.
     var onEncounter: (@MainActor (MapDef.Encounters, SKTexture?) -> Void)?
@@ -363,6 +365,9 @@ final class ContinentScene: SKScene {
         // The shade under the trees in every land near you, and everyone's shadow, cast away from
         // the sun over the land you're in (all lands share the clock): midday where it has no sky.
         if follow {
+            // The minimap's light, the land you're in's.
+            let tint = here.flatMap { airs[$0.id]?.sky?.tint } ?? .day
+            if session.skyTint != tint { session.skyTint = tint }
             let sun = here.flatMap { airs[$0.id]?.sky?.sun } ?? .noon
             for id in nearLands { lands[id]?.stage.follow(sun) }
             if Walker.sun != sun { Walker.shine(sun) }
@@ -1241,7 +1246,7 @@ final class ContinentScene: SKScene {
         session.data.mapID = def.id
         session.markVisited(def.id)
         session.reachCheckpoint(def)
-        if walkedIn { session.bossesBeatenHere = [] }
+        if walkedIn { session.bossesBeatenHere = []; session.bossesFacedHere = [] }
         guard session.mapName != def.name else { return }
         session.post(L("You arrive at {map}.", ["map": def.name]))
         if def.danger == true {
@@ -1562,6 +1567,10 @@ final class ContinentScene: SKScene {
         }
         nearbyTalk = nearest.map { ($0.land, $0.npc.id) }
         if session.nearbyNPC != nearest?.npc.id { session.nearbyNPC = nearest?.npc.id }
+        if !isInputLocked, let boss = nearest?.npc, session.corners(boss) {
+            session.bossesFacedHere.insert(boss.id)
+            onCornered?(boss)
+        }
         if let here, let stage = lands[here.id]?.stage, let crowd = stage.crowd {
             let you = stage.local(player.position)
             let nearby = crowd.adventurer(near: you, within: 80)

@@ -36,6 +36,17 @@ final class MusicPlayer {
         isMuted.toggle()
         UserDefaults.standard.set(isMuted, forKey: "musicMuted")
         synth?.setMuted(isMuted)
+        // Switched back on: make sure there's something to hear. The engine may have stopped (a call,
+        // a new output) with nothing yet to restart it, or never started (`startIfNeeded` failed once,
+        // and the same song asked for again is ignored): start it, and the song that should be playing.
+        guard !isMuted else { return }
+        if synth == nil {
+            let song = current
+            current = nil
+            play(song)
+        } else {
+            resume()
+        }
     }
 
     /// Music volume from Settings (0...1).

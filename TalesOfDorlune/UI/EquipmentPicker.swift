@@ -50,24 +50,24 @@ struct EquipmentPicker: View {
                         .zIndex(1)
                         FilterChip(title: L("Can wear"), on: wearableOnly) { wearableOnly.toggle() }
                     }
-                    .padding(.horizontal, 14)
+                    .padding(.horizontal, HUDStyle.windowInset)
                     .padding(.top, 12)
                     .zIndex(1)
                 }
                 ScrollView {
                     if worn == nil && spares.isEmpty {
                         EmptyNote(L("Nothing for this slot yet. Shops, smiths and monsters have more."), size: 11)
-                            .padding(14)
+                            .padding(HUDStyle.windowInset)
                     } else {
                         let found = findable ? shown : spares
                         LazyVGrid(columns: [GridItem(.adaptive(minimum: 88), spacing: 8)], spacing: 8) {
                             if let worn { tile(worn, wearing: true) }
                             ForEach(found) { tile($0, wearing: false) }
                         }
-                        .padding(14)
+                        .padding(HUDStyle.windowInset)
                         if found.isEmpty && !spares.isEmpty {
                             EmptyNote(L("Nothing in your bag matches."), size: 11)
-                                .padding(.horizontal, 14)
+                                .padding(.horizontal, HUDStyle.windowInset)
                                 .padding(.bottom, 14)
                         }
                     }

@@ -156,8 +156,10 @@ extension MenuView {
                     case .settings: SettingsView(session: session, onQuitToTitle: onQuitToTitle, page: settingsPage)
                     }
                 }
-                .padding(14)
+                .padding(HUDStyle.windowInset)
                 .frame(maxWidth: .infinity, alignment: .leading)
+                // A page of its own for each tab, sliding in from its tab's side.
+                .pageSlide(shownPage)
             }
             // Debug `bottom`: opens at the end of the page (screenshots of the skills).
             .defaultScrollAnchor(DebugLaunch.opensMenuAtBottom ? .bottom : nil)
@@ -167,6 +169,17 @@ extension MenuView {
 
     private func close() {
         onClose()
+    }
+
+    /// The window's page now, for its slide between tabs (`pageSlide`).
+    private var shownPage: String {
+        switch window {
+        case .character: "\(characterPage)"
+        case .companions: "\(companionsPage)"
+        case .quests: "\(questsPage)"
+        case .settings: "\(settingsPage)"
+        case .friends, .bag: "\(window)"
+        }
     }
 
     /// Opens an explanation (`HowItWorks`) in a small window over the menu.
@@ -290,13 +303,6 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
     /// The pages in order.
     private var pages: [Page] { Array(Page.allCases) }
 
-    /// Whether the tab you're on is the first and stands at the window's side (not scrolled away):
-    /// its edge then runs straight down the page's side (the user, 2026-11-16, after a tabs design:
-    /// "the first active tab that merges into the main panel"), and the page has no corner there.
-    private var firstOnAtSide: Bool {
-        page == pages.first && (frames[page]?.minX ?? 0) > -1
-    }
-
     var body: some View {
         ScrollViewReader { reader in
             // Faded at an edge with more tabs past it, a chevron there (`SideScroll`): tapped, the
@@ -321,8 +327,11 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
                             }
                     }
                 }
-                // Flush with the window's side, so the first tab's edge, when it's the one you're on,
-                // is the page's own; the last clear of the close button's room over the corner.
+                // In from the window's side past the page's rounded corner (`PageCorner`), so the first
+                // tab, when it's the one you're on, flares out of the corner's round straight into its
+                // own (the user, 2026-11-16: "the first tab should be more inserted so it also shows the
+                // rounded corner in the bottom left"); the last clear of the close button's room.
+                .padding(.leading, PageFillet.side + FlaredTab.flare)
                 .padding(.trailing, OrangeCloseButton.room + 8)
                 .padding(.top, TabEdge.inset)
             }
@@ -334,23 +343,36 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
             }
         }
         // The bar, transparent under the tabs; and the page's light edge along its foot, from the
-        // page's top corners (`PageCorner`) to the flares of the tab you're on, which covers it.
-        .background(alignment: .bottom) {
+        // page's top corners (`PageCorner`) to the feet of the tab you're on's flares, and on from
+        // them: not under them, where it doubled their line (playtesting 2026-11-16).
+        .background {
             WindowBar(foot: false)
-                .overlay(alignment: .bottom) {
-                    HUDStyle.frameLight.opacity(0.8).frame(height: 1.5)
-                        .padding(.leading, firstOnAtSide ? 0 : PageFillet.side)
-                        .padding(.trailing, PageFillet.side)
+                .overlay {
+                    Canvas { context, size in
+                        let y = size.height - 0.75
+                        let from = PageFillet.side, to = size.width - PageFillet.side
+                        var runs = [(from, to)]
+                        if let tab = frames[page] {
+                            runs = [(from, min(to, tab.minX - FlaredTab.flare)), (max(from, tab.maxX + FlaredTab.flare), to)]
+                        }
+                        var path = Path()
+                        for (start, end) in runs where end > start {
+                            path.move(to: CGPoint(x: start, y: y))
+                            path.addLine(to: CGPoint(x: end, y: y))
+                        }
+                        context.stroke(path, with: .color(HUDStyle.frameLight.opacity(0.8)), lineWidth: 1.5)
+                    }
+                    .allowsHitTesting(false)
                 }
         }
         // The page's top corners, rounded where its edge meets the bar's foot (the user, 2026-11-16:
         // "If another tab than the first is selected, there should be a corner radius like this"),
-        // hanging under the bar; none on the left while the first tab stands there.
+        // hanging under the bar, their line level with the bar's (`PageFillet.lift`).
         .overlay(alignment: .bottomLeading) {
-            if !firstOnAtSide { PageCorner(edge: .leading).offset(y: PageFillet.radius) }
+            PageCorner(edge: .leading).offset(y: PageFillet.radius - PageFillet.lift)
         }
         .overlay(alignment: .bottomTrailing) {
-            PageCorner(edge: .trailing).offset(y: PageFillet.radius)
+            PageCorner(edge: .trailing).offset(y: PageFillet.radius - PageFillet.lift)
         }
         // Over the page under it, where its corners hang.
         .zIndex(1)
@@ -371,12 +393,23 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
 
     private func tab(_ item: Page) -> some View {
         let selected = item == page
-        let first = item == pages.first
         let marked = !selected && waiting(item)
         return Button {
             guard !selected else { return }
             SoundEffects.shared.play(.tap, volume: 0.7)
-            page = item
+            // The pages slide across toward the side its tab is on (`pageSlide`): the way set first,
+            // so the page you leave has it too, then the page a moment later.
+            let order = pages
+            let forward = (order.firstIndex(of: item) ?? 0) > (order.firstIndex(of: page) ?? 0)
+            let turn = $page
+            if PageSlide.shared.forward == forward {
+                withAnimation(PageSlide.animation) { turn.wrappedValue = item }
+            } else {
+                PageSlide.shared.forward = forward
+                DispatchQueue.main.async {
+                    withAnimation(PageSlide.animation) { turn.wrappedValue = item }
+                }
+            }
         } label: {
             Text(title(item))
                 .font(HUDStyle.font(13))
@@ -396,16 +429,15 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
                     // The others have none: their names on the bar (the user, 2026-11-16: "the inactive
                     // tabs shouldn't have a tab fill, just transparent").
                     if selected {
-                        FlaredTab(leading: !first).fill(HUDStyle.glassTop)
-                            .padding(.leading, first ? 0 : -FlaredTab.flare).padding(.trailing, -FlaredTab.flare)
+                        FlaredTab().fill(HUDStyle.glassTop).padding(.horizontal, -FlaredTab.flare)
                     }
                 }
                 .overlay {
                     // A light edge up its sides, over its top and out along its flares; none along its
                     // foot, where it's the page's. One you're not on edged faintly in the bar's dark.
                     if selected {
-                        FlaredTab(open: true, leading: !first).stroke(HUDStyle.frameLight.opacity(0.8), lineWidth: 1.5)
-                            .padding(.leading, first ? 0 : -FlaredTab.flare).padding(.trailing, -FlaredTab.flare)
+                        FlaredTab(open: true).stroke(HUDStyle.frameLight.opacity(0.8), lineWidth: 1.5)
+                            .padding(.horizontal, -FlaredTab.flare)
                     }
                 }
                 .overlay(alignment: .topTrailing) {
@@ -447,7 +479,8 @@ private nonisolated struct FlaredTab: Shape {
         let flare = Self.flare, radius = TabEdge.radius
         // Inside by half the stroke's width at the top and sides, so a stroke stays on it.
         let left = rect.minX + (leading ? flare : 0) + 0.75, right = rect.maxX - flare - 0.75, top = rect.minY + 0.75
-        let bottom = rect.maxY
+        // Its line ends on the middle of the page's line along the bar's foot (1.5 wide), not under it.
+        let bottom = open ? rect.maxY - 0.75 : rect.maxY
         var path = Path()
         // Round arcs, as the window's corners are, the flares as the top's turned the other way.
         if leading {
@@ -462,6 +495,28 @@ private nonisolated struct FlaredTab: Shape {
         path.addLine(to: CGPoint(x: rect.maxX, y: bottom))
         if !open { path.closeSubpath() }
         return path
+    }
+}
+
+/// Which way a window's pages slide as you switch tabs (the user, 2026-11-16: "When switching the
+/// modal window tabs, can we have them move horizontally?", then "the tabs should move across
+/// horizontally, instead of this fade"): `PageTabs` sets `forward` as you tap a tab right of the one
+/// you're on, and `pageSlide` pushes the pages across that way. Observed, so a window's pages take
+/// the new way before the page changes (`PageTabs` changes it a moment later): the page leaving goes
+/// out the side the way says, not the way the last switch went.
+@MainActor @Observable final class PageSlide {
+    static let shared = PageSlide()
+    var forward = true
+    static let animation = Animation.easeInOut(duration: 0.3)
+}
+
+extension View {
+    /// What a window shows on its page `page` (`PageTabs`): a page of its own, pushed across as you
+    /// switch tabs, the new one in from the side of the tab you tapped and the old one out the other
+    /// (`PageSlide.forward`).
+    @MainActor func pageSlide(_ page: some Hashable) -> some View {
+        id(page)
+            .transition(.push(from: PageSlide.shared.forward ? .trailing : .leading))
     }
 }
 
@@ -485,11 +540,17 @@ private struct PageCorner: View {
 /// `PageCorner`'s shape, top down: the bar's colour outside the round, or with `open` the round
 /// alone, for the line. Drawn for the left, mirrored for the right.
 private nonisolated struct PageFillet: Shape {
-    /// The corner's round (the user's, 2026-11-16: 16) and how far in the window's frame reaches.
+    /// The corner's round (the user's, 2026-11-16: 16), and how far in from the window's edge its line
+    /// comes down: onto the frame's light bevel (`HUDStyle.frame`, 3 wide), so it runs on into the
+    /// window's light border (the user, 2026-11-16: "the line all the way on the left should go into
+    /// the light border line of the modal"; ending inside the frame, the frame's dark inner line cut it off).
     static let radius: CGFloat = 16
-    static let frameWidth: CGFloat = 4
+    static let frameWidth: CGFloat = 1.5
     /// How far in from the window's side the page's edge along the bar's foot begins.
     static var side: CGFloat { frameWidth + radius }
+    /// How far up into the bar it reaches: its line's width, so its line lies on the bar's own along
+    /// its foot (hung just under it, it showed a step below the line, playtesting 2026-11-16).
+    static let lift: CGFloat = 1.5
 
     let edge: HorizontalEdge
     let open: Bool
@@ -1566,7 +1627,7 @@ struct FriendMapWindow: View {
                             .frame(maxWidth: .infinity)
                     }
                 }
-                .padding(14)
+                .padding(HUDStyle.windowInset)
             }
             .frame(maxWidth: 380)
             .gameWindow()
@@ -1907,14 +1968,12 @@ private struct BagTab: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            // How full the bag is shows by the window's title (`MenuView.tabs`); here, the coins you
-            // carry (no slot of their own since 2026-10-30: "We don't need to deposit coins in bank
-            // anymore"), when it's full, what's up for trade (the coin on its slot), and what the last
-            // thing used did.
+            // How full the bag is shows by the window's title (`MenuView.tabs`); here, when it's full,
+            // what's up for trade (the coin on its slot), and what the last thing used did. Not the coins
+            // you carry: the HUD shows them (the user, 2026-11-16: "We don't need to show the money here").
             let full = session.bagSlotsFree == 0
-            HStack {
-                GoldPill(amount: session.data.gold, size: 13)
-                if full || !session.forTrade.isEmpty || note != nil {
+            if full || !session.forTrade.isEmpty || note != nil {
+                HStack {
                     if full {
                         Text(L("Full: bank something")).foregroundStyle(HUDStyle.orange)
                     }
@@ -1922,11 +1981,11 @@ private struct BagTab: View {
                         Label(L("{count} for trade", ["count": session.forTrade.count]), icon: .coins)
                             .foregroundStyle(HUDStyle.gold)
                     }
+                    Spacer()
+                    if let note { Text(note).foregroundStyle(HUDStyle.green) }
                 }
-                Spacer()
-                if let note { Text(note).foregroundStyle(HUDStyle.green) }
+                .font(HUDStyle.font(12))
             }
-            .font(HUDStyle.font(12))
 
             if hatching, let pet = hatched {
                 HatchView(session: session, pet: pet) { hatching = false }

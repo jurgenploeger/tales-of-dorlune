@@ -59,7 +59,10 @@ struct IntroView: View {
 
     var body: some View {
         GeometryReader { proxy in
-            let size = CGSize(width: min(proxy.size.width, 720), height: min(proxy.size.height, wide ? proxy.size.height : 680))
+            // As big as What's new and Settings, which open over the same sky: the screen less 16 all round,
+            // no wider than 720 (the user, 2026-11-16: "Make sure that these modals are always the same
+            // height"; capped at 680 tall, the story pages were shorter than the others).
+            let size = CGSize(width: min(proxy.size.width, 720), height: proxy.size.height)
             Group {
                 if wide {
                     HStack(spacing: 0) {

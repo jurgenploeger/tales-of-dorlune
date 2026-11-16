@@ -80,7 +80,7 @@ def base_row(mask):
     if lift < 3 or lift > band - 3: return foot
     return foot - lift
 
-def cast(mask, foot_x, foot_y, foot_row, s, H, W):
+def cast(mask, foot_x, foot_y, foot_row, s, H, W, walls=False):
     """The silhouette `mask` (its foot on `foot_row`) laid on the ground from (foot_x, foot_y), away
     from the sun `s`. Each run of a row is taken as a slice of a round crown: its shade an ellipse as
     wide as the run and half as tall (a round on the ground, as `WorldMap.project` draws it), moved
@@ -107,7 +107,9 @@ def cast(mask, foot_x, foot_y, foot_row, s, H, W):
             half = (run[-1] - run[0] + 1) / 2
             cx = foot_x - w / 2 + (run[0] + run[-1]) / 2 + ox * hs
             cy = foot_y + dy * hs
-            d.ellipse((cx - half, cy - half / 2, cx + half, cy + half / 2), fill=int(255 * depth))
+            # A building's walls lay thin bands, not rounds (CanopyPainter.Caster.walls, wallDepth).
+            deep = min(2, half / 2) if walls else half / 2
+            d.ellipse((cx - half, cy - deep, cx + half, cy + deep), fill=int(255 * depth))
     return np.asarray(im).astype(float) / 255
 
 def canopy(hour, flecks_phase=(0.0, 0.0)):
@@ -121,7 +123,8 @@ def canopy(hour, flecks_phase=(0.0, 0.0)):
             rows = np.where(mask.any(1))[0]
             if not len(rows): continue
             foot = base_row(mask)
-            depth = np.maximum(depth, cast(mask, x0 + w / 2, y0 + foot, foot, s, H, W))
+            walls = pp.assets.get(art, {}).get('kind') == 'building'
+            depth = np.maximum(depth, cast(mask, x0 + w / 2, y0 + foot, foot, s, H, W, walls))
         if not depth.any(): return
         core = depth > 0
         n = value_noise(H, W, 9, 11, flecks_phase)

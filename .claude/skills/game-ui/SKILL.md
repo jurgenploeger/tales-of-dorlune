@@ -37,6 +37,8 @@ glass (`HUDStyle.glass`) in the same glossy light-blue bevel (`HUDStyle.frame`),
 continuous corners (at 10 "everything felt too sharp", 2026-10-26), a soft shadow under it. Build every
 modal with `.gameWindow()`, never a background of its own.
 
+**Every window's content stands `HUDStyle.windowInset` (16) in from its sides**, in line with its title (the user, 2026-11-16): never 12, 14, 20 or 22 of its own; cards inside it keep their own smaller padding.
+
 **Every window has a title bar** (`WindowBar`, since 0.9.74; the user, 2026-11-10: "We can have the title
 bars with the tabs"): the frame's own bevel along the window's top, out to the frame, as Figma's `UI /
 Window` has it. On it, the window's name in dark ink (`HUDStyle.barText`, white in Dark Mode; white on the light bar was
@@ -86,9 +88,10 @@ the one you're on is the window's own glass (`HUDStyle.glassTop`) with its name 
 under it, its foot flaring out into the bar in corners rounded the other way (`FlaredTab`, the user,
 2026-11-11); their top corners concentric with the window's (`TabEdge.radius`: the window's 22 less the
 tabs' 10-point inset from its top and side; the user, 2026-11-11); the others have no fill, only their names in the bar's ink on the bar, a faint upright line between two of them (the user,
-2026-11-16). The strip starts flush with the window's side: the first tab, when you're on it, runs straight down
-into the page's side; otherwise the page's top corners are rounded 16 points where its light edge along the bar's
-foot meets the window's side (`PageCorner`; the user, 2026-11-16, with a picture of the corner). The bar shows
+2026-11-16). The page's top corners are rounded 16 points where its light edge along the bar's foot meets the
+window's side (`PageCorner`; the user, 2026-11-16, with a picture of the corner), its line on the bar's own; the
+strip starts past the left one, so the first tab, when you're on it, flares straight out of the corner's round
+(the user, 2026-11-16: flush with the side, the corner didn't show). The bar shows
 through the strip, and through the fade beside a chevron. One with something waiting wears the gold dot. Each of Character, Companions, Friends, Bag, Quests and Settings is
 a window of its own, opened from the HUD menu (2026-10-25: "The menu items hero etc should become their
 own modal window"), so a window's tabs are its own pages, never the other windows.
@@ -157,7 +160,8 @@ name is the window's title.
 modals have the same opening animation yet"): it pops in from a touch smaller (`popIn()`, after
 `gameWindow()` and its `windowCloseButton`), and is presented with `.transition(.opacity)`, its backdrop
 only fading. Never a scale or slide of its own at the call site: with `popIn` it doubled up. A HUD
-button or pad (not a window) may grow from where it's anchored. What a tap opens
+button or pad (not a window) may grow from where it's anchored. Switching tabs, the pages push across: the new one in from the side its tab is on, the old one out the other (`pageSlide`,
+`PageSlide`; the user, 2026-11-16). What a tap opens
 under a row unrolls (`.transition(.reveal)` with `Reveal.animation`). Respect Reduce Motion.
 
 **Dark Mode.** Light surfaces (frames, plates, buttons, portraits) are `Color.adaptive(light:dark:)`; the

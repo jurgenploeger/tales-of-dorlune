@@ -64,6 +64,8 @@ final class LandNode: SKNode {
 final class WorldScene: SKScene {
     var onEncounter: (@MainActor (MapDef.Encounters, SKTexture?) -> Void)?
     var onTalk: (@MainActor (NPCDef) -> Void)?
+    /// A boss you've walked up to that won't let you go (`GameSession.corners`).
+    var onCornered: (@MainActor (NPCDef) -> Void)?
     var onTravel: (@MainActor (MapDef.Exit) -> Void)?
     var onFirstFrame: (@MainActor () -> Void)?
     /// A duel with another adventurer is starting (you challenged them, or they picked a fight).
@@ -321,8 +323,8 @@ final class WorldScene: SKScene {
         crowd = Crowd(def: def, map: map, world: world, heroLevel: session.data.hero.level,
                       friends: session.friendsIn(def.id), market: market,
                       locals: planner.plan.locals, hides: { [see, map] in see.hides($0, on: map) })
-        crowd?.onChat = { [weak session] speaker, text, kind in
-            session?.postChat(text, from: speaker, kind: kind)
+        crowd?.onChat = { [weak session] speaker, text, kind, art, adventurer in
+            session?.postChat(text, from: speaker, kind: kind, art: art, adventurer: adventurer)
         }
         crowd?.dares = { [weak session] rival in session?.dares(rival) ?? false }
         crowd?.onChallenge = { [weak self] rival in
@@ -2562,7 +2564,12 @@ final class WorldScene: SKScene {
             if sunTimer <= 0 {
                 sunTimer = 0.5
                 follow(sky.sun)
+                // The minimap's light (`GameSession.skyTint`).
+                if session.skyTint != sky.tint { session.skyTint = sky.tint }
             }
+        } else if session.skyTint != .day {
+            // No sky (a cave): its minimap as drawn.
+            session.skyTint = .day
         }
         updateCamera(dt)
         showChunks()
@@ -2789,6 +2796,10 @@ final class WorldScene: SKScene {
             }
         }
         if session.nearbyNPC != nearest?.id { session.nearbyNPC = nearest?.id }
+        if !isInputLocked, let id = nearest?.id, let boss = npcs.first(where: { $0.def.id == id })?.def, session.corners(boss) {
+            session.bossesFacedHere.insert(boss.id)
+            onCornered?(boss)
+        }
         for (index, sign) in signs.enumerated() {
             let near = sign.base.distance(to: player.position) <= signRange
             sign.hint.isHidden = !near || sign.label.alpha > 0.5

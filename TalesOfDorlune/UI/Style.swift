@@ -114,6 +114,10 @@ enum HUDStyle {
 
     /// Every window's corners: round and smooth (continuous, as iOS draws its own), 22 points
     /// (playtesting 2026-10-26: at 10 everything felt too sharp).
+    /// How far in from a window's sides its content stands: as far as its title (`WindowTitle`), so
+    /// everything lines up under it (the user, 2026-11-16: "Make sure that the paddings inside every
+    /// modal window in the game is the same. It should align with the title in the header").
+    static let windowInset: CGFloat = 16
     static let windowRadius: CGFloat = 22
     /// A window's shape.
     static var windowShape: RoundedRectangle { RoundedRectangle(cornerRadius: windowRadius, style: .continuous) }

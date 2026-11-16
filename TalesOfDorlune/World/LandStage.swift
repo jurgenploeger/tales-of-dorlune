@@ -145,9 +145,9 @@ final class LandStage {
                           market: market, locals: plan.locals, hides: { [see, map] in see.hides($0, on: map) })
         // Its locals stand where the plan put them: off to a spot nothing hides, if something does.
         crowd.moveOutOfHiding()
-        crowd.onChat = { [weak self, weak session] speaker, text, kind in
+        crowd.onChat = { [weak self, weak session] speaker, text, kind, art, adventurer in
             guard self?.isHere == true else { return }
-            session?.postChat(text, from: speaker, kind: kind)
+            session?.postChat(text, from: speaker, kind: kind, art: art, adventurer: adventurer)
         }
         crowd.dares = { [weak session] rival in session?.dares(rival) ?? false }
         self.crowd = crowd
@@ -374,7 +374,8 @@ final class LandStage {
         // Everything set down on flat ground casts shade, merged and cast away from the sun (on a hill
         // or the sunk shore, a prop with `shadow` keeps its round one: `plant`).
         if map.hillIndex(at: cell) == nil, !map.isSunken(cell) {
-            canopy.add(node, picture: art.picture(of: sprite.texture))
+            // A building's walls cast it, not a crown's rounds (`CanopyPainter.Caster.walls`).
+            canopy.add(node, picture: art.picture(of: sprite.texture), walls: wind.flatMap { art.asset($0)?.kind } == "building")
         }
         return node
     }

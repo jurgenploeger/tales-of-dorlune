@@ -33,7 +33,7 @@ struct BankView: View {
                         }
                         BankPanel(session: session, reply: $reply, onPick: { picked = $0 })
                     }
-                    .padding(14)
+                    .padding(HUDStyle.windowInset)
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)

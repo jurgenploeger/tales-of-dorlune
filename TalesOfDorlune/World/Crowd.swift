@@ -22,6 +22,8 @@ final class Crowd {
         let lines: [String]
         /// Adventurers have a level, class and companion like you.
         let profile: Adventurer?
+        /// Their picture, for their face by what they say in the chat.
+        var art: String?
         /// A market trader: stays at their spot, and calls out their deals.
         let trades: Bool
         var wait: TimeInterval
@@ -103,7 +105,9 @@ final class Crowd {
     }
 
     /// Everything anyone says goes to the map's chat log.
-    var onChat: ((String, String, GameSession.ChatLine.Kind) -> Void)?
+    /// Someone says something: their name, the line, what kind of speaker, their picture, and who
+    /// they are if they're an adventurer.
+    var onChat: ((String, String, GameSession.ChatLine.Kind, String?, Adventurer?) -> Void)?
     /// A red-named adventurer in a danger zone walks up and picks a fight.
     var onChallenge: ((Adventurer) -> Void)?
     /// Whether a troublemaker dares take you on (`GameSession.dares`): the weaker ones leave you be.
@@ -219,9 +223,12 @@ final class Crowd {
             guard let home = spot(near: map.center, radius: spread) else { continue }
             let name = villagerNames.popLast() ?? L("Villager")
             let race = Content.shared.races.randomElement()?.id ?? "human"
-            let walker = Self.person(name, art: GameSession.registerPerson(race: race, look: Self.randomLook(race: race)), color: .white)
+            let art = GameSession.registerPerson(race: race, look: Self.randomLook(race: race))
+            let walker = Self.person(name, art: art, color: .white)
             walker.walkSpeed = .random(in: 50...66)
-            add(Member(name: name, kind: .villager, walker: walker, pet: nil, home: home, roam: 5, lines: villagerLines), to: world)
+            let member = Member(name: name, kind: .villager, walker: walker, pet: nil, home: home, roam: 5, lines: villagerLines)
+            member.art = art
+            add(member, to: world)
         }
         for local in locals { addLocal(local, on: def.id, world: world) }
     }
@@ -234,7 +241,8 @@ final class Crowd {
     static var mingleOverride: ClosedRange<TimeInterval>?
 
     private func addAdventurer(_ profile: Adventurer, home: GridPoint, roam: Int, world: SKNode, trades: Bool = false) {
-        let walker = Self.person(profile.name, art: GameSession.registerAdventurer(profile),
+        let art = GameSession.registerAdventurer(profile)
+        let walker = Self.person(profile.name, art: art,
                                  color: profile.hostile ? Self.hostileColor : Self.adventurerColor, badge: .bot)
         // A weapon in hand for their class and level, like yours (`GameSession.weapon(for:)`).
         walker.setWeapon(GameSession.weapon(for: profile))
@@ -244,8 +252,10 @@ final class Crowd {
         let lines = Content.shared.crowd.adventurerLines
             .filter { profile.level > 1 || !$0.contains("{level}") }
             .map { $0.replacingOccurrences(of: "{level}", with: String(profile.level)) }
-        add(Member(name: profile.name, kind: .adventurer, walker: walker, pet: Self.pet(profile.petSpecies), home: home, roam: roam,
-                   lines: lines, profile: profile, trades: trades), to: world)
+        let member = Member(name: profile.name, kind: .adventurer, walker: walker, pet: Self.pet(profile.petSpecies), home: home,
+                            roam: roam, lines: lines, profile: profile, trades: trades)
+        member.art = art
+        add(member, to: world)
     }
 
     /// A monster trotting along behind someone (a monsters.json species), if they have one.
@@ -281,8 +291,10 @@ final class Crowd {
         walker.setWeapon(def.hold.flatMap(content.item))
         walker.walkSpeed = .random(in: 44...56, using: &draw)
         let facing = def.face.flatMap(Direction.init(rawValue:))
-        add(Member(name: def.name, kind: .villager, walker: walker, pet: Self.pet(def.pet), home: local.home, roam: def.roam ?? 0,
-                   lines: def.lines, story: true, route: local.walk, facing: facing), to: world)
+        let member = Member(name: def.name, kind: .villager, walker: walker, pet: Self.pet(def.pet), home: local.home,
+                            roam: def.roam ?? 0, lines: def.lines, story: true, route: local.walk, facing: facing)
+        member.art = art
+        add(member, to: world)
         if let facing { walker.face(facing) }
     }
 
@@ -796,7 +808,7 @@ final class Crowd {
         member.noticed = true
         member.walker.face(Direction(point - member.walker.position, current: member.walker.facing))
         member.walker.say(line, for: 600)
-        onChat?(member.name, line, member.kind)
+        onChat?(member.name, line, member.kind, member.art, member.profile)
     }
     #endif
 
@@ -906,6 +918,6 @@ final class Crowd {
         // Long enough to read: a longer line stays up longer. None over the map on its own (`nohud`, the
         // App Store slides and covers): a passing remark ended up under a caption or the logo.
         if bubble && !DebugLaunch.hidesHUD { member.walker.say(line, for: max(3.5, Double(line.count) / 14)) }
-        onChat?(member.name, line, member.kind)
+        onChat?(member.name, line, member.kind, member.art, member.profile)
     }
 }

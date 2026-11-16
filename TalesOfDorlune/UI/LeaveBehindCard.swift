@@ -74,7 +74,7 @@ struct LeaveBehindCard: View {
                 Text(L("Tap a companion")).font(HUDStyle.font(11)).foregroundStyle(HUDStyle.dim)
             }
         }
-        .padding(20)
+        .padding(HUDStyle.windowInset)
         .frame(maxWidth: 460)
         .gameWindow()
         // Closing it keeps your party as it is: the newcomer goes back to the wild.

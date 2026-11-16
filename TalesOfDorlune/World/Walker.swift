@@ -103,13 +103,27 @@ final class Walker: SKNode {
                  + texture2D(u_texture, v_tex_coord + vec2(0.0, d.y)).a + texture2D(u_texture, v_tex_coord - vec2(0.0, d.y)).a) * 0.16;
             float t = clamp((v_tex_coord.y - a_frame.x) / a_frame.y, 0.0, 1.0);
             a *= (1.0 - 0.75 * t) * v_color_mix.a;
-            // Multiplied over the ground (`blendMode`): the ground times 1 - a * (1 - shade).
-            gl_FragColor = vec4(u_shade.rgb * a, a);
+            // Multiplied over the ground (`blendMode`): the ground times 1 - a * (1 - shade), white
+            // (nothing) where it's clear. SpriteKit's multiply takes no account of alpha: a clear
+            // pixel came out black, the figure's whole square black on the ground (0.9.96).
+            gl_FragColor = vec4(vec3(1.0) - a * (vec3(1.0) - u_shade.rgb), 1.0);
         }
         """)
         shader.uniforms = [SKUniform(name: "u_shade", vectorFloat4: SIMD4<Float>(Float(CanopyPainter.lean.r), Float(CanopyPainter.lean.g),
                                                                          Float(CanopyPainter.lean.b), 1))]
         shader.attributes = [SKAttribute(name: "a_frame", type: .vectorFloat4)]
+        return shader
+    }()
+    /// The soft round at its feet, multiplied over the ground as the figure is: white where it's clear.
+    private static let round: SKShader = {
+        let shader = SKShader(source: """
+        void main() {
+            float a = texture2D(u_texture, v_tex_coord).a * v_color_mix.a;
+            gl_FragColor = vec4(vec3(1.0) - a * (vec3(1.0) - u_shade.rgb), 1.0);
+        }
+        """)
+        shader.uniforms = [SKUniform(name: "u_shade", vectorFloat4: SIMD4<Float>(Float(CanopyPainter.lean.r), Float(CanopyPainter.lean.g),
+                                                                         Float(CanopyPainter.lean.b), 1))]
         return shader
     }()
     /// Where the light over the map comes from now, for anyone set down after it last moved
@@ -203,6 +217,7 @@ final class Walker: SKNode {
         shadow.color = Self.figureColor
         shadow.colorBlendFactor = 1
         shadow.blendMode = .multiply
+        shadow.shader = Self.round
         shadow.zPosition = -1
         addChild(shadow)
         figure.size = cycle.size

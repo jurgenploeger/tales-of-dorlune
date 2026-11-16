@@ -23,7 +23,7 @@ struct TravelPicker: View {
                         // One group (`GroupedRows`), as every list is (the user, 2026-11-11).
                         GroupedRows(travel.places(in: session), id: \.self) { place in row(place) }
                     }
-                    .padding(14)
+                    .padding(HUDStyle.windowInset)
                 }
                 .scrollBounceBehavior(.basedOnSize)
             }

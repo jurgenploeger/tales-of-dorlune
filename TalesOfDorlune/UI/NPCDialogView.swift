@@ -9,6 +9,9 @@ struct NPCDialogView: View {
     var onFight: (NPCDef) -> Void = { _ in }
     /// Bankers: open the bank's window.
     var onBank: (NPCDef) -> Void = { _ in }
+    /// A boss that's cornered you (`GameCoordinator.corner`): its story over what it says, and no way
+    /// out but the fight.
+    var cornered = false
     @State private var reply: String?
     /// A quest just handed in: its reward card covers the dialog until you continue.
     @State private var finished: FinishedQuest?
@@ -39,12 +42,14 @@ struct NPCDialogView: View {
             let portrait = min(proxy.size.width * 0.48, proxy.size.height * 0.55, 280)
             let bottom = max(16, proxy.safeAreaInsets.bottom)
             ZStack(alignment: .bottomTrailing) {
-                Color.black.opacity(0.35)
-                    .onTapGesture(perform: onClose)
+                Color.black.opacity(cornered ? 0.5 : 0.35)
+                    .onTapGesture { if !cornered { onClose() } }
 
                 // Out of sight under the wares' window, so what they said doesn't show through it.
                 Group {
-                    bubble(maxHeight: proxy.size.height * 0.5, speakerRoom: portrait * 0.5)
+                    // How high they stand over the window's foot: their top, less a little of the
+                    // picture's own clear margin, is where what's beside them has to give them room.
+                    bubble(maxHeight: proxy.size.height * 0.5, speakerRoom: portrait * 0.5, speakerRise: portrait * 0.84 - bottom + 6)
                         .padding(.horizontal, 12)
                         .padding(.bottom, bottom)
 
@@ -91,8 +96,13 @@ struct NPCDialogView: View {
 
                 if dyeing {
                     DyeWindow(session: session) { said in
-                        if let said { reply = said }
-                        dyeing = false
+                        // Closed, the conversation under it closes too; done dyeing, they say so in it.
+                        if let said {
+                            reply = said
+                            dyeing = false
+                        } else {
+                            onClose()
+                        }
                     }
                     .frame(width: proxy.size.width, height: proxy.size.height)
                     .transition(.opacity)
@@ -111,36 +121,37 @@ struct NPCDialogView: View {
 
     /// The window they talk from: what they say and its buttons lined up under their name, all
     /// clear of the `speakerRoom` the character stands in at the right.
-    private func bubble(maxHeight: CGFloat, speakerRoom: CGFloat) -> some View {
+    private func bubble(maxHeight: CGFloat, speakerRoom: CGFloat, speakerRise: CGFloat) -> some View {
         let window = RoundedRectangle(cornerRadius: HUDStyle.windowRadius)
-        return VStack(alignment: .leading, spacing: 0) {
-            WindowTitle(npc.name, trailingRoom: speakerRoom)
-            VStack(alignment: .leading, spacing: 10) {
-                if npc.role == .quests {
-                    QuestConversation(session: session, giver: npc, reply: $reply, finished: $finished,
-                                      room: min(260, max(120, maxHeight - 110)))
-                } else {
-                    talk(maxHeight: maxHeight)
-                }
-            }
-            // In line with the name (`WindowTitle`'s 16 points in).
-            .padding(.leading, 16)
-            .padding(.trailing, 12 + speakerRoom)
-            .padding(.top, 10)
-            .padding(.bottom, 14)
-        }
+        // What they say runs the window's width, and only what would stand beside the character gives
+        // them room (the user, 2026-11-16: "The content in these conversations should wrap around the
+        // character. So if there is space, it can go to the edge on the right"): `AroundSpeaker`.
         // As tall as the character standing by it (their room is half their height): a line or two left
         // it a strip under their feet. 0.9.74's floor (1.2 times their room) and 0.9.75's (1.6) were
         // about as tall as the window already was, so it didn't grow (0.9.76, the user's call). Held on
         // its side, no more than most of the room it has.
-        .frame(minHeight: min(speakerRoom * 2, maxHeight * 0.8), alignment: .top)
+        return AroundSpeaker(room: speakerRoom, rise: speakerRise, minHeight: min(speakerRoom * 2, maxHeight * 0.8)) {
+            WindowTitle(npc.name, trailingRoom: speakerRoom)
+            if npc.role == .quests {
+                QuestConversation(session: session, giver: npc, reply: $reply, finished: $finished,
+                                  room: min(260, max(120, maxHeight - 110)))
+            } else {
+                talk(maxHeight: maxHeight)
+            }
+        }
         .frame(maxWidth: .infinity, alignment: .leading)
         .foregroundStyle(HUDStyle.cream)
         .clipShape(window)
         // The frame all the way round, like every window's (`gameWindow`), the close button over its corner.
         .background(window.fill(HUDStyle.glass).shadow(color: .black.opacity(0.35), radius: 3, x: 0, y: 2))
         .overlay(HUDStyle.frame(window))
-        .windowCloseButton(onClose)
+        // The close button over its corner; none while a boss has you cornered.
+        .overlay(alignment: .topTrailing) {
+            if !cornered {
+                OrangeCloseButton(action: onClose)
+                    .offset(x: OrangeCloseButton.overhang, y: -OrangeCloseButton.overhang)
+            }
+        }
         // Opens as every window does.
         .popIn()
     }
@@ -148,54 +159,84 @@ struct NPCDialogView: View {
     /// What everyone but a quest giver says, and what they do for you under it.
     @ViewBuilder
     private func talk(maxHeight: CGFloat) -> some View {
+        // A boss that's cornered you: its story first, told, then what it says to you.
+        if cornered, let lore = npc.monster.flatMap(session.content.monster)?.lore {
+            Text(lore)
+                .font(HUDStyle.font(12))
+                .foregroundStyle(HUDStyle.dim)
+                .fixedSize(horizontal: false, vertical: true)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
         Text(reply ?? npc.greeting)
             .font(HUDStyle.font(13))
             .fixedSize(horizontal: false, vertical: true)
             .frame(maxWidth: .infinity, alignment: .leading)
-        ScrollView {
-            VStack(alignment: .leading, spacing: 0) {
+        // No scroll inside the speech window: it grows to hold what they say (the user, 2026-11-16:
+        // "There is a vertical scroll inside the conversation block, that should never be there").
+        VStack(alignment: .leading, spacing: 0) {
                 // A favour you're carrying to them, whoever they are.
                 ErrandPanel(session: session, npcID: npc.id, reply: $reply)
                 Group {
                     switch npc.role {
-                    case .healer: HealerPanel(session: session, reply: $reply)
+                    case .healer: EmptyView()   // its button stands at the window's foot (`actions`)
                     case .quests: EmptyView()   // QuestConversation
                     case .guild: GuildPanel(session: session, classID: npc.classId ?? "", reply: $reply)
                     case .chest, .stairs, .waystone: EmptyView()   // straight from the map (GameCoordinator.open)
-                    case .boss: BossPanel(session: session, boss: npc, onFight: onFight)
-                    case .shop, .smith, .weaver, .barber:
-                        // What they have opens in a window of its own, with room to see it all
-                        // (playtesting 2026-10-30: never squeezed in with what they say).
-                        Button {
-                            browsing = true
-                        } label: {
-                            Label(waresTitle, icon: waresIcon)
-                        }
-                        .buttonStyle(PixelButtonStyle(tint: HUDStyle.gold))
-                    case .bank:
-                        // The bank itself opens in a window of its own (`BankView`), with room to see it all.
-                        Button {
-                            onBank(npc)
-                        } label: {
-                            Label(L("Open the bank"), icon: .coins)
-                        }
-                        .buttonStyle(PixelButtonStyle(tint: HUDStyle.gold))
+                    case .boss: BossPanel(session: session, boss: npc, onFight: onFight, fights: false)
+                    // Their buttons stand at the window's foot (`actions`).
+                    case .shop, .smith, .weaver, .barber, .bank: EmptyView()
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        actions
+    }
+
+    /// What you can do with them, along the speech window's foot whatever's said over it (the user,
+    /// 2026-11-16: "Conversation CTA buttons should always be aligned bottom of the chat window"):
+    /// rest at a healer's, look through a shop's wares (in a window of its own, with room to see it all: playtesting
+    /// 2026-10-30), dye gear at the weaver's or a barber's, open the bank, take on a boss.
+    @ViewBuilder
+    private var actions: some View {
+        let shop = hasWares
+        let dyes = npc.role == .weaver || npc.role == .barber
+        if shop || dyes || npc.role == .bank || npc.role == .boss || npc.role == .healer {
+            WrapRows(spacing: 8) {
+                if npc.role == .healer {
+                    HealerPanel(session: session, reply: $reply)
+                }
+                if shop {
+                    Button {
+                        browsing = true
+                    } label: {
+                        Label(waresTitle, icon: waresIcon)
+                    }
+                    .buttonStyle(PixelButtonStyle(tint: HUDStyle.gold))
+                }
                 // The weaver and every barber dye armour too (Dyes.swift), a piece at a time.
-                if npc.role == .weaver || npc.role == .barber {
+                if dyes {
                     Button {
                         dyeing = true
                     } label: {
                         Label(L("Dye gear"), icon: .palette)
                     }
                     .buttonStyle(PixelButtonStyle(tint: HUDStyle.gold))
-                    .padding(.top, 10)
+                }
+                if npc.role == .bank {
+                    // The bank itself opens in a window of its own (`BankView`), with room to see it all.
+                    Button {
+                        onBank(npc)
+                    } label: {
+                        Label(L("Open the bank"), icon: .coins)
+                    }
+                    .buttonStyle(PixelButtonStyle(tint: HUDStyle.gold))
+                }
+                if npc.role == .boss {
+                    BossPanel.fight(session: session, boss: npc, onFight: onFight)
                 }
             }
+            .speechFooter()
         }
-        .frame(maxHeight: min(260, max(120, maxHeight - 110)))
     }
 
     /// Whether they have wares to look through in a window (`waresWindow`).
@@ -224,9 +265,11 @@ struct NPCDialogView: View {
     private func waresWindow(safeArea: EdgeInsets) -> some View {
         ZStack {
             Color.black.opacity(0.5)
-                .onTapGesture { browsing = false }
+                // Closing the wares closes the conversation under it too (the user, 2026-11-16: "When
+                // closing a modal like this, it should also close the conversation box with the character").
+                .onTapGesture(perform: onClose)
             VStack(spacing: 0) {
-                WindowTitle(npc.name, onClose: { browsing = false })
+                WindowTitle(npc.name, onClose: onClose)
                 ScrollView {
                     VStack(alignment: .leading, spacing: 12) {
                         if let reply {
@@ -624,13 +667,17 @@ private struct QuestConversation: View {
         let lines = told.isEmpty ? [giver.greeting] : told
         let index = min(page, lines.count - 1)
         let last = index == lines.count - 1
-        VStack(alignment: .leading, spacing: 10) {
+        // Its parts one by one in the speech window (`AroundSpeaker`), so only those beside the
+        // speaker give them room.
+        Group {
             // A favour you're carrying to them: what they say to it comes first.
             ErrandPanel(session: session, npcID: giver.id, reply: $reply)
             Text(lines[index])
                 .font(HUDStyle.font(13))
                 .fixedSize(horizontal: false, vertical: true)
-                .frame(maxWidth: .infinity, minHeight: 50, alignment: .topLeading)
+                // No floor under a line or two: 50 points left a gap over the quest under it (the user,
+                // 2026-11-16: "the spacing between the text and that quest card is too big").
+                .frame(maxWidth: .infinity, alignment: .topLeading)
                 .contentShape(Rectangle())
                 // A tap on what they're saying reads on, as Next does.
                 .onTapGesture { if !last { turn(from: index, by: 1, of: lines.count) } }
@@ -638,12 +685,22 @@ private struct QuestConversation: View {
                 .accessibilityHint(last ? "" : L("Next"))
                 .id(index)
                 .transition(.opacity)
+            // No scroll: the window grows to hold it.
             if last, let quest {
-                ScrollView { offer(quest) }
-                    .frame(maxHeight: room)
+                offer(quest)
             }
-            if lines.count > 1 {
-                navigation(index: index, count: lines.count)
+            // What you can do, and Back, the page dots and Next, along the window's foot whatever's
+            // said over them (the user, 2026-11-16: "Conversation CTA buttons should always be aligned
+            // bottom of the chat window. Same with the back and next buttons and carousel indicators").
+            let action = last ? quest.flatMap(questAction) : nil
+            if action != nil || lines.count > 1 {
+                VStack(alignment: .leading, spacing: 8) {
+                    if let action { action }
+                    if lines.count > 1 {
+                        navigation(index: index, count: lines.count)
+                    }
+                }
+                .speechFooter()
             }
         }
         .onChange(of: reply) { _, _ in page = 0 }
@@ -669,38 +726,42 @@ private struct QuestConversation: View {
     private func offer(_ quest: QuestDef) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             QuestRow(session: session, quest: quest, showsDescription: false)
-            switch session.status(of: quest) {
-            case .available:
-                if let question = quest.question {
-                    // Cards to pick from, one a row so a long answer reads whole; Confirm, bottom
-                    // right where Next was, takes the one picked (playtesting 2026-10-26: buttons
-                    // that answered at a tap, three a row, broke their words).
-                    VStack(spacing: 6) {
-                        ForEach(question.answers, id: \.text) { answer in
-                            AnswerCard(text: answer.text, picked: picked == answer.text) {
-                                withAnimation(.easeOut(duration: 0.15)) { picked = answer.text }
-                            }
+            if session.status(of: quest) == .available, let question = quest.question {
+                // Cards to pick from, one a row so a long answer reads whole; Confirm, bottom
+                // right where Next was, takes the one picked (playtesting 2026-10-26: buttons
+                // that answered at a tap, three a row, broke their words).
+                VStack(spacing: 6) {
+                    ForEach(question.answers, id: \.text) { answer in
+                        AnswerCard(text: answer.text, picked: picked == answer.text) {
+                            withAnimation(.easeOut(duration: 0.15)) { picked = answer.text }
                         }
                     }
-                } else {
-                    Button(L("Accept")) {
+                }
+            }
+        }
+    }
+
+    /// What you can do about `quest` (take it on, hand it in, hear it again), at the window's foot; none
+    /// for a question, answered by Confirm by the page dots.
+    private func questAction(_ quest: QuestDef) -> AnyView? {
+        switch session.status(of: quest) {
+        case .available where quest.question == nil:
+            return AnyView(Button(L("Accept")) {
                         session.acceptQuest(quest.id)
                         begin(L("Wonderful! I knew I could count on you."))
                     }
-                    .buttonStyle(PixelButtonStyle(tint: HUDStyle.gold, compact: true))
-                }
-            case .ready:
-                Button(L("Complete quest")) { handIn(quest) }
-                    .buttonStyle(PixelButtonStyle(tint: HUDStyle.green, compact: true))
-            case .active:
-                Button(L("Tell me again")) {
+                    .buttonStyle(PixelButtonStyle(tint: HUDStyle.gold, compact: true)))
+        case .ready:
+            return AnyView(Button(L("Complete quest")) { handIn(quest) }
+                .buttonStyle(PixelButtonStyle(tint: HUDStyle.green, compact: true)))
+        case .active:
+            return AnyView(Button(L("Tell me again")) {
                     retelling = true
                     withAnimation(.easeOut(duration: 0.15)) { page = 0 }
                 }
-                .buttonStyle(PixelButtonStyle(compact: true))
-            default:
-                EmptyView()
-            }
+                .buttonStyle(PixelButtonStyle(compact: true)))
+        default:
+            return nil
         }
     }
 
@@ -950,11 +1011,128 @@ extension GuildPanel {
     }
 }
 
+/// The speech window's own layout (`NPCDialogView.bubble`): its title along the top, then what's said
+/// and done, one part under another 10 apart, each the window's width (16 in from its left, 12 from
+/// its right) unless it would reach down beside the character standing in its bottom-right corner,
+/// `rise` up from its foot and `room` in from its right: then it's narrowed to clear them. At least
+/// `minHeight` tall, the character's height. Worked out in one go from the parts' sizes: which parts
+/// stand beside the character is judged against the window as tall as the parts at full width make
+/// it; a narrowed part that makes it taller still clears them, only a little sooner than it needed to.
+/// Marks a part of the speech window to stand along its foot (`AroundSpeaker`).
+private nonisolated struct SpeechFooter: LayoutValueKey {
+    static let defaultValue = false
+}
+
+extension View {
+    /// Stands along the speech window's foot, whatever's said over it (`AroundSpeaker`): its buttons,
+    /// Back, the page dots and Next.
+    fileprivate func speechFooter() -> some View {
+        layoutValue(key: SpeechFooter.self, value: true)
+    }
+}
+
+private struct AroundSpeaker: Layout {
+    let room: CGFloat
+    let rise: CGFloat
+    let minHeight: CGFloat
+    private let spacing: CGFloat = 10
+    /// Round what's said and done: as far from the window's foot as from its left (the user, 2026-11-16:
+    /// "Make sure the button has the same margin left and bottom of the block").
+    private let inset = EdgeInsets(top: 10, leading: 16, bottom: 16, trailing: 12)
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        let width = proposal.width ?? 360
+        return CGSize(width: width, height: arrange(width: width, subviews).height)
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        let frames = arrange(width: bounds.width, subviews).frames
+        for (index, frame) in frames.enumerated() where index < subviews.count {
+            subviews[index].place(at: CGPoint(x: bounds.minX + frame.minX, y: bounds.minY + frame.minY),
+                                  proposal: ProposedViewSize(width: frame.width, height: frame.height))
+        }
+    }
+
+    /// Where each part goes (the first, the title, across the top; those marked `speechFooter` along
+    /// the foot, beside the character, as narrow as that leaves them), and how tall the window is.
+    private func arrange(width: CGFloat, _ subviews: Subviews) -> (frames: [CGRect], height: CGFloat) {
+        guard let title = subviews.first else { return ([], minHeight) }
+        let titleHeight = title.sizeThatFits(ProposedViewSize(width: width, height: nil)).height
+        var frames = [CGRect](repeating: .zero, count: subviews.count)
+        frames[0] = CGRect(x: 0, y: 0, width: width, height: titleHeight)
+        let wide = max(1, width - inset.leading - inset.trailing)
+        let narrow = max(80, wide - room)
+        let indices = Array(subviews.indices.dropFirst())
+        let body = indices.filter { !subviews[$0][SpeechFooter.self] }
+        let foot = indices.filter { subviews[$0][SpeechFooter.self] }
+        // The foot's parts, beside the character.
+        var footHeight: CGFloat = 0
+        var footSizes: [Int: CGSize] = [:]
+        for index in foot {
+            let size = subviews[index].sizeThatFits(ProposedViewSize(width: narrow, height: nil))
+            footSizes[index] = size
+            guard size.height > 0 else { continue }
+            footHeight += (footHeight > 0 ? spacing : 0) + size.height
+        }
+        let footRoom = footHeight > 0 ? footHeight + spacing : 0
+        // As tall as the parts make it at full width: where the character's room begins.
+        var natural: CGFloat = 0
+        for index in body {
+            let height = subviews[index].sizeThatFits(ProposedViewSize(width: wide, height: nil)).height
+            guard height > 0 else { continue }
+            natural += (natural > 0 ? spacing : 0) + height
+        }
+        let top = titleHeight + inset.top
+        let beside = max(minHeight, top + natural + footRoom + inset.bottom) - rise
+        var y = top
+        var any = false
+        for index in body {
+            var size = subviews[index].sizeThatFits(ProposedViewSize(width: wide, height: nil))
+            var across = wide
+            if size.height > 0, y + (any ? spacing : 0) + size.height > beside {
+                size = subviews[index].sizeThatFits(ProposedViewSize(width: narrow, height: nil))
+                across = narrow
+            }
+            guard size.height > 0 else {
+                frames[index] = CGRect(x: inset.leading, y: y, width: across, height: 0)
+                continue
+            }
+            if any { y += spacing }
+            frames[index] = CGRect(x: inset.leading, y: y, width: across, height: size.height)
+            y += size.height
+            any = true
+        }
+        let height = max(minHeight, y + footRoom + inset.bottom)
+        // The foot's parts from the bottom up, in their order.
+        var bottom = height - inset.bottom - footHeight
+        for index in foot {
+            let size = footSizes[index] ?? .zero
+            frames[index] = CGRect(x: inset.leading, y: bottom, width: narrow, height: size.height)
+            if size.height > 0 { bottom += size.height + spacing }
+        }
+        return (frames, height)
+    }
+}
+
 /// A boss: how strong it is, and a button to take it on.
 private struct BossPanel: View {
     let session: GameSession
     let boss: NPCDef
     let onFight: (NPCDef) -> Void
+    /// Whether its Fight! is here: in the speech window it stands at the window's foot instead
+    /// (`NPCDialogView.actions`, `fight`).
+    var fights = true
+
+    /// Fight! (Rematch! once beaten), or a note that it's beaten for now.
+    @ViewBuilder
+    static func fight(session: GameSession, boss: NPCDef, onFight: @escaping (NPCDef) -> Void) -> some View {
+        if session.isBeatenHere(boss) {
+            EmptyNote(L("Beaten! It'll be back next time you come by."))
+        } else {
+            Button { onFight(boss) } label: { Label(session.isDefeated(boss) ? L("Rematch!") : L("Fight!"), icon: .sword) }
+                .buttonStyle(PixelButtonStyle(tint: Color(red: 1, green: 0.55, blue: 0.5)))
+        }
+    }
 
     var body: some View {
         let species = boss.monster.flatMap(session.content.monster)
@@ -974,12 +1152,7 @@ private struct BossPanel: View {
                 let names = drops.compactMap { session.content.item($0.item)?.name }
                 Text(L("Rare drops: {items}", ["items": names.joined(separator: ", ")])).font(HUDStyle.font(11)).foregroundStyle(HUDStyle.dim)
             }
-            if session.isBeatenHere(boss) {
-                EmptyNote(L("Beaten! It'll be back next time you come by."))
-            } else {
-                Button { onFight(boss) } label: { Label(session.isDefeated(boss) ? L("Rematch!") : L("Fight!"), icon: .sword) }
-                    .buttonStyle(PixelButtonStyle(tint: Color(red: 1, green: 0.55, blue: 0.5)))
-            }
+            if fights { Self.fight(session: session, boss: boss, onFight: onFight) }
         }
     }
 }
