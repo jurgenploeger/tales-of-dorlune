@@ -28,7 +28,13 @@ struct ChatView: View {
                         }
                         .padding(HUDStyle.windowInset)
                     }
-                    .defaultScrollAnchor(.bottom)
+                    // Short, it starts at the top (anchored to the bottom, a few lines sat at the foot
+                    // under empty glass); opened, and as lines come in, it shows the latest (the user,
+                    // 2026-11-16: "The chat should start from the top here. Then when new messages come
+                    // in, it stays pinned at the latest").
+                    .onAppear {
+                        if let last = session.chat.last?.id { reader.scrollTo(last, anchor: .bottom) }
+                    }
                     .onChange(of: session.chat.last?.id) {
                         guard let last = session.chat.last?.id else { return }
                         withAnimation(.easeOut(duration: 0.2)) { reader.scrollTo(last, anchor: .bottom) }
