@@ -1,7 +1,7 @@
 import SwiftUI
 
 /// Tapping the minimap: the world map, with where you are. In a cave, the cave's own map instead,
-/// as far as you've explored it, with a way to the world map, and its other levels a tap away.
+/// as far as you've explored it, and its other levels a tap away.
 struct MapOverlay: View {
     let session: GameSession
     /// The cave you're in, if you're in one (`GameCoordinator.caveMap`).
@@ -15,7 +15,6 @@ struct MapOverlay: View {
     /// (`GameCoordinator.mapRows`).
     var rows = 0
     let onClose: () -> Void
-    @State private var showsWorld = false
     /// The level shown when it isn't the one you're on, and its map once it's drawn.
     @State private var level: MapDef?
     @State private var levelPicture: CaveMap.Picture?
@@ -31,21 +30,17 @@ struct MapOverlay: View {
             // where you are under it, its map below. The world's: the atlas under the bar out to the
             // frame, the time and where you are over its top (playtesting 2026-10-26).
             VStack(spacing: 0) {
-                if let cave, !showsWorld {
+                if let cave {
+                    // The pills over the map's top left, the compass at its top right, as on the world
+                    // map, and the levels' chips along its foot where the world map's controls are; no
+                    // way to the world map (the user, 2026-11-16: "The two pills should be in exactly
+                    // the same location as the main map. Remove the button at the bottom").
                     WindowTitle(level?.name ?? session.mapName, onClose: onClose)
-                        .padding(.bottom, 8)
-                    if level == nil {
-                        pills
-                            .padding(.horizontal, 16)
-                            .padding(.bottom, 8)
-                    }
-                    if levels.count > 1 { levelChips }
-                    if level != nil {
-                        CaveMap(picture: levelPicture, cell: nil, marks: []) { showsWorld = true }
-                    } else {
-                        CaveMap(picture: cave, cell: session.mapCell, marks: session.minimapMarks) {
-                            showsWorld = true
-                        }
+                    CaveMap(picture: level != nil ? levelPicture : Optional(cave), cell: level != nil ? nil : session.mapCell,
+                            marks: level != nil ? [] : session.minimapMarks) {
+                        if level == nil { pills }
+                    } foot: {
+                        if levels.count > 1 { levelChips }
                     }
                 } else {
                     WindowTitle(L("World map"), onClose: onClose)
@@ -89,7 +84,6 @@ struct MapOverlay: View {
                 }
             }
             .padding(.horizontal, 16)
-            .padding(.bottom, 8)
         }
     }
 
@@ -111,7 +105,8 @@ struct MapOverlay: View {
 /// A cave's map (playtesting 2026-10-17: "When I'm in a cave, it should show the map of that"): its
 /// minimap's picture, dark where you haven't been, turned and squashed as the minimap is, so it
 /// lies the way the cave does on screen, fitted to the window. Where you are and who does what (the
-/// minimap's icons); a button to the world map under it.
+/// minimap's icons); over its top left what `topLeading` shows and along its foot `foot`, placed as
+/// the world map's (`WorldAtlas`).
 struct CaveMap: View {
     /// The cave's minimap, one pixel a cell (`WorldScene.minimapImage`), rows north at the top.
     struct Picture {
@@ -125,51 +120,70 @@ struct CaveMap: View {
     /// Where you are: nil on another level.
     let cell: GridPoint?
     let marks: [GameSession.MinimapMark]
-    let showWorld: () -> Void
+    private let topLeading: AnyView
+    private let foot: AnyView
+
+    init(picture: Picture?, cell: GridPoint?, marks: [GameSession.MinimapMark],
+         @ViewBuilder topLeading: () -> some View, @ViewBuilder foot: () -> some View) {
+        self.picture = picture
+        self.cell = cell
+        self.marks = marks
+        self.topLeading = AnyView(topLeading())
+        self.foot = AnyView(foot())
+    }
 
     var body: some View {
-        VStack(spacing: 10) {
-            GeometryReader { space in
-                if let picture {
-                    // Turned 45 degrees and squashed by half, the cave spans (columns + rows) / sqrt(2)
-                    // cells across and half that down: as big as fits.
-                    let half = CGFloat(0.5).squareRoot()
-                    let span = CGFloat(picture.columns + picture.rows) * half
-                    let zoom = max(1, min(space.size.width / span, space.size.height / (span * 0.5)))
-                    ZStack {
-                        Image(uiImage: picture.image)
-                            .interpolation(.none)
-                            .resizable()
-                            .frame(width: CGFloat(picture.columns) * zoom, height: CGFloat(picture.rows) * zoom)
-                            .rotationEffect(.degrees(-45))
-                            .scaleEffect(x: 1, y: 0.5)
-                        ForEach(Array(marks.enumerated()), id: \.offset) { _, mark in
-                            MinimapIcon(kind: mark.kind)
-                                .offset(offset(of: mark.cell, in: picture, zoom: zoom))
-                        }
-                        // Where you are, pulsing as on the world map (`HereMarker`).
-                        if let cell {
-                            HereMarker()
-                                .offset(offset(of: cell, in: picture, zoom: zoom))
-                        }
+        GeometryReader { space in
+            if let picture {
+                // Turned 45 degrees and squashed by half, the cave spans (columns + rows) / sqrt(2)
+                // cells across and half that down: as big as fits.
+                let half = CGFloat(0.5).squareRoot()
+                let span = CGFloat(picture.columns + picture.rows) * half
+                let zoom = max(1, min(space.size.width / span, space.size.height / (span * 0.5)))
+                ZStack {
+                    Image(uiImage: picture.image)
+                        .interpolation(.none)
+                        .resizable()
+                        .frame(width: CGFloat(picture.columns) * zoom, height: CGFloat(picture.rows) * zoom)
+                        .rotationEffect(.degrees(-45))
+                        .scaleEffect(x: 1, y: 0.5)
+                    ForEach(Array(marks.enumerated()), id: \.offset) { _, mark in
+                        MinimapIcon(kind: mark.kind)
+                            .offset(offset(of: mark.cell, in: picture, zoom: zoom))
                     }
-                    .frame(width: space.size.width, height: space.size.height)
-                } else {
-                    ProgressView()
-                        .tint(HUDStyle.cream)
-                        .frame(width: space.size.width, height: space.size.height)
+                    // Where you are, pulsing as on the world map (`HereMarker`).
+                    if let cell {
+                        HereMarker()
+                            .offset(offset(of: cell, in: picture, zoom: zoom))
+                    }
                 }
+                .frame(width: space.size.width, height: space.size.height)
+            } else {
+                ProgressView()
+                    .tint(HUDStyle.cream)
+                    .frame(width: space.size.width, height: space.size.height)
             }
-            .frame(minHeight: 260)
-            .background(Color(red: 0.03, green: 0.05, blue: 0.1))
-            .clipped()
-            // Its compass as the cave lies, turned like the game's view (`MapCompass.isometric`).
-            .overlay(alignment: .topTrailing) {
-                MapCompass(size: 60, isometric: true).padding(10).allowsHitTesting(false).accessibilityHidden(true)
-            }
-            Button(L("World map"), action: showWorld)
-                .buttonStyle(PixelButtonStyle(compact: true))
-                .padding(.bottom, 10)
+        }
+        .frame(minHeight: 260, maxHeight: .infinity)
+        .background(Color(red: 0.03, green: 0.05, blue: 0.1))
+        .clipped()
+        // Where the world map has them (`WorldAtlas.body`): the pills 16 in from the top left, clear
+        // of the compass, and the compass, as big, 10 down and 16 in from the right.
+        .overlay(alignment: .top) {
+            topLeading
+                .allowsHitTesting(false)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.leading, 16)
+                .padding(.trailing, 76)
+                .padding(.top, 16)
+        }
+        // Its compass as the cave lies, turned like the game's view (`MapCompass.isometric`).
+        .overlay(alignment: .topTrailing) {
+            MapCompass(size: 68, isometric: true).padding(.top, 10).padding(.trailing, 16)
+                .allowsHitTesting(false).accessibilityHidden(true)
+        }
+        .overlay(alignment: .bottom) {
+            foot.padding(.bottom, 16)
         }
     }
 
