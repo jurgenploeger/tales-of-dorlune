@@ -301,7 +301,7 @@ struct ChatLineView: View {
     }
 
     private var rule: some View {
-        color.opacity(0.45).frame(minWidth: 12, maxWidth: .infinity).frame(height: 1)
+        color.opacity(0.22).frame(minWidth: 12, maxWidth: .infinity).frame(height: 1)
     }
 
     /// Their face or name: a button to their profile, for an adventurer.
