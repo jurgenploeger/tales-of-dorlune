@@ -1794,11 +1794,11 @@ nonisolated final class WorldMap: @unchecked Sendable {
         // The town's own buildings first, so the shops below keep clear of them.
         placeOwnBuildings()
 
-        // Shops along the streets: a 3×2 plot just off a street, clear of everything else.
+        // Shops along the streets: a 3×2 plot a cell back from a street, clear of everything else.
         let frontage = streetFrontage(&rng)
         var used: Set<GridPoint> = []
         for art in town.lots ?? [] {
-            guard let anchor = frontage.first(where: { plotFits($0, used: used) }) else { continue }
+            guard let anchor = lotFrontage(frontage).first(where: { plotFits($0, used: used) }) else { continue }
             for dc in -2...2 {
                 for dr in -1...2 { used.insert(GridPoint(col: anchor.col + dc, row: anchor.row + dr)) }
             }
@@ -1869,12 +1869,24 @@ nonisolated final class WorldMap: @unchecked Sendable {
     private func placeOwnBuildings() {
         let npcs = Set((def.npcs ?? []).filter { $0.summit == nil }.map { offset($0.x, $0.y) })
         let fence = Set(fenceCells)
-        func fits(_ anchor: GridPoint, _ footprint: (columns: ClosedRange<Int>, rows: ClosedRange<Int>)) -> Bool {
+        func fits(_ anchor: GridPoint, _ footprint: (columns: ClosedRange<Int>, rows: ClosedRange<Int>), clear: Bool) -> Bool {
             for dc in footprint.columns {
                 for dr in footprint.rows {
                     let cell = GridPoint(col: anchor.col + dc, row: anchor.row + dr)
                     guard contains(cell), [.ground, .accent].contains(ground[cell.row][cell.col]),
                           !occupied.contains(cell), !fence.contains(cell), !npcs.contains(cell) else { return false }
+                }
+            }
+            // Its picture reaches out a little past its plot, in front and at either side: no street
+            // there (the user, 2026-11-16: "A building shouldn't be on the roads"). It looks a little
+            // farther for a plot that clears them, and only where none does stands by a street as before.
+            guard clear else { return true }
+            let columns = (footprint.columns.lowerBound - 1)...(footprint.columns.upperBound + 1)
+            for dc in columns {
+                for dr in (footprint.rows.lowerBound - 1)...footprint.rows.upperBound
+                where dr == footprint.rows.lowerBound - 1 || dc == columns.lowerBound || dc == columns.upperBound {
+                    let cell = GridPoint(col: anchor.col + dc, row: anchor.row + dr)
+                    if contains(cell), ground[cell.row][cell.col] == .path { return false }
                 }
             }
             return true
@@ -1883,13 +1895,15 @@ nonisolated final class WorldMap: @unchecked Sendable {
             let wanted = offset(building.x, building.y)
             let footprint = building.footprint
             var plot: GridPoint?
-            search: for radius in 0...8 {
-                for dr in -radius...radius {
-                    for dc in -radius...radius where max(abs(dc), abs(dr)) == radius {
-                        let candidate = GridPoint(col: wanted.col + dc, row: wanted.row + dr)
-                        if fits(candidate, footprint) {
-                            plot = candidate
-                            break search
+            search: for clear in [true, false] {
+                for radius in 0...8 {
+                    for dr in -radius...radius {
+                        for dc in -radius...radius where max(abs(dc), abs(dr)) == radius {
+                            let candidate = GridPoint(col: wanted.col + dc, row: wanted.row + dr)
+                            if fits(candidate, footprint, clear: clear) {
+                                plot = candidate
+                                break search
+                            }
                         }
                     }
                 }
@@ -1917,11 +1931,35 @@ nonisolated final class WorldMap: @unchecked Sendable {
             .map(\.0)
     }
 
+    /// Where a shop's plot can stand: a cell back from the streets (`streetFrontage`, in its order),
+    /// none of the street itself in the cell round it. On the street's edge, a shop's picture,
+    /// wider than its plot at its foot, stood out over the road (the user, 2026-11-16: "A building
+    /// shouldn't be on the roads").
+    private func lotFrontage(_ frontage: [GridPoint]) -> [GridPoint] {
+        var seen: Set<GridPoint> = []
+        var found: [GridPoint] = []
+        for cell in frontage {
+            for (dc, dr) in [(0, 1), (1, 0), (-1, 0), (0, -1)] {
+                let back = GridPoint(col: cell.col + dc, row: cell.row + dr)
+                guard contains(back), seen.insert(back).inserted, ground[back.row][back.col] == .ground else { continue }
+                found.append(back)
+            }
+        }
+        return found
+    }
+
     private func plotFits(_ anchor: GridPoint, used: Set<GridPoint>) -> Bool {
         for dc in -1...1 {
             for dr in 0...1 {
                 let cell = GridPoint(col: anchor.col + dc, row: anchor.row + dr)
                 guard contains(cell), ground[cell.row][cell.col] == .ground, !occupied.contains(cell), !used.contains(cell) else { return false }
+            }
+        }
+        // Its picture reaches out a little past its plot, in front and at either side: no street there.
+        for dc in -2...2 {
+            for dr in -1...2 where dr == -1 || abs(dc) == 2 {
+                let cell = GridPoint(col: anchor.col + dc, row: anchor.row + dr)
+                if contains(cell), ground[cell.row][cell.col] == .path { return false }
             }
         }
         return max(abs(anchor.col - center.col), abs(anchor.row - center.row)) > 3
