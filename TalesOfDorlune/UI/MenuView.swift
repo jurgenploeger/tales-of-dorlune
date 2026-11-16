@@ -295,6 +295,9 @@ extension MenuView {
 struct PageTabs<Page: Hashable & CaseIterable>: View {
     @Binding var page: Page
     let title: (Page) -> String
+    /// The pages to show, in order, where not all of them are (someone's profile with no companion);
+    /// all of them when nil.
+    var shown: [Page]? = nil
     var waiting: (Page) -> Bool = { _ in false }
     /// Where each tab is in the strip as it shows now, for the chevrons to find the first hidden.
     @State private var frames: [Page: CGRect] = [:]
@@ -304,7 +307,7 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
     @State private var shownWidth: CGFloat = 0
 
     /// The pages in order.
-    private var pages: [Page] { Array(Page.allCases) }
+    private var pages: [Page] { shown ?? Array(Page.allCases) }
 
     var body: some View {
         ScrollViewReader { reader in
@@ -400,7 +403,7 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
     /// The nearest tab hidden past `edge`, under its chevron or beyond it.
     private func hidden(toward edge: HorizontalEdge) -> Page? {
         let room = SideScroll<EmptyView>.chevronRoom
-        let tabs = Array(Page.allCases)
+        let tabs = pages
         switch edge {
         case .trailing: return tabs.first { (frames[$0]?.maxX ?? 0) > shownWidth - room }
         case .leading: return tabs.last { (frames[$0]?.minX ?? 0) < room }
@@ -436,7 +439,9 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
                 .foregroundStyle(selected ? HUDStyle.gold : HUDStyle.barText)
                 .shadow(color: selected ? .clear : HUDStyle.barTextShadow, radius: 0, x: 0, y: 1)
                 .padding(.horizontal, 13)
-                .padding(.vertical, selected ? 9 : 7)
+                // Every tab as tall, so a name stays where it is as the glass slides under it (the user,
+                // 2026-11-16: "The labels shouldn't move in y position from inactive and active").
+                .padding(.vertical, 9)
                 .background {
                     // The one you're on flares out at its foot, its bottom corners rounded the other way
                     // into the bar (the user, 2026-11-11: "The bottom of the tabs should have rounded
@@ -459,8 +464,6 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
                             .offset(x: 2, y: -2)
                     }
                 }
-                // One you're not on stops short of the bar's foot, its dark line showing under it.
-                .padding(.bottom, selected ? 0 : 3)
                 .contentShape(Rectangle())
         }
         .buttonStyle(.plain)

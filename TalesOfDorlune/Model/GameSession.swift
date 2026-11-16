@@ -2048,8 +2048,15 @@ final class GameSession {
     /// so a hard zone always gives you a way home.
     static func featherDropChance(boss: Bool, worth: Double) -> Double { boss ? 1 : min(0.2, 0.027 * worth) }
 
-    /// How likely a won fight is to leave a Waystone Shard: half a feather's chance, and a boss one time in two.
-    static func shardDropChance(boss: Bool, worth: Double) -> Double { boss ? 0.5 : featherDropChance(boss: false, worth: worth) / 2 }
+    /// How likely a won fight is to leave a Waystone Shard: half a feather's chance, and a boss one time in
+    /// two. Higher up, more (the user, 2026-11-16: "In higher level places it should have a bit of a
+    /// higher drop rate"): by the beaten monsters' `level`, half as much again at level 60, twice at
+    /// 120, two and a half times from 180, a fight's chance no more than 15%.
+    static func shardDropChance(boss: Bool, worth: Double, level: Int = 0) -> Double {
+        guard !boss else { return 0.5 }
+        let higher = 1 + min(1.5, Double(max(0, level)) / 120)
+        return min(0.15, featherDropChance(boss: false, worth: worth) / 2 * higher)
+    }
 
     /// How likely a beaten wild monster is to drop a piece of equipment: 6%, a point more for each
     /// level it has over you (up to 16%) and a point less for each below, down to 2% of what it's

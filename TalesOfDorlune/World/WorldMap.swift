@@ -1093,6 +1093,42 @@ nonisolated final class WorldMap: @unchecked Sendable {
     /// a chamber where they meet and around each character, more chambers joined on by short
     /// tunnels, and dead-end tunnels branching off. The edges are roughened, pockets that can't
     /// be reached are filled back in, and the map's edge stays solid except where roads leave.
+    /// How far apart along a cave's road its torches stand (`wallTorchSpots`), in cells.
+    static let torchGap = 8
+
+    /// Where a cave's road is lit by torches on its walls (the user, 2026-11-16: "In caves there
+    /// should be fires on the wall on the main road to light the place a bit"): along the road every
+    /// `torchGap` cells or so, the floor cell nearest it with a wall right behind it (north or east, up
+    /// the screen, so the torch stands against the rock), clear of everything set down; and which way
+    /// that wall is. None outside a cave.
+    func wallTorchSpots() -> [(cell: GridPoint, wall: GridPoint)] {
+        guard !rock.isEmpty else { return [] }
+        var spots: [(cell: GridPoint, wall: GridPoint)] = []
+        var lit: [GridPoint] = []
+        for row in 0..<rows {
+            for col in 0..<columns where ground[row][col] == .path {
+                let road = GridPoint(col: col, row: row)
+                guard lit.allSatisfy({ max(abs($0.col - col), abs($0.row - row)) >= Self.torchGap }) else { continue }
+                var best: (cell: GridPoint, wall: GridPoint, distance: Int)?
+                for dr in -4...4 {
+                    for dc in -4...4 {
+                        let cell = GridPoint(col: col + dc, row: row + dr)
+                        guard contains(cell), !rock.contains(cell), !blocked.contains(cell), !occupied.contains(cell),
+                              ground[cell.row][cell.col] != .path, ground[cell.row][cell.col] != .water else { continue }
+                        let walls = [GridPoint(col: cell.col, row: cell.row + 1), GridPoint(col: cell.col + 1, row: cell.row)]
+                        guard let wall = walls.first(where: { rock.contains($0) }) else { continue }
+                        let distance = abs(dc) + abs(dr)
+                        if distance < best?.distance ?? .max { best = (cell, wall, distance) }
+                    }
+                }
+                guard let best else { continue }
+                lit.append(road)
+                spots.append((best.cell, best.wall))
+            }
+        }
+        return spots
+    }
+
     private func digCave(_ cave: MapDef.Cave, _ rng: inout SeededRandom) {
         guard columns > 12, rows > 12 else { return }
         var open = Array(repeating: Array(repeating: false, count: columns), count: rows)

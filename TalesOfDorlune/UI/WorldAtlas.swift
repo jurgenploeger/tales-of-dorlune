@@ -24,7 +24,6 @@ struct WorldAtlas: View {
     @State private var filtering = false
     @State private var pulse = false
     /// The ring pulsing out from where you are, out and fading, then again.
-    @State private var ping = false
     /// Which badges show (playtesting 2026-10-30: "Add filters to the map so you can quickly see
     /// stuff"), kept for the next time the map opens.
     @AppStorage("mapFilter") private var filter: MapFilter = .all
@@ -202,10 +201,6 @@ struct WorldAtlas: View {
         .onAppear {
             overview.prepare()
             withAnimation(.easeInOut(duration: 0.8).repeatForever(autoreverses: true)) { pulse = true }
-            // Where you are pulses out (`Mark.Kind.here`), still under Reduce Motion.
-            if !reduceMotion {
-                withAnimation(.easeOut(duration: 1.6).repeatForever(autoreverses: false)) { ping = true }
-            }
         }
         .onDisappear { gliding?.cancel() }
         // Drawn again as each land's picture comes in.
@@ -810,21 +805,7 @@ struct WorldAtlas: View {
             // Where you are, as map apps mark it (the user, 2026-11-11: "Have a pulsing yellow circle
             // around your current location, just like any other map app"): a gold dot in a white rim on
             // a soft halo, a ring pulsing out from it and fading, over and over.
-            ZStack {
-                Circle()
-                    .stroke(HUDStyle.gold, lineWidth: 3)
-                    .frame(width: 18, height: 18)
-                    .scaleEffect(ping ? 3.2 : 1)
-                    .opacity(ping ? 0 : 0.9)
-                Circle().fill(HUDStyle.gold.opacity(0.3)).frame(width: 30, height: 30)
-                Circle()
-                    .fill(HUDStyle.gold)
-                    .frame(width: 14, height: 14)
-                    .overlay(Circle().strokeBorder(.white, lineWidth: 2.5))
-                    .shadow(color: .black.opacity(0.4), radius: 2, x: 0, y: 1)
-            }
-            .allowsHitTesting(false)
-            .accessibilityLabel(L("Where you are"))
+            HereMarker()
         case .badge:
             if mark.count > 1 {
                 // A group: how many, in the brand's midnight ringed in gold.
@@ -1092,6 +1073,37 @@ nonisolated enum MapFilter: String, CaseIterable {
         case .town: [.healer, .bank, .shop, .smith, .weaver, .barber, .guild].contains(kind)
         case .waystones: kind == .waystone
         case .treasure: kind == .chest || kind == .lost
+        }
+    }
+}
+
+/// Where you are on a map, as map apps mark it (the user, 2026-11-11: "Have a pulsing yellow circle
+/// around your current location, just like any other map app"): a gold dot in a white rim on a soft
+/// halo, a ring pulsing out from it and fading, over and over (not under Reduce Motion). The world
+/// map's and a cave's alike (the user, 2026-11-16).
+struct HereMarker: View {
+    @State private var ping = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    var body: some View {
+        ZStack {
+            Circle()
+                .stroke(HUDStyle.gold, lineWidth: 3)
+                .frame(width: 18, height: 18)
+                .scaleEffect(ping ? 3.2 : 1)
+                .opacity(ping ? 0 : 0.9)
+            Circle().fill(HUDStyle.gold.opacity(0.3)).frame(width: 30, height: 30)
+            Circle()
+                .fill(HUDStyle.gold)
+                .frame(width: 14, height: 14)
+                .overlay(Circle().strokeBorder(.white, lineWidth: 2.5))
+                .shadow(color: .black.opacity(0.4), radius: 2, x: 0, y: 1)
+        }
+        .allowsHitTesting(false)
+        .accessibilityLabel(L("Where you are"))
+        .onAppear {
+            guard !reduceMotion else { return }
+            withAnimation(.easeOut(duration: 1.6).repeatForever(autoreverses: false)) { ping = true }
         }
     }
 }

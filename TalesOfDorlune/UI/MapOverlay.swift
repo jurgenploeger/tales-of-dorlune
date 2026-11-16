@@ -147,11 +147,9 @@ struct CaveMap: View {
                             MinimapIcon(kind: mark.kind)
                                 .offset(offset(of: mark.cell, in: picture, zoom: zoom))
                         }
+                        // Where you are, pulsing as on the world map (`HereMarker`).
                         if let cell {
-                            Circle()
-                                .fill(HUDStyle.gold)
-                                .frame(width: 10, height: 10)
-                                .overlay(Circle().stroke(HUDStyle.ink, lineWidth: 1.5))
+                            HereMarker()
                                 .offset(offset(of: cell, in: picture, zoom: zoom))
                         }
                     }
