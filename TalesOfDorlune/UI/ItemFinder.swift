@@ -121,7 +121,7 @@ struct ItemSearchField: View {
 /// Sort: a button with the sort icon that opens the orders in a small panel under it, in the HUD
 /// menu's look (playtesting 2026-10-26: "The 'Bag order' sorting button should just say 'Sort' with
 /// the same leading icon. That button should open the same menu style as the hamburger menu, so no
-/// native iOS dropdown menu"): the one in use in gold with a tick; a tap on one, or anywhere else,
+/// native iOS dropdown menu"): the one in use white on a dark plate, a tick at its right; a tap on one, or anywhere else,
 /// closes it. Any list's orders (the Bag's and the bank's `ItemSort`, the Quests'), each named by
 /// `title`. The row it sits in needs `.zIndex(1)`, so the panel lies over what's under the row.
 struct SortMenu<Option: Hashable>: View {
@@ -197,19 +197,27 @@ struct SortMenu<Option: Hashable>: View {
             sort = option
             close()
         } label: {
+            // The one in use on a dark plate, white, its tick at the right end (the user, 2026-11-16:
+            // "The checkmark icon should always be on the right. Also the selected item should have a
+            // dark bg with white label + icon, instead of this yellow, because this is hard to read").
             HStack(spacing: 8) {
-                IconImage(.check, size: 14)
-                    .foregroundStyle(HUDStyle.gold)
-                    .opacity(selected ? 1 : 0)
                 Text(title(option))
                     .font(HUDStyle.font(13))
-                    .foregroundStyle(selected ? HUDStyle.gold : .white)
-                    .shadow(color: HUDStyle.frameDark, radius: 0, x: 1, y: 1)
+                    .foregroundStyle(.white)
+                    .shadow(color: selected ? .clear : HUDStyle.frameDark, radius: 0, x: 1, y: 1)
                     .lineLimit(1)
-                Spacer(minLength: 0)
+                Spacer(minLength: 12)
+                IconImage(.check, size: 14)
+                    .foregroundStyle(.white)
+                    .opacity(selected ? 1 : 0)
             }
-            .padding(.horizontal, 8)
-            .padding(.vertical, 5)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 6)
+            .background {
+                if selected {
+                    RoundedRectangle(cornerRadius: 9, style: .continuous).fill(HUDStyle.ink.opacity(0.85))
+                }
+            }
             .contentShape(Rectangle())
         }
         .buttonStyle(PressScaleStyle())
