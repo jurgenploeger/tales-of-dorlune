@@ -913,6 +913,8 @@
     "{item}  ·  Lv {level}": "{item}  ・  Lv {level}",
     "{name} throws a Seal Stone!": "{name}は封印石を投げた！",
     "{count} in all": "全部で{count}",
+    "Scroll left": "左へスクロール",
+    "Scroll right": "右へスクロール",
     "bot": "ボット",
     "Common||item": "コモン",
     "Uncommon||item": "アンコモン",

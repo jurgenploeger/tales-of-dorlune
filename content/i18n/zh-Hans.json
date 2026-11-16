@@ -913,6 +913,8 @@
     "{item}  ·  Lv {level}": "{item}  ·  Lv {level}",
     "{name} throws a Seal Stone!": "{name}扔出了封印石！",
     "{count} in all": "共{count}",
+    "Scroll left": "向左滚动",
+    "Scroll right": "向右滚动",
     "bot": "机器人",
     "Common||item": "普通",
     "Uncommon||item": "优秀",

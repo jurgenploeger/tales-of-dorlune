@@ -44,6 +44,8 @@ REACH = 0.55    # how long the shade is next to real geometry (real shadows read
 LONGEST = 2.2   # at most this many times the sprite's height (the low evening sun)
 FLECKS = 0.035   # the share of the shade where the leaves part
 LEAN = np.array([0.42, 0.5, 0.72])   # what full shade multiplies the ground by (CanopyShade.lean)
+BASE_BAND = 0.35   # a base of its own lies in the bottom this much of its height (CanopyPainter.baseBand)
+BASE_NARROWS = 0.85  # and what stands on it is narrower than this much of its width (CanopyPainter.baseNarrows)
 FLECK_CUT = 0.875  # the noise over which that share lies: fixed, so chunks meet (CanopyShade.fleckCut)
 
 def value_noise(H, W, cell, seed, phase=(0.0, 0.0)):
@@ -57,6 +59,26 @@ def value_noise(H, W, cell, seed, phase=(0.0, 0.0)):
     tx, ty = tx * tx * (3 - 2 * tx), ty * ty * (3 - 2 * ty)
     a, b, c, d = grid[iy, ix], grid[iy, ix + 1], grid[iy + 1, ix], grid[iy + 1, ix + 1]
     return (a + (b - a) * tx) + ((c + (d - c) * tx) - (a + (b - a) * tx)) * ty
+
+def base_row(mask):
+    """The row a thing stands up from (mirrors `CanopyPainter.base`): a sprite drawn on a base of its
+    own (a house's grass skirt, a plinth, roots) has its widest row near its foot, where that flat
+    base's middle is; the rows under it are ground in front of it, not something standing, and cast
+    none (as walls they laid shade out in front of the house, playtesting 2026-11-16). Its foot's row
+    where it has no such base."""
+    widths = mask.sum(1)
+    rows = np.where(widths > 0)[0]
+    if not len(rows): return 0
+    top, foot = rows[0], rows[-1]
+    band = int((foot - top + 1) * BASE_BAND)
+    if band < 8: return foot
+    low = widths[foot - band:foot + 1][::-1]          # from the foot up
+    widest = low.max()
+    if low[-1] >= BASE_NARROWS * widest: return foot  # still as wide above: no base of its own
+    near = np.where(low >= 0.97 * widest)[0]
+    lift = int(round(near.mean()))
+    if lift < 3 or lift > band - 3: return foot
+    return foot - lift
 
 def cast(mask, foot_x, foot_y, foot_row, s, H, W):
     """The silhouette `mask` (its foot on `foot_row`) laid on the ground from (foot_x, foot_y), away
@@ -98,7 +120,8 @@ def canopy(hour, flecks_phase=(0.0, 0.0)):
             mask = spr[..., 3] > 0.5
             rows = np.where(mask.any(1))[0]
             if not len(rows): continue
-            depth = np.maximum(depth, cast(mask, x0 + w / 2, y0 + rows[-1], rows[-1], s, H, W))
+            foot = base_row(mask)
+            depth = np.maximum(depth, cast(mask, x0 + w / 2, y0 + foot, foot, s, H, W))
         if not depth.any(): return
         core = depth > 0
         n = value_noise(H, W, 9, 11, flecks_phase)

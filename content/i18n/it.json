@@ -913,6 +913,8 @@
     "{item}  ·  Lv {level}": "{item}  ·  Liv {level}",
     "{name} throws a Seal Stone!": "{name} lancia una Pietra Sigillo!",
     "{count} in all": "{count} in tutto",
+    "Scroll left": "Scorri a sinistra",
+    "Scroll right": "Scorri a destra",
     "bot": "bot",
     "Common||item": "Comune",
     "Uncommon||item": "Non comune",

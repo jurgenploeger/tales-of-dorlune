@@ -77,12 +77,19 @@ vector glyphs below that.
 **Tabs** (`PageTabs`): a window's pages' names and nothing else, in full, never truncated; the row scrolls
 sideways when they don't fit (2026-10-26: "The tabs don't need icons and shouldn't get truncated. If it
 doesn't fit, there should just be a horizontal scroll"), faded out at an edge with more past it, the right
-at first and the left too once scrolled (`SideScroll`, 2026-11-11). Every sideways row in a window (filter
+at first and the left too once scrolled (`SideScroll`, 2026-11-11), with no scrollbar, and a small
+glossy chevron button standing in the fade on each side with tabs hidden past it, only there; tapped, the
+nearest hidden tab scrolls into the middle (`SideScroll(step:)`, `PageTabs.hidden`; the user, 2026-11-16, after a
+Tabs design: "chevron buttons appear only on the sides with hidden tabs"). Every sideways row in a window (filter
 chips, swatches, hairstyles) is a `SideScroll`, never a bare `ScrollView(.horizontal)`. They're folder tabs standing on the title bar:
 the one you're on is the window's own glass (`HUDStyle.glassTop`) with its name in gold, joined to the page
 under it, its foot flaring out into the bar in corners rounded the other way (`FlaredTab`, the user,
 2026-11-11); their top corners concentric with the window's (`TabEdge.radius`: the window's 22 less the
-tabs' 10-point inset from its top and side; the user, 2026-11-11); the others are sunk into the bar, their names in the bar's ink. One with something waiting wears the gold dot. Each of Character, Companions, Friends, Bag, Quests and Settings is
+tabs' 10-point inset from its top and side; the user, 2026-11-11); the others have no fill, only their names in the bar's ink on the bar, a faint upright line between two of them (the user,
+2026-11-16). The strip starts flush with the window's side: the first tab, when you're on it, runs straight down
+into the page's side; otherwise the page's top corners are rounded 16 points where its light edge along the bar's
+foot meets the window's side (`PageCorner`; the user, 2026-11-16, with a picture of the corner). The bar shows
+through the strip, and through the fade beside a chevron. One with something waiting wears the gold dot. Each of Character, Companions, Friends, Bag, Quests and Settings is
 a window of its own, opened from the HUD menu (2026-10-25: "The menu items hero etc should become their
 own modal window"), so a window's tabs are its own pages, never the other windows.
 

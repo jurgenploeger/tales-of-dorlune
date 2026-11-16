@@ -324,9 +324,12 @@ struct WindowTitle: View {
 /// dark line under it (Figma's `UI / Window`; the user, 2026-11-10: "We can have the title bars with
 /// the tabs"). A window's name sits on it in white (`WindowTitle`), or its pages' tabs (`PageTabs`).
 struct WindowBar: View {
+    /// The dark line along its foot; none under a window's tabs (`PageTabs`), which draw their own.
+    var foot = true
+
     var body: some View {
         HUDStyle.barGradient
-            .overlay(alignment: .bottom) { HUDStyle.frameDark.opacity(0.85).frame(height: 1) }
+            .overlay(alignment: .bottom) { if foot { HUDStyle.frameDark.opacity(0.85).frame(height: 1) } }
     }
 }
 
@@ -422,9 +425,18 @@ extension View {
 /// an edge where there's more past it: the right at first, the left too once it's scrolled (the user,
 /// 2026-11-11: "when the tabs don't fit horizontally, there should be a gradient mask. When you
 /// scroll horizontally, the gradient mask also shows on the left"). When it all fits, no fade.
+/// With `step`, a chevron button stands on each side with more past it, and only there (the user,
+/// 2026-11-16, after a tabs design: "chevron buttons appear only on the sides with hidden tabs"),
+/// 12 points in from the side, `chevronTop` lower than the middle; what scrolls under it is gone
+/// (`chevronRoom`) and fades out beside it, so the chevron stands on whatever is behind the row (the
+/// title bar's light blue: "the gradient behind the arrow button should be the color of that
+/// background"). Tapped, `step` scrolls that way. No scrollbar either way.
 struct SideScroll<Content: View>: View {
     /// How wide the fade is.
     var fade: CGFloat = 28
+    /// Scrolls on toward the edge given, for the chevrons; nil, none.
+    var step: ((HorizontalEdge) -> Void)?
+    var chevronTop: CGFloat = 0
     @ViewBuilder let content: () -> Content
     @State private var contentWidth: CGFloat = 0
     @State private var viewWidth: CGFloat = 0
@@ -432,10 +444,17 @@ struct SideScroll<Content: View>: View {
     @State private var scrolled: CGFloat = 0
     @State private var space = UUID()
 
-    init(fade: CGFloat = 28, @ViewBuilder content: @escaping () -> Content) {
+    init(fade: CGFloat = 28, step: ((HorizontalEdge) -> Void)? = nil, chevronTop: CGFloat = 0,
+         @ViewBuilder content: @escaping () -> Content) {
         self.fade = fade
+        self.step = step
+        self.chevronTop = chevronTop
         self.content = content
     }
+
+    /// How much of each side a chevron takes (12 points in, 22 across, a little past it): nothing
+    /// scrolls under it, and what's in it counts as hidden.
+    static var chevronRoom: CGFloat { 38 }
 
     private var overflows: Bool { contentWidth > viewWidth + 1 }
     private var moreLeft: Bool { overflows && scrolled > 2 }
@@ -459,15 +478,59 @@ struct SideScroll<Content: View>: View {
         .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { viewWidth = $0 }
         .mask(
             HStack(spacing: 0) {
+                Color.black.opacity(step != nil && moreLeft ? 0 : 1).frame(width: step != nil ? Self.chevronRoom : 0)
                 LinearGradient(colors: [moreLeft ? .clear : .black, .black], startPoint: .leading, endPoint: .trailing)
                     .frame(width: fade)
                 Color.black
                 LinearGradient(colors: [.black, moreRight ? .clear : .black], startPoint: .leading, endPoint: .trailing)
                     .frame(width: fade)
+                Color.black.opacity(step != nil && moreRight ? 0 : 1).frame(width: step != nil ? Self.chevronRoom : 0)
             }
             .animation(.easeOut(duration: 0.15), value: moreLeft)
             .animation(.easeOut(duration: 0.15), value: moreRight)
         )
+        .overlay(alignment: .leading) {
+            if let step, moreLeft {
+                SideChevron(edge: .leading) { step(.leading) }.padding(.top, 2 * chevronTop).transition(.opacity)
+            }
+        }
+        .overlay(alignment: .trailing) {
+            if let step, moreRight {
+                SideChevron(edge: .trailing) { step(.trailing) }.padding(.top, 2 * chevronTop).transition(.opacity)
+            }
+        }
+        .animation(.easeOut(duration: 0.15), value: moreLeft)
+        .animation(.easeOut(duration: 0.15), value: moreRight)
+    }
+}
+
+/// A `SideScroll`'s chevron: a small glossy round in the frame's bevel, a chevron in the bar's ink
+/// pointing the way there's more, 12 points in from the side, 34 points to tap.
+private struct SideChevron: View {
+    let edge: HorizontalEdge
+    let action: () -> Void
+
+    var body: some View {
+        Button {
+            SoundEffects.shared.play(.tap, volume: 0.6)
+            action()
+        } label: {
+            IconImage(.chevronUp, size: 12)
+                .rotationEffect(.degrees(edge == .leading ? -90 : 90))
+                .foregroundStyle(HUDStyle.barText)
+                .frame(width: 22, height: 22)
+                .background(
+                    Circle().fill(HUDStyle.bevel)
+                        .overlay(Circle().strokeBorder(HUDStyle.frameDark.opacity(0.7), lineWidth: 1))
+                        .shadow(color: .black.opacity(0.25), radius: 2, x: 0, y: 1)
+                )
+                .frame(width: 34, height: 34)
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        // 6 in its 34-point frame, 12 in to the round.
+        .padding(edge == .leading ? .leading : .trailing, 6)
+        .accessibilityLabel(edge == .leading ? L("Scroll left") : L("Scroll right"))
     }
 }
 

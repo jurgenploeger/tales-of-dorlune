@@ -2775,18 +2775,33 @@ nonisolated final class WorldMap: @unchecked Sendable {
         }
     }
 
-    /// The road on either bank bent to meet a bridge squarely: a stretch of road from just past
-    /// each end to the nearest bit of the road there.
+    /// How many cells the road runs straight on out of each end of a bridge, as wide as its deck,
+    /// before it bends away to the road it was: where the road had crossed the river aslant, it left
+    /// the deck's end slantwise, half beside it (playtesting 2026-11-16).
+    static let bridgeApproach = 3
+
+    /// The road on either bank bent to meet a bridge squarely: straight on out of each end as wide
+    /// as the deck (`bridgeApproach`), then a stretch of road from there to the nearest bit of the
+    /// road farther on.
     private func meetRoad(_ bridge: Bridge) {
         let centre = CGFloat(bridge.lane) + CGFloat(bridge.lanes) / 2
-        for (along, step) in [(bridge.start - 1, -1), (bridge.end + 1, 1)] {
+        for (end, step) in [(bridge.start - 1, -1), (bridge.end + 1, 1)] {
+            // Only over open ground: not into water, a border, the sea or a land next door's.
+            for out in 0..<Self.bridgeApproach {
+                for lane in bridge.lane..<(bridge.lane + bridge.lanes) {
+                    let cell = bridge.cell(lane: lane, along: end + step * out)
+                    guard contains(cell), owns(cell), ([.ground, .accent, .path] as [Ground]).contains(ground[cell.row][cell.col]) else { continue }
+                    ground[cell.row][cell.col] = .path
+                }
+            }
+            let along = end + step * (Self.bridgeApproach - 1)
             let foot = bridge.northward ? CGPoint(x: centre, y: CGFloat(along) + 0.5) : CGPoint(x: CGFloat(along) + 0.5, y: centre)
             var best: (distance: CGFloat, spot: CGPoint)?
             for dr in -8...8 {
                 for dc in -8...8 {
                     let cell = GridPoint(col: Int(foot.x.rounded(.down)) + dc, row: Int(foot.y.rounded(.down)) + dr)
                     guard contains(cell), ground[cell.row][cell.col] == .path else { continue }
-                    // Only on past the bridge, on its own bank.
+                    // Only on past the straight run, on its own bank.
                     guard ((bridge.northward ? cell.row : cell.col) - along) * step >= 1 else { continue }
                     let spot = CGPoint(x: CGFloat(cell.col) + 0.5, y: CGFloat(cell.row) + 0.5)
                     let distance = spot.distance(to: foot)

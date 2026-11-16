@@ -32,7 +32,7 @@ final class CanopyShade {
     private let walls: Set<GridPoint>
     private let map: WorldMap
     private var casters: [GridPoint: [CanopyPainter.Caster]] = [:]
-    private var outlines: [Outline: [CanopyPainter.Slice]] = [:]
+    private var outlines: [Outline: (slices: [CanopyPainter.Slice], lift: CGFloat)] = [:]
     private var nodes: [GridPoint: SKSpriteNode] = [:]
     /// The chunks any caster's shade could reach, those to draw again, and those being drawn now.
     private var reached: Set<GridPoint> = []
@@ -90,10 +90,12 @@ final class CanopyShade {
         let outline = Outline(texture: ObjectIdentifier(texture), anchor: node.anchorPoint.y)
         let unit = outlines[outline] ?? CanopyPainter.slices(of: picture, anchor: node.anchorPoint)
         outlines[outline] = unit
-        guard !unit.isEmpty else { return }
+        guard !unit.slices.isEmpty else { return }
         let w = node.size.width, h = node.size.height
-        let slices = unit.map { CanopyPainter.Slice(dx: $0.dx * w, up: $0.up * h, half: $0.half * w) }
-        let caster = CanopyPainter.Caster(foot: node.position, slices: slices)
+        let slices = unit.slices.map { CanopyPainter.Slice(dx: $0.dx * w, up: $0.up * h, half: $0.half * w) }
+        // From where it stands up: the middle of a base of its own (`CanopyPainter.base`).
+        let foot = CGPoint(x: node.position.x, y: node.position.y + unit.lift * h)
+        let caster = CanopyPainter.Caster(foot: foot, slices: slices)
         let home = key(at: node.position)
         casters[home, default: []].append(caster)
         for dc in -Self.reachChunks...Self.reachChunks {
@@ -417,11 +419,36 @@ nonisolated enum CanopyPainter {
         return Double(h >> 11) / Double(UInt64(1) << 53)
     }
 
-    /// `picture`'s outline as runs of each row (alpha over half), from the foot of a node anchored at
-    /// `anchor`, in its widths and heights: rows below the foot left out.
-    static func slices(of picture: CGImage, anchor: CGPoint) -> [Slice] {
+    /// A base of its own lies in the bottom this much of a picture's height, and what stands on it is
+    /// narrower than this much of its width (`base`).
+    static let baseBand = 0.35
+    static let baseNarrows = 0.85
+
+    /// The row (from the top) a picture stands up from: a sprite drawn on a base of its own (a
+    /// house's grass skirt, a plinth, a tree's roots) has its widest row near its foot, the middle of
+    /// that flat base; the rows under it are ground in front of it, not something standing, and cast
+    /// none (as walls they laid shade out in front of the house, playtesting 2026-11-16). Its lowest
+    /// row where it has no such base. `widths`: how many solid pixels each row has, from the top.
+    static func base(_ widths: [Int]) -> Int? {
+        guard let top = widths.firstIndex(where: { $0 > 0 }), let foot = widths.lastIndex(where: { $0 > 0 }) else { return nil }
+        let band = Int(Double(foot - top + 1) * baseBand)
+        guard band >= 8 else { return foot }
+        // From the foot up.
+        let low = (0...band).map { widths[foot - $0] }
+        let widest = low.max() ?? 0
+        guard Double(low[band]) < baseNarrows * Double(widest) else { return foot }
+        let near = low.indices.filter { Double(low[$0]) >= 0.97 * Double(widest) }
+        let lift = Int((Double(near.reduce(0, +)) / Double(max(1, near.count))).rounded())
+        guard lift >= 3, lift <= band - 3 else { return foot }
+        return foot - lift
+    }
+
+    /// `picture`'s outline as runs of each row (alpha over half), from where it stands up (`base`),
+    /// in its widths and heights, and how far that is above the foot of a node anchored at `anchor`
+    /// (in its heights): rows below it left out.
+    static func slices(of picture: CGImage, anchor: CGPoint) -> (slices: [Slice], lift: CGFloat) {
         let w = picture.width, h = picture.height
-        guard w > 0, h > 0 else { return [] }
+        guard w > 0, h > 0 else { return ([], 0) }
         var pixels = [UInt8](repeating: 0, count: w * h * 4)
         let drawn = pixels.withUnsafeMutableBytes { buffer -> Bool in
             guard let context = CGContext(data: buffer.baseAddress, width: w, height: h, bitsPerComponent: 8, bytesPerRow: w * 4,
@@ -430,11 +457,17 @@ nonisolated enum CanopyPainter {
             context.draw(picture, in: CGRect(x: 0, y: 0, width: w, height: h))
             return true
         }
-        guard drawn else { return [] }
+        guard drawn else { return ([], 0) }
+        let widths = (0..<h).map { row in (0..<w).reduce(0) { $0 + (pixels[(row * w + $1) * 4 + 3] > 127 ? 1 : 0) } }
+        guard let standing = base(widths) else { return ([], 0) }
+        // Where it stands up from, in heights above the picture's bottom (never under the node's
+        // foot: its sprite sinks a little into the ground), and above that foot.
+        let from = max(anchor.y, (CGFloat(h - 1 - standing) + 0.5) / CGFloat(h))
+        let lift = from - anchor.y
         var slices: [Slice] = []
         // Row 0 is the picture's top.
-        for row in 0..<h {
-            let up = (CGFloat(h - row) - 0.5) / CGFloat(h) - anchor.y
+        for row in 0...standing {
+            let up = (CGFloat(h - row) - 0.5) / CGFloat(h) - from
             guard up >= 0 else { continue }
             var start: Int?
             for x in 0...w {
@@ -447,6 +480,6 @@ nonisolated enum CanopyPainter {
                 }
             }
         }
-        return slices
+        return (slices, lift)
     }
 }

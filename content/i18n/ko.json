@@ -913,6 +913,8 @@
     "{item}  ·  Lv {level}": "{item}  ·  Lv {level}",
     "{name} throws a Seal Stone!": "{name}이(가) 봉인석을 던졌어요!",
     "{count} in all": "모두 {count}",
+    "Scroll left": "왼쪽으로 스크롤",
+    "Scroll right": "오른쪽으로 스크롤",
     "bot": "봇",
     "Common||item": "일반",
     "Uncommon||item": "고급",
