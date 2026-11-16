@@ -3889,6 +3889,10 @@ struct RulesTests {
         // Dropped half as often as a feather, and by a boss one time in two.
         #expect(GameSession.shardDropChance(boss: true, worth: 0) == 0.5)
         #expect(GameSession.shardDropChance(boss: false, worth: 3) == GameSession.featherDropChance(boss: false, worth: 3) / 2)
+        // Higher up, more often: twice at level 120, never past 15% a fight.
+        #expect(abs(GameSession.shardDropChance(boss: false, worth: 3, level: 120) - 2 * GameSession.shardDropChance(boss: false, worth: 3)) < 1e-9)
+        #expect(GameSession.shardDropChance(boss: false, worth: 30, level: 200) <= 0.15)
+        #expect(GameSession.shardDropChance(boss: true, worth: 3, level: 200) == 0.5)
     }
 
     @Test func botsAreTagged() {

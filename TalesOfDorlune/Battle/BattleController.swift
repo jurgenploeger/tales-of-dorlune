@@ -1408,7 +1408,9 @@ final class BattleController {
             loot[GameSession.featherID, default: 0] += 1
         }
         // And, half as often, a Waystone Shard for the way to a waystone (playtesting 2026-11-01).
-        if Double.random(in: 0..<1) < GameSession.shardDropChance(boss: bossBeaten, worth: worth),
+        // More often higher up: by the beaten monsters' level, on average.
+        let wildLevel = defeatedWild.isEmpty ? 0 : defeatedWild.reduce(0) { $0 + $1.level } / defeatedWild.count
+        if Double.random(in: 0..<1) < GameSession.shardDropChance(boss: bossBeaten, worth: worth, level: wildLevel),
            content.item(GameSession.shardID) != nil, session.addItem(GameSession.shardID) {
             loot[GameSession.shardID, default: 0] += 1
         }
