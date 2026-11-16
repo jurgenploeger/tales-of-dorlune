@@ -467,9 +467,9 @@ struct WorldAtlas: View {
     /// The map's buttons in a row at the bottom right, in reach of a thumb: where you are, zoom out,
     /// zoom in.
     private var controls: some View {
-        // As far apart as the HUD's Chat, Bag and menu buttons (15 points between their faces; the user,
-        // 2026-11-16): 11 between their 44-point frames, each face 2 in from its frame's edge.
-        HStack(spacing: 11) {
+        // Close together (the user, 2026-11-16: "The gaps between these buttons should be way smaller"):
+        // 8 points between their faces, each 2 in from its 44-point frame's edge.
+        HStack(spacing: 4) {
             mapButton(IconImage(.user, size: 16), label: L("Where you are")) { centreOnHere() }
             mapButton(Text("−").font(HUDStyle.font(18)), label: L("Zoom out")) { zoom(by: 1 / 1.6) }
             mapButton(Text("+").font(HUDStyle.font(18)), label: L("Zoom in")) { zoom(by: 1.6) }
