@@ -330,13 +330,26 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
             }
         }
         // The bar, transparent under the tabs; and the page's light edge along its foot, from the
-        // page's top corners (`PageCorner`) to the flares of the tab you're on, which covers it.
-        .background(alignment: .bottom) {
+        // page's top corners (`PageCorner`) to the feet of the tab you're on's flares, and on from
+        // them: not under them, where it doubled their line (playtesting 2026-11-16).
+        .background {
             WindowBar(foot: false)
-                .overlay(alignment: .bottom) {
-                    HUDStyle.frameLight.opacity(0.8).frame(height: 1.5)
-                        .padding(.leading, PageFillet.side)
-                        .padding(.trailing, PageFillet.side)
+                .overlay {
+                    Canvas { context, size in
+                        let y = size.height - 0.75
+                        let from = PageFillet.side, to = size.width - PageFillet.side
+                        var runs = [(from, to)]
+                        if let tab = frames[page] {
+                            runs = [(from, min(to, tab.minX - FlaredTab.flare)), (max(from, tab.maxX + FlaredTab.flare), to)]
+                        }
+                        var path = Path()
+                        for (start, end) in runs where end > start {
+                            path.move(to: CGPoint(x: start, y: y))
+                            path.addLine(to: CGPoint(x: end, y: y))
+                        }
+                        context.stroke(path, with: .color(HUDStyle.frameLight.opacity(0.8)), lineWidth: 1.5)
+                    }
+                    .allowsHitTesting(false)
                 }
         }
         // The page's top corners, rounded where its edge meets the bar's foot (the user, 2026-11-16:
@@ -480,9 +493,12 @@ private struct PageCorner: View {
 /// `PageCorner`'s shape, top down: the bar's colour outside the round, or with `open` the round
 /// alone, for the line. Drawn for the left, mirrored for the right.
 private nonisolated struct PageFillet: Shape {
-    /// The corner's round (the user's, 2026-11-16: 16) and how far in the window's frame reaches.
+    /// The corner's round (the user's, 2026-11-16: 16), and how far in from the window's edge its line
+    /// comes down: onto the frame's light bevel (`HUDStyle.frame`, 3 wide), so it runs on into the
+    /// window's light border (the user, 2026-11-16: "the line all the way on the left should go into
+    /// the light border line of the modal"; ending inside the frame, the frame's dark inner line cut it off).
     static let radius: CGFloat = 16
-    static let frameWidth: CGFloat = 4
+    static let frameWidth: CGFloat = 1.5
     /// How far in from the window's side the page's edge along the bar's foot begins.
     static var side: CGFloat { frameWidth + radius }
     /// How far up into the bar it reaches: its line's width, so its line lies on the bar's own along
