@@ -287,41 +287,73 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
     @State private var frames: [Page: CGRect] = [:]
     @State private var shownWidth: CGFloat = 0
 
+    /// The pages in order.
+    private var pages: [Page] { Array(Page.allCases) }
+
+    /// Whether the tab you're on is the first and stands at the window's side (not scrolled away):
+    /// its edge then runs straight down the page's side (the user, 2026-11-16, after a tabs design:
+    /// "the first active tab that merges into the main panel"), and the page has no corner there.
+    private var firstOnAtSide: Bool {
+        page == pages.first && (frames[page]?.minX ?? 0) > -1
+    }
+
     var body: some View {
-        HStack(spacing: 0) {
-            ScrollViewReader { reader in
-                // Faded at an edge with more tabs past it, a chevron there (`SideScroll`): tapped, the
-                // nearest tab hidden that way scrolls into the middle.
-                SideScroll(step: { edge in
-                    guard let next = hidden(toward: edge) else { return }
-                    withAnimation(.easeOut(duration: 0.25)) { reader.scrollTo(next, anchor: .center) }
-                }) {
-                    // Standing on the bar's foot, the one you're on a little taller.
-                    // Far enough apart that the flare at the foot of the one you're on (`FlaredTab`)
-                    // meets no other.
-                    HStack(alignment: .bottom, spacing: FlaredTab.flare) {
-                        ForEach(Array(Page.allCases), id: \.self) { item in
-                            tab(item)
-                                .id(item)
-                                .onGeometryChange(for: CGRect.self) { $0.frame(in: .named(Self.strip)) } action: { frames[item] = $0 }
-                        }
+        ScrollViewReader { reader in
+            // Faded at an edge with more tabs past it, a chevron there (`SideScroll`): tapped, the
+            // nearest tab hidden that way scrolls into the middle.
+            SideScroll(step: { edge in
+                guard let next = hidden(toward: edge) else { return }
+                withAnimation(.easeOut(duration: 0.25)) { reader.scrollTo(next, anchor: .center) }
+            }, chevronTop: TabEdge.inset / 2) {
+                // Standing on the bar's foot, the one you're on a little taller, the others only their
+                // names on the bar, a faint upright line between two of them.
+                HStack(alignment: .bottom, spacing: 0) {
+                    ForEach(Array(pages.enumerated()), id: \.element) { index, item in
+                        tab(item)
+                            .id(item)
+                            .onGeometryChange(for: CGRect.self) { $0.frame(in: .named(Self.strip)) } action: { frames[item] = $0 }
+                            .overlay(alignment: .trailing) {
+                                if index + 1 < pages.count, item != page, pages[index + 1] != page {
+                                    HUDStyle.frameDark.opacity(0.4).frame(width: 1, height: 16)
+                                        .padding(.bottom, 3)
+                                        .offset(x: 0.5)
+                                }
+                            }
                     }
-                    // As far in from the window's side as from its top, so the first tab's corner sits
-                    // in the window's own, the same distance off all round (`TabEdge.radius`).
-                    .padding(.horizontal, TabEdge.inset)
-                    .padding(.top, TabEdge.inset)
                 }
-                .coordinateSpace(name: Self.strip)
-                .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { shownWidth = $0 }
-                .onAppear { reader.scrollTo(page, anchor: .center) }
-                .onChange(of: page) {
-                    withAnimation(.easeOut(duration: 0.2)) { reader.scrollTo(page, anchor: .center) }
-                }
+                // Flush with the window's side, so the first tab's edge, when it's the one you're on,
+                // is the page's own; the last clear of the close button's room over the corner.
+                .padding(.trailing, OrangeCloseButton.room + 8)
+                .padding(.top, TabEdge.inset)
             }
-            // The close button's room: it sits over the window's corner.
-            Color.clear.frame(width: OrangeCloseButton.room, height: 34)
+            .coordinateSpace(name: Self.strip)
+            .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { shownWidth = $0 }
+            .onAppear { reader.scrollTo(page, anchor: .center) }
+            .onChange(of: page) {
+                withAnimation(.easeOut(duration: 0.2)) { reader.scrollTo(page, anchor: .center) }
+            }
         }
-        .background(WindowBar())
+        // The bar, transparent under the tabs; and the page's light edge along its foot, from the
+        // page's top corners (`PageCorner`) to the flares of the tab you're on, which covers it.
+        .background(alignment: .bottom) {
+            WindowBar(foot: false)
+                .overlay(alignment: .bottom) {
+                    HUDStyle.frameLight.opacity(0.8).frame(height: 1.5)
+                        .padding(.leading, firstOnAtSide ? 0 : PageFillet.side)
+                        .padding(.trailing, PageFillet.side)
+                }
+        }
+        // The page's top corners, rounded where its edge meets the bar's foot (the user, 2026-11-16:
+        // "If another tab than the first is selected, there should be a corner radius like this"),
+        // hanging under the bar; none on the left while the first tab stands there.
+        .overlay(alignment: .bottomLeading) {
+            if !firstOnAtSide { PageCorner(edge: .leading).offset(y: PageFillet.radius) }
+        }
+        .overlay(alignment: .bottomTrailing) {
+            PageCorner(edge: .trailing).offset(y: PageFillet.radius)
+        }
+        // Over the page under it, where its corners hang.
+        .zIndex(1)
     }
 
     /// The strip as it shows, for the tabs' frames (`frames`).
@@ -339,6 +371,7 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
 
     private func tab(_ item: Page) -> some View {
         let selected = item == page
+        let first = item == pages.first
         let marked = !selected && waiting(item)
         return Button {
             guard !selected else { return }
@@ -360,20 +393,19 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
                     // into the bar (the user, 2026-11-11: "The bottom of the tabs should have rounded
                     // corners that are inverted to the other side"), so it runs into the page as a
                     // folder's tab does.
+                    // The others have none: their names on the bar (the user, 2026-11-16: "the inactive
+                    // tabs shouldn't have a tab fill, just transparent").
                     if selected {
-                        FlaredTab().fill(HUDStyle.glassTop).padding(.horizontal, -FlaredTab.flare)
-                    } else {
-                        Self.tabShape.fill(HUDStyle.frameDark.opacity(0.3))
+                        FlaredTab(leading: !first).fill(HUDStyle.glassTop)
+                            .padding(.leading, first ? 0 : -FlaredTab.flare).padding(.trailing, -FlaredTab.flare)
                     }
                 }
                 .overlay {
                     // A light edge up its sides, over its top and out along its flares; none along its
                     // foot, where it's the page's. One you're not on edged faintly in the bar's dark.
                     if selected {
-                        FlaredTab(open: true).stroke(HUDStyle.frameLight.opacity(0.8), lineWidth: 1.5)
-                            .padding(.horizontal, -FlaredTab.flare)
-                    } else {
-                        TabEdge().stroke(HUDStyle.frameDark.opacity(0.35), lineWidth: 1)
+                        FlaredTab(open: true, leading: !first).stroke(HUDStyle.frameLight.opacity(0.8), lineWidth: 1.5)
+                            .padding(.leading, first ? 0 : -FlaredTab.flare).padding(.trailing, -FlaredTab.flare)
                     }
                 }
                 .overlay(alignment: .topTrailing) {
@@ -407,22 +439,76 @@ extension PageTabs {
 private nonisolated struct FlaredTab: Shape {
     static let flare: CGFloat = 6
     var open = false
+    /// Whether it flares at its left: not the first tab, which stands at the window's side and runs
+    /// straight down into the page's (then drawn no wider than the tab on that side).
+    var leading = true
 
     func path(in rect: CGRect) -> Path {
         let flare = Self.flare, radius = TabEdge.radius
         // Inside by half the stroke's width at the top and sides, so a stroke stays on it.
-        let left = rect.minX + flare + 0.75, right = rect.maxX - flare - 0.75, top = rect.minY + 0.75
+        let left = rect.minX + (leading ? flare : 0) + 0.75, right = rect.maxX - flare - 0.75, top = rect.minY + 0.75
         let bottom = rect.maxY
         var path = Path()
         // Round arcs, as the window's corners are, the flares as the top's turned the other way.
-        path.move(to: CGPoint(x: rect.minX, y: bottom))
-        path.addArc(tangent1End: CGPoint(x: left, y: bottom), tangent2End: CGPoint(x: left, y: top), radius: flare)
+        if leading {
+            path.move(to: CGPoint(x: rect.minX, y: bottom))
+            path.addArc(tangent1End: CGPoint(x: left, y: bottom), tangent2End: CGPoint(x: left, y: top), radius: flare)
+        } else {
+            path.move(to: CGPoint(x: left, y: bottom))
+        }
         path.addArc(tangent1End: CGPoint(x: left, y: top), tangent2End: CGPoint(x: right, y: top), radius: radius)
         path.addArc(tangent1End: CGPoint(x: right, y: top), tangent2End: CGPoint(x: right, y: bottom), radius: radius)
         path.addArc(tangent1End: CGPoint(x: right, y: bottom), tangent2End: CGPoint(x: rect.maxX, y: bottom), radius: flare)
         path.addLine(to: CGPoint(x: rect.maxX, y: bottom))
         if !open { path.closeSubpath() }
         return path
+    }
+}
+
+/// A page's top corner under its window's tabs (`PageTabs`): the bar's light blue round the outside
+/// of a quarter round `PageFillet.radius` across, and the page's light edge along it, from the bar's
+/// foot down to the window's side (inside its frame), where the frame's own edge runs on.
+private struct PageCorner: View {
+    let edge: HorizontalEdge
+
+    var body: some View {
+        ZStack {
+            PageFillet(edge: edge, open: false).fill(HUDStyle.frameMid)
+            PageFillet(edge: edge, open: true).stroke(HUDStyle.frameLight.opacity(0.8), lineWidth: 1.5)
+        }
+        .frame(width: PageFillet.side, height: PageFillet.radius)
+        .allowsHitTesting(false)
+        .accessibilityHidden(true)
+    }
+}
+
+/// `PageCorner`'s shape, top down: the bar's colour outside the round, or with `open` the round
+/// alone, for the line. Drawn for the left, mirrored for the right.
+private nonisolated struct PageFillet: Shape {
+    /// The corner's round (the user's, 2026-11-16: 16) and how far in the window's frame reaches.
+    static let radius: CGFloat = 16
+    static let frameWidth: CGFloat = 4
+    /// How far in from the window's side the page's edge along the bar's foot begins.
+    static var side: CGFloat { frameWidth + radius }
+
+    let edge: HorizontalEdge
+    let open: Bool
+
+    func path(in rect: CGRect) -> Path {
+        let r = Self.radius, inner = Self.frameWidth
+        let line: CGFloat = open ? 0.75 : 0
+        var path = Path()
+        path.move(to: CGPoint(x: inner + line, y: rect.maxY))
+        path.addArc(tangent1End: CGPoint(x: inner + line, y: line), tangent2End: CGPoint(x: inner + r, y: line), radius: r - line)
+        path.addLine(to: CGPoint(x: inner + r, y: line))
+        if !open {
+            path.addLine(to: CGPoint(x: inner + r, y: 0))
+            path.addLine(to: CGPoint(x: 0, y: 0))
+            path.addLine(to: CGPoint(x: 0, y: rect.maxY))
+            path.closeSubpath()
+        }
+        guard edge == .trailing else { return path }
+        return path.applying(CGAffineTransform(translationX: rect.width, y: 0).scaledBy(x: -1, y: 1))
     }
 }
 

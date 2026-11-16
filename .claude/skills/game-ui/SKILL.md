@@ -85,7 +85,11 @@ chips, swatches, hairstyles) is a `SideScroll`, never a bare `ScrollView(.horizo
 the one you're on is the window's own glass (`HUDStyle.glassTop`) with its name in gold, joined to the page
 under it, its foot flaring out into the bar in corners rounded the other way (`FlaredTab`, the user,
 2026-11-11); their top corners concentric with the window's (`TabEdge.radius`: the window's 22 less the
-tabs' 10-point inset from its top and side; the user, 2026-11-11); the others are sunk into the bar, their names in the bar's ink. One with something waiting wears the gold dot. Each of Character, Companions, Friends, Bag, Quests and Settings is
+tabs' 10-point inset from its top and side; the user, 2026-11-11); the others have no fill, only their names in the bar's ink on the bar, a faint upright line between two of them (the user,
+2026-11-16). The strip starts flush with the window's side: the first tab, when you're on it, runs straight down
+into the page's side; otherwise the page's top corners are rounded 16 points where its light edge along the bar's
+foot meets the window's side (`PageCorner`; the user, 2026-11-16, with a picture of the corner). The bar shows
+through the strip, and through the fade beside a chevron. One with something waiting wears the gold dot. Each of Character, Companions, Friends, Bag, Quests and Settings is
 a window of its own, opened from the HUD menu (2026-10-25: "The menu items hero etc should become their
 own modal window"), so a window's tabs are its own pages, never the other windows.
 
