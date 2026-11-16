@@ -81,7 +81,7 @@ struct BankPanel: View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
                 // Its gold rule runs on to the button.
-                SectionTitle(text: L("Bag {used}/{slots}", ["used": session.bagSlotsUsed, "slots": GameSession.bagSlots]))
+                SectionTitle(text: L("Bag {used}/{slots}", ["used": session.bagSlotsUsed, "slots": session.bagSize]))
                 Button(L("Deposit all")) {
                     session.depositAll()
                     session.save()

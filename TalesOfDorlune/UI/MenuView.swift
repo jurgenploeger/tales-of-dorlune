@@ -221,9 +221,9 @@ extension MenuView {
         case .bag:
             // How full the bag is after its name (playtesting 2026-10-26: "add the x/50 behind the big
             // 'Inventory' title"): 50 slots, one for every item (`GameSession+Bank`); coins take none.
-            WindowTitle(window.menuTitle, detail: "\(session.bagSlotsUsed)/\(GameSession.bagSlots)",
+            WindowTitle(window.menuTitle, detail: "\(session.bagSlotsUsed)/\(session.bagSize)",
                         detailTint: session.bagSlotsFree == 0 ? HUDStyle.orange : nil)
-                .accessibilityValue(L("{used} of {slots} slots", ["used": session.bagSlotsUsed, "slots": GameSession.bagSlots]))
+                .accessibilityValue(L("{used} of {slots} slots", ["used": session.bagSlotsUsed, "slots": session.bagSize]))
                 .padding(.bottom, 2)
         }
     }

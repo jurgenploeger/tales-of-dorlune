@@ -174,7 +174,7 @@
     "{item} ({colour})": "{item} ({colour})",
     "{name} [BOT]": "{name} [BOT]",
     "{year}/{month}/{day}/{hour}hr": "{day}.{month}.{year}, {hour} Uhr",
-    "Your bag holds 50 things now, every one a slot: {count} went to the bank.": "Deine Tasche fasst jetzt 50 Dinge, jedes belegt einen Platz: {count} kamen auf die Bank.",
+    "Your bag holds {slots} things now, every one a slot: {count} went to the bank.": "Deine Tasche fasst jetzt {slots} Dinge, jedes belegt einen Platz: {count} kamen auf die Bank.",
     "Your bag is full. Put something in the bank first.": "Deine Tasche ist voll. Bring zuerst etwas zur Bank.",
     "You deleted {item}.": "Du hast {item} gelöscht.",
     "You lost everything you carried and wore: {items}.": "Du hast alles verloren, was du dabeihattest und trugst: {items}.",
@@ -3853,6 +3853,7 @@
     "Town Favourite": "Liebling der Stadt",
     "Faithful": "Treu",
     "Old Friend": "Alter Freund",
+    "Your bag holds 50 things now, every one a slot: {count} went to the bank.": "Deine Tasche fasst jetzt 50 Dinge, jedes belegt einen Platz: {count} kamen auf die Bank.",
     "with a {pet}": "mit {pet}"
   }
 }

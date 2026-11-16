@@ -242,7 +242,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   stats). `--sheet out.png` writes a contact sheet. Spells are light, not sprites:
   `TalesOfDorlune/Battle/ElementEffects.swift` layers soft glows in each element's colours (`ElementLight`).
 - `tools/coin_art.py`: the coins in the Bag (`item_coins_1` to `_4`, a bigger pile the more you carry,
-  `CoinsTile`), drawn with `pixel_kit` in the clean look at 64 pixels. The bag holds 50 slots (`GameSession+Bank.swift`); the
+  `CoinsTile`), drawn with `pixel_kit` in the clean look at 64 pixels. The bag holds 50 slots at level 1, 100 at level 200 (`GameSession.bagRoom`, `GameSession+Bank.swift`); the
   rest goes in a bank (`tools/building_art.py` `bank`, NPC role `bank`), the only place nothing is lost.
 - `tools/hud_icon_art.py`: the pictures on the HUD's pills beside the gold's coin (`ArtPill`): the world map's
   sun and moon (`pill_sun`, `pill_moon`) and map pin (`pill_pin`), with `pixel_kit` in the clean look at 64 pixels, as

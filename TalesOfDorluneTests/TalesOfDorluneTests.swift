@@ -2122,6 +2122,19 @@ struct RulesTests {
         #expect(session.addItem("ether", force: true))
     }
 
+    /// The bag grows as the hero levels: 50 at level 1, twice that at the cap, evenly between.
+    @Test func theBagGrowsWithLevel() {
+        #expect(GameSession.bagRoom(level: 1) == 50)
+        #expect(GameSession.bagRoom(level: 100) == 74)
+        #expect(GameSession.bagRoom(level: GameSession.levelCap) == 100)
+        #expect(GameSession.bagRoom(level: GameSession.levelCap + 5) == 100)
+        let levels = Array(1...GameSession.levelCap).map { GameSession.bagRoom(level: $0) }
+        #expect(zip(levels, levels.dropFirst()).allSatisfy { $1 - $0 <= 1 && $1 >= $0 })
+        let session = GameSession.newGame(name: "Test", raceID: "human")
+        session.data.hero.level = GameSession.levelCap
+        #expect(session.bagSize == 100 && session.bagSlotsFree == 97)
+    }
+
     /// A bag from before every item took a slot, over 50, puts the rest in the bank as it loads, from
     /// the biggest pile down, once.
     @Test func anOverfullBagGoesToTheBankOnLoad() {

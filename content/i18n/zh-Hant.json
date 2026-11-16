@@ -174,7 +174,7 @@
     "{item} ({colour})": "{item}（{colour}）",
     "{name} [BOT]": "{name} [BOT]",
     "{year}/{month}/{day}/{hour}hr": "{year}/{month}/{day} {hour}時",
-    "Your bag holds 50 things now, every one a slot: {count} went to the bank.": "背包現在最多裝50件物品，每件佔一格：{count}件已存入銀行。",
+    "Your bag holds {slots} things now, every one a slot: {count} went to the bank.": "背包現在最多裝{slots}件物品，每件佔一格：{count}件已存入銀行。",
     "Your bag is full. Put something in the bank first.": "背包滿了。先把東西存進銀行吧。",
     "You deleted {item}.": "你刪除了{item}。",
     "You lost everything you carried and wore: {items}.": "你身上帶著和穿著的東西全丟了：{items}。",
@@ -3853,6 +3853,7 @@
     "Town Favourite": "小鎮紅人",
     "Faithful": "常客",
     "Old Friend": "老朋友",
+    "Your bag holds 50 things now, every one a slot: {count} went to the bank.": "背包現在最多裝50件物品，每件佔一格：{count}件已存入銀行。",
     "with a {pet}": "帶著{pet}"
   }
 }

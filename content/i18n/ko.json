@@ -174,7 +174,7 @@
     "{item} ({colour})": "{item} ({colour})",
     "{name} [BOT]": "{name} [BOT]",
     "{year}/{month}/{day}/{hour}hr": "{year}년 {month}월 {day}일 {hour}시",
-    "Your bag holds 50 things now, every one a slot: {count} went to the bank.": "이제 가방에는 50개까지 들어가요. 하나가 한 칸을 차지해요. {count}개는 은행으로 보냈어요.",
+    "Your bag holds {slots} things now, every one a slot: {count} went to the bank.": "이제 가방에는 {slots}개까지 들어가요. 하나가 한 칸을 차지해요. {count}개는 은행으로 보냈어요.",
     "Your bag is full. Put something in the bank first.": "가방이 가득 찼어요. 먼저 은행에 맡기세요.",
     "You deleted {item}.": "{item}을(를) 삭제했어요.",
     "You lost everything you carried and wore: {items}.": "가지고 있던 것과 입고 있던 것을 모두 잃었어요: {items}.",
@@ -3853,6 +3853,7 @@
     "Town Favourite": "마을의 인기인",
     "Faithful": "단골",
     "Old Friend": "오랜 친구",
+    "Your bag holds 50 things now, every one a slot: {count} went to the bank.": "이제 가방에는 50개까지 들어가요. 하나가 한 칸을 차지해요. {count}개는 은행으로 보냈어요.",
     "with a {pet}": "{pet}와(과) 함께"
   }
 }

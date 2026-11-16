@@ -174,7 +174,7 @@
     "{item} ({colour})": "{item}（{colour}）",
     "{name} [BOT]": "{name} [BOT]",
     "{year}/{month}/{day}/{hour}hr": "{year}年{month}月{day}日 {hour}時",
-    "Your bag holds 50 things now, every one a slot: {count} went to the bank.": "バッグに入るのは50個までになりました（1つにつき1枠）。{count}個を銀行に預けました。",
+    "Your bag holds {slots} things now, every one a slot: {count} went to the bank.": "バッグに入るのは{slots}個までになりました（1つにつき1枠）。{count}個を銀行に預けました。",
     "Your bag is full. Put something in the bank first.": "バッグがいっぱいだよ。先に何か銀行に預けてね。",
     "You deleted {item}.": "{item}を削除しました。",
     "You lost everything you carried and wore: {items}.": "持ち物と身につけていた物をすべてなくした：{items}。",
@@ -3853,6 +3853,7 @@
     "Town Favourite": "町の人気者",
     "Faithful": "常連さん",
     "Old Friend": "古なじみ",
+    "Your bag holds 50 things now, every one a slot: {count} went to the bank.": "バッグに入るのは50個までになりました（1つにつき1枠）。{count}個を銀行に預けました。",
     "with a {pet}": "{pet}といっしょ"
   }
 }
