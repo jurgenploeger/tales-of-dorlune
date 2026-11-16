@@ -196,6 +196,8 @@ struct StatBar: View {
     /// The label's and the numbers' sizes (bigger on the Character screen).
     var labelSize: CGFloat = 10
     var numberSize: CGFloat = 8
+    /// What it says over the bar in place of value/maximum (∞ on an EXP bar at the level cap).
+    var caption: String? = nil
 
     private var fraction: CGFloat {
         maximum > 0 ? min(1, max(0, CGFloat(value) / CGFloat(maximum))) : 0
@@ -210,7 +212,7 @@ struct StatBar: View {
             GlossyBar(fraction: fraction, color: color, height: height)
                 .overlay {
                     if showsNumbers {
-                        Text("\(value)/\(maximum)")
+                        Text(caption ?? "\(value)/\(maximum)")
                             .font(HUDStyle.mono(numberSize))
                             .foregroundStyle(.white)
                             .shadow(color: .black, radius: 0, x: 1, y: 1)

@@ -317,9 +317,7 @@
     "The road from {from} to {map} is open!": "Дорога открыта: {from} → {map}!",
     "The waystone in {map} is awake! Touch it to travel.": "Путевой камень в месте {map} пробудился! Коснись его, чтобы путешествовать.",
     "{name}'s stats": "Характеристики: {name}",
-    "with a {pet}": "питомец: {pet}",
     "In a party of {count}": "В команде из {count}",
-    "HP": "HP",
     "Looking for trouble!": "Ищу приключений!",
     "Befriend": "Подружиться",
     "Invite": "Позвать",
@@ -367,6 +365,7 @@
     "Wave {wave} of {total}": "Волна {wave} из {total}",
     "Boss wave, the last of {total}": "Волна босса, последняя из {total}",
     "Lv{level}": "Ур.{level}",
+    "HP": "HP",
     "Ready": "Готовы",
     "Time left to choose before you attack": "Время на выбор до атаки",
     "Drag to rearrange": "Перетащи, чтобы переставить",
@@ -407,9 +406,9 @@
     "Level up! You're now level {level}. {bonuses}": "Новый уровень! Теперь у тебя уровень {level}. {bonuses}",
     "LV": "УР",
     "Chat · {map}": "Чат · {map}",
-    "Latest messages": "Последние сообщения",
     "Say something…": "Скажи что-нибудь…",
     "Send": "Отпр.",
+    "Latest messages": "Последние сообщения",
     "Announcement: {text}": "Объявление: {text}",
     "Health and magic": "Здоровье и магия",
     "HP is your health, MP your magic and XP how far you are to the next level. The round badge shows your level. Tap your face for your hero. Once you have a companion, its small face sits on the corner of yours: tap it for your companion.": "HP — твоё здоровье, MP — магия, а XP — сколько осталось до следующего уровня. Круглый значок показывает уровень. Нажми на своё лицо, чтобы открыть героя. Когда появится спутник, его маленькое лицо будет в углу твоего: нажми на него, чтобы открыть спутника.",
@@ -623,6 +622,7 @@
     "Show fewer": "Показать меньше",
     "Show {count} more": "Показать ещё {count}",
     "EXP": "Опыт",
+    "Highest level": "Максимальный уровень",
     "Defense": "Защита",
     "Magic": "Магия",
     "Speed": "Скорость",
@@ -3850,6 +3850,7 @@
     "Bounty Hunter": "Охотник за наградами",
     "Town Favourite": "Любимец города",
     "Faithful": "Верный",
-    "Old Friend": "Старый друг"
+    "Old Friend": "Старый друг",
+    "with a {pet}": "питомец: {pet}"
   }
 }

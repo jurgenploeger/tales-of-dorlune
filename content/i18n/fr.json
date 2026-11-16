@@ -317,9 +317,7 @@
     "The road from {from} to {map} is open!": "La route de {from} à {map} est ouverte !",
     "The waystone in {map} is awake! Touch it to travel.": "La pierre de passage de {map} est réveillée ! Touche-la pour voyager.",
     "{name}'s stats": "Stats de {name}",
-    "with a {pet}": "avec : {pet}",
     "In a party of {count}": "Dans un groupe de {count}",
-    "HP": "PV",
     "Looking for trouble!": "En quête d'aventure !",
     "Befriend": "Ajouter en ami",
     "Invite": "Inviter",
@@ -367,6 +365,7 @@
     "Wave {wave} of {total}": "Vague {wave} sur {total}",
     "Boss wave, the last of {total}": "Vague du boss, la dernière sur {total}",
     "Lv{level}": "Nv{level}",
+    "HP": "PV",
     "Ready": "Prêtes",
     "Time left to choose before you attack": "Temps restant pour choisir avant d'attaquer",
     "Drag to rearrange": "Fais glisser pour réorganiser",
@@ -407,9 +406,9 @@
     "Level up! You're now level {level}. {bonuses}": "Niveau supérieur ! Tu es maintenant niveau {level}. {bonuses}",
     "LV": "NIV",
     "Chat · {map}": "Chat · {map}",
-    "Latest messages": "Derniers messages",
     "Say something…": "Dis quelque chose…",
     "Send": "Envoyer",
+    "Latest messages": "Derniers messages",
     "Announcement: {text}": "Annonce : {text}",
     "Health and magic": "Santé et magie",
     "HP is your health, MP your magic and XP how far you are to the next level. The round badge shows your level. Tap your face for your hero. Once you have a companion, its small face sits on the corner of yours: tap it for your companion.": "PV, c'est ta santé, PM ta magie et XP ton avancée vers le niveau suivant. Le badge rond montre ton niveau. Touche ton visage pour voir ton héros. Quand tu auras un compagnon, son petit visage se place au coin du tien : touche-le pour voir ton compagnon.",
@@ -623,6 +622,7 @@
     "Show fewer": "Afficher moins",
     "Show {count} more": "En afficher {count} de plus",
     "EXP": "EXP",
+    "Highest level": "Niveau maximum",
     "Defense": "Défense",
     "Magic": "Magie",
     "Speed": "Vitesse",
@@ -3850,6 +3850,7 @@
     "Bounty Hunter": "Chasseur de primes",
     "Town Favourite": "Chouchou du village",
     "Faithful": "Fidèle",
-    "Old Friend": "Vieil ami"
+    "Old Friend": "Vieil ami",
+    "with a {pet}": "avec : {pet}"
   }
 }

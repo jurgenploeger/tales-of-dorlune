@@ -317,9 +317,7 @@
     "The road from {from} to {map} is open!": "從{from}通往{map}的道路開通了！",
     "The waystone in {map} is awake! Touch it to travel.": "{map}的引路石甦醒了!觸碰它就能旅行。",
     "{name}'s stats": "{name}的能力值",
-    "with a {pet}": "帶著{pet}",
     "In a party of {count}": "{count}人隊伍",
-    "HP": "HP",
     "Looking for trouble!": "想找人打架！",
     "Befriend": "加好友",
     "Invite": "邀請",
@@ -367,6 +365,7 @@
     "Wave {wave} of {total}": "第{wave}/{total}波",
     "Boss wave, the last of {total}": "首領波，{total}波中的最後一波",
     "Lv{level}": "Lv{level}",
+    "HP": "HP",
     "Ready": "可交付",
     "Time left to choose before you attack": "自動攻擊前的剩餘選擇時間",
     "Drag to rearrange": "拖曳以重新排列",
@@ -407,9 +406,9 @@
     "Level up! You're now level {level}. {bonuses}": "升級了！你現在是{level}級。{bonuses}",
     "LV": "LV",
     "Chat · {map}": "聊天 · {map}",
-    "Latest messages": "最新訊息",
     "Say something…": "說點什麼吧…",
     "Send": "送出",
+    "Latest messages": "最新訊息",
     "Announcement: {text}": "公告：{text}",
     "Health and magic": "生命與魔力",
     "HP is your health, MP your magic and XP how far you are to the next level. The round badge shows your level. Tap your face for your hero. Once you have a companion, its small face sits on the corner of yours: tap it for your companion.": "HP 是你的生命，MP 是魔力，XP 是你離下一級還有多遠。圓形徽章顯示你的等級。點你的頭像查看英雄。有了夥伴之後，牠的小頭像會出現在你頭像的角上：點牠查看夥伴。",
@@ -623,6 +622,7 @@
     "Show fewer": "收起",
     "Show {count} more": "再顯示{count}個",
     "EXP": "EXP",
+    "Highest level": "最高等級",
     "Defense": "防禦",
     "Magic": "魔力",
     "Speed": "速度",
@@ -3850,6 +3850,7 @@
     "Bounty Hunter": "賞金獵人",
     "Town Favourite": "小鎮紅人",
     "Faithful": "常客",
-    "Old Friend": "老朋友"
+    "Old Friend": "老朋友",
+    "with a {pet}": "帶著{pet}"
   }
 }

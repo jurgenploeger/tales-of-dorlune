@@ -317,9 +317,7 @@
     "The road from {from} to {map} is open!": "{from}から{map}への道がひらけた！",
     "The waystone in {map} is awake! Touch it to travel.": "{map}の道しるべの石が目覚めた!さわれば旅ができる。",
     "{name}'s stats": "{name}のステータス",
-    "with a {pet}": "{pet}といっしょ",
     "In a party of {count}": "{count}人のパーティ",
-    "HP": "HP",
     "Looking for trouble!": "ひと暴れしたい気分！",
     "Befriend": "フレンドになる",
     "Invite": "さそう",
@@ -367,6 +365,7 @@
     "Wave {wave} of {total}": "ウェーブ {wave}/{total}",
     "Boss wave, the last of {total}": "ボスウェーブ（全{total}ウェーブの最後）",
     "Lv{level}": "Lv{level}",
+    "HP": "HP",
     "Ready": "報告可",
     "Time left to choose before you attack": "こうげきするまでの残り時間",
     "Drag to rearrange": "ドラッグで並べかえ",
@@ -407,9 +406,9 @@
     "Level up! You're now level {level}. {bonuses}": "レベルアップ！ レベル{level}になった。{bonuses}",
     "LV": "LV",
     "Chat · {map}": "チャット・{map}",
-    "Latest messages": "最新のメッセージ",
     "Say something…": "なにか話そう…",
     "Send": "送信",
+    "Latest messages": "最新のメッセージ",
     "Announcement: {text}": "お知らせ：{text}",
     "Health and magic": "体力と魔力",
     "HP is your health, MP your magic and XP how far you are to the next level. The round badge shows your level. Tap your face for your hero. Once you have a companion, its small face sits on the corner of yours: tap it for your companion.": "HPは体力、MPは魔力、XPは次のレベルまでの経験値です。丸いバッジはレベル。自分の顔をタップするとヒーローが見られます。なかまができると、その小さな顔があなたの顔の角に付きます。タップするとなかまが見られます。",
@@ -623,6 +622,7 @@
     "Show fewer": "少なく表示",
     "Show {count} more": "あと{count}個を表示",
     "EXP": "EXP",
+    "Highest level": "最高レベル",
     "Defense": "ぼうぎょ",
     "Magic": "まりょく",
     "Speed": "すばやさ",
@@ -3850,6 +3850,7 @@
     "Bounty Hunter": "賞金かせぎ",
     "Town Favourite": "町の人気者",
     "Faithful": "常連さん",
-    "Old Friend": "古なじみ"
+    "Old Friend": "古なじみ",
+    "with a {pet}": "{pet}といっしょ"
   }
 }

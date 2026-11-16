@@ -317,9 +317,7 @@
     "The road from {from} to {map} is open!": "{from}에서 {map}(으)로 가는 길이 열렸어요!",
     "The waystone in {map} is awake! Touch it to travel.": "{map}의 길잡이 돌이 깨어났어요! 만지면 여행할 수 있어요.",
     "{name}'s stats": "{name}의 능력치",
-    "with a {pet}": "{pet}와(과) 함께",
     "In a party of {count}": "{count}명 파티",
-    "HP": "HP",
     "Looking for trouble!": "한판 붙을 사람 찾아요!",
     "Befriend": "친구 추가",
     "Invite": "초대",
@@ -367,6 +365,7 @@
     "Wave {wave} of {total}": "{total}번 중 {wave}번째 공격",
     "Boss wave, the last of {total}": "보스 공격, {total}번 중 마지막",
     "Lv{level}": "Lv{level}",
+    "HP": "HP",
     "Ready": "보고 가능",
     "Time left to choose before you attack": "자동 공격까지 남은 선택 시간",
     "Drag to rearrange": "끌어서 순서 바꾸기",
@@ -407,9 +406,9 @@
     "Level up! You're now level {level}. {bonuses}": "레벨 업! 현재 레벨: {level}. {bonuses}",
     "LV": "LV",
     "Chat · {map}": "채팅 · {map}",
-    "Latest messages": "최신 메시지",
     "Say something…": "말을 걸어 보세요…",
     "Send": "보내기",
+    "Latest messages": "최신 메시지",
     "Announcement: {text}": "공지: {text}",
     "Health and magic": "체력과 마력",
     "HP is your health, MP your magic and XP how far you are to the next level. The round badge shows your level. Tap your face for your hero. Once you have a companion, its small face sits on the corner of yours: tap it for your companion.": "HP는 체력, MP는 마력, XP는 다음 레벨까지의 경험치예요. 동그란 배지는 레벨을 보여 줘요. 내 얼굴을 누르면 영웅을 볼 수 있어요. 동료가 생기면 그 작은 얼굴이 내 얼굴 모서리에 붙어요. 누르면 동료를 볼 수 있어요.",
@@ -623,6 +622,7 @@
     "Show fewer": "접기",
     "Show {count} more": "{count}개 더 보기",
     "EXP": "EXP",
+    "Highest level": "최고 레벨",
     "Defense": "방어력",
     "Magic": "마력",
     "Speed": "속도",
@@ -3850,6 +3850,7 @@
     "Bounty Hunter": "현상금 사냥꾼",
     "Town Favourite": "마을의 인기인",
     "Faithful": "단골",
-    "Old Friend": "오랜 친구"
+    "Old Friend": "오랜 친구",
+    "with a {pet}": "{pet}와(과) 함께"
   }
 }

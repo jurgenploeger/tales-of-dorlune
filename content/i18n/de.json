@@ -317,9 +317,7 @@
     "The road from {from} to {map} is open!": "Der Weg von {from} nach {map} ist offen!",
     "The waystone in {map} is awake! Touch it to travel.": "Der Wegstein in {map} ist erwacht! Berühre ihn, um zu reisen.",
     "{name}'s stats": "Werte von {name}",
-    "with a {pet}": "mit {pet}",
     "In a party of {count}": "In einer Gruppe von {count}",
-    "HP": "HP",
     "Looking for trouble!": "Auf Ärger aus!",
     "Befriend": "Anfreunden",
     "Invite": "Einladen",
@@ -367,6 +365,7 @@
     "Wave {wave} of {total}": "Welle {wave} von {total}",
     "Boss wave, the last of {total}": "Bosswelle, die letzte von {total}",
     "Lv{level}": "Lv{level}",
+    "HP": "HP",
     "Ready": "Bereit",
     "Time left to choose before you attack": "Verbleibende Zeit, bevor du angreifst",
     "Drag to rearrange": "Zum Anordnen ziehen",
@@ -407,9 +406,9 @@
     "Level up! You're now level {level}. {bonuses}": "Level-Up! Du bist jetzt Level {level}. {bonuses}",
     "LV": "LV",
     "Chat · {map}": "Chat · {map}",
-    "Latest messages": "Neueste Nachrichten",
     "Say something…": "Sag etwas …",
     "Send": "Senden",
+    "Latest messages": "Neueste Nachrichten",
     "Announcement: {text}": "Ankündigung: {text}",
     "Health and magic": "Leben und Magie",
     "HP is your health, MP your magic and XP how far you are to the next level. The round badge shows your level. Tap your face for your hero. Once you have a companion, its small face sits on the corner of yours: tap it for your companion.": "HP ist deine Gesundheit, MP deine Magie und XP, wie weit du bis zur nächsten Stufe bist. Das runde Abzeichen zeigt deine Stufe. Tippe auf dein Gesicht für deinen Helden. Sobald du einen Begleiter hast, sitzt sein kleines Gesicht an der Ecke von deinem: Tippe darauf für deinen Begleiter.",
@@ -623,6 +622,7 @@
     "Show fewer": "Weniger zeigen",
     "Show {count} more": "{count} weitere zeigen",
     "EXP": "EXP",
+    "Highest level": "Höchste Stufe",
     "Defense": "Verteidigung",
     "Magic": "Magie",
     "Speed": "Initiative",
@@ -3850,6 +3850,7 @@
     "Bounty Hunter": "Kopfgeldjäger",
     "Town Favourite": "Liebling der Stadt",
     "Faithful": "Treu",
-    "Old Friend": "Alter Freund"
+    "Old Friend": "Alter Freund",
+    "with a {pet}": "mit {pet}"
   }
 }

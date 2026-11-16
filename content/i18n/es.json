@@ -317,9 +317,7 @@
     "The road from {from} to {map} is open!": "¡El camino de {from} a {map} está abierto!",
     "The waystone in {map} is awake! Touch it to travel.": "¡La piedra de paso de {map} ha despertado! Tócala para viajar.",
     "{name}'s stats": "Estadísticas de {name}",
-    "with a {pet}": "con {pet}",
     "In a party of {count}": "En un grupo de {count}",
-    "HP": "HP",
     "Looking for trouble!": "¡Busco pelea!",
     "Befriend": "Hacer amigos",
     "Invite": "Invitar",
@@ -367,6 +365,7 @@
     "Wave {wave} of {total}": "Oleada {wave} de {total}",
     "Boss wave, the last of {total}": "Oleada del jefe, la última de {total}",
     "Lv{level}": "Nv{level}",
+    "HP": "HP",
     "Ready": "Listas",
     "Time left to choose before you attack": "Tiempo para elegir antes de atacar",
     "Drag to rearrange": "Arrastra para reordenar",
@@ -407,9 +406,9 @@
     "Level up! You're now level {level}. {bonuses}": "¡Subes de nivel! Ahora eres nivel {level}. {bonuses}",
     "LV": "NV",
     "Chat · {map}": "Chat · {map}",
-    "Latest messages": "Últimos mensajes",
     "Say something…": "Di algo…",
     "Send": "Enviar",
+    "Latest messages": "Últimos mensajes",
     "Announcement: {text}": "Anuncio: {text}",
     "Health and magic": "Salud y magia",
     "HP is your health, MP your magic and XP how far you are to the next level. The round badge shows your level. Tap your face for your hero. Once you have a companion, its small face sits on the corner of yours: tap it for your companion.": "HP es tu salud, MP tu magia y XP lo que te falta para el siguiente nivel. La insignia redonda muestra tu nivel. Toca tu cara para ver a tu héroe. Cuando tengas un compañero, su carita aparece en la esquina de la tuya: tócala para ver a tu compañero.",
@@ -623,6 +622,7 @@
     "Show fewer": "Mostrar menos",
     "Show {count} more": "Mostrar {count} más",
     "EXP": "EXP",
+    "Highest level": "Nivel máximo",
     "Defense": "Defensa",
     "Magic": "Magia",
     "Speed": "Velocidad",
@@ -3850,6 +3850,7 @@
     "Bounty Hunter": "Cazarrecompensas",
     "Town Favourite": "Favorito del Pueblo",
     "Faithful": "Fiel",
-    "Old Friend": "Viejo Amigo"
+    "Old Friend": "Viejo Amigo",
+    "with a {pet}": "con {pet}"
   }
 }
