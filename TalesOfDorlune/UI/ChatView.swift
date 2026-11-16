@@ -57,7 +57,7 @@ struct ChatView: View {
                     .disabled(draft.trimmingCharacters(in: .whitespaces).isEmpty)
                     .accessibilityLabel(L("Send"))
                 }
-                .padding(.horizontal, HUDStyle.windowInset).padding(.vertical, 10)
+                .padding(HUDStyle.windowInset)
                 .background(HUDStyle.ink.opacity(0.6))
             }
             // As big as the menu's windows (playtesting 2026-10-25: "Make the chat modal the same size as
