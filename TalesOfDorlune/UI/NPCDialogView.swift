@@ -47,7 +47,9 @@ struct NPCDialogView: View {
 
                 // Out of sight under the wares' window, so what they said doesn't show through it.
                 Group {
-                    bubble(maxHeight: proxy.size.height * 0.5, speakerRoom: portrait * 0.5)
+                    // How high they stand over the window's foot: their top, less a little of the
+                    // picture's own clear margin, is where what's beside them has to give them room.
+                    bubble(maxHeight: proxy.size.height * 0.5, speakerRoom: portrait * 0.5, speakerRise: portrait * 0.84 - bottom + 6)
                         .padding(.horizontal, 12)
                         .padding(.bottom, bottom)
 
@@ -114,29 +116,24 @@ struct NPCDialogView: View {
 
     /// The window they talk from: what they say and its buttons lined up under their name, all
     /// clear of the `speakerRoom` the character stands in at the right.
-    private func bubble(maxHeight: CGFloat, speakerRoom: CGFloat) -> some View {
+    private func bubble(maxHeight: CGFloat, speakerRoom: CGFloat, speakerRise: CGFloat) -> some View {
         let window = RoundedRectangle(cornerRadius: HUDStyle.windowRadius)
-        return VStack(alignment: .leading, spacing: 0) {
-            WindowTitle(npc.name, trailingRoom: speakerRoom)
-            VStack(alignment: .leading, spacing: 10) {
-                if npc.role == .quests {
-                    QuestConversation(session: session, giver: npc, reply: $reply, finished: $finished,
-                                      room: min(260, max(120, maxHeight - 110)))
-                } else {
-                    talk(maxHeight: maxHeight)
-                }
-            }
-            // In line with the name (`WindowTitle`'s 16 points in).
-            .padding(.leading, 16)
-            .padding(.trailing, 12 + speakerRoom)
-            .padding(.top, 10)
-            .padding(.bottom, 14)
-        }
+        // What they say runs the window's width, and only what would stand beside the character gives
+        // them room (the user, 2026-11-16: "The content in these conversations should wrap around the
+        // character. So if there is space, it can go to the edge on the right"): `AroundSpeaker`.
         // As tall as the character standing by it (their room is half their height): a line or two left
         // it a strip under their feet. 0.9.74's floor (1.2 times their room) and 0.9.75's (1.6) were
         // about as tall as the window already was, so it didn't grow (0.9.76, the user's call). Held on
         // its side, no more than most of the room it has.
-        .frame(minHeight: min(speakerRoom * 2, maxHeight * 0.8), alignment: .top)
+        return AroundSpeaker(room: speakerRoom, rise: speakerRise, minHeight: min(speakerRoom * 2, maxHeight * 0.8)) {
+            WindowTitle(npc.name, trailingRoom: speakerRoom)
+            if npc.role == .quests {
+                QuestConversation(session: session, giver: npc, reply: $reply, finished: $finished,
+                                  room: min(260, max(120, maxHeight - 110)))
+            } else {
+                talk(maxHeight: maxHeight)
+            }
+        }
         .frame(maxWidth: .infinity, alignment: .leading)
         .foregroundStyle(HUDStyle.cream)
         .clipShape(window)
@@ -641,13 +638,17 @@ private struct QuestConversation: View {
         let lines = told.isEmpty ? [giver.greeting] : told
         let index = min(page, lines.count - 1)
         let last = index == lines.count - 1
-        VStack(alignment: .leading, spacing: 10) {
+        // Its parts one by one in the speech window (`AroundSpeaker`), so only those beside the
+        // speaker give them room.
+        Group {
             // A favour you're carrying to them: what they say to it comes first.
             ErrandPanel(session: session, npcID: giver.id, reply: $reply)
             Text(lines[index])
                 .font(HUDStyle.font(13))
                 .fixedSize(horizontal: false, vertical: true)
-                .frame(maxWidth: .infinity, minHeight: 50, alignment: .topLeading)
+                // No floor under a line or two: 50 points left a gap over the quest under it (the user,
+                // 2026-11-16: "the spacing between the text and that quest card is too big").
+                .frame(maxWidth: .infinity, alignment: .topLeading)
                 .contentShape(Rectangle())
                 // A tap on what they're saying reads on, as Next does.
                 .onTapGesture { if !last { turn(from: index, by: 1, of: lines.count) } }
@@ -964,6 +965,74 @@ extension GuildPanel {
                 }
             }
         }
+    }
+}
+
+/// The speech window's own layout (`NPCDialogView.bubble`): its title along the top, then what's said
+/// and done, one part under another 10 apart, each the window's width (16 in from its left, 12 from
+/// its right) unless it would reach down beside the character standing in its bottom-right corner,
+/// `rise` up from its foot and `room` in from its right: then it's narrowed to clear them. At least
+/// `minHeight` tall, the character's height. Worked out in one go from the parts' sizes: which parts
+/// stand beside the character is judged against the window as tall as the parts at full width make
+/// it; a narrowed part that makes it taller still clears them, only a little sooner than it needed to.
+private struct AroundSpeaker: Layout {
+    let room: CGFloat
+    let rise: CGFloat
+    let minHeight: CGFloat
+    private let spacing: CGFloat = 10
+    private let inset = EdgeInsets(top: 10, leading: 16, bottom: 14, trailing: 12)
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        let width = proposal.width ?? 360
+        return CGSize(width: width, height: arrange(width: width, subviews).height)
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        let frames = arrange(width: bounds.width, subviews).frames
+        for (index, frame) in frames.enumerated() where index < subviews.count {
+            subviews[index].place(at: CGPoint(x: bounds.minX + frame.minX, y: bounds.minY + frame.minY),
+                                  proposal: ProposedViewSize(width: frame.width, height: frame.height))
+        }
+    }
+
+    /// Where each part goes (the first, the title, across the top), and how tall the window is.
+    private func arrange(width: CGFloat, _ subviews: Subviews) -> (frames: [CGRect], height: CGFloat) {
+        guard let title = subviews.first else { return ([], minHeight) }
+        let titleHeight = title.sizeThatFits(ProposedViewSize(width: width, height: nil)).height
+        var frames = [CGRect(x: 0, y: 0, width: width, height: titleHeight)]
+        let wide = max(1, width - inset.leading - inset.trailing)
+        let narrow = max(80, wide - room)
+        let parts = subviews.dropFirst()
+        // As tall as the parts make it at full width: where the character's room begins.
+        var natural: CGFloat = 0
+        var any = false
+        for part in parts {
+            let height = part.sizeThatFits(ProposedViewSize(width: wide, height: nil)).height
+            guard height > 0 else { continue }
+            natural += (any ? spacing : 0) + height
+            any = true
+        }
+        let top = titleHeight + inset.top
+        let beside = max(minHeight, top + natural + inset.bottom) - rise
+        var y = top
+        any = false
+        for part in parts {
+            var size = part.sizeThatFits(ProposedViewSize(width: wide, height: nil))
+            var across = wide
+            if size.height > 0, y + (any ? spacing : 0) + size.height > beside {
+                size = part.sizeThatFits(ProposedViewSize(width: narrow, height: nil))
+                across = narrow
+            }
+            guard size.height > 0 else {
+                frames.append(CGRect(x: inset.leading, y: y, width: across, height: 0))
+                continue
+            }
+            if any { y += spacing }
+            frames.append(CGRect(x: inset.leading, y: y, width: across, height: size.height))
+            y += size.height
+            any = true
+        }
+        return (frames, max(minHeight, y + inset.bottom))
     }
 }
 
