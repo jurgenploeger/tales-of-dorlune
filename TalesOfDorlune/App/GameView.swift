@@ -60,7 +60,7 @@ struct GameView: View {
                 case .npc(let id):
                     if let npc = Content.shared.npc(id) {
                         NPCDialogView(npc: npc, session: coordinator.session, onClose: coordinator.closeOverlay, onFight: coordinator.fightBoss,
-                                      onBank: coordinator.openBank)
+                                      onBank: coordinator.openBank, cornered: coordinator.cornered == id)
                     }
                 case .bank(let id):
                     if let npc = Content.shared.npc(id) {

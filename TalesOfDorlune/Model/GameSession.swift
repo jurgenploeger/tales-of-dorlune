@@ -2492,6 +2492,18 @@ final class GameSession {
         bossesBeatenHere.contains(boss.id)
     }
 
+    /// Bosses that have cornered you since arriving on this map (`corners`), so one you ran from or
+    /// lost to doesn't corner you again at once: next visit it does.
+    var bossesFacedHere: Set<String> = []
+
+    /// Whether walking up to `boss` corners you (the user, 2026-11-16: "when you come close to a boss,
+    /// it should automatically open a modal with the narrative of the boss, which you cannot close, so
+    /// you really have to go in a fight with them"): one you've never beaten, once a visit. Rematches
+    /// stay yours to ask for.
+    func corners(_ boss: NPCDef) -> Bool {
+        boss.role == .boss && !isDefeated(boss) && !isBeatenHere(boss) && !bossesFacedHere.contains(boss.id)
+    }
+
     /// Every win rolls the boss's rare drops (the colour variants of top armour).
     func defeatBoss(_ boss: NPCDef) {
         bossesBeatenHere.insert(boss.id)

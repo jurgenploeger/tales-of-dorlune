@@ -64,6 +64,8 @@ final class LandNode: SKNode {
 final class WorldScene: SKScene {
     var onEncounter: (@MainActor (MapDef.Encounters, SKTexture?) -> Void)?
     var onTalk: (@MainActor (NPCDef) -> Void)?
+    /// A boss you've walked up to that won't let you go (`GameSession.corners`).
+    var onCornered: (@MainActor (NPCDef) -> Void)?
     var onTravel: (@MainActor (MapDef.Exit) -> Void)?
     var onFirstFrame: (@MainActor () -> Void)?
     /// A duel with another adventurer is starting (you challenged them, or they picked a fight).
@@ -2789,6 +2791,10 @@ final class WorldScene: SKScene {
             }
         }
         if session.nearbyNPC != nearest?.id { session.nearbyNPC = nearest?.id }
+        if !isInputLocked, let id = nearest?.id, let boss = npcs.first(where: { $0.def.id == id })?.def, session.corners(boss) {
+            session.bossesFacedHere.insert(boss.id)
+            onCornered?(boss)
+        }
         for (index, sign) in signs.enumerated() {
             let near = sign.base.distance(to: player.position) <= signRange
             sign.hint.isHidden = !near || sign.label.alpha > 0.5

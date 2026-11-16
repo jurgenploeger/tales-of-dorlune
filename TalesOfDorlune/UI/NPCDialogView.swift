@@ -9,6 +9,9 @@ struct NPCDialogView: View {
     var onFight: (NPCDef) -> Void = { _ in }
     /// Bankers: open the bank's window.
     var onBank: (NPCDef) -> Void = { _ in }
+    /// A boss that's cornered you (`GameCoordinator.corner`): its story over what it says, and no way
+    /// out but the fight.
+    var cornered = false
     @State private var reply: String?
     /// A quest just handed in: its reward card covers the dialog until you continue.
     @State private var finished: FinishedQuest?
@@ -39,8 +42,8 @@ struct NPCDialogView: View {
             let portrait = min(proxy.size.width * 0.48, proxy.size.height * 0.55, 280)
             let bottom = max(16, proxy.safeAreaInsets.bottom)
             ZStack(alignment: .bottomTrailing) {
-                Color.black.opacity(0.35)
-                    .onTapGesture(perform: onClose)
+                Color.black.opacity(cornered ? 0.5 : 0.35)
+                    .onTapGesture { if !cornered { onClose() } }
 
                 // Out of sight under the wares' window, so what they said doesn't show through it.
                 Group {
@@ -140,7 +143,13 @@ struct NPCDialogView: View {
         // The frame all the way round, like every window's (`gameWindow`), the close button over its corner.
         .background(window.fill(HUDStyle.glass).shadow(color: .black.opacity(0.35), radius: 3, x: 0, y: 2))
         .overlay(HUDStyle.frame(window))
-        .windowCloseButton(onClose)
+        // The close button over its corner; none while a boss has you cornered.
+        .overlay(alignment: .topTrailing) {
+            if !cornered {
+                OrangeCloseButton(action: onClose)
+                    .offset(x: OrangeCloseButton.overhang, y: -OrangeCloseButton.overhang)
+            }
+        }
         // Opens as every window does.
         .popIn()
     }
@@ -148,6 +157,14 @@ struct NPCDialogView: View {
     /// What everyone but a quest giver says, and what they do for you under it.
     @ViewBuilder
     private func talk(maxHeight: CGFloat) -> some View {
+        // A boss that's cornered you: its story first, told, then what it says to you.
+        if cornered, let lore = npc.monster.flatMap(session.content.monster)?.lore {
+            Text(lore)
+                .font(HUDStyle.font(12))
+                .foregroundStyle(HUDStyle.dim)
+                .fixedSize(horizontal: false, vertical: true)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
         Text(reply ?? npc.greeting)
             .font(HUDStyle.font(13))
             .fixedSize(horizontal: false, vertical: true)

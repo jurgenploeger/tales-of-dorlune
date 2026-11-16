@@ -92,6 +92,8 @@ final class GameCoordinator {
     private(set) var world: WorldScene
     private(set) var battle: BattleController?
     private(set) var overlay: Overlay?
+    /// The boss whose window is open with no way out but the fight (`corner`).
+    private(set) var cornered: String?
     /// False until the first map frame has rendered (the loading curtain stays up until then).
     private(set) var isReady = false
     /// The map being travelled to, while its loading card is showing.
@@ -255,6 +257,7 @@ final class GameCoordinator {
         if let continent { return continent }
         let scene = ContinentScene(session: session, input: input)
         scene.onTalk = { [weak self] npc in self?.open(.npc(npc.id)) }
+        scene.onCornered = { [weak self] npc in self?.corner(npc) }
         scene.onInspect = { [weak self] profile in self?.open(.profile(profile)) }
         scene.onEncounter = { [weak self] encounters, backdrop in self?.startBattle(encounters, backdrop: backdrop) }
         scene.onDuel = { [weak self] rival, backdrop in self?.startDuel(with: rival, backdrop: backdrop) }
@@ -379,6 +382,7 @@ final class GameCoordinator {
         scene.onFirstFrame = { [weak self] in self?.finishLoading() }
         scene.onEncounter = { [weak self] encounters, backdrop in self?.startBattle(encounters, backdrop: backdrop) }
         scene.onTalk = { [weak self] npc in self?.open(.npc(npc.id)) }
+        scene.onCornered = { [weak self] npc in self?.corner(npc) }
         scene.onTravel = { [weak self] exit in self?.travel(through: exit) }
         scene.onDuel = { [weak self] rival, backdrop in self?.startDuel(with: rival, backdrop: backdrop) }
         scene.onInspect = { [weak self] profile in self?.open(.profile(profile)) }
@@ -429,7 +433,7 @@ final class GameCoordinator {
             Task {
                 try? await Task.sleep(for: .milliseconds(280))
                 session.markVisited(map.id)
-                session.bossesBeatenHere = []
+                session.bossesBeatenHere = []; session.bossesFacedHere = []
                 session.reachCheckpoint(map)
                 let scene = makeContinent()
                 showsContinent = true
@@ -531,7 +535,7 @@ final class GameCoordinator {
     private func loadMap(_ map: MapDef, grid: WorldMap, began: Date, entry: Edge?, arrival: CGPoint? = nil) {
         session.data.mapID = map.id
         session.markVisited(map.id)
-        session.bossesBeatenHere = []
+        session.bossesBeatenHere = []; session.bossesFacedHere = []
         if entry == nil { session.playerPosition = nil }
         session.reachCheckpoint(map)
         let scene = WorldScene(map: map, session: session, input: input, entry: entry, arrival: arrival, grid: grid)
@@ -579,9 +583,18 @@ final class GameCoordinator {
     /// The boss you're fighting, so it disappears from the map once beaten.
     private var boss: NPCDef?
 
+    /// A boss you walked up to (`GameSession.corners`): its window opens by itself, its story and
+    /// what it says to you, and closes only into the fight: no close button, no tap outside.
+    func corner(_ npc: NPCDef) {
+        guard battle == nil, overlay == nil else { return }
+        show(.npc(npc.id))
+        cornered = npc.id
+    }
+
     func fightBoss(_ npc: NPCDef) {
         guard battle == nil, let controller = BattleController.boss(npc, encounters: currentLand.encounters, session: session) else { return }
         overlay = nil
+        cornered = nil
         controller.onFinish = { [weak self] outcome in self?.endBattle(outcome) }
         // The map you're standing on, like any fight (without the boss: it's in the battle now).
         battleScene = BattleScene(controller: controller, size: mapScene.size, backdrop: mapScene.battleBackdrop(hiding: npc.id))
@@ -707,6 +720,8 @@ final class GameCoordinator {
     }
 
     private func show(_ overlay: Overlay) {
+        // Only `corner` keeps a window from closing, and only the one it opens.
+        cornered = nil
         self.overlay = overlay
         if case .npc = overlay { SoundEffects.shared.play(.talk) }
         if case .npc(let id) = overlay, let npc = Content.shared.npc(id), !npc.role.isObject {
@@ -862,6 +877,8 @@ final class GameCoordinator {
     }
 
     func closeOverlay() {
+        // A boss that's cornered you lets you go only into the fight.
+        if let cornered, overlay == .npc(cornered) { return }
         SoundEffects.shared.play(.close, volume: 0.8)
         overlay = nil
         mapScene.resume()
