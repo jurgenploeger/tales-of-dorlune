@@ -217,10 +217,12 @@ struct ChatLineView: View {
     var body: some View {
         switch line.kind {
         case .system:
-            Text(line.text)
-                .font(HUDStyle.font(11))
-                .foregroundStyle(color)
-                .frame(maxWidth: .infinity)
+            ruled {
+                Text(line.text)
+                    .font(HUDStyle.font(11))
+                    .foregroundStyle(color)
+                    .multilineTextAlignment(.center)
+            }
         case .announcement:
             // The game's own notices: a gold banner, apart from what people say.
             // Centred on a soft gold plate, no rim, as round as the window's cards (the user, 2026-11-16).
@@ -241,15 +243,17 @@ struct ChatLineView: View {
             .accessibilityLabel(L("Announcement: {text}", ["text": line.text]))
         case .notice:
             // What happened to you lately, toasted on the map first.
-            HStack(alignment: .firstTextBaseline, spacing: 6) {
-                IconImage(ChatLineView.icon(of: line.tone ?? .system), size: 11)
-                    .foregroundStyle(color)
-                Text(line.text)
-                    .font(HUDStyle.font(11))
-                    .foregroundStyle(color)
-                    .fixedSize(horizontal: false, vertical: true)
+            ruled {
+                HStack(alignment: .firstTextBaseline, spacing: 6) {
+                    IconImage(ChatLineView.icon(of: line.tone ?? .system), size: 11)
+                        .foregroundStyle(color)
+                    Text(line.text)
+                        .font(HUDStyle.font(11))
+                        .foregroundStyle(color)
+                        .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
         case .you, .adventurer, .villager, .npc:
             // Their face, then their name, BOT after it and the time at the right, and what they said
             // under it (the user, 2026-11-16). An adventurer's face and name open their profile.
@@ -282,6 +286,22 @@ struct ChatLineView: View {
             .padding(.vertical, 3)
             .accessibilityElement(children: .combine)
         }
+    }
+
+    /// What happened, not said by anyone (`.system`, `.notice`): centred between two thin rules in its
+    /// own colour, running out to the window's sides (the user, 2026-11-16: "add horizontal lines left
+    /// and right of those labels").
+    private func ruled<Label: View>(@ViewBuilder _ label: () -> Label) -> some View {
+        HStack(spacing: 8) {
+            rule
+            label().layoutPriority(1)
+            rule
+        }
+        .frame(maxWidth: .infinity)
+    }
+
+    private var rule: some View {
+        color.opacity(0.45).frame(minWidth: 12, maxWidth: .infinity).frame(height: 1)
     }
 
     /// Their face or name: a button to their profile, for an adventurer.
