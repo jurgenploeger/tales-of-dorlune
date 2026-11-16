@@ -763,6 +763,20 @@ final class ArtLibrary {
                         // along it, where the land had stopped dead at a flat blue (playtesting 2026-10-23).
                         let natural = layer.tile == "tile_water"
                         let speck = Self.speck(px, py, cell)
+                        // Grass in the outline (the user, 2026-11-16): the land's own grass grows out over
+                        // the waterline in blades, each its own height (`bladeReach`, along the screen's
+                        // width across the world, so they meet from tile to tile), its tip a little lighter,
+                        // the bank's earth only in the gaps between them. Only where the ground is green.
+                        let reach = natural ? Self.bladeReach(Double(cell.col) + x - Double(cell.row) - y) : -1
+                        let grassy = Int(out[index + 1]) > Int(out[index]) + 8 && Int(out[index + 1]) > Int(out[index + 2]) + 8
+                        if natural, grassy, depth > -0.3, depth < reach {
+                            let shade: Double = depth > reach - 0.035 ? 1.12 : 0.9
+                            for c in 0..<3 { out[index + c] = UInt8(max(0, min(255, Double(out[index + c]) * shade))) }
+                            out[index + 3] = 255
+                            continue
+                        }
+                        // The blade's shadow on the water, just past its tip.
+                        let shadowed = natural && grassy && reach > 0 && depth >= reach && depth < reach + 0.04
                         if depth > 0 {
                             // Foam along the edge, broken here and there, with a few flecks out past it.
                             let foam = depth < 0.05 ? (speck < 0.75 ? 0.35 : 0.12) : (depth < 0.1 && speck < 0.12 ? 0.22 : 0)
@@ -772,6 +786,7 @@ final class ArtLibrary {
                                 var value: Double = Double(texels[index + c]) * (1 - deep)
                                 value += (Self.shallows[c] - value) * shallow
                                 value = value * (1 - foam) + 255 * foam
+                                if shadowed { value *= 0.7 }
                                 out[index + c] = UInt8(max(0, min(255, value)))
                             }
                             out[index + 3] = 255
@@ -895,6 +910,21 @@ final class ArtLibrary {
     nonisolated private static let pebble: [Double] = [186, 180, 168]
 
     /// A pixel's own fixed chance, 0 to 1, for the foam's breaks and the bank's pebbles.
+    /// How far the blade of grass at `across` (world cells along the screen's width, x - y) reaches out
+    /// past the waterline, in cells: a blade every 1/13 of a cell (2 or 3 of a tile's pixels), most of
+    /// them 1 to 6 pixels over the water, a few in between short of it, where the bank's earth shows.
+    nonisolated static func bladeReach(_ across: Double) -> Double {
+        let blade = Int((across * 13).rounded(.down))
+        var h = UInt32(truncatingIfNeeded: blade &* 668_265_263) ^ 0x9E37_79B9
+        h = (h ^ (h >> 15)) &* 2_246_822_519
+        h ^= h >> 13
+        h = h &* 3_266_489_917
+        h ^= h >> 16
+        let gap = Double(h & 0xFFFF) / 65_535, height = Double(h >> 16) / 65_535
+        guard gap < 0.7 else { return -0.16 }
+        return 0.02 + 0.17 * height * height
+    }
+
     nonisolated private static func speck(_ px: Int, _ py: Int, _ cell: GridPoint) -> Double {
         var h = UInt32(truncatingIfNeeded: px &* 73_856_093) ^ UInt32(truncatingIfNeeded: py &* 19_349_663)
         h ^= UInt32(truncatingIfNeeded: cell.col &* 83_492_791) ^ UInt32(truncatingIfNeeded: cell.row &* 2_654_435_761)
