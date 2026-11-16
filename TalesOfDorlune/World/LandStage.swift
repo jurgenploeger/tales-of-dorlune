@@ -115,6 +115,7 @@ final class LandStage {
         placeBridges()
         placeHarbors()
         for reed in plan.reeds { addScenery(reed) }
+        placeWaterfalls(plan.waterfalls)
         await pause()
         placeFence()
         placeBuildings()
@@ -611,6 +612,19 @@ final class LandStage {
                     chunk(at: node.position).addChild(node)
                 }
             }
+        }
+    }
+
+    /// The waterfalls where the rivers spring (`LandPlan.planWaterfalls`): their four frames in turn, the
+    /// water running down, and a little spray sparkling over the pool at their foot.
+    private func placeWaterfalls(_ planned: [Placement]) {
+        guard !planned.isEmpty else { return }
+        let frames = ["waterfall", "waterfall_2", "waterfall_3", "waterfall_4"].map { art.sprite($0).texture }
+        for fall in planned {
+            let node = addScenery(art.sprite(fall.art), at: fall.cell, nudge: fall.nudge, scale: fall.scale)
+            node.run(.repeatForever(.animate(with: frames, timePerFrame: 0.11)))
+            let spray = node.position + CGVector(dx: 0, dy: 10)
+            Ambience.twinkle(around: spray, radius: 20, count: 4, in: layer(at: spray, lift: Self.airLift))
         }
     }
 
