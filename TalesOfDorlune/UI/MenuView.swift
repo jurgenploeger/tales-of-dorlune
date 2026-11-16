@@ -290,13 +290,6 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
     /// The pages in order.
     private var pages: [Page] { Array(Page.allCases) }
 
-    /// Whether the tab you're on is the first and stands at the window's side (not scrolled away):
-    /// its edge then runs straight down the page's side (the user, 2026-11-16, after a tabs design:
-    /// "the first active tab that merges into the main panel"), and the page has no corner there.
-    private var firstOnAtSide: Bool {
-        page == pages.first && (frames[page]?.minX ?? 0) > -1
-    }
-
     var body: some View {
         ScrollViewReader { reader in
             // Faded at an edge with more tabs past it, a chevron there (`SideScroll`): tapped, the
@@ -321,8 +314,11 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
                             }
                     }
                 }
-                // Flush with the window's side, so the first tab's edge, when it's the one you're on,
-                // is the page's own; the last clear of the close button's room over the corner.
+                // In from the window's side past the page's rounded corner (`PageCorner`), so the first
+                // tab, when it's the one you're on, flares out of the corner's round straight into its
+                // own (the user, 2026-11-16: "the first tab should be more inserted so it also shows the
+                // rounded corner in the bottom left"); the last clear of the close button's room.
+                .padding(.leading, PageFillet.side + FlaredTab.flare)
                 .padding(.trailing, OrangeCloseButton.room + 8)
                 .padding(.top, TabEdge.inset)
             }
@@ -339,18 +335,18 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
             WindowBar(foot: false)
                 .overlay(alignment: .bottom) {
                     HUDStyle.frameLight.opacity(0.8).frame(height: 1.5)
-                        .padding(.leading, firstOnAtSide ? 0 : PageFillet.side)
+                        .padding(.leading, PageFillet.side)
                         .padding(.trailing, PageFillet.side)
                 }
         }
         // The page's top corners, rounded where its edge meets the bar's foot (the user, 2026-11-16:
         // "If another tab than the first is selected, there should be a corner radius like this"),
-        // hanging under the bar; none on the left while the first tab stands there.
+        // hanging under the bar, their line level with the bar's (`PageFillet.lift`).
         .overlay(alignment: .bottomLeading) {
-            if !firstOnAtSide { PageCorner(edge: .leading).offset(y: PageFillet.radius) }
+            PageCorner(edge: .leading).offset(y: PageFillet.radius - PageFillet.lift)
         }
         .overlay(alignment: .bottomTrailing) {
-            PageCorner(edge: .trailing).offset(y: PageFillet.radius)
+            PageCorner(edge: .trailing).offset(y: PageFillet.radius - PageFillet.lift)
         }
         // Over the page under it, where its corners hang.
         .zIndex(1)
@@ -371,7 +367,6 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
 
     private func tab(_ item: Page) -> some View {
         let selected = item == page
-        let first = item == pages.first
         let marked = !selected && waiting(item)
         return Button {
             guard !selected else { return }
@@ -396,16 +391,15 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
                     // The others have none: their names on the bar (the user, 2026-11-16: "the inactive
                     // tabs shouldn't have a tab fill, just transparent").
                     if selected {
-                        FlaredTab(leading: !first).fill(HUDStyle.glassTop)
-                            .padding(.leading, first ? 0 : -FlaredTab.flare).padding(.trailing, -FlaredTab.flare)
+                        FlaredTab().fill(HUDStyle.glassTop).padding(.horizontal, -FlaredTab.flare)
                     }
                 }
                 .overlay {
                     // A light edge up its sides, over its top and out along its flares; none along its
                     // foot, where it's the page's. One you're not on edged faintly in the bar's dark.
                     if selected {
-                        FlaredTab(open: true, leading: !first).stroke(HUDStyle.frameLight.opacity(0.8), lineWidth: 1.5)
-                            .padding(.leading, first ? 0 : -FlaredTab.flare).padding(.trailing, -FlaredTab.flare)
+                        FlaredTab(open: true).stroke(HUDStyle.frameLight.opacity(0.8), lineWidth: 1.5)
+                            .padding(.horizontal, -FlaredTab.flare)
                     }
                 }
                 .overlay(alignment: .topTrailing) {
@@ -447,7 +441,8 @@ private nonisolated struct FlaredTab: Shape {
         let flare = Self.flare, radius = TabEdge.radius
         // Inside by half the stroke's width at the top and sides, so a stroke stays on it.
         let left = rect.minX + (leading ? flare : 0) + 0.75, right = rect.maxX - flare - 0.75, top = rect.minY + 0.75
-        let bottom = rect.maxY
+        // Its line ends on the middle of the page's line along the bar's foot (1.5 wide), not under it.
+        let bottom = open ? rect.maxY - 0.75 : rect.maxY
         var path = Path()
         // Round arcs, as the window's corners are, the flares as the top's turned the other way.
         if leading {
@@ -490,6 +485,9 @@ private nonisolated struct PageFillet: Shape {
     static let frameWidth: CGFloat = 4
     /// How far in from the window's side the page's edge along the bar's foot begins.
     static var side: CGFloat { frameWidth + radius }
+    /// How far up into the bar it reaches: its line's width, so its line lies on the bar's own along
+    /// its foot (hung just under it, it showed a step below the line, playtesting 2026-11-16).
+    static let lift: CGFloat = 1.5
 
     let edge: HorizontalEdge
     let open: Bool
