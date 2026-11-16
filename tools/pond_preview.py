@@ -108,6 +108,22 @@ def scene(mid, seed=4):
                 taken.add((c, r))
                 lo, hi = p.get('size', [1, 1])
                 items.append((p['art'], c, r, rng.uniform(lo, hi)))
+    # The shore dressed as `LandPlan.planReeds` dresses it: reeds, long grass and mossy stones on the
+    # bank cells, at the water's edge.
+    for c in range(n):
+        for r in range(n):
+            if not free(c, r) or not near_water(c, r) or rng.random() >= 0.55:
+                continue
+            pick = rng.random()
+            art = 'reeds' if pick < 0.35 else 'shore_grass' if pick < 0.82 else 'shore_stones'
+            taken.add((c, r))
+            ways = [(dc, dr) for dc, dr in ((1, 0), (-1, 0), (0, 1), (0, -1))
+                    if 0 <= c + dc < n and 0 <= r + dr < n and kinds[r + dr][c + dc] == 'w']
+            if not ways:
+                continue
+            dc, dr = rng.choice(ways)
+            reach = rng.uniform(0.26, 0.4)
+            items.append((art, c + dc * reach, r + dr * reach, rng.uniform(0.75, 1)))
     for _ in range(26):
         c, r = rng.randrange(n), rng.randrange(n)
         if free(c, r) and not near_water(c, r):

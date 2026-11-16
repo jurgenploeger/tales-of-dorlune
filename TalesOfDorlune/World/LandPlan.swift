@@ -152,8 +152,10 @@ final class LandPlanner {
         }
     }
 
-    /// Reeds here and there along the lakes' and the river's shores, where the water isn't frozen
-    /// or chocolate.
+    /// The lakes' and the river's shores dressed where the water isn't frozen or chocolate: reeds, tufts
+    /// of long grass and a few mossy stones on the bank, drawn out to the water's edge so they overlap
+    /// it (the user, 2026-11-16: "grass sprites on the sides, to make it look more natural [...] also
+    /// little details like rocks"; `tools/scenery_art.py` draws `shore_grass` and `shore_stones`).
     private func planReeds() {
         let water = def.theme.water ?? ""
         guard !water.contains("ice"), !water.contains("chocolate"), !map.lakes.isEmpty || !map.river.isEmpty else { return }
@@ -164,10 +166,19 @@ final class LandPlanner {
                 for (dc, dr) in [(1, 0), (-1, 0), (0, 1), (0, -1)] {
                     let land = GridPoint(col: cell.col + dc, row: cell.row + dr)
                     guard map.contains(land), map.ground[land.row][land.col] != .water, seen.insert(land).inserted else { continue }
-                    guard Double.random(in: 0..<1, using: &reedRNG) < 0.18, map.isFreeForScenery(land, blocking: false) else { continue }
+                    guard Double.random(in: 0..<1, using: &reedRNG) < 0.55, map.isFreeForScenery(land, blocking: false) else { continue }
                     map.occupy(land, blocking: false)
+                    let pick = Double.random(in: 0..<1, using: &reedRNG)
+                    let art = pick < 0.35 ? "reeds" : pick < 0.82 ? "shore_grass" : "shore_stones"
                     let scale = CGFloat.random(in: 0.75...1, using: &reedRNG)
-                    plan.reeds.append(scenery("reeds", at: land, nudge: true, scale: scale))
+                    // Nudged as before (the plan's own random numbers drawn as they were, so nothing else
+                    // in the land moves), then set toward the water.
+                    var placement = scenery(art, at: land, nudge: true, scale: scale)
+                    // A third of a cell toward the water it borders, give or take, so it stands at the edge.
+                    let reach = WorldMap.tileSize * CGFloat.random(in: 0.26...0.4, using: &reedRNG)
+                    let toward = WorldMap.project(CGPoint(x: CGFloat(-dc) * reach, y: CGFloat(-dr) * reach))
+                    placement.nudge = CGVector(dx: toward.x + CGFloat.random(in: -5...5, using: &reedRNG), dy: toward.y)
+                    plan.reeds.append(placement)
                 }
             }
         }

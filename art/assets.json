@@ -1872,6 +1872,14 @@
       }
     },
     {
+      "id": "shore_grass",
+      "kind": "prop"
+    },
+    {
+      "id": "shore_stones",
+      "kind": "prop"
+    },
+    {
       "id": "dead_tree",
       "kind": "prop",
       "request": {

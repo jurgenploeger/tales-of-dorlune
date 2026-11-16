@@ -612,7 +612,41 @@ def sapling():
     return s
 
 
+def grass_tuft(colour, seed, blades=10, height=(16, 26)):
+    """shore_grass: a tuft of long grass by the water (the user, 2026-11-16: "grass sprites on the sides,
+    to make it look more natural"), blades fanning up and out from one root, each a tapering leaf that
+    bends over at its tip; the ones behind in the shadow colour, the front ones lit."""
+    s = scene(32)
+    r = rng(seed)
+    back, mid, lit = (Material(shade_of(colour, k), texture=0.0, shades=4) for k in (0.72, 0.95, 1.22))
+    for i in range(blades):
+        t = i / (blades - 1) - 0.5                       # -0.5 left to 0.5 right
+        root = 16 + t * 10 + r.uniform(-1, 1)
+        h = r.uniform(*height) * (1 - abs(t) * 0.45)
+        lean = t * 18 + r.uniform(-2.5, 2.5)
+        tip = (root + lean, 28 - h)
+        bend = (root + lean * 0.45, 28 - h * 0.6)
+        mat = back if i % 3 == 0 else (lit if i % 3 == 1 else mid)
+        w = r.uniform(1.1, 1.5)
+        s.poly([(root - w / 2, 28.5), (root + w / 2, 28.5), (bend[0] + w * 0.3, bend[1]), tip, (bend[0] - w * 0.3, bend[1])],
+               mat, profile="flat")
+    return s
+
+
+def shore_stones(seed=141):
+    """shore_stones: two or three smooth stones half in the shallows, the biggest with moss on its top."""
+    s = scene(32)
+    grey, dark, moss = Material("#a8a69a", texture=0.06), Material("#8c8a80", texture=0.06), foliage("#6e9a3a")
+    s.ellipse(11, 23, 7, 4.5, dark)
+    s.ellipse(19, 21, 9, 6, grey)
+    s.ellipse(25.5, 25, 4, 2.8, grey)
+    puffs(s, 17.5, 16.8, 5.5, 2.2, moss, 10, 2.2, seed, flat=0.7, bulge=1.6)
+    return s
+
+
 BUSHES = {
+    "shore_grass": lambda: grass_tuft("#4c9636", 151),
+    "shore_stones": shore_stones,
     "bush": lambda: mound("#4aa63a", 131),
     "flowering_bush": lambda: mound("#4e9e3e", 132, flowers="#fff4f8", bloom_count=7),
     "autumn_bush": lambda: mound("#d8641e", 133),
