@@ -166,13 +166,14 @@ struct NPCDialogView: View {
             .font(HUDStyle.font(13))
             .fixedSize(horizontal: false, vertical: true)
             .frame(maxWidth: .infinity, alignment: .leading)
-        ScrollView {
-            VStack(alignment: .leading, spacing: 0) {
+        // No scroll inside the speech window: it grows to hold what they say (the user, 2026-11-16:
+        // "There is a vertical scroll inside the conversation block, that should never be there").
+        VStack(alignment: .leading, spacing: 0) {
                 // A favour you're carrying to them, whoever they are.
                 ErrandPanel(session: session, npcID: npc.id, reply: $reply)
                 Group {
                     switch npc.role {
-                    case .healer: HealerPanel(session: session, reply: $reply)
+                    case .healer: EmptyView()   // its button stands at the window's foot (`actions`)
                     case .quests: EmptyView()   // QuestConversation
                     case .guild: GuildPanel(session: session, classID: npc.classId ?? "", reply: $reply)
                     case .chest, .stairs, .waystone: EmptyView()   // straight from the map (GameCoordinator.open)
@@ -182,22 +183,23 @@ struct NPCDialogView: View {
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-            }
         }
-        .frame(maxHeight: min(260, max(120, maxHeight - 110)))
         actions
     }
 
     /// What you can do with them, along the speech window's foot whatever's said over it (the user,
     /// 2026-11-16: "Conversation CTA buttons should always be aligned bottom of the chat window"):
-    /// look through a shop's wares (in a window of its own, with room to see it all: playtesting
+    /// rest at a healer's, look through a shop's wares (in a window of its own, with room to see it all: playtesting
     /// 2026-10-30), dye gear at the weaver's or a barber's, open the bank, take on a boss.
     @ViewBuilder
     private var actions: some View {
         let shop = hasWares
         let dyes = npc.role == .weaver || npc.role == .barber
-        if shop || dyes || npc.role == .bank || npc.role == .boss {
+        if shop || dyes || npc.role == .bank || npc.role == .boss || npc.role == .healer {
             WrapRows(spacing: 8) {
+                if npc.role == .healer {
+                    HealerPanel(session: session, reply: $reply)
+                }
                 if shop {
                     Button {
                         browsing = true
@@ -676,9 +678,9 @@ private struct QuestConversation: View {
                 .accessibilityHint(last ? "" : L("Next"))
                 .id(index)
                 .transition(.opacity)
+            // No scroll: the window grows to hold it.
             if last, let quest {
-                ScrollView { offer(quest) }
-                    .frame(maxHeight: room)
+                offer(quest)
             }
             // What you can do, and Back, the page dots and Next, along the window's foot whatever's
             // said over them (the user, 2026-11-16: "Conversation CTA buttons should always be aligned

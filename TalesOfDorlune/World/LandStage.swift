@@ -374,7 +374,8 @@ final class LandStage {
         // Everything set down on flat ground casts shade, merged and cast away from the sun (on a hill
         // or the sunk shore, a prop with `shadow` keeps its round one: `plant`).
         if map.hillIndex(at: cell) == nil, !map.isSunken(cell) {
-            canopy.add(node, picture: art.picture(of: sprite.texture))
+            // A building's walls cast it, not a crown's rounds (`CanopyPainter.Caster.walls`).
+            canopy.add(node, picture: art.picture(of: sprite.texture), walls: wind.flatMap { art.asset($0)?.kind } == "building")
         }
         return node
     }
