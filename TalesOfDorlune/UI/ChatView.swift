@@ -194,22 +194,20 @@ struct ChatLineView: View {
                 .frame(maxWidth: .infinity)
         case .announcement:
             // The game's own notices: a gold banner, apart from what people say.
+            // Centred on a soft gold plate, no rim, as round as the window's cards (the user, 2026-11-16).
             HStack(alignment: .top, spacing: 7) {
                 IconImage(.sparkles, size: 14)
                     .foregroundStyle(HUDStyle.gold)
                 Text(line.text)
                     .font(HUDStyle.font(12))
                     .foregroundStyle(HUDStyle.gold)
+                    .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
             }
-            .padding(.horizontal, 10)
-            .padding(.vertical, 7)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(HUDStyle.gold.opacity(0.13))
-                    .overlay(RoundedRectangle(cornerRadius: 8).strokeBorder(HUDStyle.gold.opacity(0.75), lineWidth: 1))
-            )
+            .padding(.horizontal, 12)
+            .padding(.vertical, 9)
+            .frame(maxWidth: .infinity, alignment: .center)
+            .background(RoundedRectangle(cornerRadius: 12, style: .continuous).fill(HUDStyle.gold.opacity(0.15)))
             .accessibilityElement(children: .combine)
             .accessibilityLabel(L("Announcement: {text}", ["text": line.text]))
         case .notice:
