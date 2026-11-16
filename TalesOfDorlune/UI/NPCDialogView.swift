@@ -1010,7 +1010,7 @@ extension GuildPanel {
 /// stand beside the character is judged against the window as tall as the parts at full width make
 /// it; a narrowed part that makes it taller still clears them, only a little sooner than it needed to.
 /// Marks a part of the speech window to stand along its foot (`AroundSpeaker`).
-private struct SpeechFooter: LayoutValueKey {
+private nonisolated struct SpeechFooter: LayoutValueKey {
     static let defaultValue = false
 }
 
