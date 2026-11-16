@@ -80,6 +80,7 @@ struct WorldHUD: View {
                     cell: session.mapCell,
                     dots: session.minimapDots,
                     marks: session.minimapMarks,
+                    tint: session.skyTint,
                     onOpen: { coordinator.open(.worldMap) }
                 )
                 .coachTarget(.minimap)
@@ -779,6 +780,9 @@ private struct MinimapWindow: View {
     let cell: GridPoint
     let dots: [GameSession.MinimapDot]
     let marks: [GameSession.MinimapMark]
+    /// The light over the land (`GameSession.skyTint`): its map darkens with it at dusk and night;
+    /// the dots and icons over it keep their colours, to read.
+    var tint = GameSession.SkyTint.day
     let onOpen: () -> Void
 
     private let size: CGFloat = 128
@@ -789,6 +793,7 @@ private struct MinimapWindow: View {
     var body: some View {
         ZStack {
             Color(red: 0.05, green: 0.12, blue: 0.22)
+                .colorMultiply(Color(red: tint.r, green: tint.g, blue: tint.b))
             // Turned and squashed like the world, so "up" on the minimap is "up" on screen.
             // The map rides in an overlay: an image bigger than the layer (maps over 84 tiles
             // wide) must not resize or re-centre it, or the hero's cell drifts off the marker.
@@ -799,6 +804,7 @@ private struct MinimapWindow: View {
                         .interpolation(.none)
                         .resizable()
                         .frame(width: CGFloat(picture.columns) * zoom, height: CGFloat(picture.rows) * zoom)
+                        .colorMultiply(Color(red: tint.r, green: tint.g, blue: tint.b))
                         .offset(
                             x: layer / 2 - (CGFloat(cell.col - picture.origin.col) + 0.5) * zoom,
                             y: layer / 2 - (CGFloat(picture.rows - 1 - (cell.row - picture.origin.row)) + 0.5) * zoom

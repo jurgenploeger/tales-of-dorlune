@@ -365,6 +365,9 @@ final class ContinentScene: SKScene {
         // The shade under the trees in every land near you, and everyone's shadow, cast away from
         // the sun over the land you're in (all lands share the clock): midday where it has no sky.
         if follow {
+            // The minimap's light, the land you're in's.
+            let tint = here.flatMap { airs[$0.id]?.sky?.tint } ?? .day
+            if session.skyTint != tint { session.skyTint = tint }
             let sun = here.flatMap { airs[$0.id]?.sky?.sun } ?? .noon
             for id in nearLands { lands[id]?.stage.follow(sun) }
             if Walker.sun != sun { Walker.shine(sun) }

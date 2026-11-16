@@ -85,6 +85,14 @@ final class Sky {
         apply()
     }
 
+    /// The colour the map is multiplied by now (white by day), in hundredths so it changes only as
+    /// often as it shows: the minimap takes it too (`GameSession.skyTint`).
+    var tint: GameSession.SkyTint {
+        let s = Double(strength)
+        func step(_ channel: Double) -> Double { ((1 - (1 - channel) * s) * 100).rounded() / 100 }
+        return GameSession.SkyTint(r: step(color.r), g: step(color.g), b: step(color.b))
+    }
+
     private func apply() {
         // Less of it shows as plain daylight (white), never as a fainter shade: a multiplied colour
         // faded by alpha darkens toward black (crossing into a land, the screen went dark).

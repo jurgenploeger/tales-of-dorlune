@@ -2564,7 +2564,12 @@ final class WorldScene: SKScene {
             if sunTimer <= 0 {
                 sunTimer = 0.5
                 follow(sky.sun)
+                // The minimap's light (`GameSession.skyTint`).
+                if session.skyTint != sky.tint { session.skyTint = sky.tint }
             }
+        } else if session.skyTint != .day {
+            // No sky (a cave): its minimap as drawn.
+            session.skyTint = .day
         }
         updateCamera(dt)
         showChunks()

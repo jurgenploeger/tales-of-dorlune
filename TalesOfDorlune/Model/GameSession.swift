@@ -74,6 +74,15 @@ final class GameSession {
     var minimapDots: [MinimapDot] = []
     /// Who does what on this map, as icons on the minimap.
     var minimapMarks: [MinimapMark] = []
+    /// The light over the land you're in, the colour the map is multiplied by (`Sky.tint`): the
+    /// minimap's map takes it too, so it darkens at dusk and night as the land does (the user,
+    /// 2026-11-16: "When it's evening, also update the mini map at the top with the same colors").
+    var skyTint = SkyTint.day
+
+    struct SkyTint: Equatable {
+        var r, g, b: Double
+        static let day = SkyTint(r: 1, g: 1, b: 1)
+    }
 
     /// Someone else on the minimap: an adventurer, a friend you've made, a red-named one looking for
     /// a fight, a friend in your party, or one of the folk who live there (villagers and locals).
