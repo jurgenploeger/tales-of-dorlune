@@ -179,8 +179,8 @@ struct SortMenu<Option: Hashable>: View {
         VStack(alignment: .leading, spacing: 2) {
             ForEach(options, id: \.self) { row($0) }
         }
-        .padding(.vertical, 6)
-        .padding(.horizontal, 4)
+        // As far in all round (`WorldAtlas.filterPanel` too).
+        .padding(6)
         .frame(minWidth: 160, alignment: .leading)
         .background(HUDStyle.panelSurface(RoundedRectangle(cornerRadius: 14)))
         .shadow(color: .black.opacity(0.35), radius: 3, x: 0, y: 2)

@@ -583,14 +583,14 @@ struct WorldAtlas: View {
                         }
                         .frame(width: 22, height: 22)
                     }
-                    .frame(minHeight: 36)
                 }
                 .buttonStyle(PressScaleStyle())
                 .accessibilityAddTraits(selected ? .isSelected : [])
             }
         }
-        .padding(.vertical, 6)
-        .padding(.horizontal, 4)
+        // As far in all round, so the plate under the one in use is as far from the foot as from the
+        // sides (the user, 2026-11-16).
+        .padding(6)
         .frame(minWidth: 170, alignment: .leading)
         .background(HUDStyle.panelSurface(RoundedRectangle(cornerRadius: 14)))
         .shadow(color: .black.opacity(0.35), radius: 3, x: 0, y: 2)
