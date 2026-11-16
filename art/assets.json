@@ -10572,6 +10572,10 @@
       "kind": "item"
     },
     {
+      "id": "item_legend_cape",
+      "kind": "item"
+    },
+    {
       "id": "item_storyleaf_cape",
       "kind": "item",
       "request": {
