@@ -140,11 +140,20 @@ struct ChatView: View {
                     guard let last = session.chat.last?.id else { return }
                     withAnimation(.easeOut(duration: 0.25)) { reader.scrollTo(last, anchor: .bottom) }
                 } label: {
-                    IconImage(.arrowDown, size: 18)
-                        .foregroundStyle(HUDStyle.ink)
+                    // Blue, a plain arrow down (the user, 2026-11-16: "The scroll to button should be blue
+                    // and have an arrow down icon"): Iconaut's glyph, not the drawn arrow-down, which
+                    // drops into a tray (saving to the phone) and on gold read as Send's twin.
+                    Image(GameIcon.arrowDown.assetName(for: 18))
+                        .renderingMode(.template)
+                        .resizable()
+                        .interpolation(.high)
+                        .scaledToFit()
+                        .frame(width: 18, height: 18)
+                        .foregroundStyle(.white)
                         .frame(width: 38, height: 38)
-                        .background(Circle().fill(HUDStyle.gold)
+                        .background(Circle().fill(LinearGradient(colors: [HUDStyle.mp, HUDStyle.frameDark], startPoint: .top, endPoint: .bottom))
                             .overlay(Circle().strokeBorder(.white.opacity(0.8), lineWidth: 1.5)))
+                        .accessibilityHidden(true)
                         .shadow(color: .black.opacity(0.35), radius: 3, x: 0, y: 2)
                         .overlay(alignment: .topTrailing) {
                             if unseen > 0 { CountBadge(count: unseen).offset(x: 6, y: -6) }
