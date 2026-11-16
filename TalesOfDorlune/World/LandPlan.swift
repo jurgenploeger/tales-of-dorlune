@@ -182,6 +182,25 @@ final class LandPlanner {
                 }
             }
         }
+        // Mossy rocks standing in the shallows (the user, 2026-11-16: "We should also have some rocks"),
+        // a few to a lake, in the water just off its shore; not where a bridge or a lily pad is.
+        let pads = Set(plan.lilyPads.map(\.cell))
+        var rockRNG = SeededRandom(text: def.id + "/water-rocks")
+        for shore in map.lakes.map({ $0.water }) + [map.river] {
+            for cell in shore.sorted(by: WorldMap.inOrder) where !map.bridgeCells.contains(cell) && !pads.contains(cell) {
+                let banks = [(1, 0), (-1, 0), (0, 1), (0, -1)].filter { offset in
+                    let land = GridPoint(col: cell.col + offset.0, row: cell.row + offset.1)
+                    return map.contains(land) && map.ground[land.row][land.col] != .water
+                }
+                guard let bank = banks.first, Double.random(in: 0..<1, using: &rockRNG) < 0.07 else { continue }
+                var placement = Placement(art: "water_rock", cell: cell, scale: CGFloat.random(in: 0.85...1.25, using: &rockRNG))
+                // Toward the shore it's off, a little, so it stands in the shallows.
+                let reach = WorldMap.tileSize * 0.18
+                let toward = WorldMap.project(CGPoint(x: CGFloat(bank.0) * reach, y: CGFloat(bank.1) * reach))
+                placement.nudge = CGVector(dx: toward.x + CGFloat.random(in: -6...6, using: &rockRNG), dy: toward.y)
+                plan.reeds.append(placement)
+            }
+        }
     }
 
     private func occupyFence() {

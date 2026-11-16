@@ -1880,6 +1880,10 @@
       "kind": "prop"
     },
     {
+      "id": "water_rock",
+      "kind": "prop"
+    },
+    {
       "id": "dead_tree",
       "kind": "prop",
       "request": {

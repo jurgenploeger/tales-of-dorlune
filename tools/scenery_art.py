@@ -644,7 +644,22 @@ def shore_stones(seed=141):
     return s
 
 
+def water_rock(seed=161):
+    """water_rock: a mossy boulder standing in the shallows (the user, 2026-11-16: "We should also have some
+    rocks"), its foot under the water: cut off level where the water meets it, taller than the bank's
+    stones. No water of its own drawn in: the lake's shows round it in the land's own colour."""
+    s = scene(32)
+    grey, dark, moss = Material("#a2a096", texture=0.06), Material("#86847a", texture=0.06), foliage("#6e9a3a")
+    line = 23.0
+    x, y = s._grid()
+    for cx, cy, rx, ry, mat in ((11.5, 18, 7.5, 9, dark), (17.5, 16.5, 9, 10.5, grey)):
+        s.mask((((x - cx) / rx) ** 2 + ((y - cy) / ry) ** 2 <= 1) & (y < line), mat)
+    puffs(s, 16.5, 9, 6.5, 2.6, moss, 12, 2.4, seed, flat=0.7, bulge=1.6)
+    return s
+
+
 BUSHES = {
+    "water_rock": water_rock,
     "shore_grass": lambda: grass_tuft("#4c9636", 151),
     "shore_stones": shore_stones,
     "bush": lambda: mound("#4aa63a", 131),

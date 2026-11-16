@@ -127,6 +127,16 @@ def scene(mid, seed=4):
             dc, dr = rng.choice(ways)
             reach = rng.uniform(0.26, 0.4)
             items.append((art, c + dc * reach, r + dr * reach, rng.uniform(0.75, 1)))
+    # Mossy rocks in the shallows, as `LandPlan.planReeds` sets them: in water cells just off the shore.
+    for c in range(n):
+        for r in range(n):
+            if kinds[r][c] != 'w':
+                continue
+            banks = [(dc, dr) for dc, dr in ((1, 0), (-1, 0), (0, 1), (0, -1))
+                     if 0 <= c + dc < n and 0 <= r + dr < n and kinds[r + dr][c + dc] != 'w']
+            if banks and rng.random() < 0.12:
+                dc, dr = banks[0]
+                items.append(('water_rock', c + dc * 0.18, r + dr * 0.18, rng.uniform(0.85, 1.25)))
     for _ in range(26):
         c, r = rng.randrange(n), rng.randrange(n)
         if free(c, r) and not near_water(c, r):
