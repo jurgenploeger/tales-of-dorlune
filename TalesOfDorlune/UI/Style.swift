@@ -630,7 +630,9 @@ struct FLIconButton: View {
     }
 
     private var tile: some View {
-        IconImage(icon, size: size * 0.5)
+        // Three fifths of the button (half before): the pixel icons are drawn with room round them,
+        // and at half looked small beside the menu button's bars (the user, 2026-11-17).
+        IconImage(icon, size: (size * 0.6).rounded())
             .foregroundStyle(.white)
             .shadow(color: HUDStyle.frameDark, radius: 0, x: 1, y: 1)
             .frame(width: size, height: size)

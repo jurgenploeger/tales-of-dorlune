@@ -776,7 +776,8 @@ enum HUDMargins {
 /// Three white lines.
 private struct MenuGlyph: View {
     var body: some View {
-        VStack(spacing: 3.5) {
+        // A little smaller than it was (22 wide, 3.5 thick), to sit with the icons beside it.
+        VStack(spacing: 3) {
             line
             line
             line
@@ -787,7 +788,7 @@ private struct MenuGlyph: View {
     private var line: some View {
         Capsule()
             .fill(.white)
-            .frame(width: 22, height: 3.5)
+            .frame(width: 18, height: 3)
             .shadow(color: HUDStyle.frameDark, radius: 0, x: 1, y: 1)
     }
 }

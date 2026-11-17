@@ -618,7 +618,7 @@ private struct TitleRoundButtonStyle: ButtonStyle {
 
     func makeBody(configuration: Configuration) -> some View {
         VStack(spacing: 6) {
-            IconImage(icon, size: 24)
+            IconImage(icon, size: 30)
                 .foregroundStyle(HUDStyle.ink)
                 .frame(width: 50, height: 50)
                 // The HUD's glossy blue (`FLIconButton`), not cream (the user, 2026-11-17: "Can we
