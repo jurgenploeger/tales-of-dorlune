@@ -459,6 +459,8 @@ closed_road  | newgame,map=goldburg,at=0_-26                     | 8
 # Raised ground: a town terrace (its stairs, and up on top) and hills out in the fields.
 terrace_stairs | newgame,level=40,map=goldburg,at=14_13           | 8
 terrace_top    | newgame,level=40,map=goldburg,at=11_17           | 8
+# The sandstone terraces' shade, long in the evening (`CanopyShade.addBlock`, 2026-11-17).
+terrace_evening | newgame,level=40,map=goldburg,at=14_12,hour=17,weather=clear | 8
 hill_meadow    | newgame,map=sunny_meadow,hill=0                  | 8
 hill_top       | newgame,map=sunny_meadow,hill=0,ontop            | 8
 hill_twilight  | newgame,level=20,map=twilight_woods,hill=0,weather=clear,hour=12 | 8

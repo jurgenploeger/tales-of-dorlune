@@ -3043,6 +3043,58 @@
       }
     },
     {
+      "id": "terrace_wall_s",
+      "kind": "prop"
+    },
+    {
+      "id": "terrace_wall_s_2",
+      "kind": "prop"
+    },
+    {
+      "id": "terrace_wall_s_3",
+      "kind": "prop"
+    },
+    {
+      "id": "terrace_wall_w",
+      "kind": "prop"
+    },
+    {
+      "id": "terrace_wall_w_2",
+      "kind": "prop"
+    },
+    {
+      "id": "terrace_wall_w_3",
+      "kind": "prop"
+    },
+    {
+      "id": "terrace_rail_s",
+      "kind": "prop"
+    },
+    {
+      "id": "terrace_rail_w",
+      "kind": "prop"
+    },
+    {
+      "id": "terrace_post",
+      "kind": "prop"
+    },
+    {
+      "id": "terrace_flag",
+      "kind": "tile"
+    },
+    {
+      "id": "terrace_flag_2",
+      "kind": "tile"
+    },
+    {
+      "id": "terrace_flag_3",
+      "kind": "tile"
+    },
+    {
+      "id": "terrace_flag_4",
+      "kind": "tile"
+    },
+    {
       "id": "bush",
       "kind": "prop",
       "scale": 0.9,

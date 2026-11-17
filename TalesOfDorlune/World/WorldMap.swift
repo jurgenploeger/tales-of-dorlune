@@ -2102,7 +2102,7 @@ nonisolated final class WorldMap: @unchecked Sendable {
     }
 
     /// How high a town's terraces stand (points).
-    static let terraceHeight: CGFloat = 26
+    static let terraceHeight: CGFloat = 34
 
     private func addPlateau(_ plateau: Plateau) {
         for cell in plateau.cells { plateauOf[cell] = plateaus.count }

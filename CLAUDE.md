@@ -73,6 +73,11 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   painted into the picture it stretched into streaks), with shade at each face's foot; up to two waterfalls a
   range over faces turned to you (`LandPlanner.planCliffFalls`, `LandStage.placeCliffFalls`: a stream, a sheet
   stretched to the face, a pool, from `tools/waterfall_art.py`).
+- A town's terraces (maps.json town `terraces`, `WorldMap.raiseTerrace`, 34 points high) in stacked sandstone
+  (the user's pick from `tools/terrace_preview.py`, 2026-11-17): `tools/terrace_art.py` draws a cell's stretch of
+  wall (sheared along its edge), of balustrade, a post and the flagstones; `LandStage.placePlateaus` lays them,
+  `placeTerraces` the balustrade round the top, and the terrace casts its shade away from the sun as a block
+  (`CanopyShade.addBlock`). Caves' `WorldScene` keeps the old look.
 - How a blow lands in battle (`BattleScene.impact`, after SpriteCook's hit feel article): attacker and
   target stand still 5 frames (9 on a killing blow, `hitStop`: the two nodes paused, the stage plays
   on), the target white for 2 (`whiteFlash`, a shader: a tint can't light a dark outline), then pushed
