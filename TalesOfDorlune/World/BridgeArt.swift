@@ -248,7 +248,10 @@ enum BridgeArt {
         // footbridge, not a jetty or a pier (those stand on posts of their own).
         // A bow bridge: its deck, the wall under it and its reflection, one picture (`bowSprite`).
         if bridge.bowed, let bow = bowSprite(for: bridge, pixels: pixels, palette: palette) { world.addChild(bow) }
-        if bridge.kind != .jetty, !bridge.bowed, let side = fill(style.beam, shade: 0.5, palette: palette),
+        // A jetty out into a lake too, on its own legs (the user, 2026-11-17: "because this bridge
+        // ends in the water, it should have wooden stands in the water"); not a harbor's pier
+        // (`railed` false), which stands on posts of its own.
+        if bridge.kind != .jetty || railed, !bridge.bowed, let side = fill(style.beam, shade: 0.5, palette: palette),
            let pile = fill(style.beam, shade: 0.4, palette: palette) {
             let thick = 5 * scale
             let edge = CGFloat(bridge.lane)
@@ -311,6 +314,29 @@ enum BridgeArt {
                 foam.position = CGPoint(x: top.x, y: top.y - thick - 3 * scale)
                 foam.zPosition = -rim[index].y + 0.0045
                 world.addChild(foam)
+            }
+            // A jetty's far end, out in the water: legs under both its corners and between, where that
+            // end faces you (the deck hides them where it faces away).
+            if bridge.kind == .jetty, !bridge.landsAtStart || !bridge.landsAtEnd {
+                let end = bridge.landsAtStart ? CGFloat(bridge.end + 1) - 0.12 : CGFloat(bridge.start) + 0.12
+                let corners = [spot(edge, end), spot(edge + CGFloat(bridge.lanes) / 2, end), spot(edge + CGFloat(bridge.lanes), end)]
+                let facesYou = corners[2].y < spot(edge + CGFloat(bridge.lanes), (CGFloat(bridge.start) + CGFloat(bridge.end + 1)) / 2).y
+                if facesYou {
+                    for corner in corners {
+                        let top = CGPoint(x: corner.x, y: corner.y + ground(corner))
+                        let leg = SKSpriteNode(texture: pile, size: CGSize(width: 3 * scale, height: thick + 3 * scale))
+                        leg.anchorPoint = CGPoint(x: 0.5, y: 1)
+                        leg.position = top
+                        leg.zPosition = -corner.y + 0.004
+                        world.addChild(leg)
+                        let foam = SKSpriteNode(color: UIColor(red: 0.82, green: 0.92, blue: 0.96, alpha: 1), size: CGSize(width: 5 * scale, height: scale))
+                        foam.alpha = 0.8
+                        foam.anchorPoint = CGPoint(x: 0.5, y: 1)
+                        foam.position = CGPoint(x: top.x, y: top.y - thick - 3 * scale)
+                        foam.zPosition = -corner.y + 0.0045
+                        world.addChild(foam)
+                    }
+                }
             }
             let sway = SKAction.sequence([.moveBy(x: scale, y: 0, duration: 0), .wait(forDuration: 0.7),
                                           .moveBy(x: -scale, y: 0, duration: 0), .wait(forDuration: 0.7)])

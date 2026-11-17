@@ -3206,7 +3206,19 @@ nonisolated final class WorldMap: @unchecked Sendable {
                                     start: step > 0 ? start : start - length + 1, end: step > 0 ? start + length - 1 : start,
                                     landsAtStart: step > 0, landsAtEnd: step < 0)
                 let besideLand = bridge.cell(lane: bridge.lane + 1, along: start - step)
-                let fits = contains(besideLand) && ground[besideLand.row][besideLand.col] != .water && !island.contains(besideLand)
+                // Straight out from a shore of its own, into open water (the user, 2026-11-17: "This
+                // bridge is still in a weird place"): solid land behind it, three cells deep under
+                // both its lanes, so it doesn't start from a thin neck between two waters; open water
+                // past its far end, and beside both its sides there, so it isn't laid along a shore.
+                func dry(_ cell: GridPoint) -> Bool { contains(cell) && ground[cell.row][cell.col] != .water && !island.contains(cell) }
+                func wet(_ cell: GridPoint) -> Bool { water.contains(cell) }
+                let far = step > 0 ? start + length - 1 : start - length + 1
+                let behind = (1...3).allSatisfy { back in
+                    (bridge.lane..<(bridge.lane + bridge.lanes)).allSatisfy { dry(bridge.cell(lane: $0, along: start - step * back)) }
+                }
+                let open = (bridge.lane - 1...bridge.lane + bridge.lanes).allSatisfy { wet(bridge.cell(lane: $0, along: far + step)) }
+                    && wet(bridge.cell(lane: bridge.lane - 1, along: far)) && wet(bridge.cell(lane: bridge.lane + bridge.lanes, along: far))
+                let fits = dry(besideLand) && behind && open
                     && bridge.cells.allSatisfy { deck in
                         water.contains(deck) && island.allSatisfy { max(abs($0.col - deck.col), abs($0.row - deck.row)) > 2 }
                     }

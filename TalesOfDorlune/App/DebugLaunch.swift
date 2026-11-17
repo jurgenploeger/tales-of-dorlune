@@ -780,10 +780,12 @@ enum DebugLaunch {
                 session.playerPosition = grid.center(of: grid.nearestWalkable(to: GridPoint(col: home.col - 2, row: home.row - 2)) ?? home)
             }
         }
-        if let pick = flags["bridge"].flatMap({ Int($0) }), let def = Content.shared.map(session.data.mapID) {
+        if let pick = flags["bridge"].flatMap({ Int($0) }) ?? flags["jetty"].flatMap({ Int($0) }), let def = Content.shared.map(session.data.mapID) {
             let grid = WorldMap(def: def)
-            if grid.bridges.indices.contains(pick) {
-                let bridge = grid.bridges[pick]
+            // `jetty=N`: the Nth of its jetties, wherever its bridges come in the list.
+            let bridges = flags["jetty"] != nil ? grid.bridges.filter { $0.kind == .jetty } : grid.bridges
+            if bridges.indices.contains(pick) {
+                let bridge = bridges[pick]
                 // A jetty from where it leaves the shore, looking out; a bridge from its middle.
                 let along = !bridge.landsAtEnd ? bridge.start : !bridge.landsAtStart ? bridge.end : (bridge.start + bridge.end) / 2
                 session.playerPosition = grid.center(of: bridge.cell(lane: bridge.lane, along: along))
