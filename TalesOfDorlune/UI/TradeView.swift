@@ -59,10 +59,11 @@ struct TradeView: View {
                     .padding(HUDStyle.windowInset)
                 }
             }
-            .frame(maxWidth: 520, maxHeight: 560)
+            // As big as every other window (the user, 2026-11-17): it had a size of its own.
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
             .gameWindow()
             .popIn()
-            .padding(14)
+            .menuWindowMargins()
 
             if let info {
                 ItemInfoCard(session: session, item: info) { self.info = nil }
