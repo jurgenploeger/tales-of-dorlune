@@ -68,6 +68,83 @@ def top_height(L, gx, gy):
     return LIFTS[L] + (6 if L > 0 else 2) * bump(gx, gy)
 
 
+def shrub(seed, width):
+    """A mass of leafy shrubs, as the reference's thickets: round clumps of leaves heaped together, each lit
+    on its top left and darker at its foot and bottom right, leaves speckled, a dark line round the whole.
+    RGBA floats, `width` pixels across."""
+    rng = random.Random(seed)
+    w, h = width, int(width * 0.8)
+    yy, xx = np.mgrid[0:h, 0:w].astype(float)
+    shade = np.full((h, w), -1.0)
+    clumps = []
+    for _ in range(4 + width // 10):
+        r = rng.uniform(0.18, 0.3) * width
+        cx = rng.uniform(r, w - r)
+        cy = rng.uniform(h - r * 1.1 - h * 0.35, h - r)
+        clumps.append((cy, cx, r))
+    for cy, cx, r in sorted(clumps):              # back (higher) first, each over the one behind
+        d = np.hypot(xx - cx, (yy - cy) * 1.15)
+        inside = d <= r
+        light = 0.5 + 0.5 * ((cx - xx) + (cy - yy) * 1.3) / (r * 1.8) - 0.25 * (d / r) ** 2
+        shade = np.where(inside, np.clip(light, 0, 1), shade)
+    out = np.zeros((h, w, 4))
+    solid = shade >= 0
+    ramp = np.array([[0.16, 0.32, 0.13], [0.27, 0.5, 0.18], [0.4, 0.66, 0.22], [0.6, 0.84, 0.34]])
+    leaf = speck(xx.astype(int), yy.astype(int), seed) * 0.35
+    level = np.clip((shade + leaf - 0.1) * 3.2, 0, 3).astype(int)
+    out[solid, :3] = ramp[level[solid]]
+    out[solid, 3] = 1
+    rim = np.zeros_like(solid)
+    rim[1:] |= solid[:-1]
+    rim[:-1] |= solid[1:]
+    rim[:, 1:] |= solid[:, :-1]
+    rim[:, :-1] |= solid[:, 1:]
+    rim &= ~solid
+    out[rim, :3] = (0.07, 0.15, 0.07)
+    out[rim, 3] = 1
+    # A few flowers on some.
+    if rng.random() < 0.4:
+        colour = rng.choice([(1, 0.95, 0.6), (1, 1, 1), (1, 0.7, 0.8)])
+        for _ in range(width // 6):
+            y, x = rng.randrange(h), rng.randrange(w)
+            if solid[y, x] and shade[y, x] > 0.4:
+                out[y, x, :3] = colour
+    return out
+
+
+def boulder(seed, width):
+    """A big boulder, as the reference's rock formations: a blocky lump with a flat lit top, a front face in
+    shade, a crack or two, moss on its top, a dark line round it."""
+    rng = random.Random(seed)
+    w, h = width, int(width * rng.uniform(0.6, 0.85))
+    yy, xx = np.mgrid[0:h, 0:w].astype(float)
+    cx, cy = w / 2, h / 2
+    shape = (np.abs(xx - cx) / (w / 2 - 1)) ** 2.6 + (np.abs(yy - cy) / (h / 2 - 1)) ** 2.6 <= 1
+    lip = h * rng.uniform(0.32, 0.42)
+    top = yy < lip + 2 * np.sin(xx * 0.4 + seed)
+    base = np.array([0.7, 0.64, 0.54])
+    light = np.where(top, 1.15, 0.78 - 0.25 * (yy - lip) / h) * (1 + 0.25 * (cx - xx) / w)
+    colour = base * (light * (0.94 + 0.1 * speck(xx.astype(int) // 3, yy.astype(int) // 3, seed)))[..., None]
+    moss = top & (speck(xx.astype(int) // 2, yy.astype(int) // 2, seed + 9) < 0.45)
+    colour = np.where(moss[..., None], [0.34, 0.5, 0.22], colour)
+    crack = (~top) & (np.abs(xx - (cx + w * 0.15 * math.sin(seed))) < 0.8) & (yy > lip + 2)
+    colour = np.where(crack[..., None], colour * 0.55, colour)
+    edge = top & (np.abs(yy - lip - 2 * np.sin(xx * 0.4 + seed)) < 1)
+    colour = np.where(edge[..., None], colour * 0.8, colour)
+    out = np.zeros((h, w, 4))
+    out[shape, :3] = colour[shape]
+    out[shape, 3] = 1
+    rim = np.zeros_like(shape)
+    rim[1:] |= shape[:-1]
+    rim[:-1] |= shape[1:]
+    rim[:, 1:] |= shape[:, :-1]
+    rim[:, :-1] |= shape[:, 1:]
+    rim &= ~shape
+    out[rim, :3] = (0.2, 0.18, 0.17)
+    out[rim, 3] = 1
+    return out
+
+
 def layout(seed=5):
     """What stands, on the levels: trees and bushes, bushes thick along the rims, rocks at the walls' feet."""
     rng = random.Random(seed)
@@ -92,12 +169,31 @@ def layout(seed=5):
             room = 99 if back is None else back * T * C
             roll = rng.random()
             near_rim = level_field(cx - 1.2, cy - 1.2) < lv
-            if roll < 0.13 and room > 130:
-                props.append((rng.choice(trees), cx, cy, lv, rng.uniform(0.8, 1.0)))
-            elif (near_rim and roll < 0.5 or roll < 0.22) and room > 40:
-                props.append((rng.choice(bushes), cx, cy, lv, rng.uniform(0.8, 1.05)))
-            elif back is not None and room > 24 and roll < 0.4:
-                props.append(("rock", cx, cy, lv, rng.uniform(0.45, 0.65)))
+            # Thickets in patches across the land, thickest along the rims; boulders here and there, more
+            # on the tops; trees where there's room.
+            thicket = math.sin(cx * 0.8 + cy * 0.3) + math.sin(cy * 0.9 - cx * 0.5) > 0.4
+            jx, jy = rng.uniform(-0.3, 0.3), rng.uniform(-0.3, 0.3)
+            if roll < 0.12 and room > 130:
+                props.append((rng.choice(trees), cx + jx, cy + jy, lv, rng.uniform(0.8, 1.0)))
+            elif (thicket or near_rim) and roll < 0.75 and room > 50:
+                props.append(("@shrub", cx + jx, cy + jy, lv, rng.randrange(32, 54)))
+            elif roll < 0.9 and room > 40 and (lv > 0 or thicket):
+                props.append(("@boulder", cx + jx, cy + jy, lv, rng.randrange(18, 34)))
+            elif roll < 0.95 and room > 30:
+                props.append((rng.choice(bushes), cx + jx, cy + jy, lv, rng.uniform(0.8, 1.05)))
+    # Stones round the pool's rim, and lily pads on it.
+    for k in range(18):
+        t = 2 * math.pi * k / 18
+        a_, b_ = 3.5, 2.9
+        across, along = a_ * math.cos(t), b_ * math.sin(t)
+        gx, gy = (along + across) / 2 + (9.5 + 2.5) / 2, (along - across) / 2 + (9.5 - 2.5) / 2
+        if level_field(gx, gy) == 0 and not water_field(gx + 0.45, gy + 0.45) is False and rng.random() < 0.8:
+            props.append(("@boulder", gx, gy, 0, rng.randrange(16, 26)))
+    for _ in range(4):
+        across, along = rng.uniform(-1.8, 1.8), rng.uniform(-1.5, 1.5)
+        gx, gy = (along + across) / 2 + 6.0, (along - across) / 2 + 3.5
+        if water_field(gx, gy):
+            props.append(("lily_pad", gx, gy, 0, 1))
     props.append(("player_walk", 4.5, 3.5, 0, 1))
     return props
 
@@ -197,39 +293,55 @@ def render(mid, terraced, seed=5):
                 found |= hit
         if not found.any():
             continue
-        lip = top_height(L, hit_x, hit_y)
-        foot = top_height(L - 1, hit_x, hit_y)
-        tall = np.maximum(1, lip - foot)
-        v_px = np.maximum(0, lip - hit_z)
-        # Which way the wall faces, from where the lower ground lies: south-west, lit from the top left;
-        # south-east, in shade.
-        west, _ = level_at(terraced, hit_x - 0.2, hit_y)
-        south, _ = level_at(terraced, hit_x, hit_y - 0.2)
-        faces_west, faces_south = west < L, south < L
-        light = np.where(faces_west & ~faces_south, 1.1, np.where(faces_south & ~faces_west, 0.55, 0.82))
-        # Boulders, each rounded: lit on its top left and shadowed on its bottom right about its middle (the
-        # nearest of a scatter of points, every 9 pixels or so), a dark crack where it meets the next.
-        cell = 9.0
-        bx, by = np.floor(xs / cell), np.floor(v_px / cell)
+        # Each column's wall measured from its own top edge down (the run of wall pixels it's in), so the
+        # stone and the light run on smoothly from column to column: worked out from each pixel's own
+        # height, they jumped a pixel or two between columns and the walls showed vertical lines.
+        start = np.zeros(found.shape)
+        stop = np.zeros(found.shape)
+        run = np.full(W, -1.0)
+        for row in range(H):
+            run = np.where(found[row], np.where(run < 0, row, run), -1.0)
+            start[row] = run
+        run = np.full(W, -1.0)
+        for row in range(H - 1, -1, -1):
+            run = np.where(found[row], np.where(run < 0, row, run), -1.0)
+            stop[row] = run
+        v_px = np.where(found, ys - start, 0)
+        tall = np.maximum(1, stop - start + 1)
+        # Which way the wall faces, from how its top edge runs across the screen: down to the right, it faces
+        # south-west into the light from the top left; up to the right, south-east into shade.
+        lip_row = np.where(found, start, np.nan)
+        ahead = np.roll(lip_row, -3, axis=1)
+        behind = np.roll(lip_row, 3, axis=1)
+        slope = np.nan_to_num((ahead - behind) / 6, nan=0.0)
+        light = 0.82 + 0.56 * np.clip(slope, -0.5, 0.5)
+        # Big stones, not cobbles, as a rock face's: each rounded, lit on its top left and shadowed on its
+        # bottom right about its middle (the nearest of a scatter of points, every 15 pixels or so), its upper
+        # part a paler ledge where it turns to the sky, a dark crack where it meets the next.
+        cell = 15.0
+        # The stones laid out on the screen itself, so they run on unbroken where a wall bends and its top
+        # edge climbs steeply; only the moss, the dark foot and the fringe go by the column's own top edge.
+        bx, by = np.floor(xs / cell), np.floor(ys / (cell * 0.8))
         best, second = np.full(xs.shape, 99.0), np.full(xs.shape, 99.0)
         mid_x, mid_y = np.zeros(xs.shape), np.zeros(xs.shape)
         for dx in (-1, 0, 1):
             for dy in (-1, 0, 1):
                 cxp, cyp = bx + dx, by + dy
                 fx = (cxp + speck(cxp, cyp, 11 + L)) * cell
-                fy = (cyp + speck(cxp, cyp, 23 + L)) * cell
-                d = np.hypot(xs - fx, v_px - fy)
+                fy = (cyp + 0.2 + 0.6 * speck(cxp, cyp, 23 + L)) * cell * 0.8
+                d = np.hypot((xs - fx) * 0.85, ys - fy)
                 closer = d < best
                 second = np.where(closer, best, np.minimum(second, d))
                 mid_x, mid_y = np.where(closer, fx, mid_x), np.where(closer, fy, mid_y)
                 best = np.minimum(best, d)
         edge = second - best
-        round_ = np.clip(1 + 0.5 * ((mid_x - xs) + (mid_y - v_px)) / cell, 0.6, 1.35)
-        tint = 0.93 + 0.1 * speck(bx, by, 5 + L)
-        rock = rock_base * (light * round_ * tint)[..., None]
-        rock = np.where((edge < 1.3)[..., None], rock * 0.5, rock)
-        # Moss on the upper stones here and there.
-        mossy = (v_px < tall * 0.45) & (speck(np.floor(xs / 5), np.floor(v_px / 4), 31 + L) < 0.28)
+        round_ = np.clip(1 + 0.4 * ((mid_x - xs) + (mid_y - ys)) / cell, 0.65, 1.3)
+        ledge = (ys - mid_y) < -cell * 0.22
+        tint = 0.92 + 0.12 * speck(bx, by, 5 + L)
+        rock = rock_base * (light * round_ * tint * np.where(ledge, 1.14, 1.0))[..., None]
+        rock = np.where((edge < 1.4)[..., None], rock * 0.45, rock)
+        # Moss on the upper stones' ledges here and there.
+        mossy = ledge & (v_px < tall * 0.6) & (speck(bx, by, 31 + L) < 0.35)
         rock = np.where(mossy[..., None], moss * (light * round_)[..., None], rock)
         # Darker toward the foot, where less light reaches.
         rock = rock * (1 - 0.35 * np.clip(v_px / tall, 0, 1) ** 2)[..., None]
@@ -269,8 +381,15 @@ def render(mid, terraced, seed=5):
     # What stands, back to front.
     drawn = []
     for art, gx, gy, lv, scale in props:
-        s = pp.sprite(art, None if art == "player_walk" else palette)
-        if scale != 1:
+        if art == "@shrub":
+            s = shrub(int(gx * 97 + gy * 31), int(scale))
+        elif art == "@boulder":
+            s = boulder(int(gx * 53 + gy * 17), int(scale))
+        else:
+            s = pp.sprite(art, None if art == "player_walk" else palette)
+        if art.startswith("@"):
+            pass
+        elif scale != 1:
             h, w = s.shape[:2]
             s = np.asarray(Image.fromarray((s * 255).astype(np.uint8)).resize((max(1, round(w * scale)), max(1, round(h * scale))),
                                                                               Image.NEAREST)).astype(float) / 255
