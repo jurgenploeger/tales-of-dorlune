@@ -10,12 +10,34 @@ enum BridgeArt {
     /// (`WorldMap.bank`), its end posts standing on land. A third of a cell only touched the shore.
     static let overlap: CGFloat = 0.6
 
-    /// The wood, as 0...255 channels.
-    private static let plank = (r: 164.0, g: 116.0, b: 70.0)
-    private static let gap = (r: 78.0, g: 52.0, b: 34.0)
-    private static let beam = (r: 112.0, g: 76.0, b: 46.0)
-    private static let edge = (r: 84.0, g: 56.0, b: 34.0)
-    private static let nail = (r: 60.0, g: 52.0, b: 48.0)
+    private typealias Tone = (r: Double, g: Double, b: Double)
+
+    /// What a bridge is built of, as 0...255 channels (`WorldMap.Bridge.Material`): its deck's
+    /// boards (or slabs), the gaps between them, the beam along each side and its dark edge, the
+    /// nails; its posts' caps and its rails, light over dark.
+    private struct Look {
+        let plank: Tone, gap: Tone, beam: Tone, edge: Tone, nail: Tone
+        let cap: Tone, railLight: Tone, railDark: Tone
+        /// Stone slabs, twice as deep as planks, their joints staggered, and no nails.
+        var slabs = false
+    }
+
+    private static func look(_ material: WorldMap.Bridge.Material) -> Look {
+        switch material {
+        case .wood:
+            Look(plank: (164, 116, 70), gap: (78, 52, 34), beam: (112, 76, 46), edge: (84, 56, 34), nail: (60, 52, 48),
+                 cap: (164, 116, 70), railLight: (164, 116, 70), railDark: (112, 76, 46))
+        case .stone:
+            Look(plank: (156, 152, 144), gap: (92, 90, 90), beam: (124, 120, 114), edge: (78, 76, 78), nail: (92, 90, 90),
+                 cap: (184, 180, 170), railLight: (164, 160, 152), railDark: (108, 104, 102), slabs: true)
+        case .lacquer:
+            Look(plank: (136, 92, 60), gap: (66, 42, 30), beam: (176, 50, 44), edge: (104, 28, 30), nail: (60, 44, 40),
+                 cap: (238, 190, 80), railLight: (206, 66, 54), railDark: (136, 36, 36))
+        case .rope:
+            Look(plank: (188, 150, 100), gap: (70, 52, 38), beam: (150, 118, 76), edge: (96, 72, 46), nail: (70, 52, 38),
+                 cap: (188, 150, 100), railLight: (206, 184, 136), railDark: (150, 126, 86))
+        }
+    }
 
     /// A bridge's deck for the ground's own (unprojected) layer, where it lies over its cells
     /// (`deckPicture`). Nil if it can't be drawn.
@@ -41,7 +63,9 @@ enum BridgeArt {
         let deckWide = bridge.lanes * pixels
         let across = deckWide + 2 * shadow
         let along = Int((cellsAlong * CGFloat(pixels)).rounded())
-        let plankDeep = max(3, pixels / 4)
+        let style = look(bridge.material)
+        let plank = style.plank, gap = style.gap, beam = style.beam, edge = style.edge, nail = style.nail
+        let plankDeep = style.slabs ? max(4, pixels / 2) : max(3, pixels / 4)
         // Grid-space orientation: x east, y north (image rows top down).
         let width = bridge.northward ? across : along, height = bridge.northward ? along : across
         var bytes = [UInt8](repeating: 0, count: width * height * 4)
@@ -69,7 +93,10 @@ enum BridgeArt {
                     put(x, y, beam)
                 } else if inBoard == plankDeep - 1 {
                     put(x, y, gap)
-                } else if inBoard == plankDeep / 2, inside == beamWidth + 1 || inside == deckWide - beamWidth - 2 {
+                } else if style.slabs, (inside + (board % 2) * plankDeep / 2) % plankDeep == 0 {
+                    // A slab's joint with the one beside it, staggered from course to course.
+                    put(x, y, gap)
+                } else if !style.slabs, inBoard == plankDeep / 2, inside == beamWidth + 1 || inside == deckWide - beamWidth - 2 {
                     put(x, y, nail)
                 } else {
                     var shade = tone * (inBoard == 0 ? 1.12 : 1)
@@ -95,7 +122,8 @@ enum BridgeArt {
                       railed: Bool = true, ground: (CGPoint) -> CGFloat = { _ in 0 }) {
         let tile = WorldMap.tileSize
         let scale = tile / CGFloat(max(1, pixels))
-        guard let post = texture(post: true, palette: palette), let rail = texture(post: false, palette: palette) else { return }
+        let style = look(bridge.material)
+        guard let post = texture(post: true, style, palette: palette), let rail = texture(post: false, style, palette: palette) else { return }
         let before = bridge.landsAtStart ? overlap : 0, after = bridge.landsAtEnd ? overlap : 0
         let first = CGFloat(bridge.start) - before + 0.1, last = CGFloat(bridge.end + 1) + after - 0.1
         let count = max(2, Int(((last - first) / 1.25).rounded()) + 1)
@@ -144,19 +172,21 @@ enum BridgeArt {
 
     /// A post (a few pixels wide, lit down one side, a lighter cap) or a rail's colour (light over
     /// dark, stretched), as a texture in the map's palette.
-    private static func texture(post: Bool, palette: MapPalette?) -> SKTexture? {
+    private static func texture(post: Bool, _ style: Look, palette: MapPalette?) -> SKTexture? {
         let width = post ? 3 : 1, height = post ? 10 : 2
         var bytes = [UInt8](repeating: 0, count: width * height * 4)
         for y in 0..<height {
             for x in 0..<width {
                 // Lit from the upper left, as the art is: the cap and left side light, the right dark.
-                var color = beam
-                if y == 0 || (post && x == 0) {
-                    color = plank
+                var color: Tone = style.railDark
+                if post, y == 0 {
+                    color = style.cap
+                } else if y == 0 || (post && x == 0) {
+                    color = style.railLight
                 } else if post, x == width - 1 {
-                    color = edge
+                    color = style.edge
                 } else if post {
-                    color = (r: plank.r * 0.9, g: plank.g * 0.9, b: plank.b * 0.9)
+                    color = (r: style.railLight.r * 0.9, g: style.railLight.g * 0.9, b: style.railLight.b * 0.9)
                 }
                 let index = (y * width + x) * 4
                 bytes[index] = UInt8(color.r)

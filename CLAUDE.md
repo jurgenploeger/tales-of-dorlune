@@ -40,7 +40,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   and shape (`regions`, rivers in it), and `check_content.py` checks it (everything set down by hand on
   its land and clear of the rivers, roads meeting, nothing cut off by a river). Rerun it after changing exits or
   anything set down by hand; `--preview out.png` draws it. The game lays the rivers where they're painted, a bridge
-  wherever a road crosses one (`WorldMap.layRivers`) along a row or column, so the tool runs each river straight along the other
+  wherever a road crosses one (`WorldMap.layRivers`; of wood, stone, red lacquer or rope, `Bridge.Material`, drawn by `BridgeArt`; where the water's open on both sides of it if anywhere near) along a row or column, so the tool runs each river straight along the other
   where a road crosses it (`SQUARE_REACH`; aslant, its bridge crossed it askew); the land slopes down to the sea and into the lakes
   (`WorldMap.shore`, drawn sunk by `HillArt`, darker the lower it lies; the sea paler in the shallows, `ContinentScene.shallows`:
   a distance field, after SpriteCook's shoreline article, each chunk's distances from the land worked out once,

@@ -112,6 +112,12 @@ nonisolated final class WorldMap: @unchecked Sendable {
         let start: Int, end: Int
         /// Whether its start and its end meet land (a jetty's far end stands in the water).
         let landsAtStart: Bool, landsAtEnd: Bool
+        /// What it's built of (`BridgeArt`): planks, stone slabs with a low parapet, dark planks
+        /// between red lacquered rails, or light planks slung between ropes (the user, 2026-11-17:
+        /// "can we have more different types of bridges in the game, these wooden ones are just one
+        /// version"). `WorldMap.bridgeMaterial` picks one.
+        nonisolated enum Material { case wood, stone, lacquer, rope }
+        var material: Material = .wood
 
         /// The cell `lane` across (a column or a row, as the map numbers them) and `along` along it.
         func cell(lane: Int, along: Int) -> GridPoint {
@@ -2893,10 +2899,26 @@ nonisolated final class WorldMap: @unchecked Sendable {
                 guard contains(cell), ground[cell.row][cell.col] != .water else { return nil }
             }
         }
-        let bridge = Bridge(kind: kind, northward: northward, lane: first, lanes: lanes, start: start, end: end, landsAtStart: true, landsAtEnd: true)
+        var bridge = Bridge(kind: kind, northward: northward, lane: first, lanes: lanes, start: start, end: end, landsAtStart: true, landsAtEnd: true)
+        bridge.material = bridgeMaterial(kind, lane: first, start: start)
         lay(bridge)
         bank(bridge)
         return bridge
+    }
+
+    /// What a bridge here is built of (`Bridge.Material`), the same every time: a footbridge out to a
+    /// lake's island of rope and planks; a road's of stone in the bare lands (rock, snow, sand,
+    /// desert), three in four, and in the green ones wood for half, stone or red lacquer for a
+    /// quarter each, by where it stands.
+    private func bridgeMaterial(_ kind: Bridge.Kind, lane: Int, start: Int) -> Bridge.Material {
+        switch kind {
+        case .jetty: return .wood
+        case .foot: return .rope
+        case .road:
+            let roll = abs(lane &* 31 &+ start &* 17) % 4
+            if ["tile_scree", "tile_snow", "tile_desert", "tile_sand"].contains(def.theme.ground) { return roll == 0 ? .wood : .stone }
+            return roll == 0 ? .stone : roll == 1 ? .lacquer : .wood
+        }
     }
 
     /// Lays a bridge: the water under its deck becomes somewhere to walk.
@@ -2954,12 +2976,24 @@ nonisolated final class WorldMap: @unchecked Sendable {
                     if distance < 7, distance < best?.distance ?? .infinity { best = (distance, spot) }
                 }
             }
-            guard let best else { continue }
-            let steps = max(2, Int(best.distance * 4))
-            for k in 0...steps {
-                let t = CGFloat(k) / CGFloat(steps)
-                let spot = CGPoint(x: foot.x + (best.spot.x - foot.x) * t, y: foot.y + (best.spot.y - foot.y) * t)
-                for cell in cells(around: spot, radius: 1.05) where ground[cell.row][cell.col] != .water { ground[cell.row][cell.col] = .path }
+            if let best {
+                let steps = max(2, Int(best.distance * 4))
+                for k in 0...steps {
+                    let t = CGFloat(k) / CGFloat(steps)
+                    let spot = CGPoint(x: foot.x + (best.spot.x - foot.x) * t, y: foot.y + (best.spot.y - foot.y) * t)
+                    for cell in cells(around: spot, radius: 1.05) where ground[cell.row][cell.col] != .water { ground[cell.row][cell.col] = .path }
+                }
+            }
+            // No road beside the deck's end: where the bridge stands a little along the river from
+            // where the road came to it, the old road still ran to the water beside it, and the
+            // road met the deck at a corner (the user, 2026-11-17: "The path doesn't go into the
+            // bridge exactly"). The cells at the water's edge, two lanes either side, back to
+            // ground; no further out, where a road along the bank joins the way onto the bridge.
+            for out in 0..<1 {
+                for lane in [bridge.lane - 2, bridge.lane - 1, bridge.lane + bridge.lanes, bridge.lane + bridge.lanes + 1] {
+                    let cell = bridge.cell(lane: lane, along: end + step * out)
+                    if contains(cell), ground[cell.row][cell.col] == .path { ground[cell.row][cell.col] = .ground }
+                }
             }
         }
     }
