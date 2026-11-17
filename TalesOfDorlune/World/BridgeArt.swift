@@ -32,7 +32,7 @@ enum BridgeArt {
                  cap: (164, 116, 70), railLight: (164, 116, 70), railDark: (112, 76, 46))
         case .stone:
             Look(plank: (156, 152, 144), gap: (92, 90, 90), beam: (124, 120, 114), edge: (78, 76, 78), nail: (92, 90, 90),
-                 cap: (184, 180, 170), railLight: (164, 160, 152), railDark: (108, 104, 102), slabs: true, sill: true)
+                 cap: (160, 156, 148), railLight: (132, 128, 122), railDark: (96, 92, 90), slabs: true, sill: true)
         case .lacquer:
             Look(plank: (136, 92, 60), gap: (66, 42, 30), beam: (176, 50, 44), edge: (104, 28, 30), nail: (60, 44, 40),
                  cap: (238, 190, 80), railLight: (206, 66, 54), railDark: (136, 36, 36), sill: true)
@@ -133,19 +133,32 @@ enum BridgeArt {
                     put(x, y, (0, 0, 0), alpha: 0.28)
                     continue
                 }
+                // The far side's wall or rails cast their shade on the deck (the user, 2026-11-17:
+                // "they should have a shadow on the bridge because of the direction of the sun"):
+                // the sun's up the screen and to the left, so on a bridge that runs east it falls
+                // across the deck from its far side, a band as deep as a stone wall stands (a
+                // thin one under rails), softer along its edge. On one that runs north the shade
+                // falls along the wall's own foot, off the boards.
+                var dim = 1.0
+                if !bridge.northward {
+                    let fromFar = deckWide - 1 - inside
+                    let deep = style.slabs ? max(4, pixels / 4) : max(2, pixels / 10)
+                    dim = fromFar < deep ? (style.slabs ? 0.7 : 0.86) : fromFar < deep + 2 ? 0.88 : 1
+                }
+                func shaded(_ color: Tone) -> Tone { (color.r * dim, color.g * dim, color.b * dim) }
                 if inside == 0 || inside == deckWide - 1 {
-                    put(x, y, edge)
+                    put(x, y, shaded(edge))
                 } else if inside < beamWidth || inside >= deckWide - beamWidth {
-                    put(x, y, beam)
+                    put(x, y, shaded(beam))
                 } else if inBoard == plankDeep - 1 {
-                    put(x, y, gap)
+                    put(x, y, shaded(gap))
                 } else if style.slabs, (inside + (board % 2) * plankDeep / 2) % plankDeep == 0 {
                     // A slab's joint with the one beside it, staggered from course to course.
-                    put(x, y, gap)
+                    put(x, y, shaded(gap))
                 } else if !style.slabs, inBoard == plankDeep / 2, inside == beamWidth + 1 || inside == deckWide - beamWidth - 2 {
-                    put(x, y, nail)
+                    put(x, y, shaded(nail))
                 } else {
-                    var shade = tone * (inBoard == 0 ? 1.12 : 1)
+                    var shade = tone * (inBoard == 0 ? 1.12 : 1) * dim
                     // A darker fleck of grain here and there.
                     if noise(inside, v &* 7 &+ bridge.lane) < 0.06 { shade *= 0.85 }
                     put(x, y, (plank.r * shade, plank.g * shade, plank.b * shade))
@@ -356,7 +369,8 @@ enum BridgeArt {
         var bytes = [UInt8](repeating: 0, count: width * height * 4)
         for y in 0..<height {
             for x in 0..<width {
-                var color = style.plank
+                // Darker than the deck's slabs, so the wall stands out from it (the user, 2026-11-17).
+                var color = style.railLight
                 var shade = 1.0
                 if y < 2 {
                     color = style.cap

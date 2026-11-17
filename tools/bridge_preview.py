@@ -8,7 +8,7 @@ from PIL import Image, ImageDraw
 PX = 32
 LOOKS = {
  'wood':    dict(plank=(164,116,70), gap=(78,52,34), beam=(112,76,46), edge=(84,56,34), nail=(60,52,48), cap=(164,116,70), light=(164,116,70), dark=(112,76,46), slabs=False),
- 'stone':   dict(plank=(156,152,144), gap=(92,90,90), beam=(124,120,114), edge=(78,76,78), nail=(92,90,90), cap=(184,180,170), light=(164,160,152), dark=(108,104,102), slabs=True),
+ 'stone':   dict(plank=(156,152,144), gap=(92,90,90), beam=(124,120,114), edge=(78,76,78), nail=(92,90,90), cap=(160,156,148), light=(132,128,122), dark=(96,92,90), slabs=True),
  'lacquer': dict(plank=(136,92,60), gap=(66,42,30), beam=(176,50,44), edge=(104,28,30), nail=(60,44,40), cap=(238,190,80), light=(206,66,54), dark=(136,36,36), slabs=False),
  'rope':    dict(plank=(188,150,100), gap=(70,52,38), beam=(150,118,76), edge=(96,72,46), nail=(70,52,38), cap=(188,150,100), light=(206,184,136), dark=(150,126,86), slabs=False),
 }
