@@ -467,6 +467,11 @@ hill_top       | newgame,map=sunny_meadow,hill=0,ontop            | 8
 hill_twilight  | newgame,level=20,map=twilight_woods,hill=0,weather=clear,hour=12 | 8
 hill_desert_mesa | newgame,level=60,map=genie_desert,hill=1,weather=clear,hour=12 | 8
 hill_rosen     | newgame,level=140,map=rosen_lake,hill=0,weather=clear,hour=12 | 8
+# Terraces in the rest of the wild lands (2026-11-17): a swamp, a dark valley, a beach and the snow.
+hill_swamp     | newgame,level=30,map=frog_swamp,hill=0,weather=clear,hour=12 | 8
+hill_valley    | newgame,level=60,map=valley_of_fear,hill=0,weather=clear,hour=12 | 8
+hill_beach     | newgame,level=10,map=pineapple_shore,hill=0,weather=clear,hour=12 | 8
+hill_snow      | newgame,level=100,map=snow_white_forest,hill=0,weather=clear,hour=12 | 8
 hill_candy     | newgame,level=60,map=candy_mountain,hill=1       | 8
 hill_desert    | newgame,level=60,map=genie_desert,hill=0         | 8
 hill_crystal   | newgame,level=90,map=crystal_mountain,hill=0     | 8

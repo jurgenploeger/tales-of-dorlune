@@ -64,7 +64,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   (`here`) brings its music, air and encounters. Caves are scenes of their own (`WorldScene`), behind the card;
   `GameCoordinator.mapScene` is whichever you're in.
 - Terraced hills (maps.json theme `hills.terraces`, a step in points, with `bank` the faces' rock; Sunny Meadow
-  since 0.9.105, after `tools/cliff_preview.py`): `Hill.terrace` steps each range's height into flat levels with a
+  since 0.9.105, after `tools/cliff_preview.py`, every wild land's since 0.9.110; a mountain range stays smooth): `Hill.terrace` steps each range's height into flat levels with a
   sheer face, only where its slopes face you (`Hill.stepped`: stepped all round, the faces turned away were laid
   back by `unfold()` into long ramps in deep shade), the faces dwindling round its sides and its back the smooth
   slope you walk up (no trails);

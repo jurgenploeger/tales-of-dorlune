@@ -2145,7 +2145,9 @@
             2,
             3
           ],
-          "height": 48
+          "height": 88,
+          "terraces": 44,
+          "bank": "tile_cliff_rock"
         },
         "props": [
           {
@@ -5209,7 +5211,10 @@
           "mountains": {
             "count": 1,
             "height": 210
-          }
+          },
+          "height": 96,
+          "terraces": 44,
+          "bank": "tile_cliff_rock"
         },
         "props": [
           {
@@ -5891,7 +5896,9 @@
             3,
             4
           ],
-          "height": 45
+          "height": 88,
+          "terraces": 44,
+          "bank": "tile_cliff_rock"
         },
         "props": [
           {
@@ -6370,11 +6377,13 @@
             3,
             5
           ],
-          "height": 80,
+          "height": 96,
           "mountains": {
             "count": 1,
             "height": 200
-          }
+          },
+          "terraces": 44,
+          "bank": "tile_cliff_rock"
         },
         "props": [
           {
@@ -8921,12 +8930,13 @@
             2,
             4
           ],
-          "height": 90,
+          "height": 96,
           "mountains": {
             "count": 2,
             "height": 250
           },
-          "bank": "tile_cave_rock"
+          "bank": "tile_cave_rock",
+          "terraces": 44
         },
         "props": [
           {
@@ -9419,11 +9429,13 @@
             2,
             4
           ],
-          "height": 83,
+          "height": 96,
           "mountains": {
             "count": 1,
             "height": 200
-          }
+          },
+          "terraces": 44,
+          "bank": "tile_cliff_rock"
         },
         "props": [
           {
@@ -11074,12 +11086,13 @@
             2,
             4
           ],
-          "height": 77,
+          "height": 96,
           "mountains": {
             "count": 1,
             "height": 200
           },
-          "bank": "tile_chocolate"
+          "bank": "tile_chocolate",
+          "terraces": 44
         },
         "props": [
           {
@@ -11749,11 +11762,13 @@
             2,
             4
           ],
-          "height": 70,
+          "height": 96,
           "mountains": {
             "count": 1,
             "height": 160
-          }
+          },
+          "terraces": 44,
+          "bank": "tile_cliff_rock"
         },
         "props": [
           {
@@ -13895,7 +13910,9 @@
             3,
             4
           ],
-          "height": 48
+          "height": 88,
+          "terraces": 44,
+          "bank": "tile_cliff_rock"
         },
         "props": [
           {
@@ -14360,7 +14377,10 @@
           "mountains": {
             "count": 1,
             "height": 190
-          }
+          },
+          "height": 96,
+          "terraces": 44,
+          "bank": "tile_cliff_rock"
         },
         "props": [
           {
@@ -15387,7 +15407,9 @@
             2,
             4
           ],
-          "height": 64
+          "height": 96,
+          "terraces": 44,
+          "bank": "tile_cliff_rock"
         },
         "props": [
           {
@@ -16007,8 +16029,9 @@
             3,
             5
           ],
-          "height": 51,
-          "bank": "tile_sand"
+          "height": 96,
+          "bank": "tile_cliff_rock",
+          "terraces": 44
         },
         "props": [
           {
@@ -16601,11 +16624,13 @@
             2,
             3
           ],
-          "height": 58,
+          "height": 96,
           "mountains": {
             "count": 1,
             "height": 160
-          }
+          },
+          "terraces": 44,
+          "bank": "tile_cliff_rock"
         },
         "props": [
           {
@@ -17603,7 +17628,9 @@
             2,
             3
           ],
-          "height": 70
+          "height": 96,
+          "terraces": 44,
+          "bank": "tile_cliff_rock"
         },
         "props": [
           {
@@ -18496,11 +18523,13 @@
             2,
             4
           ],
-          "height": 77,
+          "height": 96,
           "mountains": {
             "count": 1,
             "height": 175
-          }
+          },
+          "terraces": 44,
+          "bank": "tile_cliff_rock"
         },
         "props": [
           {
@@ -19271,11 +19300,13 @@
             3,
             4
           ],
-          "height": 70,
+          "height": 96,
           "mountains": {
             "count": 1,
             "height": 140
-          }
+          },
+          "terraces": 44,
+          "bank": "tile_cliff_rock"
         },
         "props": [
           {
