@@ -427,12 +427,20 @@ final class Walker: SKNode {
     /// An emote over its head (`Emote`), where a speech bubble would be, for a few seconds: popped up
     /// a little past its size and settling, in whole steps, then gone.
     func emote(_ emote: Emote, for duration: TimeInterval = 2.8) {
-        guard let texture = emote.texture else { return }
+        // In the bubble speech has, its picture in it; its own drawn bubble if that's missing.
+        let node: SKSpriteNode
+        if let icon = emote.icon {
+            node = Nodes.emoteBubble(icon)
+            node.position = CGPoint(x: 0, y: (tag?.position.y ?? sprite.size.height) + 20)
+        } else if let texture = emote.texture {
+            let size = texture.size()
+            node = SKSpriteNode(texture: texture, size: CGSize(width: size.width * PondMotion.pixel, height: size.height * PondMotion.pixel))
+            node.anchorPoint = CGPoint(x: 0.3, y: 0)
+            node.position = CGPoint(x: 6, y: (tag?.position.y ?? sprite.size.height) + 14)
+        } else {
+            return
+        }
         bubble?.removeFromParent()
-        let size = texture.size()
-        let node = SKSpriteNode(texture: texture, size: CGSize(width: size.width * PondMotion.pixel, height: size.height * PondMotion.pixel))
-        node.anchorPoint = CGPoint(x: 0.3, y: 0)
-        node.position = CGPoint(x: 6, y: (tag?.position.y ?? sprite.size.height) + 14)
         node.zPosition = 6_000
         node.setScale(0.5)
         addChild(node)

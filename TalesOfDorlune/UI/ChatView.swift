@@ -144,10 +144,11 @@ struct ChatView: View {
         .animation(.easeOut(duration: 0.2), value: showsEmotes)
         .padding(HUDStyle.windowInset)
         .background(alignment: .bottom) {
-            // Blurred under the bar, fading out above it, and a little darker toward the foot.
+            // Blurred under the bar, fading out above it, in the window's own blue (the user,
+            // 2026-11-17: the material alone was a grey haze over the glass).
             Rectangle()
                 .fill(.ultraThinMaterial)
-                .overlay(LinearGradient(colors: [HUDStyle.ink.opacity(0), HUDStyle.ink.opacity(0.45)], startPoint: .top, endPoint: .bottom))
+                .overlay(LinearGradient(colors: [HUDStyle.glassFoot.opacity(0.7), HUDStyle.glassFoot.opacity(0.94)], startPoint: .top, endPoint: .bottom))
                 .mask(LinearGradient(stops: [.init(color: .clear, location: 0), .init(color: .black, location: 0.4),
                                              .init(color: .black, location: 1)], startPoint: .top, endPoint: .bottom))
                 .padding(.top, -28)

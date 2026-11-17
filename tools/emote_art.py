@@ -238,6 +238,19 @@ def emote(name):
     return Image.fromarray(out, "RGBA")
 
 
+def icon(name):
+    """The picture alone, on nothing: what the game sets in its own speech bubble over someone's head
+    (`Nodes.emoteBubble`), the bubble drawn here kept for the chat's picker."""
+    rows = [line.strip() for line in ICONS[name].strip("\n").splitlines()]
+    height, width = len(rows), max(len(r) for r in rows)
+    out = np.zeros((height, width, 4), np.uint8)
+    for y, row in enumerate(rows):
+        for x, letter in enumerate(row):
+            if letter in PALETTE:
+                out[y, x] = (*PALETTE[letter], 255)
+    return Image.fromarray(out, "RGBA")
+
+
 def main(argv):
     sheet = None
     if "--sheet" in argv:
@@ -248,6 +261,7 @@ def main(argv):
     for name in argv or list(ICONS):
         img = emote(name)
         img.save(SPRITES / f"emote_{name}.png")
+        icon(name).save(SPRITES / f"emote_{name}_icon.png")
         made[name] = img
     print(f"wrote {len(made)} emotes to art/sprites/")
     if sheet:

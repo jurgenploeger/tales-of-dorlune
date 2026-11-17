@@ -34,6 +34,10 @@ enum Emote: String, CaseIterable, Identifiable {
     /// Its picture, as drawn.
     var image: UIImage? { ArtLibrary.shared.artImage("emote_" + rawValue) }
 
+    /// Its picture alone, without the bubble drawn round it: what goes in a speech bubble over
+    /// someone's head (`Nodes.emoteBubble`).
+    var icon: UIImage? { ArtLibrary.shared.artImage("emote_" + rawValue + "_icon") }
+
     /// Its picture for the map, hard-edged; nil if it isn't drawn.
     var texture: SKTexture? {
         if let known = Self.textures[self] { return known }

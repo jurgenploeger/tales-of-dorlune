@@ -107,6 +107,9 @@ enum HUDStyle {
     )
     /// The glass at a window's top, solid: the tab you're on (`PageTabs`) is the window's own glass.
     static let glassTop = Color.adaptive(light: glassTopLight, dark: glassTopDark)
+    /// The glass at a window's foot, solid: what lies over the foot of a window is its own blue
+    /// (the chat's bar, `ChatView`).
+    static let glassFoot = Color.adaptive(light: glassFootLight, dark: glassFootDark)
     private static let glassTopLight = Color(red: 0.13, green: 0.32, blue: 0.56)
     private static let glassTopDark = Color(red: 0.07, green: 0.15, blue: 0.28)
     private static let glassFootLight = Color(red: 0.05, green: 0.17, blue: 0.35)
