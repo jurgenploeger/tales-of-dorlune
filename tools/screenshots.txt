@@ -1000,3 +1000,6 @@ tabs_first_on_dark | newgame,level=40,menu=character,dark | 8
 # The night's moonlit haze over its multiply (`Sky.haze`, 2026-11-17): a town with lamps, and the meadow's river.
 night_town   | newgame,map=sunny_meadow,weather=clear,hour=23 | 8
 night_meadow_land | newgame,map=sunny_meadow,landscape,weather=clear,hour=23 | 8
+# Cobbled town streets: cobbles down the middle, sand and pebbles, grass over the edges (`ArtLibrary.townRoad`, 2026-11-17).
+town_streets | newgame,map=meadowbrook,weather=clear,hour=12 | 8
+town_streets_desert | newgame,level=40,map=goldburg,weather=clear,hour=12 | 8

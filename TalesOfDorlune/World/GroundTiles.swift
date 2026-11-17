@@ -262,6 +262,14 @@ final class GroundTiles {
         return Int(hash & 1)
     }
 
+    /// Whether a cell is in the land's town square (`WorldMap.townSquare`), where its roads are cobbled.
+    private func inTown(_ cell: GridPoint) -> Bool {
+        guard map.def.town != nil else { return false }
+        let square = map.townSquare
+        return cell.col >= square.origin.col && cell.col < square.origin.col + square.width
+            && cell.row >= square.origin.row && cell.row < square.origin.row + square.height
+    }
+
     /// The tile a cell of the land's box shows (none on the sea, or on a land next door's cell), and
     /// whether it's within two of the sea (its bank, `WorldScene.bank`).
     func pick(_ cell: GridPoint) -> (group: SKTileGroup?, nearSea: Bool) {
@@ -279,7 +287,9 @@ final class GroundTiles {
         if let band { layers += band }
         if patch != 0, let accent = theme.accent { layers.append(.init(tile: accent, mask: patch, style: .patch)) }
         let fade = road == 0 || map.seams.isEmpty ? nil : roadFade(cell)
-        if road != 0 { layers.append(.init(tile: theme.path, mask: road, style: .road, fade: fade)) }
+        // In a town's square its roads are cobbled (`ArtLibrary.GroundLayer.cobbled`); out in the wild, sand.
+        let cobbled = road != 0 && fade == nil && inTown(cell)
+        if road != 0 { layers.append(.init(tile: theme.path, mask: road, style: .road, fade: fade, cobbled: cobbled)) }
         if pond != 0 { layers.append(.init(tile: waterID, mask: poolMask(cell), style: .water)) }
         let near = sea.isEmpty ? 0 : seaPool(cell)
         let coast = near == 0 ? 0 : shore(cell)
@@ -294,7 +304,7 @@ final class GroundTiles {
             chosen = group("deep|\(waterID)#\(variant)") { art.deepWaterTile(waterID, variant) }
         } else if pond == full, coast == 0, !natural {
             chosen = waterVaries ? plain(waterID, variant) : water
-        } else if road == full, pond == 0, coast == 0 {
+        } else if road == full, pond == 0, coast == 0, !cobbled {
             if let fade {
                 chosen = group("faded|\(theme.path)|\(fade.key)#\(variant)") { art.fadedTile(theme.path, fade: fade, variant: variant) }
             } else {
@@ -311,7 +321,7 @@ final class GroundTiles {
             chosen = plain(accent, variant)
         } else {
             // Shorelines depend on where they are (see organicTile), so each gets its own tile.
-            let place = pond != 0 || coast != 0 ? "@\(col),\(row)" : ""
+            let place = (pond != 0 || coast != 0 ? "@\(col),\(row)" : "") + (cobbled ? "|cob\(ArtLibrary.cobblePhase(cell))" : "")
             let key = base + "|" + layers.map { "\($0.style)\($0.mask)\($0.from?.land ?? "")\($0.fade?.key ?? "")" }.joined(separator: "|") + place
             var tone: ((Double, Double) -> Int)? = nil
             if pond != 0, let field = pondField { tone = { field.tone($0, $1) } }

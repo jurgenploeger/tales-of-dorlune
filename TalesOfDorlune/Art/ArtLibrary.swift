@@ -396,6 +396,9 @@ final class ArtLibrary {
         var from: Foreign? = nil
         /// A road taking on the land next door's road across the band (`Fade`).
         var fade: Fade? = nil
+        /// A road in a town's square: cobbles down its middle, sand and pebbles either side, grass
+        /// growing over its edges (`townRoad`, the user's pick from `tools/road_preview.py`, 2026-11-17).
+        var cobbled = false
     }
 
     /// A land next door, for its tiles (`GroundLayer.from`).
@@ -765,6 +768,7 @@ final class ArtLibrary {
         let hasWater = layers.contains { $0.style == .water || $0.style == .cut }
         let place = (hasWater ? "@\(cell.col),\(cell.row)#\(variant)" : "") + (pond == nil ? "" : "|pond")
         let key = "organic|\(base)|" + layers.map { "\($0.tile):\($0.mask):\($0.style):\($0.from?.land ?? ""):\($0.fade?.key ?? "")" }.joined(separator: "|") + place
+            + (layers.contains { $0.cobbled } ? "|cob\(Self.cobblePhase(cell))" : "")
         if let cached = blended[key] { return cached }
         let size = max(tileImage(base).width, 16)
         let pick = hasWater ? variant : 0
@@ -832,6 +836,10 @@ final class ArtLibrary {
             }
             let segments: [(x0: Double, y0: Double, x1: Double, y1: Double)] = shore ? [] : Self.strokes(mask: layer.mask)
             let palette = pond != nil && layer.style == .water && layer.tile == "tile_water" ? Self.pondPalette(texels) : nil
+            // A town's road: the sand either side of its cobbles and the stones' colour, from the land's
+            // own path and cobble tiles as graded here.
+            let sand = layer.cobbled ? variantPixels("tile_path", pick, size: size) : []
+            let stone = layer.cobbled ? Self.meanColour(variantPixels("tile_town", 0, size: size)) : (0, 0, 0)
             let pools: [(x: Double, y: Double)] = shore ? Self.pools(mask: layer.mask) : []
             let radius: Double = switch layer.style {
             case .road: 0.36
@@ -855,6 +863,11 @@ final class ArtLibrary {
                     switch layer.style {
                     case .road, .patch, .ground:
                         guard depth > 0 else { continue }
+                        if layer.cobbled, sand.count == out.count {
+                            Self.townRoad(&out, index, x: x, y: y, depth: depth, rim: rim, cell: cell,
+                                          speck: Self.speck(px, py, cell), sand: sand, stone: stone)
+                            continue
+                        }
                         let shade = layer.style == .road && depth < rim ? 0.72 : 1
                         for c in 0..<3 { out[index + c] = UInt8(Double(texels[index + c]) * shade) }
                         out[index + 3] = 255
@@ -1095,6 +1108,110 @@ final class ArtLibrary {
         let a: Double = sin(turn * (2 * x + y))
         let b: Double = sin(turn * (3 * y - x) + 1.3)
         return 0.045 * a + 0.03 * b
+    }
+
+    // MARK: Town roads
+
+    /// Which of 4 × 4 places a cell is in the cobbles' pattern, which repeats every four cells, so a
+    /// town's road tiles are made once each for 16 places rather than once a cell.
+    nonisolated static func cobblePhase(_ cell: GridPoint) -> Int {
+        ((cell.col % 4 + 4) % 4) * 4 + (cell.row % 4 + 4) % 4
+    }
+
+    /// The mean colour of a tile's pixels.
+    nonisolated private static func meanColour(_ pixels: [UInt8]) -> (Double, Double, Double) {
+        guard pixels.count >= 4 else { return (150, 145, 140) }
+        var sum = (0.0, 0.0, 0.0)
+        for index in stride(from: 0, to: pixels.count, by: 4) {
+            sum.0 += Double(pixels[index]); sum.1 += Double(pixels[index + 1]); sum.2 += Double(pixels[index + 2])
+        }
+        let count = Double(pixels.count / 4)
+        return (sum.0 / count, sum.1 / count, sum.2 / count)
+    }
+
+    nonisolated private static func hash(_ a: Int, _ b: Int, _ c: Int) -> Double {
+        var h = UInt32(truncatingIfNeeded: a &* 73_856_093) ^ UInt32(truncatingIfNeeded: b &* 19_349_663) ^ UInt32(truncatingIfNeeded: c &* 83_492_791)
+        h = (h ^ (h >> 13)) &* 1_274_126_177
+        h ^= h >> 16
+        return Double(h & 0xFFFF) / 65_535
+    }
+
+    /// How far the grass reaches out over a town road's edge (in cells), along the edge: rounded
+    /// clumps, each its own width and reach, repeating every four cells (`cobblePhase`).
+    nonisolated private static func clumpReach(_ along: Double) -> Double {
+        let k = Int(along.rounded(.down))
+        let t = along - Double(k)
+        let clump = (k % 4 + 4) % 4
+        let width = 0.7 + 0.3 * hash(clump, 3, 11)
+        guard t < width else { return 0.04 }
+        let u = t / width * 2 - 1
+        return 0.05 + (0.12 + 0.12 * hash(clump, 4, 11)) * (1 - u * u).squareRoot()
+    }
+
+    /// A town road's pixel (`GroundLayer.cobbled`): rounded cobbles about half a cell across down its
+    /// middle (their edge ragged, stone by stone), each its own tone, lit on its north side (up and to
+    /// the left on screen, as everything is) and in shade on its south, dark gaps of sand between them;
+    /// sand with pebbles in it either side; and where the ground beside it is green, the grass growing
+    /// out over its edge in clumps, lit at their tips, with a shadow on the sand past them.
+    nonisolated private static func townRoad(_ out: inout [UInt8], _ index: Int, x: Double, y: Double, depth: Double, rim: Double,
+                                             cell: GridPoint, speck: Double, sand: [UInt8], stone: (Double, Double, Double)) {
+        let phase = cobblePhase(cell)
+        let wx = Double(phase / 4) + x + 0.5, wy = Double(phase % 4) + y + 0.5
+        let grassy = Int(out[index + 1]) > Int(out[index]) + 8 && Int(out[index + 1]) > Int(out[index + 2]) + 8
+        let reach = grassy ? clumpReach(wx - wy) : -1
+        if depth < reach {
+            // The grass over the edge: lit along its tips, a dark line where it ends.
+            let shade = depth > reach - 0.03 ? 0.5 : depth > reach - 0.08 ? 1.2 : 1
+            for c in 0..<3 { out[index + c] = UInt8(max(0, min(255, Double(out[index + c]) * shade))) }
+            out[index + 3] = 255
+            return
+        }
+        var colour = (Double(sand[index]), Double(sand[index + 1]), Double(sand[index + 2]))
+        var shade = 1.0
+        if grassy, depth < reach + 0.08 { shade = 0.68 }            // the clumps' shadow on the road
+        else if !grassy, depth < rim { shade = 0.72 }               // the road's darker rim, as before
+        // The cobbles: a stone's cell on a jittered grid, two to a cell, repeating every eight.
+        let gx = wx * 2, gy = wy * 2
+        let cx = Int(gx.rounded(.down)), cy = Int(gy.rounded(.down))
+        var best = 9.0, second = 9.0, at = (0, 0, 0.0, 0.0)
+        for dy in -1...1 {
+            for dx in -1...1 {
+                let sx = cx + dx, sy = cy + dy
+                let kx = (sx % 8 + 8) % 8, ky = (sy % 8 + 8) % 8
+                let jx = Double(sx) + 0.2 + 0.6 * hash(kx, ky, 1), jy = Double(sy) + 0.2 + 0.6 * hash(kx, ky, 2)
+                let d = ((gx - jx) * (gx - jx) + (gy - jy) * (gy - jy)).squareRoot()
+                if d < best {
+                    second = best
+                    best = d
+                    at = (kx, ky, gx - jx, gy - jy)
+                } else if d < second {
+                    second = d
+                }
+            }
+        }
+        let edge = second - best
+        // Down the middle, past its sand; a stone at the edge in or out by a roll of its own.
+        let core = depth + 0.1 * (hash(at.0, at.1, 21) - 0.5) > 0.2
+        if core, edge >= 0.1 {
+            if edge < 0.16 {
+                colour = (stone.0 * 0.5, stone.1 * 0.46, stone.2 * 0.44)   // the stone's dark outline
+            } else {
+                var tone = 0.86 + 0.24 * hash(at.0, at.1, 3)
+                if edge < 0.27 { tone *= at.3 > 0 ? 1.13 : 0.78 }       // lit on its north side
+                if speck < 0.08 { tone *= 0.92 }
+                colour = (stone.0 * tone, stone.1 * tone, stone.2 * tone)
+            }
+        } else if core {
+            shade *= 0.78                                               // the sand between the stones
+        } else if speck < 0.05, depth > 0.05 {
+            // A pebble in the sand.
+            let tone = speck < 0.025 ? 1.08 : 0.8
+            colour = (stone.0 * tone, stone.1 * tone, stone.2 * tone)
+        }
+        out[index] = UInt8(max(0, min(255, colour.0 * shade)))
+        out[index + 1] = UInt8(max(0, min(255, colour.1 * shade)))
+        out[index + 2] = UInt8(max(0, min(255, colour.2 * shade)))
+        out[index + 3] = 255
     }
 
     /// How far round a cell of the 3×3 a ground across a band shows where no shape reaches
