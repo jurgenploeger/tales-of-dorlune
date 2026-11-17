@@ -1845,8 +1845,10 @@ final class ContinentScene: SKScene {
     /// `WorldScene.sliceLength`): the card still turns with the phone, and the work isn't held up
     /// by a pause every few milliseconds (each a good deal longer than asked on a busy phone). And
     /// so too while a debug launch `hurries`. While a land not laid out yet is near you (`isUrgent`),
-    /// every 16: a frame or two dropped while it comes in faster; and while you stand on one, every
-    /// 40, the frames slower for a few seconds but the land in sooner.
+    /// every 10: a frame dropped now and then while it comes in faster; and while you stand on one,
+    /// every 22, about 30 frames a second while it comes in. They were 16 and 40, and walking
+    /// toward a new land the game ran at 15 to 22 frames a second on a phone for as long as it
+    /// took (the user's gauges, 2026-11-17): smoother now, the land a little later.
     private func breathe() async {
         // The loading clouds parting: wait till they're gone (`holdWork`).
         if let until = heldUntil {
@@ -1857,7 +1859,7 @@ final class ContinentScene: SKScene {
             sliceStart = ContinuousClock.now
         }
         let slice: Duration = !isReady || hurries ? .milliseconds(120)
-            : standsOnUnbuilt ? .milliseconds(40) : isUrgent ? .milliseconds(16) : .milliseconds(6)
+            : standsOnUnbuilt ? .milliseconds(22) : isUrgent ? .milliseconds(10) : .milliseconds(6)
         guard ContinuousClock.now - sliceStart > slice else { return }
         try? await Task.sleep(for: .milliseconds(10))
         sliceStart = ContinuousClock.now
