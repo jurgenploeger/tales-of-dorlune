@@ -3,7 +3,7 @@
 look a bit flat ... do a preview of the cliffs and terraces first so I can judge").
 
 A patch of a land drawn as the game draws its ground (turned and squashed, `palette_preview.project`), on three
-levels instead of one: each raised level's top drawn higher by `LIFT` and, where it ends at the front, a wall of
+levels instead of one: each raised level's top drawn higher (`LIFTS`) and, where it ends at the front, a wall of
 rock the height of the step, so you see up and down:
 
 - the wall's two faces lit as everything is, from the top left: the face turned south-west light, the one
@@ -33,7 +33,9 @@ import palette_preview as pp  # noqa: E402
 
 T, C = pp.T, pp.C
 N = 16
-LIFT = 30                     # screen pixels a level is raised: about two thirds of a cell's height on screen
+# Screen pixels each level is raised: the first step about two thirds of a cell's height on screen, the
+# second a taller cliff.
+LIFTS = [0, 30, 74]
 W, H = 560, 400
 
 
@@ -77,8 +79,10 @@ def layout(seed=5):
                 props.append((rng.choice(bushes), cx - 0.15, cy - 0.15, lv, rng.uniform(0.8, 1.05)))
             elif roll < 0.13:
                 props.append((rng.choice(trees), cx, cy, lv, rng.uniform(0.8, 1.0)))
-            elif lv < 2 and level_field(cx + 0.8, cy + 0.8) > lv and roll < 0.32:
-                props.append(("rock", cx, cy, lv, rng.uniform(0.45, 0.7)))
+            elif lv < 2 and level_field(cx + 0.8, cy + 0.8) > lv and roll < 0.6:
+                # At a wall's foot, half over it: rocks fallen from it, bushes grown against it.
+                art = "rock" if roll < 0.25 else rng.choice(["bush", "shore_grass", "flowering_bush"])
+                props.append((art, cx + 0.25, cy + 0.25, lv, rng.uniform(0.5, 0.75) if art == "rock" else rng.uniform(0.85, 1.1)))
     props.append(("player_walk", 4.5, 3.5, 0, 1))
     return props
 
@@ -124,14 +128,22 @@ def render(mid, terraced, seed=5):
     rock_base = np.array([0.66, 0.6, 0.52])
     moss = np.array([0.36, 0.5, 0.24])
     for L in range(3):
-        lift = L * LIFT
+        lift = LIFTS[L]
         gx, gy = grid_of(xs, ys, lift)
         lv, inside = level_at(terraced, gx, gy)
         top = inside & (lv >= L)
         u = ((gx % 1) * S).astype(int).clip(0, S - 1)
         v = ((1 - gy % 1) * S).astype(int).clip(0, S - 1)
         wet = inside & water_field(gx, gy)
-        colour = np.where(wet[..., None], water_tex[v, u] * 0.92, grass[v, u])
+        ground = grass[v, u]
+        if terraced:
+            # Deeper and less even, as the reference's: darker overall, broad patches lighter and darker,
+            # and small dark tufts.
+            sway = 0.8 + 0.1 * np.sin(gx * 0.9 + gy * 0.4) * np.sin(gy * 0.7 - gx * 0.3)
+            tuft = speck(np.floor(gx * 6), np.floor(gy * 6), 61 + L) < 0.12
+            ground = ground * (sway * np.where(tuft, 0.8, 1.0))[..., None]
+            ground = ground * np.array([0.92, 1.0, 0.94])
+        colour = np.where(wet[..., None], water_tex[v, u] * 0.92, ground)
         if terraced and L < 2:
             # The dark band at a wall's foot: the ground just in front of higher ground.
             for d, k in ((0.05, 0.5), (0.12, 0.68), (0.22, 0.84)):
@@ -151,7 +163,8 @@ def render(mid, terraced, seed=5):
         depth_px = np.zeros(gx.shape)
         hit_x = np.zeros(gx.shape)
         hit_y = np.zeros(gx.shape)
-        for k in range(1, LIFT + 1):
+        tall = LIFTS[L] - LIFTS[L - 1]
+        for k in range(1, tall + 1):
             hx, hy = grid_of(xs, ys, lift - k)
             hl, hin = level_at(terraced, hx, hy)
             hit = ~found & top_clear & hin & (hl >= L)
@@ -168,7 +181,7 @@ def render(mid, terraced, seed=5):
         west, _ = level_at(terraced, hit_x - 0.2, hit_y)
         south, _ = level_at(terraced, hit_x, hit_y - 0.2)
         faces_west, faces_south = west < L, south < L
-        light = np.where(faces_west & ~faces_south, 1.0, np.where(faces_south & ~faces_west, 0.66, 0.84))
+        light = np.where(faces_west & ~faces_south, 1.1, np.where(faces_south & ~faces_west, 0.55, 0.82))
         # Boulders, not bricks: each pixel shaded by the nearest of a scatter of points (every 9 pixels or
         # so), darker at its edge where it meets the next, a crack between them.
         cell = 9.0
@@ -189,10 +202,10 @@ def render(mid, terraced, seed=5):
         rock = np.where((edge < 1.2)[..., None], rock * 0.55, rock)
         rock = np.where(((edge > 1.2) & (edge < 2.2) & (best < 3))[..., None], np.minimum(1, rock * 1.12), rock)
         # Moss on the upper stones here and there.
-        mossy = (v_px < LIFT * 0.45) & (speck(np.floor(xs / 5), np.floor(v_px / 4), 31 + L) < 0.28)
+        mossy = (v_px < tall * 0.45) & (speck(np.floor(xs / 5), np.floor(v_px / 4), 31 + L) < 0.28)
         rock = np.where(mossy[..., None], moss * light[..., None], rock)
         # Darker toward the foot, where less light reaches.
-        rock = rock * (1 - 0.35 * (v_px / LIFT) ** 2)[..., None]
+        rock = rock * (1 - 0.35 * (v_px / tall) ** 2)[..., None]
         # Grass hanging over the lip: a ragged fringe a few pixels down each column.
         hang = 1 + (speck(xs.astype(int), np.zeros_like(xs, dtype=int), 7) * 5).astype(int)
         fringe = v_px <= hang
@@ -200,17 +213,26 @@ def render(mid, terraced, seed=5):
         rock = np.where(fringe[..., None], blade, rock)
         # Where the stream comes over, a sheet of falling water instead of rock: streaks running down,
         # foam where it lands.
-        fall = water_field(hit_x, hit_y)
-        streak = speck(xs.astype(int), np.zeros_like(xs, dtype=int), 3)
-        sheet = np.where(((v_px + (streak * 9).astype(int)) % 8 < 2)[..., None], [0.88, 0.97, 0.98], water_tex[8, 8] * 0.95)
-        sheet = np.where((v_px <= 1)[..., None], [0.78, 0.93, 0.96], sheet)
-        sheet = np.where((v_px >= LIFT - 4)[..., None], [0.96, 0.99, 1.0], sheet)
+        # Narrower than the stream, its sides ragged a pixel or two column by column, blue at its top
+        # turning paler as it falls, streaked, foaming where it lands.
+        column = xs.astype(int)
+        ragged = 0.55 + 0.18 * speck(column // 2, np.zeros_like(column), 13)
+        across = hit_x - hit_y - 2.5 - 0.6 * np.sin((hit_x + hit_y) * 0.45)
+        fall = (np.abs(across) < ragged) & water_field(hit_x, hit_y)
+        streak = speck(column, np.zeros_like(column), 3)
+        depth_t = (v_px / tall)[..., None]
+        blue = water_tex[8, 8] * 0.95
+        body = blue + (np.array([0.82, 0.94, 0.97]) - blue) * (depth_t * 0.7)
+        sheet = np.where(((v_px + (streak * 9).astype(int)) % 7 < 2)[..., None], np.minimum(1, body * 1.18 + 0.06), body)
+        sheet = np.where((np.abs(across) > ragged - 0.12)[..., None], blue * 0.78, sheet)
+        foam = (v_px >= tall - 3) & (speck(column, v_px, 17) < 0.7)
+        sheet = np.where(foam[..., None], [0.96, 0.99, 1.0], sheet)
         rock = np.where(fall[..., None], sheet, rock)
         img[found] = rock[found]
     # Foam where each fall lands: the water just in front of a wall the stream comes over.
     if terraced:
         for L in range(2):
-            gx, gy = grid_of(xs, ys, L * LIFT)
+            gx, gy = grid_of(xs, ys, LIFTS[L])
             lv, inside = level_at(terraced, gx, gy)
             behind, _ = level_at(terraced, gx + 0.25, gy + 0.25)
             splash = inside & (lv == L) & (behind > L) & water_field(gx, gy) & water_field(gx + 0.3, gy + 0.3)
@@ -224,7 +246,7 @@ def render(mid, terraced, seed=5):
             h, w = s.shape[:2]
             s = np.asarray(Image.fromarray((s * 255).astype(np.uint8)).resize((max(1, round(w * scale)), max(1, round(h * scale))),
                                                                               Image.NEAREST)).astype(float) / 255
-        sx, sy = screen_of(gx, gy, (lv if terraced else 0) * LIFT)
+        sx, sy = screen_of(gx, gy, LIFTS[lv] if terraced else 0)
         rows = np.where((s[..., 3] > 0.5).any(1))[0]
         foot = rows[-1] if len(rows) else s.shape[0] - 1
         drawn.append((sy, s, int(sx - s.shape[1] / 2), int(sy - foot)))
