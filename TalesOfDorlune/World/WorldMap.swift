@@ -63,7 +63,6 @@ nonisolated final class WorldMap: @unchecked Sendable {
     private(set) var streetDecor: [(art: String, cell: GridPoint)] = []
     /// The cells the town's buildings and shops stand on, its own and its lots (`nearBuilding`).
     private var buildingCells: Set<GridPoint> = []
-    /// Raised terraces: their rectangles in grid cells (min corner inclusive), and stair cells.
     /// A town's terraces: where each stands, its stairs (out in front of its walls, `raiseTerrace`) and
     /// the cells of its rim they come up to, open in its balustrade.
     private(set) var terraces: [(origin: GridPoint, width: Int, height: Int, stairs: [GridPoint], heads: [GridPoint])] = []
