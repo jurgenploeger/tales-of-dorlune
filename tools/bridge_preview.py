@@ -44,7 +44,7 @@ def deck(look, lanes, cells):
             img[v, u] = (*c, 255)
     return img
 
-def scene(look, lanes=3, cells=5, zoom=3, depth=True):
+def scene(look, lanes=3, cells=5, zoom=3, depth=True, ends='now', crop=None):
     """`depth`: the deck standing over the water, not lying on it (the user, 2026-11-17: "They look a bit
     too flat, and shouldn't there be a shadow underneath as well and a reflection in the water?"): its
     thickness down its near side, piles under it into the water, its shadow on the water away from the sun
@@ -52,6 +52,22 @@ def scene(look, lanes=3, cells=5, zoom=3, depth=True):
     W, H = 300, 210
     L = LOOKS[look]
     d = deck(look, lanes, cells + 1.2)
+    # How its ends meet the land (the user, 2026-11-17: "The connection with the land looks still a bit
+    # too perfect"). 'now': the deck's end a straight line across the road. 'worn': its last boards
+    # broken off raggedly, the road's earth trodden onto them. 'sill': a sill of rough stones under each
+    # end, wider than the deck, with tufts of grass at its corners. 'both': the two together.
+    if ends in ('worn', 'both'):
+        rows = d.shape[0]
+        for v in range(rows):
+            into = (0.6 * PX - v) / PX if v < 0.6 * PX else (v - (rows - 0.6 * PX)) / PX   # cells onto the bank
+            if into <= 0.2:
+                continue
+            for u in range(d.shape[1]):
+                gone = (into - 0.2) / 0.4
+                if noise(u // 2, v // 2 + 91) < gone * 1.15:
+                    d[v, u, 3] = 0
+                elif noise(u // 2 + 5, v // 2 + 17) < 0.25 * gone:
+                    d[v, u, :3] = (188, 160, 114)         # earth trodden onto the boards
     shadow = max(2, PX // 8)
     C = 22  # half a cell's diamond across, in pixels
     THICK = 6 if depth else 0   # how far the deck's top stands over the water, in pixels
@@ -71,6 +87,20 @@ def scene(look, lanes=3, cells=5, zoom=3, depth=True):
     canvas[water & ((gy < 0.18) | (gy > cells - 0.18))] = (40, 110, 150)
     road = ~water & (gx > 0) & (gx < lanes)
     canvas[road] = np.array([196, 168, 120]) + 6 * rip[road][..., None]
+    # The road's edges worn uneven, as the game's are (`ArtLibrary.organicTile`), not ruled.
+    wob = 0.16 * np.sin(gy * 2.3 + 1) + 0.1 * np.sin(gy * 5.1)
+    ragged = ~water & (gx > -0.2 + wob) & (gx < lanes + 0.2 + wob)
+    if ends != 'now':
+        canvas[ragged & ~road] = np.array([186, 160, 112]) + 6 * rip[ragged & ~road][..., None]
+    if ends in ('sill', 'both'):
+        for lo, hi in ((-1.0, -0.45), (cells + 0.45, cells + 1.0)):
+            band = (gy > lo) & (gy < hi) & (gx > -0.35) & (gx < lanes + 0.35)
+            stone = np.floor(gx * 2.2 + (0.5 if lo < 0 else 0)).astype(int)
+            tone = 0.82 + 0.3 * np.vectorize(lambda a: noise(int(a), 3))(stone)
+            joint = np.abs(gx * 2.2 + (0.5 if lo < 0 else 0) - np.round(gx * 2.2 + (0.5 if lo < 0 else 0))) < 0.07
+            rim = (gy - lo < 0.06) | (hi - gy < 0.06) | (gx < -0.29) | (gx > lanes + 0.29)
+            canvas[band] = (np.array([150, 146, 138])[None, :] * tone[band][:, None])
+            canvas[band & (joint | rim)] = (86, 84, 86)
 
     def spot(lane, along, z=0.0):
         x = lane - 1.5
@@ -135,6 +165,7 @@ def scene(look, lanes=3, cells=5, zoom=3, depth=True):
     dgx, dgy = ground(THICK)
     u = np.floor((dgx * PX) + shadow).astype(int); v = np.floor((dgy + 0.6) * PX).astype(int)
     ok = (u >= shadow) & (u < d.shape[1] - shadow) & (v >= 0) & (v < d.shape[0])
+    ok[ok] &= d[v[ok], u[ok], 3] > 0
     layer = np.asarray(img).astype(float)
     if depth:
         # Its thickness down the two sides that face you: under its near long side and its near end.
@@ -142,22 +173,44 @@ def scene(look, lanes=3, cells=5, zoom=3, depth=True):
             fgx, fgy = ground(THICK - dz)
             fu = np.floor(fgx * PX).astype(int); fv = np.floor((fgy + 0.6) * PX).astype(int)
             side = (fu >= 0) & (fu < lanes * PX) & (fv >= 0) & (fv < d.shape[0]) & ~ok
+            if ends in ('worn', 'both'):
+                side &= (fgy > -0.15) & (fgy < cells + 0.15)      # no side under the broken ends
             shade = 0.5 if dz > 1 else 0.36
             layer[side, :3] = np.array(L['beam']) * shade if look != 'stone' else np.array(L['plank']) * (shade + 0.12)
     layer[ok, :3] = d[v[ok], u[ok], :3]
     img = Image.fromarray(layer.clip(0, 255).astype(np.uint8)).convert('RGBA')
     railings(ImageDraw.Draw(img), 1)
-    return img.resize((W * zoom, H * zoom), Image.NEAREST)
+    if ends in ('sill', 'both'):
+        # Tufts of grass and a pebble or two at the sill's corners.
+        dr = ImageDraw.Draw(img)
+        for lane, along, k in ((-0.5, -0.75, 0), (lanes + 0.5, -0.75, 1), (-0.5, cells + 0.75, 2), (lanes + 0.5, cells + 0.75, 3)):
+            x, y = spot(lane, along)
+            for b in range(5):
+                bx = x + (b - 2) * 1.5
+                dr.line([(bx, y), (bx + (b - 2) * 0.6, y - 4 - (b % 2) * 2)], fill=(52, 120, 50) if b % 2 else (84, 150, 62))
+            px, py = x + (5 if k % 2 else -5), y + 2
+            dr.ellipse([px - 2, py - 1, px + 2, py + 1], fill=(160, 156, 148), outline=(86, 84, 86))
+    if crop:
+        img = img.crop(crop)
+    return img.resize((img.width * zoom, img.height * zoom), Image.NEAREST)
 
 
 names = ['wood', 'stone', 'lacquer', 'rope']
 titles = {'wood': 'Wood', 'stone': 'Stone', 'lacquer': 'Red lacquer', 'rope': 'Rope (footbridges)'}
 flat = "--flat" in sys.argv
 out = [a for a in sys.argv[1:] if not a.startswith("--")][0]
-tiles = [scene(n, lanes=2 if n == 'rope' else 3, depth=not flat) for n in names]
-w, h = tiles[0].size
-board = Image.new('RGBA', (w * 2 + 30, h * 2 + 90), (24, 30, 46, 255)); dr = ImageDraw.Draw(board)
-for k, (n, t) in enumerate(zip(names, tiles)):
-    x, y = 10 + (k % 2) * (w + 10), 10 + (k // 2) * (h + 40)
-    board.alpha_composite(t, (x, y)); dr.text((x + 8, y + h + 8), titles[n], fill=(255, 255, 255, 255))
+if "--ends" in sys.argv:
+    # How a bridge's ends meet the land, four ways, on the stone bridge and the wooden one.
+    picks = [('now', 'A: as now'), ('worn', 'B: boards broken off, earth trodden on'), ('sill', 'C: a stone sill and tufts'), ('both', 'D: B and C together')]
+    tiles = [(f"{titles[n]}  {label}", scene(n, depth=True, ends=e, zoom=5, crop=(150, 78, 300, 200))) for n in ('stone', 'wood') for e, label in picks]
+    columns = 4
+else:
+    tiles = [(titles[n], scene(n, lanes=2 if n == 'rope' else 3, depth=not flat)) for n in names]
+    columns = 2
+w, h = tiles[0][1].size
+rows = (len(tiles) + columns - 1) // columns
+board = Image.new('RGBA', (w * columns + 10 * (columns + 1), (h + 40) * rows + 10), (24, 30, 46, 255)); dr = ImageDraw.Draw(board)
+for k, (title, t) in enumerate(tiles):
+    x, y = 10 + (k % columns) * (w + 10), 10 + (k // columns) * (h + 40)
+    board.alpha_composite(t, (x, y)); dr.text((x + 8, y + h + 8), title, fill=(255, 255, 255, 255))
 board.save(out); print(out)
