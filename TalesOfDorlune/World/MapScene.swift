@@ -15,6 +15,8 @@ protocol MapScene: SKScene {
     /// You said something in the Chat window, through its filter (`ChatFilter`): `rude`, it starred
     /// something out, and someone nearby tells you off.
     func heroSay(_ text: String, rude: Bool)
+    /// You picked an emote by the chat's box: over your head, and maybe an answer from someone near.
+    func heroEmote(_ emote: Emote)
     /// An adventurer's answer, in a bubble over them.
     func adventurerSays(_ line: String, _ id: UUID)
     /// After a duel you won, the rival skulks off.

@@ -45,7 +45,7 @@ struct GameView: View {
                 case .trade(let adventurer):
                     TradeView(session: coordinator.session, adventurer: adventurer, onClose: coordinator.closeOverlay)
                 case .chat:
-                    ChatView(session: coordinator.session, onSay: coordinator.say, onClose: coordinator.closeOverlay, coordinator: coordinator)
+                    ChatView(session: coordinator.session, onSay: coordinator.say, onClose: coordinator.closeOverlay, coordinator: coordinator, onEmote: coordinator.emote)
                 case .profile(.adventurer(let person)):
                     ProfileWindow(coordinator: coordinator, person: person, onClose: coordinator.closeOverlay)
                 case .profile(.hero):

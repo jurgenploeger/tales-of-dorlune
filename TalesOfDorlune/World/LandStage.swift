@@ -664,6 +664,10 @@ final class LandStage {
         mirror.anchorPoint = CGPoint(x: node.anchorPoint.x, y: CGFloat(height - 1 - footRow) / CGFloat(height))
         mirror.position = CGPoint(x: node.position.x, y: footY)
         mirror.yScale = -Self.squash
+        // Should the shader not take, still the water's colour more than the tree's (the user,
+        // 2026-11-17: "it should have a bit of the water color"), if not cut to the water.
+        mirror.color = UIColor(red: CGFloat(colours[1].r), green: CGFloat(colours[1].g), blue: CGFloat(colours[1].b), alpha: 1)
+        mirror.colorBlendFactor = 0.7
         mirror.shader = shader
         if let frames { WindField.shared.add(mirror, frames: frames, at: CGPoint(x: node.position.x + shift.dx, y: node.position.y + shift.dy)) }
         // Over the water it lies on: on a sunk lake, over its lowest strip of it.
@@ -683,7 +687,8 @@ final class LandStage {
     /// wind frames), sampled a whole pixel aside by a slow wave down its rows (none in the first 3 below
     /// the foot, then one, two past 16 of the picture's: about 30 of the reflection's) that steps every
     /// 0.625 seconds, four steps a 2.5-second turn; drawn where the water is (`u_mask`, its tone in red)
-    /// in tone 0, 1 or 2 by the pixel's brightness, a step darker than the water's own. No early return
+    /// in tone 0, 1 or 2 by the pixel's brightness, a step darker than the water's own, a third of the
+    /// thing's own colour kept in it (the user, 2026-11-17: "a bit of the water color"). No early return
     /// and no choice between colours with `?:`: written so, the first one didn't take on the device and
     /// the tree's own colours showed in the water (0.9.103's screenshot).
     private static let reflectionSource = """
@@ -702,6 +707,7 @@ final class LandStage {
         float shade = max(0.0, min(floor(pool.r * 255.0 / 32.0 + 0.5) - 1.0, band));
         vec3 paint = mix(u_tone0.rgb, u_tone1.rgb, step(0.5, shade));
         paint = mix(paint, u_tone2.rgb, step(1.5, shade));
+        paint = mix(picked.rgb / max(picked.a, 0.001), paint, 0.68);
         float shown = step(0.5, pool.a) * step(0.5, picked.a);
         gl_FragColor = vec4(paint * shown, shown);
     }

@@ -767,6 +767,12 @@ final class ContinentScene: SKScene {
         if let here, let stage = lands[here.id]?.stage { stage.crowd?.reply(near: stage.local(player.position), scolding: rude) }
     }
 
+    /// You picked an emote: over your head, and maybe one back from someone about you.
+    func heroEmote(_ emote: Emote) {
+        player.emote(emote)
+        if let here, let stage = lands[here.id]?.stage { stage.crowd?.answer(emote, near: stage.local(player.position)) }
+    }
+
     /// An adventurer's answer (befriended, invited), in a bubble over them, wherever they are.
     func adventurerSays(_ line: String, _ id: UUID) {
         for land in lands.values { land.stage.crowd?.say(line, from: id) }

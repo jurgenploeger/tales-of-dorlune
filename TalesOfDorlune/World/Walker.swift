@@ -414,6 +414,24 @@ final class Walker: SKNode {
         node.run(.sequence([pop, .wait(forDuration: duration), .fadeOut(withDuration: 0.3), .removeFromParent()]))
     }
 
+    /// An emote over its head (`Emote`), where a speech bubble would be, for a few seconds: popped up
+    /// a little past its size and settling, in whole steps, then gone.
+    func emote(_ emote: Emote, for duration: TimeInterval = 2.8) {
+        guard let texture = emote.texture else { return }
+        bubble?.removeFromParent()
+        let size = texture.size()
+        let node = SKSpriteNode(texture: texture, size: CGSize(width: size.width * PondMotion.pixel, height: size.height * PondMotion.pixel))
+        node.anchorPoint = CGPoint(x: 0.3, y: 0)
+        node.position = CGPoint(x: 6, y: (tag?.position.y ?? sprite.size.height) + 14)
+        node.zPosition = 6_000
+        node.setScale(0.5)
+        addChild(node)
+        bubble = node
+        node.accessibilityLabel = emote.label
+        node.run(.sequence([.scale(to: 1.15, duration: 0.08), .scale(to: 1, duration: 0.06),
+                            .wait(forDuration: duration), .fadeOut(withDuration: 0.2), .removeFromParent()]))
+    }
+
     /// Where this walker has just been, newest first, a step apart: ground it stood on, so a
     /// follower can always walk there.
     private var footsteps: [CGPoint] = []

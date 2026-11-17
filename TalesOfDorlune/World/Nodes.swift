@@ -18,7 +18,7 @@ enum Nodes {
         let string = NSAttributedString(string: text, attributes: [.font: font, .foregroundColor: ink, .paragraphStyle: paragraph])
         let textBox = string.boundingRect(with: CGSize(width: maxWidth, height: 200), options: [.usesLineFragmentOrigin], context: nil).integral
         let padding = CGSize(width: 9, height: 5)
-        let tail: CGFloat = 6
+        let tail: CGFloat = 8
         let bubble = CGRect(x: 1, y: 1, width: textBox.width + padding.width * 2, height: textBox.height + padding.height * 2)
         let canvas = CGSize(width: bubble.width + 2, height: bubble.height + tail + 2)
         let image = UIGraphicsImageRenderer(size: canvas).image { _ in
@@ -33,9 +33,13 @@ enum Nodes {
             shape.addArc(withCenter: CGPoint(x: bubble.maxX - radius, y: bubble.minY + radius), radius: radius, startAngle: -.pi / 2, endAngle: 0, clockwise: true)
             shape.addLine(to: CGPoint(x: bubble.maxX, y: bubble.maxY - radius))
             shape.addArc(withCenter: CGPoint(x: bubble.maxX - radius, y: bubble.maxY - radius), radius: radius, startAngle: 0, endAngle: .pi / 2, clockwise: true)
+            // A tail that curves down and away to the left, as a speech bubble's does (the user,
+            // 2026-11-17: "look more like actual message bubbles with these curved tips"), not a point.
             shape.addLine(to: CGPoint(x: bubble.midX + half, y: bubble.maxY))
-            shape.addLine(to: CGPoint(x: bubble.midX, y: bubble.maxY + tail))
-            shape.addLine(to: CGPoint(x: bubble.midX - half, y: bubble.maxY))
+            shape.addQuadCurve(to: CGPoint(x: bubble.midX - half - 4, y: bubble.maxY + tail),
+                               controlPoint: CGPoint(x: bubble.midX + 1, y: bubble.maxY + tail * 0.9))
+            shape.addQuadCurve(to: CGPoint(x: bubble.midX - half, y: bubble.maxY),
+                               controlPoint: CGPoint(x: bubble.midX - half - 1, y: bubble.maxY + tail * 0.35))
             shape.addLine(to: CGPoint(x: bubble.minX + radius, y: bubble.maxY))
             shape.addArc(withCenter: CGPoint(x: bubble.minX + radius, y: bubble.maxY - radius), radius: radius, startAngle: .pi / 2, endAngle: .pi, clockwise: true)
             shape.addLine(to: CGPoint(x: bubble.minX, y: bubble.minY + radius))
