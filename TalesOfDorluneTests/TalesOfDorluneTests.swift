@@ -2144,11 +2144,12 @@ struct RulesTests {
         for row in -1...10 { for col in -1...10 { cells.insert(GridPoint(col: col, row: row)) } }
         let field = PondField(cells: cells) { cell, _, _ in (0..<10).contains(cell.col) && (0..<10).contains(cell.row) }
         #expect(field.tone(9.98, 5) == 0)          // just under the far shore
+        #expect(field.tone(9.9, 5) == 9)           // the far bank's grass mirrored under it
         #expect(field.tone(8.8, 8.8) == 1)         // the far half, out from the shore
         #expect(field.tone(6.5, 6.5) == 3)         // a quarter of the way down
         #expect(field.tone(5, 5) == 4)             // the near half
         #expect(field.tone(-0.5, -0.5) == 3)       // off the water
-        #expect(ArtLibrary.pondTones(water: (0.3, 0.6, 0.8)).count == 8)
+        #expect(ArtLibrary.pondTones(water: (0.3, 0.6, 0.8)).count == 10)
     }
 
     /// The bag grows as the hero levels: 50 at level 1, twice that at the cap, evenly between.

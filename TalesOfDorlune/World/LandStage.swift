@@ -121,6 +121,7 @@ final class LandStage {
             if reed.art == "water_rock" || reed.art == "shore_stones" { roundShadow(under: node, at: reed.cell) }
         }
         placeWaterfalls(plan.waterfalls)
+        placePondMotion()
         await pause()
         placeFence()
         placeBuildings()
@@ -323,6 +324,7 @@ final class LandStage {
         let drawn = sprite ?? art.sprite(placement.art)
         let node = addScenery(drawn, at: placement.cell, nudge: placement.nudge, sway: placement.sway, scale: placement.scale,
                               wind: placement.art)
+        reflect(node, picture: drawn.texture, art: placement.art, cell: placement.cell)
         // Lit by a lamp nearby at night (`LampLight`): not a light itself, nor what moves in the wind
         // (its picture changes, the light's copy wouldn't).
         if !lamps.isEmpty, node.texture === drawn.texture, placement.art != "street_lamp", placement.prop?.glow == nil {
@@ -454,6 +456,12 @@ final class LandStage {
                 .rotate(toAngle: 0.08, duration: 2.2, shortestUnitArc: true),
                 .rotate(toAngle: -0.08, duration: 2.2, shortestUnitArc: true),
             ])))
+            // Bobbing a whole pixel down and up again, each in its own time (the pond water article's:
+            // down while sin(t + 1.7k) > 0.4, about three eighths of a 5-second turn).
+            node.run(.sequence([.wait(forDuration: .random(in: 0...5)), .repeatForever(.sequence([
+                .moveBy(x: 0, y: -PondMotion.pixel, duration: 0), .wait(forDuration: 1.85),
+                .moveBy(x: 0, y: PondMotion.pixel, duration: 0), .wait(forDuration: 3.15),
+            ]))]))
             if map.isSunken(cell), let z = flatZ(at: spot) {
                 node.zPosition = z
                 chunk(at: node.position).addChild(node)
@@ -461,6 +469,252 @@ final class LandStage {
                 node.zPosition = -99_000
                 layer(at: node.position).addChild(node)
             }
+        }
+    }
+
+    /// The water moving on the land's own lakes and rivers (`PondMotion`; not ice or chocolate): along the
+    /// near and side shores (down the screen, south and west of the water) a light dash lapping a pixel in
+    /// and out every 1.25 seconds, showing a while and gone a while; along the far shore (north and east)
+    /// the waterline creeping a pixel up the bank now and then; and out on the open water, a chunk at a
+    /// time, glints flickering (one every half second or so) and a drop rippling out every few seconds.
+    /// Unseeded: the land's layout stays what it was.
+    private func placePondMotion() {
+        guard (def.theme.water ?? "tile_water") == "tile_water" else { return }
+        var cells = map.river
+        for lake in map.lakes { cells.formUnion(lake.water) }
+        guard !cells.isEmpty else { return }
+        let tile = WorldMap.tileSize
+        var open: [GridPoint: [(point: CGPoint, cell: GridPoint)]] = [:]
+        for cell in cells.sorted(by: WorldMap.inOrder) where !map.bridgeCells.contains(cell) {
+            var shore = false
+            for (dc, dr) in [(1, 0), (-1, 0), (0, 1), (0, -1)] {
+                let next = GridPoint(col: cell.col + dc, row: cell.row + dr)
+                guard map.contains(next), !cells.contains(next) else { continue }
+                let ground = map.ground[next.row][next.col]
+                guard ground != .water, ground != .sea, ground != .away else { continue }
+                shore = true
+                // Up the screen is north and east at once: a shore that way is the far bank.
+                let far = dc + dr > 0
+                guard Double.random(in: 0..<1) < (far ? 0.4 : 0.6) else { continue }
+                // Along the edge, toward the land: the near shore's dashes two or three pixels out on
+                // the water, the far shore's creep at the waterline.
+                let along = Double.random(in: -0.3...0.3), inset = far ? 0.47 : 0.36
+                let offset = CGPoint(x: (Double(dc) * inset - Double(dr) * along) * tile, y: (Double(dr) * inset + Double(dc) * along) * tile)
+                let point = map.center(of: cell) + CGVector(dx: WorldMap.project(offset).x, dy: WorldMap.project(offset).y)
+                if far {
+                    let node = PondMotion.sprite(PondMotion.creep)
+                    node.alpha = 0
+                    node.run(.sequence([.wait(forDuration: .random(in: 0...6)), .repeatForever(.sequence([
+                        .fadeAlpha(to: 1, duration: 0), .wait(forDuration: 2.5, withRange: 2),
+                        .fadeAlpha(to: 0, duration: 0), .wait(forDuration: 4, withRange: 4),
+                    ]))]))
+                    onWater(node, at: point, cell: cell)
+                } else {
+                    // A pixel out toward the open water and back, as the ring of dashes steps out and in.
+                    let toward = WorldMap.project(CGPoint(x: -Double(dc), y: -Double(dr)))
+                    let length = max(0.001, (toward.x * toward.x + toward.y * toward.y).squareRoot())
+                    let step = CGVector(dx: (toward.x / length * PondMotion.pixel).rounded(), dy: (toward.y / length * PondMotion.pixel).rounded())
+                    let node = PondMotion.sprite(PondMotion.lap)
+                    node.alpha = 0
+                    node.run(.repeatForever(.sequence([
+                        .wait(forDuration: 1.25), .moveBy(x: step.dx, y: step.dy, duration: 0),
+                        .wait(forDuration: 1.25), .moveBy(x: -step.dx, y: -step.dy, duration: 0),
+                    ])))
+                    node.run(.sequence([.wait(forDuration: .random(in: 0...5)), .repeatForever(.sequence([
+                        .fadeAlpha(to: 1, duration: 0), .wait(forDuration: 1.5, withRange: 1.5),
+                        .fadeAlpha(to: 0, duration: 0), .wait(forDuration: 2, withRange: 2),
+                    ]))]))
+                    onWater(node, at: point, cell: cell)
+                }
+            }
+            if !shore {
+                let point = map.center(of: cell)
+                // Down on the water, with its height, for the glints and drops set round it.
+                open[Self.key(point.x, point.y), default: []].append((CGPoint(x: point.x, y: point.y + map.height(at: point)), cell))
+            }
+        }
+        // Glints and drops, a spawner for each chunk of open water.
+        for spots in open.values {
+            guard let first = spots.first else { continue }
+            let spawner = SKNode()
+            onWater(spawner, at: map.center(of: first.cell), cell: first.cell)
+            let base = spawner.position
+            let places = spots.map { $0.point }
+            let spot: () -> CGPoint = {
+                let pick = places[Int.random(in: 0..<places.count)]
+                let jitter = WorldMap.project(CGPoint(x: Double.random(in: -0.4...0.4) * tile, y: Double.random(in: -0.4...0.4) * tile))
+                return CGPoint(x: (pick.x + jitter.x - base.x).rounded(), y: (pick.y + jitter.y - base.y).rounded())
+            }
+            let glint = SKAction.run { [weak spawner] in
+                guard let spawner else { return }
+                let node = PondMotion.sprite(PondMotion.glint[0].texture)
+                node.position = spot()
+                spawner.addChild(node)
+                var steps: [SKAction] = []
+                for frame in PondMotion.glint {
+                    steps.append(.setTexture(frame.texture))
+                    steps.append(.wait(forDuration: frame.time))
+                }
+                steps.append(.removeFromParent())
+                node.run(.sequence(steps))
+            }
+            let drop = SKAction.run { [weak spawner] in
+                guard let spawner, let first = PondMotion.ripple.first else { return }
+                let node = PondMotion.sprite(first)
+                node.position = spot()
+                spawner.addChild(node)
+                node.run(.sequence([.animate(with: PondMotion.ripple, timePerFrame: 0.2), .removeFromParent()]))
+            }
+            spawner.run(.repeatForever(.sequence([.wait(forDuration: 0.55, withRange: 0.6), glint])))
+            spawner.run(.repeatForever(.sequence([.wait(forDuration: 3.5, withRange: 3), drop])))
+        }
+    }
+
+    /// How many reflections a land lays (`reflect`): a lake's banks are lined with trees, and each one
+    /// has a shader and a mask of its own.
+    private static let reflectionsAtMost = 160
+    private var reflections = 0
+
+    /// What stands just above the water on screen mirrored in it (after SpriteCook's pond water article,
+    /// its reflections; the user, 2026-11-17: "Start on the reflections"): its picture flipped about its
+    /// foot and squashed to 0.55, in three of the pond's darkest tones by how bright each pixel is (the
+    /// darkest 15% tone 0, below 110 tone 1, the rest 2), always a step darker than the water it lies on,
+    /// only where it lies on the land's own water (`GroundTiles.pondTone`, baked in a mask), its rows
+    /// shifted a whole pixel by a slow wave in four steps over 2.5 seconds (`reflectionSource`). A tree's
+    /// reflection moves in the wind with it (2026-11-17: "do the things that are not done yet"): it
+    /// shows the tree's own frame, its picture turned over, not copies of it. Not what stands in the water.
+    private func reflect(_ node: SKSpriteNode, picture texture: SKTexture, art id: String, cell: GridPoint) {
+        guard reflections < Self.reflectionsAtMost, !id.hasPrefix("waterfall"), id != "water_rock", id != "lily_pad",
+              map.contains(cell), map.ground[cell.row][cell.col] != .water else { return }
+        // Water down the screen from it (south and west) within reach of its reflection.
+        var nearWater = false
+        for dc in 0...3 where !nearWater {
+            for dr in 0...3 where dc + dr > 0 {
+                let below = GridPoint(col: cell.col - dc, row: cell.row - dr)
+                if map.contains(below), map.ground[below.row][below.col] == .water { nearWater = true; break }
+            }
+        }
+        guard nearWater, tiles.pondColours.count >= 3 else { return }
+        let image = art.picture(of: texture)
+        let width = image.width, height = image.height
+        guard width > 0, height > 0, let pixels = PixelImage.pixels(of: image, width: width, height: height) else { return }
+        // Its lowest opaque row, from the top.
+        var footRow = -1
+        search: for row in stride(from: height - 1, through: 0, by: -1) {
+            for col in 0..<width where pixels[(row * width + col) * 4 + 3] > 127 {
+                footRow = row
+                break search
+            }
+        }
+        guard footRow > 0 else { return }
+        let pixelWidth = node.size.width / CGFloat(width), pixelHeight = node.size.height / CGFloat(height)
+        let footY = node.position.y - node.anchorPoint.y * node.size.height + CGFloat(height - 1 - footRow) * pixelHeight
+        let left = node.position.x - node.anchorPoint.x * node.size.width
+        // Where each of its pixels falls in the water, mirrored: the water's tone there (as 32 a step in
+        // red), or clear where it isn't water. The water lies down the screen by its depth on a sunk
+        // lake: found again from where the ground there lies.
+        var mask = [UInt8](repeating: 0, count: width * height * 4)
+        var lowest: CGPoint?
+        let tile = Double(WorldMap.tileSize)
+        for row in 0...footRow {
+            let y = footY - (CGFloat(footRow - row) + 0.5) * pixelHeight * Self.squash
+            for col in 0..<width {
+                let x = left + (CGFloat(col) + 0.5) * pixelWidth
+                var grid = WorldMap.unproject(CGPoint(x: x, y: y))
+                for _ in 0..<2 {
+                    let depth = map.height(at: WorldMap.project(grid))
+                    grid = WorldMap.unproject(CGPoint(x: x, y: y - depth))
+                }
+                guard let tone = tiles.pondTone(atCells: Double(grid.x) / tile, Double(grid.y) / tile) else { continue }
+                let o = (row * width + col) * 4
+                mask[o] = UInt8(min(7, tone) * 32)
+                mask[o + 3] = 255
+                if lowest == nil || y < (lowest?.y ?? 0) { lowest = CGPoint(x: x, y: y) }
+            }
+        }
+        guard let lowest, let maskImage = PixelImage.make(mask, width: width, height: height) else { return }
+        // Its brightness's darkest 15%, the cut to its darkest tone.
+        var bright: [Double] = []
+        for i in stride(from: 0, to: width * height * 4, by: 4) where pixels[i + 3] > 127 {
+            bright.append(0.3 * Double(pixels[i]) + 0.59 * Double(pixels[i + 1]) + 0.11 * Double(pixels[i + 2]))
+        }
+        bright.sort()
+        let darkCut = bright.isEmpty ? 0 : bright[bright.count * 15 / 100]
+        let maskTexture = SKTexture(cgImage: maskImage)
+        maskTexture.filteringMode = .nearest
+        let frames = art.windFrames(id, texture: texture)
+        let colours = tiles.pondColours
+        func colour(_ k: Int) -> SIMD4<Float> {
+            SIMD4<Float>(Float(colours[k].r), Float(colours[k].g), Float(colours[k].b), 1)
+        }
+        let shader = SKShader(source: Self.reflectionSource, uniforms: [
+            SKUniform(name: "u_mask", texture: maskTexture),
+            SKUniform(name: "u_count", float: Float(frames?.count ?? 1)),
+            SKUniform(name: "u_size", vectorFloat2: SIMD2<Float>(Float(width), Float(height))),
+            SKUniform(name: "u_foot", float: Float(height - 1 - footRow) / Float(height)),
+            SKUniform(name: "u_cut", float: Float(darkCut)),
+            SKUniform(name: "u_tone0", vectorFloat4: colour(0)),
+            SKUniform(name: "u_tone1", vectorFloat4: colour(1)),
+            SKUniform(name: "u_tone2", vectorFloat4: colour(2)),
+        ])
+        reflections += 1
+        // The tree's own picture, turned over about its foot and squashed: it shows whatever the tree
+        // shows, moving in the wind with it (`WindField`), drawn in the pond's tones by the shader.
+        let mirror = SKSpriteNode(texture: node.texture ?? texture, size: node.size)
+        mirror.anchorPoint = CGPoint(x: node.anchorPoint.x, y: CGFloat(height - 1 - footRow) / CGFloat(height))
+        mirror.position = CGPoint(x: node.position.x, y: footY)
+        mirror.yScale = -Self.squash
+        mirror.shader = shader
+        if let frames { WindField.shared.add(mirror, frames: frames, at: CGPoint(x: node.position.x + shift.dx, y: node.position.y + shift.dy)) }
+        // Over the water it lies on: on a sunk lake, over its lowest strip of it.
+        if let z = flatZ(at: lowest), map.isSunken(map.cell(at: lowest)) {
+            mirror.zPosition = z - 0.1
+            chunk(at: lowest).addChild(mirror)
+        } else {
+            mirror.zPosition = -99_020
+            layer(at: mirror.position).addChild(mirror)
+        }
+    }
+
+    /// How much shorter a reflection is than what it mirrors (the article's 0.55).
+    private static let squash: CGFloat = 0.55
+
+    /// A reflection's pixels (`reflect`): its picture's frame (one of `u_count` side by side, a tree's
+    /// wind frames), sampled a whole pixel aside by a slow wave down its rows (none in the first 3 below
+    /// the foot, then one, two past 16 of the picture's: about 30 of the reflection's) that steps every
+    /// 0.625 seconds, four steps a 2.5-second turn; drawn where the water is (`u_mask`, its tone in red)
+    /// in tone 0, 1 or 2 by the pixel's brightness, a step darker than the water's own.
+    private static let reflectionSource = """
+    void main() {
+        float index = floor(v_tex_coord.x * u_count);
+        vec2 at = vec2(fract(v_tex_coord.x * u_count), v_tex_coord.y);
+        vec4 water = texture2D(u_mask, at);
+        if (water.a < 0.5) { gl_FragColor = vec4(0.0); return; }
+        float rows = (at.y - u_foot) * u_size.y;
+        float reach = rows < 3.0 ? 0.0 : (rows < 16.0 ? 1.0 : 2.0);
+        float phase = floor(u_time / 0.625) * 1.5707963;
+        float aside = floor(reach * sin(rows * 1.36 - phase) + 0.5);
+        float x = clamp(at.x - aside / u_size.x, 0.0, 0.9999);
+        vec4 source = texture2D(u_texture, vec2((index + x) / u_count, v_tex_coord.y));
+        if (source.a < 0.5) { gl_FragColor = vec4(0.0); return; }
+        float bright = dot(source.rgb / source.a, vec3(0.3, 0.59, 0.11)) * 255.0;
+        float level = bright < u_cut ? 0.0 : (bright < 110.0 ? 1.0 : 2.0);
+        float tone = max(0.0, min(floor(water.r * 255.0 / 32.0 + 0.5) - 1.0, level));
+        vec4 colour = tone < 0.5 ? u_tone0 : (tone < 1.5 ? u_tone1 : u_tone2);
+        gl_FragColor = vec4(colour.rgb, 1.0);
+    }
+    """
+
+    /// Sets `node` down on the water at `point` (`cell`'s), as the lily pads are: down on a lake sunk with
+    /// the shore, just under the pads.
+    private func onWater(_ node: SKNode, at point: CGPoint, cell: GridPoint) {
+        node.position = CGPoint(x: point.x.rounded(), y: (point.y + map.height(at: point)).rounded())
+        if map.isSunken(cell), let z = flatZ(at: point) {
+            node.zPosition = z - 0.05
+            chunk(at: node.position).addChild(node)
+        } else {
+            node.zPosition = -99_010
+            layer(at: node.position).addChild(node)
         }
     }
 
