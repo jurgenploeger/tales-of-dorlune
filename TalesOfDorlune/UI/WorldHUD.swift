@@ -5,6 +5,26 @@ import SwiftUI
 /// just happened toasting under it, joystick bottom-left, and Chat and the menu bottom-right (one
 /// button that opens into the menu's pages). While you're talking to someone (or any window is open
 /// over the map) the controls step aside, so nothing peeks out from behind the conversation.
+/// The HUD's minimap, a view of its own (the speed audit, 2026-11-17): it reads where you are, the dots
+/// and the sky's tint itself, so a step into another cell or a walker moving redraws only it, not the
+/// whole HUD round it as when the HUD's own body read them.
+private struct HUDMinimap: View {
+    let coordinator: GameCoordinator
+
+    var body: some View {
+        let session = coordinator.session
+        let minimap = coordinator.minimap(explored: session.exploredVersion, overviews: WorldOverview.shared.images.count)
+        MinimapWindow(
+            picture: minimap.picture,
+            cell: session.mapCell,
+            dots: session.minimapDots,
+            marks: session.minimapMarks,
+            tint: session.skyTint,
+            onOpen: { coordinator.open(.worldMap) }
+        )
+    }
+}
+
 struct WorldHUD: View {
     let coordinator: GameCoordinator
     /// The menu button opened into its list of pages (`GameMenu`).
@@ -76,16 +96,8 @@ struct WorldHUD: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
 
             VStack(alignment: .trailing, spacing: 6) {
-                let minimap = coordinator.minimap(explored: session.exploredVersion, overviews: WorldOverview.shared.images.count)
-                MinimapWindow(
-                    picture: minimap.picture,
-                    cell: session.mapCell,
-                    dots: session.minimapDots,
-                    marks: session.minimapMarks,
-                    tint: session.skyTint,
-                    onOpen: { coordinator.open(.worldMap) }
-                )
-                .coachTarget(.minimap)
+                HUDMinimap(coordinator: coordinator)
+                    .coachTarget(.minimap)
             }
             .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { minimapHeight = $0 }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)

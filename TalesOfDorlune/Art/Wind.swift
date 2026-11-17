@@ -142,6 +142,8 @@ final class WindField {
 
     private struct Tree {
         weak var node: SKSpriteNode?
+        /// The land it's in (`LandStage.world`): hidden, far from you, its trees keep still.
+        weak var land: SKNode?
         let frames: [SKTexture]
         let x: Double
         let y: Double
@@ -155,9 +157,9 @@ final class WindField {
 
     /// `node` moves in the wind from now on, by `frames`, standing at `point` (the continent's
     /// points, or a cave's own).
-    func add(_ node: SKSpriteNode, frames: [SKTexture], at point: CGPoint) {
+    func add(_ node: SKSpriteNode, frames: [SKTexture], at point: CGPoint, land: SKNode? = nil) {
         guard let book = WindBook.shared, frames.count == book.loop + book.gust else { return }
-        let tree = Tree(node: node, frames: frames, x: Double(point.x), y: Double(point.y))
+        let tree = Tree(node: node, land: land, frames: frames, x: Double(point.x), y: Double(point.y))
         node.texture = frames[book.frame(at: clock, x: tree.x, y: tree.y)]
         trees.append(tree)
         if trees.count > prunedAt {
@@ -175,7 +177,8 @@ final class WindField {
         shownTick = tick
         for tree in trees {
             // Only what's on stage: a chunk out of sight waits.
-            guard let node = tree.node, node.scene != nil else { continue }
+            // Nor in a land hidden far off (the speed audit, 2026-11-17: they kept swapping pictures).
+            guard let node = tree.node, node.scene != nil, tree.land?.isHidden != true else { continue }
             let texture = tree.frames[book.frame(at: clock, x: tree.x, y: tree.y)]
             if node.texture !== texture { node.texture = texture }
         }

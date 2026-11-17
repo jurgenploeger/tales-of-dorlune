@@ -797,10 +797,15 @@ nonisolated final class WorldMap: @unchecked Sendable {
             let dx = abs(cell.col - goal.col), dy = abs(cell.row - goal.row)
             return 10 * max(dx, dy) + 4 * min(dx, dy)
         }
-        let count = columns * rows
-        var cost = [Int](repeating: .max, count: count)
-        var cameFrom = [Int](repeating: -1, count: count)
-        var done = [Bool](repeating: false, count: count)
+        // Only the cells it looks at, and only within a box round the two ends, and so many: three arrays the
+        // size of the whole land (some 400 KB) were made and cleared for every walk any villager or
+        // adventurer took, every few seconds each (the speed audit, 2026-11-17). Farther than that, no way.
+        var cost: [Int: Int] = [:]
+        var cameFrom: [Int: Int] = [:]
+        var done = Set<Int>()
+        let margin = 24
+        let low = GridPoint(col: min(start.col, goal.col) - margin, row: min(start.row, goal.row) - margin)
+        let high = GridPoint(col: max(start.col, goal.col) + margin, row: max(start.row, goal.row) + margin)
         var open = World.Frontier()
         let first = slot(start), last = slot(goal)
         cost[first] = 0
@@ -808,27 +813,28 @@ nonisolated final class WorldMap: @unchecked Sendable {
         let steps = [(1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (1, -1), (-1, 1), (-1, -1)]
         while let current = open.pop() {
             if current == last { break }
-            guard !done[current] else { continue }
-            done[current] = true
+            guard done.insert(current).inserted else { continue }
+            if done.count > 6_000 { return [] }
             let here = GridPoint(col: current % columns, row: current / columns)
             for (dc, dr) in steps {
                 let next = GridPoint(col: here.col + dc, row: here.row + dr)
-                guard isWalkable(next) else { continue }
+                guard next.col >= low.col, next.col <= high.col, next.row >= low.row, next.row <= high.row,
+                      isWalkable(next) else { continue }
                 let index = slot(next)
-                guard !done[index] else { continue }
-                let through = cost[current] + (dc != 0 && dr != 0 ? 14 : 10)
-                guard through < cost[index] else { continue }
+                guard !done.contains(index) else { continue }
+                let through = (cost[current] ?? .max) + (dc != 0 && dr != 0 ? 14 : 10)
+                guard through < cost[index] ?? .max else { continue }
                 cost[index] = through
                 cameFrom[index] = current
                 open.push(index, priority: through + estimate(next))
             }
         }
-        guard cameFrom[last] >= 0 else { return [] }
+        guard cameFrom[last] != nil else { return [] }
         var cells: [GridPoint] = []
         var at = last
-        while at != first {
+        while at != first, let back = cameFrom[at] {
             cells.append(GridPoint(col: at % columns, row: at / columns))
-            at = cameFrom[at]
+            at = back
         }
         return cells.reversed()
     }

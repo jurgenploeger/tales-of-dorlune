@@ -161,12 +161,17 @@ final class LandStage {
         critters = Critters(def.ambience, world: world, map: map, seed: def.id)
     }
 
+    /// Whether any of its chunks is in the scene, near the camera (`show`).
+    private(set) var onScreen = false
+
     /// A frame of its life (`player` and `camera` in the continent's points, the screen at
     /// `scale`): its people stroll and its animals mind you as you come near, and its pieces near the
-    /// camera are in the scene. Its birds cross the sky only while you're in it (`isHere`).
+    /// camera are in the scene. Its birds cross the sky only while you're in it (`isHere`). Its people
+    /// wait while none of it is near the screen (the speed audit, 2026-11-17: every land round you,
+    /// most of them out of sight, walked and found its ways every frame).
     func update(dt: TimeInterval, player: CGPoint, camera: CGPoint, scale: CGFloat, screen: CGSize, isHere: Bool = true) {
         let you = local(player), eye = local(camera)
-        crowd?.update(dt: dt, player: you)
+        if onScreen || isHere { crowd?.update(dt: dt, player: you) }
         let visible = CGRect(x: eye.x - screen.width / 2 * scale, y: eye.y - screen.height / 2 * scale,
                              width: screen.width * scale, height: screen.height * scale)
         critters?.update(dt: dt, player: you, visible: visible, flocks: isHere) { [map] in map.isWalkable(map.rawCell(at: $0)) }
@@ -304,6 +309,7 @@ final class LandStage {
         let high = Self.key(local.x + reach.width, local.y + reach.height)
         if let shown = shownChunks, shown.low == low, shown.high == high { return }
         shownChunks = (low, high)
+        defer { onScreen = chunks.values.contains { $0.parent != nil } }
         canopy.show(low: low, high: high)
         for (spot, node) in chunks {
             let near = spot.col >= low.col && spot.col <= high.col && spot.row >= low.row && spot.row <= high.row
@@ -368,7 +374,7 @@ final class LandStage {
         shade(node, standingOn: cell)
         if let wind, let frames = art.windFrames(wind, texture: sprite.texture) {
             // Timed by where it stands on the continent, so the wind runs on across the border.
-            WindField.shared.add(node, frames: frames, at: CGPoint(x: position.x + shift.dx, y: position.y + shift.dy))
+            WindField.shared.add(node, frames: frames, at: CGPoint(x: position.x + shift.dx, y: position.y + shift.dy), land: world)
         } else if let sway {
             let left = SKAction.rotate(toAngle: sway.lean, duration: sway.duration, shortestUnitArc: true)
             let right = SKAction.rotate(toAngle: -sway.lean, duration: sway.duration, shortestUnitArc: true)
@@ -669,7 +675,7 @@ final class LandStage {
         mirror.color = UIColor(red: CGFloat(colours[1].r), green: CGFloat(colours[1].g), blue: CGFloat(colours[1].b), alpha: 1)
         mirror.colorBlendFactor = 0.7
         mirror.shader = shader
-        if let frames { WindField.shared.add(mirror, frames: frames, at: CGPoint(x: node.position.x + shift.dx, y: node.position.y + shift.dy)) }
+        if let frames { WindField.shared.add(mirror, frames: frames, at: CGPoint(x: node.position.x + shift.dx, y: node.position.y + shift.dy), land: world) }
         // Over the water it lies on: on a sunk lake, over its lowest strip of it.
         if let z = flatZ(at: lowest), map.isSunken(map.cell(at: lowest)) {
             mirror.zPosition = z - 0.1
