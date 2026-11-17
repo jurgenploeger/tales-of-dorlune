@@ -606,8 +606,11 @@ struct ContentTests {
                 #expect(fields.contains { $0.hasMountain && Double($0.peak) >= asked * 0.85 },
                         "map \(def.id): no mountain near \(Int(asked)) high (needs more room)")
             }
-            // Not every range has a trail up it, but every land has one, and every mountain.
-            #expect(fields.contains { !$0.trails.isEmpty }, "map \(def.id): no trail up any of its hills")
+            // Not every range has a trail up it, but every land has one, and every mountain; terraces
+            // have none, their ways up round the backs of their levels.
+            if def.theme.hills?.terraces == nil {
+                #expect(fields.contains { !$0.trails.isEmpty }, "map \(def.id): no trail up any of its hills")
+            }
             for hill in fields {
                 func height(_ point: CGPoint) -> CGFloat { map.height(atGrid: CGPoint(x: point.x * tile, y: point.y * tile)) }
                 func cell(_ point: CGPoint) -> GridPoint { GridPoint(col: Int(point.x.rounded(.down)), row: Int(point.y.rounded(.down))) }
@@ -650,6 +653,23 @@ struct ContentTests {
                 let mountain = hill.lobes.firstIndex { $0.front != nil }
                 if let mountain, hill.trails.contains(where: { $0.lobe == mountain }) {
                     #expect(hill.cells.contains { !map.isWalkable($0) }, "map \(def.id): a mountain you can walk up anywhere")
+                } else if let step = hill.terrace {
+                    // Terraces: their faces you can't walk up, but you get up onto a level over the
+                    // first round its back, from the ground round it.
+                    #expect(hill.cells.contains { !map.isWalkable($0) }, "map \(def.id): terraces with no faces")
+                    let standable = hill.cells.filter { map.isWalkable($0) }
+                    let top = standable.max { map.height(at: map.center(of: $0)) < map.height(at: map.center(of: $1)) }
+                    var ground: GridPoint?
+                    for cell in hill.cells where ground == nil {
+                        let beside = GridPoint(col: cell.col - 1, row: cell.row)
+                        if !hill.cells.contains(beside), map.isWalkable(beside) { ground = beside }
+                    }
+                    if let top, let ground {
+                        #expect(map.height(at: map.center(of: top)) >= CGFloat(step), "map \(def.id): no level of its terraces you can get up to")
+                        #expect(!map.path(from: map.center(of: ground), to: map.center(of: top)).isEmpty, "map \(def.id): no way up its terraces")
+                    } else {
+                        Issue.record("map \(def.id): terraces you can't walk on or round")
+                    }
                 } else {
                     #expect(hill.cells.allSatisfy { map.isWalkable($0) }, "map \(def.id): part of a hill you can't walk on")
                 }

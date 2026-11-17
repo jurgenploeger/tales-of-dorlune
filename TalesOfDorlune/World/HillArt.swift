@@ -43,6 +43,11 @@ enum HillArt {
         /// own height (`strata`). A sheer face showed the rock and its ledges stretched up the
         /// screen (a cave's wall, playtesting 2026-10-16).
         var upright = false
+        /// A terraced range's faces (`WorldMap.Hill.terrace`), if set: its bank shows only where the
+        /// ground climbs faster than this (points a cell), worked out a pixel at a time so the rock
+        /// fills its faces exactly, its lip ragged with the grass over it; and a band of shade on the
+        /// ground at each face's foot. Painted upright (`upright`).
+        var cliff: Double? = nil
         /// The map's road, if bare rock should leave it showing (a road up into a cave's mouth).
         var road: ((GridPoint) -> Bool)? = nil
         /// The soft colour patches over the map's whole ground: a pixel a cell, north at the top.
@@ -309,6 +314,7 @@ enum HillArt {
                     let level = (h00 + h10 + h01 + h11) / 4
                     amount = max(amount, min(1, max(0, (level - line + ragged * 12) / 14)))
                 }
+                if let cliff = look.cliff { amount = min(1, max(0, (slope - cliff) / 14)) }
                 if amount > 0 { amount *= min(1, max(0, (trailDistance - 0.55) / 0.3)) }
                 if amount > 0, let road = look.road, road(GridPoint(col: Int(x.rounded(.down)), row: Int(y.rounded(.down)))) { amount = 0 }
                 for channel in 0..<4 { bare[index + channel] = UInt8(amount * 255) }
@@ -331,6 +337,22 @@ enum HillArt {
                     light[j * sw + i] = Float(shade)
                 }
             }
+        }
+        if look.cliff != nil, !hill.sunken {
+            // Shade on the ground at each face's foot, where it stands on it: the three samples in
+            // front (down the screen), the nearest the darkest.
+            var shaded = light
+            for j in 0..<sh {
+                for i in 0..<sw where bare[((sh - 1 - j) * sw + i) * 4] > 128 {
+                    for k in 1...3 {
+                        let fi = i - k, fj = j - k
+                        guard fi >= 0, fj >= 0, bare[((sh - 1 - fj) * sw + fi) * 4] < 64 else { continue }
+                        let dark = Float(1 - 0.16 * Double(4 - k) / 3)
+                        shaded[fj * sw + fi] = min(shaded[fj * sw + fi], light[fj * sw + fi] * dark)
+                    }
+                }
+            }
+            light = shaded
         }
         let patches = look.bank == nil ? nil : image(bare, width: sw, height: sh)
         let outline = image(mask, width: sw, height: sh)
@@ -439,11 +461,21 @@ enum HillArt {
                                 shade *= 1 + 0.1 * steep
                             }
                         }
+                        // A face's rock where it climbs fast enough (`Look.cliff`), its edge ragged a
+                        // pixel at a time: the grass over its lip.
+                        var cover = 1.0
+                        if let cliff = look.cliff {
+                            let slope = (gx * gx + gy * gy).squareRoot()
+                            let pixelX = (cell.col - low.col) * px + i, pixelY = (cell.row - low.row) * px + j
+                            let fray = Self.noise(pixelX, pixelY, 7) + 0.5 * Self.noise(pixelX >> 1, pixelY >> 1, 8)
+                            cover = min(1, max(0, (slope - cliff + 20 - 40 * fray) / 10))
+                            guard cover > 0 else { continue }
+                        }
                         let index = (row * side + (cell.col - corner.col) * px + i) * 4
-                        bytes[index] = UInt8(min(255, red * shade))
-                        bytes[index + 1] = UInt8(min(255, green * shade))
-                        bytes[index + 2] = UInt8(min(255, blue * shade))
-                        bytes[index + 3] = 255
+                        bytes[index] = UInt8(min(255, red * shade * cover))
+                        bytes[index + 1] = UInt8(min(255, green * shade * cover))
+                        bytes[index + 2] = UInt8(min(255, blue * shade * cover))
+                        bytes[index + 3] = UInt8(cover * 255)
                     }
                 }
             }
@@ -489,8 +521,10 @@ enum HillArt {
                     }
                 }
                 context.interpolationQuality = .medium
-                context.setBlendMode(.destinationIn)
-                context.draw(patches, in: whole)
+                if look.cliff == nil || rockUpright == nil {
+                    context.setBlendMode(.destinationIn)
+                    context.draw(patches, in: whole)
+                }
                 context.endTransparencyLayer()
                 context.restoreGState()
             }

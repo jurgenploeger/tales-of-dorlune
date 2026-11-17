@@ -613,6 +613,10 @@ nonisolated struct MapDef: Decodable, Identifiable, Sendable {
         /// The tile showing through on their slopes, the more the rockier they are (scree when not
         /// given, and none on grassy ones).
         let bank: String?
+        /// Terraces instead of smooth slopes, if set: each range stepped into flat levels this many
+        /// points apart, a sheer face of rock (`bank`) between each and the next where it faces you
+        /// and a walkable slope round its back (`WorldMap.Hill.terrace`). Not with mountains.
+        let terraces: Double?
 
         nonisolated struct Mountains: Decodable, Sendable {
             let count: Int

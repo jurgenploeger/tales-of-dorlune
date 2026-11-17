@@ -196,6 +196,12 @@ nonisolated extension WorldMap {
             }
         }
         var wall: Wall?
+        /// Terraces, if set (`MapDef.Hills.terraces`): its slopes stepped into flat levels this many
+        /// points apart (`terraced`), each ending in a sheer face up to the next (the user,
+        /// 2026-11-17: "our maps still look a bit flat", after the cliffs preview,
+        /// `tools/cliff_preview.py`). Facing you the faces stand sheer; round its back `unfold()`
+        /// lays them back into slopes you can walk up (`WorldMap.shapeHill` blocks the faces).
+        var terrace: Double?
         /// A range along a map's edge with a cave's mouth in it, rising on past the edge, rather than
         /// hills out in the fields.
         var isCrag: Bool { mouth != nil }
@@ -304,7 +310,7 @@ nonisolated extension WorldMap {
         /// their heights' fourth powers): as high as the highest, a little fuller where two meet, and
         /// flat ground where none rise. A cave's wall (`wall`) stands over the ground at its foot.
         func shape(_ x: Double, _ y: Double) -> CGFloat {
-            let ground = summits(x, y)
+            let ground = terraced(summits(x, y), x, y)
             guard let wall, let lift = wall.lift(x, y) else { return CGFloat(ground) }
             if let base = wall.base {
                 return CGFloat(max(ground, max(0, base + lift.height) * lift.width))
@@ -315,6 +321,22 @@ nonisolated extension WorldMap {
             let foot = wall.foot(x, y)
             let over = summits(foot.x, foot.y) + lift.height - ground
             return CGFloat(ground + max(0, over) * lift.width)
+        }
+
+        /// A smooth height stepped into terraces (`terrace`), at a point: each level's top rising a
+        /// little across it (a tenth of a step), then its face up to the next in the last tenth, eased
+        /// in and out. Where the faces fall wanders a little, so their lips aren't the summits' even
+        /// rings. As it was without terraces.
+        private func terraced(_ height: Double, _ x: Double, _ y: Double) -> Double {
+            guard let step = terrace, step > 0, height > 0 else { return height }
+            let wander = 0.14 * sin(x * 1.3 + y * 0.4) + 0.09 * sin(y * 1.7 - x * 0.6 + 1)
+            // Nothing wanders at its foot, where it meets the ground round it.
+            let level = height / step + wander * min(1, height / step)
+            let floor = level.rounded(.down), part = level - floor
+            let face = 0.1
+            guard part > 1 - face else { return step * (floor + 0.1 * part / (1 - face)) }
+            let t = (part - (1 - face)) / face
+            return step * (floor + 0.1 + 0.9 * t * t * (3 - 2 * t))
         }
 
         /// The summits' blended height at a point (`shape`).

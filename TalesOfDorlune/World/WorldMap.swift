@@ -2149,6 +2149,7 @@ nonisolated final class WorldMap: @unchecked Sendable {
                      fy: Double.random(in: 0.4...1, using: &rng), py: Double.random(in: 0..<6.3, using: &rng))
                 }
                 var hill = Hill(lobes: lobes, ripples: ripples, steepness: steep)
+                if tall == nil { hill.terrace = hills.terraces }
                 // How its trails wind: from where on its front, which way round, how far and how
                 // they bend, its own.
                 let winding = Winding(aim: 1.25 * Double.pi + Double.random(in: -0.35...0.35, using: &rng),
@@ -2290,6 +2291,10 @@ nonisolated final class WorldMap: @unchecked Sendable {
         // Wherever a mountain's spurs would fold over, filled in so it stays in sight.
         hill.unfold()
         hill.highest = CGFloat(hill.heights.max() ?? 0)
+        if hill.terrace != nil {
+            blockFaces(of: hill, ring: ring)
+            return true
+        }
         // Its trails, the easy way up (you can climb it anywhere): from the ground in front up the
         // nearest summit with room for one, and up the mountain too if that wasn't it, winding round
         // their sides (`Hill.traceTrail`). Each is never steeper than a comfortable walk and keeps
@@ -2372,6 +2377,52 @@ nonisolated final class WorldMap: @unchecked Sendable {
         }
         return true
     }
+
+    /// A terraced range's faces (`Hill.terrace`), where the ground rises faster than `faceSlope`:
+    /// not walked on, and nothing set down on them or on the cell in front of them, where it would
+    /// stand over the rock. Its ways up are round the backs of its levels, where `unfold()` laid the
+    /// faces back into slopes; no trail is worn up it. Any level you can't get up to is closed too,
+    /// so nothing (a chest, an encounter) is ever set down where you can't reach it.
+    private func blockFaces(of hill: Hill, ring: Set<GridPoint>) {
+        var faces: Set<GridPoint> = []
+        let samples = Hill.samples
+        for cell in hill.cells {
+            var steepest = 0.0
+            for j in 0..<samples {
+                for i in 0..<samples {
+                    let x = Double(cell.col) + Double(i) / Double(samples), y = Double(cell.row) + Double(j) / Double(samples)
+                    let step = 1 / Double(samples)
+                    let here = Double(hill.height(atCells: x, y))
+                    let gx = (Double(hill.height(atCells: x + step, y)) - here) / step
+                    let gy = (Double(hill.height(atCells: x, y + step)) - here) / step
+                    steepest = max(steepest, (gx * gx + gy * gy).squareRoot())
+                }
+            }
+            if steepest > Self.faceSlope { faces.insert(cell) }
+        }
+        for cell in faces {
+            occupy(cell, blocking: true)
+            // In front of it, toward you: the row and column below.
+            for (dc, dr) in [(-1, 0), (0, -1), (-1, -1)] {
+                let front = GridPoint(col: cell.col + dc, row: cell.row + dr)
+                if !faces.contains(front), isFreeForScenery(front) { occupy(front, blocking: false) }
+            }
+        }
+        var reached = Set(ring.subtracting(hill.cells))
+        var queue = Array(reached)
+        while let cell = queue.popLast() {
+            for (dc, dr) in [(1, 0), (-1, 0), (0, 1), (0, -1)] {
+                let next = GridPoint(col: cell.col + dc, row: cell.row + dr)
+                guard hill.cells.contains(next), !faces.contains(next), reached.insert(next).inserted else { continue }
+                queue.append(next)
+            }
+        }
+        for cell in hill.cells where !reached.contains(cell) && !faces.contains(cell) { occupy(cell, blocking: true) }
+    }
+
+    /// How steep ground is, in points a cell, before it's a terrace's face (`blockFaces`): well over
+    /// the slopes `unfold()` lays its back faces into (about 20) and its levels' tops (a few).
+    static let faceSlope = 45.0
 
     /// How far up a mountain's side (`Hill.rise`) its slopes stop being walkable off its trail, and
     /// where its top begins and you can walk about again: from 0.6 up, under where it stands four

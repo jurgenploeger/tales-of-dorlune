@@ -63,6 +63,11 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   (`WorldOverview.isHeld`). You walk anywhere with no loading card; the land you're in
   (`here`) brings its music, air and encounters. Caves are scenes of their own (`WorldScene`), behind the card;
   `GameCoordinator.mapScene` is whichever you're in.
+- Terraced hills (maps.json theme `hills.terraces`, a step in points, with `bank` the faces' rock; Sunny Meadow
+  since 0.9.105, after `tools/cliff_preview.py`): `Hill.terrace` steps each range's height into flat levels, a
+  sheer face toward you, `unfold()` laying the back faces into slopes you walk up (no trails);
+  `WorldMap.blockFaces` blocks the faces and keeps the cell in front clear; `HillLooks.terraced` paints the
+  rock upright a pixel at a time (`HillArt.Look.cliff`), with shade at each face's foot.
 - How a blow lands in battle (`BattleScene.impact`, after SpriteCook's hit feel article): attacker and
   target stand still 5 frames (9 on a killing blow, `hitStop`: the two nodes paused, the stage plays
   on), the target white for 2 (`whiteFlash`, a shader: a tint can't light a dark outline), then pushed
