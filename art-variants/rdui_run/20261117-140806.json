@@ -1,0 +1,27 @@
+{
+  "request": {
+    "num_images": 3,
+    "prompt": "one brown leather boot seen from the side with a small white feathered wing at its ankle, a bold simple game menu icon, lit from the top left, thick dark outline",
+    "prompt_style": "rd_plus__topdown_item",
+    "width": 64,
+    "height": 64,
+    "remove_bg": true
+  },
+  "result": {
+    "created_at": 1794924484,
+    "credit_cost": 6,
+    "balance_cost": 0.18,
+    "output_urls": [],
+    "model": "rd_plus",
+    "remaining_credits": 0,
+    "remaining_balance": 2.921,
+    "request_id": "01b55a44-2f6f-495a-9524-f3505ca04cf3",
+    "outputs_retained_until": 1795010875,
+    "billing": {
+      "reason": "no_plan",
+      "source": "balance",
+      "balance_left": 2.921,
+      "balance_charged": 0.18
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "request": {
+    "num_images": 3,
+    "prompt": "portrait busts of two cute chibi adventurer kids side by side facing forward, big heads and big eyes, smiling, one with spiky orange hair in a green tunic, the other a girl with long blue hair in a purple robe, heads and shoulders only, thick dark outline",
+    "prompt_style": "rd_plus__low_res",
+    "width": 64,
+    "height": 64,
+    "remove_bg": true
+  },
+  "result": {
+    "created_at": 1794924472,
+    "credit_cost": 6,
+    "balance_cost": 0.18,
+    "output_urls": [],
+    "model": "rd_plus",
+    "remaining_credits": 0,
+    "remaining_balance": 3.101,
+    "request_id": "e758083d-46a9-473a-9a64-0af1f3539d16",
+    "outputs_retained_until": 1795010868,
+    "billing": {
+      "reason": "no_plan",
+      "source": "balance",
+      "balance_left": 3.101,
+      "balance_charged": 0.18
+    }
+  }
+}

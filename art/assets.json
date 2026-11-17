@@ -535,6 +535,39 @@
       }
     },
     {
+      "id": "rdui_save",
+      "kind": "prop",
+      "request": {
+        "prompt": "one blue floppy disk with a white label and a steel shutter, seen straight on, a bold simple game menu icon, lit from the top left, thick dark outline",
+        "prompt_style": "rd_plus__topdown_item",
+        "width": 64,
+        "height": 64,
+        "remove_bg": true
+      }
+    },
+    {
+      "id": "rdui_users",
+      "kind": "prop",
+      "request": {
+        "prompt": "portrait busts of two cute chibi adventurer kids side by side facing forward, big heads and big eyes, smiling, one with spiky orange hair in a green tunic, the other a girl with long blue hair in a purple robe, heads and shoulders only, thick dark outline",
+        "prompt_style": "rd_plus__low_res",
+        "width": 64,
+        "height": 64,
+        "remove_bg": true
+      }
+    },
+    {
+      "id": "rdui_run",
+      "kind": "prop",
+      "request": {
+        "prompt": "one brown leather boot seen from the side with a small white feathered wing at its ankle, a bold simple game menu icon, lit from the top left, thick dark outline",
+        "prompt_style": "rd_plus__topdown_item",
+        "width": 64,
+        "height": 64,
+        "remove_bg": true
+      }
+    },
+    {
       "id": "thicket",
       "kind": "prop",
       "request": {

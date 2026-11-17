@@ -303,6 +303,8 @@ HALO = 0.035
 PICKED = {name: f"rdui_{name}" for name in ("settings", "star", "book", "user", "backpack", "coins", "egg", "gift",
                                             "heart", "map", "paw", "shield", "sword")}
 PICKED["seal-stone"] = "item_seal_stone"
+PICKED["users"] = "rdui_users"       # friends: two of the game's heroes, as the hero's own icon is one
+PICKED["wind"] = "rdui_run"          # running (a battle's Run, the Speed stat): a winged boot
 PIXELS = 64
 
 
