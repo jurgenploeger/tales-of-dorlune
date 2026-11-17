@@ -16,6 +16,10 @@ enum GameClock {
     static let dayMinutes = daylightMinutes + 12 / nightPace
     /// Where the calendar begins for a save that doesn't say.
     static let origin = Date(timeIntervalSince1970: 1_790_000_000)
+    /// Debug launches with `hour=` only (`DebugLaunch`): the clock stands still from this moment, so a
+    /// screenshot shows the hour it asked for. Night lasts eight real minutes, and on the CI simulator the
+    /// lands took longer than that to build: `hour=23` was morning by the time it was shot.
+    nonisolated(unsafe) static var frozenAt: Date?
 
     struct Moment {
         let year: Int
@@ -37,6 +41,7 @@ enum GameClock {
     /// changes smoothly through the day). The hour of the day is this modulo 24.
     static func hours(at date: Date = Date(), since start: Date?) -> Double {
         let origin = start ?? Self.origin
+        let date = frozenAt ?? date
         // A new game opens mid-morning on day one, 9hr: three daylight hours after dawn.
         let sinceDawn = max(0, date.timeIntervalSince(origin) / 60) + 3 / dayPace
         let days = (sinceDawn / dayMinutes).rounded(.down)

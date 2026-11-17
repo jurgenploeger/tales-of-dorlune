@@ -840,40 +840,61 @@ final class LandStage {
         for building in plan.buildings { addScenery(building) }
     }
 
-    /// Stone terraces' balustrades and corner pillars, up on their tops (`WorldScene.placeTerraces`).
+    /// How tall a terrace's balustrade stands (`tools/terrace_art.py` `RAIL`).
+    static let railHeight: CGFloat = 14
+
+    /// Stone terraces' balustrades, up on their tops round every edge but the stairs, and a post at
+    /// each corner and either side of each stair (`tools/terrace_art.py`; the land's caves keep
+    /// `WorldScene.placeTerraces`). Each stretch is one cell's edge, its picture sheared along it as
+    /// the walls' are. Those along the front stand in front of whoever is on the edge's cell, those
+    /// along the back behind them.
     private func placeTerraces() {
         guard !map.terraces.isEmpty else { return }
-        let rail = art.sprite("stone_balustrade"), pillar = art.sprite("wall_pillar")
-        let picture = art.picture(of: rail.texture)
-        let rising = TownFence.railing(picture, posts: (0.108, 0.912), height: 16, alongColumns: true)
-        let falling = TownFence.railing(picture, posts: (0.108, 0.912), height: 16, alongColumns: false)
+        let tile = WorldMap.tileSize
+        let southRail = art.sprite("terrace_rail_s").texture, westRail = art.sprite("terrace_rail_w").texture
+        let post = art.sprite("terrace_post")
         let up = CGVector(dx: 0, dy: WorldMap.terraceHeight)
+        func corner(_ col: Int, _ row: Int) -> CGPoint { WorldMap.project(CGPoint(x: CGFloat(col) * tile, y: CGFloat(row) * tile)) }
+        func place(_ texture: SKTexture, from a: CGPoint, to b: CGPoint, front: Bool) {
+            let node = SKSpriteNode(texture: texture, size: CGSize(width: abs(b.x - a.x), height: abs(b.y - a.y) + Self.railHeight))
+            node.anchorPoint = .zero
+            node.position = CGPoint(x: min(a.x, b.x), y: min(a.y, b.y)) + up
+            node.zPosition = front ? -min(a.y, b.y) : -max(a.y, b.y)
+            chunk(at: CGPoint(x: (a.x + b.x) / 2, y: (a.y + b.y) / 2)).addChild(node)
+        }
+        func standPost(at point: CGPoint) {
+            let node = SKSpriteNode(texture: post.texture, size: post.size)
+            node.anchorPoint = CGPoint(x: 0.5, y: 0)
+            node.position = point + up + CGVector(dx: 0, dy: -2)
+            node.zPosition = -point.y + 0.5
+            chunk(at: point).addChild(node)
+        }
         for terrace in map.terraces {
             let o = terrace.origin
             let last = GridPoint(col: o.col + terrace.width - 1, row: o.row + terrace.height - 1)
+            var posts: Set<GridPoint> = [GridPoint(col: o.col, row: o.row), GridPoint(col: last.col + 1, row: o.row),
+                                          GridPoint(col: o.col, row: last.row + 1), GridPoint(col: last.col + 1, row: last.row + 1)]
             for col in o.col...last.col {
-                for row in o.row...last.row {
-                    let cell = GridPoint(col: col, row: row)
-                    guard col == o.col || row == o.row || col == last.col || row == last.row,
-                          !terrace.stairs.contains(cell) else { continue }
-                    let corner = (col == o.col || col == last.col) && (row == o.row || row == last.row)
-                    if !corner, let slanted = row == o.row || row == last.row ? rising : falling {
-                        let node = SKSpriteNode(texture: slanted.texture, size: slanted.size)
-                        node.anchorPoint = slanted.anchor
-                        node.position = map.center(of: cell) + up
-                        node.zPosition = -map.center(of: cell).y
-                        chunk(at: node.position).addChild(node)
-                        continue
-                    }
-                    let sprite = corner ? pillar : rail
-                    let node = SKSpriteNode(texture: sprite.texture, size: sprite.size * (corner ? 0.6 : 0.7))
-                    node.anchorPoint = CGPoint(x: 0.5, y: 0.1)
-                    node.position = map.base(of: cell) + up
-                    if !corner, col == o.col || col == last.col { node.xScale = -1 }
-                    node.zPosition = -map.base(of: cell).y
-                    chunk(at: node.position).addChild(node)
+                // Along the front (south) and the back (north).
+                if terrace.stairs.contains(GridPoint(col: col, row: o.row)) {
+                    posts.insert(GridPoint(col: col, row: o.row))
+                    posts.insert(GridPoint(col: col + 1, row: o.row))
+                } else {
+                    place(southRail, from: corner(col, o.row), to: corner(col + 1, o.row), front: true)
                 }
+                place(southRail, from: corner(col, last.row + 1), to: corner(col + 1, last.row + 1), front: false)
             }
+            for row in o.row...last.row {
+                // Along the left (west) and the right (east).
+                if terrace.stairs.contains(GridPoint(col: o.col, row: row)) {
+                    posts.insert(GridPoint(col: o.col, row: row))
+                    posts.insert(GridPoint(col: o.col, row: row + 1))
+                } else {
+                    place(westRail, from: corner(o.col, row), to: corner(o.col, row + 1), front: true)
+                }
+                place(westRail, from: corner(last.col + 1, row), to: corner(last.col + 1, row + 1), front: false)
+            }
+            for spot in posts { standPost(at: corner(spot.col, spot.row)) }
         }
     }
 
@@ -1174,14 +1195,23 @@ final class LandStage {
         }
     }
 
-    /// Raised terraces (`WorldMap.plateaus`): each top drawn its height up in its own tiles, a stone
-    /// wall under the edges that face you, and stone steps up from the ground in front
-    /// (`WorldScene.placePlateaus`).
+    /// Raised terraces (`WorldMap.plateaus`), in stacked sandstone (the user's pick from
+    /// `tools/terrace_preview.py`, 2026-11-17; drawn by `tools/terrace_art.py`): each top paved in
+    /// flagstones its height up, a wall of sandstone blocks under the edges that face you, stone
+    /// steps up from the ground in front, and its shade laid on the ground away from the sun as
+    /// everything's is (`CanopyShade.addBlock`) (`WorldScene.placePlateaus`).
     private func placePlateaus() {
         guard !map.plateaus.isEmpty else { return }
         let tile = WorldMap.tileSize
         let tileSize = CGSize(width: tile, height: tile)
-        let stone = art.tileTexture(def.theme.accent ?? "tile_scree")
+        let stone = art.tileTexture("terrace_flag")
+        let flags = ["terrace_flag", "terrace_flag_2", "terrace_flag_3", "terrace_flag_4"].map {
+            SKTileGroup(tileDefinition: SKTileDefinition(texture: art.tileTexture($0), size: tileSize))
+        }
+        // A cell's stretch of wall under a south edge (rising to the right) and a west one, three of each.
+        let southWalls = ["terrace_wall_s", "terrace_wall_s_2", "terrace_wall_s_3"].map { art.sprite($0).texture }
+        let westWalls = ["terrace_wall_w", "terrace_wall_w_2", "terrace_wall_w_3"].map { art.sprite($0).texture }
+        func pick(_ cell: GridPoint, _ count: Int) -> Int { (((cell.col &* 73_856_093) ^ (cell.row &* 19_349_663)) & 0x7fff_ffff) % count }
         func corner(_ col: Int, _ row: Int) -> CGPoint { WorldMap.project(CGPoint(x: CGFloat(col) * tile, y: CGFloat(row) * tile)) }
         func stroke(_ path: CGPath, color: UIColor, width: CGFloat, z: CGFloat) {
             guard !path.isEmpty else { return }
@@ -1200,18 +1230,14 @@ final class LandStage {
                 path.move(to: from)
                 path.addLine(to: to)
             }
-            // Its top: its own tiles again, its height up. The stairs are drawn as slopes instead.
+            // Its top: flagstones, its height up. The stairs are drawn as slopes instead.
             let (low, high) = plateau.bounds
-            var picks: [(cell: GridPoint, group: SKTileGroup)] = []
-            for cell in plateau.cells where plateau.ramps[cell] == nil {
-                if let group = tiles.pick(cell).group { picks.append((cell, group)) }
-            }
-            var groups: [ObjectIdentifier: SKTileGroup] = [:]
-            for pick in picks { groups[ObjectIdentifier(pick.group)] = pick.group }
-            let top = SKTileMapNode(tileSet: SKTileSet(tileGroups: Array(groups.values)), columns: high.col - low.col + 1,
+            let top = SKTileMapNode(tileSet: SKTileSet(tileGroups: flags), columns: high.col - low.col + 1,
                                     rows: high.row - low.row + 1, tileSize: tileSize)
             top.anchorPoint = .zero
-            for pick in picks { top.setTileGroup(pick.group, forColumn: pick.cell.col - low.col, row: pick.cell.row - low.row) }
+            for cell in plateau.cells where plateau.ramps[cell] == nil {
+                top.setTileGroup(flags[pick(cell, flags.count)], forColumn: cell.col - low.col, row: cell.row - low.row)
+            }
             top.position = CGPoint(x: CGFloat(low.col) * tile, y: CGFloat(low.row) * tile)
             let grid = SKNode()
             grid.addChild(top)
@@ -1232,6 +1258,21 @@ final class LandStage {
                     let lowB = map.height(atGrid: CGPoint(x: b.x - nudge, y: b.y - nudge))
                     guard min(lowA, lowB) < rise - 0.5 else { continue }
                     let pa = WorldMap.project(a), pb = WorldMap.project(b)
+                    let wall = front ? southWalls[pick(cell, southWalls.count)] : westWalls[pick(cell, westWalls.count)]
+                    defer {
+                        line(lips, pa + CGVector(dx: 0, dy: rise), pb + CGVector(dx: 0, dy: rise))
+                        line(shadows, pa + CGVector(dx: 0, dy: min(rise, lowA)), pb + CGVector(dx: 0, dy: min(rise, lowB)))
+                    }
+                    if abs(lowA) < 0.5, abs(lowB) < 0.5 {
+                        // On level ground: the wall's picture, sheared along the edge as drawn.
+                        let face = SKSpriteNode(texture: wall, size: CGSize(width: abs(pb.x - pa.x), height: abs(pb.y - pa.y) + rise))
+                        face.anchorPoint = .zero
+                        face.position = CGPoint(x: min(pa.x, pb.x), y: min(pa.y, pb.y))
+                        face.zPosition = topZ - 0.5
+                        world.addChild(face)
+                        continue
+                    }
+                    // Down to a stair's slope beside it: the same picture, cut to the slope.
                     let path = CGMutablePath()
                     path.move(to: pa + CGVector(dx: 0, dy: rise))
                     path.addLine(to: pb + CGVector(dx: 0, dy: rise))
@@ -1239,14 +1280,12 @@ final class LandStage {
                     path.addLine(to: pa + CGVector(dx: 0, dy: min(rise, lowA)))
                     path.closeSubpath()
                     let face = SKShapeNode(path: path)
-                    face.fillTexture = stone
-                    face.fillColor = UIColor(white: front ? 0.82 : 0.64, alpha: 1)
+                    face.fillTexture = wall
+                    face.fillColor = .white
                     face.strokeColor = .clear
                     face.lineWidth = 0
                     face.zPosition = topZ - 0.5
                     world.addChild(face)
-                    line(lips, pa + CGVector(dx: 0, dy: rise), pb + CGVector(dx: 0, dy: rise))
-                    line(shadows, pa + CGVector(dx: 0, dy: min(rise, lowA)), pb + CGVector(dx: 0, dy: min(rise, lowB)))
                 }
             }
             // Stairs: the foot on the ground in front, the head up at the top.
@@ -1275,10 +1314,13 @@ final class LandStage {
                     line(treads, left + CGVector(dx: 0, dy: 1.5), right + CGVector(dx: 0, dy: 1.5))
                 }
             }
-            stroke(lips, color: UIColor(white: 1, alpha: 0.55), width: 2, z: topZ + 0.1)
+            stroke(lips, color: UIColor(white: 1, alpha: 0.2), width: 1, z: topZ + 0.1)
             stroke(shadows, color: UIColor(white: 0, alpha: 0.28), width: 2, z: topZ - 0.45)
             stroke(creases, color: UIColor(white: 0, alpha: 0.3), width: 1.5, z: topZ - 0.2)
             stroke(treads, color: UIColor(white: 1, alpha: 0.35), width: 1, z: topZ - 0.2)
+            // Its shade on the ground away from the sun, a block its height (and its balustrade's).
+            canopy.addBlock(feet: plateau.cells.map { map.center(of: $0) }, height: rise + Self.railHeight * 0.5,
+                            half: tile * 0.70710678)
         }
     }
 

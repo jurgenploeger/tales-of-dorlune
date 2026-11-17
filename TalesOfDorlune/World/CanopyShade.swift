@@ -107,6 +107,26 @@ final class CanopyShade {
         }
     }
 
+    /// A raised terrace casts shade as a block `height` points tall (`LandStage.placePlateaus`): a round
+    /// as wide as a cell (`half` its half width on screen) from each cell's middle at every few points up,
+    /// so together they lay its outline on the ground away from the sun, its shade as long as its
+    /// height. What falls under the terrace itself is hidden by its top.
+    func addBlock(feet: [CGPoint], height: CGFloat, half: CGFloat) {
+        guard height >= Self.shortest else { return }
+        let slices = stride(from: CGFloat(0), through: height, by: 3).map { CanopyPainter.Slice(dx: 0, up: $0, half: half) }
+        for foot in feet {
+            let home = key(at: foot)
+            casters[home, default: []].append(CanopyPainter.Caster(foot: foot, slices: slices))
+            for dc in -Self.reachChunks...Self.reachChunks {
+                for dr in -Self.reachChunks...Self.reachChunks {
+                    let spot = GridPoint(col: home.col + dc, row: home.row + dr)
+                    reached.insert(spot)
+                    stale.insert(spot)
+                }
+            }
+        }
+    }
+
     /// Lays the shade away from `sun` from now on: drawn again once it has moved far enough to show
     /// (the tip of a tall tree's shade a few points).
     func follow(_ sun: Sun) {
