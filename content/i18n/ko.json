@@ -1091,7 +1091,7 @@
     "Reach level 200 for the Legend's Cape at the weaver.": "레벨 200에 도달하면 직조공에게서 전설의 망토를 받을 수 있어요.",
     "Your bag grows as you level, from 50 slots to 100 at level 200.": "가방이 레벨에 따라 커져요. 50칸에서 레벨 200에는 100칸.",
     "Cave floors no longer glitch, and the cave map matches the world map.": "동굴 바닥의 그래픽 오류를 고치고, 동굴 지도를 월드 지도와 맞췄어요.",
-    "Lakes and rivers have grassy edges and rocks in the shallows, and waterfalls where the rivers spring.": "호수와 강가에 풀이 우거지고 얕은 물에 바위가 생겼으며, 강이 시작되는 곳에는 폭포가 있어요.",
+    "Lakes and rivers have grassy edges, rocks in the shallows, water that deepens and mirrors the sky, and waterfalls where the rivers spring.": "호수와 강가에 풀이 우거지고 얕은 물에 바위가 생겼으며, 물은 깊어질수록 짙어지고 하늘을 비추고, 강이 시작되는 곳에는 폭포가 있어요.",
     "A living world": "살아 숨 쉬는 세계",
     "Trees rustle in the wind and cast deep shade that stretches as the sun sinks; days last longer, and travel skips the clock ahead.": "나무가 바람에 살랑이며 해가 질수록 길어지는 짙은 그늘을 드리웁니다. 하루가 더 길어지고, 이동하면 시간이 앞으로 흐릅니다.",
     "Waves roll in to the shore over shallows that follow every bay, and open fields no longer show a grid.": "모든 만을 따라 이어진 얕은 물 위로 파도가 해안에 밀려오고, 넓은 들판에는 더 이상 격자가 보이지 않습니다.",
@@ -3862,6 +3862,7 @@
     "Town Favourite": "마을의 인기인",
     "Faithful": "단골",
     "Old Friend": "오랜 친구",
+    "Lakes and rivers have grassy edges and rocks in the shallows, and waterfalls where the rivers spring.": "호수와 강가에 풀이 우거지고 얕은 물에 바위가 생겼으며, 강이 시작되는 곳에는 폭포가 있어요.",
     "Your bag holds 50 things now, every one a slot: {count} went to the bank.": "이제 가방에는 50개까지 들어가요. 하나가 한 칸을 차지해요. {count}개는 은행으로 보냈어요.",
     "with a {pet}": "{pet}와(과) 함께"
   }

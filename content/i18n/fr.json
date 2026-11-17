@@ -1091,7 +1091,7 @@
     "Reach level 200 for the Legend's Cape at the weaver.": "Atteins le niveau 200 pour obtenir la Cape de Légende chez le tisserand.",
     "Your bag grows as you level, from 50 slots to 100 at level 200.": "Ton sac grandit avec ton niveau, de 50 places à 100 au niveau 200.",
     "Cave floors no longer glitch, and the cave map matches the world map.": "Plus de défauts sur le sol des grottes, et la carte des grottes ressemble à celle du monde.",
-    "Lakes and rivers have grassy edges and rocks in the shallows, and waterfalls where the rivers spring.": "Les lacs et les rivières ont des rives herbeuses et des rochers dans les hauts-fonds, et des cascades là où naissent les rivières.",
+    "Lakes and rivers have grassy edges, rocks in the shallows, water that deepens and mirrors the sky, and waterfalls where the rivers spring.": "Les lacs et les rivières ont des rives herbeuses, des rochers dans les hauts-fonds, une eau qui s'assombrit au large et reflète le ciel, et des cascades là où naissent les rivières.",
     "A living world": "Un monde vivant",
     "Trees rustle in the wind and cast deep shade that stretches as the sun sinks; days last longer, and travel skips the clock ahead.": "Les arbres bruissent dans le vent et projettent une ombre profonde qui s'allonge au coucher du soleil ; les journées durent plus longtemps et voyager fait avancer l'horloge.",
     "Waves roll in to the shore over shallows that follow every bay, and open fields no longer show a grid.": "Les vagues roulent jusqu'au rivage sur des hauts-fonds qui épousent chaque baie, et les grands champs ne laissent plus voir de quadrillage.",
@@ -3862,6 +3862,7 @@
     "Town Favourite": "Chouchou du village",
     "Faithful": "Fidèle",
     "Old Friend": "Vieil ami",
+    "Lakes and rivers have grassy edges and rocks in the shallows, and waterfalls where the rivers spring.": "Les lacs et les rivières ont des rives herbeuses et des rochers dans les hauts-fonds, et des cascades là où naissent les rivières.",
     "Your bag holds 50 things now, every one a slot: {count} went to the bank.": "Ton sac contient désormais 50 objets, chacun prend une place : {count} sont allés à la banque.",
     "with a {pet}": "avec : {pet}"
   }
