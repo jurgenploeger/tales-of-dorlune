@@ -1,0 +1,27 @@
+{
+  "request": {
+    "num_images": 3,
+    "prompt": "a small stack of three shiny gold coins, a bold simple game menu icon, lit from the top left, thick dark outline",
+    "prompt_style": "rd_plus__topdown_item",
+    "width": 64,
+    "height": 64,
+    "remove_bg": true
+  },
+  "result": {
+    "created_at": 1794923943,
+    "credit_cost": 6,
+    "balance_cost": 0.18,
+    "output_urls": [],
+    "model": "rd_plus",
+    "remaining_credits": 0,
+    "remaining_balance": 4.901,
+    "request_id": "df4876a4-1dd3-4a81-8b89-8eee6a1858cc",
+    "outputs_retained_until": 1795010331,
+    "billing": {
+      "reason": "no_plan",
+      "source": "balance",
+      "balance_left": 4.901,
+      "balance_charged": 0.18
+    }
+  }
+}

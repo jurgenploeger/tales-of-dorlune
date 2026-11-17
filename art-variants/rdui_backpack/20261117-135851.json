@@ -1,0 +1,27 @@
+{
+  "request": {
+    "num_images": 3,
+    "prompt": "one chunky brown leather adventurer's backpack with a front pocket and a brass buckle, a bold simple game menu icon, lit from the top left, thick dark outline",
+    "prompt_style": "rd_plus__topdown_item",
+    "width": 64,
+    "height": 64,
+    "remove_bg": true
+  },
+  "result": {
+    "created_at": 1794923929,
+    "credit_cost": 6,
+    "balance_cost": 0.18,
+    "output_urls": [],
+    "model": "rd_plus",
+    "remaining_credits": 0,
+    "remaining_balance": 5.081,
+    "request_id": "56cffd1d-12c5-4af9-98ca-438874a3715a",
+    "outputs_retained_until": 1795010319,
+    "billing": {
+      "reason": "no_plan",
+      "source": "balance",
+      "balance_left": 5.081,
+      "balance_charged": 0.18
+    }
+  }
+}

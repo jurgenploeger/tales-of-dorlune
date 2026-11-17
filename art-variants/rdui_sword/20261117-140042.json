@@ -1,0 +1,27 @@
+{
+  "request": {
+    "num_images": 3,
+    "prompt": "one short steel sword with a gold crossguard and a brown grip, lying diagonally, handle at the bottom left, tip pointing to the top right, a bold simple game menu icon, lit from the top left, thick dark outline",
+    "prompt_style": "rd_plus__topdown_item",
+    "width": 64,
+    "height": 64,
+    "remove_bg": true
+  },
+  "result": {
+    "created_at": 1794924040,
+    "credit_cost": 6,
+    "balance_cost": 0.18,
+    "output_urls": [],
+    "model": "rd_plus",
+    "remaining_credits": 0,
+    "remaining_balance": 3.461,
+    "request_id": "b91f1cbb-4c88-4a45-852d-60cd48732447",
+    "outputs_retained_until": 1795010430,
+    "billing": {
+      "reason": "no_plan",
+      "source": "balance",
+      "balance_left": 3.461,
+      "balance_charged": 0.18
+    }
+  }
+}

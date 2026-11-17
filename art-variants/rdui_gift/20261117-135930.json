@@ -1,0 +1,27 @@
+{
+  "request": {
+    "num_images": 3,
+    "prompt": "one red gift box tied with a golden ribbon and bow, a bold simple game menu icon, lit from the top left, thick dark outline",
+    "prompt_style": "rd_plus__topdown_item",
+    "width": 64,
+    "height": 64,
+    "remove_bg": true
+  },
+  "result": {
+    "created_at": 1794923968,
+    "credit_cost": 6,
+    "balance_cost": 0.18,
+    "output_urls": [],
+    "model": "rd_plus",
+    "remaining_credits": 0,
+    "remaining_balance": 4.541,
+    "request_id": "58d265c5-e211-41db-9b6f-695fe9e209fe",
+    "outputs_retained_until": 1795010359,
+    "billing": {
+      "reason": "no_plan",
+      "source": "balance",
+      "balance_left": 4.541,
+      "balance_charged": 0.18
+    }
+  }
+}
