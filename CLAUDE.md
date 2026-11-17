@@ -235,12 +235,13 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
 - `tools/crystal_art.py`: the Glimmerdeep's crystal scenery from the caves' own rock (its walls, floor, spires and
   geodes): each pixel's brightness laid on a ramp of crystal colours, as a `derive` can't tint the grey tiles.
   Rerun it after editing a ramp; `--sheet out.png` previews them.
-- `tools/ui_icon_art.py`: the UI's button icons (`art/sprites/ui_<GameIcon>.png`), drawn as light in the skill
-  icons' style with `skill_art.Icon` (glossy shapes, flares, a soft shadow; `UIIcon` drops the shapes' coloured
-  glow), at 128 pixels on no backdrop, every glow and shadow kept to a thin rim round the shapes (`HALO`), so
-  nothing smudges or gets cut off on a light button: `IconImage` shows them smoothed from 18 pt up (battle buttons, the HUD's buttons, the
-  menu's tabs) and keeps Iconaut's vector icons for small inline glyphs. `--sheet out.png` previews them on the
-  game's button colours.
+- `tools/ui_icon_art.py`: the UI's button icons (`art/sprites/ui_<GameIcon>.png`), pixel art at 64 pixels since
+  2026-11-17 (the user's pick): the ones that are things are Retro Diffusion's drawings (`rdui_<name>`, its item
+  style; the hero a portrait in `rd_plus__low_res`; `PICKED`), the Seal Stone the Bag's own picture; the signs
+  (arrow, dots, speech bubble, two people, sparkles, wind) are still drawn as light with `skill_art.Icon` and
+  brought to the look (`pixelled`: no glow, a few flat tones, a one-pixel deep outline). `IconImage` shows them
+  crisp from 22 pt up, smoothed from 18 to 21 (battle buttons, the HUD's buttons, the menu's tabs), and keeps
+  Iconaut's vector icons for small inline glyphs. `--sheet out.png` previews them on the game's button colours.
 - `tools/water_art.py`: the same for the water: `sea.png` (16 × 16 cells that tile as a whole; the continent gives each
   world cell its own, `ContinentScene.seaGroups`) and `tile_water.png` (a land's lakes and rivers, calm so its versions
   don't make a grid), ripples level on screen. Round a land's own water (`tile_water`, not ice or chocolate)

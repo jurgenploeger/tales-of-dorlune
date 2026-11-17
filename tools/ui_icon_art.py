@@ -295,9 +295,52 @@ DRAWINGS = {name[len("draw_"):].replace("_", "-"): fn for name, fn in list(globa
 HALO = 0.035
 
 
+# Pixel art since 2026-11-17 (the user: "Can we use retro diffusion for these type of pixel UI icons?",
+# then their picks): the icons that are things are Retro Diffusion's drawings (`rdui_<name>`, 64 pixels,
+# its item style, picked from art-variants/), the Seal Stone the Bag's own picture; the game shows a
+# 64-pixel icon hard-edged (`IconImage`). The few that are signs, not things (an arrow, dots, a speech
+# bubble, two people, sparkles, wind), are still drawn here, then brought to the same look (`pixelled`).
+PICKED = {name: f"rdui_{name}" for name in ("settings", "star", "book", "user", "backpack", "coins", "egg", "gift",
+                                            "heart", "map", "paw", "shield", "sword")}
+PICKED["seal-stone"] = "item_seal_stone"
+PIXELS = 64
+
+
+def pixelled(img):
+    """A drawing made as light brought to the pixel icons' look at 64 pixels: its soft glow and shadow
+    gone (a pixel is there or it isn't), its colours gathered into a few flat tones, and a one-pixel
+    outline round it in a deep shade of what it rounds."""
+    small = img.convert("RGBa").resize((PIXELS, PIXELS), Image.LANCZOS).convert("RGBA")
+    a = np.asarray(small).copy()
+    solid = a[..., 3] >= 128
+    flat = Image.fromarray(a[..., :3], "RGB").quantize(colors=14, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE).convert("RGB")
+    rgb = np.asarray(flat).astype(float)
+    out = np.zeros((PIXELS, PIXELS, 4), np.uint8)
+    out[solid, :3] = rgb[solid].round().astype(np.uint8)
+    out[solid, 3] = 255
+    # The outline: every clear pixel beside a solid one, in that one's colour at a third.
+    for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+        near = np.roll(solid, (dy, dx), (0, 1))
+        colour = np.roll(rgb, (dy, dx), (0, 1))
+        edge = near & ~solid & (out[..., 3] == 0)
+        out[edge, :3] = (colour[edge] * 0.34).round().astype(np.uint8)
+        out[edge, 3] = 255
+    return Image.fromarray(out, "RGBA")
+
+
 def render(name):
-    """The icon at 128 pixels, on nothing: its glows and shadow a thin soft rim round its shapes, so
-    it sits on any button, light or dark, with nothing cut off at its edges."""
+    """The icon at 64 pixels: Retro Diffusion's drawing or the Bag's (`PICKED`), or drawn here and
+    brought to their look (`pixelled`)."""
+    if name in PICKED:
+        img = Image.open(SPRITES / f"{PICKED[name]}.png").convert("RGBA")
+        assert img.size == (PIXELS, PIXELS), f"{PICKED[name]} is {img.size}, not {PIXELS} pixels"
+        return img
+    return pixelled(light(name))
+
+
+def light(name):
+    """The icon as light at 128 pixels, on nothing: its glows and shadow a thin soft rim round its
+    shapes, so it sits on any button, light or dark, with nothing cut off at its edges."""
     ic = UIIcon(None)
     DRAWINGS[name](ic)
     # What's solid (the shapes, the sparks' cores), and a soft band round it the glows may fill.
