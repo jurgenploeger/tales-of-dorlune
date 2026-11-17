@@ -228,6 +228,21 @@ final class LandPlanner {
             let cell = GridPoint(col: Int(spring.x.rounded(.down)), row: Int(spring.y.rounded(.down)))
             let back = CGVector(dx: spring.x - ahead.x, dy: spring.y - ahead.y)
             let length = max(0.001, (back.dx * back.dx + back.dy * back.dy).squareRoot())
+            // Only where a narrow river rises out of the land on its own: with open water round
+            // it (a lake's end) the ledge stood out in the water, a rock with a trickle down it,
+            // and by a road or a bridge it made no sense beside them (the user, 2026-11-17).
+            let behind = GridPoint(col: Int((spring.x + back.dx / length * 2).rounded(.down)), row: Int((spring.y + back.dy / length * 2).rounded(.down)))
+            guard map.contains(behind), map.ground[behind.row][behind.col] != .water else { continue }
+            var wet = 0, byRoad = false
+            for dr in -5...5 {
+                for dc in -5...5 {
+                    let near = GridPoint(col: cell.col + dc, row: cell.row + dr)
+                    guard map.contains(near) else { continue }
+                    if map.ground[near.row][near.col] == .path || map.bridgeCells.contains(near) { byRoad = true }
+                    if abs(dc) <= 3, abs(dr) <= 3, map.ground[near.row][near.col] == .water { wet += 1 }
+                }
+            }
+            guard !byRoad, wet <= 14 else { continue }
             let reach = WorldMap.tileSize * 0.5 / length
             let toward = WorldMap.project(CGPoint(x: back.dx * reach, y: back.dy * reach))
             var placement = Placement(art: "waterfall", cell: cell, scale: 1.15)
