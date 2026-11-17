@@ -140,16 +140,31 @@ nonisolated struct WindBook: Decodable, Sendable {
 final class WindField {
     static let shared = WindField()
 
-    private struct Tree {
+    /// One tree or bush in the wind. A class, so going through them each tick copies none: as a
+    /// struct with weak references every copy went through the weak table, thousands ten times a
+    /// second, and a run from Xcode stopped in one being destroyed (`weak_entry_for_referent`,
+    /// 2026-11-17).
+    private final class Tree {
         weak var node: SKSpriteNode?
-        /// The land it's in (`LandStage.world`): hidden, far from you, its trees keep still.
-        weak var land: SKNode?
+        /// The land it's in (`LandStage.world`), by its identity: hidden, far from you, its trees
+        /// keep still (`hide`).
+        let land: ObjectIdentifier?
         let frames: [SKTexture]
         let x: Double
         let y: Double
+
+        init(node: SKSpriteNode, land: ObjectIdentifier?, frames: [SKTexture], x: Double, y: Double) {
+            self.node = node
+            self.land = land
+            self.frames = frames
+            self.x = x
+            self.y = y
+        }
     }
 
     private var trees: [Tree] = []
+    /// The lands hidden far off (`hide`).
+    private var hidden: Set<ObjectIdentifier> = []
     private var clock: TimeInterval = 0
     private var shownTick = -1
     /// How many there may be before those gone (a land let go) are dropped.
@@ -159,12 +174,22 @@ final class WindField {
     /// points, or a cave's own).
     func add(_ node: SKSpriteNode, frames: [SKTexture], at point: CGPoint, land: SKNode? = nil) {
         guard let book = WindBook.shared, frames.count == book.loop + book.gust else { return }
-        let tree = Tree(node: node, land: land, frames: frames, x: Double(point.x), y: Double(point.y))
+        let tree = Tree(node: node, land: land.map { ObjectIdentifier($0) }, frames: frames, x: Double(point.x), y: Double(point.y))
         node.texture = frames[book.frame(at: clock, x: tree.x, y: tree.y)]
         trees.append(tree)
         if trees.count > prunedAt {
             trees.removeAll { $0.node == nil }
             prunedAt = max(4096, trees.count * 2)
+        }
+    }
+
+    /// A land's trees keep still while it's hidden far off, and move again once it's shown
+    /// (`ContinentScene.lookAround`; the speed audit, 2026-11-17: they kept swapping pictures).
+    func hide(_ land: SKNode, _ isHidden: Bool) {
+        if isHidden {
+            hidden.insert(ObjectIdentifier(land))
+        } else {
+            hidden.remove(ObjectIdentifier(land))
         }
     }
 
@@ -176,9 +201,9 @@ final class WindField {
         guard tick != shownTick else { return }
         shownTick = tick
         for tree in trees {
+            if let land = tree.land, hidden.contains(land) { continue }
             // Only what's on stage: a chunk out of sight waits.
-            // Nor in a land hidden far off (the speed audit, 2026-11-17: they kept swapping pictures).
-            guard let node = tree.node, node.scene != nil, tree.land?.isHidden != true else { continue }
+            guard let node = tree.node, node.scene != nil else { continue }
             let texture = tree.frames[book.frame(at: clock, x: tree.x, y: tree.y)]
             if node.texture !== texture { node.texture = texture }
         }

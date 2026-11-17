@@ -441,11 +441,12 @@ enum HillArt {
                             let fray = Self.noise(pixelX, pixelY, 7) + 0.5 * Self.noise(pixelX >> 1, pixelY >> 1, 8)
                             cover = min(1, max(0, (slope - cliff + 20 - 40 * fray) / 10))
                             guard cover > 0 else { continue }
-                            // Darker than the tile and darker still toward its foot, lighter at
-                            // its lip, so it reads as a wall, not a pale path (2026-11-17).
+                            // A little darker than the tile toward its foot, so it reads as a
+                            // wall, not a pale path; not much: with a face in the shade it went
+                            // near black and read as a shadow on the grass (2026-11-17, twice).
                             if let rise = hill.terrace, rise > 0 {
                                 let up = here / rise - (here / rise).rounded(.down)
-                                dim = 0.58 + 0.34 * min(1, max(0, (up - 0.1) / 0.9))
+                                dim = 0.8 + 0.2 * min(1, max(0, (up - 0.1) / 0.9))
                             }
                         }
                         let lift = here / climb

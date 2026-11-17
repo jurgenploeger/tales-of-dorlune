@@ -1610,6 +1610,7 @@ final class ContinentScene: SKScene {
         for (id, land) in lands where land.stage.world.isHidden == nearLands.contains(id) {
             land.stage.world.isHidden = !nearLands.contains(id)
             land.stage.world.isPaused = !nearLands.contains(id)
+            WindField.shared.hide(land.stage.world, !nearLands.contains(id))
         }
     }
 

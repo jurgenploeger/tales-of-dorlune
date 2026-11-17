@@ -86,7 +86,8 @@ struct HillLooks {
         terraced.bank = look.bank ?? scree
         terraced.cliff = WorldMap.faceSlope
         terraced.upright = true
-        terraced.ambient = 0.4
+        // Its faces turned from the sun stay rock you can read, not a dark band.
+        terraced.ambient = 0.62
         terraced.brightest = 1.1
         self.terraced = terraced
     }
