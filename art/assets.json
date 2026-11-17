@@ -381,6 +381,50 @@
       }
     },
     {
+      "id": "rdui_settings",
+      "kind": "prop",
+      "request": {
+        "prompt": "one chunky steel-blue cog wheel gear with a round hole in its middle, a bold simple game menu icon, lit from the top left, thick dark outline",
+        "prompt_style": "rd_plus__topdown_item",
+        "width": 64,
+        "height": 64,
+        "remove_bg": true
+      }
+    },
+    {
+      "id": "rdui_star",
+      "kind": "prop",
+      "request": {
+        "prompt": "one chunky five-pointed golden yellow star, glossy with a small white highlight, a bold simple game menu icon, lit from the top left, thick dark outline",
+        "prompt_style": "rd_plus__topdown_item",
+        "width": 64,
+        "height": 64,
+        "remove_bg": true
+      }
+    },
+    {
+      "id": "rdui_book",
+      "kind": "prop",
+      "request": {
+        "prompt": "one closed green hardcover book with a gold diamond emblem on its cover and cream page edges, a bold simple game menu icon, lit from the top left, thick dark outline",
+        "prompt_style": "rd_plus__topdown_item",
+        "width": 64,
+        "height": 64,
+        "remove_bg": true
+      }
+    },
+    {
+      "id": "rdui_user",
+      "kind": "prop",
+      "request": {
+        "prompt": "the head and shoulders of one simple round figure, a tan head over a blue tunic, like a player profile symbol, a bold simple game menu icon, lit from the top left, thick dark outline",
+        "prompt_style": "rd_plus__topdown_item",
+        "width": 64,
+        "height": 64,
+        "remove_bg": true
+      }
+    },
+    {
       "id": "thicket",
       "kind": "prop",
       "request": {
