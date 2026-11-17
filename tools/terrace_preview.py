@@ -32,6 +32,7 @@ X0, X1, Y0, Y1 = 2.0, 10.0, 5.0, 9.0            # the terrace, in cells
 STAIRS_S = (5.0, Y0)                             # a stair cell in the middle of the front (south) side
 STAIRS_W = (X0, 6.0)                             # and of the left (west) side
 RISE = 34.0                                      # points (26 now)
+PARAPET = 13.0                                   # the balustrade's height, points
 W, H = 520, 330
 
 
@@ -131,6 +132,7 @@ def render(mid, style):
     top = np.where(back[:, None], top * 0.62, top)                             # its back edge against the ground behind
     # Faces: the south one (lower right on screen) and the west one (lower left).
     faces = np.zeros(xs.size, bool)
+    front = []
     face_col = np.zeros((xs.size, 3))
     ox, oy = pp.project(N * T / 2, N * T / 2)
 
@@ -199,9 +201,81 @@ def render(mid, style):
         stair_col = np.where(hit[:, None], col, stair_col)
         stair |= hit
     out = np.where(on_top[:, None], top, out)
+    if style == "masonry":
+        # A stone balustrade round the top: a base course, piers every half cell and a capping rail,
+        # open between the piers; along the back too, and gaps where the stairs come up.
+        def rail(kind, c, lo, hi, light, gap=None):
+            g, z, _ = plane(kind, c, lo, hi)
+            z = z - RISE
+            along = (g - lo) * T
+            on = (g >= lo) & (g < hi) & (z >= 0) & (z <= PARAPET + 2.5)
+            if gap is not None:
+                on &= ~((g >= gap) & (g < gap + 1))
+            m = np.mod(along, 10)
+            pier = m < 5
+            # Bigger posts at the corners and either side of the stairs.
+            post = (along < 6) | (along > (hi - lo) * T - 6)
+            if gap is not None:
+                gp = (gap - lo) * T
+                post |= (np.abs(along - gp + 3) < 3) | (np.abs(along - gp - T - 3) < 3)
+            cap = z > PARAPET - 3.5
+            solid = cap | (z < 2.5) | pier | post
+            on &= ~(post & (z > PARAPET + 2.5)) & ((z <= PARAPET) | post)
+            col = np.array([196.0, 160, 110])[None, :] * light * (0.92 + 0.1 * h(np.floor(along / 10), np.floor(z / 3), 17))[:, None]
+            col = np.where(cap[:, None], col * 1.12, col)                             # the rail lit along its top
+            col = np.where(((z > PARAPET - 4.5) & (z < PARAPET - 3.5))[:, None], col * 0.55, col)   # its shadow
+            col = np.where((~cap & ~post & (z >= 2.5) & ((m < 1) | (m > 4)))[:, None], np.array([86.0, 62, 44])[None, :], col)
+            col = np.where((~cap & ~post & (z >= 2.5) & (m >= 1) & (m < 2))[:, None], col * 1.15, col)
+            return on & solid, col
+        for kind, c, lo, hi, light, gap in [("south", Y1, X0, X1, 0.74, None), ("west", X1, Y0, Y1, 0.9, None),
+                                            ("south", Y0, X0, X1, 0.78, STAIRS_S[0]), ("west", X0, Y0, Y1, 1.0, STAIRS_W[1])]:
+            on, col = rail(kind, c, lo, hi, light, gap)
+            if kind == "south" and c == Y1 or kind == "west" and c == X1:
+                out = np.where(on[:, None], col, out)
+            else:
+                front.append((on, col))
     out = np.where(faces[:, None], face_col, out)
     out = np.where(stair[:, None], stair_col, out)
-    return Image.fromarray(np.clip(out.reshape(H, W, 3), 0, 255).astype(np.uint8))
+    for on, col in front:
+        out = np.where(on[:, None], col, out)
+    img = Image.fromarray(np.clip(out.reshape(H, W, 3), 0, 255).astype(np.uint8))
+    if style == "rock":
+        rocks(img, palette)
+    return img
+
+
+def rocks(img, palette):
+    """Rocky parts: boulders and stones fallen at the walls' feet and lying along the lip, an outcrop at the
+    corner, drawn far to near."""
+    rng = np.random.default_rng(3)
+    places = []
+    for g in np.arange(X0 + 0.3, X1, 0.9):
+        if not STAIRS_S[0] - 0.5 < g < STAIRS_S[0] + 1.5 and rng.random() < 0.6:
+            places.append((g + rng.uniform(-0.2, 0.2), Y0 - rng.uniform(0.25, 0.5), 0))
+        if rng.random() < 0.3 and not STAIRS_S[0] - 0.5 < g < STAIRS_S[0] + 1.5:
+            places.append((g, Y0 + rng.uniform(0.2, 0.4), RISE))
+    for g in np.arange(Y0 + 0.3, Y1, 0.9):
+        if not STAIRS_W[1] - 0.5 < g < STAIRS_W[1] + 1.5 and rng.random() < 0.6:
+            places.append((X0 - rng.uniform(0.25, 0.5), g + rng.uniform(-0.2, 0.2), 0))
+        if rng.random() < 0.3 and not STAIRS_W[1] - 0.5 < g < STAIRS_W[1] + 1.5:
+            places.append((X0 + rng.uniform(0.2, 0.4), g, RISE))
+    # A heap of boulders at the front corner, where the two walls meet.
+    for dx, dy, name in [(-0.1, -0.5, "sandstone_boulder"), (-0.5, -0.1, "sandstone_boulder"), (-0.45, -0.55, "red_rock"),
+                         (0.3, -0.45, "red_rock"), (-0.45, 0.3, "red_rock")]:
+        places.append((X0 + dx, Y0 + dy, 0, name))
+    sprites = {}
+    for place in sorted(places, key=lambda q: -(q[0] + q[1])):
+        gx, gy, lift = place[:3]
+        name = place[3] if len(place) > 3 else ("sandstone_boulder" if rng.random() < 0.5 else "red_rock")
+        if name not in sprites:
+            raw = pp.grade(pp.raw(name), palette)
+            sprites[name] = Image.fromarray((np.clip(raw, 0, 1) * 255).astype(np.uint8), "RGBA")
+        spr = sprites[name]
+        size = {"red_rock": 0.9, "sandstone_boulder": 0.62}[name]
+        size *= rng.uniform(0.75, 1.1)
+        spr = spr.resize((max(1, int(spr.width * size)), max(1, int(spr.height * size))), Image.NEAREST)
+        x, y = screen_of(gx, gy, lift)
+        img.paste(spr, (int(x - spr.width / 2), int(y - spr.height * 0.9)), spr)
 
 
 def main(argv):
