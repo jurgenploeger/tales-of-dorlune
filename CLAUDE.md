@@ -67,7 +67,9 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   since 0.9.105, after `tools/cliff_preview.py`): `Hill.terrace` steps each range's height into flat levels, a
   sheer face toward you, `unfold()` laying the back faces into slopes you walk up (no trails);
   `WorldMap.blockFaces` blocks the faces and keeps the cell in front clear; `HillLooks.terraced` paints the
-  rock upright a pixel at a time (`HillArt.Look.cliff`), with shade at each face's foot.
+  rock upright a pixel at a time (`HillArt.Look.cliff`), with shade at each face's foot; up to two waterfalls a
+  range over faces turned to you (`LandPlanner.planCliffFalls`, `LandStage.placeCliffFalls`: a stream, a sheet
+  stretched to the face, a pool, from `tools/waterfall_art.py`).
 - How a blow lands in battle (`BattleScene.impact`, after SpriteCook's hit feel article): attacker and
   target stand still 5 frames (9 on a killing blow, `hitStop`: the two nodes paused, the stage plays
   on), the target white for 2 (`whiteFlash`, a shader: a tint can't light a dark outline), then pushed
@@ -248,7 +250,8 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   bank), the tile's own ripples kept over them; moving in whole pixels (`PondMotion`, `LandStage.placePondMotion`:
   dashes lapping the near shores, the far waterline creeping, glints and drops on the open water); and what
   stands just above the water mirrored in it (`LandStage.reflect`: flipped, squashed to 0.55, in the pond's
-  dark tones a step darker than the water, only on its water, rows wobbling a pixel in four frames).
+  dark tones a step darker than the water, only on its water, rows wobbling a pixel in four frames; painted
+  on the CPU, as a shader for it didn't take on a phone and the reflections lay over the land).
   It replaced a generated tile that repeated every 16 pixels; rerun it
   after editing, `--preview out.png` shows them turned as the game draws them.
 - `tools/fx_art.py`: the same for the few battle marks that aren't light (`art/sprites/fx_*.png`: poison's bubble

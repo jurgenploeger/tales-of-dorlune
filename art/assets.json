@@ -1986,6 +1986,54 @@
       "kind": "prop"
     },
     {
+      "id": "cliff_fall_top",
+      "kind": "prop"
+    },
+    {
+      "id": "cliff_fall_top_2",
+      "kind": "prop"
+    },
+    {
+      "id": "cliff_fall_top_3",
+      "kind": "prop"
+    },
+    {
+      "id": "cliff_fall_top_4",
+      "kind": "prop"
+    },
+    {
+      "id": "cliff_fall_sheet",
+      "kind": "prop"
+    },
+    {
+      "id": "cliff_fall_sheet_2",
+      "kind": "prop"
+    },
+    {
+      "id": "cliff_fall_sheet_3",
+      "kind": "prop"
+    },
+    {
+      "id": "cliff_fall_sheet_4",
+      "kind": "prop"
+    },
+    {
+      "id": "cliff_fall_pool",
+      "kind": "prop"
+    },
+    {
+      "id": "cliff_fall_pool_2",
+      "kind": "prop"
+    },
+    {
+      "id": "cliff_fall_pool_3",
+      "kind": "prop"
+    },
+    {
+      "id": "cliff_fall_pool_4",
+      "kind": "prop"
+    },
+    {
       "id": "dead_tree",
       "kind": "prop",
       "request": {

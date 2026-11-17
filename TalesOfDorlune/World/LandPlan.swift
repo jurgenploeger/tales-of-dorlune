@@ -32,6 +32,9 @@ struct LandPlan {
     var reeds: [Placement] = []
     /// Waterfalls where the rivers spring (`planWaterfalls`), played frame by frame (`LandStage.placeWaterfalls`).
     var waterfalls: [Placement] = []
+    /// Waterfalls over terraces' faces (`planCliffFalls`): where each lands at the face's foot and
+    /// leaves its lip, in cells (`LandStage.placeCliffFalls`).
+    var cliffFalls: [(foot: CGPoint, lip: CGPoint)] = []
     /// A town's houses, street lamps and benches, and the land's own buildings.
     var lots: [Placement] = []
     var streetDecor: [Placement] = []
@@ -160,6 +163,7 @@ final class LandPlanner {
     /// little details like rocks"; `tools/scenery_art.py` draws `shore_grass` and `shore_stones`).
     private func planReeds() {
         planWaterfalls()
+        planCliffFalls()
         let water = def.theme.water ?? ""
         guard !water.contains("ice"), !water.contains("chocolate"), !map.lakes.isEmpty || !map.river.isEmpty else { return }
         var reedRNG = SeededRandom(text: def.id + "/reeds")
@@ -231,6 +235,54 @@ final class LandPlanner {
             for dc in -1...1 {
                 for dr in -1...1 { map.occupy(GridPoint(col: cell.col + dc, row: cell.row + dr), blocking: false) }
             }
+        }
+    }
+
+    /// Waterfalls over the terraces' faces (the user, 2026-11-17: "Also add the waterfalls over the
+    /// cliffs"): up to two a range, each where a face turns straight toward you and drops a step,
+    /// a stream running to its lip on the level above and a pool at its foot, the pool's cell not
+    /// walked through and nothing set down by its lip. Draws of its own, so the rest of the land is
+    /// as it was.
+    private func planCliffFalls() {
+        let water = def.theme.water ?? ""
+        guard !water.contains("ice"), !water.contains("chocolate") else { return }
+        for hill in map.hills where hill.terrace != nil {
+            var draw = SeededRandom(text: def.id + "/cliff falls \(hill.origin.col) \(hill.origin.row)")
+            let cells = hill.cells.sorted { ($0.row, $0.col) < ($1.row, $1.col) }.shuffled(using: &draw)
+            func height(_ x: Double, _ y: Double) -> Double { Double(hill.height(atCells: x, y)) }
+            // How fast it climbs up the screen (along the map's diagonal), in points a cell.
+            let step = 0.05 / 2.0.squareRoot()
+            func climb(_ x: Double, _ y: Double) -> Double { (height(x + step, y + step) - height(x - step, y - step)) / 0.1 }
+            var falls: [(foot: CGPoint, lip: CGPoint)] = []
+            for cell in cells where falls.count < 2 {
+                let x = Double(cell.col) + 0.5, y = Double(cell.row) + 0.5, e = 0.125
+                let gx = (height(x + e, y) - height(x - e, y)) / (2 * e)
+                let gy = (height(x, y + e) - height(x, y - e)) / (2 * e)
+                // A face turned toward you: climbing fast up the screen, near enough straight.
+                guard gx > 0, gy > 0, gx + gy > 2 * WorldMap.faceSlope, abs(gx - gy) < 0.4 * (gx + gy) else { continue }
+                // Down to its foot and up to its lip, where the ground levels off.
+                var foot = (x: x, y: y), lip = (x: x, y: y)
+                var footFound = false, lipFound = false
+                for _ in 0..<40 where !footFound {
+                    foot = (foot.x - step, foot.y - step)
+                    footFound = climb(foot.x, foot.y) < 12
+                }
+                for _ in 0..<40 where !lipFound {
+                    lip = (lip.x + step, lip.y + step)
+                    lipFound = climb(lip.x, lip.y) < 12
+                }
+                let drop = height(lip.x, lip.y) - height(foot.x, foot.y)
+                guard footFound, lipFound, drop > 20, drop < 48 else { continue }
+                // The pool a little out in front of the foot; its cell open ground, kept for it.
+                let pool = GridPoint(col: Int((foot.x - 0.2).rounded(.down)), row: Int((foot.y - 0.2).rounded(.down)))
+                let top = GridPoint(col: Int((lip.x + 0.3).rounded(.down)), row: Int((lip.y + 0.3).rounded(.down)))
+                guard map.contains(pool), map.isWalkable(pool), map.ground[pool.row][pool.col] == .ground,
+                      falls.allSatisfy({ abs(Double($0.foot.x) - foot.x) + abs(Double($0.foot.y) - foot.y) > 6 }) else { continue }
+                map.occupy(pool, blocking: true)
+                if map.isFreeForScenery(top) { map.occupy(top, blocking: false) }
+                falls.append((foot: CGPoint(x: foot.x, y: foot.y), lip: CGPoint(x: lip.x, y: lip.y)))
+            }
+            plan.cliffFalls += falls
         }
     }
 
