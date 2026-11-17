@@ -186,7 +186,8 @@ enum BridgeArt {
             // Sorted by where they stand on the ground, drawn as high as it lies there.
             let raised = spots.map { CGPoint(x: $0.x, y: $0.y + ground($0)) }
             for (base, top) in zip(spots, raised) {
-                let node = SKSpriteNode(texture: post, size: CGSize(width: 3 * scale, height: 10 * scale))
+                // A stone bridge's are pillars, stouter and a little taller than its wall.
+                let node = SKSpriteNode(texture: post, size: style.slabs ? CGSize(width: 5 * scale, height: 12 * scale) : CGSize(width: 3 * scale, height: 10 * scale))
                 node.anchorPoint = CGPoint(x: 0.5, y: 0.05)
                 node.position = top
                 node.zPosition = -base.y
@@ -195,10 +196,11 @@ enum BridgeArt {
             for ((a, b), (from, to)) in zip(zip(spots, spots.dropFirst()), zip(raised, raised.dropFirst())) where railed {
                 let z = inFront ? -min(a.y, b.y) + 0.01 : -max(a.y, b.y) - 0.01
                 // A stone bridge's sides are stone too (the user, 2026-11-17: "if it's a stone bridge,
-                // the rails should be solid stones as well"): a low wall from post to post, pale
-                // along its top, in place of two rails.
-                if style.slabs, let wall = parapet(style, palette: palette) {
-                    let node = SKSpriteNode(texture: wall, size: CGSize(width: from.distance(to: to) + scale, height: 7 * scale))
+                // the rails should be solid stones as well"): a low wall of stacked stones from post
+                // to post (`parapet`), in place of two rails.
+                let long = from.distance(to: to) + scale
+                if style.slabs, let wall = parapet(style, wide: Int((long / scale).rounded()), seed: Int(a.x) &+ Int(a.y) &* 7, palette: palette) {
+                    let node = SKSpriteNode(texture: wall, size: CGSize(width: long, height: 10 * scale))
                     node.anchorPoint = .zero
                     node.position = from
                     node.zRotation = atan2(to.y - from.y, to.x - from.x)
@@ -345,19 +347,37 @@ enum BridgeArt {
         return texture
     }
 
-    /// A stone bridge's low wall between two posts, as a texture in the map's palette: seven pixels
-    /// tall, pale along its top, a dark line along its foot, stretched along the bridge's side.
-    private static func parapet(_ style: Look, palette: MapPalette?) -> SKTexture? {
-        var bytes = [UInt8](repeating: 0, count: 7 * 4)
-        for y in 0..<7 {
-            let color: Tone = y == 0 ? style.cap : y == 6 ? style.edge
-                : (r: style.railLight.r * 0.94, g: style.railLight.g * 0.94, b: style.railLight.b * 0.94)
-            bytes[y * 4] = UInt8(color.r)
-            bytes[y * 4 + 1] = UInt8(color.g)
-            bytes[y * 4 + 2] = UInt8(color.b)
-            bytes[y * 4 + 3] = 255
+    /// A stone bridge's low wall between two posts, `wide` of the art's pixels long, as a texture in
+    /// the map's palette: stacked stones (the user, 2026-11-17: "The solid stones should be like
+    /// stacked stones and thicker, now it looks like a metal gate"), two courses of blocks each its
+    /// own shade, their joints staggered, under a pale coping two pixels deep, ten pixels tall.
+    private static func parapet(_ style: Look, wide: Int, seed: Int, palette: MapPalette?) -> SKTexture? {
+        let width = max(4, wide), height = 10, block = 9
+        var bytes = [UInt8](repeating: 0, count: width * height * 4)
+        for y in 0..<height {
+            for x in 0..<width {
+                var color = style.plank
+                var shade = 1.0
+                if y < 2 {
+                    color = style.cap
+                    if y == 1 { shade = 0.9 }
+                } else {
+                    let course = y < 6 ? 0 : 1
+                    let shifted = x + course * (block / 2) + seed % block
+                    if y == 5 || y == height - 1 || shifted % block == 0 {
+                        color = style.gap
+                    } else {
+                        shade = 0.86 + 0.24 * noise(shifted / block, course &+ seed)
+                    }
+                }
+                let index = (y * width + x) * 4
+                bytes[index] = UInt8(min(255, color.r * shade))
+                bytes[index + 1] = UInt8(min(255, color.g * shade))
+                bytes[index + 2] = UInt8(min(255, color.b * shade))
+                bytes[index + 3] = 255
+            }
         }
-        guard var image = Self.image(bytes, width: 1, height: 7) else { return nil }
+        guard var image = Self.image(bytes, width: width, height: height) else { return nil }
         if let palette, let graded = Recolor.grade(palette, image: image) { image = graded }
         let texture = SKTexture(cgImage: image)
         texture.filteringMode = .nearest
@@ -428,7 +448,7 @@ enum BridgeArt {
             guard top >= open else { continue }
             for z in open...top { plot(spot(lane, along, -Double(z) - 1), dark, alpha: 0.55) }
             // Its rails, or a stone bridge's low wall.
-            let sides = style.slabs ? Array((top + 1)...(top + 7)) : [top + 4, top + 5, top + 8, top + 9]
+            let sides = style.slabs ? Array((top + 1)...(top + 10)) : [top + 4, top + 5, top + 8, top + 9]
             for z in sides { plot(spot(lane, along, -Double(z) - 1), dark, alpha: 0.45) }
         }
         let first = low + 0.1, last = high - 0.1
