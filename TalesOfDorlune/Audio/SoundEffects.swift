@@ -72,6 +72,22 @@ final class SoundEffects {
         case strike, spellFire = "spell_fire", spellWater = "spell_water", spellWood = "spell_wood"
         case spellEarth = "spell_earth", spellLight = "spell_light", spellDark = "spell_dark", spellMetal = "spell_metal"
         case buff, curse, surge, ultimate
+        // The hero's own blows, one for each kind of weapon (`swing(with:)`).
+        case swingSword = "swing_sword", swingAxe = "swing_axe", swingStaff = "swing_staff"
+        case swingWhip = "swing_whip", swingFist = "swing_fist"
+
+        /// What the hero's blow sounds like with this weapon, by its kind (items.json `icon`: a sword,
+        /// an axe, a staff or wand, a whip), and bare hands with none.
+        static func swing(with weapon: ItemDef?) -> Sound {
+            guard let weapon else { return .swingFist }
+            switch weapon.icon {
+            case "sword": return .swingSword
+            case "axe": return .swingAxe
+            case "wand", "diamond": return .swingStaff
+            case "paw": return .swingWhip
+            default: return .hit
+            }
+        }
 
         /// What a skill sounds like as it lands: a blow strikes, a spell sounds like its element.
         static func landing(_ skill: SkillDef) -> Sound {

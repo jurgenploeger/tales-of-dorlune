@@ -726,6 +726,71 @@ def strike():
     return space(at([(0, swish * 0.5), (s, landing)]), "room", wet=0.25, predelay=0.006)
 
 
+# The hero's own blows, one for each kind of weapon (items.json `icon`: sword, axe, wand or diamond, paw
+# for a whip; none for bare hands), played as the blow lands in place of `hit` (`SoundEffects.Sound.swing`).
+# Each starts on the blow itself, so it keeps time with the animation, and a crit adds `crit` over it.
+
+def _swish_tail(seconds, low, high, q=1.4, level=0.35):
+    """The blade or haft carrying on past the target: a short falling swish after the blow (stereo)."""
+    sweep = glide(high, low, seconds, 0.6)
+    return amp(air(seconds, sweep, q=q, width=0.3), env(seconds, 0.004, seconds / 3.5)) * level
+
+
+@sound(-14.0, longest=0.5, fade_out=0.12)
+def swing_sword():
+    """A sword's cut: a bright slice and the blade ringing a moment, over a light thump."""
+    blow = impact(0.3, thump=(190, 70), thump_decay=0.06, body=(400, 3000), body_decay=0.022, click=0.35, drive=1.6, weight=0.6)
+    slice_ = bandpass(noise(0.07), 2500, 9000) * env(0.07, 0.0004, 0.016)
+    ring = metal(note("A6"), 0.45, ring=0.09, mallet=11000.0, click=0.0)
+    tail = _swish_tail(0.16, 1200, 5200)
+    return space(at([(0, blow), (0, norm(slice_) * 0.5), (0.002, ring * 0.2), (0.012, norm(tail) * 0.3)]), "room", wet=0.18, predelay=0.004)
+
+
+@sound(-13.0, longest=0.55, fade_out=0.12)
+def swing_axe():
+    """An axe biting in: a heavy low chop, a woody crunch and a dull clank of its head."""
+    blow = impact(0.4, thump=(140, 42), thump_decay=0.12, body=(120, 1300), body_decay=0.05, click=0.3, drive=2.4, weight=0.9)
+    chop = norm(modal(310, WOOD, 0.2, ring=0.035, mallet=2600.0, click=0.3, beat=0.0))
+    crunch = bandpass(noise(0.09), 700, 3200) * env(0.09, 0.0006, 0.025)
+    clank = metal(330, 0.35, ring=0.06, mallet=5000.0, click=0.1)
+    tail = _swish_tail(0.2, 260, 1500, q=1.0)
+    return space(at([(0, blow), (0, chop * 0.6), (0, norm(crunch) * 0.5), (0.004, clank * 0.22), (0.015, norm(tail) * 0.25)]),
+                 "room", wet=0.18, predelay=0.005)
+
+
+@sound(-14.5, longest=0.45, fade_out=0.1)
+def swing_staff():
+    """A staff or wand landing: a hollow wooden knock and a soft thud, a faint glint of magic in it."""
+    blow = impact(0.3, thump=(180, 80), thump_decay=0.07, body=(250, 1800), body_decay=0.03, click=0.15, drive=1.5, weight=0.7)
+    knock = wood(480, 0.16, ring=0.04, mallet=2200.0)
+    knock2 = wood(720, 0.12, ring=0.025, mallet=2600.0)
+    glint = chime(note("E7"), 0.4, ring=0.08)
+    tail = _swish_tail(0.15, 500, 2600, q=1.2)
+    return space(at([(0, blow * 0.8), (0, knock * 0.75), (0.006, knock2 * 0.35), (0.01, glint * 0.08), (0.01, norm(tail) * 0.25)]),
+                 "room", wet=0.18, predelay=0.004)
+
+
+@sound(-13.5, longest=0.45, fade_out=0.1)
+def swing_whip():
+    """A whip's lash: a sharp crack, its echo off the room, and a light slap where it lands."""
+    s = 0.02
+    crack = highpass(noise(s), 2000) * env(s, 0.0001, 0.0022)
+    snap = bandpass(noise(0.05), 1200, 6000) * env(0.05, 0.0002, 0.008)
+    slap = bandpass(noise(0.08), 400, 2400) * env(0.08, 0.0004, 0.014)
+    whirr = amp(air(0.035, glide(1500, 4800, 0.035, 1.6), q=1.6, width=0.3), np.linspace(0, 1, secs(0.035)) ** 2)
+    blow = impact(0.22, thump=(200, 90), thump_decay=0.04, body=(500, 2600), body_decay=0.018, click=0.4, drive=1.4, weight=0.4)
+    return space(at([(0, fade(norm(whirr), fade_out=0.004) * 0.25), (0.035, warm(norm(crack), 2.5)), (0.035, norm(snap) * 0.6),
+                     (0.04, norm(slap) * 0.5), (0.04, blow * 0.5)]), "room", wet=0.22, predelay=0.006)
+
+
+@sound(-14.5, longest=0.35, fade_out=0.08)
+def swing_fist():
+    """Bare hands: a quick punch, a dull smack of knuckles."""
+    blow = impact(0.28, thump=(160, 55), thump_decay=0.07, body=(220, 1400), body_decay=0.03, click=0.15, drive=1.8, weight=0.9)
+    smack = bandpass(noise(0.07), 600, 2600) * env(0.07, 0.0004, 0.012)
+    return space(at([(0, blow), (0, norm(smack) * 0.55)]), "room", wet=0.14, predelay=0.004)
+
+
 @sound(-9.0, longest=0.9, fade_out=0.3)
 def magic():
     """A rising sparkle-shimmer: glassy partials gliding up, twinkles climbing, a breath of air."""
