@@ -1,0 +1,27 @@
+{
+  "request": {
+    "num_images": 3,
+    "prompt": "portrait bust of a cute chibi adventurer kid facing forward, big head with spiky orange hair and big eyes, smiling, shoulders in a green tunic, head and shoulders only, thick dark outline",
+    "prompt_style": "rd_plus__low_res",
+    "width": 64,
+    "height": 64,
+    "remove_bg": true
+  },
+  "result": {
+    "created_at": 1794923851,
+    "credit_cost": 6,
+    "balance_cost": 0.18,
+    "output_urls": [],
+    "model": "rd_plus",
+    "remaining_credits": 0,
+    "remaining_balance": 5.261,
+    "request_id": "e165b616-8918-42ae-9387-15df8329cec0",
+    "outputs_retained_until": 1795010246,
+    "billing": {
+      "reason": "no_plan",
+      "source": "balance",
+      "balance_left": 5.261,
+      "balance_charged": 0.18
+    }
+  }
+}

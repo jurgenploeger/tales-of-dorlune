@@ -9,6 +9,14 @@ import UIKit
 /// map (a cave) has no sky. It lives on the camera, so a battle's backdrop is the map without it.
 final class Sky {
     private let shade = SKSpriteNode(color: .white, size: CGSize(width: 3000, height: 3000))
+    /// The night's moonlit haze over the shade: one flat navy sheet at a fraction of its alpha, which
+    /// mixes every colour toward the same navy and so takes the colour out of the grass and the water
+    /// as moonlight does (after SpriteCook's day and night colour table, made cheap: plain alpha
+    /// blending, no shader and no render to a texture; `tools/night_preview.py`).
+    private let haze = SKSpriteNode(color: Sky.hazeColor, size: CGSize(width: 3000, height: 3000))
+    private static let hazeColor = UIColor(red: 38 / 255, green: 46 / 255, blue: 74 / 255, alpha: 1)
+    /// The haze's alpha at the deepest of the night.
+    private static let hazeAlpha = 0.42
     private let camera: SKCameraNode
     /// The weather's rain, fog or snow, faded with the map's mood (`setMood`).
     private let weatherLayer = SKNode()
@@ -17,6 +25,8 @@ final class Sky {
     private(set) var weather: Weather?
     private var layer: SKNode?
     private var color: (r: Double, g: Double, b: Double) = (1, 1, 1)
+    /// How much of the night's haze shows, 0 by day to 1 at night.
+    private var night: Double = 0
     private var checkTimer: TimeInterval = 0
     /// Sunlight now, 0 at night to 1 by day, for the sun's flare and sunbeams (`Lighting.sunlight`).
     /// Clouds hide them.
@@ -24,16 +34,18 @@ final class Sky {
     /// How much of its light shows (`setMood`).
     private var strength: CGFloat = 1
 
-    /// The colour the time of day multiplies the map by, at hours of the day, eased between.
-    private static let light: [(hour: Double, r: Double, g: Double, b: Double)] = [
-        (0, 0.42, 0.47, 0.78),
-        (4.5, 0.42, 0.47, 0.78),
-        (6, 1, 0.8, 0.76),
-        (7.5, 1, 1, 1),
-        (16.5, 1, 1, 1),
-        (18, 1, 0.78, 0.6),
-        (19.5, 0.42, 0.47, 0.78),
-        (24, 0.42, 0.47, 0.78),
+    /// The colour the time of day multiplies the map by, and how much of the night's haze lies over
+    /// it, at hours of the day, eased between. The night's multiply is lighter than it was alone
+    /// (0.42, 0.47, 0.78), as the haze darkens it too.
+    private static let light: [(hour: Double, r: Double, g: Double, b: Double, haze: Double)] = [
+        (0, 0.6, 0.64, 0.84, 1),
+        (4.5, 0.6, 0.64, 0.84, 1),
+        (6, 1, 0.8, 0.76, 0),
+        (7.5, 1, 1, 1, 0),
+        (16.5, 1, 1, 1, 0),
+        (18, 1, 0.78, 0.6, 0),
+        (19.5, 0.6, 0.64, 0.84, 1),
+        (24, 0.6, 0.64, 0.84, 1),
     ]
 
     init?(map: MapDef, camera: SKCameraNode, start: Date?) {
@@ -44,9 +56,13 @@ final class Sky {
         shade.blendMode = .multiply
         shade.zPosition = 43_000
         camera.addChild(shade)
+        haze.blendMode = .alpha
+        haze.zPosition = 43_001
+        camera.addChild(haze)
         camera.addChild(weatherLayer)
         turn(to: Weather.on(map, since: start), fade: 0)
         color = target()
+        night = nightGoal()
         apply()
         sunlight = sunGoal()
     }
@@ -59,7 +75,7 @@ final class Sky {
 
     /// How dark it's grown, 0 by day to 1 at night (the night's shade's green, 0.47 at its deepest):
     /// the lamps' light on what stands round them fades in with it (`LampLight`).
-    var darkness: CGFloat { CGFloat(max(0, min(1, (1 - color.g) / 0.5))) }
+    var darkness: CGFloat { CGFloat(max(0, min(1, max(night, (1 - color.g) / 0.5)))) }
 
     /// Where the sun (or the moon) is at this hour: the hills' light and the shadows follow it.
     var sun: Sun { Sun(hour: hour) }
@@ -82,6 +98,7 @@ final class Sky {
         let t = dt == 0 ? 1 : min(1, dt / 2.5)
         color = (color.r + (goal.r - color.r) * t, color.g + (goal.g - color.g) * t, color.b + (goal.b - color.b) * t)
         sunlight += (sunGoal() - sunlight) * CGFloat(t)
+        night += (nightGoal() - night) * t
         apply()
     }
 
@@ -101,17 +118,27 @@ final class Sky {
         shade.color = UIColor(red: r, green: g, blue: b, alpha: 1)
         // Plain daylight changes nothing; skip drawing it.
         shade.isHidden = r > 0.995 && g > 0.995 && b > 0.995
+        haze.alpha = CGFloat(Self.hazeAlpha * night * s)
+        haze.isHidden = haze.alpha < 0.005
     }
 
-    private func target() -> (r: Double, g: Double, b: Double) {
+    /// The table's light at this hour, eased between its hours.
+    private func hourly() -> (r: Double, g: Double, b: Double, haze: Double) {
         let hour = self.hour
-        var day = (r: 1.0, g: 1.0, b: 1.0)
         for (a, b) in zip(Self.light, Self.light.dropFirst()) where hour >= a.hour && hour <= b.hour {
             let t = b.hour > a.hour ? (hour - a.hour) / (b.hour - a.hour) : 0
             let eased = t * t * (3 - 2 * t)
-            day = (a.r + (b.r - a.r) * eased, a.g + (b.g - a.g) * eased, a.b + (b.b - a.b) * eased)
-            break
+            return (a.r + (b.r - a.r) * eased, a.g + (b.g - a.g) * eased, a.b + (b.b - a.b) * eased,
+                    a.haze + (b.haze - a.haze) * eased)
         }
+        return (1, 1, 1, 0)
+    }
+
+    private func nightGoal() -> Double { hourly().haze }
+
+    private func target() -> (r: Double, g: Double, b: Double) {
+        let light = hourly()
+        let day = (r: light.r, g: light.g, b: light.b)
         let cloud: (r: Double, g: Double, b: Double) = weather?.shade ?? (1, 1, 1)
         return (day.r * cloud.r, day.g * cloud.g, day.b * cloud.b)
     }
@@ -147,6 +174,7 @@ final class Sky {
         let now = Weather.on(map, since: start)
         if now != weather { turn(to: now, fade: 0) }
         color = target()
+        night = nightGoal()
         sunlight = sunGoal()
         apply()
     }
@@ -155,6 +183,7 @@ final class Sky {
     /// they were, easing toward this map's own (`update`).
     func carryOn(from other: Sky) {
         color = other.color
+        night = other.night
         sunlight = other.sunlight
         apply()
     }

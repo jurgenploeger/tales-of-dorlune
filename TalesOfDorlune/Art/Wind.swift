@@ -89,14 +89,18 @@ nonisolated struct WindBook: Decodable, Sendable {
     }
 
     /// Which frame a tree standing at `x`, `y` (the continent's points) shows `seconds` into the
-    /// wind: its place in the calm loop, timed by where it stands so a ripple runs from tree to
-    /// tree, and in a gust when one is passing over it (tools/wind_art.py `frame_at`).
-    func frame(at seconds: Double, x: Double, y: Double) -> Int {
+    /// wind while a gust is passing over it, timed by where it stands so the gust runs from tree
+    /// to tree; nil in still air, where it stands as it's drawn (tools/wind_art.py `frame_at`).
+    /// Every tree used to turn through a calm loop all the time between gusts: it drew the eye
+    /// from everything else and cost the most (the user, 2026-11-17: "it makes the game very slow
+    /// and it kinda distracts"). Now the land is still, and a gust crosses a patch of it every
+    /// quarter minute or so.
+    func gustFrame(at seconds: Double, x: Double, y: Double) -> Int? {
         let slant = x + 0.35 * y
         let u = seconds * fps / Double(loop) - slant / wavelength
         let n = u.rounded(.down)
+        guard let slot = gustSlot(Int(n), y: y) else { return nil }
         let f = min(loop - 1, max(0, Int((u - n) * Double(loop))))
-        guard let slot = gustSlot(Int(n), y: y) else { return f }
         return loop + slot * loop + f
     }
 
@@ -140,14 +144,34 @@ nonisolated struct WindBook: Decodable, Sendable {
 final class WindField {
     static let shared = WindField()
 
-    private struct Tree {
+    /// One tree or bush in the wind. A class, so going through them each tick copies none: as a
+    /// struct with weak references every copy went through the weak table, thousands ten times a
+    /// second, and a run from Xcode stopped in one being destroyed (`weak_entry_for_referent`,
+    /// 2026-11-17).
+    private final class Tree {
         weak var node: SKSpriteNode?
+        /// Its picture as drawn: what it shows in still air.
+        let rest: SKTexture?
+        /// The land it's in (`LandStage.world`), by its identity: hidden, far from you, its trees
+        /// keep still (`hide`).
+        let land: ObjectIdentifier?
         let frames: [SKTexture]
         let x: Double
         let y: Double
+
+        init(node: SKSpriteNode, land: ObjectIdentifier?, frames: [SKTexture], x: Double, y: Double) {
+            self.node = node
+            rest = node.texture
+            self.land = land
+            self.frames = frames
+            self.x = x
+            self.y = y
+        }
     }
 
     private var trees: [Tree] = []
+    /// The lands hidden far off (`hide`).
+    private var hidden: Set<ObjectIdentifier> = []
     private var clock: TimeInterval = 0
     private var shownTick = -1
     /// How many there may be before those gone (a land let go) are dropped.
@@ -155,14 +179,24 @@ final class WindField {
 
     /// `node` moves in the wind from now on, by `frames`, standing at `point` (the continent's
     /// points, or a cave's own).
-    func add(_ node: SKSpriteNode, frames: [SKTexture], at point: CGPoint) {
+    func add(_ node: SKSpriteNode, frames: [SKTexture], at point: CGPoint, land: SKNode? = nil) {
         guard let book = WindBook.shared, frames.count == book.loop + book.gust else { return }
-        let tree = Tree(node: node, frames: frames, x: Double(point.x), y: Double(point.y))
-        node.texture = frames[book.frame(at: clock, x: tree.x, y: tree.y)]
+        let tree = Tree(node: node, land: land.map { ObjectIdentifier($0) }, frames: frames, x: Double(point.x), y: Double(point.y))
+        if let frame = book.gustFrame(at: clock, x: tree.x, y: tree.y) { node.texture = frames[frame] }
         trees.append(tree)
         if trees.count > prunedAt {
             trees.removeAll { $0.node == nil }
             prunedAt = max(4096, trees.count * 2)
+        }
+    }
+
+    /// A land's trees keep still while it's hidden far off, and move again once it's shown
+    /// (`ContinentScene.lookAround`; the speed audit, 2026-11-17: they kept swapping pictures).
+    func hide(_ land: SKNode, _ isHidden: Bool) {
+        if isHidden {
+            hidden.insert(ObjectIdentifier(land))
+        } else {
+            hidden.remove(ObjectIdentifier(land))
         }
     }
 
@@ -174,9 +208,10 @@ final class WindField {
         guard tick != shownTick else { return }
         shownTick = tick
         for tree in trees {
+            if let land = tree.land, hidden.contains(land) { continue }
             // Only what's on stage: a chunk out of sight waits.
             guard let node = tree.node, node.scene != nil else { continue }
-            let texture = tree.frames[book.frame(at: clock, x: tree.x, y: tree.y)]
+            let texture = book.gustFrame(at: clock, x: tree.x, y: tree.y).map { tree.frames[$0] } ?? tree.rest
             if node.texture !== texture { node.texture = texture }
         }
     }

@@ -735,6 +735,19 @@ final class ContinentScene: SKScene {
         }
         hidden += boss
         hidden += layer.children.filter { $0.name == Effects.tapMarkerName }
+        // Nor the shadows whose shader takes a value of its own from each sprite (walkers' cast
+        // shadows, scenery's on a slope): gathering those for the picture, SpriteKit read past
+        // them and crashed on a phone as a battle began (2026-11-17,
+        // `SKCNode::addBatchAttributeValues` under `textureFromNode`). The hills' and shore's
+        // strips stay: leaving the picture out wherever one was on screen left most battles on
+        // the bare ground.
+        Walker.hideFigures(true)
+        let stages = nearLands.compactMap { lands[$0]?.stage }
+        stages.forEach { $0.hideSlopeShadows(true) }
+        defer {
+            Walker.hideFigures(false)
+            stages.forEach { $0.hideSlopeShadows(false) }
+        }
         hidden.forEach { $0.isHidden = true }
         defer { hidden.forEach { $0.isHidden = false } }
         guard let picture = view?.texture(from: layer, crop: visible) else { return nil }
@@ -765,6 +778,12 @@ final class ContinentScene: SKScene {
         player.say(text)
         session.postChat(text, from: session.data.hero.name, kind: .you)
         if let here, let stage = lands[here.id]?.stage { stage.crowd?.reply(near: stage.local(player.position), scolding: rude) }
+    }
+
+    /// You picked an emote: over your head, and maybe one back from someone about you.
+    func heroEmote(_ emote: Emote) {
+        player.emote(emote)
+        if let here, let stage = lands[here.id]?.stage { stage.crowd?.answer(emote, near: stage.local(player.position)) }
     }
 
     /// An adventurer's answer (befriended, invited), in a bubble over them, wherever they are.
@@ -1503,11 +1522,20 @@ final class ContinentScene: SKScene {
         let you = Self.cell(at: cam.position)
         let middle = World.chunk(of: you)
         var near: [String: Int] = [:]
+        // Of the chunks out at the edge of what's drawn, well off the screen, one a look (four a
+        // second): crossing into a new chunk drew a row of five at once, a stutter every 32 cells
+        // (the speed audit, 2026-11-17). Those next to yours, and all of them till the land's
+        // first shown, at once.
+        var drewFar = false
         for dr in -Self.reach...Self.reach {
             for dc in -Self.reach...Self.reach {
                 let chunk = GridPoint(col: middle.col + dc, row: middle.row + dr)
                 if chunks[chunk] == nil {
-                    draw(chunk)
+                    let far = isReady && max(abs(dc), abs(dr)) > 1
+                    if !far || !drewFar {
+                        draw(chunk)
+                        drewFar = drewFar || far
+                    }
                 } else if max(abs(dc), abs(dr)) <= 1, stale.contains(chunk), let drawn = chunks[chunk] {
                     stale.remove(chunk)
                     redraw(drawn, at: chunk)
@@ -1595,7 +1623,41 @@ final class ContinentScene: SKScene {
         for (id, land) in lands where land.stage.world.isHidden == nearLands.contains(id) {
             land.stage.world.isHidden = !nearLands.contains(id)
             land.stage.world.isPaused = !nearLands.contains(id)
+            WindField.shared.hide(land.stage.world, !nearLands.contains(id))
         }
+        letGoFarLands(from: you)
+    }
+
+    /// How many cells off a land's box must be before it's let go (`letGoFarLands`): well past
+    /// where its chunks are (`keep`, 96 cells and a chunk's own 32), so one let go isn't built
+    /// again a few steps on.
+    private static let letGoReach = 176
+
+    /// Lets go of the lands far behind you: what each set down, its people, its ground's tiles, its
+    /// hills' pictures and its layout. They were kept for good, and the game's memory grew with
+    /// every land you walked through, past a gigabyte on a phone (the user's gauges, 2026-11-17).
+    /// It's built again, as it was (a layout's the same every time), when you come back near it;
+    /// where you can walk on it stays in the store meanwhile. Never the land you're in, one being
+    /// built, one a party you've joined is in, or one with a chunk still drawn.
+    private func letGoFarLands(from you: GridPoint) {
+        guard placed, isReady else { return }
+        var letGo = false
+        for (id, land) in lands where !nearLands.contains(id) && id != here?.id && id != hostLand && id != building {
+            let low = land.place.origin
+            let gap = max(low.col - you.col, you.col - (low.col + land.place.columns - 1),
+                          low.row - you.row, you.row - (low.row + land.place.rows - 1), 0)
+            guard gap > Self.letGoReach else { continue }
+            waiting.removeAll { $0.land == id }
+            unshown.remove(id)
+            WindField.shared.hide(land.stage.world, false)
+            land.stage.world.removeAllActions()
+            land.stage.world.removeFromParent()
+            if let air = airs.removeValue(forKey: id) { air.layer.removeFromParent() }
+            lands[id] = nil
+            art.release(map: id)
+            letGo = true
+        }
+        if letGo { art.letGoOfSources() }
     }
 
     /// The lands owning any cell of a chunk.
@@ -1783,8 +1845,10 @@ final class ContinentScene: SKScene {
     /// `WorldScene.sliceLength`): the card still turns with the phone, and the work isn't held up
     /// by a pause every few milliseconds (each a good deal longer than asked on a busy phone). And
     /// so too while a debug launch `hurries`. While a land not laid out yet is near you (`isUrgent`),
-    /// every 16: a frame or two dropped while it comes in faster; and while you stand on one, every
-    /// 40, the frames slower for a few seconds but the land in sooner.
+    /// every 10: a frame dropped now and then while it comes in faster; and while you stand on one,
+    /// every 22, about 30 frames a second while it comes in. They were 16 and 40, and walking
+    /// toward a new land the game ran at 15 to 22 frames a second on a phone for as long as it
+    /// took (the user's gauges, 2026-11-17): smoother now, the land a little later.
     private func breathe() async {
         // The loading clouds parting: wait till they're gone (`holdWork`).
         if let until = heldUntil {
@@ -1794,8 +1858,17 @@ final class ContinentScene: SKScene {
             heldUntil = nil
             sliceStart = ContinuousClock.now
         }
+        // Nor while a battle or a cave is up over a continent already shown: the work went on
+        // through every fight, on the thread the fight draws on, and the fight ran at a few
+        // frames a second (the user's gauges, 2026-11-17). It goes on once you're back.
+        if isReady, view == nil {
+            while isReady, view == nil {
+                try? await Task.sleep(for: .milliseconds(100))
+            }
+            sliceStart = ContinuousClock.now
+        }
         let slice: Duration = !isReady || hurries ? .milliseconds(120)
-            : standsOnUnbuilt ? .milliseconds(40) : isUrgent ? .milliseconds(16) : .milliseconds(6)
+            : standsOnUnbuilt ? .milliseconds(22) : isUrgent ? .milliseconds(10) : .milliseconds(6)
         guard ContinuousClock.now - sliceStart > slice else { return }
         try? await Task.sleep(for: .milliseconds(10))
         sliceStart = ContinuousClock.now
@@ -1829,7 +1902,8 @@ final class ContinentScene: SKScene {
             for bridge in map.bridges {
                 if bridge.cells.contains(where: { sunk.contains($0) }) {
                     if let deck = BridgeArt.deckPicture(for: bridge, pixels: pixels, palette: theme.palette) { sunkDecks.append(deck) }
-                } else if let deck = BridgeArt.deck(for: bridge, pixels: pixels, palette: theme.palette) {
+                } else if !bridge.bowed, let deck = BridgeArt.deck(for: bridge, pixels: pixels, palette: theme.palette) {
+                    // (A bow bridge's deck stands with its rails: `BridgeArt.rails`.)
                     deck.zPosition = 2
                     flat.addChild(deck)
                 }

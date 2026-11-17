@@ -151,7 +151,7 @@ struct SettingsView: View {
                                 SoundEffects.shared.play(.questAccept, volume: 0.6)
                                 justSaved = true
                             } label: {
-                                Label(justSaved ? L("Saved") : L("Save now"), icon: justSaved ? .check : .checkCircle)
+                                Label(justSaved ? L("Saved") : L("Save now"), icon: justSaved ? .check : .save)
                             }
                             .buttonStyle(PixelButtonStyle(compact: true))
                             if let onQuitToTitle {
@@ -197,9 +197,9 @@ struct SettingsView: View {
                 }
 
                 if let onImportBackup {
-                    section(L("Backups"), icon: .arrowDown) {
+                    section(L("Backups"), icon: .save) {
                         Button(action: onImportBackup) {
-                            Label(L("Import a backup"), icon: .arrowDown)
+                            Label(L("Import a backup"), icon: .save)
                         }
                         .buttonStyle(PixelButtonStyle(compact: true))
                         Text(L("A backup from Files or iCloud Drive comes back as a game of its own, next to your others."))
@@ -261,10 +261,12 @@ struct SettingsView: View {
 
     /// A group of settings: its name over it with a gold rule, as every window's groups are
     /// (`SectionTitle`), and its controls on a plate sunk into the glass (`GlassCard`).
-    private func section<Content: View>(_ title: String, icon: GameIcon, @ViewBuilder content: () -> Content) -> some View {
+    /// No picture before its name (the user, 2026-11-17: "Remove the icons leading for each section
+    /// heading"); `icon` is what each group was given, kept for whoever wants it back.
+    private func section<Content: View>(_ title: String, icon _: GameIcon, @ViewBuilder content: () -> Content) -> some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack(spacing: 8) {
-                Label(title, icon: icon)
+                Text(title)
                     .font(HUDStyle.font(13))
                     .foregroundStyle(HUDStyle.gold)
                     .fixedSize()

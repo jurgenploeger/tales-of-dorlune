@@ -1409,7 +1409,10 @@
           "chain": [
             2,
             4
-          ]
+          ],
+          "height": 96,
+          "terraces": 44,
+          "bank": "tile_cliff_rock"
         },
         "props": [
           {
@@ -1748,6 +1751,71 @@
               0.9,
               1.1
             ]
+          },
+          {
+            "art": "thicket",
+            "count": 90,
+            "blocking": true,
+            "cluster": 4,
+            "sway": true,
+            "size": [
+              0.8,
+              1.15
+            ],
+            "shadow": true
+          },
+          {
+            "art": "fern_clump",
+            "count": 160,
+            "blocking": false,
+            "cluster": 5,
+            "sway": true,
+            "size": [
+              0.8,
+              1.2
+            ]
+          },
+          {
+            "art": "flower_patch",
+            "count": 120,
+            "blocking": false,
+            "cluster": 4,
+            "size": [
+              0.8,
+              1.2
+            ]
+          },
+          {
+            "art": "mossy_boulder",
+            "count": 40,
+            "blocking": true,
+            "cluster": 2,
+            "size": [
+              0.75,
+              1.1
+            ],
+            "shadow": true
+          },
+          {
+            "art": "rock_formation_small",
+            "count": 24,
+            "blocking": true,
+            "cluster": 2,
+            "size": [
+              0.8,
+              1.1
+            ],
+            "shadow": true
+          },
+          {
+            "art": "rock_formation_large",
+            "count": 10,
+            "blocking": true,
+            "size": [
+              0.85,
+              1.1
+            ],
+            "shadow": true
           }
         ],
         "palette": {
@@ -2534,7 +2602,9 @@
             2,
             4
           ],
-          "height": 64
+          "height": 96,
+          "terraces": 44,
+          "bank": "tile_cliff_rock"
         },
         "props": [
           {
@@ -2733,6 +2803,71 @@
             "art": "fallen_log",
             "count": 42,
             "blocking": true
+          },
+          {
+            "art": "thicket",
+            "count": 57,
+            "blocking": true,
+            "cluster": 4,
+            "sway": true,
+            "size": [
+              0.8,
+              1.15
+            ],
+            "shadow": true
+          },
+          {
+            "art": "fern_clump",
+            "count": 101,
+            "blocking": false,
+            "cluster": 5,
+            "sway": true,
+            "size": [
+              0.8,
+              1.2
+            ]
+          },
+          {
+            "art": "flower_patch",
+            "count": 76,
+            "blocking": false,
+            "cluster": 4,
+            "size": [
+              0.8,
+              1.2
+            ]
+          },
+          {
+            "art": "mossy_boulder",
+            "count": 25,
+            "blocking": true,
+            "cluster": 2,
+            "size": [
+              0.75,
+              1.1
+            ],
+            "shadow": true
+          },
+          {
+            "art": "rock_formation_small",
+            "count": 15,
+            "blocking": true,
+            "cluster": 2,
+            "size": [
+              0.8,
+              1.1
+            ],
+            "shadow": true
+          },
+          {
+            "art": "rock_formation_large",
+            "count": 6,
+            "blocking": true,
+            "size": [
+              0.85,
+              1.1
+            ],
+            "shadow": true
           }
         ],
         "palette": {
@@ -3114,7 +3249,9 @@
             2,
             4
           ],
-          "height": 64
+          "height": 96,
+          "terraces": 44,
+          "bank": "tile_cliff_rock"
         },
         "props": [
           {
@@ -3447,6 +3584,71 @@
               1.2
             ],
             "sway": true,
+            "shadow": true
+          },
+          {
+            "art": "thicket",
+            "count": 74,
+            "blocking": true,
+            "cluster": 4,
+            "sway": true,
+            "size": [
+              0.8,
+              1.15
+            ],
+            "shadow": true
+          },
+          {
+            "art": "fern_clump",
+            "count": 131,
+            "blocking": false,
+            "cluster": 5,
+            "sway": true,
+            "size": [
+              0.8,
+              1.2
+            ]
+          },
+          {
+            "art": "flower_patch",
+            "count": 98,
+            "blocking": false,
+            "cluster": 4,
+            "size": [
+              0.8,
+              1.2
+            ]
+          },
+          {
+            "art": "mossy_boulder",
+            "count": 33,
+            "blocking": true,
+            "cluster": 2,
+            "size": [
+              0.75,
+              1.1
+            ],
+            "shadow": true
+          },
+          {
+            "art": "rock_formation_small",
+            "count": 20,
+            "blocking": true,
+            "cluster": 2,
+            "size": [
+              0.8,
+              1.1
+            ],
+            "shadow": true
+          },
+          {
+            "art": "rock_formation_large",
+            "count": 8,
+            "blocking": true,
+            "size": [
+              0.85,
+              1.1
+            ],
             "shadow": true
           }
         ],
@@ -8073,8 +8275,9 @@
             3,
             5
           ],
-          "height": 51,
-          "bank": "tile_sand"
+          "height": 96,
+          "bank": "tile_cliff_rock",
+          "terraces": 44
         },
         "props": [
           {
@@ -8254,6 +8457,27 @@
               1.1
             ],
             "glow": "#7FE7FF"
+          },
+          {
+            "art": "rock_formation_small",
+            "count": 27,
+            "blocking": true,
+            "cluster": 2,
+            "size": [
+              0.8,
+              1.1
+            ],
+            "shadow": true
+          },
+          {
+            "art": "rock_formation_large",
+            "count": 11,
+            "blocking": true,
+            "size": [
+              0.85,
+              1.1
+            ],
+            "shadow": true
           }
         ],
         "palette": {
@@ -9780,7 +10004,10 @@
           "chain": [
             3,
             4
-          ]
+          ],
+          "height": 96,
+          "terraces": 44,
+          "bank": "tile_cliff_rock"
         },
         "props": [
           {
@@ -10119,6 +10346,71 @@
               0.9,
               1.1
             ]
+          },
+          {
+            "art": "thicket",
+            "count": 42,
+            "blocking": true,
+            "cluster": 4,
+            "sway": true,
+            "size": [
+              0.8,
+              1.15
+            ],
+            "shadow": true
+          },
+          {
+            "art": "fern_clump",
+            "count": 75,
+            "blocking": false,
+            "cluster": 5,
+            "sway": true,
+            "size": [
+              0.8,
+              1.2
+            ]
+          },
+          {
+            "art": "flower_patch",
+            "count": 56,
+            "blocking": false,
+            "cluster": 4,
+            "size": [
+              0.8,
+              1.2
+            ]
+          },
+          {
+            "art": "mossy_boulder",
+            "count": 19,
+            "blocking": true,
+            "cluster": 2,
+            "size": [
+              0.75,
+              1.1
+            ],
+            "shadow": true
+          },
+          {
+            "art": "rock_formation_small",
+            "count": 11,
+            "blocking": true,
+            "cluster": 2,
+            "size": [
+              0.8,
+              1.1
+            ],
+            "shadow": true
+          },
+          {
+            "art": "rock_formation_large",
+            "count": 5,
+            "blocking": true,
+            "size": [
+              0.85,
+              1.1
+            ],
+            "shadow": true
           }
         ],
         "palette": {
@@ -12901,7 +13193,9 @@
             2,
             3
           ],
-          "height": 64
+          "height": 96,
+          "terraces": 44,
+          "bank": "tile_cliff_rock"
         },
         "props": [
           {
@@ -13230,6 +13524,71 @@
               0.9,
               1.1
             ]
+          },
+          {
+            "art": "thicket",
+            "count": 72,
+            "blocking": true,
+            "cluster": 4,
+            "sway": true,
+            "size": [
+              0.8,
+              1.15
+            ],
+            "shadow": true
+          },
+          {
+            "art": "fern_clump",
+            "count": 128,
+            "blocking": false,
+            "cluster": 5,
+            "sway": true,
+            "size": [
+              0.8,
+              1.2
+            ]
+          },
+          {
+            "art": "flower_patch",
+            "count": 96,
+            "blocking": false,
+            "cluster": 4,
+            "size": [
+              0.8,
+              1.2
+            ]
+          },
+          {
+            "art": "mossy_boulder",
+            "count": 32,
+            "blocking": true,
+            "cluster": 2,
+            "size": [
+              0.75,
+              1.1
+            ],
+            "shadow": true
+          },
+          {
+            "art": "rock_formation_small",
+            "count": 19,
+            "blocking": true,
+            "cluster": 2,
+            "size": [
+              0.8,
+              1.1
+            ],
+            "shadow": true
+          },
+          {
+            "art": "rock_formation_large",
+            "count": 8,
+            "blocking": true,
+            "size": [
+              0.85,
+              1.1
+            ],
+            "shadow": true
           }
         ],
         "palette": {
@@ -14563,7 +14922,9 @@
             2,
             4
           ],
-          "height": 64
+          "height": 96,
+          "terraces": 44,
+          "bank": "tile_cliff_rock"
         },
         "props": [
           {
@@ -14704,6 +15065,27 @@
               0.8,
               1.0
             ]
+          },
+          {
+            "art": "rock_formation_small",
+            "count": 19,
+            "blocking": true,
+            "cluster": 2,
+            "size": [
+              0.8,
+              1.1
+            ],
+            "shadow": true
+          },
+          {
+            "art": "rock_formation_large",
+            "count": 8,
+            "blocking": true,
+            "size": [
+              0.85,
+              1.1
+            ],
+            "shadow": true
           }
         ],
         "palette": {
@@ -16704,7 +17086,9 @@
             2,
             4
           ],
-          "height": 70
+          "height": 96,
+          "terraces": 44,
+          "bank": "tile_cliff_rock"
         },
         "props": [
           {
@@ -16886,6 +17270,27 @@
               0.8,
               1.2
             ]
+          },
+          {
+            "art": "rock_formation_small",
+            "count": 20,
+            "blocking": true,
+            "cluster": 2,
+            "size": [
+              0.8,
+              1.1
+            ],
+            "shadow": true
+          },
+          {
+            "art": "rock_formation_large",
+            "count": 8,
+            "blocking": true,
+            "size": [
+              0.85,
+              1.1
+            ],
+            "shadow": true
           }
         ],
         "palette": {

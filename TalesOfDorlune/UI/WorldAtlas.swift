@@ -1059,7 +1059,8 @@ nonisolated enum MapFilter: String, CaseIterable {
     @MainActor var badge: GameSession.MinimapMark.Kind? {
         switch self {
         case .all: nil
-        case .quests: .questNew
+        // The star, quests' own mark (the user, 2026-11-17), not the "!" of one new to you.
+        case .quests: .quest
         case .town: .shop
         case .waystones: .waystone
         case .treasure: .chest

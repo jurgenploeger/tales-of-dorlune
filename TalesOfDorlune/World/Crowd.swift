@@ -914,6 +914,18 @@ final class Crowd {
         }
     }
 
+    /// Someone near `point` answers your emote with one of their own (`Emote.answer`), most times, after a
+    /// moment.
+    func answer(_ emote: Emote, near point: CGPoint) {
+        guard Int.random(in: 0..<3, using: &rng) > 0, !DebugLaunch.hidesHUD else { return }
+        let nearby = members.filter { $0.walker.position.distance(to: point) < 420 }
+        guard let member = nearby.randomElement() else { return }
+        let reply = emote.answer
+        member.walker.run(.wait(forDuration: .random(in: 0.8...2))) { [weak member] in
+            member?.walker.emote(reply)
+        }
+    }
+
     private func speak(_ line: String, by member: Member, bubble: Bool) {
         // Long enough to read: a longer line stays up longer. None over the map on its own (`nohud`, the
         // App Store slides and covers): a passing remark ended up under a caption or the logo.

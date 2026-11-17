@@ -61,6 +61,8 @@ nonisolated final class WorldMap: @unchecked Sendable {
     /// road or another building, on the nearest clear plot (`placeOwnBuildings`).
     private(set) var buildings: [(art: String, anchor: GridPoint)] = []
     private(set) var streetDecor: [(art: String, cell: GridPoint)] = []
+    /// The cells the town's buildings and shops stand on, its own and its lots (`nearBuilding`).
+    private var buildingCells: Set<GridPoint> = []
     /// Raised terraces: their rectangles in grid cells (min corner inclusive), and stair cells.
     private(set) var terraces: [(origin: GridPoint, width: Int, height: Int, stairs: [GridPoint])] = []
     /// A town's raised terraces (`height(at:)`): each stands `height` points up; its rim is a wall
@@ -93,6 +95,8 @@ nonisolated final class WorldMap: @unchecked Sendable {
     private(set) var fords = 0
     /// Bridges where roads cross the river, footbridges out to the lakes' islands and jetties.
     private(set) var bridges: [Bridge] = []
+    /// Its bow bridges (`Bridge.bowed`), for how high the ground stands on them.
+    private(set) var bowBridges: [Bridge] = []
     /// The water under the bridges' decks, walked over like the land.
     private(set) var bridgeCells: Set<GridPoint> = []
     /// Where a footbridge or a jetty meets the land: footpaths run from there to the nearest road
@@ -112,6 +116,33 @@ nonisolated final class WorldMap: @unchecked Sendable {
         let start: Int, end: Int
         /// Whether its start and its end meet land (a jetty's far end stands in the water).
         let landsAtStart: Bool, landsAtEnd: Bool
+        /// What it's built of (`BridgeArt`): planks, stone slabs with a low parapet, dark planks
+        /// between red lacquered rails, or light planks slung between ropes (the user, 2026-11-17:
+        /// "can we have more different types of bridges in the game, these wooden ones are just one
+        /// version"). `WorldMap.bridgeMaterial` picks one.
+        nonisolated enum Material { case wood, stone, lacquer, rope }
+        var material: Material = .wood
+        /// A bow bridge (the user, 2026-11-17, of the flat stone one: "perhaps it should be more
+        /// lifted up or become a bow bridge when it's stone"; their pick from
+        /// tools/bridge_preview.py --bow): a road's bridge of stone or red lacquer over a river,
+        /// its deck rising in an arch from bank to bank, `rise` at its middle. Whoever crosses it
+        /// climbs and comes down with it (`bow(atCells:_:)`, `WorldMap.height(atGrid:)`), and
+        /// `BridgeArt.bowSprite` draws it. Not over a lake or by the sea, sunk with the shore.
+        var bowed = false
+        /// How high a bow bridge stands at its middle, in points.
+        static let rise: CGFloat = 18
+        /// How far a deck reaches onto the bank at each end, in cells (`BridgeArt.overlap`).
+        static let reach: CGFloat = 0.6
+
+        /// How high a bow bridge's deck stands over a spot (in cells), nil off it or if it isn't one.
+        func bow(atCells x: CGFloat, _ y: CGFloat) -> CGFloat? {
+            guard bowed else { return nil }
+            let across = northward ? x : y, along = northward ? y : x
+            guard across >= CGFloat(lane), across < CGFloat(lane + lanes) else { return nil }
+            let low = CGFloat(start) - Self.reach, high = CGFloat(end + 1) + Self.reach
+            guard along > low, along < high else { return nil }
+            return Self.rise * sin(.pi * (along - low) / (high - low))
+        }
 
         /// The cell `lane` across (a column or a row, as the map numbers them) and `along` along it.
         func cell(lane: Int, along: Int) -> GridPoint {
@@ -329,6 +360,12 @@ nonisolated final class WorldMap: @unchecked Sendable {
         markForeign()
         lap("foreign")
         layShore()
+        // A bow bridge keeps to the rivers: out over a lake or by the sea, sunk with the shore, a
+        // bridge's deck lies on the shore's own slope.
+        for index in bridges.indices where bridges[index].bowed && bridges[index].cells.contains(where: { isSunken($0) }) {
+            bridges[index].bowed = false
+        }
+        bowBridges = bridges.filter(\.bowed)
         lap("shore")
         if def.theme.cave == nil { sealPockets() }
         lap("pockets")
@@ -413,6 +450,9 @@ nonisolated final class WorldMap: @unchecked Sendable {
         let cell = GridPoint(col: Int((grid.x / Self.tileSize).rounded(.down)), row: Int((grid.y / Self.tileSize).rounded(.down)))
         if let index = hillOf[cell] { return hills[index].height(atCells: grid.x / Self.tileSize, grid.y / Self.tileSize) }
         if let shore, shore.cells.contains(cell) { return shore.height(atCells: grid.x / Self.tileSize, grid.y / Self.tileSize) }
+        for bridge in bowBridges {
+            if let lift = bridge.bow(atCells: grid.x / Self.tileSize, grid.y / Self.tileSize) { return lift }
+        }
         guard let index = plateauOf[cell] else { return 0 }
         let plateau = plateaus[index]
         let rise: CGFloat? = switch plateau.ramps[cell] {
@@ -426,7 +466,7 @@ nonisolated final class WorldMap: @unchecked Sendable {
     /// How high the ground stands under an on-screen (ground) point: walkers and scenery standing
     /// there are drawn this much higher.
     func height(at point: CGPoint) -> CGFloat {
-        plateaus.isEmpty && hills.isEmpty && shore == nil ? 0 : height(atGrid: Self.unproject(point))
+        plateaus.isEmpty && hills.isEmpty && shore == nil && bowBridges.isEmpty ? 0 : height(atGrid: Self.unproject(point))
     }
 
     /// Whether a cell is on the shore, sunk below the land round it (`shore`).
@@ -743,6 +783,19 @@ nonisolated final class WorldMap: @unchecked Sendable {
     }
 
     /// A free cell within `radius` cells of the map's centre, for planting around a town square.
+    /// Whether a building or shop stands within `reach + 1` cells of `cell` (its walls and roof rise
+    /// past its footprint on the screen): a well set down beside one stood in the corner of a house
+    /// (the user's screenshot, 2026-11-17, Goldburg).
+    func nearBuilding(_ cell: GridPoint, reach: Int = 1) -> Bool {
+        guard !buildingCells.isEmpty else { return false }
+        for dr in -(reach + 1)...(reach + 1) {
+            for dc in -(reach + 1)...(reach + 1) where buildingCells.contains(GridPoint(col: cell.col + dc, row: cell.row + dr)) {
+                return true
+            }
+        }
+        return false
+    }
+
     func randomFreeCell(within radius: Int, using rng: inout SeededRandom) -> GridPoint? {
         for _ in 0..<400 {
             let cell = GridPoint(col: center.col + Int.random(in: -radius...radius, using: &rng),
@@ -797,10 +850,15 @@ nonisolated final class WorldMap: @unchecked Sendable {
             let dx = abs(cell.col - goal.col), dy = abs(cell.row - goal.row)
             return 10 * max(dx, dy) + 4 * min(dx, dy)
         }
-        let count = columns * rows
-        var cost = [Int](repeating: .max, count: count)
-        var cameFrom = [Int](repeating: -1, count: count)
-        var done = [Bool](repeating: false, count: count)
+        // Only the cells it looks at, and only within a box round the two ends, and so many: three arrays the
+        // size of the whole land (some 400 KB) were made and cleared for every walk any villager or
+        // adventurer took, every few seconds each (the speed audit, 2026-11-17). Farther than that, no way.
+        var cost: [Int: Int] = [:]
+        var cameFrom: [Int: Int] = [:]
+        var done = Set<Int>()
+        let margin = 24
+        let low = GridPoint(col: min(start.col, goal.col) - margin, row: min(start.row, goal.row) - margin)
+        let high = GridPoint(col: max(start.col, goal.col) + margin, row: max(start.row, goal.row) + margin)
         var open = World.Frontier()
         let first = slot(start), last = slot(goal)
         cost[first] = 0
@@ -808,27 +866,28 @@ nonisolated final class WorldMap: @unchecked Sendable {
         let steps = [(1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (1, -1), (-1, 1), (-1, -1)]
         while let current = open.pop() {
             if current == last { break }
-            guard !done[current] else { continue }
-            done[current] = true
+            guard done.insert(current).inserted else { continue }
+            if done.count > 6_000 { return [] }
             let here = GridPoint(col: current % columns, row: current / columns)
             for (dc, dr) in steps {
                 let next = GridPoint(col: here.col + dc, row: here.row + dr)
-                guard isWalkable(next) else { continue }
+                guard next.col >= low.col, next.col <= high.col, next.row >= low.row, next.row <= high.row,
+                      isWalkable(next) else { continue }
                 let index = slot(next)
-                guard !done[index] else { continue }
-                let through = cost[current] + (dc != 0 && dr != 0 ? 14 : 10)
-                guard through < cost[index] else { continue }
+                guard !done.contains(index) else { continue }
+                let through = (cost[current] ?? .max) + (dc != 0 && dr != 0 ? 14 : 10)
+                guard through < cost[index] ?? .max else { continue }
                 cost[index] = through
                 cameFrom[index] = current
                 open.push(index, priority: through + estimate(next))
             }
         }
-        guard cameFrom[last] >= 0 else { return [] }
+        guard cameFrom[last] != nil else { return [] }
         var cells: [GridPoint] = []
         var at = last
-        while at != first {
+        while at != first, let back = cameFrom[at] {
             cells.append(GridPoint(col: at % columns, row: at / columns))
-            at = cameFrom[at]
+            at = back
         }
         return cells.reversed()
     }
@@ -1839,7 +1898,10 @@ nonisolated final class WorldMap: @unchecked Sendable {
                 for dr in -1...2 { used.insert(GridPoint(col: anchor.col + dc, row: anchor.row + dr)) }
             }
             for dc in -1...1 {
-                for dr in 0...1 { occupy(GridPoint(col: anchor.col + dc, row: anchor.row + dr), blocking: true) }
+                for dr in 0...1 {
+                    occupy(GridPoint(col: anchor.col + dc, row: anchor.row + dr), blocking: true)
+                    buildingCells.insert(GridPoint(col: anchor.col + dc, row: anchor.row + dr))
+                }
             }
             lots.append((art, anchor))
         }
@@ -1946,7 +2008,10 @@ nonisolated final class WorldMap: @unchecked Sendable {
             }
             guard let plot else { continue }
             for dc in footprint.columns {
-                for dr in footprint.rows { occupy(GridPoint(col: plot.col + dc, row: plot.row + dr), blocking: true) }
+                for dr in footprint.rows {
+                    occupy(GridPoint(col: plot.col + dc, row: plot.row + dr), blocking: true)
+                    buildingCells.insert(GridPoint(col: plot.col + dc, row: plot.row + dr))
+                }
             }
             buildings.append((building.art, plot))
         }
@@ -2143,6 +2208,7 @@ nonisolated final class WorldMap: @unchecked Sendable {
                      fy: Double.random(in: 0.4...1, using: &rng), py: Double.random(in: 0..<6.3, using: &rng))
                 }
                 var hill = Hill(lobes: lobes, ripples: ripples, steepness: steep)
+                if tall == nil { hill.terrace = hills.terraces }
                 // How its trails wind: from where on its front, which way round, how far and how
                 // they bend, its own.
                 let winding = Winding(aim: 1.25 * Double.pi + Double.random(in: -0.35...0.35, using: &rng),
@@ -2284,6 +2350,10 @@ nonisolated final class WorldMap: @unchecked Sendable {
         // Wherever a mountain's spurs would fold over, filled in so it stays in sight.
         hill.unfold()
         hill.highest = CGFloat(hill.heights.max() ?? 0)
+        if hill.terrace != nil {
+            blockFaces(of: hill, ring: ring)
+            return true
+        }
         // Its trails, the easy way up (you can climb it anywhere): from the ground in front up the
         // nearest summit with room for one, and up the mountain too if that wasn't it, winding round
         // their sides (`Hill.traceTrail`). Each is never steeper than a comfortable walk and keeps
@@ -2366,6 +2436,52 @@ nonisolated final class WorldMap: @unchecked Sendable {
         }
         return true
     }
+
+    /// A terraced range's faces (`Hill.terrace`), where the ground rises faster than `faceSlope`:
+    /// not walked on, and nothing set down on them or on the cell in front of them, where it would
+    /// stand over the rock. Its ways up are round the backs of its levels, where `unfold()` laid the
+    /// faces back into slopes; no trail is worn up it. Any level you can't get up to is closed too,
+    /// so nothing (a chest, an encounter) is ever set down where you can't reach it.
+    private func blockFaces(of hill: Hill, ring: Set<GridPoint>) {
+        var faces: Set<GridPoint> = []
+        let samples = Hill.samples
+        for cell in hill.cells {
+            var steepest = 0.0
+            for j in 0..<samples {
+                for i in 0..<samples {
+                    let x = Double(cell.col) + Double(i) / Double(samples), y = Double(cell.row) + Double(j) / Double(samples)
+                    let step = 1 / Double(samples)
+                    let here = Double(hill.height(atCells: x, y))
+                    let gx = (Double(hill.height(atCells: x + step, y)) - here) / step
+                    let gy = (Double(hill.height(atCells: x, y + step)) - here) / step
+                    steepest = max(steepest, (gx * gx + gy * gy).squareRoot())
+                }
+            }
+            if steepest > Self.faceSlope { faces.insert(cell) }
+        }
+        for cell in faces {
+            occupy(cell, blocking: true)
+            // In front of it, toward you: the row and column below.
+            for (dc, dr) in [(-1, 0), (0, -1), (-1, -1)] {
+                let front = GridPoint(col: cell.col + dc, row: cell.row + dr)
+                if !faces.contains(front), isFreeForScenery(front) { occupy(front, blocking: false) }
+            }
+        }
+        var reached = Set(ring.subtracting(hill.cells))
+        var queue = Array(reached)
+        while let cell = queue.popLast() {
+            for (dc, dr) in [(1, 0), (-1, 0), (0, 1), (0, -1)] {
+                let next = GridPoint(col: cell.col + dc, row: cell.row + dr)
+                guard hill.cells.contains(next), !faces.contains(next), reached.insert(next).inserted else { continue }
+                queue.append(next)
+            }
+        }
+        for cell in hill.cells where !reached.contains(cell) && !faces.contains(cell) { occupy(cell, blocking: true) }
+    }
+
+    /// How steep ground is, in points a cell, before it's a terrace's face (`blockFaces`): well over
+    /// the slopes `unfold()` lays its back faces into (about 20) and its levels' tops (a few).
+    static let faceSlope = 45.0
 
     /// How far up a mountain's side (`Hill.rise`) its slopes stop being walkable off its trail, and
     /// where its top begins and you can walk about again: from 0.6 up, under where it stands four
@@ -2775,15 +2891,20 @@ nonisolated final class WorldMap: @unchecked Sendable {
         let middle = CGPoint(x: crossing.map { CGFloat($0.col) + 0.5 }.reduce(0, +) / CGFloat(crossing.count),
                              y: crossing.map { CGFloat($0.row) + 0.5 }.reduce(0, +) / CGFloat(crossing.count))
         let nearest = line.indices.min { line[$0].distance(to: middle) < line[$1].distance(to: middle) } ?? 0
-        for shift in [0, 2, -2, 4, -4, 6, -6] {
-            let index = nearest + shift
-            guard line.indices.contains(index) else { continue }
-            let from = line[max(0, index - 4)], to = line[min(line.count - 1, index + 4)]
-            // A river running east is crossed going north.
-            guard let bridge = span(.road, at: shift == 0 ? middle : line[index], northward: abs(to.x - from.x) >= abs(to.y - from.y),
-                                    lanes: 3) else { continue }
-            meetRoad(bridge)
-            return true
+        // First somewhere with the water open on both sides of it; only failing that, anywhere it
+        // fits: where the river left a lake it lay right along the bank, a bridge beside the land
+        // (the user, 2026-11-17).
+        for clear in [true, false] {
+            for shift in [0, 2, -2, 4, -4, 6, -6] {
+                let index = nearest + shift
+                guard line.indices.contains(index) else { continue }
+                let from = line[max(0, index - 4)], to = line[min(line.count - 1, index + 4)]
+                // A river running east is crossed going north.
+                guard let bridge = span(.road, at: shift == 0 ? middle : line[index], northward: abs(to.x - from.x) >= abs(to.y - from.y),
+                                        lanes: 3, clear: clear) else { continue }
+                meetRoad(bridge)
+                return true
+            }
         }
         return false
     }
@@ -2791,7 +2912,8 @@ nonisolated final class WorldMap: @unchecked Sendable {
     /// A bridge `lanes` wide over the water from bank to bank, its lanes centred on `middle`,
     /// laid (`lay`); nil if any lane doesn't reach land within 14 cells, or has the water under it
     /// for less than half its length.
-    private func span(_ kind: Bridge.Kind, at middle: CGPoint, northward: Bool, lanes: Int) -> Bridge? {
+    /// `clear`: only with water beside it too, along most of both its sides.
+    private func span(_ kind: Bridge.Kind, at middle: CGPoint, northward: Bool, lanes: Int, clear: Bool = false) -> Bridge? {
         let first = Int(((northward ? middle.x : middle.y) - CGFloat(lanes) / 2).rounded())
         let origin = Int((northward ? middle.y : middle.x).rounded(.down))
         let probe = Bridge(kind: kind, northward: northward, lane: first, lanes: lanes, start: origin, end: origin, landsAtStart: true, landsAtEnd: true)
@@ -2815,16 +2937,42 @@ nonisolated final class WorldMap: @unchecked Sendable {
             }.count
             guard wet * 2 >= end - start + 1 else { return nil }
         }
+        if clear {
+            for lane in [first - 1, first + lanes] {
+                let wet = (start...end).filter { along in
+                    let cell = probe.cell(lane: lane, along: along)
+                    return contains(cell) && ground[cell.row][cell.col] == .water
+                }.count
+                guard wet * 5 >= (end - start + 1) * 3 else { return nil }
+            }
+        }
         for lane in first..<(first + lanes) {
             for along in [start - 1, end + 1] {
                 let cell = probe.cell(lane: lane, along: along)
                 guard contains(cell), ground[cell.row][cell.col] != .water else { return nil }
             }
         }
-        let bridge = Bridge(kind: kind, northward: northward, lane: first, lanes: lanes, start: start, end: end, landsAtStart: true, landsAtEnd: true)
+        var bridge = Bridge(kind: kind, northward: northward, lane: first, lanes: lanes, start: start, end: end, landsAtStart: true, landsAtEnd: true)
+        bridge.material = bridgeMaterial(kind, lane: first, start: start)
+        bridge.bowed = kind == .road && (bridge.material == .stone || bridge.material == .lacquer)
         lay(bridge)
         bank(bridge)
         return bridge
+    }
+
+    /// What a bridge here is built of (`Bridge.Material`), the same every time: a footbridge out to a
+    /// lake's island of rope and planks; a road's of stone in the bare lands (rock, snow, sand,
+    /// desert), three in four, and in the green ones wood for half, stone or red lacquer for a
+    /// quarter each, by where it stands.
+    private func bridgeMaterial(_ kind: Bridge.Kind, lane: Int, start: Int) -> Bridge.Material {
+        switch kind {
+        case .jetty: return .wood
+        case .foot: return .rope
+        case .road:
+            let roll = abs(lane &* 31 &+ start &* 17) % 4
+            if ["tile_scree", "tile_snow", "tile_desert", "tile_sand"].contains(def.theme.ground) { return roll == 0 ? .wood : .stone }
+            return roll == 0 ? .stone : roll == 1 ? .lacquer : .wood
+        }
     }
 
     /// Lays a bridge: the water under its deck becomes somewhere to walk.
@@ -2861,8 +3009,17 @@ nonisolated final class WorldMap: @unchecked Sendable {
         let centre = CGFloat(bridge.lane) + CGFloat(bridge.lanes) / 2
         for (end, step) in [(bridge.start - 1, -1), (bridge.end + 1, 1)] {
             // Only over open ground: not into water, a border, the sea or a land next door's.
+            // As wide as the deck where it meets it, then giving way: a corner off the second
+            // cell out (one side or the other, by where the bridge stands), only its middle on the
+            // third. A square of road as wide as the deck, three cells deep, looked laid with a
+            // ruler (the user, 2026-11-17: "a bit too perfect").
+            let lanes = Array(bridge.lane..<(bridge.lane + bridge.lanes))
+            let dropsFirst = (bridge.lane &+ bridge.start &+ (step > 0 ? 1 : 0)) % 2 == 0
             for out in 0..<Self.bridgeApproach {
-                for lane in bridge.lane..<(bridge.lane + bridge.lanes) {
+                var across = lanes
+                if lanes.count >= 3, out == 1 { across = dropsFirst ? Array(lanes.dropFirst()) : Array(lanes.dropLast()) }
+                if lanes.count >= 3, out >= 2 { across = Array(lanes.dropFirst().dropLast()) }
+                for lane in across {
                     let cell = bridge.cell(lane: lane, along: end + step * out)
                     guard contains(cell), owns(cell), ([.ground, .accent, .path] as [Ground]).contains(ground[cell.row][cell.col]) else { continue }
                     ground[cell.row][cell.col] = .path
@@ -2882,12 +3039,24 @@ nonisolated final class WorldMap: @unchecked Sendable {
                     if distance < 7, distance < best?.distance ?? .infinity { best = (distance, spot) }
                 }
             }
-            guard let best else { continue }
-            let steps = max(2, Int(best.distance * 4))
-            for k in 0...steps {
-                let t = CGFloat(k) / CGFloat(steps)
-                let spot = CGPoint(x: foot.x + (best.spot.x - foot.x) * t, y: foot.y + (best.spot.y - foot.y) * t)
-                for cell in cells(around: spot, radius: 1.05) where ground[cell.row][cell.col] != .water { ground[cell.row][cell.col] = .path }
+            if let best {
+                let steps = max(2, Int(best.distance * 4))
+                for k in 0...steps {
+                    let t = CGFloat(k) / CGFloat(steps)
+                    let spot = CGPoint(x: foot.x + (best.spot.x - foot.x) * t, y: foot.y + (best.spot.y - foot.y) * t)
+                    for cell in cells(around: spot, radius: 1.05) where ground[cell.row][cell.col] != .water { ground[cell.row][cell.col] = .path }
+                }
+            }
+            // No road beside the deck's end: where the bridge stands a little along the river from
+            // where the road came to it, the old road still ran to the water beside it, and the
+            // road met the deck at a corner (the user, 2026-11-17: "The path doesn't go into the
+            // bridge exactly"). The cells at the water's edge, two lanes either side, back to
+            // ground; no further out, where a road along the bank joins the way onto the bridge.
+            for out in 0..<1 {
+                for lane in [bridge.lane - 2, bridge.lane - 1, bridge.lane + bridge.lanes, bridge.lane + bridge.lanes + 1] {
+                    let cell = bridge.cell(lane: lane, along: end + step * out)
+                    if contains(cell), ground[cell.row][cell.col] == .path { ground[cell.row][cell.col] = .ground }
+                }
             }
         }
     }
@@ -3058,7 +3227,19 @@ nonisolated final class WorldMap: @unchecked Sendable {
                                     start: step > 0 ? start : start - length + 1, end: step > 0 ? start + length - 1 : start,
                                     landsAtStart: step > 0, landsAtEnd: step < 0)
                 let besideLand = bridge.cell(lane: bridge.lane + 1, along: start - step)
-                let fits = contains(besideLand) && ground[besideLand.row][besideLand.col] != .water && !island.contains(besideLand)
+                // Straight out from a shore of its own, into open water (the user, 2026-11-17: "This
+                // bridge is still in a weird place"): solid land behind it, three cells deep under
+                // both its lanes, so it doesn't start from a thin neck between two waters; open water
+                // past its far end, and beside both its sides there, so it isn't laid along a shore.
+                func dry(_ cell: GridPoint) -> Bool { contains(cell) && ground[cell.row][cell.col] != .water && !island.contains(cell) }
+                func wet(_ cell: GridPoint) -> Bool { water.contains(cell) }
+                let far = step > 0 ? start + length - 1 : start - length + 1
+                let behind = (1...3).allSatisfy { back in
+                    (bridge.lane..<(bridge.lane + bridge.lanes)).allSatisfy { dry(bridge.cell(lane: $0, along: start - step * back)) }
+                }
+                let open = (bridge.lane - 1...bridge.lane + bridge.lanes).allSatisfy { wet(bridge.cell(lane: $0, along: far + step)) }
+                    && wet(bridge.cell(lane: bridge.lane - 1, along: far)) && wet(bridge.cell(lane: bridge.lane + bridge.lanes, along: far))
+                let fits = dry(besideLand) && behind && open
                     && bridge.cells.allSatisfy { deck in
                         water.contains(deck) && island.allSatisfy { max(abs($0.col - deck.col), abs($0.row - deck.row)) > 2 }
                     }

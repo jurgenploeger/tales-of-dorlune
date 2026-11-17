@@ -13,6 +13,9 @@ enum GameIcon: String, CaseIterable {
     case chevronUp = "chevron-up", chevronDown = "chevron-down"
     case arrowUp = "arrow-up", arrowDown = "arrow-down", arrowLeft = "arrow-left", arrowRight = "arrow-right"
     case play, dice, map, tap, palette, star, starOutline = "star-outline", gift, coins, egg, edit, lock, globe
+    /// Saving your game and its backups: a floppy disk (our own drawing, art/icons; Retro
+    /// Diffusion's at button size).
+    case save
     /// Finding things in a list (the Bag, the gear for a slot): search it, sort it.
     case search, sort
     /// The time left to choose in a fight (BattleView's `TurnClockPill`).
@@ -45,12 +48,14 @@ struct IconImage: View {
 
     var body: some View {
         // At button size, the game's own drawing where there is some (full colour: a tint doesn't
-        // touch it), smoothed: drawn as light at 128 pixels like the skills' icons, not pixel art (a
-        // drawing 64 pixels or under stays crisp); small inline glyphs stay Iconaut's.
+        // touch it): pixel art at 64 pixels since 2026-11-17 (Retro Diffusion's, tools/ui_icon_art.py),
+        // shown crisp; smoothed only where it's shown smaller than it's drawn (under 22 points, where
+        // dropping rows of pixels left it ragged) or a drawing's over 64 pixels. Small inline glyphs
+        // stay Iconaut's.
         if size >= 18, let art = icon.pixelArt {
             Image(uiImage: art)
                 .resizable()
-                .interpolation(art.size.width > 64 ? .high : .none)
+                .interpolation(art.size.width > 64 || size < 22 ? .high : .none)
                 .scaledToFit()
                 .frame(width: size, height: size)
                 .accessibilityHidden(true)

@@ -1,0 +1,27 @@
+{
+  "request": {
+    "num_images": 3,
+    "prompt": "a cluster of large stacked mossy grey-brown boulders with flat sunlit tops, a chunky blocky rock formation, green moss on the tops, seen from above at an angle, thick dark outline",
+    "prompt_style": "rd_tile__tile_object",
+    "width": 96,
+    "height": 96,
+    "remove_bg": true
+  },
+  "result": {
+    "created_at": 1794913751,
+    "credit_cost": 6,
+    "balance_cost": 0.18,
+    "output_urls": [],
+    "model": "rd_fast",
+    "remaining_credits": 0,
+    "remaining_balance": 7.421,
+    "request_id": "f3cbb35b-3dce-4589-8fe3-26d37c321778",
+    "outputs_retained_until": 1795000131,
+    "billing": {
+      "reason": "no_plan",
+      "source": "balance",
+      "balance_left": 7.421,
+      "balance_charged": 0.18
+    }
+  }
+}

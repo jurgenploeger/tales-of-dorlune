@@ -2396,18 +2396,25 @@ struct QuestRow: View {
                     if showsGiver {
                         DifficultyBadge(difficulty: session.difficulty(of: quest))
                     }
-                    Spacer()
-                    switch session.status(of: quest) {
-                    case .active where quest.objective.type == .deliver:
-                        // A favour: who it's for, as there's nothing to count.
-                        Text(L("Take it to {name}", ["name": quest.objective.target.flatMap(session.content.npc)?.name ?? ""]))
-                            .foregroundStyle(HUDStyle.gold)
-                    case .active(let progress, let goal): Text("\(progress)/\(goal)").foregroundStyle(HUDStyle.gold)
-                    case .ready: Text(L("Done! Report back")).foregroundStyle(HUDStyle.green)
-                    default: EmptyView()
+                    Spacer(minLength: 0)
+                    // Only a count beside its name; anything in words goes under it, on a line of
+                    // its own: side by side a long name and "Done! Report back" each broke in two
+                    // (the user, 2026-11-17: "These quest cards look a mess").
+                    if case .active(let progress, let goal) = session.status(of: quest), quest.objective.type != .deliver {
+                        Text("\(progress)/\(goal)").foregroundStyle(HUDStyle.gold).monospacedDigit().fixedSize()
                     }
                 }
                 .font(HUDStyle.font(12))
+                switch session.status(of: quest) {
+                case .active where quest.objective.type == .deliver:
+                    // A favour: who it's for, as there's nothing to count.
+                    Text(L("Take it to {name}", ["name": quest.objective.target.flatMap(session.content.npc)?.name ?? ""]))
+                        .font(HUDStyle.font(11))
+                        .foregroundStyle(HUDStyle.gold)
+                case .ready:
+                    Text(L("Done! Report back")).font(HUDStyle.font(11)).foregroundStyle(HUDStyle.green)
+                default: EmptyView()
+                }
                 if showsGiver, let giver = session.content.npc(quest.giver) {
                     let home = session.content.home(ofNPC: quest.giver)?.name
                     Text(home.map { L("From {name} · {place}", ["name": giver.name, "place": $0]) } ?? L("From {name}", ["name": giver.name]))
@@ -2658,25 +2665,35 @@ struct QuestRewardLine: View {
 
     var body: some View {
         let pay = session.questPay(quest)
-        HStack(spacing: 4) {
-            WrapRows(spacing: 10) {
-                if pay.gold > 0 {
-                    GoldPill(amount: pay.gold, size: 11)
-                        .frame(height: 22)
+        let items = RewardList.group(quest.reward.items ?? [], in: session)
+        HStack(alignment: .top, spacing: 4) {
+            // What it pays in numbers on one row, the things it gives on a row of their own under
+            // it: run together, six icons broke after the fourth beside "+1 skill point".
+            VStack(alignment: .leading, spacing: 6) {
+                WrapRows(spacing: 10) {
+                    if pay.gold > 0 {
+                        GoldPill(amount: pay.gold, size: 11)
+                            .frame(height: 22)
+                    }
+                    if pay.exp > 0 {
+                        // Its thousands set off as the gold's are.
+                        Label(L("{exp} EXP", ["exp": pay.exp.formatted()]), icon: .star, size: 12)
+                            .frame(height: 22)
+                    }
+                    // A Hard or Elite quest gives a skill point (`GameSession.givesSkillPoint`).
+                    if session.givesSkillPoint(quest) {
+                        Label(L("+1 skill point"), icon: .sparkles, size: 12)
+                            .frame(height: 22)
+                    }
                 }
-                if pay.exp > 0 {
-                    Label(L("{exp} EXP", ["exp": pay.exp]), icon: .star, size: 12)
-                        .frame(height: 22)
-                }
-                // A Hard or Elite quest gives a skill point (`GameSession.givesSkillPoint`).
-                if session.givesSkillPoint(quest) {
-                    Label(L("+1 skill point"), icon: .sparkles, size: 12)
-                        .frame(height: 22)
-                }
-                ForEach(RewardList.group(quest.reward.items ?? [], in: session), id: \.item.id) { entry in
-                    ItemIcon(item: entry.item, size: 20, count: entry.count)
-                        .frame(height: 22)
-                        .accessibilityLabel(entry.item.name)
+                if !items.isEmpty {
+                    WrapRows(spacing: 6) {
+                        ForEach(items, id: \.item.id) { entry in
+                            ItemIcon(item: entry.item, size: 20, count: entry.count)
+                                .frame(height: 22)
+                                .accessibilityLabel(entry.item.name)
+                        }
+                    }
                 }
             }
             if more {

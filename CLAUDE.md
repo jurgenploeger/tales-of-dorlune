@@ -40,7 +40,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   and shape (`regions`, rivers in it), and `check_content.py` checks it (everything set down by hand on
   its land and clear of the rivers, roads meeting, nothing cut off by a river). Rerun it after changing exits or
   anything set down by hand; `--preview out.png` draws it. The game lays the rivers where they're painted, a bridge
-  wherever a road crosses one (`WorldMap.layRivers`) along a row or column, so the tool runs each river straight along the other
+  wherever a road crosses one (`WorldMap.layRivers`; of wood, stone, red lacquer or rope (its ropes sagging), `Bridge.Material`, drawn by `BridgeArt`, standing over the water: its thickness, piles, a shadow and a reflection along its near side; wood and rope break off raggedly on the banks; a road's stone or lacquer bridge over a river is a bow bridge, `Bridge.bowed`: a hump you walk over, `Bridge.bow`, `WorldMap.height(atGrid:)`, drawn as one picture by `BridgeArt.bowSprite`; `tools/bridge_preview.py` mirrors them; where the water's open on both sides of it if anywhere near) along a row or column, so the tool runs each river straight along the other
   where a road crosses it (`SQUARE_REACH`; aslant, its bridge crossed it askew); the land slopes down to the sea and into the lakes
   (`WorldMap.shore`, drawn sunk by `HillArt`, darker the lower it lies; the sea paler in the shallows, `ContinentScene.shallows`:
   a distance field, after SpriteCook's shoreline article, each chunk's distances from the land worked out once,
@@ -60,9 +60,19 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   people by `LandStage`, in its own points at its shift. Lands are laid out one at a time, nearest first (the one
   you're in before any), and drawn in their plain ground till then, walked on as their shape has it (anywhere but
   their rivers and lakes, `World.walkable`); the world map's own layouts wait meanwhile
-  (`WorldOverview.isHeld`). You walk anywhere with no loading card; the land you're in
+  (`WorldOverview.isHeld`). A land over 176 cells off is let go (`letGoFarLands`: memory grew past a gigabyte) and built again, the same, when you're back. You walk anywhere with no loading card; the land you're in
   (`here`) brings its music, air and encounters. Caves are scenes of their own (`WorldScene`), behind the card;
   `GameCoordinator.mapScene` is whichever you're in.
+- Terraced hills (maps.json theme `hills.terraces`, a step in points, with `bank` the faces' rock; Sunny Meadow
+  since 0.9.105, after `tools/cliff_preview.py`): `Hill.terrace` steps each range's height into flat levels with a
+  sheer face, only where its slopes face you (`Hill.stepped`: stepped all round, the faces turned away were laid
+  back by `unfold()` into long ramps in deep shade), the faces dwindling round its sides and its back the smooth
+  slope you walk up (no trails);
+  `WorldMap.blockFaces` blocks the faces and keeps the cell in front clear; `HillLooks.terraced` (`HillArt.Look.cliff`): the
+  faces' rock is drawn by the lifting shader on the screen's pixels (`u_rock`, by height and across the screen:
+  painted into the picture it stretched into streaks), with shade at each face's foot; up to two waterfalls a
+  range over faces turned to you (`LandPlanner.planCliffFalls`, `LandStage.placeCliffFalls`: a stream, a sheet
+  stretched to the face, a pool, from `tools/waterfall_art.py`).
 - How a blow lands in battle (`BattleScene.impact`, after SpriteCook's hit feel article): attacker and
   target stand still 5 frames (9 on a killing blow, `hitStop`: the two nodes paused, the stage plays
   on), the target white for 2 (`whiteFlash`, a shader: a tint can't light a dark outline), then pushed
@@ -194,8 +204,9 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
 - `tools/wind_art.py`: trees and bushes in the wind (`art/wind.json`, `TalesOfDorlune/Art/Wind.swift`), after
   SpriteCook's wind article: the trunk stays put and the crown moves in leaf clumps (cut by colour, then
   flooded out from each bright spot to the dark crevices), a whole pixel at a time, over a darker copy of the
-  crown so a gap shows shade; a calm loop timed by where each tree stands (a ripple runs across a grove), and
-  gusts in patches that bow the crown downwind and let it spring back, bounce and settle. Only pixels move,
+  crown so a gap shows shade; still as drawn in calm air (since 0.9.105: every tree turning through a calm loop
+  distracted and was slow), and gusts in patches, timed by where each tree stands, that bow the crown downwind
+  and let it spring back, bounce and settle. Only pixels move,
   so RD's art stays as drawn, and the game cuts the frames from the sprite as it's graded
   (`ArtLibrary.windFrames`, `WindField` keeps the clock, `LandStage.addScenery`); a rigged sprite moves
   instead of swaying, caves keep the old sway (their depth of field swaps textures). Rerun it after
@@ -224,12 +235,13 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
 - `tools/crystal_art.py`: the Glimmerdeep's crystal scenery from the caves' own rock (its walls, floor, spires and
   geodes): each pixel's brightness laid on a ramp of crystal colours, as a `derive` can't tint the grey tiles.
   Rerun it after editing a ramp; `--sheet out.png` previews them.
-- `tools/ui_icon_art.py`: the UI's button icons (`art/sprites/ui_<GameIcon>.png`), drawn as light in the skill
-  icons' style with `skill_art.Icon` (glossy shapes, flares, a soft shadow; `UIIcon` drops the shapes' coloured
-  glow), at 128 pixels on no backdrop, every glow and shadow kept to a thin rim round the shapes (`HALO`), so
-  nothing smudges or gets cut off on a light button: `IconImage` shows them smoothed from 18 pt up (battle buttons, the HUD's buttons, the
-  menu's tabs) and keeps Iconaut's vector icons for small inline glyphs. `--sheet out.png` previews them on the
-  game's button colours.
+- `tools/ui_icon_art.py`: the UI's button icons (`art/sprites/ui_<GameIcon>.png`), pixel art at 64 pixels since
+  2026-11-17 (the user's pick): the ones that are things are Retro Diffusion's drawings (`rdui_<name>`, its item
+  style; the hero a portrait in `rd_plus__low_res`; `PICKED`), the Seal Stone the Bag's own picture; the signs
+  (arrow, dots, speech bubble, two people, sparkles, wind) are still drawn as light with `skill_art.Icon` and
+  brought to the look (`pixelled`: no glow, a few flat tones, a one-pixel deep outline). `IconImage` shows them
+  crisp from 22 pt up, smoothed from 18 to 21 (battle buttons, the HUD's buttons, the menu's tabs), and keeps
+  Iconaut's vector icons for small inline glyphs. `--sheet out.png` previews them on the game's button colours.
 - `tools/water_art.py`: the same for the water: `sea.png` (16 × 16 cells that tile as a whole; the continent gives each
   world cell its own, `ContinentScene.seaGroups`) and `tile_water.png` (a land's lakes and rivers, calm so its versions
   don't make a grid), ripples level on screen. Round a land's own water (`tile_water`, not ice or chocolate)
@@ -243,7 +255,8 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   bank), the tile's own ripples kept over them; moving in whole pixels (`PondMotion`, `LandStage.placePondMotion`:
   dashes lapping the near shores, the far waterline creeping, glints and drops on the open water); and what
   stands just above the water mirrored in it (`LandStage.reflect`: flipped, squashed to 0.55, in the pond's
-  dark tones a step darker than the water, only on its water, rows wobbling a pixel in four frames).
+  dark tones a step darker than the water, only on its water, rows wobbling a pixel in four frames; painted
+  on the CPU, as a shader for it didn't take on a phone and the reflections lay over the land).
   It replaced a generated tile that repeated every 16 pixels; rerun it
   after editing, `--preview out.png` shows them turned as the game draws them.
 - `tools/fx_art.py`: the same for the few battle marks that aren't light (`art/sprites/fx_*.png`: poison's bubble

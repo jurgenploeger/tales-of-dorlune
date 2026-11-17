@@ -1,0 +1,27 @@
+{
+  "request": {
+    "num_images": 3,
+    "prompt": "one chunky five-pointed golden yellow star, glossy with a small white highlight, a bold simple game menu icon, lit from the top left, thick dark outline",
+    "prompt_style": "rd_plus__topdown_item",
+    "width": 64,
+    "height": 64,
+    "remove_bg": true
+  },
+  "result": {
+    "created_at": 1794923572,
+    "credit_cost": 6,
+    "balance_cost": 0.18,
+    "output_urls": [],
+    "model": "rd_plus",
+    "remaining_credits": 0,
+    "remaining_balance": 5.801,
+    "request_id": "689cccdc-ecf8-49d9-ad72-e68585823317",
+    "outputs_retained_until": 1795009962,
+    "billing": {
+      "reason": "no_plan",
+      "source": "balance",
+      "balance_left": 5.801,
+      "balance_charged": 0.18
+    }
+  }
+}

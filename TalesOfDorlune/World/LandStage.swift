@@ -121,6 +121,7 @@ final class LandStage {
             if reed.art == "water_rock" || reed.art == "shore_stones" { roundShadow(under: node, at: reed.cell) }
         }
         placeWaterfalls(plan.waterfalls)
+        placeCliffFalls(plan.cliffFalls)
         placePondMotion()
         await pause()
         placeFence()
@@ -161,12 +162,17 @@ final class LandStage {
         critters = Critters(def.ambience, world: world, map: map, seed: def.id)
     }
 
+    /// Whether any of its chunks is in the scene, near the camera (`show`).
+    private(set) var onScreen = false
+
     /// A frame of its life (`player` and `camera` in the continent's points, the screen at
     /// `scale`): its people stroll and its animals mind you as you come near, and its pieces near the
-    /// camera are in the scene. Its birds cross the sky only while you're in it (`isHere`).
+    /// camera are in the scene. Its birds cross the sky only while you're in it (`isHere`). Its people
+    /// wait while none of it is near the screen (the speed audit, 2026-11-17: every land round you,
+    /// most of them out of sight, walked and found its ways every frame).
     func update(dt: TimeInterval, player: CGPoint, camera: CGPoint, scale: CGFloat, screen: CGSize, isHere: Bool = true) {
         let you = local(player), eye = local(camera)
-        crowd?.update(dt: dt, player: you)
+        if onScreen || isHere { crowd?.update(dt: dt, player: you) }
         let visible = CGRect(x: eye.x - screen.width / 2 * scale, y: eye.y - screen.height / 2 * scale,
                              width: screen.width * scale, height: screen.height * scale)
         critters?.update(dt: dt, player: you, visible: visible, flocks: isHere) { [map] in map.isWalkable(map.rawCell(at: $0)) }
@@ -304,6 +310,7 @@ final class LandStage {
         let high = Self.key(local.x + reach.width, local.y + reach.height)
         if let shown = shownChunks, shown.low == low, shown.high == high { return }
         shownChunks = (low, high)
+        defer { onScreen = chunks.values.contains { $0.parent != nil } }
         canopy.show(low: low, high: high)
         for (spot, node) in chunks {
             let near = spot.col >= low.col && spot.col <= high.col && spot.row >= low.row && spot.row <= high.row
@@ -368,7 +375,7 @@ final class LandStage {
         shade(node, standingOn: cell)
         if let wind, let frames = art.windFrames(wind, texture: sprite.texture) {
             // Timed by where it stands on the continent, so the wind runs on across the border.
-            WindField.shared.add(node, frames: frames, at: CGPoint(x: position.x + shift.dx, y: position.y + shift.dy))
+            WindField.shared.add(node, frames: frames, at: CGPoint(x: position.x + shift.dx, y: position.y + shift.dy), land: world)
         } else if let sway {
             let left = SKAction.rotate(toAngle: sway.lean, duration: sway.duration, shortestUnitArc: true)
             let right = SKAction.rotate(toAngle: -sway.lean, duration: sway.duration, shortestUnitArc: true)
@@ -580,9 +587,10 @@ final class LandStage {
     /// foot and squashed to 0.55, in three of the pond's darkest tones by how bright each pixel is (the
     /// darkest 15% tone 0, below 110 tone 1, the rest 2), always a step darker than the water it lies on,
     /// only where it lies on the land's own water (`GroundTiles.pondTone`, baked in a mask), its rows
-    /// shifted a whole pixel by a slow wave in four steps over 2.5 seconds (`reflectionSource`). A tree's
-    /// reflection moves in the wind with it (2026-11-17: "do the things that are not done yet"): it
-    /// shows the tree's own frame, its picture turned over, not copies of it. Not what stands in the water.
+    /// shifted a whole pixel by a slow wave in four steps over 2.5 seconds (none in the first 3 rows over
+    /// the foot, then one, two past 16), a third of the thing's own colour kept (the user, 2026-11-17: "a
+    /// bit of the water color"). Painted into four pictures here: a shader did it, and on a phone it
+    /// didn't take and the reflections lay over the land. Not what stands in the water.
     private func reflect(_ node: SKSpriteNode, picture texture: SKTexture, art id: String, cell: GridPoint) {
         guard reflections < Self.reflectionsAtMost, !id.hasPrefix("waterfall"), id != "water_rock", id != "lily_pad",
               map.contains(cell), map.ground[cell.row][cell.col] != .water else { return }
@@ -632,7 +640,7 @@ final class LandStage {
                 if lowest == nil || y < (lowest?.y ?? 0) { lowest = CGPoint(x: x, y: y) }
             }
         }
-        guard let lowest, let maskImage = PixelImage.make(mask, width: width, height: height) else { return }
+        guard let lowest else { return }
         // Its brightness's darkest 15%, the cut to its darkest tone.
         var bright: [Double] = []
         for i in stride(from: 0, to: width * height * 4, by: 4) where pixels[i + 3] > 127 {
@@ -640,32 +648,53 @@ final class LandStage {
         }
         bright.sort()
         let darkCut = bright.isEmpty ? 0 : bright[bright.count * 15 / 100]
-        let maskTexture = SKTexture(cgImage: maskImage)
-        maskTexture.filteringMode = .nearest
-        let frames = art.windFrames(id, texture: texture)
+        // Painted here, a picture for each of the wave's four steps, not by a shader on the device:
+        // the shader didn't take on a phone, and every reflection showed whole, over the land as
+        // well as the water (the user, 2026-11-17: "There are tree reflections that go on on the
+        // land"). Each pixel the mask clears stays clear, whatever the GPU does.
         let colours = tiles.pondColours
-        func colour(_ k: Int) -> SIMD4<Float> {
-            SIMD4<Float>(Float(colours[k].r), Float(colours[k].g), Float(colours[k].b), 1)
+        let tones = (0..<3).map { k in (r: colours[k].r * 255, g: colours[k].g * 255, b: colours[k].b * 255) }
+        var steps: [SKTexture] = []
+        for step in 0..<4 {
+            let turn = Double(step) * Double.pi / 2
+            var out = [UInt8](repeating: 0, count: width * height * 4)
+            for row in 0...footRow {
+                // How far above its foot this row of the picture is, and how far the wave moves it.
+                let down = Double(footRow - row) + 0.5
+                let reach = (down >= 3 ? 1.0 : 0) + (down >= 16 ? 1.0 : 0)
+                let aside = Int((reach * sin(down * 1.36 - turn) + 0.5).rounded(.down))
+                for col in 0..<width {
+                    let o = (row * width + col) * 4
+                    guard mask[o + 3] > 127 else { continue }
+                    let from = min(width - 1, max(0, col - aside))
+                    let p = (row * width + from) * 4
+                    let alpha = Double(pixels[p + 3])
+                    guard alpha > 127 else { continue }
+                    let red = Double(pixels[p]) * 255 / alpha, green = Double(pixels[p + 1]) * 255 / alpha
+                    let blue = Double(pixels[p + 2]) * 255 / alpha
+                    let lum = 0.3 * red + 0.59 * green + 0.11 * blue
+                    let band = (lum >= darkCut ? 1 : 0) + (lum >= 110 ? 1 : 0)
+                    let shade = max(0, min(Int(mask[o]) / 32 - 1, band))
+                    let tone = tones[shade]
+                    out[o] = UInt8(min(255, max(0, red * 0.32 + tone.r * 0.68)))
+                    out[o + 1] = UInt8(min(255, max(0, green * 0.32 + tone.g * 0.68)))
+                    out[o + 2] = UInt8(min(255, max(0, blue * 0.32 + tone.b * 0.68)))
+                    out[o + 3] = 255
+                }
+            }
+            guard let picture = PixelImage.make(out, width: width, height: height) else { return }
+            let texture = SKTexture(cgImage: picture)
+            texture.filteringMode = .nearest
+            steps.append(texture)
         }
-        let shader = SKShader(source: Self.reflectionSource, uniforms: [
-            SKUniform(name: "u_mask", texture: maskTexture),
-            SKUniform(name: "u_count", float: Float(frames?.count ?? 1)),
-            SKUniform(name: "u_size", vectorFloat2: SIMD2<Float>(Float(width), Float(height))),
-            SKUniform(name: "u_foot", float: Float(height - 1 - footRow) / Float(height)),
-            SKUniform(name: "u_cut", float: Float(darkCut)),
-            SKUniform(name: "u_tone0", vectorFloat4: colour(0)),
-            SKUniform(name: "u_tone1", vectorFloat4: colour(1)),
-            SKUniform(name: "u_tone2", vectorFloat4: colour(2)),
-        ])
         reflections += 1
-        // The tree's own picture, turned over about its foot and squashed: it shows whatever the tree
-        // shows, moving in the wind with it (`WindField`), drawn in the pond's tones by the shader.
-        let mirror = SKSpriteNode(texture: node.texture ?? texture, size: node.size)
+        // Its picture turned over about its foot and squashed, still as the tree stands (not moving
+        // in the wind with it: a picture for every frame of the wind was too many), its rows rippling.
+        let mirror = SKSpriteNode(texture: steps[0], size: node.size)
         mirror.anchorPoint = CGPoint(x: node.anchorPoint.x, y: CGFloat(height - 1 - footRow) / CGFloat(height))
         mirror.position = CGPoint(x: node.position.x, y: footY)
         mirror.yScale = -Self.squash
-        mirror.shader = shader
-        if let frames { WindField.shared.add(mirror, frames: frames, at: CGPoint(x: node.position.x + shift.dx, y: node.position.y + shift.dy)) }
+        mirror.run(.repeatForever(.animate(with: steps, timePerFrame: 0.625)))
         // Over the water it lies on: on a sunk lake, over its lowest strip of it.
         if let z = flatZ(at: lowest), map.isSunken(map.cell(at: lowest)) {
             mirror.zPosition = z - 0.1
@@ -678,32 +707,6 @@ final class LandStage {
 
     /// How much shorter a reflection is than what it mirrors (the article's 0.55).
     private static let squash: CGFloat = 0.55
-
-    /// A reflection's pixels (`reflect`): its picture's frame (one of `u_count` side by side, a tree's
-    /// wind frames), sampled a whole pixel aside by a slow wave down its rows (none in the first 3 below
-    /// the foot, then one, two past 16 of the picture's: about 30 of the reflection's) that steps every
-    /// 0.625 seconds, four steps a 2.5-second turn; drawn where the water is (`u_mask`, its tone in red)
-    /// in tone 0, 1 or 2 by the pixel's brightness, a step darker than the water's own.
-    private static let reflectionSource = """
-    void main() {
-        float index = floor(v_tex_coord.x * u_count);
-        vec2 at = vec2(fract(v_tex_coord.x * u_count), v_tex_coord.y);
-        vec4 water = texture2D(u_mask, at);
-        if (water.a < 0.5) { gl_FragColor = vec4(0.0); return; }
-        float rows = (at.y - u_foot) * u_size.y;
-        float reach = rows < 3.0 ? 0.0 : (rows < 16.0 ? 1.0 : 2.0);
-        float phase = floor(u_time / 0.625) * 1.5707963;
-        float aside = floor(reach * sin(rows * 1.36 - phase) + 0.5);
-        float x = clamp(at.x - aside / u_size.x, 0.0, 0.9999);
-        vec4 source = texture2D(u_texture, vec2((index + x) / u_count, v_tex_coord.y));
-        if (source.a < 0.5) { gl_FragColor = vec4(0.0); return; }
-        float bright = dot(source.rgb / source.a, vec3(0.3, 0.59, 0.11)) * 255.0;
-        float level = bright < u_cut ? 0.0 : (bright < 110.0 ? 1.0 : 2.0);
-        float tone = max(0.0, min(floor(water.r * 255.0 / 32.0 + 0.5) - 1.0, level));
-        vec4 colour = tone < 0.5 ? u_tone0 : (tone < 1.5 ? u_tone1 : u_tone2);
-        gl_FragColor = vec4(colour.rgb, 1.0);
-    }
-    """
 
     /// Sets `node` down on the water at `point` (`cell`'s), as the lily pads are: down on a lake sunk with
     /// the shore, just under the pads.
@@ -876,6 +879,11 @@ final class LandStage {
 
     /// A round shadow (`Lighting.Shadow`) under what stands on a hill or on the sunk shore and lakes, where
     /// the shade cast away from the sun isn't laid (`addScenery`), as `plant` gives a prop with `shadow`.
+    /// Hides its scenery's shadows on slopes, or shows them again (`Lighting.Shadow.hideForPicture`).
+    func hideSlopeShadows(_ hidden: Bool) {
+        for shadow in shadows { shadow.hideForPicture(hidden) }
+    }
+
     private func roundShadow(under node: SKSpriteNode, at cell: GridPoint) {
         if map.hillIndex(at: cell) != nil {
             let strip = HillArt.strip(at: -node.zPosition)
@@ -901,6 +909,44 @@ final class LandStage {
             node.run(.repeatForever(.animate(with: frames, timePerFrame: 0.11)))
             let spray = node.position + CGVector(dx: 0, dy: 10)
             Ambience.twinkle(around: spray, radius: 20, count: 4, in: layer(at: spray, lift: Self.airLift))
+        }
+    }
+
+    /// The waterfalls over the terraces' faces (`LandPlan.planCliffFalls`), in three pieces fitted to
+    /// each (`tools/waterfall_art.py`): the stream on the level above with its lip, the sheet of water
+    /// down the face as tall as the face stands, and the pool at its foot, each in four frames.
+    /// Sorted at the foot, in front of the face's own strip and over the level above's.
+    private func placeCliffFalls(_ falls: [(foot: CGPoint, lip: CGPoint)]) {
+        guard !falls.isEmpty else { return }
+        func frames(_ name: String) -> [SKTexture] { ["", "_2", "_3", "_4"].map { art.sprite(name + $0).texture } }
+        let tops = frames("cliff_fall_top"), sheets = frames("cliff_fall_sheet"), pools = frames("cliff_fall_pool")
+        let tile = WorldMap.tileSize
+        /// A point in cells on the ground (its place on the map) and shown up at its height.
+        func spot(_ point: CGPoint) -> (ground: CGPoint, shown: CGPoint) {
+            let ground = WorldMap.project(CGPoint(x: point.x * tile, y: point.y * tile))
+            return (ground, CGPoint(x: ground.x, y: ground.y + map.height(at: ground)))
+        }
+        for fall in falls {
+            let foot = spot(fall.foot), lip = spot(fall.lip)
+            let x = ((foot.shown.x + lip.shown.x) / 2).rounded()
+            let z = -foot.ground.y
+            let drop = max(8, (lip.shown.y - foot.shown.y).rounded())
+            let pieces: [(frames: [SKTexture], size: CGSize, anchor: CGPoint, at: CGPoint, lift: CGFloat)] = [
+                (tops, art.sprite("cliff_fall_top").size, CGPoint(x: 0.5, y: 0), CGPoint(x: x, y: foot.shown.y.rounded() + drop - 2), 0.1),
+                (sheets, CGSize(width: art.sprite("cliff_fall_sheet").size.width, height: drop), CGPoint(x: 0.5, y: 0),
+                 CGPoint(x: x, y: foot.shown.y.rounded()), 0.2),
+                (pools, art.sprite("cliff_fall_pool").size, CGPoint(x: 0.5, y: 0.5), CGPoint(x: x, y: foot.shown.y.rounded()), 0.3),
+            ]
+            for piece in pieces {
+                let node = SKSpriteNode(texture: piece.frames[0], size: piece.size)
+                node.anchorPoint = piece.anchor
+                node.position = piece.at
+                node.zPosition = z + piece.lift
+                node.run(.repeatForever(.animate(with: piece.frames, timePerFrame: 0.11)))
+                chunk(at: foot.shown).addChild(node)
+            }
+            let spray = foot.shown + CGVector(dx: 0, dy: 6)
+            Ambience.twinkle(around: spray, radius: 14, count: 3, in: layer(at: spray, lift: Self.airLift))
         }
     }
 

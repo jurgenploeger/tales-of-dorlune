@@ -1,0 +1,27 @@
+{
+  "request": {
+    "num_images": 3,
+    "prompt": "the head and shoulders of one simple round figure, a tan head over a blue tunic, like a player profile symbol, a bold simple game menu icon, lit from the top left, thick dark outline",
+    "prompt_style": "rd_plus__topdown_item",
+    "width": 64,
+    "height": 64,
+    "remove_bg": true
+  },
+  "result": {
+    "created_at": 1794923595,
+    "credit_cost": 6,
+    "balance_cost": 0.18,
+    "output_urls": [],
+    "model": "rd_plus",
+    "remaining_credits": 0,
+    "remaining_balance": 5.441,
+    "request_id": "78b3cd05-868a-43c7-8e41-40501b525583",
+    "outputs_retained_until": 1795009985,
+    "billing": {
+      "reason": "no_plan",
+      "source": "balance",
+      "balance_left": 5.441,
+      "balance_charged": 0.18
+    }
+  }
+}

@@ -905,7 +905,13 @@ final class BattleController {
         switch event {
         case .attack(let actor, let hit):
             damage(hit)
-            SoundEffects.shared.play(hit.critical ? .crit : .hit)
+            if combatants.first(where: { $0.id == actor })?.source == .hero {
+                // The hero's blow sounds like the weapon in hand; a critical cracks over it.
+                SoundEffects.shared.play(.swing(with: session.equipped(.weapon)))
+                if hit.critical { SoundEffects.shared.play(.crit, volume: 0.7) }
+            } else {
+                SoundEffects.shared.play(hit.critical ? .crit : .hit)
+            }
             Haptics.impact(hit.critical ? .medium : .light)
             message = L("{attacker} attacks {target}!", ["attacker": name(actor), "target": name(hit.target)]) + (hit.critical ? " " + L("Critical hit!") : "")
         case .skill(let actor, let skill, let level, let hits):

@@ -408,7 +408,7 @@ def frame_at(r, seconds, x, y):
     f = int((u - n) * LOOP)
     slot = gust_slot(n, y)
     if slot is None:
-        return f
+        return None          # still air: the sprite as drawn (`WindBook.gustFrame`, 2026-11-17)
     return LOOP + slot * LOOP + f
 
 
@@ -543,7 +543,7 @@ def gif(path, ids, seconds=18.0, zoom=3):
             r = data["rigs"][art_id]
             # y up in the game: rows further down the screen are lower
             f = frame_at(r, now, x, height - y)
-            img = frame(pixels[art_id], labels[art_id], r["frames"][f])
+            img = pixels[art_id] if f is None else frame(pixels[art_id], labels[art_id], r["frames"][f])
             h, w = img.shape[:2]
             region = canvas[y:y + h, x:x + w]
             a = img[..., 3:4] > 0

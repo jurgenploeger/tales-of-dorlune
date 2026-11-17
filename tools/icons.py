@@ -107,6 +107,9 @@ OWN = [
     # Fire: a flame with three tongues. Iconaut's flame is a teardrop with a small side
     # tongue, which at badge size read as water's droplet.
     "flame",
+    # Saving and backups: a floppy disk (the user, 2026-11-17). Iconaut's download arrow, used
+    # before, is the game's "down" too (a cave's stairs, Drop, Worse).
+    "save",
 ]
 
 

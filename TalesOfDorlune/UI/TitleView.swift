@@ -275,6 +275,8 @@ struct TitleView: View {
                     .frame(maxWidth: .infinity)
             }
             // Before your first game, it's the one thing to do.
+            // Before your first game, it's the one thing to do. (Blue beside Continue was tried
+            // and taken back, 2026-11-17: its white lettering didn't stand out.)
             .buttonStyle(PixelButtonStyle(tint: saves.isEmpty ? HUDStyle.gold : HUDStyle.cream, primary: true))
         }
         .frame(maxWidth: 320)
@@ -291,7 +293,7 @@ struct TitleView: View {
                 .buttonStyle(TitleRoundButtonStyle(icon: .settings))
             if saves.isEmpty {
                 Button(L("Import a backup")) { importing = true }
-                    .buttonStyle(TitleRoundButtonStyle(icon: .arrowDown))
+                    .buttonStyle(TitleRoundButtonStyle(icon: .save))
             } else {
                 Button(L("How to play")) {
                     withAnimation(.easeInOut(duration: 0.25)) {
@@ -616,9 +618,12 @@ private struct TitleRoundButtonStyle: ButtonStyle {
 
     func makeBody(configuration: Configuration) -> some View {
         VStack(spacing: 6) {
-            IconImage(icon, size: 24)
+            IconImage(icon, size: 30)
                 .foregroundStyle(HUDStyle.ink)
                 .frame(width: 50, height: 50)
+                // Cream: the HUD's blue was tried here and taken back the same day (the user,
+                // 2026-11-17: "Change them back to white again, the contrast is not good": the
+                // icons and New game's lettering were lost on it against the sky).
                 .background(
                     Circle()
                         .fill(LinearGradient(colors: [HUDStyle.buttonShine, HUDStyle.buttonFace, HUDStyle.buttonFace.opacity(0.85)], startPoint: .top, endPoint: .bottom))

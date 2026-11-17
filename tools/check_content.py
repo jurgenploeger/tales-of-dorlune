@@ -544,7 +544,7 @@ for map_def in maps.values():
     if "hills" in theme:
         hills = theme["hills"]
         where = f"map {map_def['id']} hills"
-        known = {"count", "size", "chain", "height", "mountains", "rocky", "bank"}
+        known = {"count", "size", "chain", "height", "mountains", "rocky", "bank", "terraces"}
         check(set(hills) <= known, f"{where} → unknown keys {set(hills) - known}")
         check(not map_def.get("town") and "cave" not in theme, f"{where} → only out in the fields (not towns or caves)")
         check(isinstance(hills.get("count"), int) and 1 <= hills["count"] <= 20, f"{where} → count must be a whole number from 1 to 20")
@@ -564,6 +564,9 @@ for map_def in maps.values():
                 height = mountains.get("height")
                 check(isinstance(height, (int, float)) and max(100, hills.get("height", 70)) < height <= 300,
                       f"{where} → a mountain's height must be over the hills' and over 100, up to 300 points")
+        if "terraces" in hills:
+            check(isinstance(hills["terraces"], (int, float)) and 20 <= hills["terraces"] <= 60, f"{where} → terraces must be a step of 20 to 60 points")
+            check("bank" in hills, f"{where} → terraces need a bank: the rock of their faces")
         if "bank" in hills:
             tiles.append(hills["bank"])
     if "lakes" in theme:

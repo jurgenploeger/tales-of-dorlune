@@ -348,6 +348,279 @@
       }
     },
     {
+      "id": "rock_formation_large",
+      "kind": "prop",
+      "request": {
+        "prompt": "a cluster of large stacked mossy grey-brown boulders with flat sunlit tops, a chunky blocky rock formation, green moss on the tops, seen from above at an angle, thick dark outline",
+        "prompt_style": "rd_tile__tile_object",
+        "width": 96,
+        "height": 96,
+        "remove_bg": true
+      }
+    },
+    {
+      "id": "rock_formation_small",
+      "kind": "prop",
+      "request": {
+        "prompt": "three mossy grey-brown boulders huddled together with flat sunlit tops, seen from above at an angle, thick dark outline",
+        "prompt_style": "rd_tile__tile_object",
+        "width": 64,
+        "height": 64,
+        "remove_bg": true
+      }
+    },
+    {
+      "id": "mossy_boulder",
+      "kind": "prop",
+      "request": {
+        "prompt": "one round mossy grey-brown boulder with a flat sunlit top and a crack down its front, seen from above at an angle, thick dark outline",
+        "prompt_style": "rd_tile__tile_object",
+        "width": 48,
+        "height": 48,
+        "remove_bg": true
+      }
+    },
+    {
+      "id": "rdui_settings",
+      "kind": "prop",
+      "request": {
+        "prompt": "one chunky steel-blue cog wheel gear with a round hole in its middle, a bold simple game menu icon, lit from the top left, thick dark outline",
+        "prompt_style": "rd_plus__topdown_item",
+        "width": 64,
+        "height": 64,
+        "remove_bg": true
+      }
+    },
+    {
+      "id": "rdui_star",
+      "kind": "prop",
+      "request": {
+        "prompt": "one chunky five-pointed golden yellow star, glossy with a small white highlight, a bold simple game menu icon, lit from the top left, thick dark outline",
+        "prompt_style": "rd_plus__topdown_item",
+        "width": 64,
+        "height": 64,
+        "remove_bg": true
+      }
+    },
+    {
+      "id": "rdui_book",
+      "kind": "prop",
+      "request": {
+        "prompt": "one closed green hardcover book with a gold diamond emblem on its cover and cream page edges, a bold simple game menu icon, lit from the top left, thick dark outline",
+        "prompt_style": "rd_plus__topdown_item",
+        "width": 64,
+        "height": 64,
+        "remove_bg": true
+      }
+    },
+    {
+      "id": "rdui_user",
+      "kind": "prop",
+      "request": {
+        "prompt": "portrait bust of a cute chibi adventurer kid facing forward, big head with spiky orange hair and big eyes, smiling, shoulders in a green tunic, head and shoulders only, thick dark outline",
+        "prompt_style": "rd_plus__low_res",
+        "width": 64,
+        "height": 64,
+        "remove_bg": true
+      }
+    },
+    {
+      "id": "rdui_backpack",
+      "kind": "prop",
+      "request": {
+        "prompt": "one chunky brown leather adventurer's backpack with a front pocket and a brass buckle, a bold simple game menu icon, lit from the top left, thick dark outline",
+        "prompt_style": "rd_plus__topdown_item",
+        "width": 64,
+        "height": 64,
+        "remove_bg": true
+      }
+    },
+    {
+      "id": "rdui_coins",
+      "kind": "prop",
+      "request": {
+        "prompt": "a small stack of three shiny gold coins, a bold simple game menu icon, lit from the top left, thick dark outline",
+        "prompt_style": "rd_plus__topdown_item",
+        "width": 64,
+        "height": 64,
+        "remove_bg": true
+      }
+    },
+    {
+      "id": "rdui_egg",
+      "kind": "prop",
+      "request": {
+        "prompt": "one cream speckled egg with pale blue spots, a bold simple game menu icon, lit from the top left, thick dark outline",
+        "prompt_style": "rd_plus__topdown_item",
+        "width": 64,
+        "height": 64,
+        "remove_bg": true
+      }
+    },
+    {
+      "id": "rdui_gift",
+      "kind": "prop",
+      "request": {
+        "prompt": "one red gift box tied with a golden ribbon and bow, a bold simple game menu icon, lit from the top left, thick dark outline",
+        "prompt_style": "rd_plus__topdown_item",
+        "width": 64,
+        "height": 64,
+        "remove_bg": true
+      }
+    },
+    {
+      "id": "rdui_heart",
+      "kind": "prop",
+      "request": {
+        "prompt": "one chunky glossy red heart with a small white highlight, a bold simple game menu icon, lit from the top left, thick dark outline",
+        "prompt_style": "rd_plus__topdown_item",
+        "width": 64,
+        "height": 64,
+        "remove_bg": true
+      }
+    },
+    {
+      "id": "rdui_map",
+      "kind": "prop",
+      "request": {
+        "prompt": "one rolled-open parchment treasure map with a red dotted path and an X, a bold simple game menu icon, lit from the top left, thick dark outline",
+        "prompt_style": "rd_plus__topdown_item",
+        "width": 64,
+        "height": 64,
+        "remove_bg": true
+      }
+    },
+    {
+      "id": "rdui_paw",
+      "kind": "prop",
+      "request": {
+        "prompt": "one chunky pink animal paw print, a big pad and four toe pads, a bold simple game menu icon, lit from the top left, thick dark outline",
+        "prompt_style": "rd_plus__topdown_item",
+        "width": 64,
+        "height": 64,
+        "remove_bg": true
+      }
+    },
+    {
+      "id": "rdui_seal_stone",
+      "kind": "prop",
+      "request": {
+        "prompt": "one round blue-violet magic stone with a glowing rune carved in it, a bold simple game menu icon, lit from the top left, thick dark outline",
+        "prompt_style": "rd_plus__topdown_item",
+        "width": 64,
+        "height": 64,
+        "remove_bg": true
+      }
+    },
+    {
+      "id": "rdui_shield",
+      "kind": "prop",
+      "request": {
+        "prompt": "one chunky blue heater shield with a steel rim and a gold boss, a bold simple game menu icon, lit from the top left, thick dark outline",
+        "prompt_style": "rd_plus__topdown_item",
+        "width": 64,
+        "height": 64,
+        "remove_bg": true
+      }
+    },
+    {
+      "id": "rdui_sword",
+      "kind": "prop",
+      "request": {
+        "prompt": "one short steel sword with a gold crossguard and a brown grip, lying diagonally, handle at the bottom left, tip pointing to the top right, a bold simple game menu icon, lit from the top left, thick dark outline",
+        "prompt_style": "rd_plus__topdown_item",
+        "width": 64,
+        "height": 64,
+        "remove_bg": true
+      }
+    },
+    {
+      "id": "rdui_save",
+      "kind": "prop",
+      "request": {
+        "prompt": "one blue floppy disk with a white label and a steel shutter, seen straight on, a bold simple game menu icon, lit from the top left, thick dark outline",
+        "prompt_style": "rd_plus__topdown_item",
+        "width": 64,
+        "height": 64,
+        "remove_bg": true
+      }
+    },
+    {
+      "id": "rdui_users",
+      "kind": "prop",
+      "request": {
+        "prompt": "portrait busts of two cute chibi adventurer kids side by side facing forward, big heads and big eyes, smiling, one with spiky orange hair in a green tunic, the other a girl with long blue hair in a purple robe, heads and shoulders only, thick dark outline",
+        "prompt_style": "rd_plus__low_res",
+        "width": 64,
+        "height": 64,
+        "remove_bg": true
+      }
+    },
+    {
+      "id": "rdui_run",
+      "kind": "prop",
+      "request": {
+        "prompt": "one brown leather boot seen from the side with a small white feathered wing at its ankle, a bold simple game menu icon, lit from the top left, thick dark outline",
+        "prompt_style": "rd_plus__topdown_item",
+        "width": 64,
+        "height": 64,
+        "remove_bg": true
+      }
+    },
+    {
+      "id": "thicket",
+      "kind": "prop",
+      "request": {
+        "prompt": "a dense thicket of round leafy green bushes heaped together, puffy clumps of leaves lit from the top left, seen from above at an angle, thick dark outline",
+        "prompt_style": "rd_tile__tile_object",
+        "width": 64,
+        "height": 64,
+        "remove_bg": true
+      }
+    },
+    {
+      "id": "fern_clump",
+      "kind": "prop",
+      "request": {
+        "prompt": "a small clump of bright green fern fronds spreading out, seen from above at an angle, thick dark outline",
+        "prompt_style": "rd_tile__tile_object",
+        "width": 32,
+        "height": 32,
+        "remove_bg": true
+      }
+    },
+    {
+      "id": "flower_patch",
+      "kind": "prop",
+      "request": {
+        "prompt": "a small patch of tiny yellow and white wildflowers among short grass, seen from above",
+        "prompt_style": "rd_tile__tile_object",
+        "width": 32,
+        "height": 32,
+        "remove_bg": true
+      }
+    },
+    {
+      "id": "tile_cliff_rock",
+      "kind": "tile",
+      "request": {
+        "prompt": "seamless rough grey-brown rock cliff face, layered stone ledges with cracks and a little green moss",
+        "prompt_style": "rd_tile__single_tile",
+        "width": 32,
+        "height": 32
+      }
+    },
+    {
+      "id": "tile_rich_grass",
+      "kind": "tile",
+      "request": {
+        "prompt": "lush deep green meadow grass with darker patches and small tufts",
+        "prompt_style": "rd_tile__single_tile",
+        "width": 32,
+        "height": 32
+      }
+    },
+    {
       "id": "mushroom",
       "kind": "prop",
       "request": {
@@ -1900,6 +2173,54 @@
       "kind": "prop"
     },
     {
+      "id": "cliff_fall_top",
+      "kind": "prop"
+    },
+    {
+      "id": "cliff_fall_top_2",
+      "kind": "prop"
+    },
+    {
+      "id": "cliff_fall_top_3",
+      "kind": "prop"
+    },
+    {
+      "id": "cliff_fall_top_4",
+      "kind": "prop"
+    },
+    {
+      "id": "cliff_fall_sheet",
+      "kind": "prop"
+    },
+    {
+      "id": "cliff_fall_sheet_2",
+      "kind": "prop"
+    },
+    {
+      "id": "cliff_fall_sheet_3",
+      "kind": "prop"
+    },
+    {
+      "id": "cliff_fall_sheet_4",
+      "kind": "prop"
+    },
+    {
+      "id": "cliff_fall_pool",
+      "kind": "prop"
+    },
+    {
+      "id": "cliff_fall_pool_2",
+      "kind": "prop"
+    },
+    {
+      "id": "cliff_fall_pool_3",
+      "kind": "prop"
+    },
+    {
+      "id": "cliff_fall_pool_4",
+      "kind": "prop"
+    },
+    {
       "id": "dead_tree",
       "kind": "prop",
       "request": {
@@ -2038,7 +2359,6 @@
     },
     {
       "id": "mushroom_house",
-      "scale": 1.35,
       "kind": "building",
       "request": {
         "prompt": "cozy mushroom house with a red spotted cap roof and round door",
@@ -2583,7 +2903,6 @@
     },
     {
       "id": "mushroom_house_blue",
-      "scale": 1.35,
       "kind": "building",
       "derive": {
         "from": "mushroom_house",
@@ -2603,7 +2922,6 @@
     },
     {
       "id": "mushroom_house_gold",
-      "scale": 1.35,
       "kind": "building",
       "derive": {
         "from": "mushroom_house",

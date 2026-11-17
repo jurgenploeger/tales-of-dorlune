@@ -1,0 +1,26 @@
+{
+  "request": {
+    "num_images": 3,
+    "prompt": "seamless rough grey-brown rock cliff face, layered stone ledges with cracks and a little green moss",
+    "prompt_style": "rd_tile__single_tile",
+    "width": 32,
+    "height": 32
+  },
+  "result": {
+    "created_at": 1794913804,
+    "credit_cost": 6,
+    "balance_cost": 0.18,
+    "output_urls": [],
+    "model": "rd_fast",
+    "remaining_credits": 0,
+    "remaining_balance": 6.341,
+    "request_id": "4eccca5a-c4d4-4342-acab-f1a2b68b2d5c",
+    "outputs_retained_until": 1795000201,
+    "billing": {
+      "reason": "no_plan",
+      "source": "balance",
+      "balance_left": 6.341,
+      "balance_charged": 0.18
+    }
+  }
+}

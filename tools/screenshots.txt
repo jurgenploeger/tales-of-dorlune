@@ -461,6 +461,9 @@ terrace_stairs | newgame,level=40,map=goldburg,at=14_13           | 8
 terrace_top    | newgame,level=40,map=goldburg,at=11_17           | 8
 hill_meadow    | newgame,map=sunny_meadow,hill=0                  | 8
 hill_top       | newgame,map=sunny_meadow,hill=0,ontop            | 8
+hill_twilight  | newgame,level=20,map=twilight_woods,hill=0,weather=clear,hour=12 | 8
+hill_desert_mesa | newgame,level=60,map=genie_desert,hill=1,weather=clear,hour=12 | 8
+hill_rosen     | newgame,level=140,map=rosen_lake,hill=0,weather=clear,hour=12 | 8
 hill_candy     | newgame,level=60,map=candy_mountain,hill=1       | 8
 hill_desert    | newgame,level=60,map=genie_desert,hill=0         | 8
 hill_crystal   | newgame,level=90,map=crystal_mountain,hill=0     | 8
@@ -511,6 +514,7 @@ river_bridge   | newgame,map=sunny_meadow,bridge=0,hour=10,weather=clear | 8
 river_bridge_land | newgame,map=sunny_meadow,bridge=1,hour=10,weather=clear,landscape | 8
 lake_island    | newgame,level=60,map=swan_lake,bridge=0,hour=10,weather=clear | 8
 lake_jetty     | newgame,level=60,map=swan_lake,bridge=1,hour=10,weather=clear | 8
+meadow_jetty   | newgame,map=sunny_meadow,jetty=0,hour=10,weather=clear | 8
 lake_swamp     | newgame,level=20,map=frog_swamp,bridge=0,hour=10,weather=clear | 8
 lake_briarmere_land | newgame,level=110,map=rosen_lake,bridge=1,hour=10,weather=clear,landscape | 8
 # Briarmere's road bridge over its river, where its road meets the pool round the river's spring: across
@@ -990,3 +994,6 @@ tabs_chevron_ru | newgame,menu=settings,lang=ru | 8
 tabs_chevron_de | newgame,level=40,menu=character,lang=de | 8
 tabs_first_on | newgame,level=40,menu=character | 8
 tabs_first_on_dark | newgame,level=40,menu=character,dark | 8
+# The night's moonlit haze over its multiply (`Sky.haze`, 2026-11-17): a town with lamps, and the meadow's river.
+night_town   | newgame,map=sunny_meadow,weather=clear,hour=23 | 8
+night_meadow_land | newgame,map=sunny_meadow,landscape,weather=clear,hour=23 | 8

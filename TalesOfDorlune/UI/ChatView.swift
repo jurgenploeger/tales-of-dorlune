@@ -8,6 +8,10 @@ struct ChatView: View {
     let onClose: () -> Void
     /// For an adventurer's profile, opened over the chat from their face or name.
     var coordinator: GameCoordinator? = nil
+    /// An emote picked by the box (`Emote`): popped over your head on the map.
+    var onEmote: (Emote) -> Void = { _ in }
+    /// The emotes laid out over the box, to pick one.
+    @State private var showsEmotes = false
     /// The adventurer whose profile is open over the chat.
     @State private var profile: Adventurer?
     /// How far down the list's foot is in the scroll view, and how tall the scroll view is: whether
@@ -100,7 +104,24 @@ struct ChatView: View {
     /// user, 2026-11-16: "There should be a progressive gradient blur behind the chat composer"), and,
     /// scrolled up from the latest, a button back down over Send with how many lines came in since.
     private func composer(_ reader: ScrollViewProxy) -> some View {
-        HStack(spacing: 8) {
+        VStack(spacing: 10) {
+            if showsEmotes { emotes }
+            HStack(spacing: 8) {
+            Button {
+                showsEmotes.toggle()
+            } label: {
+                Group {
+                    // The bubble an emote pops up in, as it looks over your head.
+                    if let picture = Emote.happy.bubble ?? Emote.happy.image {
+                        Image(uiImage: picture).resizable().scaledToFit().frame(width: 28, height: 26)
+                    }
+                }
+                .frame(width: 38, height: 38)
+                .background(Circle().fill(showsEmotes ? HUDStyle.gold : HUDStyle.cream)
+                    .overlay(Circle().strokeBorder(.white.opacity(0.8), lineWidth: 1.5)))
+            }
+            .buttonStyle(PressScaleStyle())
+            .accessibilityLabel(L("Emotes"))
             TextField(L("Say something…"), text: $draft)
                 .font(HUDStyle.font(13))
                 .foregroundStyle(HUDStyle.ink)
@@ -119,13 +140,16 @@ struct ChatView: View {
             .buttonStyle(PressScaleStyle())
             .disabled(draft.trimmingCharacters(in: .whitespaces).isEmpty)
             .accessibilityLabel(L("Send"))
+            }
         }
+        .animation(.easeOut(duration: 0.2), value: showsEmotes)
         .padding(HUDStyle.windowInset)
         .background(alignment: .bottom) {
-            // Blurred under the bar, fading out above it, and a little darker toward the foot.
+            // Blurred under the bar, fading out above it, in the window's own blue (the user,
+            // 2026-11-17: the material alone was a grey haze over the glass).
             Rectangle()
                 .fill(.ultraThinMaterial)
-                .overlay(LinearGradient(colors: [HUDStyle.ink.opacity(0), HUDStyle.ink.opacity(0.45)], startPoint: .top, endPoint: .bottom))
+                .overlay(LinearGradient(colors: [HUDStyle.glassFoot.opacity(0.7), HUDStyle.glassFoot.opacity(0.94)], startPoint: .top, endPoint: .bottom))
                 .mask(LinearGradient(stops: [.init(color: .clear, location: 0), .init(color: .black, location: 0.4),
                                              .init(color: .black, location: 1)], startPoint: .top, endPoint: .bottom))
                 .padding(.top, -28)
@@ -167,6 +191,32 @@ struct ChatView: View {
                 .accessibilityValue(unseen > 0 ? "\(unseen)" : "")
             }
         }
+    }
+
+    /// The emotes to pick from, five to a row, each its own picture (the user, 2026-11-17: "Can we add these
+    /// emote/reactions features to the game?"): one tapped closes the chat and pops over your head.
+    private var emotes: some View {
+        LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 5), spacing: 6) {
+            ForEach(Emote.allCases) { emote in
+                Button {
+                    // The window goes first, then the emote: behind it you never saw the one
+                    // you'd sent (the user, 2026-11-17).
+                    showsEmotes = false
+                    onClose()
+                    onEmote(emote)
+                } label: {
+                    if let picture = emote.bubble ?? emote.image {
+                        Image(uiImage: picture)
+                            .frame(width: 48, height: 40)
+                    }
+                }
+                .buttonStyle(PressScaleStyle())
+                .accessibilityLabel(emote.label)
+            }
+        }
+        .padding(10)
+        .background(RoundedRectangle(cornerRadius: 14).fill(HUDStyle.ink.opacity(0.55)))
+        .transition(.move(edge: .bottom).combined(with: .opacity))
     }
 
     /// The scroll view, for where the list's foot is in it.

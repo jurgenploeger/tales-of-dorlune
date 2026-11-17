@@ -132,6 +132,12 @@ final class Walker: SKNode {
     /// Every walker there is, held weakly, so a new sun reaches them all (`shine`).
     private static let everyone = NSHashTable<Walker>.weakObjects()
 
+    /// Hides everyone's cast shadow, or shows it again: out of a picture of the map
+    /// (`ContinentScene.battleBackdrop`).
+    static func hideFigures(_ hidden: Bool) {
+        for walker in everyone.allObjects { walker.figure.isHidden = hidden }
+    }
+
     /// Casts everyone's shadow away from `sun` from now on, and anyone's set down later.
     static func shine(_ sun: Sun) {
         self.sun = sun
@@ -180,7 +186,11 @@ final class Walker: SKNode {
     /// (`soften`).
     private func showFrame() {
         figure.texture = sprite.texture
-        guard let texture = sprite.texture else { return }
+        guard let texture = sprite.texture else {
+            // Never without a value for its shader: SpriteKit reads one from every sprite it draws.
+            figure.setValue(SKAttributeValue(vectorFloat4: SIMD4<Float>(0, 1, 0, 0)), forAttribute: "a_frame")
+            return
+        }
         let rect = texture.textureRect(), size = texture.size()
         let frame = SIMD4<Float>(Float(rect.minY), Float(max(rect.height, 0.0001)),
                                  Float(rect.width / max(1, size.width) * 1.3), Float(rect.height / max(1, size.height) * 1.3))
@@ -412,6 +422,32 @@ final class Walker: SKNode {
         bubble = node
         let pop = SKAction.group([.fadeIn(withDuration: 0.15), .scale(to: 1, duration: 0.15)])
         node.run(.sequence([pop, .wait(forDuration: duration), .fadeOut(withDuration: 0.3), .removeFromParent()]))
+    }
+
+    /// An emote over its head (`Emote`), where a speech bubble would be, for a few seconds: popped up
+    /// a little past its size and settling, in whole steps, then gone.
+    func emote(_ emote: Emote, for duration: TimeInterval = 2.8) {
+        // In the bubble speech has, its picture in it; its own drawn bubble if that's missing.
+        let node: SKSpriteNode
+        if let icon = emote.icon {
+            node = Nodes.emoteBubble(icon)
+            node.position = CGPoint(x: 0, y: (tag?.position.y ?? sprite.size.height) + 20)
+        } else if let texture = emote.texture {
+            let size = texture.size()
+            node = SKSpriteNode(texture: texture, size: CGSize(width: size.width * PondMotion.pixel, height: size.height * PondMotion.pixel))
+            node.anchorPoint = CGPoint(x: 0.3, y: 0)
+            node.position = CGPoint(x: 6, y: (tag?.position.y ?? sprite.size.height) + 14)
+        } else {
+            return
+        }
+        bubble?.removeFromParent()
+        node.zPosition = 6_000
+        node.setScale(0.5)
+        addChild(node)
+        bubble = node
+        node.accessibilityLabel = emote.label
+        node.run(.sequence([.scale(to: 1.15, duration: 0.08), .scale(to: 1, duration: 0.06),
+                            .wait(forDuration: duration), .fadeOut(withDuration: 0.2), .removeFromParent()]))
     }
 
     /// Where this walker has just been, newest first, a step apart: ground it stood on, so a

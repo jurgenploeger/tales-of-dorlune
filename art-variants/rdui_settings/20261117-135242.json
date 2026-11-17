@@ -1,0 +1,27 @@
+{
+  "request": {
+    "num_images": 3,
+    "prompt": "one chunky steel-blue cog wheel gear with a round hole in its middle, a bold simple game menu icon, lit from the top left, thick dark outline",
+    "prompt_style": "rd_plus__topdown_item",
+    "width": 64,
+    "height": 64,
+    "remove_bg": true
+  },
+  "result": {
+    "created_at": 1794923559,
+    "credit_cost": 6,
+    "balance_cost": 0.18,
+    "output_urls": [],
+    "model": "rd_plus",
+    "remaining_credits": 0,
+    "remaining_balance": 5.981,
+    "request_id": "047fa5e4-7b2c-492c-a10d-513c8d1b3948",
+    "outputs_retained_until": 1795009950,
+    "billing": {
+      "reason": "no_plan",
+      "source": "balance",
+      "balance_left": 5.981,
+      "balance_charged": 0.18
+    }
+  }
+}

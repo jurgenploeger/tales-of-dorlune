@@ -15,6 +15,10 @@ struct HillLooks {
     /// A range with a mountain in it: bare layered rock from partway up (`look(for:)` sets how far),
     /// its foothills' tops below that, in deeper shade and brighter sun, so its height shows.
     let mountain: HillArt.Look
+    /// A terraced range (`WorldMap.Hill.terrace`): its levels the land's own ground, each face sheer
+    /// rock (`MapDef.Hills.bank`) painted upright, darker toward its foot, in a little deeper shade
+    /// and brighter sun than a hill.
+    let terraced: HillArt.Look
 
     /// `ground`: each cell's own tile picture, as the land's ground shows it; nil where it has none
     /// (past the map's edge, or the sea), where the land out there is drawn instead. `variation`: the
@@ -78,6 +82,14 @@ struct HillLooks {
         mountain.brightest = 1.2
         mountain.strata = 14
         self.mountain = mountain
+        var terraced = look
+        terraced.bank = look.bank ?? scree
+        terraced.cliff = WorldMap.faceSlope
+        terraced.upright = true
+        // Its faces turned from the sun stay rock you can read, not a dark band.
+        terraced.ambient = 0.62
+        terraced.brightest = 1.1
+        self.terraced = terraced
     }
 
     /// How a range of the land's looks.
@@ -94,6 +106,7 @@ struct HillLooks {
             return style
         }
         if hill.isCrag { return crag }
+        if hill.terrace != nil { return terraced }
         guard hill.hasMountain else { return plain }
         var style = mountain
         style.rockFrom = Double(hill.peak) * 0.4

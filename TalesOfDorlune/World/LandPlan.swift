@@ -32,6 +32,9 @@ struct LandPlan {
     var reeds: [Placement] = []
     /// Waterfalls where the rivers spring (`planWaterfalls`), played frame by frame (`LandStage.placeWaterfalls`).
     var waterfalls: [Placement] = []
+    /// Waterfalls over terraces' faces (`planCliffFalls`): where each lands at the face's foot and
+    /// leaves its lip, in cells (`LandStage.placeCliffFalls`).
+    var cliffFalls: [(foot: CGPoint, lip: CGPoint)] = []
     /// A town's houses, street lamps and benches, and the land's own buildings.
     var lots: [Placement] = []
     var streetDecor: [Placement] = []
@@ -102,6 +105,7 @@ final class LandPlanner {
         await pause()
         planFairyRings()
         planOutcrops()
+        planCliffFeet()
         await pause()
         await planProps(pause: pause)
         await planSeamProps(pause: pause)
@@ -160,6 +164,7 @@ final class LandPlanner {
     /// little details like rocks"; `tools/scenery_art.py` draws `shore_grass` and `shore_stones`).
     private func planReeds() {
         planWaterfalls()
+        planCliffFalls()
         let water = def.theme.water ?? ""
         guard !water.contains("ice"), !water.contains("chocolate"), !map.lakes.isEmpty || !map.river.isEmpty else { return }
         var reedRNG = SeededRandom(text: def.id + "/reeds")
@@ -223,6 +228,21 @@ final class LandPlanner {
             let cell = GridPoint(col: Int(spring.x.rounded(.down)), row: Int(spring.y.rounded(.down)))
             let back = CGVector(dx: spring.x - ahead.x, dy: spring.y - ahead.y)
             let length = max(0.001, (back.dx * back.dx + back.dy * back.dy).squareRoot())
+            // Only where a narrow river rises out of the land on its own: with open water round
+            // it (a lake's end) the ledge stood out in the water, a rock with a trickle down it,
+            // and by a road or a bridge it made no sense beside them (the user, 2026-11-17).
+            let behind = GridPoint(col: Int((spring.x + back.dx / length * 2).rounded(.down)), row: Int((spring.y + back.dy / length * 2).rounded(.down)))
+            guard map.contains(behind), map.ground[behind.row][behind.col] != .water else { continue }
+            var wet = 0, byRoad = false
+            for dr in -5...5 {
+                for dc in -5...5 {
+                    let near = GridPoint(col: cell.col + dc, row: cell.row + dr)
+                    guard map.contains(near) else { continue }
+                    if map.ground[near.row][near.col] == .path || map.bridgeCells.contains(near) { byRoad = true }
+                    if abs(dc) <= 3, abs(dr) <= 3, map.ground[near.row][near.col] == .water { wet += 1 }
+                }
+            }
+            guard !byRoad, wet <= 14 else { continue }
             let reach = WorldMap.tileSize * 0.5 / length
             let toward = WorldMap.project(CGPoint(x: back.dx * reach, y: back.dy * reach))
             var placement = Placement(art: "waterfall", cell: cell, scale: 1.15)
@@ -231,6 +251,56 @@ final class LandPlanner {
             for dc in -1...1 {
                 for dr in -1...1 { map.occupy(GridPoint(col: cell.col + dc, row: cell.row + dr), blocking: false) }
             }
+        }
+    }
+
+    /// Waterfalls over the terraces' faces (the user, 2026-11-17: "Also add the waterfalls over the
+    /// cliffs"): up to two a range, each where a face turns straight toward you and drops a step,
+    /// a stream running to its lip on the level above and a pool at its foot, the pool's cell not
+    /// walked through and nothing set down by its lip. Draws of its own, so the rest of the land is
+    /// as it was.
+    private func planCliffFalls() {
+        let water = def.theme.water ?? ""
+        // Nor in the dry lands, off a mesa of sand or desert rock.
+        guard !water.contains("ice"), !water.contains("chocolate"),
+              def.theme.ground != "tile_desert", def.theme.ground != "tile_sand" else { return }
+        for hill in map.hills where hill.terrace != nil {
+            var draw = SeededRandom(text: def.id + "/cliff falls \(hill.origin.col) \(hill.origin.row)")
+            let cells = hill.cells.sorted { ($0.row, $0.col) < ($1.row, $1.col) }.shuffled(using: &draw)
+            func height(_ x: Double, _ y: Double) -> Double { Double(hill.height(atCells: x, y)) }
+            // How fast it climbs up the screen (along the map's diagonal), in points a cell.
+            let step = 0.05 / 2.0.squareRoot()
+            func climb(_ x: Double, _ y: Double) -> Double { (height(x + step, y + step) - height(x - step, y - step)) / 0.1 }
+            var falls: [(foot: CGPoint, lip: CGPoint)] = []
+            for cell in cells where falls.count < 2 {
+                let x = Double(cell.col) + 0.5, y = Double(cell.row) + 0.5, e = 0.125
+                let gx = (height(x + e, y) - height(x - e, y)) / (2 * e)
+                let gy = (height(x, y + e) - height(x, y - e)) / (2 * e)
+                // A face turned toward you: climbing fast up the screen, near enough straight.
+                guard gx > 0, gy > 0, gx + gy > 2 * WorldMap.faceSlope, abs(gx - gy) < 0.4 * (gx + gy) else { continue }
+                // Down to its foot and up to its lip, where the ground levels off.
+                var foot = (x: x, y: y), lip = (x: x, y: y)
+                var footFound = false, lipFound = false
+                for _ in 0..<40 where !footFound {
+                    foot = (foot.x - step, foot.y - step)
+                    footFound = climb(foot.x, foot.y) < 12
+                }
+                for _ in 0..<40 where !lipFound {
+                    lip = (lip.x + step, lip.y + step)
+                    lipFound = climb(lip.x, lip.y) < 12
+                }
+                let drop = height(lip.x, lip.y) - height(foot.x, foot.y)
+                guard footFound, lipFound, drop > 20, drop < 48 else { continue }
+                // The pool a little out in front of the foot; its cell open ground, kept for it.
+                let pool = GridPoint(col: Int((foot.x - 0.2).rounded(.down)), row: Int((foot.y - 0.2).rounded(.down)))
+                let top = GridPoint(col: Int((lip.x + 0.3).rounded(.down)), row: Int((lip.y + 0.3).rounded(.down)))
+                guard map.contains(pool), map.isWalkable(pool), map.ground[pool.row][pool.col] == .ground,
+                      falls.allSatisfy({ abs(Double($0.foot.x) - foot.x) + abs(Double($0.foot.y) - foot.y) > 6 }) else { continue }
+                map.occupy(pool, blocking: true)
+                if map.isFreeForScenery(top) { map.occupy(top, blocking: false) }
+                falls.append((foot: CGPoint(x: foot.x, y: foot.y), lip: CGPoint(x: lip.x, y: lip.y)))
+            }
+            plan.cliffFalls += falls
         }
     }
 
@@ -747,6 +817,37 @@ final class LandPlanner {
         }
     }
 
+    /// What lies at the foot of the terraces' faces (the cliffs preview: "a few rocks fallen at the
+    /// walls' feet"): on the cells in front of a face, kept clear of anything tall
+    /// (`WorldMap.blockFaces`), now and then one of the land's own low things, a fern, flowers,
+    /// or pebbles (nothing in your way), so the rock doesn't meet bare grass all along. Only what
+    /// the land's theme has among its props; draws of its own.
+    private func planCliffFeet() {
+        guard map.hills.contains(where: { $0.terrace != nil }) else { return }
+        let low = ["fern_clump", "flower_patch", "pebbles"]
+        let kinds = low.filter { kind in def.theme.props.contains { $0.art == kind } }
+        guard !kinds.isEmpty else { return }
+        var draw = SeededRandom(text: def.id + "/cliff feet")
+        for hill in map.hills where hill.terrace != nil {
+            let faces = Set(hill.cells.filter { !map.isWalkable($0) && map.rise(across: $0) > 14 })
+            var feet: Set<GridPoint> = []
+            for face in faces {
+                for (dc, dr) in [(-1, 0), (0, -1), (-1, -1)] {
+                    let front = GridPoint(col: face.col + dc, row: face.row + dr)
+                    if !faces.contains(front), map.isWalkable(front),
+                       map.ground[front.row][front.col] == .ground { feet.insert(front) }
+                }
+            }
+            for cell in feet.sorted(by: { ($0.row, $0.col) < ($1.row, $1.col) }) {
+                guard Double.random(in: 0..<1, using: &draw) < 0.3 else { continue }
+                let kind = kinds[Int.random(in: 0..<kinds.count, using: &draw)]
+                var placement = Placement(art: kind, cell: cell, scale: CGFloat.random(in: 0.75...1.05, using: &draw))
+                placement.nudge = CGVector(dx: CGFloat.random(in: -7...7, using: &draw), dy: CGFloat.random(in: -5...5, using: &draw))
+                plan.outcrops.append(placement)
+            }
+        }
+    }
+
     /// Scenery from the theme. Props with `cluster` grow in groves around a random centre. None
     /// past the lines the land meets the lands beside it along (`WorldMap.foreign`), where theirs
     /// grows (`planSeamProps`).
@@ -773,7 +874,10 @@ final class LandPlanner {
                         col: middle.col + Int.random(in: -spread...spread, using: &rng),
                         row: middle.row + Int.random(in: -spread...spread, using: &rng)
                     )
+                    // In town, nothing in the way set down against a building: a well stood in the
+                    // corner of a house (the user, 2026-11-17).
                     guard map.isFreeForScenery(cell, insideFence: placement.within != nil, blocking: placement.blocking),
+                          placement.within == nil || !placement.blocking || !map.nearBuilding(cell),
                           map.foreign[cell] == nil, !isCoast(cell), !placement.blocking || roomOnIsland(cell),
                           gap == 0 || !nearPath(cell, within: gap) else { continue }
                     var scale: CGFloat = 1

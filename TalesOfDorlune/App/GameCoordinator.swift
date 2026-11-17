@@ -889,6 +889,11 @@ final class GameCoordinator {
         mapScene.talkToNearby()
     }
 
+    /// An emote picked by the chat's box (`Emote`).
+    func emote(_ emote: Emote) {
+        mapScene.heroEmote(emote)
+    }
+
     /// What you type goes through the chat's filter first (`ChatFilter`): a rude word is starred out
     /// in your bubble and the chat, a note says so, and someone nearby tells you off.
     func say(_ text: String) {

@@ -1,0 +1,27 @@
+{
+  "request": {
+    "num_images": 3,
+    "prompt": "one closed green hardcover book with a gold diamond emblem on its cover and cream page edges, a bold simple game menu icon, lit from the top left, thick dark outline",
+    "prompt_style": "rd_plus__topdown_item",
+    "width": 64,
+    "height": 64,
+    "remove_bg": true
+  },
+  "result": {
+    "created_at": 1794923584,
+    "credit_cost": 6,
+    "balance_cost": 0.18,
+    "output_urls": [],
+    "model": "rd_plus",
+    "remaining_credits": 0,
+    "remaining_balance": 5.621,
+    "request_id": "cf1f9c34-4337-4747-86a2-446b244430ee",
+    "outputs_retained_until": 1795009974,
+    "billing": {
+      "reason": "no_plan",
+      "source": "balance",
+      "balance_left": 5.621,
+      "balance_charged": 0.18
+    }
+  }
+}

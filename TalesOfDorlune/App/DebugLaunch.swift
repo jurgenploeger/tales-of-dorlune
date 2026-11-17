@@ -750,11 +750,15 @@ enum DebugLaunch {
                 let highest = hill.trails.indices.max { hill.lobes[hill.trails[$0].lobe].peak < hill.lobes[hill.trails[$1].lobe].peak }
                 let chosen: Int = tallest ? (highest ?? 0) : 0
                 let which = flags["trail"].flatMap { Int($0) } ?? chosen
-                if flags["face"] != nil, let summit = hill.lobes.max(by: { $0.peak < $1.peak }) {
+                if flags["face"] != nil || (hill.trails.isEmpty && flags["ontop"] == nil), let summit = hill.lobes.max(by: { $0.peak < $1.peak }) {
                     // A few cells out in front of its tallest summit's face, looking up it.
                     let out = (summit.front ?? summit.across) + 3
                     let spot = CGPoint(x: summit.x - out * 0.7071, y: summit.y - out * 0.7071)
                     session.playerPosition = WorldMap.project(CGPoint(x: spot.x * WorldMap.tileSize, y: spot.y * WorldMap.tileSize))
+                } else if hill.trails.isEmpty, flags["ontop"] != nil,
+                          let top = hill.cells.filter({ grid.isWalkable($0) }).max(by: { grid.height(at: grid.center(of: $0)) < grid.height(at: grid.center(of: $1)) }) {
+                    // Terraces have no trail: up on their highest level you can walk on.
+                    session.playerPosition = grid.center(of: top)
                 } else if hill.trails.indices.contains(which), let foot = hill.trails[which].points.first, let top = hill.trails[which].points.last {
                     let spot = flags["ontop"] != nil ? top : foot
                     session.playerPosition = WorldMap.project(CGPoint(x: spot.x * WorldMap.tileSize, y: spot.y * WorldMap.tileSize))
@@ -776,10 +780,12 @@ enum DebugLaunch {
                 session.playerPosition = grid.center(of: grid.nearestWalkable(to: GridPoint(col: home.col - 2, row: home.row - 2)) ?? home)
             }
         }
-        if let pick = flags["bridge"].flatMap({ Int($0) }), let def = Content.shared.map(session.data.mapID) {
+        if let pick = flags["bridge"].flatMap({ Int($0) }) ?? flags["jetty"].flatMap({ Int($0) }), let def = Content.shared.map(session.data.mapID) {
             let grid = WorldMap(def: def)
-            if grid.bridges.indices.contains(pick) {
-                let bridge = grid.bridges[pick]
+            // `jetty=N`: the Nth of its jetties, wherever its bridges come in the list.
+            let bridges = flags["jetty"] != nil ? grid.bridges.filter { $0.kind == .jetty } : grid.bridges
+            if bridges.indices.contains(pick) {
+                let bridge = bridges[pick]
                 // A jetty from where it leaves the shore, looking out; a bridge from its middle.
                 let along = !bridge.landsAtEnd ? bridge.start : !bridge.landsAtStart ? bridge.end : (bridge.start + bridge.end) / 2
                 session.playerPosition = grid.center(of: bridge.cell(lane: bridge.lane, along: along))

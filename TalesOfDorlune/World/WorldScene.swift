@@ -557,7 +557,8 @@ final class WorldScene: SKScene {
                     if let deck = BridgeArt.deckPicture(for: bridge, pixels: pixels, palette: theme.palette) { sunkDecks.append(deck) }
                     continue
                 }
-                guard let deck = BridgeArt.deck(for: bridge, pixels: pixels, palette: theme.palette) else { continue }
+                // (A bow bridge's deck stands with its rails: `BridgeArt.rails`.)
+                guard !bridge.bowed, let deck = BridgeArt.deck(for: bridge, pixels: pixels, palette: theme.palette) else { continue }
                 deck.zPosition = 2
                 grid.addChild(deck)
             }
@@ -2408,6 +2409,11 @@ final class WorldScene: SKScene {
 
     func adventurerSays(_ line: String, _ id: UUID) {
         crowd?.say(line, from: id)
+    }
+
+    func heroEmote(_ emote: Emote) {
+        player.emote(emote)
+        crowd?.answer(emote, near: player.position)
     }
 
     /// You said something in the Chat window: a bubble over your head, and maybe an answer.

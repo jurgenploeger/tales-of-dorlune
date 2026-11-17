@@ -43,6 +43,11 @@ enum HillArt {
         /// own height (`strata`). A sheer face showed the rock and its ledges stretched up the
         /// screen (a cave's wall, playtesting 2026-10-16).
         var upright = false
+        /// A terraced range's faces (`WorldMap.Hill.terrace`), if set: its bank shows only where the
+        /// ground climbs faster than this (points a cell), worked out a pixel at a time so the rock
+        /// fills its faces exactly, its lip ragged with the grass over it; and a band of shade on the
+        /// ground at each face's foot. Painted upright (`upright`).
+        var cliff: Double? = nil
         /// The map's road, if bare rock should leave it showing (a road up into a cave's mouth).
         var road: ((GridPoint) -> Bool)? = nil
         /// The soft colour patches over the map's whole ground: a pixel a cell, north at the top.
@@ -309,6 +314,7 @@ enum HillArt {
                     let level = (h00 + h10 + h01 + h11) / 4
                     amount = max(amount, min(1, max(0, (level - line + ragged * 12) / 14)))
                 }
+                if let cliff = look.cliff { amount = min(1, max(0, (slope - cliff) / 14)) }
                 if amount > 0 { amount *= min(1, max(0, (trailDistance - 0.55) / 0.3)) }
                 if amount > 0, let road = look.road, road(GridPoint(col: Int(x.rounded(.down)), row: Int(y.rounded(.down)))) { amount = 0 }
                 for channel in 0..<4 { bare[index + channel] = UInt8(amount * 255) }
@@ -331,6 +337,22 @@ enum HillArt {
                     light[j * sw + i] = Float(shade)
                 }
             }
+        }
+        if look.cliff != nil, !hill.sunken {
+            // Shade on the ground at each face's foot, where it stands on it: the three samples in
+            // front (down the screen), the nearest the darkest.
+            var shaded = light
+            for j in 0..<sh {
+                for i in 0..<sw where bare[((sh - 1 - j) * sw + i) * 4] > 128 {
+                    for k in 1...3 {
+                        let fi = i - k, fj = j - k
+                        guard fi >= 0, fj >= 0, bare[((sh - 1 - fj) * sw + fi) * 4] < 64 else { continue }
+                        let dark = Float(1 - 0.16 * Double(4 - k) / 3)
+                        shaded[fj * sw + fi] = min(shaded[fj * sw + fi], light[fj * sw + fi] * dark)
+                    }
+                }
+            }
+            light = shaded
         }
         let patches = look.bank == nil ? nil : image(bare, width: sw, height: sh)
         let outline = image(mask, width: sw, height: sh)
@@ -408,6 +430,25 @@ enum HillArt {
                         // shows and what it covers there: a pixel across and up the map each.
                         let gx = (Double(hill.height(atCells: x + step, y)) - here) / step
                         let gy = (Double(hill.height(atCells: x, y + step)) - here) / step
+                        // A face's rock where it climbs fast enough (`Look.cliff`), its edge ragged a
+                        // pixel at a time: the grass over its lip. Found before the rock's own
+                        // colour: most of a terraced range is its levels' grass, with none.
+                        var cover = 1.0, dim = 1.0
+                        if let cliff = look.cliff {
+                            let slope = (gx * gx + gy * gy).squareRoot()
+                            guard slope > cliff - 20 else { continue }
+                            let pixelX = (cell.col - low.col) * px + i, pixelY = (cell.row - low.row) * px + j
+                            let fray = Self.noise(pixelX, pixelY, 7) + 0.5 * Self.noise(pixelX >> 1, pixelY >> 1, 8)
+                            cover = min(1, max(0, (slope - cliff + 20 - 40 * fray) / 10))
+                            guard cover > 0 else { continue }
+                            // A little darker than the tile toward its foot, so it reads as a
+                            // wall, not a pale path; not much: with a face in the shade it went
+                            // near black and read as a shadow on the grass (2026-11-17, twice).
+                            if let rise = hill.terrace, rise > 0 {
+                                let up = here / rise - (here / rise).rounded(.down)
+                                dim = 0.8 + 0.2 * min(1, max(0, (up - 0.1) / 0.9))
+                            }
+                        }
                         let lift = here / climb
                         let ax = step * (1 + gx / climb), ay = step * gx / climb
                         let bx = step * gy / climb, by = step * (1 + gy / climb)
@@ -440,10 +481,10 @@ enum HillArt {
                             }
                         }
                         let index = (row * side + (cell.col - corner.col) * px + i) * 4
-                        bytes[index] = UInt8(min(255, red * shade))
-                        bytes[index + 1] = UInt8(min(255, green * shade))
-                        bytes[index + 2] = UInt8(min(255, blue * shade))
-                        bytes[index + 3] = 255
+                        bytes[index] = UInt8(min(255, red * shade * cover * dim))
+                        bytes[index + 1] = UInt8(min(255, green * shade * cover * dim))
+                        bytes[index + 2] = UInt8(min(255, blue * shade * cover * dim))
+                        bytes[index + 3] = UInt8(cover * 255)
                     }
                 }
             }
@@ -489,8 +530,10 @@ enum HillArt {
                     }
                 }
                 context.interpolationQuality = .medium
-                context.setBlendMode(.destinationIn)
-                context.draw(patches, in: whole)
+                if look.cliff == nil || rockUpright == nil {
+                    context.setBlendMode(.destinationIn)
+                    context.draw(patches, in: whole)
+                }
                 context.endTransparencyLayer()
                 context.restoreGState()
             }
@@ -556,6 +599,16 @@ enum HillArt {
         heights.filteringMode = .linear
         let shader = SKShader(source: Self.lifting)
         let sun = Sun.noon
+        // The rock a terraced range's faces show, drawn by the shader on the screen's own pixels
+        // (`lifting`): painted into the picture, a face a quarter of a cell deep had eight pixels
+        // to show over thirty points of height, each stretched into a streak up the face (the
+        // simulator's screenshots, 2026-11-17).
+        var rockTile: SKTexture?
+        if look.cliff != nil, let bank = look.bank, let tile = bank(first) {
+            let texture = SKTexture(cgImage: tile)
+            texture.filteringMode = .nearest
+            rockTile = texture
+        }
         shader.uniforms = [
             SKUniform(name: "u_heights", texture: heights),
             SKUniform(name: "u_samples", vectorFloat4: SIMD4(Float(low.col), Float(low.row), Float(samples), Float(peak))),
@@ -565,6 +618,11 @@ enum HillArt {
             SKUniform(name: "u_sun", vectorFloat4: SIMD4(Float(sun.x), Float(sun.y), Float(sun.z), Float(sun.strength))),
             SKUniform(name: "u_look", vectorFloat4: SIMD4(Float(Sun.shaded(ambient: ambient)), Float(look.brightest), Float(base), Float(px))),
             SKUniform(name: "u_lean", vectorFloat4: SIMD4(Float(1 - tint.0), Float(1 - tint.1), Float(1 - tint.2), 0)),
+            // A terraced range's faces (`Look.cliff`): the rock's own tile, and how steep a face is
+            // (points a cell), 1 if it has faces at all. Any texture where it has none: every
+            // strip's shader is the one source.
+            SKUniform(name: "u_rock", texture: rockTile ?? heights),
+            SKUniform(name: "u_cliff", vectorFloat4: SIMD4(Float(look.cliff ?? 0), rockTile == nil ? 0 : 1, 0, 0)),
         ]
         shader.attributes = [
             SKAttribute(name: "a_box", type: .vectorFloat4),
@@ -678,6 +736,12 @@ enum HillArt {
     /// picture, the shade leaning toward the map's shadow colour (`u_lean`). Flat ground stays as it
     /// is. Everything inline: SpriteKit's shaders can't count on helper functions seeing uniforms.
     ///
+    /// A terraced range's faces (`u_cliff`: how steep one is, and whether it has any) show the rock's
+    /// tile (`u_rock`) on the screen's own pixels: across by where the ground lies across the screen
+    /// (three quarters of a tile a cell, so it joins from one square of 16 cells to the next), up by
+    /// its height, a tile every 44 points. So a sheer face shows the tile whole, not the few pixels
+    /// of the picture that lie under it, stretched.
+    ///
     /// All in small numbers, from the strip's box (`drawSquare` works out its corner in the heights'
     /// picture, `a_box.xy`; in the square's, `a_area.xy`; the band from it, `a_band.xy`; and the
     /// square's corner in the heights with their samples a cell, `a_light`), never the land's own
@@ -718,6 +782,10 @@ enum HillArt {
             float rise = u_samples.w / 255.0 * u_samples.z / (44.0 * 0.8660254);
             float hx = ((east.r - west.r) * 255.0 + (east.g - west.g)) * rise;
             float hy = ((north.r - south.r) * 255.0 + (north.g - south.g)) * rise;
+            if (u_cliff.y > 0.5 && sqrt(hx * hx + hy * hy) * 38.105 > u_cliff.x + 6.0) {
+                vec2 stone = vec2(fract((uv.x - uv.y) * a_area.z * 0.75), fract(lift / 44.0));
+                paint = vec4(texture2D(u_rock, stone).rgb * paint.a, paint.a);
+            }
             float facing = (u_sun.z - hx * u_sun.x - hy * u_sun.y) / sqrt(hx * hx + hy * hy + 1.0);
             float lit = u_look.x + (1.0 - u_look.x) * max(0.0, facing) / u_sun.z;
             lit = 1.0 + (lit - 1.0) * u_sun.w;
