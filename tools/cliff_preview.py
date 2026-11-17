@@ -175,11 +175,17 @@ def layout(seed=5):
             jx, jy = rng.uniform(-0.3, 0.3), rng.uniform(-0.3, 0.3)
             if roll < 0.12 and room > 130:
                 props.append((rng.choice(trees), cx + jx, cy + jy, lv, rng.uniform(0.8, 1.0)))
-            elif (thicket or near_rim) and roll < 0.75 and room > 50:
-                props.append(("@shrub", cx + jx, cy + jy, lv, rng.randrange(32, 54)))
-            elif roll < 0.9 and room > 40 and (lv > 0 or thicket):
-                props.append(("@boulder", cx + jx, cy + jy, lv, rng.randrange(18, 34)))
-            elif roll < 0.95 and room > 30:
+            elif (thicket or near_rim) and roll < 0.55 and room > 50:
+                props.append(("thicket", cx + jx, cy + jy, lv, rng.uniform(0.6, 0.85)))
+            elif 0.55 <= roll < 0.62 and room > 60 and (lv > 0 or thicket):
+                props.append(("rock_formation_large", cx + jx, cy + jy, lv, rng.uniform(0.55, 0.75)))
+            elif 0.62 <= roll < 0.67 and room > 40:
+                props.append(("rock_formation_small", cx + jx, cy + jy, lv, rng.uniform(0.5, 0.7)))
+            elif 0.67 <= roll < 0.77 and room > 30:
+                props.append(("fern_clump", cx + jx, cy + jy, lv, rng.uniform(0.8, 1.0)))
+            elif 0.77 <= roll < 0.87 and room > 26:
+                props.append(("flower_patch", cx + jx, cy + jy, lv, rng.uniform(0.8, 1.0)))
+            elif 0.87 <= roll < 0.93 and room > 30:
                 props.append((rng.choice(bushes), cx + jx, cy + jy, lv, rng.uniform(0.8, 1.05)))
     # Stones round the pool's rim, and lily pads on it.
     for k in range(18):
@@ -188,7 +194,7 @@ def layout(seed=5):
         across, along = a_ * math.cos(t), b_ * math.sin(t)
         gx, gy = (along + across) / 2 + (9.5 + 2.5) / 2, (along - across) / 2 + (9.5 - 2.5) / 2
         if level_field(gx, gy) == 0 and not water_field(gx + 0.45, gy + 0.45) is False and rng.random() < 0.8:
-            props.append(("@boulder", gx, gy, 0, rng.randrange(16, 26)))
+            props.append(("mossy_boulder", gx, gy, 0, rng.uniform(0.35, 0.5)))
     for _ in range(4):
         across, along = rng.uniform(-1.8, 1.8), rng.uniform(-1.5, 1.5)
         gx, gy = (along + across) / 2 + 6.0, (along - across) / 2 + 3.5
@@ -229,7 +235,8 @@ def speck(a, b, c=0):
 def render(mid, terraced, seed=5):
     m = pp.maps[mid]
     palette = m["theme"].get("palette")
-    grass = pp.grade(pp.raw(m["theme"]["ground"]), palette)[..., :3]
+    grass = pp.grade(pp.raw("tile_rich_grass" if terraced else m["theme"]["ground"]), palette)[..., :3]
+    cliff = pp.grade(pp.raw("tile_cliff_rock"), palette)[..., :3]
     water_tex = pp.grade(pp.raw("tile_water"), palette)[..., :3]
     props = layout(seed)
     img = np.zeros((H, W, 3))
@@ -337,8 +344,9 @@ def render(mid, terraced, seed=5):
         edge = second - best
         round_ = np.clip(1 + 0.4 * ((mid_x - xs) + (mid_y - ys)) / cell, 0.65, 1.3)
         ledge = (ys - mid_y) < -cell * 0.22
-        tint = 0.92 + 0.12 * speck(bx, by, 5 + L)
-        rock = rock_base * (light * round_ * tint * np.where(ledge, 1.14, 1.0))[..., None]
+        # Retro Diffusion's rock face (`tile_cliff_rock`) laid on the screen, under the stones' light.
+        face = cliff[(ys.astype(int) % cliff.shape[0]), (xs.astype(int) % cliff.shape[1])]
+        rock = face * 1.05 * (light * (0.75 + 0.25 * round_) * np.where(ledge, 1.1, 1.0))[..., None]
         rock = np.where((edge < 1.4)[..., None], rock * 0.45, rock)
         # Moss on the upper stones' ledges here and there.
         mossy = ledge & (v_px < tall * 0.6) & (speck(bx, by, 31 + L) < 0.35)
