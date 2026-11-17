@@ -1858,6 +1858,15 @@ final class ContinentScene: SKScene {
             heldUntil = nil
             sliceStart = ContinuousClock.now
         }
+        // Nor while a battle or a cave is up over a continent already shown: the work went on
+        // through every fight, on the thread the fight draws on, and the fight ran at a few
+        // frames a second (the user's gauges, 2026-11-17). It goes on once you're back.
+        if isReady, view == nil {
+            while isReady, view == nil {
+                try? await Task.sleep(for: .milliseconds(100))
+            }
+            sliceStart = ContinuousClock.now
+        }
         let slice: Duration = !isReady || hurries ? .milliseconds(120)
             : standsOnUnbuilt ? .milliseconds(22) : isUrgent ? .milliseconds(10) : .milliseconds(6)
         guard ContinuousClock.now - sliceStart > slice else { return }
