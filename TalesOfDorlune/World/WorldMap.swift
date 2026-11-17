@@ -93,6 +93,8 @@ nonisolated final class WorldMap: @unchecked Sendable {
     private(set) var fords = 0
     /// Bridges where roads cross the river, footbridges out to the lakes' islands and jetties.
     private(set) var bridges: [Bridge] = []
+    /// Its bow bridges (`Bridge.bowed`), for how high the ground stands on them.
+    private(set) var bowBridges: [Bridge] = []
     /// The water under the bridges' decks, walked over like the land.
     private(set) var bridgeCells: Set<GridPoint> = []
     /// Where a footbridge or a jetty meets the land: footpaths run from there to the nearest road
@@ -118,6 +120,27 @@ nonisolated final class WorldMap: @unchecked Sendable {
         /// version"). `WorldMap.bridgeMaterial` picks one.
         nonisolated enum Material { case wood, stone, lacquer, rope }
         var material: Material = .wood
+        /// A bow bridge (the user, 2026-11-17, of the flat stone one: "perhaps it should be more
+        /// lifted up or become a bow bridge when it's stone"; their pick from
+        /// tools/bridge_preview.py --bow): a road's bridge of stone or red lacquer over a river,
+        /// its deck rising in an arch from bank to bank, `rise` at its middle. Whoever crosses it
+        /// climbs and comes down with it (`bow(atCells:_:)`, `WorldMap.height(atGrid:)`), and
+        /// `BridgeArt.bowSprite` draws it. Not over a lake or by the sea, sunk with the shore.
+        var bowed = false
+        /// How high a bow bridge stands at its middle, in points.
+        static let rise: CGFloat = 18
+        /// How far a deck reaches onto the bank at each end, in cells (`BridgeArt.overlap`).
+        static let reach: CGFloat = 0.6
+
+        /// How high a bow bridge's deck stands over a spot (in cells), nil off it or if it isn't one.
+        func bow(atCells x: CGFloat, _ y: CGFloat) -> CGFloat? {
+            guard bowed else { return nil }
+            let across = northward ? x : y, along = northward ? y : x
+            guard across >= CGFloat(lane), across < CGFloat(lane + lanes) else { return nil }
+            let low = CGFloat(start) - Self.reach, high = CGFloat(end + 1) + Self.reach
+            guard along > low, along < high else { return nil }
+            return Self.rise * sin(.pi * (along - low) / (high - low))
+        }
 
         /// The cell `lane` across (a column or a row, as the map numbers them) and `along` along it.
         func cell(lane: Int, along: Int) -> GridPoint {
@@ -335,6 +358,12 @@ nonisolated final class WorldMap: @unchecked Sendable {
         markForeign()
         lap("foreign")
         layShore()
+        // A bow bridge keeps to the rivers: out over a lake or by the sea, sunk with the shore, a
+        // bridge's deck lies on the shore's own slope.
+        for index in bridges.indices where bridges[index].bowed && bridges[index].cells.contains(where: { isSunken($0) }) {
+            bridges[index].bowed = false
+        }
+        bowBridges = bridges.filter(\.bowed)
         lap("shore")
         if def.theme.cave == nil { sealPockets() }
         lap("pockets")
@@ -419,6 +448,9 @@ nonisolated final class WorldMap: @unchecked Sendable {
         let cell = GridPoint(col: Int((grid.x / Self.tileSize).rounded(.down)), row: Int((grid.y / Self.tileSize).rounded(.down)))
         if let index = hillOf[cell] { return hills[index].height(atCells: grid.x / Self.tileSize, grid.y / Self.tileSize) }
         if let shore, shore.cells.contains(cell) { return shore.height(atCells: grid.x / Self.tileSize, grid.y / Self.tileSize) }
+        for bridge in bowBridges {
+            if let lift = bridge.bow(atCells: grid.x / Self.tileSize, grid.y / Self.tileSize) { return lift }
+        }
         guard let index = plateauOf[cell] else { return 0 }
         let plateau = plateaus[index]
         let rise: CGFloat? = switch plateau.ramps[cell] {
@@ -432,7 +464,7 @@ nonisolated final class WorldMap: @unchecked Sendable {
     /// How high the ground stands under an on-screen (ground) point: walkers and scenery standing
     /// there are drawn this much higher.
     func height(at point: CGPoint) -> CGFloat {
-        plateaus.isEmpty && hills.isEmpty && shore == nil ? 0 : height(atGrid: Self.unproject(point))
+        plateaus.isEmpty && hills.isEmpty && shore == nil && bowBridges.isEmpty ? 0 : height(atGrid: Self.unproject(point))
     }
 
     /// Whether a cell is on the shore, sunk below the land round it (`shore`).
@@ -2901,6 +2933,7 @@ nonisolated final class WorldMap: @unchecked Sendable {
         }
         var bridge = Bridge(kind: kind, northward: northward, lane: first, lanes: lanes, start: start, end: end, landsAtStart: true, landsAtEnd: true)
         bridge.material = bridgeMaterial(kind, lane: first, start: start)
+        bridge.bowed = kind == .road && (bridge.material == .stone || bridge.material == .lacquer)
         lay(bridge)
         bank(bridge)
         return bridge

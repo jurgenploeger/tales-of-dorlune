@@ -67,12 +67,15 @@ enum BridgeArt {
         // rope: the deck's last boards break off raggedly on the bank, the road showing between
         // them. Stone and red lacquer, which are built, not worn: the deck whole, and past each
         // end a sill of rough stones on the bank, wider than the deck.
+        // (The sill went the same day: in the game it read as flaps on a flat slab, and stone and
+        // red lacquer became bow bridges, `bowSprite`. One of them out over a sunk lake keeps a
+        // plain whole end.)
         let worn = !style.sill
-        let sillDeep = style.sill ? max(6, pixels * 3 / 8) : 0
+        let sillDeep = 0
         let lead = bridge.landsAtStart ? sillDeep : 0, tail = bridge.landsAtEnd ? sillDeep : 0
         let shadow = max(2, pixels / 8), beamWidth = max(2, pixels / 10)
         // The picture's margin either side of the deck: its shadow's, or a sill's reach past it.
-        let margin = style.sill ? max(shadow, pixels * 3 / 10) : shadow
+        let margin = shadow
         let deckWide = bridge.lanes * pixels
         let across = deckWide + 2 * margin
         let deckAlong = Int(((CGFloat(bridge.end - bridge.start + 1) + before + after) * CGFloat(pixels)).rounded())
@@ -216,7 +219,9 @@ enum BridgeArt {
         // under it into the water, its shadow on the water, and its side, posts and rails mirrored
         // in the water, darker than it, swaying a point like ripples. A road's bridge and a
         // footbridge, not a jetty or a pier (those stand on posts of their own).
-        if bridge.kind != .jetty, let side = fill(style.beam, shade: 0.5, palette: palette),
+        // A bow bridge: its deck, the wall under it and its reflection, one picture (`bowSprite`).
+        if bridge.bowed, let bow = bowSprite(for: bridge, pixels: pixels, palette: palette) { world.addChild(bow) }
+        if bridge.kind != .jetty, !bridge.bowed, let side = fill(style.beam, shade: 0.5, palette: palette),
            let pile = fill(style.beam, shade: 0.4, palette: palette) {
             let thick = 5 * scale
             let edge = CGFloat(bridge.lane)
@@ -326,6 +331,118 @@ enum BridgeArt {
         let texture = SKTexture(cgImage: image)
         texture.filteringMode = .nearest
         return texture
+    }
+
+    /// A bow bridge (`WorldMap.Bridge.bowed`) as one picture, as it stands on the screen (mirrored in
+    /// tools/bridge_preview.py `bow`): its deck's boards or slabs laid up the curve, each pixel
+    /// where the view puts it and as high as the deck stands there (`Bridge.bow`), a little lighter
+    /// where it climbs toward the sun and darker where it falls away; down its near side a wall
+    /// with an arch through it over the water, in courses of stone (or the lacquer's dark red), a
+    /// pale coping along its top; and the wall mirrored in the water under it. Sorted just behind
+    /// its far corner, under everyone who walks it, as a harbor's pier is.
+    static func bowSprite(for bridge: WorldMap.Bridge, pixels: Int, palette: MapPalette?) -> SKSpriteNode? {
+        guard bridge.bowed, pixels > 0, let deck = deckPicture(for: bridge, pixels: pixels, palette: nil),
+              let source = PixelImage.pixels(of: deck.image, width: deck.image.width, height: deck.image.height) else { return nil }
+        let style = look(bridge.material)
+        let unit = WorldMap.tileSize / CGFloat(pixels)                 // points to one of the art's pixels
+        let per = Double(pixels)
+        let rise = Double(WorldMap.Bridge.rise / unit)
+        let reach = Double(WorldMap.Bridge.reach)
+        let low = Double(bridge.start) - reach, high = Double(bridge.end + 1) + reach
+        let lane = Double(bridge.lane)
+        let wet = (from: Double(bridge.start), to: Double(bridge.end + 1))
+        func lift(_ along: Double) -> Double { rise * sin(Double.pi * min(1, max(0, (along - low) / (high - low)))) }
+        /// Where a spot on it (lanes across, cells along, `z` pixels up) shows, in the art's pixels.
+        func spot(_ across: Double, _ along: Double, _ z: Double) -> (x: Double, y: Double) {
+            let gx = (bridge.northward ? across : along) * per, gy = (bridge.northward ? along : across) * per
+            return ((gx - gy) * 0.70710678, (gx + gy) * 0.35355339 + z)
+        }
+        let corners = [spot(lane, low, 0), spot(lane + Double(bridge.lanes), low, 0), spot(lane, high, 0), spot(lane + Double(bridge.lanes), high, 0)]
+        let xs = corners.map { $0.x }, ys = corners.map { $0.y }
+        let minX = (xs.min() ?? 0).rounded(.down) - 2, maxX = (xs.max() ?? 0).rounded(.up) + 2
+        let minY = (ys.min() ?? 0).rounded(.down) - rise - 6, maxY = (ys.max() ?? 0).rounded(.up) + rise + 3
+        let width = Int(maxX - minX), height = Int(maxY - minY)
+        guard width > 0, height > 0, width < 2048, height < 2048 else { return nil }
+        var bytes = [UInt8](repeating: 0, count: width * height * 4)
+        func plot(_ at: (x: Double, y: Double), _ color: Tone, alpha: Double = 1) {
+            let x = Int((at.x - minX).rounded(.down)), y = Int((at.y - minY).rounded(.down))
+            guard x >= 0, y >= 0, x < width, y < height else { return }
+            let index = ((height - 1 - y) * width + x) * 4
+            bytes[index] = UInt8(min(255, max(0, color.r * alpha)))
+            bytes[index + 1] = UInt8(min(255, max(0, color.g * alpha)))
+            bytes[index + 2] = UInt8(min(255, max(0, color.b * alpha)))
+            bytes[index + 3] = UInt8(alpha * 255)
+        }
+        /// How high the arch through its wall stands over the water at a spot along it: none over
+        /// the banks, a ring of the wall left under the deck at its crown.
+        func arch(_ along: Double) -> Double {
+            let t = (along - wet.from) / max(1, wet.to - wet.from)
+            guard t > 0, t < 1 else { return 0 }
+            let across = (t - 0.5) / 0.42
+            return max(0, rise - 5) * max(0, 1 - across * across).squareRoot()
+        }
+        let step = 1 / (per * 1.5)
+        // The wall mirrored in the water, as far under the water's level as it stands over it.
+        let dark: Tone = (30, 92, 128)
+        for along in stride(from: wet.from, to: wet.to, by: step) {
+            let top = Int(lift(along).rounded()), open = Int(arch(along))
+            guard top >= open else { continue }
+            for z in open...top { plot(spot(lane, along, -Double(z) - 1), dark, alpha: 0.45) }
+        }
+        // The deck, up the curve.
+        let imageWide = deck.image.width, imageHigh = deck.image.height
+        let margin = max(2, pixels / 8)
+        let deckWide = bridge.lanes * pixels
+        let deckAlong = (bridge.northward ? imageHigh : imageWide)
+        for v in 0..<deckAlong {
+            let along = low + (Double(v) + 0.5) / per
+            let z = lift(along)
+            let slope = cos(Double.pi * min(1, max(0, (along - low) / (high - low))))
+            let lit = 1 + 0.1 * slope
+            for u in 0..<deckWide {
+                let x = bridge.northward ? margin + u : v, y = bridge.northward ? v : margin + u
+                guard x < imageWide, y < imageHigh else { continue }
+                let index = ((imageHigh - 1 - y) * imageWide + x) * 4
+                guard source[index + 3] == 255 else { continue }
+                plot(spot(lane + (Double(u) + 0.5) / per, along, z),
+                     (Double(source[index]) * lit, Double(source[index + 1]) * lit, Double(source[index + 2]) * lit))
+            }
+        }
+        // The wall down its near side, the arch through it.
+        var stone: Tone = (128, 126, 120), coping: Tone = (170, 167, 160)
+        if !style.slabs {
+            stone = (style.edge.r * 1.15, style.edge.g * 1.15, style.edge.b * 1.15)
+            coping = style.beam
+        }
+        for along in stride(from: low, to: high, by: step) {
+            let top = Int(lift(along).rounded()), open = Int(arch(along))
+            guard top >= open else { continue }
+            for z in open...top {
+                var tone = stone
+                var shade = 1.0
+                if z >= top - 1 {
+                    tone = coping
+                } else if open > 0, z < open + 3 {
+                    shade = 0.8                                   // the ring of the arch
+                } else if style.slabs {
+                    // Courses four pixels deep, their joints staggered.
+                    let course = z / 4
+                    let block = Int((along * 9 + Double(course % 2) * 0.5).rounded(.down))
+                    let before = Int((along * 9 + Double(course % 2) * 0.5 - 0.12).rounded(.down))
+                    shade = z % 4 == 0 || block != before ? 0.72 : 0.9 + 0.2 * noise(block, course)
+                }
+                plot(spot(lane, along, Double(z)), (tone.r * shade, tone.g * shade, tone.b * shade))
+            }
+        }
+        guard var image = Self.image(bytes, width: width, height: height) else { return nil }
+        if let palette, let graded = Recolor.grade(palette, image: image) { image = graded }
+        let texture = SKTexture(cgImage: image)
+        texture.filteringMode = .nearest
+        let sprite = SKSpriteNode(texture: texture, size: CGSize(width: CGFloat(width) * unit, height: CGFloat(height) * unit))
+        sprite.anchorPoint = .zero
+        sprite.position = CGPoint(x: CGFloat(minX) * unit, y: CGFloat(minY) * unit)
+        sprite.zPosition = -CGFloat(ys.max() ?? 0) * unit - 1
+        return sprite
     }
 
     /// One colour as a texture, in the map's palette: a tone at `shade` of itself (the deck's side,

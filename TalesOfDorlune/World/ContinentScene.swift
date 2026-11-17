@@ -1902,7 +1902,8 @@ final class ContinentScene: SKScene {
             for bridge in map.bridges {
                 if bridge.cells.contains(where: { sunk.contains($0) }) {
                     if let deck = BridgeArt.deckPicture(for: bridge, pixels: pixels, palette: theme.palette) { sunkDecks.append(deck) }
-                } else if let deck = BridgeArt.deck(for: bridge, pixels: pixels, palette: theme.palette) {
+                } else if !bridge.bowed, let deck = BridgeArt.deck(for: bridge, pixels: pixels, palette: theme.palette) {
+                    // (A bow bridge's deck stands with its rails: `BridgeArt.rails`.)
                     deck.zPosition = 2
                     flat.addChild(deck)
                 }
