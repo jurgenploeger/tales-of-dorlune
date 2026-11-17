@@ -1060,8 +1060,13 @@ def dome_house(b):
     b.surface([(cx - 10, top - 2), (cx + 10, top - 2), (cx + 10, top - 7), (cx - 10, top - 7)], "#e2c69a", "blocks")
     base = top - 7
     half = [(10, 0), (13, 4), (14, 9), (12, 14), (7.5, 19), (3.5, 23), (0, 27)]          # the onion's profile
-    dome = [(cx - w, base - h) for w, h in half] + [(cx + w, base - h) for w, h in half[::-1]]
-    b.surface(dome, "#2e9a9a", "tiles", slope=(-0.016, 0.0))
+    # In gores from its lit left round to its shaded right, so it reads as round (the user,
+    # 2026-11-17: "the roof looks too flat"): one surface in one tone was a flat cut-out.
+    edges = [-1, -0.62, -0.2, 0.22, 0.64, 1]
+    tones = [0.06, 0.26, 0.04, -0.2, -0.42]
+    for (f0, f1), tone in zip(zip(edges, edges[1:]), tones):
+        gore = [(cx + f0 * w, base - h) for w, h in half] + [(cx + f1 * w, base - h) for w, h in half[::-1]]
+        b.surface(gore, "#2e9a9a", "tiles", tone=tone)
     b.stroke([(cx, top - 26), (cx, top - 34)], 1.2, "#e8c050")
     b.ellipse(cx, top - 35, 1.6, 1.6, "#f0c040", gloss=0.8)
     door(b, x0 + 13, w=10, h=17, colour="#2e7a8a", frame="#a8885a")

@@ -2172,7 +2172,6 @@
     },
     {
       "id": "mushroom_house",
-      "scale": 1.35,
       "kind": "building",
       "request": {
         "prompt": "cozy mushroom house with a red spotted cap roof and round door",
@@ -2717,7 +2716,6 @@
     },
     {
       "id": "mushroom_house_blue",
-      "scale": 1.35,
       "kind": "building",
       "derive": {
         "from": "mushroom_house",
@@ -2737,7 +2735,6 @@
     },
     {
       "id": "mushroom_house_gold",
-      "scale": 1.35,
       "kind": "building",
       "derive": {
         "from": "mushroom_house",
