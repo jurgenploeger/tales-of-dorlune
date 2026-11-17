@@ -14,6 +14,9 @@ squashed as the game's view is. Left: as now. Right: proposed:
 - the grass growing out over the road's edge in tufts, each its own length (`ArtLibrary.bladeReach`, as the
   grass over the waterline), its tips lit, a soft shadow on the sand under them.
 
+Bigger stones and bolder clumps, and only in villages and towns (the user, 2026-11-17); roads out in the
+wild keep their plain sand.
+
     python3 tools/road_preview.py out.png
 
 Needs pillow + numpy.
@@ -48,7 +51,7 @@ def h(*v):
     return (x & 0xffff) / 65535
 
 
-STONE = 10.0                             # cobbles about this many of the art's pixels across
+STONE = 15.0                             # cobbles about this many of the art's pixels across (10 was too fine)
 
 
 def cobble(px, py):
@@ -69,15 +72,15 @@ def cobble(px, py):
                 second = d
     edge = second - best
     sx, sy, ox, oy = at
-    if edge < 0.14:
+    if edge < 0.1:
         return None                                        # the sand between the stones
-    if edge < 0.2:
-        return np.array([84, 74, 66.0])                    # each stone's dark outline
+    if edge < 0.15:
+        return np.array([78, 68, 60.0])                    # each stone's dark outline
     tone = 0.9 + 0.22 * h(sx, sy, 3)
     base = np.array([176, 168, 156.0]) * tone
     lit = -(ox + oy)
-    if edge < 0.3:
-        base *= 1.1 if lit > 0 else 0.8
+    if edge < 0.27:
+        base *= 1.14 if lit > 0 else 0.76
     if h(px, py, 9) < 0.08:
         base *= 0.9
     return base
@@ -86,13 +89,13 @@ def cobble(px, py):
 def blade(across):
     """How far the grass reaches over the edge, in cells: rounded clumps along it, each its own width and
     reach, as the reference's grass overhangs the road in soft scallops."""
-    k = math.floor(across * 2.2)
-    t = across * 2.2 - k
-    width = 0.55 + 0.4 * h(k, 3)
+    k = math.floor(across * 1.1)
+    t = across * 1.1 - k
+    width = 0.7 + 0.3 * h(k, 3)
     if t > width:
         return 0.02
     u = (t / width) * 2 - 1
-    return 0.03 + (0.1 + 0.16 * h(k, 4)) * math.sqrt(max(0, 1 - u * u))
+    return 0.05 + (0.12 + 0.12 * h(k, 4)) * math.sqrt(max(0, 1 - u * u))
 
 
 def road_depth(gx, gy):
@@ -129,33 +132,32 @@ def ground(proposed):
                 continue
             # The grass over the edge: its tufts, lit at their tips, a shadow past them.
             reach = blade(gx - gy)
-            if depth < reach - 0.025:
-                out[py, px] = g * (1.12 if depth > reach - 0.06 else 1.0)
+            if depth < reach - 0.035:
+                out[py, px] = g * (1.22 if depth > reach - 0.09 else 1.0)
                 continue
             if depth < reach:
-                out[py, px] = g * 0.55                       # the clump's dark edge
+                out[py, px] = g * 0.45                       # the clump's dark edge
                 continue
             c = SAND[v, u].copy()
-            if depth < reach + 0.06:
-                c *= 0.76                                     # its shadow on the road
+            if depth < reach + 0.09:
+                c *= 0.68                                     # its shadow on the road
             # The cobbles down the middle of the wide road, their edge ragged, loose stones at it.
-            core = wide - 0.55 + 0.12 * (h(int(gx * 4), int(gy * 4), 3) - 0.5)
+            core = wide - 0.75 + 0.12 * (h(int(gx * 4), int(gy * 4), 3) - 0.5)
             stone = cobble(px, py) if core > -0.25 else None
             if stone is not None and (core > 0 or h(int(px / STONE), int(py / STONE), 21) < 0.5 + core * 2):
                 c = stone
             else:
                 # Pebbles in the sand: more near the cobbles.
                 near = max(0, 1 - abs(core) / 0.6) if wide > 0 else 0.15
-                cx, cy = int(gx * 10), int(gy * 10)
-                cx, cy = int(gx * 6), int(gy * 6)
+                cx, cy = int(gx * 4), int(gy * 4)
                 if h(cx, cy, 11) < 0.08 + 0.35 * near:
                     ox, oy = 0.25 + 0.5 * h(cx, cy, 12), 0.25 + 0.5 * h(cx, cy, 13)
                     size = 0.12 + 0.12 * h(cx, cy, 14)
-                    dx, dy = gx * 6 - cx - ox, gy * 6 - cy - oy
+                    dx, dy = gx * 4 - cx - ox, gy * 4 - cy - oy
                     r = dx * dx + dy * dy
                     if r < size * size:
                         c = np.array([158, 150, 140.0]) * (1.15 if dx + dy < -size * 0.3 else 0.9)
-                    elif r < (size + 0.07) ** 2:
+                    elif r < (size + 0.06) ** 2:
                         c = np.array([88, 76, 66.0])
             out[py, px] = c
     return out
