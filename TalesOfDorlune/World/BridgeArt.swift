@@ -80,8 +80,17 @@ enum BridgeArt {
             let board = v / plankDeep, inBoard = v % plankDeep
             // Each plank a little lighter or darker than the next.
             let tone = 0.92 + 0.16 * noise(board, bridge.lane &* 31 &+ bridge.start)
+            // How far onto a bank this row lies, in cells (0 over the water): there its boards
+            // break off raggedly, more of them gone the further on, and the road shows between
+            // them, so the deck gives way to the land instead of ending on it in a ruled line
+            // (the user, 2026-11-17: "the overlap with the land and bridge, it's a straight line
+            // now"; their pick from tools/bridge_preview.py --ends).
+            let onto = max(before > 0 ? before - CGFloat(v) / CGFloat(pixels) : 0,
+                           after > 0 ? CGFloat(v) / CGFloat(pixels) - (cellsAlong - after) : 0)
+            let gone = Double(max(0, (onto - 0.2) / 0.4))
             for u in 0..<across {
                 let x = bridge.northward ? u : v, y = bridge.northward ? v : u
+                if gone > 0, noise(u / 2 &+ 3, v / 2 &+ 91 &+ bridge.lane) < gone * 1.15 { continue }
                 let inside = u - shadow
                 if inside < 0 || inside >= deckWide {
                     put(x, y, (0, 0, 0), alpha: 0.28)
