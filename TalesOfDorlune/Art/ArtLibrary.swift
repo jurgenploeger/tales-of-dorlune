@@ -855,6 +855,16 @@ final class ArtLibrary {
                     let depth: Double
                     if shore {
                         depth = Self.waterDepth(x, y, pools: pools, wobble: wobble)
+                    } else if layer.cobbled {
+                        // A town street's edge is where its cells end: how far the point is from the nearest
+                        // cell round it that isn't street. Measured from the rounded strokes between its cells,
+                        // the edge dipped in near their corners inside a wide street too, and grass and sand
+                        // showed through the cobbles there (the user, 2026-11-17: "holes").
+                        var nearest = 1.0
+                        for bit in 0..<9 where layer.mask & (1 << bit) == 0 {
+                            nearest = min(nearest, Self.gap(x, y, to: (x: Double(bit % 3 - 1), y: Double(1 - bit / 3))))
+                        }
+                        depth = nearest + wobble
                     } else {
                         var distance = Double.infinity
                         for segment in segments { distance = min(distance, Self.distance(x, y, to: segment)) }
