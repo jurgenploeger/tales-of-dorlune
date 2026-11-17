@@ -823,23 +823,19 @@ struct PixelButtonStyle: ButtonStyle {
     var compact = false
     /// A screen's main choice (the title screen's Continue and New game): bigger lettering and room.
     var primary = false
-    /// The HUD buttons' glossy blue face (`HUDStyle.tile`, `FLIconButton`) in place of `tint`, its
-    /// lettering white with a dark edge: the title screen's New game beside Continue.
-    var blue = false
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .labelStyle(ButtonLabelStyle())
             .font(HUDStyle.font(primary ? 18 : compact ? 11 : 13))
-            .foregroundStyle(blue ? Color.white : HUDStyle.ink)
-            .shadow(color: blue ? HUDStyle.frameDark : .clear, radius: 0, x: 1, y: 1)
+            .foregroundStyle(HUDStyle.ink)
             .padding(.horizontal, primary ? 24 : compact ? 12 : 16)
             .padding(.vertical, primary ? 15 : compact ? 6 : 9)
             .background(
                 // Only the face casts the shadow, under the button. The outline goes on after it: a
                 // shadow on both draws the outline's again inside the face, 3 pt below its top edge.
                 Capsule()
-                    .fill(LinearGradient(colors: blue ? HUDStyle.tile : [HUDStyle.buttonShine, tint, tint.opacity(0.85)], startPoint: .top, endPoint: .bottom))
+                    .fill(LinearGradient(colors: [HUDStyle.buttonShine, tint, tint.opacity(0.85)], startPoint: .top, endPoint: .bottom))
                     .shadow(color: .black.opacity(0.35), radius: 0, x: 0, y: configuration.isPressed ? 0 : 3)
                     .overlay(Capsule().strokeBorder(HUDStyle.frameDark.opacity(0.7), lineWidth: 1.5))
             )

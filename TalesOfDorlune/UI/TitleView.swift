@@ -275,9 +275,9 @@ struct TitleView: View {
                     .frame(maxWidth: .infinity)
             }
             // Before your first game, it's the one thing to do.
-            // Gold while it's the one thing to do; beside Continue, the HUD's blue (the user,
-            // 2026-11-17), not cream.
-            .buttonStyle(PixelButtonStyle(tint: HUDStyle.gold, primary: true, blue: !saves.isEmpty))
+            // Before your first game, it's the one thing to do. (Blue beside Continue was tried
+            // and taken back, 2026-11-17: its white lettering didn't stand out.)
+            .buttonStyle(PixelButtonStyle(tint: saves.isEmpty ? HUDStyle.gold : HUDStyle.cream, primary: true))
         }
         .frame(maxWidth: 320)
     }
@@ -621,16 +621,14 @@ private struct TitleRoundButtonStyle: ButtonStyle {
             IconImage(icon, size: 30)
                 .foregroundStyle(HUDStyle.ink)
                 .frame(width: 50, height: 50)
-                // The HUD's glossy blue (`FLIconButton`), not cream (the user, 2026-11-17: "Can we
-                // show blue buttons here"), with the hard shadow that presses down.
+                // Cream: the HUD's blue was tried here and taken back the same day (the user,
+                // 2026-11-17: "Change them back to white again, the contrast is not good": the
+                // icons and New game's lettering were lost on it against the sky).
                 .background(
                     Circle()
-                        .fill(LinearGradient(colors: HUDStyle.tile, startPoint: .top, endPoint: .bottom))
+                        .fill(LinearGradient(colors: [HUDStyle.buttonShine, HUDStyle.buttonFace, HUDStyle.buttonFace.opacity(0.85)], startPoint: .top, endPoint: .bottom))
                         .shadow(color: .black.opacity(0.35), radius: 0, x: 0, y: configuration.isPressed ? 0 : 3)
-                        .overlay(Circle().strokeBorder(HUDStyle.bevel, lineWidth: 2.5))
-                        .overlay(alignment: .top) {
-                            Ellipse().fill(.white.opacity(0.35)).frame(width: 31, height: 14).padding(.top, 4)
-                        }
+                        .overlay(Circle().strokeBorder(HUDStyle.frameDark.opacity(0.7), lineWidth: 1.5))
                 )
                 .overlay(alignment: .topTrailing) {
                     if marked {
