@@ -16,8 +16,8 @@ struct HillLooks {
     /// its foothills' tops below that, in deeper shade and brighter sun, so its height shows.
     let mountain: HillArt.Look
     /// A terraced range (`WorldMap.Hill.terrace`): its levels the land's own ground, each face sheer
-    /// rock (`MapDef.Hills.bank`) painted upright, in deeper shade and brighter sun so the faces
-    /// stand out.
+    /// rock (`MapDef.Hills.bank`) painted upright, darker toward its foot, in a little deeper shade
+    /// and brighter sun than a hill.
     let terraced: HillArt.Look
 
     /// `ground`: each cell's own tile picture, as the land's ground shows it; nil where it has none
@@ -86,8 +86,8 @@ struct HillLooks {
         terraced.bank = look.bank ?? scree
         terraced.cliff = WorldMap.faceSlope
         terraced.upright = true
-        terraced.ambient = 0.3
-        terraced.brightest = 1.2
+        terraced.ambient = 0.4
+        terraced.brightest = 1.1
         self.terraced = terraced
     }
 

@@ -199,8 +199,9 @@ nonisolated extension WorldMap {
         /// Terraces, if set (`MapDef.Hills.terraces`): its slopes stepped into flat levels this many
         /// points apart (`terraced`), each ending in a sheer face up to the next (the user,
         /// 2026-11-17: "our maps still look a bit flat", after the cliffs preview,
-        /// `tools/cliff_preview.py`). Facing you the faces stand sheer; round its back `unfold()`
-        /// lays them back into slopes you can walk up (`WorldMap.shapeHill` blocks the faces).
+        /// `tools/cliff_preview.py`). Only where its slopes face you (`stepped`): round its sides the
+        /// faces dwindle, and its back is the smooth slope it was, the way up
+        /// (`WorldMap.shapeHill` blocks the faces).
         var terrace: Double?
         /// A range along a map's edge with a cave's mouth in it, rising on past the edge, rather than
         /// hills out in the fields.
@@ -310,7 +311,7 @@ nonisolated extension WorldMap {
         /// their heights' fourth powers): as high as the highest, a little fuller where two meet, and
         /// flat ground where none rise. A cave's wall (`wall`) stands over the ground at its foot.
         func shape(_ x: Double, _ y: Double) -> CGFloat {
-            let ground = terraced(summits(x, y), x, y)
+            let ground = stepped(x, y)
             guard let wall, let lift = wall.lift(x, y) else { return CGFloat(ground) }
             if let base = wall.base {
                 return CGFloat(max(ground, max(0, base + lift.height) * lift.width))
@@ -321,6 +322,27 @@ nonisolated extension WorldMap {
             let foot = wall.foot(x, y)
             let over = summits(foot.x, foot.y) + lift.height - ground
             return CGFloat(ground + max(0, over) * lift.width)
+        }
+
+        /// The summits' height at a point, stepped into terraces (`terrace`) where the slope faces
+        /// you, and left as it was round the back. Stepped all round, every face turned from you
+        /// had to be laid back (`unfold()`) into a long steep ramp, and half of each range was
+        /// ramps in deep shade (the user's screenshot, 2026-11-17: "This looks like a glitch").
+        /// So by which way the smooth slope climbs: wholly stepped where it climbs up the screen
+        /// within about 50° of straight, not at all from side-on round to the back, between the
+        /// two the faces dwindling into the slope; and not on a summit's flat top, where the slope
+        /// turns every way at once.
+        private func stepped(_ x: Double, _ y: Double) -> Double {
+            let smooth = summits(x, y)
+            guard terrace != nil, smooth > 0 else { return smooth }
+            let e = 0.05
+            let gx = (summits(x + e, y) - summits(x - e, y)) / (2 * e)
+            let gy = (summits(x, y + e) - summits(x, y - e)) / (2 * e)
+            let steep = (gx * gx + gy * gy).squareRoot()
+            let toward = (gx + gy) / max(steep * 2.0.squareRoot(), 1e-9)
+            let facing = Wall.smooth((toward - 0.1) / 0.5) * Wall.smooth(steep / 4)
+            guard facing > 0 else { return smooth }
+            return smooth + (terraced(smooth, x, y) - smooth) * facing
         }
 
         /// A smooth height stepped into terraces (`terrace`), at a point: each level's top rising a

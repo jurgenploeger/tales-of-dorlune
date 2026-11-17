@@ -433,7 +433,7 @@ enum HillArt {
                         // A face's rock where it climbs fast enough (`Look.cliff`), its edge ragged a
                         // pixel at a time: the grass over its lip. Found before the rock's own
                         // colour: most of a terraced range is its levels' grass, with none.
-                        var cover = 1.0
+                        var cover = 1.0, dim = 1.0
                         if let cliff = look.cliff {
                             let slope = (gx * gx + gy * gy).squareRoot()
                             guard slope > cliff - 20 else { continue }
@@ -441,6 +441,12 @@ enum HillArt {
                             let fray = Self.noise(pixelX, pixelY, 7) + 0.5 * Self.noise(pixelX >> 1, pixelY >> 1, 8)
                             cover = min(1, max(0, (slope - cliff + 20 - 40 * fray) / 10))
                             guard cover > 0 else { continue }
+                            // Darker than the tile and darker still toward its foot, lighter at
+                            // its lip, so it reads as a wall, not a pale path (2026-11-17).
+                            if let rise = hill.terrace, rise > 0 {
+                                let up = here / rise - (here / rise).rounded(.down)
+                                dim = 0.58 + 0.34 * min(1, max(0, (up - 0.1) / 0.9))
+                            }
                         }
                         let lift = here / climb
                         let ax = step * (1 + gx / climb), ay = step * gx / climb
@@ -474,9 +480,9 @@ enum HillArt {
                             }
                         }
                         let index = (row * side + (cell.col - corner.col) * px + i) * 4
-                        bytes[index] = UInt8(min(255, red * shade * cover))
-                        bytes[index + 1] = UInt8(min(255, green * shade * cover))
-                        bytes[index + 2] = UInt8(min(255, blue * shade * cover))
+                        bytes[index] = UInt8(min(255, red * shade * cover * dim))
+                        bytes[index + 1] = UInt8(min(255, green * shade * cover * dim))
+                        bytes[index + 2] = UInt8(min(255, blue * shade * cover * dim))
                         bytes[index + 3] = UInt8(cover * 255)
                     }
                 }
