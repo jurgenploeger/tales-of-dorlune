@@ -417,7 +417,117 @@
       "id": "rdui_user",
       "kind": "prop",
       "request": {
-        "prompt": "the head and shoulders of one simple round figure, a tan head over a blue tunic, like a player profile symbol, a bold simple game menu icon, lit from the top left, thick dark outline",
+        "prompt": "portrait bust of a cute chibi adventurer kid facing forward, big head with spiky orange hair and big eyes, smiling, shoulders in a green tunic, head and shoulders only, thick dark outline",
+        "prompt_style": "rd_plus__low_res",
+        "width": 64,
+        "height": 64,
+        "remove_bg": true
+      }
+    },
+    {
+      "id": "rdui_backpack",
+      "kind": "prop",
+      "request": {
+        "prompt": "one chunky brown leather adventurer's backpack with a front pocket and a brass buckle, a bold simple game menu icon, lit from the top left, thick dark outline",
+        "prompt_style": "rd_plus__topdown_item",
+        "width": 64,
+        "height": 64,
+        "remove_bg": true
+      }
+    },
+    {
+      "id": "rdui_coins",
+      "kind": "prop",
+      "request": {
+        "prompt": "a small stack of three shiny gold coins, a bold simple game menu icon, lit from the top left, thick dark outline",
+        "prompt_style": "rd_plus__topdown_item",
+        "width": 64,
+        "height": 64,
+        "remove_bg": true
+      }
+    },
+    {
+      "id": "rdui_egg",
+      "kind": "prop",
+      "request": {
+        "prompt": "one cream speckled egg with pale blue spots, a bold simple game menu icon, lit from the top left, thick dark outline",
+        "prompt_style": "rd_plus__topdown_item",
+        "width": 64,
+        "height": 64,
+        "remove_bg": true
+      }
+    },
+    {
+      "id": "rdui_gift",
+      "kind": "prop",
+      "request": {
+        "prompt": "one red gift box tied with a golden ribbon and bow, a bold simple game menu icon, lit from the top left, thick dark outline",
+        "prompt_style": "rd_plus__topdown_item",
+        "width": 64,
+        "height": 64,
+        "remove_bg": true
+      }
+    },
+    {
+      "id": "rdui_heart",
+      "kind": "prop",
+      "request": {
+        "prompt": "one chunky glossy red heart with a small white highlight, a bold simple game menu icon, lit from the top left, thick dark outline",
+        "prompt_style": "rd_plus__topdown_item",
+        "width": 64,
+        "height": 64,
+        "remove_bg": true
+      }
+    },
+    {
+      "id": "rdui_map",
+      "kind": "prop",
+      "request": {
+        "prompt": "one rolled-open parchment treasure map with a red dotted path and an X, a bold simple game menu icon, lit from the top left, thick dark outline",
+        "prompt_style": "rd_plus__topdown_item",
+        "width": 64,
+        "height": 64,
+        "remove_bg": true
+      }
+    },
+    {
+      "id": "rdui_paw",
+      "kind": "prop",
+      "request": {
+        "prompt": "one chunky pink animal paw print, a big pad and four toe pads, a bold simple game menu icon, lit from the top left, thick dark outline",
+        "prompt_style": "rd_plus__topdown_item",
+        "width": 64,
+        "height": 64,
+        "remove_bg": true
+      }
+    },
+    {
+      "id": "rdui_seal_stone",
+      "kind": "prop",
+      "request": {
+        "prompt": "one round blue-violet magic stone with a glowing rune carved in it, a bold simple game menu icon, lit from the top left, thick dark outline",
+        "prompt_style": "rd_plus__topdown_item",
+        "width": 64,
+        "height": 64,
+        "remove_bg": true
+      }
+    },
+    {
+      "id": "rdui_shield",
+      "kind": "prop",
+      "request": {
+        "prompt": "one chunky blue heater shield with a steel rim and a gold boss, a bold simple game menu icon, lit from the top left, thick dark outline",
+        "prompt_style": "rd_plus__topdown_item",
+        "width": 64,
+        "height": 64,
+        "remove_bg": true
+      }
+    },
+    {
+      "id": "rdui_sword",
+      "kind": "prop",
+      "request": {
+        "prompt": "one short steel sword with a gold crossguard and a brown grip, lying diagonally, handle at the bottom left, tip pointing to the top right, a bold simple game menu icon, lit from the top left, thick dark outline",
         "prompt_style": "rd_plus__topdown_item",
         "width": 64,
         "height": 64,
