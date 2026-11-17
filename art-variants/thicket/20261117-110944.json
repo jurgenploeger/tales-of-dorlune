@@ -1,0 +1,27 @@
+{
+  "request": {
+    "num_images": 3,
+    "prompt": "a dense thicket of round leafy green bushes heaped together, puffy clumps of leaves lit from the top left, seen from above at an angle, thick dark outline",
+    "prompt_style": "rd_tile__tile_object",
+    "width": 64,
+    "height": 64,
+    "remove_bg": true
+  },
+  "result": {
+    "created_at": 1794913783,
+    "credit_cost": 6,
+    "balance_cost": 0.18,
+    "output_urls": [],
+    "model": "rd_fast",
+    "remaining_credits": 0,
+    "remaining_balance": 6.881,
+    "request_id": "10b32fe1-61a6-46a1-80f0-7f2ed8071cfb",
+    "outputs_retained_until": 1795000173,
+    "billing": {
+      "reason": "no_plan",
+      "source": "balance",
+      "balance_left": 6.881,
+      "balance_charged": 0.18
+    }
+  }
+}

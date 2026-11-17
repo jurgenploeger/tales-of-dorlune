@@ -1,0 +1,27 @@
+{
+  "request": {
+    "num_images": 3,
+    "prompt": "a small clump of bright green fern fronds spreading out, seen from above at an angle, thick dark outline",
+    "prompt_style": "rd_tile__tile_object",
+    "width": 32,
+    "height": 32,
+    "remove_bg": true
+  },
+  "result": {
+    "created_at": 1794913792,
+    "credit_cost": 6,
+    "balance_cost": 0.18,
+    "output_urls": [],
+    "model": "rd_fast",
+    "remaining_credits": 0,
+    "remaining_balance": 6.701,
+    "request_id": "4c3f4906-9323-4efc-af50-b56ba49f62d4",
+    "outputs_retained_until": 1795000184,
+    "billing": {
+      "reason": "no_plan",
+      "source": "balance",
+      "balance_left": 6.701,
+      "balance_charged": 0.18
+    }
+  }
+}

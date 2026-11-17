@@ -348,6 +348,92 @@
       }
     },
     {
+      "id": "rock_formation_large",
+      "kind": "prop",
+      "request": {
+        "prompt": "a cluster of large stacked mossy grey-brown boulders with flat sunlit tops, a chunky blocky rock formation, green moss on the tops, seen from above at an angle, thick dark outline",
+        "prompt_style": "rd_tile__tile_object",
+        "width": 96,
+        "height": 96,
+        "remove_bg": true
+      }
+    },
+    {
+      "id": "rock_formation_small",
+      "kind": "prop",
+      "request": {
+        "prompt": "three mossy grey-brown boulders huddled together with flat sunlit tops, seen from above at an angle, thick dark outline",
+        "prompt_style": "rd_tile__tile_object",
+        "width": 64,
+        "height": 64,
+        "remove_bg": true
+      }
+    },
+    {
+      "id": "mossy_boulder",
+      "kind": "prop",
+      "request": {
+        "prompt": "one round mossy grey-brown boulder with a flat sunlit top and a crack down its front, seen from above at an angle, thick dark outline",
+        "prompt_style": "rd_tile__tile_object",
+        "width": 48,
+        "height": 48,
+        "remove_bg": true
+      }
+    },
+    {
+      "id": "thicket",
+      "kind": "prop",
+      "request": {
+        "prompt": "a dense thicket of round leafy green bushes heaped together, puffy clumps of leaves lit from the top left, seen from above at an angle, thick dark outline",
+        "prompt_style": "rd_tile__tile_object",
+        "width": 64,
+        "height": 64,
+        "remove_bg": true
+      }
+    },
+    {
+      "id": "fern_clump",
+      "kind": "prop",
+      "request": {
+        "prompt": "a small clump of bright green fern fronds spreading out, seen from above at an angle, thick dark outline",
+        "prompt_style": "rd_tile__tile_object",
+        "width": 32,
+        "height": 32,
+        "remove_bg": true
+      }
+    },
+    {
+      "id": "flower_patch",
+      "kind": "prop",
+      "request": {
+        "prompt": "a small patch of tiny yellow and white wildflowers among short grass, seen from above",
+        "prompt_style": "rd_tile__tile_object",
+        "width": 32,
+        "height": 32,
+        "remove_bg": true
+      }
+    },
+    {
+      "id": "tile_cliff_rock",
+      "kind": "tile",
+      "request": {
+        "prompt": "seamless rough grey-brown rock cliff face, layered stone ledges with cracks and a little green moss",
+        "prompt_style": "rd_tile__single_tile",
+        "width": 32,
+        "height": 32
+      }
+    },
+    {
+      "id": "tile_rich_grass",
+      "kind": "tile",
+      "request": {
+        "prompt": "lush deep green meadow grass with darker patches and small tufts",
+        "prompt_style": "rd_tile__single_tile",
+        "width": 32,
+        "height": 32
+      }
+    },
+    {
       "id": "mushroom",
       "kind": "prop",
       "request": {
