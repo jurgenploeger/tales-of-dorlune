@@ -304,6 +304,7 @@ PICKED = {name: f"rdui_{name}" for name in ("settings", "star", "book", "user", 
                                             "heart", "map", "paw", "shield", "sword")}
 PICKED["seal-stone"] = "item_seal_stone"
 PICKED["users"] = "rdui_users"       # friends: two of the game's heroes, as the hero's own icon is one
+PICKED["save"] = "rdui_save"         # saving and backups: a floppy disk
 PICKED["wind"] = "rdui_run"          # running (a battle's Run, the Speed stat): a winged boot
 PIXELS = 64
 
@@ -364,7 +365,7 @@ def main(argv):
         index = argv.index("--sheet")
         sheet_path = argv[index + 1]
         argv = argv[:index] + argv[index + 2:]
-    names = argv or sorted(DRAWINGS)
+    names = argv or sorted(set(DRAWINGS) | set(PICKED))
     out = {}
     for name in names:
         out[name] = render(name)

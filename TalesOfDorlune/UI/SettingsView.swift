@@ -151,7 +151,7 @@ struct SettingsView: View {
                                 SoundEffects.shared.play(.questAccept, volume: 0.6)
                                 justSaved = true
                             } label: {
-                                Label(justSaved ? L("Saved") : L("Save now"), icon: justSaved ? .check : .checkCircle)
+                                Label(justSaved ? L("Saved") : L("Save now"), icon: justSaved ? .check : .save)
                             }
                             .buttonStyle(PixelButtonStyle(compact: true))
                             if let onQuitToTitle {
@@ -197,9 +197,9 @@ struct SettingsView: View {
                 }
 
                 if let onImportBackup {
-                    section(L("Backups"), icon: .arrowDown) {
+                    section(L("Backups"), icon: .save) {
                         Button(action: onImportBackup) {
-                            Label(L("Import a backup"), icon: .arrowDown)
+                            Label(L("Import a backup"), icon: .save)
                         }
                         .buttonStyle(PixelButtonStyle(compact: true))
                         Text(L("A backup from Files or iCloud Drive comes back as a game of its own, next to your others."))

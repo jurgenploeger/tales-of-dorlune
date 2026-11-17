@@ -291,7 +291,7 @@ struct TitleView: View {
                 .buttonStyle(TitleRoundButtonStyle(icon: .settings))
             if saves.isEmpty {
                 Button(L("Import a backup")) { importing = true }
-                    .buttonStyle(TitleRoundButtonStyle(icon: .arrowDown))
+                    .buttonStyle(TitleRoundButtonStyle(icon: .save))
             } else {
                 Button(L("How to play")) {
                     withAnimation(.easeInOut(duration: 0.25)) {

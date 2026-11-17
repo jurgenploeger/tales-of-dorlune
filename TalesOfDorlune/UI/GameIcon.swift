@@ -13,6 +13,9 @@ enum GameIcon: String, CaseIterable {
     case chevronUp = "chevron-up", chevronDown = "chevron-down"
     case arrowUp = "arrow-up", arrowDown = "arrow-down", arrowLeft = "arrow-left", arrowRight = "arrow-right"
     case play, dice, map, tap, palette, star, starOutline = "star-outline", gift, coins, egg, edit, lock, globe
+    /// Saving your game and its backups: a floppy disk (our own drawing, art/icons; Retro
+    /// Diffusion's at button size).
+    case save
     /// Finding things in a list (the Bag, the gear for a slot): search it, sort it.
     case search, sort
     /// The time left to choose in a fight (BattleView's `TurnClockPill`).
