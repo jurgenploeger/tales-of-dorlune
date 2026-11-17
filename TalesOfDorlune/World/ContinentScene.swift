@@ -735,22 +735,19 @@ final class ContinentScene: SKScene {
         }
         hidden += boss
         hidden += layer.children.filter { $0.name == Effects.tapMarkerName }
-        // Nor anything whose shader takes a value of its own from each sprite (the hills' and
-        // shore's strips, walkers' cast shadows, shadows cut off on a slope): gathering those for
-        // the picture, SpriteKit has read past them and crashed, again on a phone as a battle
-        // began (2026-11-17, `SKCNode::addBatchAttributeValues` under `textureFromNode`). With a
-        // hill or the shore on screen there'd be a hole where it stood: the battle's own ground.
-        var holed = false
-        layer.enumerateChildNodes(withName: "//*") { node, _ in
-            guard !holed, let sprite = node as? SKSpriteNode, !sprite.isHidden, let shader = sprite.shader, !shader.attributes.isEmpty
-            else { return }
-            if sprite.size.width > 120, let parent = sprite.parent {
-                let corner = self.layer.convert(sprite.frame.origin, from: parent)
-                if CGRect(origin: corner, size: sprite.frame.size).intersects(visible) { holed = true }
-            }
-            hidden.append(sprite)
+        // Nor the shadows whose shader takes a value of its own from each sprite (walkers' cast
+        // shadows, scenery's on a slope): gathering those for the picture, SpriteKit read past
+        // them and crashed on a phone as a battle began (2026-11-17,
+        // `SKCNode::addBatchAttributeValues` under `textureFromNode`). The hills' and shore's
+        // strips stay: leaving the picture out wherever one was on screen left most battles on
+        // the bare ground.
+        Walker.hideFigures(true)
+        let stages = nearLands.compactMap { lands[$0]?.stage }
+        stages.forEach { $0.hideSlopeShadows(true) }
+        defer {
+            Walker.hideFigures(false)
+            stages.forEach { $0.hideSlopeShadows(false) }
         }
-        guard !holed else { return nil }
         hidden.forEach { $0.isHidden = true }
         defer { hidden.forEach { $0.isHidden = false } }
         guard let picture = view?.texture(from: layer, crop: visible) else { return nil }

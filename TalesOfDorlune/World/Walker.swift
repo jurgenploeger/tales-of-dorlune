@@ -132,6 +132,12 @@ final class Walker: SKNode {
     /// Every walker there is, held weakly, so a new sun reaches them all (`shine`).
     private static let everyone = NSHashTable<Walker>.weakObjects()
 
+    /// Hides everyone's cast shadow, or shows it again: out of a picture of the map
+    /// (`ContinentScene.battleBackdrop`).
+    static func hideFigures(_ hidden: Bool) {
+        for walker in everyone.allObjects { walker.figure.isHidden = hidden }
+    }
+
     /// Casts everyone's shadow away from `sun` from now on, and anyone's set down later.
     static func shine(_ sun: Sun) {
         self.sun = sun
@@ -180,7 +186,11 @@ final class Walker: SKNode {
     /// (`soften`).
     private func showFrame() {
         figure.texture = sprite.texture
-        guard let texture = sprite.texture else { return }
+        guard let texture = sprite.texture else {
+            // Never without a value for its shader: SpriteKit reads one from every sprite it draws.
+            figure.setValue(SKAttributeValue(vectorFloat4: SIMD4<Float>(0, 1, 0, 0)), forAttribute: "a_frame")
+            return
+        }
         let rect = texture.textureRect(), size = texture.size()
         let frame = SIMD4<Float>(Float(rect.minY), Float(max(rect.height, 0.0001)),
                                  Float(rect.width / max(1, size.width) * 1.3), Float(rect.height / max(1, size.height) * 1.3))

@@ -879,6 +879,11 @@ final class LandStage {
 
     /// A round shadow (`Lighting.Shadow`) under what stands on a hill or on the sunk shore and lakes, where
     /// the shade cast away from the sun isn't laid (`addScenery`), as `plant` gives a prop with `shadow`.
+    /// Hides its scenery's shadows on slopes, or shows them again (`Lighting.Shadow.hideForPicture`).
+    func hideSlopeShadows(_ hidden: Bool) {
+        for shadow in shadows { shadow.hideForPicture(hidden) }
+    }
+
     private func roundShadow(under node: SKSpriteNode, at cell: GridPoint) {
         if map.hillIndex(at: cell) != nil {
             let strip = HillArt.strip(at: -node.zPosition)

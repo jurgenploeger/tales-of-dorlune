@@ -204,6 +204,22 @@ final class Lighting {
         private let foot: CGPoint
         private let width: CGFloat
 
+        /// Which parts were showing before `hideForPicture(true)`.
+        private var shownBefore: [Bool] = []
+
+        /// Hides its parts cut off by a shader (on a slope), or shows those again that were
+        /// showing: out of a picture of the map (`ContinentScene.battleBackdrop`).
+        func hideForPicture(_ hidden: Bool) {
+            guard parts.contains(where: { $0.node.shader != nil }) else { return }
+            if hidden {
+                shownBefore = parts.map { !$0.node.isHidden }
+                parts.forEach { $0.node.isHidden = true }
+            } else if shownBefore.count == parts.count {
+                for (part, shown) in zip(parts, shownBefore) { part.node.isHidden = !shown }
+                shownBefore = []
+            }
+        }
+
         /// `layers`: where each part begins on screen and how deep it's sorted, the strip it stands
         /// on first; none on flat ground.
         init(under node: SKSpriteNode, in world: SKNode, layers: [(from: CGFloat, z: CGFloat)] = []) {
@@ -219,7 +235,11 @@ final class Lighting {
                 shadow.color = .black
                 shadow.colorBlendFactor = 1
                 shadow.zPosition = span.z + 0.1
-                if spans.count > 1 { shadow.shader = Shadow.clip }
+                if spans.count > 1 {
+                    shadow.shader = Shadow.clip
+                    // Never without a value for its shader, even before it's first shown (`fall`).
+                    shadow.setValue(SKAttributeValue(vectorFloat4: SIMD4<Float>(0, 0, 0, 0)), forAttribute: "a_clip")
+                }
                 world.addChild(shadow)
                 parts.append((shadow, from, to))
                 to = from
