@@ -1612,6 +1612,39 @@ final class ContinentScene: SKScene {
             land.stage.world.isPaused = !nearLands.contains(id)
             WindField.shared.hide(land.stage.world, !nearLands.contains(id))
         }
+        letGoFarLands(from: you)
+    }
+
+    /// How many cells off a land's box must be before it's let go (`letGoFarLands`): well past
+    /// where its chunks are (`keep`, 96 cells and a chunk's own 32), so one let go isn't built
+    /// again a few steps on.
+    private static let letGoReach = 176
+
+    /// Lets go of the lands far behind you: what each set down, its people, its ground's tiles, its
+    /// hills' pictures and its layout. They were kept for good, and the game's memory grew with
+    /// every land you walked through, past a gigabyte on a phone (the user's gauges, 2026-11-17).
+    /// It's built again, as it was (a layout's the same every time), when you come back near it;
+    /// where you can walk on it stays in the store meanwhile. Never the land you're in, one being
+    /// built, one a party you've joined is in, or one with a chunk still drawn.
+    private func letGoFarLands(from you: GridPoint) {
+        guard placed, isReady else { return }
+        var letGo = false
+        for (id, land) in lands where !nearLands.contains(id) && id != here?.id && id != hostLand && id != building {
+            let low = land.place.origin
+            let gap = max(low.col - you.col, you.col - (low.col + land.place.columns - 1),
+                          low.row - you.row, you.row - (low.row + land.place.rows - 1), 0)
+            guard gap > Self.letGoReach else { continue }
+            waiting.removeAll { $0.land == id }
+            unshown.remove(id)
+            WindField.shared.hide(land.stage.world, false)
+            land.stage.world.removeAllActions()
+            land.stage.world.removeFromParent()
+            if let air = airs.removeValue(forKey: id) { air.layer.removeFromParent() }
+            lands[id] = nil
+            art.release(map: id)
+            letGo = true
+        }
+        if letGo { art.letGoOfSources() }
     }
 
     /// The lands owning any cell of a chunk.

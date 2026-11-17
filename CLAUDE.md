@@ -60,7 +60,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   people by `LandStage`, in its own points at its shift. Lands are laid out one at a time, nearest first (the one
   you're in before any), and drawn in their plain ground till then, walked on as their shape has it (anywhere but
   their rivers and lakes, `World.walkable`); the world map's own layouts wait meanwhile
-  (`WorldOverview.isHeld`). You walk anywhere with no loading card; the land you're in
+  (`WorldOverview.isHeld`). A land over 176 cells off is let go (`letGoFarLands`: memory grew past a gigabyte) and built again, the same, when you're back. You walk anywhere with no loading card; the land you're in
   (`here`) brings its music, air and encounters. Caves are scenes of their own (`WorldScene`), behind the card;
   `GameCoordinator.mapScene` is whichever you're in.
 - Terraced hills (maps.json theme `hills.terraces`, a step in points, with `bank` the faces' rock; Sunny Meadow

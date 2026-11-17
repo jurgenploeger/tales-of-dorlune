@@ -159,6 +159,15 @@ final class ArtLibrary {
         stashOrder.removeAll { $0 == map }
     }
 
+    /// Lets go of what it kept for textures that are gone (their images, `sources`, and wind
+    /// strips): after a land's let go (`ContinentScene.letGoFarLands`), not only once thousands
+    /// have piled up.
+    func letGoOfSources() {
+        guard sources.count > 512 || windStrips.count > 64 else { return }
+        sources = sources.filter { $0.value.texture != nil }
+        windStrips = windStrips.filter { $0.value.texture != nil }
+    }
+
     /// A tile's image graded with `palette`, whatever map the library is grading for right now: the
     /// HUD draws a new map's minimap as soon as the scene exists, before its `build` takes the
     /// library over from the map you came from.
