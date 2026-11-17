@@ -89,14 +89,18 @@ nonisolated struct WindBook: Decodable, Sendable {
     }
 
     /// Which frame a tree standing at `x`, `y` (the continent's points) shows `seconds` into the
-    /// wind: its place in the calm loop, timed by where it stands so a ripple runs from tree to
-    /// tree, and in a gust when one is passing over it (tools/wind_art.py `frame_at`).
-    func frame(at seconds: Double, x: Double, y: Double) -> Int {
+    /// wind while a gust is passing over it, timed by where it stands so the gust runs from tree
+    /// to tree; nil in still air, where it stands as it's drawn (tools/wind_art.py `frame_at`).
+    /// Every tree used to turn through a calm loop all the time between gusts: it drew the eye
+    /// from everything else and cost the most (the user, 2026-11-17: "it makes the game very slow
+    /// and it kinda distracts"). Now the land is still, and a gust crosses a patch of it every
+    /// quarter minute or so.
+    func gustFrame(at seconds: Double, x: Double, y: Double) -> Int? {
         let slant = x + 0.35 * y
         let u = seconds * fps / Double(loop) - slant / wavelength
         let n = u.rounded(.down)
+        guard let slot = gustSlot(Int(n), y: y) else { return nil }
         let f = min(loop - 1, max(0, Int((u - n) * Double(loop))))
-        guard let slot = gustSlot(Int(n), y: y) else { return f }
         return loop + slot * loop + f
     }
 
@@ -146,6 +150,8 @@ final class WindField {
     /// 2026-11-17).
     private final class Tree {
         weak var node: SKSpriteNode?
+        /// Its picture as drawn: what it shows in still air.
+        let rest: SKTexture?
         /// The land it's in (`LandStage.world`), by its identity: hidden, far from you, its trees
         /// keep still (`hide`).
         let land: ObjectIdentifier?
@@ -155,6 +161,7 @@ final class WindField {
 
         init(node: SKSpriteNode, land: ObjectIdentifier?, frames: [SKTexture], x: Double, y: Double) {
             self.node = node
+            rest = node.texture
             self.land = land
             self.frames = frames
             self.x = x
@@ -175,7 +182,7 @@ final class WindField {
     func add(_ node: SKSpriteNode, frames: [SKTexture], at point: CGPoint, land: SKNode? = nil) {
         guard let book = WindBook.shared, frames.count == book.loop + book.gust else { return }
         let tree = Tree(node: node, land: land.map { ObjectIdentifier($0) }, frames: frames, x: Double(point.x), y: Double(point.y))
-        node.texture = frames[book.frame(at: clock, x: tree.x, y: tree.y)]
+        if let frame = book.gustFrame(at: clock, x: tree.x, y: tree.y) { node.texture = frames[frame] }
         trees.append(tree)
         if trees.count > prunedAt {
             trees.removeAll { $0.node == nil }
@@ -204,7 +211,7 @@ final class WindField {
             if let land = tree.land, hidden.contains(land) { continue }
             // Only what's on stage: a chunk out of sight waits.
             guard let node = tree.node, node.scene != nil else { continue }
-            let texture = tree.frames[book.frame(at: clock, x: tree.x, y: tree.y)]
+            let texture = book.gustFrame(at: clock, x: tree.x, y: tree.y).map { tree.frames[$0] } ?? tree.rest
             if node.texture !== texture { node.texture = texture }
         }
     }

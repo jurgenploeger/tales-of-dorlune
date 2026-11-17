@@ -204,8 +204,9 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
 - `tools/wind_art.py`: trees and bushes in the wind (`art/wind.json`, `TalesOfDorlune/Art/Wind.swift`), after
   SpriteCook's wind article: the trunk stays put and the crown moves in leaf clumps (cut by colour, then
   flooded out from each bright spot to the dark crevices), a whole pixel at a time, over a darker copy of the
-  crown so a gap shows shade; a calm loop timed by where each tree stands (a ripple runs across a grove), and
-  gusts in patches that bow the crown downwind and let it spring back, bounce and settle. Only pixels move,
+  crown so a gap shows shade; still as drawn in calm air (since 0.9.105: every tree turning through a calm loop
+  distracted and was slow), and gusts in patches, timed by where each tree stands, that bow the crown downwind
+  and let it spring back, bounce and settle. Only pixels move,
   so RD's art stays as drawn, and the game cuts the frames from the sprite as it's graded
   (`ArtLibrary.windFrames`, `WindField` keeps the clock, `LandStage.addScenery`); a rigged sprite moves
   instead of swaying, caves keep the old sway (their depth of field swaps textures). Rerun it after
