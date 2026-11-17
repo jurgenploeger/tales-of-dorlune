@@ -2955,8 +2955,17 @@ nonisolated final class WorldMap: @unchecked Sendable {
         let centre = CGFloat(bridge.lane) + CGFloat(bridge.lanes) / 2
         for (end, step) in [(bridge.start - 1, -1), (bridge.end + 1, 1)] {
             // Only over open ground: not into water, a border, the sea or a land next door's.
+            // As wide as the deck where it meets it, then giving way: a corner off the second
+            // cell out (one side or the other, by where the bridge stands), only its middle on the
+            // third. A square of road as wide as the deck, three cells deep, looked laid with a
+            // ruler (the user, 2026-11-17: "a bit too perfect").
+            let lanes = Array(bridge.lane..<(bridge.lane + bridge.lanes))
+            let dropsFirst = (bridge.lane &+ bridge.start &+ (step > 0 ? 1 : 0)) % 2 == 0
             for out in 0..<Self.bridgeApproach {
-                for lane in bridge.lane..<(bridge.lane + bridge.lanes) {
+                var across = lanes
+                if lanes.count >= 3, out == 1 { across = dropsFirst ? Array(lanes.dropFirst()) : Array(lanes.dropLast()) }
+                if lanes.count >= 3, out >= 2 { across = Array(lanes.dropFirst().dropLast()) }
+                for lane in across {
                     let cell = bridge.cell(lane: lane, along: end + step * out)
                     guard contains(cell), owns(cell), ([.ground, .accent, .path] as [Ground]).contains(ground[cell.row][cell.col]) else { continue }
                     ground[cell.row][cell.col] = .path
