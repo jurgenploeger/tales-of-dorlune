@@ -599,6 +599,16 @@ enum HillArt {
         heights.filteringMode = .linear
         let shader = SKShader(source: Self.lifting)
         let sun = Sun.noon
+        // The rock a terraced range's faces show, drawn by the shader on the screen's own pixels
+        // (`lifting`): painted into the picture, a face a quarter of a cell deep had eight pixels
+        // to show over thirty points of height, each stretched into a streak up the face (the
+        // simulator's screenshots, 2026-11-17).
+        var rockTile: SKTexture?
+        if look.cliff != nil, let bank = look.bank, let tile = bank(first) {
+            let texture = SKTexture(cgImage: tile)
+            texture.filteringMode = .nearest
+            rockTile = texture
+        }
         shader.uniforms = [
             SKUniform(name: "u_heights", texture: heights),
             SKUniform(name: "u_samples", vectorFloat4: SIMD4(Float(low.col), Float(low.row), Float(samples), Float(peak))),
@@ -608,6 +618,11 @@ enum HillArt {
             SKUniform(name: "u_sun", vectorFloat4: SIMD4(Float(sun.x), Float(sun.y), Float(sun.z), Float(sun.strength))),
             SKUniform(name: "u_look", vectorFloat4: SIMD4(Float(Sun.shaded(ambient: ambient)), Float(look.brightest), Float(base), Float(px))),
             SKUniform(name: "u_lean", vectorFloat4: SIMD4(Float(1 - tint.0), Float(1 - tint.1), Float(1 - tint.2), 0)),
+            // A terraced range's faces (`Look.cliff`): the rock's own tile, and how steep a face is
+            // (points a cell), 1 if it has faces at all. Any texture where it has none: every
+            // strip's shader is the one source.
+            SKUniform(name: "u_rock", texture: rockTile ?? heights),
+            SKUniform(name: "u_cliff", vectorFloat4: SIMD4(Float(look.cliff ?? 0), rockTile == nil ? 0 : 1, 0, 0)),
         ]
         shader.attributes = [
             SKAttribute(name: "a_box", type: .vectorFloat4),
@@ -721,6 +736,12 @@ enum HillArt {
     /// picture, the shade leaning toward the map's shadow colour (`u_lean`). Flat ground stays as it
     /// is. Everything inline: SpriteKit's shaders can't count on helper functions seeing uniforms.
     ///
+    /// A terraced range's faces (`u_cliff`: how steep one is, and whether it has any) show the rock's
+    /// tile (`u_rock`) on the screen's own pixels: across by where the ground lies across the screen
+    /// (three quarters of a tile a cell, so it joins from one square of 16 cells to the next), up by
+    /// its height, a tile every 44 points. So a sheer face shows the tile whole, not the few pixels
+    /// of the picture that lie under it, stretched.
+    ///
     /// All in small numbers, from the strip's box (`drawSquare` works out its corner in the heights'
     /// picture, `a_box.xy`; in the square's, `a_area.xy`; the band from it, `a_band.xy`; and the
     /// square's corner in the heights with their samples a cell, `a_light`), never the land's own
@@ -761,6 +782,10 @@ enum HillArt {
             float rise = u_samples.w / 255.0 * u_samples.z / (44.0 * 0.8660254);
             float hx = ((east.r - west.r) * 255.0 + (east.g - west.g)) * rise;
             float hy = ((north.r - south.r) * 255.0 + (north.g - south.g)) * rise;
+            if (u_cliff.y > 0.5 && sqrt(hx * hx + hy * hy) * 38.105 > u_cliff.x + 6.0) {
+                vec2 stone = vec2(fract((uv.x - uv.y) * a_area.z * 0.75), fract(lift / 44.0));
+                paint = vec4(texture2D(u_rock, stone).rgb * paint.a, paint.a);
+            }
             float facing = (u_sun.z - hx * u_sun.x - hy * u_sun.y) / sqrt(hx * hx + hy * hy + 1.0);
             float lit = u_look.x + (1.0 - u_look.x) * max(0.0, facing) / u_sun.z;
             lit = 1.0 + (lit - 1.0) * u_sun.w;

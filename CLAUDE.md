@@ -68,8 +68,9 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   sheer face, only where its slopes face you (`Hill.stepped`: stepped all round, the faces turned away were laid
   back by `unfold()` into long ramps in deep shade), the faces dwindling round its sides and its back the smooth
   slope you walk up (no trails);
-  `WorldMap.blockFaces` blocks the faces and keeps the cell in front clear; `HillLooks.terraced` paints the
-  rock upright a pixel at a time (`HillArt.Look.cliff`), with shade at each face's foot; up to two waterfalls a
+  `WorldMap.blockFaces` blocks the faces and keeps the cell in front clear; `HillLooks.terraced` (`HillArt.Look.cliff`): the
+  faces' rock is drawn by the lifting shader on the screen's pixels (`u_rock`, by height and across the screen:
+  painted into the picture it stretched into streaks), with shade at each face's foot; up to two waterfalls a
   range over faces turned to you (`LandPlanner.planCliffFalls`, `LandStage.placeCliffFalls`: a stream, a sheet
   stretched to the face, a pool, from `tools/waterfall_art.py`).
 - How a blow lands in battle (`BattleScene.impact`, after SpriteCook's hit feel article): attacker and

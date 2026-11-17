@@ -1410,8 +1410,8 @@
             2,
             4
           ],
-          "height": 80,
-          "terraces": 34,
+          "height": 96,
+          "terraces": 44,
           "bank": "tile_cliff_rock"
         },
         "props": [
@@ -2602,8 +2602,8 @@
             2,
             4
           ],
-          "height": 76,
-          "terraces": 34,
+          "height": 96,
+          "terraces": 44,
           "bank": "tile_cliff_rock"
         },
         "props": [
@@ -3249,8 +3249,8 @@
             2,
             4
           ],
-          "height": 76,
-          "terraces": 34,
+          "height": 96,
+          "terraces": 44,
           "bank": "tile_cliff_rock"
         },
         "props": [
@@ -8275,9 +8275,9 @@
             3,
             5
           ],
-          "height": 76,
+          "height": 96,
           "bank": "tile_cliff_rock",
-          "terraces": 34
+          "terraces": 44
         },
         "props": [
           {
@@ -10005,8 +10005,8 @@
             3,
             4
           ],
-          "height": 76,
-          "terraces": 34,
+          "height": 96,
+          "terraces": 44,
           "bank": "tile_cliff_rock"
         },
         "props": [
@@ -13193,8 +13193,8 @@
             2,
             3
           ],
-          "height": 76,
-          "terraces": 34,
+          "height": 96,
+          "terraces": 44,
           "bank": "tile_cliff_rock"
         },
         "props": [
@@ -14922,8 +14922,8 @@
             2,
             4
           ],
-          "height": 76,
-          "terraces": 34,
+          "height": 96,
+          "terraces": 44,
           "bank": "tile_cliff_rock"
         },
         "props": [
@@ -17086,8 +17086,8 @@
             2,
             4
           ],
-          "height": 76,
-          "terraces": 34,
+          "height": 96,
+          "terraces": 44,
           "bank": "tile_cliff_rock"
         },
         "props": [
