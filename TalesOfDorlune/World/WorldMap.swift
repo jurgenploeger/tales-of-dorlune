@@ -783,13 +783,13 @@ nonisolated final class WorldMap: @unchecked Sendable {
     }
 
     /// A free cell within `radius` cells of the map's centre, for planting around a town square.
-    /// Whether a building or shop stands within `reach` cells of `cell`, or within `reach + 1` up the
-    /// map behind it, where its walls and roof rise on the screen: a well set down there stood in
-    /// the corner of a house (the user's screenshot, 2026-11-17, Goldburg).
+    /// Whether a building or shop stands within `reach + 1` cells of `cell` (its walls and roof rise
+    /// past its footprint on the screen): a well set down beside one stood in the corner of a house
+    /// (the user's screenshot, 2026-11-17, Goldburg).
     func nearBuilding(_ cell: GridPoint, reach: Int = 1) -> Bool {
         guard !buildingCells.isEmpty else { return false }
-        for dr in -(reach + 1)...reach {
-            for dc in -(reach + 1)...reach where buildingCells.contains(GridPoint(col: cell.col + dc, row: cell.row + dr)) {
+        for dr in -(reach + 1)...(reach + 1) {
+            for dc in -(reach + 1)...(reach + 1) where buildingCells.contains(GridPoint(col: cell.col + dc, row: cell.row + dr)) {
                 return true
             }
         }
