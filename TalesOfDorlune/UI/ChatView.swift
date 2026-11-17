@@ -193,13 +193,16 @@ struct ChatView: View {
     }
 
     /// The emotes to pick from, five to a row, each its own picture (the user, 2026-11-17: "Can we add these
-    /// emote/reactions features to the game?"): one tapped pops over your head and the row closes.
+    /// emote/reactions features to the game?"): one tapped closes the chat and pops over your head.
     private var emotes: some View {
         LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 5), spacing: 6) {
             ForEach(Emote.allCases) { emote in
                 Button {
-                    onEmote(emote)
+                    // The window goes first, then the emote: behind it you never saw the one
+                    // you'd sent (the user, 2026-11-17).
                     showsEmotes = false
+                    onClose()
+                    onEmote(emote)
                 } label: {
                     if let picture = emote.image {
                         Image(uiImage: picture)
