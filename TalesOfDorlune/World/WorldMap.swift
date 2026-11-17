@@ -2832,15 +2832,20 @@ nonisolated final class WorldMap: @unchecked Sendable {
         let middle = CGPoint(x: crossing.map { CGFloat($0.col) + 0.5 }.reduce(0, +) / CGFloat(crossing.count),
                              y: crossing.map { CGFloat($0.row) + 0.5 }.reduce(0, +) / CGFloat(crossing.count))
         let nearest = line.indices.min { line[$0].distance(to: middle) < line[$1].distance(to: middle) } ?? 0
-        for shift in [0, 2, -2, 4, -4, 6, -6] {
-            let index = nearest + shift
-            guard line.indices.contains(index) else { continue }
-            let from = line[max(0, index - 4)], to = line[min(line.count - 1, index + 4)]
-            // A river running east is crossed going north.
-            guard let bridge = span(.road, at: shift == 0 ? middle : line[index], northward: abs(to.x - from.x) >= abs(to.y - from.y),
-                                    lanes: 3) else { continue }
-            meetRoad(bridge)
-            return true
+        // First somewhere with the water open on both sides of it; only failing that, anywhere it
+        // fits: where the river left a lake it lay right along the bank, a bridge beside the land
+        // (the user, 2026-11-17).
+        for clear in [true, false] {
+            for shift in [0, 2, -2, 4, -4, 6, -6] {
+                let index = nearest + shift
+                guard line.indices.contains(index) else { continue }
+                let from = line[max(0, index - 4)], to = line[min(line.count - 1, index + 4)]
+                // A river running east is crossed going north.
+                guard let bridge = span(.road, at: shift == 0 ? middle : line[index], northward: abs(to.x - from.x) >= abs(to.y - from.y),
+                                        lanes: 3, clear: clear) else { continue }
+                meetRoad(bridge)
+                return true
+            }
         }
         return false
     }
@@ -2848,7 +2853,8 @@ nonisolated final class WorldMap: @unchecked Sendable {
     /// A bridge `lanes` wide over the water from bank to bank, its lanes centred on `middle`,
     /// laid (`lay`); nil if any lane doesn't reach land within 14 cells, or has the water under it
     /// for less than half its length.
-    private func span(_ kind: Bridge.Kind, at middle: CGPoint, northward: Bool, lanes: Int) -> Bridge? {
+    /// `clear`: only with water beside it too, along most of both its sides.
+    private func span(_ kind: Bridge.Kind, at middle: CGPoint, northward: Bool, lanes: Int, clear: Bool = false) -> Bridge? {
         let first = Int(((northward ? middle.x : middle.y) - CGFloat(lanes) / 2).rounded())
         let origin = Int((northward ? middle.y : middle.x).rounded(.down))
         let probe = Bridge(kind: kind, northward: northward, lane: first, lanes: lanes, start: origin, end: origin, landsAtStart: true, landsAtEnd: true)
@@ -2871,6 +2877,15 @@ nonisolated final class WorldMap: @unchecked Sendable {
                 return contains(cell) && ground[cell.row][cell.col] == .water
             }.count
             guard wet * 2 >= end - start + 1 else { return nil }
+        }
+        if clear {
+            for lane in [first - 1, first + lanes] {
+                let wet = (start...end).filter { along in
+                    let cell = probe.cell(lane: lane, along: along)
+                    return contains(cell) && ground[cell.row][cell.col] == .water
+                }.count
+                guard wet * 5 >= (end - start + 1) * 3 else { return nil }
+            }
         }
         for lane in first..<(first + lanes) {
             for along in [start - 1, end + 1] {
