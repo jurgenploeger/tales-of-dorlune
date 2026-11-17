@@ -111,8 +111,9 @@ struct ChatView: View {
                 showsEmotes.toggle()
             } label: {
                 Group {
-                    if let picture = Emote.happy.image {
-                        Image(uiImage: picture).interpolation(.none).resizable().scaledToFit().frame(width: 26, height: 26)
+                    // The bubble an emote pops up in, as it looks over your head.
+                    if let picture = Emote.happy.bubble ?? Emote.happy.image {
+                        Image(uiImage: picture).resizable().scaledToFit().frame(width: 28, height: 26)
                     }
                 }
                 .frame(width: 38, height: 38)
@@ -204,12 +205,9 @@ struct ChatView: View {
                     onClose()
                     onEmote(emote)
                 } label: {
-                    if let picture = emote.image {
+                    if let picture = emote.bubble ?? emote.image {
                         Image(uiImage: picture)
-                            .interpolation(.none)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 40, height: 40)
+                            .frame(width: 48, height: 40)
                     }
                 }
                 .buttonStyle(PressScaleStyle())

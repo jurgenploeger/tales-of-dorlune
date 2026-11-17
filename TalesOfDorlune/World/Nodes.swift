@@ -26,29 +26,52 @@ enum Nodes {
     /// the same message bubble style as a normal message bubble"): its picture (`Emote.icon`), each
     /// of its pixels two points, in the bubble speech has.
     static func emoteBubble(_ icon: UIImage) -> SKSpriteNode {
+        let drawn = emoteBubbleImage(icon)
+        return node(of: drawn.image, tip: drawn.tip)
+    }
+
+    /// An emote's bubble as a picture (`emoteBubble`), for the chat's button and its picker too,
+    /// so they show what will pop up over your head (the user, 2026-11-17).
+    static func emoteBubbleImage(_ icon: UIImage) -> (image: UIImage, tip: CGFloat) {
         let size = CGSize(width: icon.size.width * icon.scale * 2, height: icon.size.height * icon.scale * 2)
-        return bubble(around: size, padding: CGSize(width: 8, height: 6)) { box in
+        return bubbleImage(around: size, padding: CGSize(width: 8, height: 6)) { box in
             guard let context = UIGraphicsGetCurrentContext() else { return }
             context.interpolationQuality = .none
             icon.draw(in: box)
         }
     }
 
+    private static func bubble(around content: CGSize, padding: CGSize, draw: @escaping (CGRect) -> Void) -> SKSpriteNode {
+        let drawn = bubbleImage(around: content, padding: padding, draw: draw)
+        return node(of: drawn.image, tip: drawn.tip)
+    }
+
+    /// A bubble's picture as a sprite, anchored at its tail's tip (`tip`, how far across it lies):
+    /// over whoever's speaking, the bubble out to their right.
+    private static func node(of image: UIImage, tip: CGFloat) -> SKSpriteNode {
+        let texture = SKTexture(image: image)
+        texture.filteringMode = .linear
+        let node = SKSpriteNode(texture: texture, size: image.size)
+        node.anchorPoint = CGPoint(x: tip, y: 0)
+        return node
+    }
+
     /// The bubble speech and emotes share: cream, a dark line round it, and a tail that curves down
     /// and away to the left from near its bottom left corner (the user, 2026-11-17: "more on the
     /// bottom left instead of the middle"), as a message bubble's does. `draw` fills what's in it,
-    /// `content` in size. Anchored at the tail's tip.
-    private static func bubble(around content: CGSize, padding: CGSize, draw: @escaping (CGRect) -> Void) -> SKSpriteNode {
-        let tail: CGFloat = 8
+    /// `content` in size. Its tail small (5 points; at 8 it was too big, the user, 2026-11-17).
+    /// With how far across the picture the tail's tip lies.
+    private static func bubbleImage(around content: CGSize, padding: CGSize, draw: @escaping (CGRect) -> Void) -> (image: UIImage, tip: CGFloat) {
+        let tail: CGFloat = 5
         // Room on its left for the tail's tip, which reaches a little past its corner.
-        let lead: CGFloat = 3
+        let lead: CGFloat = 2
         let bubble = CGRect(x: 1 + lead, y: 1, width: content.width + padding.width * 2, height: content.height + padding.height * 2)
         let canvas = CGSize(width: bubble.maxX + 1, height: bubble.height + tail + 2)
         let radius = min(10, bubble.height / 2)
         // The tail's base on the straight bit of the bottom edge, just past the corner's round.
-        let half = max(2, min(5, bubble.width / 2 - radius))
+        let half = max(2, min(3, bubble.width / 2 - radius))
         let root = min(bubble.midX, bubble.minX + radius + half + 1)
-        let tip = CGPoint(x: root - half - 4, y: bubble.maxY + tail)
+        let tip = CGPoint(x: root - half - 2.5, y: bubble.maxY + tail)
         let image = UIGraphicsImageRenderer(size: canvas).image { _ in
             // One outline, clockwise from the top-left, that dips into the tail along the bottom
             // edge: the tail is part of the bubble, with no line drawn across where it joins.
@@ -75,12 +98,7 @@ enum Nodes {
             shape.stroke()
             draw(CGRect(x: bubble.minX + padding.width, y: bubble.minY + padding.height, width: content.width, height: content.height))
         }
-        let texture = SKTexture(image: image)
-        texture.filteringMode = .linear
-        let node = SKSpriteNode(texture: texture, size: image.size)
-        // At the tail's tip: over whoever's speaking, the bubble out to their right.
-        node.anchorPoint = CGPoint(x: tip.x / canvas.width, y: 0)
-        return node
+        return (image, tip.x / canvas.width)
     }
 
     /// A market trader's sign: a little wooden board over their head with something they sell.

@@ -38,6 +38,16 @@ enum Emote: String, CaseIterable, Identifiable {
     /// someone's head (`Nodes.emoteBubble`).
     var icon: UIImage? { ArtLibrary.shared.artImage("emote_" + rawValue + "_icon") }
 
+    /// It in the bubble it pops up in (`Nodes.emoteBubbleImage`), for the chat's button and picker.
+    var bubble: UIImage? {
+        if let known = Self.bubbles[self] { return known }
+        guard let icon else { return nil }
+        let image = Nodes.emoteBubbleImage(icon).image
+        Self.bubbles[self] = image
+        return image
+    }
+    private static var bubbles: [Emote: UIImage] = [:]
+
     /// Its picture for the map, hard-edged; nil if it isn't drawn.
     var texture: SKTexture? {
         if let known = Self.textures[self] { return known }
