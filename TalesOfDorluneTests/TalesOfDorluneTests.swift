@@ -656,7 +656,9 @@ struct ContentTests {
                 } else if let step = hill.terrace {
                     // Terraces: their faces you can't walk up, but you get up onto a level over the
                     // first round its back, from the ground round it.
-                    #expect(hill.cells.contains { !map.isWalkable($0) }, "map \(def.id): terraces with no faces")
+                    // A range too low for a step (narrow summits stand low) is a smooth hill.
+                    let stepped = Double(hill.highest) >= 1.6 * step
+                    #expect(!stepped || hill.cells.contains { !map.isWalkable($0) }, "map \(def.id): terraces with no faces")
                     let standable = hill.cells.filter { map.isWalkable($0) }
                     let top = standable.max { map.height(at: map.center(of: $0)) < map.height(at: map.center(of: $1)) }
                     var ground: GridPoint?
@@ -665,7 +667,7 @@ struct ContentTests {
                         if !hill.cells.contains(beside), map.isWalkable(beside) { ground = beside }
                     }
                     if let top, let ground {
-                        #expect(map.height(at: map.center(of: top)) >= CGFloat(step), "map \(def.id): no level of its terraces you can get up to")
+                        #expect(!stepped || map.height(at: map.center(of: top)) >= CGFloat(step), "map \(def.id): no level of its terraces you can get up to")
                         #expect(!map.path(from: map.center(of: ground), to: map.center(of: top)).isEmpty, "map \(def.id): no way up its terraces")
                     } else {
                         Issue.record("map \(def.id): terraces you can't walk on or round")

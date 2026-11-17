@@ -246,7 +246,9 @@ final class LandPlanner {
     /// as it was.
     private func planCliffFalls() {
         let water = def.theme.water ?? ""
-        guard !water.contains("ice"), !water.contains("chocolate") else { return }
+        // Nor in the dry lands, off a mesa of sand or desert rock.
+        guard !water.contains("ice"), !water.contains("chocolate"),
+              def.theme.ground != "tile_desert", def.theme.ground != "tile_sand" else { return }
         for hill in map.hills where hill.terrace != nil {
             var draw = SeededRandom(text: def.id + "/cliff falls \(hill.origin.col) \(hill.origin.row)")
             let cells = hill.cells.sorted { ($0.row, $0.col) < ($1.row, $1.col) }.shuffled(using: &draw)
