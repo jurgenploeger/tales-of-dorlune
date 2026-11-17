@@ -176,7 +176,12 @@ enum BridgeArt {
            let pile = fill(style.beam, shade: 0.4, palette: palette) {
             let thick = 5 * scale
             let edge = CGFloat(bridge.lane)
-            let rim = steps.map { spot(edge, $0) }
+            // Only over the water (its cells from `start` to `end`), a little in from each bank:
+            // run the deck's whole length, its shadow and reflection lay across the banks too (the
+            // user, 2026-11-17: "the shadow over the water and land is a bit strange").
+            let wetFrom = CGFloat(bridge.start) + 0.2, wetTo = CGFloat(bridge.end + 1) - 0.2
+            let over = [wetFrom] + steps.filter { $0 > wetFrom + 0.3 && $0 < wetTo - 0.3 } + [wetTo]
+            let rim = over.map { spot(edge, $0) }
             let lifted = rim.map { CGPoint(x: $0.x, y: $0.y + ground($0)) }
             let mirror = SKNode()
             mirror.zPosition = -(rim.map(\.y).min() ?? 0) + 0.002
@@ -185,10 +190,10 @@ enum BridgeArt {
                 let z = -min(a.y, b.y)
                 let turn = atan2(to.y - from.y, to.x - from.x), length = from.distance(to: to) + scale
                 // Its shadow on the water, away from the sun: down the screen and a little right.
-                let shade = SKSpriteNode(color: .black, size: CGSize(width: length, height: 2.4 * thick))
-                shade.alpha = 0.3
+                let shade = SKSpriteNode(color: .black, size: CGSize(width: length, height: 1.6 * thick))
+                shade.alpha = 0.2
                 shade.anchorPoint = CGPoint(x: 0, y: 1)
-                shade.position = CGPoint(x: from.x + 3 * scale, y: from.y - thick * 0.6)
+                shade.position = CGPoint(x: from.x, y: from.y - thick * 0.8)
                 shade.zRotation = turn
                 shade.zPosition = z + 0.001
                 world.addChild(shade)
@@ -216,8 +221,8 @@ enum BridgeArt {
                 post.anchorPoint = CGPoint(x: 0.5, y: 1)
                 post.position = CGPoint(x: top.x, y: top.y - thick - 1.5 * scale)
                 mirror.addChild(post)
-                // Piles under it, not at its ends on the banks, each with a pale line where it stands
-                // in the water.
+                // Piles under it, not at the water's edge by the banks, each with a pale line where
+                // it stands in the water.
                 guard index > 0, index < lifted.count - 1 else { continue }
                 let leg = SKSpriteNode(texture: pile, size: CGSize(width: 3 * scale, height: thick + 3 * scale))
                 leg.anchorPoint = CGPoint(x: 0.5, y: 1)
