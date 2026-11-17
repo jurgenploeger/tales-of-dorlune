@@ -360,7 +360,7 @@ enum BridgeArt {
         let corners = [spot(lane, low, 0), spot(lane + Double(bridge.lanes), low, 0), spot(lane, high, 0), spot(lane + Double(bridge.lanes), high, 0)]
         let xs = corners.map { $0.x }, ys = corners.map { $0.y }
         let minX = (xs.min() ?? 0).rounded(.down) - 2, maxX = (xs.max() ?? 0).rounded(.up) + 2
-        let minY = (ys.min() ?? 0).rounded(.down) - rise - 6, maxY = (ys.max() ?? 0).rounded(.up) + rise + 3
+        let minY = (ys.min() ?? 0).rounded(.down) - rise - 16, maxY = (ys.max() ?? 0).rounded(.up) + rise + 3
         let width = Int(maxX - minX), height = Int(maxY - minY)
         guard width > 0, height > 0, width < 2048, height < 2048 else { return nil }
         var bytes = [UInt8](repeating: 0, count: width * height * 4)
@@ -382,12 +382,32 @@ enum BridgeArt {
             return max(0, rise - 5) * max(0, 1 - across * across).squareRoot()
         }
         let step = 1 / (per * 1.5)
-        // The wall mirrored in the water, as far under the water's level as it stands over it.
-        let dark: Tone = (30, 92, 128)
+        // Its shade on the water under it, a little toward you: the water's dark through the arch.
+        for along in stride(from: wet.from + 0.1, to: wet.to - 0.1, by: step) {
+            for across in stride(from: -0.45, to: Double(bridge.lanes), by: step) {
+                plot(spot(lane + across, along, 0), (0, 0, 0), alpha: 0.24)
+            }
+        }
+        // It mirrored in the water, as far under the water's level as it stands over it: the wall
+        // with its arch, then its rails and posts under that (the user, 2026-11-17: "shouldn't the
+        // reflection under the bridge be more? Not just the edge of the bridge").
+        let dark: Tone = (24, 78, 112)
         for along in stride(from: wet.from, to: wet.to, by: step) {
             let top = Int(lift(along).rounded()), open = Int(arch(along))
             guard top >= open else { continue }
-            for z in open...top { plot(spot(lane, along, -Double(z) - 1), dark, alpha: 0.45) }
+            for z in open...top { plot(spot(lane, along, -Double(z) - 1), dark, alpha: 0.55) }
+            for z in [top + 4, top + 5, top + 8, top + 9] { plot(spot(lane, along, -Double(z) - 1), dark, alpha: 0.45) }
+        }
+        let first = low + 0.1, last = high - 0.1
+        let posts = max(2, Int(((last - first) / 1.25).rounded()) + 1)
+        for k in 0..<posts {
+            let along = first + (last - first) * Double(k) / Double(posts - 1)
+            guard along > wet.from, along < wet.to else { continue }
+            let top = Int(lift(along).rounded())
+            for z in top...(top + 10) {
+                let at = spot(lane, along, -Double(z) - 1)
+                for dx in [-1.0, 0, 1] { plot((at.x + dx, at.y), dark, alpha: 0.5) }
+            }
         }
         // The deck, up the curve.
         let imageWide = deck.image.width, imageHigh = deck.image.height
