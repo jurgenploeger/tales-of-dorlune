@@ -472,6 +472,11 @@ final class ArtLibrary {
         return tones
     }
 
+    /// Tile `id`'s pond tones and average brightness (`pondPalette`), as graded now.
+    func pondPalette(of id: String) -> (tones: [(r: Double, g: Double, b: Double)], mean: Double) {
+        Self.pondPalette(variantPixels(id, 0, size: max(tileImage(id).width, 16)))
+    }
+
     /// A water tile's tones (`pondTones`, from its average colour) and its average brightness.
     nonisolated static func pondPalette(_ texels: [UInt8]) -> (tones: [(r: Double, g: Double, b: Double)], mean: Double) {
         var r = 0.0, g = 0.0, b = 0.0

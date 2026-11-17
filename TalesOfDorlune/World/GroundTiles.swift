@@ -326,6 +326,17 @@ final class GroundTiles {
     /// tones (`ArtLibrary.pondTones`); none where its water is ice, chocolate or animated.
     private lazy var pondField: PondField? = makePondField()
 
+    /// The tone (`ArtLibrary.pondTones`) of the land's own water at (x, y) in its cells; nil off its water,
+    /// or where its water is ice, chocolate or animated. What a reflection falls on (`LandStage.reflect`).
+    func pondTone(atCells x: Double, _ y: Double) -> Int? {
+        pondField?.toneIfWater(x, y)
+    }
+
+    /// The pond's tones' colours in this land's water, graded with its palette.
+    lazy var pondColours: [(r: Double, g: Double, b: Double)] = art.grading(palette: theme.palette, for: map.def.id) {
+        art.pondPalette(of: waterID).tones
+    }
+
     private func makePondField() -> PondField? {
         guard waterID == "tile_water", waterVaries else { return nil }
         var cells: Set<GridPoint> = []
@@ -443,6 +454,16 @@ struct PondField {
         let other = GridPoint(col: cell.col + dc, row: cell.row + dr)
         guard let base = start[other] else { return nil }
         return base + (j - dr * s) * s + (i - dc * s)
+    }
+
+    /// `tone`, or nil where (x, y) isn't water.
+    func toneIfWater(_ x: Double, _ y: Double) -> Int? {
+        let s = Self.samples
+        let col = Int(x.rounded(.down)), row = Int(y.rounded(.down))
+        let i = min(s - 1, max(0, Int(((x - Double(col)) * Double(s)).rounded(.down))))
+        let j = min(s - 1, max(0, Int(((y - Double(row)) * Double(s)).rounded(.down))))
+        guard let k = spot(GridPoint(col: col, row: row), i, j), water[k] else { return nil }
+        return tone(x, y)
     }
 
     /// The tone (`ArtLibrary.pondTones`) of the water at (x, y), in cells of the land: by how far it lies

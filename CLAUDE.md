@@ -240,7 +240,10 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   a few tones in the land's water colour (`ArtLibrary.pondTones`), by how far it lies from land and how far
   below the far shore up the screen (`GroundTiles.PondField`, 16 spots a cell, worked out once a land:
   dark out from the shore, the near half lighter where it mirrors the sky, a dark line under the far
-  bank), the tile's own ripples kept over them; the moving layers and reflections aren't in yet.
+  bank), the tile's own ripples kept over them; moving in whole pixels (`PondMotion`, `LandStage.placePondMotion`:
+  dashes lapping the near shores, the far waterline creeping, glints and drops on the open water); and what
+  stands just above the water mirrored in it (`LandStage.reflect`: flipped, squashed to 0.55, in the pond's
+  dark tones a step darker than the water, only on its water, rows wobbling a pixel in four frames).
   It replaced a generated tile that repeated every 16 pixels; rerun it
   after editing, `--preview out.png` shows them turned as the game draws them.
 - `tools/fx_art.py`: the same for the few battle marks that aren't light (`art/sprites/fx_*.png`: poison's bubble
