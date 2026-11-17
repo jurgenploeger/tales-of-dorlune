@@ -4613,6 +4613,8 @@ struct RewardTests {
         for _ in 0..<300 {
             if let drop = session.equipmentDrop(level: 190, best: true) { #expect(drop.type != .cape, "a monster dropped \(drop.id)") }
         }
+        // Back at level 1: at 200 (for the drops above) the Legend's Cape is earned, one of the others.
+        session.data.hero.level = 1
         let crown = try #require(session.prizes.first { $0.kind == .capes })
         let others = session.prizes.filter { $0.kind != .capes }
         let crowning = session.prizeProgress(crown)
