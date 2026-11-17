@@ -332,6 +332,7 @@ final class LandStage {
         let node = addScenery(drawn, at: placement.cell, nudge: placement.nudge, sway: placement.sway, scale: placement.scale,
                               wind: placement.art)
         reflect(node, picture: drawn.texture, art: placement.art, cell: placement.cell)
+        addFire(to: node, art: placement.art)
         // Lit by a lamp nearby at night (`LampLight`): not a light itself, nor what moves in the wind
         // (its picture changes, the light's copy wouldn't).
         if !lamps.isEmpty, node.texture === drawn.texture, placement.art != "street_lamp", placement.prop?.glow == nil {
@@ -339,6 +340,20 @@ final class LandStage {
                                    from: lamps)
         }
         return node
+    }
+
+    /// A building's fire moving (`tools/fire_art.py`, the user, 2026-11-17: a forge's fire stood
+    /// still): its flame's frames, cut from its own picture at its own size, laid over it and played on
+    /// a loop, each building from a moment of its own so they don't flicker in step.
+    private func addFire(to node: SKSpriteNode, art id: String) {
+        let names = (0..<4).map { "fire_\(id)_\($0)" }
+        guard names.allSatisfy({ art.asset($0) != nil }) else { return }
+        let frames = names.map { art.sprite($0).texture }
+        let flame = SKSpriteNode(texture: frames[0], size: node.size)
+        flame.anchorPoint = node.anchorPoint
+        flame.zPosition = 0.01
+        node.addChild(flame)
+        flame.run(.sequence([.wait(forDuration: .random(in: 0...0.33)), .repeatForever(.animate(with: frames, timePerFrame: 0.11))]))
     }
 
     /// Its lights at night (`LampLight`): its town's street lamps, where their glow is, and its props
@@ -840,6 +855,14 @@ final class LandStage {
         for building in plan.buildings { addScenery(building) }
     }
 
+    /// A terrace's stairs: how many steps, and their sandstone (`tools/terrace_art.py`'s colours).
+    static let stairSteps = 6
+    static let stairTread = UIColor(red: 0.9, green: 0.79, blue: 0.6, alpha: 1)
+    static let stairTreadAlt = UIColor(red: 0.94, green: 0.83, blue: 0.64, alpha: 1)
+    static let stairLitRiser = UIColor(red: 0.8, green: 0.66, blue: 0.47, alpha: 1)
+    static let stairShadedRiser = UIColor(red: 0.64, green: 0.51, blue: 0.38, alpha: 1)
+    static let stairEdge = UIColor(red: 0.45, green: 0.32, blue: 0.24, alpha: 1)
+
     /// How tall a terrace's balustrade stands (`tools/terrace_art.py` `RAIL`).
     static let railHeight: CGFloat = 14
 
@@ -876,7 +899,7 @@ final class LandStage {
                                           GridPoint(col: o.col, row: last.row + 1), GridPoint(col: last.col + 1, row: last.row + 1)]
             for col in o.col...last.col {
                 // Along the front (south) and the back (north).
-                if terrace.stairs.contains(GridPoint(col: col, row: o.row)) {
+                if terrace.heads.contains(GridPoint(col: col, row: o.row)) {
                     posts.insert(GridPoint(col: col, row: o.row))
                     posts.insert(GridPoint(col: col + 1, row: o.row))
                 } else {
@@ -886,7 +909,7 @@ final class LandStage {
             }
             for row in o.row...last.row {
                 // Along the left (west) and the right (east).
-                if terrace.stairs.contains(GridPoint(col: o.col, row: row)) {
+                if terrace.heads.contains(GridPoint(col: o.col, row: row)) {
                     posts.insert(GridPoint(col: o.col, row: row))
                     posts.insert(GridPoint(col: o.col, row: row + 1))
                 } else {
@@ -1204,7 +1227,6 @@ final class LandStage {
         guard !map.plateaus.isEmpty else { return }
         let tile = WorldMap.tileSize
         let tileSize = CGSize(width: tile, height: tile)
-        let stone = art.tileTexture("terrace_flag")
         let flags = ["terrace_flag", "terrace_flag_2", "terrace_flag_3", "terrace_flag_4"].map {
             SKTileGroup(tileDefinition: SKTileDefinition(texture: art.tileTexture($0), size: tileSize))
         }
@@ -1225,12 +1247,12 @@ final class LandStage {
         for plateau in map.plateaus {
             let rise = plateau.height
             let topZ = Self.topZ(of: plateau.cells)
-            let lips = CGMutablePath(), shadows = CGMutablePath(), creases = CGMutablePath(), treads = CGMutablePath()
+            let lips = CGMutablePath(), shadows = CGMutablePath()
             func line(_ path: CGMutablePath, _ from: CGPoint, _ to: CGPoint) {
                 path.move(to: from)
                 path.addLine(to: to)
             }
-            // Its top: flagstones, its height up. The stairs are drawn as slopes instead.
+            // Its top: flagstones, its height up. The stairs are drawn as steps instead.
             let (low, high) = plateau.bounds
             let top = SKTileMapNode(tileSet: SKTileSet(tileGroups: flags), columns: high.col - low.col + 1,
                                     rows: high.row - low.row + 1, tileSize: tileSize)
@@ -1288,38 +1310,57 @@ final class LandStage {
                     world.addChild(face)
                 }
             }
-            // Stairs: the foot on the ground in front, the head up at the top.
-            for (cell, ramp) in plateau.ramps {
-                let c = cell.col, r = cell.row
-                let corners: [(CGPoint, CGFloat)] = ramp == .south
-                    ? [(corner(c, r), 0), (corner(c + 1, r), 0), (corner(c + 1, r + 1), rise), (corner(c, r + 1), rise)]
-                    : [(corner(c, r + 1), 0), (corner(c, r), 0), (corner(c + 1, r), rise), (corner(c + 1, r + 1), rise)]
-                let points = corners.map { $0.0 + CGVector(dx: 0, dy: $0.1) }
+            // Stairs: steps from the foot on the ground in front up to the head at the top, each a lit
+            // tread and a riser in front of it, the nearest drawn last; and their side turned to you,
+            // stepped (the user, 2026-11-17: one slope with lines on it read as flat).
+            func at(_ x: CGFloat, _ y: CGFloat, _ z: CGFloat) -> CGPoint {
+                WorldMap.project(CGPoint(x: x * tile, y: y * tile)) + CGVector(dx: 0, dy: z)
+            }
+            func shape(_ points: [CGPoint], fill: UIColor, z: CGFloat) {
                 let path = CGMutablePath()
                 path.addLines(between: points)
                 path.closeSubpath()
-                let slope = SKShapeNode(path: path)
-                slope.fillTexture = stone
-                slope.fillColor = UIColor(white: 0.95, alpha: 1)
-                slope.strokeColor = UIColor(white: 0, alpha: 0.22)
-                slope.lineWidth = 1
-                slope.zPosition = topZ - 0.25
-                world.addChild(slope)
-                let steps = 5
-                for step in 1..<steps {
-                    let t = CGFloat(step) / CGFloat(steps)
-                    let left = points[0] + (points[3] - points[0]) * t
-                    let right = points[1] + (points[2] - points[1]) * t
-                    line(creases, left, right)
-                    line(treads, left + CGVector(dx: 0, dy: 1.5), right + CGVector(dx: 0, dy: 1.5))
+                let node = SKShapeNode(path: path)
+                node.fillColor = fill
+                node.strokeColor = Self.stairEdge
+                node.lineWidth = 1
+                node.lineJoin = .miter
+                node.zPosition = z
+                world.addChild(node)
+            }
+            for (cell, ramp) in plateau.ramps {
+                let c = CGFloat(cell.col), r = CGFloat(cell.row)
+                let count = Self.stairSteps, step = rise / CGFloat(count)
+                var side: [CGPoint] = [at(c, r, 0)]
+                for k in stride(from: count - 1, through: 0, by: -1) {
+                    let near = CGFloat(k) / CGFloat(count), far = CGFloat(k + 1) / CGFloat(count)
+                    let low = CGFloat(k) * step, high = CGFloat(k + 1) * step
+                    let z = topZ - 0.25 + 0.01 * CGFloat(count - k)
+                    if ramp == .south {
+                        shape([at(c, r + near, high), at(c + 1, r + near, high), at(c + 1, r + far, high), at(c, r + far, high)],
+                              fill: k % 2 == 0 ? Self.stairTread : Self.stairTreadAlt, z: z)
+                        shape([at(c, r + near, low), at(c + 1, r + near, low), at(c + 1, r + near, high), at(c, r + near, high)],
+                              fill: Self.stairShadedRiser, z: z + 0.005)
+                    } else {
+                        shape([at(c + near, r, high), at(c + far, r, high), at(c + far, r + 1, high), at(c + near, r + 1, high)],
+                              fill: k % 2 == 0 ? Self.stairTread : Self.stairTreadAlt, z: z)
+                        shape([at(c + near, r, low), at(c + near, r + 1, low), at(c + near, r + 1, high), at(c + near, r, high)],
+                              fill: Self.stairLitRiser, z: z + 0.005)
+                    }
                 }
+                for k in 0..<count {
+                    let near = CGFloat(k) / CGFloat(count), far = CGFloat(k + 1) / CGFloat(count), high = CGFloat(k + 1) * step
+                    side += ramp == .south ? [at(c, r + near, high), at(c, r + far, high)] : [at(c + near, r, high), at(c + far, r, high)]
+                }
+                side.append(ramp == .south ? at(c, r + 1, 0) : at(c + 1, r, 0))
+                // The west side of the front stairs is turned to the light, the south side of the side ones away.
+                shape(side, fill: ramp == .south ? Self.stairLitRiser : Self.stairShadedRiser, z: topZ - 0.15)
             }
             stroke(lips, color: UIColor(white: 1, alpha: 0.2), width: 1, z: topZ + 0.1)
             stroke(shadows, color: UIColor(white: 0, alpha: 0.28), width: 2, z: topZ - 0.45)
-            stroke(creases, color: UIColor(white: 0, alpha: 0.3), width: 1.5, z: topZ - 0.2)
-            stroke(treads, color: UIColor(white: 1, alpha: 0.35), width: 1, z: topZ - 0.2)
             // Its shade on the ground away from the sun, a block its height (and its balustrade's).
-            canopy.addBlock(feet: plateau.cells.map { map.center(of: $0) }, height: rise + Self.railHeight * 0.5,
+            canopy.addBlock(feet: plateau.cells.filter { plateau.ramps[$0] == nil }.map { map.center(of: $0) },
+                            height: rise + Self.railHeight * 0.5,
                             half: tile * 0.70710678)
         }
     }

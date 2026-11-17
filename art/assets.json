@@ -3043,6 +3043,22 @@
       }
     },
     {
+      "id": "fire_blacksmith_0",
+      "kind": "prop"
+    },
+    {
+      "id": "fire_blacksmith_1",
+      "kind": "prop"
+    },
+    {
+      "id": "fire_blacksmith_2",
+      "kind": "prop"
+    },
+    {
+      "id": "fire_blacksmith_3",
+      "kind": "prop"
+    },
+    {
       "id": "terrace_wall_s",
       "kind": "prop"
     },

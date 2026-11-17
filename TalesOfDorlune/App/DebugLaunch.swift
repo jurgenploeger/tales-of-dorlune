@@ -10,7 +10,8 @@ import SpriteKit
 ///   hp=0.2         start with this fraction of HP left
 ///   gold=1457603   start with this much gold
 ///   map=<id>       start on a map from content/maps.json
-///   at=x_y         start at this offset from the map's centre (e.g. at=0_14)
+///   at=x_y         start at this offset from the map's centre (e.g. at=0_14); at=terrace (or
+///                  terrace_side) at the foot of the first terrace's front (or side) stairs
 ///   ring=0         beside the land's first fairy ring (debug builds)
 ///   hill=n         start at the foot of the first trail up the map's nth range of hills (0 first);
 ///                  `hill=tallest` the range with the highest top, up its highest trail; `trail=k`
@@ -713,7 +714,16 @@ enum DebugLaunch {
         if let at = flags["at"]?.split(separator: ";").first ?? flags["at"].map({ Substring($0) }),
            let def = Content.shared.map(session.data.mapID) {
             let parts = at.split(separator: "_").compactMap { Int($0) }
-            if parts.count == 2 {
+            if at.hasPrefix("terrace") {
+                // `at=terrace` (or `terrace_side`): at the foot of the town's first terrace's front (or side)
+                // stairs, wherever it found room (`WorldMap.raiseTerrace`).
+                let grid = WorldMap(def: def)
+                if let terrace = grid.terraces.first {
+                    let stair = terrace.stairs[at.hasSuffix("side") ? 1 : 0]
+                    let foot = at.hasSuffix("side") ? GridPoint(col: stair.col - 1, row: stair.row) : GridPoint(col: stair.col, row: stair.row - 1)
+                    session.playerPosition = grid.center(of: foot)
+                }
+            } else if parts.count == 2 {
                 let grid = WorldMap(def: def)
                 session.playerPosition = grid.center(of: grid.offset(parts[0], parts[1]))
             }

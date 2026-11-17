@@ -1208,7 +1208,7 @@ final class WorldScene: SKScene {
                 for row in o.row...last.row {
                     let cell = GridPoint(col: col, row: row)
                     guard col == o.col || row == o.row || col == last.col || row == last.row,
-                          !terrace.stairs.contains(cell) else { continue }
+                          !terrace.heads.contains(cell) else { continue }
                     let corner = (col == o.col || col == last.col) && (row == o.row || row == last.row)
                     if !corner, let slanted = row == o.row || row == last.row ? rising : falling {
                         let node = SKSpriteNode(texture: slanted.texture, size: slanted.size)

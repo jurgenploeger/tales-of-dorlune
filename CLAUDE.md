@@ -217,6 +217,16 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   instead of swaying, caves keep the old sway (their depth of field swaps textures). Rerun it after
   redrawing a rigged sprite (`check_content.py` checks each rig fits); `--sheet` shows the clumps, `--gif`
   a grove in the wind.
+- Town roads (the user's pick from `tools/road_preview.py`, 2026-11-17): in a town's square (`GroundTiles.inTown`,
+  `WorldMap.townSquare`) every road cell is drawn by `ArtLibrary.townRoad` (`GroundLayer.cobbled`): cobbles about half a
+  cell across down its middle in the colour of the land's `tile_town` (graded), their edge ragged stone by stone, sand
+  (`tile_path`) with pebbles either side, and grass growing over the edges in clumps where the ground beside is green;
+  the pattern repeats every four cells (`cobblePhase`), so its tiles are made for 16 places. Wild roads stay sand.
+- `tools/fire_art.py`: a building's fire moving (Goldburg's forge, `blacksmith`): its flame's own pixels cut
+  into four frames (`fire_<id>_0` to `_3`, the first as drawn), each column of the flame reaching a pixel
+  higher or lower, a few pixels a step along its ramp, the glow round it pulsing; `LandStage.addFire` lays
+  them over the building and plays them. RD's art stays as drawn. Add a sprite to `FIRES` for another fire;
+  `--gif out.gif` shows it.
 - `TalesOfDorlune/Art/LampLight.swift`: street lamps and glowing props light what stands round them at night,
   after SpriteCook's normal-map article: which way each pixel faces from the sprite's outline alone
   (`OutlineNormals`: how far in from a clear pixel, a 5-pixel bevel, a little of its brightness), lit from the
