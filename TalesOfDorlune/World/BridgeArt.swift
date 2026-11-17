@@ -147,18 +147,95 @@ enum BridgeArt {
             }
             for ((a, b), (from, to)) in zip(zip(spots, spots.dropFirst()), zip(raised, raised.dropFirst())) where railed {
                 let z = inFront ? -min(a.y, b.y) + 0.01 : -max(a.y, b.y) - 0.01
+                // Ropes hang between their posts, in four short stretches; rails run straight.
+                let parts = bridge.material == .rope ? 4 : 1
+                let sag = bridge.material == .rope ? 2.5 * scale : 0
                 for (lift, thick) in [(8.5 * scale, 2 * scale), (4.5 * scale, scale)] {
-                    let length = from.distance(to: to)
-                    let node = SKSpriteNode(texture: rail, size: CGSize(width: length + scale, height: thick))
-                    node.anchorPoint = CGPoint(x: 0, y: 0.5)
-                    node.position = CGPoint(x: from.x, y: from.y + lift)
-                    node.zRotation = atan2(to.y - from.y, to.x - from.x)
-                    node.zPosition = z
-                    world.addChild(node)
+                    for part in 0..<parts {
+                        let t0 = CGFloat(part) / CGFloat(parts), t1 = CGFloat(part + 1) / CGFloat(parts)
+                        let p0 = CGPoint(x: from.x + (to.x - from.x) * t0, y: from.y + (to.y - from.y) * t0 + lift - sag * sin(.pi * t0))
+                        let p1 = CGPoint(x: from.x + (to.x - from.x) * t1, y: from.y + (to.y - from.y) * t1 + lift - sag * sin(.pi * t1))
+                        let node = SKSpriteNode(texture: rail, size: CGSize(width: p0.distance(to: p1) + scale, height: thick))
+                        node.anchorPoint = CGPoint(x: 0, y: 0.5)
+                        node.position = p0
+                        node.zRotation = atan2(p1.y - p0.y, p1.x - p0.x)
+                        node.zPosition = z
+                        world.addChild(node)
+                    }
                 }
             }
         }
         let steps = (0..<count).map { first + (last - first) * CGFloat($0) / CGFloat(count - 1) }
+        // Standing over the water, not lying on it (the user, 2026-11-17: "They look a bit too flat,
+        // and shouldn't there be a shadow underneath as well and a reflection in the water?"; their
+        // pick from tools/bridge_preview.py): along the side nearer you, the deck's thickness, piles
+        // under it into the water, its shadow on the water, and its side, posts and rails mirrored
+        // in the water, darker than it, swaying a point like ripples. A road's bridge and a
+        // footbridge, not a jetty or a pier (those stand on posts of their own).
+        if bridge.kind != .jetty, let side = fill(style.beam, shade: 0.5, palette: palette),
+           let pile = fill(style.beam, shade: 0.4, palette: palette) {
+            let thick = 5 * scale
+            let edge = CGFloat(bridge.lane)
+            let rim = steps.map { spot(edge, $0) }
+            let lifted = rim.map { CGPoint(x: $0.x, y: $0.y + ground($0)) }
+            let mirror = SKNode()
+            mirror.zPosition = -(rim.map(\.y).min() ?? 0) + 0.002
+            let dark = UIColor(red: 0.04, green: 0.16, blue: 0.28, alpha: 1)
+            for ((a, b), (from, to)) in zip(zip(rim, rim.dropFirst()), zip(lifted, lifted.dropFirst())) {
+                let z = -min(a.y, b.y)
+                let turn = atan2(to.y - from.y, to.x - from.x), length = from.distance(to: to) + scale
+                // Its shadow on the water, away from the sun: down the screen and a little right.
+                let shade = SKSpriteNode(color: .black, size: CGSize(width: length, height: 2.4 * thick))
+                shade.alpha = 0.3
+                shade.anchorPoint = CGPoint(x: 0, y: 1)
+                shade.position = CGPoint(x: from.x + 3 * scale, y: from.y - thick * 0.6)
+                shade.zRotation = turn
+                shade.zPosition = z + 0.001
+                world.addChild(shade)
+                // Its thickness.
+                let face = SKSpriteNode(texture: side, size: CGSize(width: length, height: thick))
+                face.anchorPoint = CGPoint(x: 0, y: 1)
+                face.position = from
+                face.zRotation = turn
+                face.zPosition = z + 0.005
+                world.addChild(face)
+                // Its side and rails in the water, as far under the water's level as they stand over it.
+                for (drop, tall) in [(thick + 1.5 * scale, 3 * scale), (thick + 5.5 * scale, scale), (thick + 9.5 * scale, 2 * scale)] where railed {
+                    let streak = SKSpriteNode(color: dark, size: CGSize(width: length, height: tall))
+                    streak.alpha = 0.5
+                    streak.anchorPoint = CGPoint(x: 0, y: 1)
+                    streak.position = CGPoint(x: from.x, y: from.y - drop)
+                    streak.zRotation = turn
+                    mirror.addChild(streak)
+                }
+            }
+            for (index, top) in lifted.enumerated() {
+                // A post's reflection under each post.
+                let post = SKSpriteNode(color: dark, size: CGSize(width: 3 * scale, height: 9 * scale))
+                post.alpha = 0.5
+                post.anchorPoint = CGPoint(x: 0.5, y: 1)
+                post.position = CGPoint(x: top.x, y: top.y - thick - 1.5 * scale)
+                mirror.addChild(post)
+                // Piles under it, not at its ends on the banks, each with a pale line where it stands
+                // in the water.
+                guard index > 0, index < lifted.count - 1 else { continue }
+                let leg = SKSpriteNode(texture: pile, size: CGSize(width: 3 * scale, height: thick + 3 * scale))
+                leg.anchorPoint = CGPoint(x: 0.5, y: 1)
+                leg.position = top
+                leg.zPosition = -rim[index].y + 0.004
+                world.addChild(leg)
+                let foam = SKSpriteNode(color: UIColor(red: 0.82, green: 0.92, blue: 0.96, alpha: 1), size: CGSize(width: 5 * scale, height: scale))
+                foam.alpha = 0.8
+                foam.anchorPoint = CGPoint(x: 0.5, y: 1)
+                foam.position = CGPoint(x: top.x, y: top.y - thick - 3 * scale)
+                foam.zPosition = -rim[index].y + 0.0045
+                world.addChild(foam)
+            }
+            let sway = SKAction.sequence([.moveBy(x: scale, y: 0, duration: 0), .wait(forDuration: 0.7),
+                                          .moveBy(x: -scale, y: 0, duration: 0), .wait(forDuration: 0.7)])
+            mirror.run(.repeatForever(sway))
+            world.addChild(mirror)
+        }
         // The lane nearer you is the one lower on the screen, across (west or south) of the deck.
         line(steps.map { spot(near, $0) }, inFront: true)
         line(steps.map { spot(far, $0) }, inFront: false)
@@ -196,6 +273,17 @@ enum BridgeArt {
             }
         }
         guard var image = Self.image(bytes, width: width, height: height) else { return nil }
+        if let palette, let graded = Recolor.grade(palette, image: image) { image = graded }
+        let texture = SKTexture(cgImage: image)
+        texture.filteringMode = .nearest
+        return texture
+    }
+
+    /// One colour as a texture, in the map's palette: a tone at `shade` of itself (the deck's side,
+    /// its piles).
+    private static func fill(_ tone: Tone, shade: Double, palette: MapPalette?) -> SKTexture? {
+        let bytes = [UInt8(tone.r * shade), UInt8(tone.g * shade), UInt8(tone.b * shade), 255]
+        guard var image = Self.image(bytes, width: 1, height: 1) else { return nil }
         if let palette, let graded = Recolor.grade(palette, image: image) { image = graded }
         let texture = SKTexture(cgImage: image)
         texture.filteringMode = .nearest

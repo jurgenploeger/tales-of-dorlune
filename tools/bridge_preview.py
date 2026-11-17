@@ -86,9 +86,14 @@ def scene(look, lanes=3, cells=5, zoom=3, depth=True):
         for lane in sides:
             pts = [(lane, first + (last - first) * k / (n - 1)) for k in range(n)]
             for (l0, a0), (l1, a1) in zip(pts, pts[1:]):
+                # Ropes hang between their posts (`BridgeArt.rails`); rails run straight.
+                parts, sag = (4, 2.5) if look == 'rope' else (1, 0)
                 for h, colour in ((9, L['light']), (8, L['dark']), (5, L['light']), (4, L['dark'])):
-                    x0, y0 = spot(l0, a0, sign * (top + h)); x1, y1 = spot(l1, a1, sign * (top + h))
-                    draw.line([(x0, y0), (x1, y1)], fill=c(colour), width=1)
+                    for k in range(parts):
+                        t0, t1 = k / parts, (k + 1) / parts
+                        x0, y0 = spot(l0 + (l1 - l0) * t0, a0 + (a1 - a0) * t0, sign * (top + h - sag * math.sin(math.pi * t0)))
+                        x1, y1 = spot(l0 + (l1 - l0) * t1, a0 + (a1 - a0) * t1, sign * (top + h - sag * math.sin(math.pi * t1)))
+                        draw.line([(x0, y0), (x1, y1)], fill=c(colour), width=1)
             for lane_, along in pts:
                 x, y0 = spot(lane_, along, sign * top); _, y1 = spot(lane_, along, sign * (top + 12))
                 draw.rectangle([x - 1, min(y0, y1), x + 1, max(y0, y1)], fill=c(tuple(int(t * 0.9) for t in L['light'])))
