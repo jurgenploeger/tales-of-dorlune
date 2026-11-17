@@ -461,6 +461,9 @@ terrace_stairs | newgame,level=40,map=goldburg,at=14_13           | 8
 terrace_top    | newgame,level=40,map=goldburg,at=11_17           | 8
 hill_meadow    | newgame,map=sunny_meadow,hill=0                  | 8
 hill_top       | newgame,map=sunny_meadow,hill=0,ontop            | 8
+hill_twilight  | newgame,level=20,map=twilight_woods,hill=0,weather=clear,hour=12 | 8
+hill_desert_mesa | newgame,level=60,map=genie_desert,hill=1,weather=clear,hour=12 | 8
+hill_rosen     | newgame,level=140,map=rosen_lake,hill=0,weather=clear,hour=12 | 8
 hill_candy     | newgame,level=60,map=candy_mountain,hill=1       | 8
 hill_desert    | newgame,level=60,map=genie_desert,hill=0         | 8
 hill_crystal   | newgame,level=90,map=crystal_mountain,hill=0     | 8
