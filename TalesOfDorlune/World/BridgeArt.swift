@@ -194,6 +194,18 @@ enum BridgeArt {
             }
             for ((a, b), (from, to)) in zip(zip(spots, spots.dropFirst()), zip(raised, raised.dropFirst())) where railed {
                 let z = inFront ? -min(a.y, b.y) + 0.01 : -max(a.y, b.y) - 0.01
+                // A stone bridge's sides are stone too (the user, 2026-11-17: "if it's a stone bridge,
+                // the rails should be solid stones as well"): a low wall from post to post, pale
+                // along its top, in place of two rails.
+                if style.slabs, let wall = parapet(style, palette: palette) {
+                    let node = SKSpriteNode(texture: wall, size: CGSize(width: from.distance(to: to) + scale, height: 7 * scale))
+                    node.anchorPoint = .zero
+                    node.position = from
+                    node.zRotation = atan2(to.y - from.y, to.x - from.x)
+                    node.zPosition = z
+                    world.addChild(node)
+                    continue
+                }
                 // Ropes hang between their posts, in four short stretches; rails run straight.
                 let parts = bridge.material == .rope ? 4 : 1
                 let sag = bridge.material == .rope ? 2.5 * scale : 0
@@ -333,6 +345,25 @@ enum BridgeArt {
         return texture
     }
 
+    /// A stone bridge's low wall between two posts, as a texture in the map's palette: seven pixels
+    /// tall, pale along its top, a dark line along its foot, stretched along the bridge's side.
+    private static func parapet(_ style: Look, palette: MapPalette?) -> SKTexture? {
+        var bytes = [UInt8](repeating: 0, count: 7 * 4)
+        for y in 0..<7 {
+            let color: Tone = y == 0 ? style.cap : y == 6 ? style.edge
+                : (r: style.railLight.r * 0.94, g: style.railLight.g * 0.94, b: style.railLight.b * 0.94)
+            bytes[y * 4] = UInt8(color.r)
+            bytes[y * 4 + 1] = UInt8(color.g)
+            bytes[y * 4 + 2] = UInt8(color.b)
+            bytes[y * 4 + 3] = 255
+        }
+        guard var image = Self.image(bytes, width: 1, height: 7) else { return nil }
+        if let palette, let graded = Recolor.grade(palette, image: image) { image = graded }
+        let texture = SKTexture(cgImage: image)
+        texture.filteringMode = .nearest
+        return texture
+    }
+
     /// A bow bridge (`WorldMap.Bridge.bowed`) as one picture, as it stands on the screen (mirrored in
     /// tools/bridge_preview.py `bow`): its deck's boards or slabs laid up the curve, each pixel
     /// where the view puts it and as high as the deck stands there (`Bridge.bow`), a little lighter
@@ -396,7 +427,9 @@ enum BridgeArt {
             let top = Int(lift(along).rounded()), open = Int(arch(along))
             guard top >= open else { continue }
             for z in open...top { plot(spot(lane, along, -Double(z) - 1), dark, alpha: 0.55) }
-            for z in [top + 4, top + 5, top + 8, top + 9] { plot(spot(lane, along, -Double(z) - 1), dark, alpha: 0.45) }
+            // Its rails, or a stone bridge's low wall.
+            let sides = style.slabs ? Array((top + 1)...(top + 7)) : [top + 4, top + 5, top + 8, top + 9]
+            for z in sides { plot(spot(lane, along, -Double(z) - 1), dark, alpha: 0.45) }
         }
         let first = low + 0.1, last = high - 0.1
         let posts = max(2, Int(((last - first) / 1.25).rounded()) + 1)
