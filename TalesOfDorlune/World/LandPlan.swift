@@ -105,6 +105,7 @@ final class LandPlanner {
         await pause()
         planFairyRings()
         planOutcrops()
+        planCliffFeet()
         await pause()
         await planProps(pause: pause)
         await planSeamProps(pause: pause)
@@ -795,6 +796,37 @@ final class LandPlanner {
                 map.occupy(cell, blocking: true)
                 let scale = CGFloat.random(in: 0.7...1.1, using: &rocks)
                 plan.outcrops.append(scenery(kind, at: cell, nudge: true, scale: scale))
+            }
+        }
+    }
+
+    /// What lies at the foot of the terraces' faces (the cliffs preview: "a few rocks fallen at the
+    /// walls' feet"): on the cells in front of a face, kept clear of anything tall
+    /// (`WorldMap.blockFaces`), now and then one of the land's own low things, a fern, flowers,
+    /// or pebbles (nothing in your way), so the rock doesn't meet bare grass all along. Only what
+    /// the land's theme has among its props; draws of its own.
+    private func planCliffFeet() {
+        guard map.hills.contains(where: { $0.terrace != nil }) else { return }
+        let low = ["fern_clump", "flower_patch", "pebbles"]
+        let kinds = low.filter { kind in def.theme.props.contains { $0.art == kind } }
+        guard !kinds.isEmpty else { return }
+        var draw = SeededRandom(text: def.id + "/cliff feet")
+        for hill in map.hills where hill.terrace != nil {
+            let faces = Set(hill.cells.filter { !map.isWalkable($0) && map.rise(across: $0) > 14 })
+            var feet: Set<GridPoint> = []
+            for face in faces {
+                for (dc, dr) in [(-1, 0), (0, -1), (-1, -1)] {
+                    let front = GridPoint(col: face.col + dc, row: face.row + dr)
+                    if !faces.contains(front), map.isWalkable(front),
+                       map.ground[front.row][front.col] == .ground { feet.insert(front) }
+                }
+            }
+            for cell in feet.sorted(by: { ($0.row, $0.col) < ($1.row, $1.col) }) {
+                guard Double.random(in: 0..<1, using: &draw) < 0.3 else { continue }
+                let kind = kinds[Int.random(in: 0..<kinds.count, using: &draw)]
+                var placement = Placement(art: kind, cell: cell, scale: CGFloat.random(in: 0.75...1.05, using: &draw))
+                placement.nudge = CGVector(dx: CGFloat.random(in: -7...7, using: &draw), dy: CGFloat.random(in: -5...5, using: &draw))
+                plan.outcrops.append(placement)
             }
         }
     }

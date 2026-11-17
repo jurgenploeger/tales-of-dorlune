@@ -430,6 +430,18 @@ enum HillArt {
                         // shows and what it covers there: a pixel across and up the map each.
                         let gx = (Double(hill.height(atCells: x + step, y)) - here) / step
                         let gy = (Double(hill.height(atCells: x, y + step)) - here) / step
+                        // A face's rock where it climbs fast enough (`Look.cliff`), its edge ragged a
+                        // pixel at a time: the grass over its lip. Found before the rock's own
+                        // colour: most of a terraced range is its levels' grass, with none.
+                        var cover = 1.0
+                        if let cliff = look.cliff {
+                            let slope = (gx * gx + gy * gy).squareRoot()
+                            guard slope > cliff - 20 else { continue }
+                            let pixelX = (cell.col - low.col) * px + i, pixelY = (cell.row - low.row) * px + j
+                            let fray = Self.noise(pixelX, pixelY, 7) + 0.5 * Self.noise(pixelX >> 1, pixelY >> 1, 8)
+                            cover = min(1, max(0, (slope - cliff + 20 - 40 * fray) / 10))
+                            guard cover > 0 else { continue }
+                        }
                         let lift = here / climb
                         let ax = step * (1 + gx / climb), ay = step * gx / climb
                         let bx = step * gy / climb, by = step * (1 + gy / climb)
@@ -460,16 +472,6 @@ enum HillArt {
                             } else if band < 0.28 {
                                 shade *= 1 + 0.1 * steep
                             }
-                        }
-                        // A face's rock where it climbs fast enough (`Look.cliff`), its edge ragged a
-                        // pixel at a time: the grass over its lip.
-                        var cover = 1.0
-                        if let cliff = look.cliff {
-                            let slope = (gx * gx + gy * gy).squareRoot()
-                            let pixelX = (cell.col - low.col) * px + i, pixelY = (cell.row - low.row) * px + j
-                            let fray = Self.noise(pixelX, pixelY, 7) + 0.5 * Self.noise(pixelX >> 1, pixelY >> 1, 8)
-                            cover = min(1, max(0, (slope - cliff + 20 - 40 * fray) / 10))
-                            guard cover > 0 else { continue }
                         }
                         let index = (row * side + (cell.col - corner.col) * px + i) * 4
                         bytes[index] = UInt8(min(255, red * shade * cover))

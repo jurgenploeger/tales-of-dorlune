@@ -1509,11 +1509,20 @@ final class ContinentScene: SKScene {
         let you = Self.cell(at: cam.position)
         let middle = World.chunk(of: you)
         var near: [String: Int] = [:]
+        // Of the chunks out at the edge of what's drawn, well off the screen, one a look (four a
+        // second): crossing into a new chunk drew a row of five at once, a stutter every 32 cells
+        // (the speed audit, 2026-11-17). Those next to yours, and all of them till the land's
+        // first shown, at once.
+        var drewFar = false
         for dr in -Self.reach...Self.reach {
             for dc in -Self.reach...Self.reach {
                 let chunk = GridPoint(col: middle.col + dc, row: middle.row + dr)
                 if chunks[chunk] == nil {
-                    draw(chunk)
+                    let far = isReady && max(abs(dc), abs(dr)) > 1
+                    if !far || !drewFar {
+                        draw(chunk)
+                        drewFar = drewFar || far
+                    }
                 } else if max(abs(dc), abs(dr)) <= 1, stale.contains(chunk), let drawn = chunks[chunk] {
                     stale.remove(chunk)
                     redraw(drawn, at: chunk)
