@@ -2093,12 +2093,23 @@ nonisolated final class WorldMap: @unchecked Sendable {
             }
             let steps = stairs(at: origin)
             need += steps + [GridPoint(col: steps[0].col, row: steps[0].row - 1), GridPoint(col: steps[1].col - 1, row: steps[1].row)]
-            return need.allSatisfy { contains($0) && ground[$0.row][$0.col] == .ground && !occupied.contains($0) }
+            // Inside the town's square, two cells in from its fence, never out in the countryside.
+            let square = townSquare
+            func inside(_ cell: GridPoint) -> Bool {
+                cell.col >= square.origin.col + Self.townBorder + 2 && cell.col < square.origin.col + square.width - Self.townBorder - 2
+                    && cell.row >= square.origin.row + Self.townBorder + 2 && cell.row < square.origin.row + square.height - Self.townBorder - 2
+            }
+            return need.allSatisfy {
+                contains($0) && inside($0) && [.ground, .accent].contains(ground[$0.row][$0.col]) && !occupied.contains($0) && !fence.contains($0)
+            }
         }
+        let fence = Set(fenceCells)
         let wanted = offset(terrace.x, terrace.y)
         var origin = wanted
+        // Out to 24 cells: the green towns are crowded with streets and the townsfolk's spots, and
+        // within 10 Meadowbrook's, Rainbow City's and Larkspur's found no room and fell back onto a road.
         search: for margin in [true, false] {
-            for radius in 0...10 {
+            for radius in 0...24 {
                 for dr in -radius...radius {
                     for dc in -radius...radius where max(abs(dc), abs(dr)) == radius {
                         let candidate = GridPoint(col: wanted.col + dc, row: wanted.row + dr)

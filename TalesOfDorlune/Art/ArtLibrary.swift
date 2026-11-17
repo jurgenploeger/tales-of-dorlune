@@ -839,7 +839,8 @@ final class ArtLibrary {
             // A town's road: the sand either side of its cobbles and the stones' colour, from the land's
             // own path and cobble tiles as graded here.
             let sand = layer.cobbled ? variantPixels("tile_path", pick, size: size) : []
-            let stone = layer.cobbled ? Self.meanColour(variantPixels("tile_town", 0, size: size)) : (0, 0, 0)
+            let sandMean = layer.cobbled ? Self.meanColour(sand) : (0, 0, 0)
+            let stone = layer.cobbled ? Self.stoneColour(Self.meanColour(variantPixels("tile_town", 0, size: size))) : (0, 0, 0)
             let pools: [(x: Double, y: Double)] = shore ? Self.pools(mask: layer.mask) : []
             let radius: Double = switch layer.style {
             case .road: 0.36
@@ -865,7 +866,7 @@ final class ArtLibrary {
                         guard depth > 0 else { continue }
                         if layer.cobbled, sand.count == out.count {
                             Self.townRoad(&out, index, x: x, y: y, depth: depth, rim: rim, cell: cell,
-                                          speck: Self.speck(px, py, cell), sand: sand, stone: stone)
+                                          speck: Self.speck(px, py, cell), sand: sand, sandMean: sandMean, stone: stone)
                             continue
                         }
                         let shade = layer.style == .road && depth < rim ? 0.72 : 1
@@ -1118,15 +1119,27 @@ final class ArtLibrary {
         ((cell.col % 4 + 4) % 4) * 4 + (cell.row % 4 + 4) % 4
     }
 
-    /// The mean colour of a tile's pixels.
+    /// The mean colour of a tile's pixels, leaving out green ones (a path tile's flecks of grass).
     nonisolated private static func meanColour(_ pixels: [UInt8]) -> (Double, Double, Double) {
-        guard pixels.count >= 4 else { return (150, 145, 140) }
-        var sum = (0.0, 0.0, 0.0)
-        for index in stride(from: 0, to: pixels.count, by: 4) {
+        var sum = (0.0, 0.0, 0.0), count = 0.0
+        for index in stride(from: 0, to: pixels.count - 3, by: 4) where !isGreen(pixels, index) {
             sum.0 += Double(pixels[index]); sum.1 += Double(pixels[index + 1]); sum.2 += Double(pixels[index + 2])
+            count += 1
         }
-        let count = Double(pixels.count / 4)
+        guard count > 0 else { return (150, 145, 140) }
         return (sum.0 / count, sum.1 / count, sum.2 / count)
+    }
+
+    nonisolated private static func isGreen(_ pixels: [UInt8], _ index: Int) -> Bool {
+        Int(pixels[index + 1]) > Int(pixels[index]) + 8 && Int(pixels[index + 1]) > Int(pixels[index + 2]) + 8
+    }
+
+    /// A cobble's colour from a cobble tile's mean: less saturated and a little darker, so it reads as
+    /// stone beside the sand rather than as more sand (the tile's mean was tan in the green towns).
+    nonisolated private static func stoneColour(_ mean: (Double, Double, Double)) -> (Double, Double, Double) {
+        let grey = 0.3 * mean.0 + 0.59 * mean.1 + 0.11 * mean.2
+        func mix(_ c: Double) -> Double { (grey + (c - grey) * 0.45) * 0.92 }
+        return (mix(mean.0), mix(mean.1), mix(mean.2) + 4)
     }
 
     nonisolated private static func hash(_ a: Int, _ b: Int, _ c: Int) -> Double {
@@ -1154,7 +1167,8 @@ final class ArtLibrary {
     /// sand with pebbles in it either side; and where the ground beside it is green, the grass growing
     /// out over its edge in clumps, lit at their tips, with a shadow on the sand past them.
     nonisolated private static func townRoad(_ out: inout [UInt8], _ index: Int, x: Double, y: Double, depth: Double, rim: Double,
-                                             cell: GridPoint, speck: Double, sand: [UInt8], stone: (Double, Double, Double)) {
+                                             cell: GridPoint, speck: Double, sand: [UInt8], sandMean: (Double, Double, Double),
+                                             stone: (Double, Double, Double)) {
         let phase = cobblePhase(cell)
         let wx = Double(phase / 4) + x + 0.5, wy = Double(phase % 4) + y + 0.5
         let grassy = Int(out[index + 1]) > Int(out[index]) + 8 && Int(out[index + 1]) > Int(out[index + 2]) + 8
@@ -1166,7 +1180,11 @@ final class ArtLibrary {
             out[index + 3] = 255
             return
         }
-        var colour = (Double(sand[index]), Double(sand[index + 1]), Double(sand[index + 2]))
+        // The sand: the path tile's own light and dark, in its own colour without its flecks of grass.
+        let meanLight = max(1, sandMean.0 + sandMean.1 + sandMean.2)
+        let light = min(1.15, max(0.85, (Double(sand[index]) + Double(sand[index + 1]) + Double(sand[index + 2])) / meanLight))
+        let tint = isGreen(sand, index) ? 1 : light
+        var colour = (sandMean.0 * tint, sandMean.1 * tint, sandMean.2 * tint)
         var shade = 1.0
         if grassy, depth < reach + 0.08 { shade = 0.68 }            // the clumps' shadow on the road
         else if !grassy, depth < rim { shade = 0.72 }               // the road's darker rim, as before
@@ -1202,7 +1220,7 @@ final class ArtLibrary {
                 colour = (stone.0 * tone, stone.1 * tone, stone.2 * tone)
             }
         } else if core {
-            shade *= 0.78                                               // the sand between the stones
+            colour = (sandMean.0 * 0.62, sandMean.1 * 0.58, sandMean.2 * 0.56)   // the packed earth between the stones
         } else if speck < 0.05, depth > 0.05 {
             // A pebble in the sand.
             let tone = speck < 0.025 ? 1.08 : 0.8
