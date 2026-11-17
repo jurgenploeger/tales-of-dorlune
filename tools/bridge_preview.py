@@ -195,11 +195,117 @@ def scene(look, lanes=3, cells=5, zoom=3, depth=True, ends='now', crop=None):
     return img.resize((img.width * zoom, img.height * zoom), Image.NEAREST)
 
 
+def bow(look='stone', lanes=3, cells=5, zoom=4, rise=15):
+    """A bow bridge (the user, 2026-11-17: "perhaps it should be more lifted up or become a bow bridge when
+    it's stone"): the deck rising in an arch from bank to bank, `rise` pixels at its middle, on a wall of
+    stone down its near side with an arch through it for the water, its rails following the curve, and
+    the whole mirrored in the water."""
+    W, H = 300, 220
+    L = LOOKS[look]
+    C = 22
+    ox, oy = W / 2, H - 44
+    yy, xx = np.mgrid[0:H, 0:W]
+    sx = (xx - ox) / C; sy = (oy - yy) / (C * 0.5)
+    gx = (sx + sy) / 2 + 1.5; gy = (sy - sx) / 2
+    water = (gy > 0) & (gy < cells)
+    rip = np.sin(gx * 5 + gy * 3) * np.sin(gy * 7 - gx * 2)
+    canvas = np.where(water[..., None], np.array([58, 150, 190.0]) + 10 * rip[..., None], np.array([98, 160, 74]) + 6 * rip[..., None])
+    canvas[water & ((gy < 0.18) | (gy > cells - 0.18))] = (40, 110, 150)
+    wob = 0.16 * np.sin(gy * 2.3 + 1) + 0.1 * np.sin(gy * 5.1)
+    road = ~water & (gx > -0.15 + wob) & (gx < lanes + 0.15 + wob)
+    canvas[road] = np.array([196, 168, 120]) + 6 * rip[road][..., None]
+
+    lo, hi = -0.6, cells + 0.6              # the deck's ends, on the banks
+    def lift(along):
+        t = min(1, max(0, (along - lo) / (hi - lo)))
+        return rise * math.sin(math.pi * t)
+    def spot(lane, along, z=0.0):
+        x = lane - 1.5
+        return (ox + (x - along) * C, oy - (x + along) * C * 0.5 - z)
+
+    # Its shadow on the water, and it mirrored there: the wall's arch and the deck's edge, hanging down.
+    img = Image.fromarray(canvas.clip(0, 255).astype(np.uint8)).convert('RGBA')
+    px = img.load()
+    def wall(sign, colour_of):
+        steps = int((hi - lo) * C * 2)
+        for k in range(steps + 1):
+            along = lo + (hi - lo) * k / steps
+            x, y0 = spot(0, along)
+            top = lift(along)
+            # The arch through it: an opening over the water, leaving a ring of stone under the deck.
+            t = (along - 0) / cells
+            opening = 0 < t < 1
+            arch = (rise - 5) * math.sqrt(max(0, 1 - ((t - 0.5) / 0.46) ** 2)) if opening else 0
+            for z in range(int(round(top)) + 1):
+                if z < arch:
+                    continue
+                yy_ = int(round(y0 - sign * z)); xx_ = int(round(x))
+                if 0 <= xx_ < W and 0 <= yy_ < H:
+                    c = colour_of(along, z, top, arch)
+                    if c is not None:
+                        px[xx_, yy_] = c
+    dark = (30, 92, 128, 255)
+    def mirrored(along, z, top, arch):
+        return dark if 0 < along < cells else None
+    wall(-1, mirrored)
+    # The deck, boards up the curve, drawn from its far side to its near side.
+    d = deck(look, lanes, hi - lo)
+    sh = max(2, PX // 8)
+    for v in range(d.shape[0] * 2):
+        along = lo + v / 2 / PX
+        z = lift(along)
+        for u in range(lanes * PX * 2, -1, -1):
+            lane = u / 2 / PX
+            c = d[min(d.shape[0] - 1, v // 2), min(d.shape[1] - 1, sh + u // 2)]
+            if c[3] < 255:
+                continue
+            x, y = spot(lane, along, z)
+            xi, yi = int(round(x)), int(round(y))
+            if 0 <= xi < W and 0 <= yi < H:
+                # Lit where it climbs toward the sun (the far half), shaded where it falls away.
+                slope = math.cos(math.pi * min(1, max(0, (along - lo) / (hi - lo))))
+                k = 1 + 0.10 * slope
+                px[xi, yi] = (int(min(255, c[0] * k)), int(min(255, c[1] * k)), int(min(255, c[2] * k)), 255)
+    def stone(along, z, top, arch):
+        course = int(z) // 4
+        joint = int(z) % 4 == 0 or int((along * 9 + (course % 2) * 0.5)) != int((along * 9 + (course % 2) * 0.5 - 0.12))
+        ring = arch > 0 and z < arch + 3
+        base = 104 if ring else 128
+        tone = base * (0.9 + 0.2 * noise(int(along * 9 + course % 2 * 0.5), course))
+        if joint and not ring:
+            tone *= 0.72
+        if z >= int(round(top)) - 1:
+            tone = 168            # the coping along its top
+        return (int(tone), int(tone * 0.98), int(tone * 0.94), 255)
+    wall(1, stone)
+    draw = ImageDraw.Draw(img)
+    # Posts and rails along both sides, following the curve.
+    first, last = lo + 0.1, hi - 0.1
+    n = max(2, round((last - first) / 1.25) + 1)
+    for lane in (lanes - 0.06, 0.06):
+        pts = [first + (last - first) * k / (n - 1) for k in range(n)]
+        for a0, a1 in zip(pts, pts[1:]):
+            for part in range(6):
+                b0, b1 = a0 + (a1 - a0) * part / 6, a0 + (a1 - a0) * (part + 1) / 6
+                for h, colour in ((9, L['light']), (8, L['dark']), (5, L['light']), (4, L['dark'])):
+                    draw.line([spot(lane, b0, lift(b0) + h), spot(lane, b1, lift(b1) + h)], fill=colour, width=1)
+        for along in pts:
+            x, y = spot(lane, along, lift(along))
+            draw.rectangle([x - 1, y - 12, x + 1, y], fill=tuple(int(t * 0.9) for t in L['light']))
+            draw.line([(x - 1, y - 12), (x - 1, y)], fill=L['light']); draw.line([(x + 1, y - 12), (x + 1, y)], fill=L['edge'])
+            draw.line([(x - 1, y - 13), (x + 1, y - 13)], fill=L['cap'])
+    return img.resize((W * zoom, H * zoom), Image.NEAREST)
+
+
 names = ['wood', 'stone', 'lacquer', 'rope']
 titles = {'wood': 'Wood', 'stone': 'Stone', 'lacquer': 'Red lacquer', 'rope': 'Rope (footbridges)'}
 flat = "--flat" in sys.argv
 out = [a for a in sys.argv[1:] if not a.startswith("--")][0]
-if "--ends" in sys.argv:
+if "--bow" in sys.argv:
+    tiles = [("Stone, as it is now (flat, with a sill)", scene('stone', depth=True, ends='sill', zoom=4)),
+             ("Stone as a bow bridge", bow('stone')), ("Red lacquer as a bow bridge", bow('lacquer'))]
+    columns = 3
+elif "--ends" in sys.argv:
     # How a bridge's ends meet the land, four ways, on the stone bridge and the wooden one.
     picks = [('now', 'A: as now'), ('worn', 'B: boards broken off, earth trodden on'), ('sill', 'C: a stone sill and tufts'), ('both', 'D: B and C together')]
     tiles = [(f"{titles[n]}  {label}", scene(n, depth=True, ends=e, zoom=5, crop=(150, 78, 300, 200))) for n in ('stone', 'wood') for e, label in picks]
