@@ -683,25 +683,27 @@ final class LandStage {
     /// wind frames), sampled a whole pixel aside by a slow wave down its rows (none in the first 3 below
     /// the foot, then one, two past 16 of the picture's: about 30 of the reflection's) that steps every
     /// 0.625 seconds, four steps a 2.5-second turn; drawn where the water is (`u_mask`, its tone in red)
-    /// in tone 0, 1 or 2 by the pixel's brightness, a step darker than the water's own.
+    /// in tone 0, 1 or 2 by the pixel's brightness, a step darker than the water's own. No early return
+    /// and no choice between colours with `?:`: written so, the first one didn't take on the device and
+    /// the tree's own colours showed in the water (0.9.103's screenshot).
     private static let reflectionSource = """
     void main() {
-        float index = floor(v_tex_coord.x * u_count);
-        vec2 at = vec2(fract(v_tex_coord.x * u_count), v_tex_coord.y);
-        vec4 water = texture2D(u_mask, at);
-        if (water.a < 0.5) { gl_FragColor = vec4(0.0); return; }
-        float rows = (at.y - u_foot) * u_size.y;
-        float reach = rows < 3.0 ? 0.0 : (rows < 16.0 ? 1.0 : 2.0);
-        float phase = floor(u_time / 0.625) * 1.5707963;
-        float aside = floor(reach * sin(rows * 1.36 - phase) + 0.5);
-        float x = clamp(at.x - aside / u_size.x, 0.0, 0.9999);
-        vec4 source = texture2D(u_texture, vec2((index + x) / u_count, v_tex_coord.y));
-        if (source.a < 0.5) { gl_FragColor = vec4(0.0); return; }
-        float bright = dot(source.rgb / source.a, vec3(0.3, 0.59, 0.11)) * 255.0;
-        float level = bright < u_cut ? 0.0 : (bright < 110.0 ? 1.0 : 2.0);
-        float tone = max(0.0, min(floor(water.r * 255.0 / 32.0 + 0.5) - 1.0, level));
-        vec4 colour = tone < 0.5 ? u_tone0 : (tone < 1.5 ? u_tone1 : u_tone2);
-        gl_FragColor = vec4(colour.rgb, 1.0);
+        float frameAt = floor(v_tex_coord.x * u_count);
+        vec2 spot = vec2(fract(v_tex_coord.x * u_count), v_tex_coord.y);
+        vec4 pool = texture2D(u_mask, spot);
+        float down = (spot.y - u_foot) * u_size.y;
+        float reach = step(3.0, down) + step(16.0, down);
+        float turn = floor(u_time / 0.625) * 1.5707963;
+        float aside = floor(reach * sin(down * 1.36 - turn) + 0.5);
+        float x = clamp(spot.x - aside / u_size.x, 0.0, 0.9999);
+        vec4 picked = texture2D(u_texture, vec2((frameAt + x) / u_count, v_tex_coord.y));
+        float lum = dot(picked.rgb / max(picked.a, 0.001), vec3(0.3, 0.59, 0.11)) * 255.0;
+        float band = step(u_cut, lum) + step(110.0, lum);
+        float shade = max(0.0, min(floor(pool.r * 255.0 / 32.0 + 0.5) - 1.0, band));
+        vec3 paint = mix(u_tone0.rgb, u_tone1.rgb, step(0.5, shade));
+        paint = mix(paint, u_tone2.rgb, step(1.5, shade));
+        float shown = step(0.5, pool.a) * step(0.5, picked.a);
+        gl_FragColor = vec4(paint * shown, shown);
     }
     """
 
