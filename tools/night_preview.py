@@ -75,6 +75,19 @@ def night(rgb, depth=1.0):
     return from_oklab(np.stack([L2, a2, b2], -1))
 
 
+# The cheap night the game can afford (`Sky`): the multiply it already draws, a little lighter, and over
+# it one flat sheet of moonlit navy at a fraction of its alpha (plain alpha blending, no shader and no
+# render to a texture): it mixes every colour toward the same navy, which is what takes the colour out
+# of the grass and the water, as the per-colour grade does.
+MOON_MULTIPLY = np.array([0.6, 0.64, 0.84])
+MOON_HAZE = np.array([38.0, 46.0, 74.0])
+MOON_ALPHA = 0.42
+
+
+def haze_night(day):
+    return (day * MOON_MULTIPLY) * (1 - MOON_ALPHA) + MOON_HAZE * MOON_ALPHA
+
+
 def main(argv):
     out, shots = argv[0], argv[1:]
     rows = []
@@ -87,12 +100,12 @@ def main(argv):
         day = np.asarray(im).astype(float)
         now = day * np.array([0.42, 0.47, 0.78])
         cube = night(day)
-        rows.append([day, now, cube])
+        rows.append([day, now, haze_night(day), cube])
     w, h = rows[0][0].shape[1], rows[0][0].shape[0]
-    board = Image.new("RGB", (w * 3 + 40, (h + 30) * len(rows) + 10), (24, 30, 46))
+    board = Image.new("RGB", (w * 4 + 50, (h + 30) * len(rows) + 10), (24, 30, 46))
     d = ImageDraw.Draw(board)
     for r, row in enumerate(rows):
-        for c, (pic, title) in enumerate(zip(row, ["By day", "Night as now (one colour multiplied)", "Night by colour (proposed)"])):
+        for c, (pic, title) in enumerate(zip(row, ["By day", "Night as now (one colour multiplied)", "Cheap: multiply plus a navy haze", "Per colour (a shader on every pixel)"])):
             x, y = 10 + c * (w + 10), 10 + r * (h + 30)
             board.paste(Image.fromarray(np.clip(pic, 0, 255).astype(np.uint8)), (x, y))
             d.text((x + 4, y + h + 6), title, fill=(255, 255, 255))

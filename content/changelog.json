@@ -2,10 +2,11 @@
   "_note": "Newest first, one entry per big update with at most five lines that sum it up. The top version must match MARKETING_VERSION in project.yml (tools/check_content.py checks): a small change moves the top entry's version and date along and adds a line only if it's big enough to tell players. 1.0.0 is the App Store release.",
   "releases": [
     {
-      "version": "0.9.105",
+      "version": "0.9.106",
       "date": "2026-11-17",
       "title": "Emotes",
       "notes": [
+        "Every kind of weapon sounds its own in battle, and nights fall moonlit and soft.",
         "Pick an emote by the chat's box: a heart, a wave, a laugh and more pop up over your head, and adventurers nearby answer.",
         "Speech bubbles have curved tails, and reflections in the water take on its colour.",
         "Hills in Sunny Meadow and seven more lands rise in terraces with rock cliffs and waterfalls, among thickets, ferns and rock formations."

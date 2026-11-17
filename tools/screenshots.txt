@@ -994,3 +994,6 @@ tabs_chevron_ru | newgame,menu=settings,lang=ru | 8
 tabs_chevron_de | newgame,level=40,menu=character,lang=de | 8
 tabs_first_on | newgame,level=40,menu=character | 8
 tabs_first_on_dark | newgame,level=40,menu=character,dark | 8
+# The night's moonlit haze over its multiply (`Sky.haze`, 2026-11-17): a town with lamps, and the meadow's river.
+night_town   | newgame,map=sunny_meadow,weather=clear,hour=23 | 8
+night_meadow_land | newgame,map=sunny_meadow,landscape,weather=clear,hour=23 | 8
