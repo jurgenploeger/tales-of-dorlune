@@ -64,7 +64,9 @@ nonisolated final class WorldMap: @unchecked Sendable {
     /// The cells the town's buildings and shops stand on, its own and its lots (`nearBuilding`).
     private var buildingCells: Set<GridPoint> = []
     /// Raised terraces: their rectangles in grid cells (min corner inclusive), and stair cells.
-    private(set) var terraces: [(origin: GridPoint, width: Int, height: Int, stairs: [GridPoint])] = []
+    /// A town's terraces: where each stands, its stairs (out in front of its walls, `raiseTerrace`) and
+    /// the cells of its rim they come up to, open in its balustrade.
+    private(set) var terraces: [(origin: GridPoint, width: Int, height: Int, stairs: [GridPoint], heads: [GridPoint])] = []
     /// A town's raised terraces (`height(at:)`): each stands `height` points up; its rim is a wall
     /// but at its stairs.
     private(set) var plateaus: [Plateau] = []
@@ -1921,7 +1923,7 @@ nonisolated final class WorldMap: @unchecked Sendable {
     /// Sets down the map's own buildings (a 3×2 footprint above the anchor, like the shops, or its own
     /// `size`) where maps.json puts them. One that would stand on a road, water, the town fence, a
     /// terrace's wall, an NPC or another building (maps.json put some right on a street) moves to the nearest plot
-    /// that's clear, ring by ring, up to 8 cells away. A terrace's paved top is fine to build on.
+    /// that's clear, ring by ring, up to 8 cells away. Never on a terrace or its stairs.
     /// Out on the road, like in town: no tree or bush on an NPC's spot or in front of it (down the
     /// screen, toward you), where it would hide them. A boss is big, and the trees around it tall,
     /// so it gets a wider clearing. You can still walk there.
@@ -1971,7 +1973,8 @@ nonisolated final class WorldMap: @unchecked Sendable {
             for dc in footprint.columns {
                 for dr in footprint.rows {
                     let cell = GridPoint(col: anchor.col + dc, row: anchor.row + dr)
-                    guard contains(cell), [.ground, .accent].contains(ground[cell.row][cell.col]),
+                    // Never on a terrace: drawn on the ground, it stood through it.
+                    guard contains(cell), [.ground, .accent].contains(ground[cell.row][cell.col]), plateauOf[cell] == nil,
                           !occupied.contains(cell), !fence.contains(cell), !npcs.contains(cell) else { return false }
                 }
             }
@@ -2071,34 +2074,69 @@ nonisolated final class WorldMap: @unchecked Sendable {
             && !(-1...1).contains { dc in (-1...1).contains { dr in occupied.contains(GridPoint(col: cell.col + dc, row: cell.row + dr)) } }
     }
 
-    /// A raised stone terrace: its edges are walls (railings along the back), with stairs in
-    /// the middle of the front and one side. The walls block; the top is walkable and paved all
-    /// over, a street under it too: one left there showed on the top, running up and over the
-    /// walls with no stairs (playtesting 2026-10-21, Meadowbrook).
+    /// A raised stone terrace: its edges are walls (a balustrade round its top), with stairs out in
+    /// front of the middle of its front and one side, up to an opening in the rim. The walls block;
+    /// the top is walkable and paved all over. It stands where maps.json puts it if there's room, else
+    /// on the nearest spot that has it (the user, 2026-11-17: Goldburg's stood part on a road, a
+    /// building through it): its cells and a cell all round them, its stairs and a cell in front of
+    /// each, all plain ground with nothing on it, so it keeps off the streets, the plaza and the
+    /// townsfolk's spots; then nothing else is built, set down or planted on it or its stairs.
     private func raiseTerrace(_ terrace: MapDef.Terrace) {
-        let origin = offset(terrace.x, terrace.y)
-        let stairs = [GridPoint(col: origin.col + terrace.width / 2, row: origin.row),
-                      GridPoint(col: origin.col, row: origin.row + terrace.height / 2)]
-        for col in origin.col..<(origin.col + terrace.width) {
-            for row in origin.row..<(origin.row + terrace.height) {
-                let cell = GridPoint(col: col, row: row)
-                guard contains(cell) else { continue }
-                let onEdge = col == origin.col || row == origin.row || col == origin.col + terrace.width - 1 || row == origin.row + terrace.height - 1
-                if onEdge, !stairs.contains(cell) {
-                    occupy(cell, blocking: true)
-                    // The rim is the top's grassy edge, a road under it as well.
-                    if ground[row][col] == .path { ground[row][col] = .ground }
-                } else if ground[row][col] == .ground || ground[row][col] == .path {
-                    ground[row][col] = .accent   // the terrace top is paved
+        let width = terrace.width, height = terrace.height
+        func stairs(at origin: GridPoint) -> [GridPoint] {
+            [GridPoint(col: origin.col + width / 2, row: origin.row - 1), GridPoint(col: origin.col - 1, row: origin.row + height / 2)]
+        }
+        func room(at origin: GridPoint, margin: Bool) -> Bool {
+            var need: [GridPoint] = []
+            let pad = margin ? 1 : 0
+            for col in (origin.col - pad)..<(origin.col + width + pad) {
+                for row in (origin.row - pad)..<(origin.row + height + pad) { need.append(GridPoint(col: col, row: row)) }
+            }
+            let steps = stairs(at: origin)
+            need += steps + [GridPoint(col: steps[0].col, row: steps[0].row - 1), GridPoint(col: steps[1].col - 1, row: steps[1].row)]
+            return need.allSatisfy { contains($0) && ground[$0.row][$0.col] == .ground && !occupied.contains($0) }
+        }
+        let wanted = offset(terrace.x, terrace.y)
+        var origin = wanted
+        search: for margin in [true, false] {
+            for radius in 0...10 {
+                for dr in -radius...radius {
+                    for dc in -radius...radius where max(abs(dc), abs(dr)) == radius {
+                        let candidate = GridPoint(col: wanted.col + dc, row: wanted.row + dr)
+                        if room(at: candidate, margin: margin) {
+                            origin = candidate
+                            break search
+                        }
+                    }
                 }
             }
         }
-        terraces.append((origin, terrace.width, terrace.height, stairs))
+        let steps = stairs(at: origin)
+        let heads = [GridPoint(col: steps[0].col, row: origin.row), GridPoint(col: origin.col, row: steps[1].row)]
+        for col in origin.col..<(origin.col + width) {
+            for row in origin.row..<(origin.row + height) {
+                let cell = GridPoint(col: col, row: row)
+                guard contains(cell) else { continue }
+                let onEdge = col == origin.col || row == origin.row || col == origin.col + width - 1 || row == origin.row + height - 1
+                if onEdge, !heads.contains(cell) {
+                    occupy(cell, blocking: true)
+                    if ground[row][col] == .path { ground[row][col] = .ground }
+                } else {
+                    occupy(cell, blocking: false)
+                    if ground[row][col] == .ground || ground[row][col] == .path { ground[row][col] = .accent }   // paved
+                }
+            }
+        }
+        // Its stairs and the cell in front of each, kept clear to walk up.
+        for cell in steps + [GridPoint(col: steps[0].col, row: steps[0].row - 1), GridPoint(col: steps[1].col - 1, row: steps[1].row)] {
+            occupy(cell, blocking: false)
+        }
+        terraces.append((origin, width, height, steps, heads))
         // It stands raised: walk up its stairs (front and side) and you're up on it.
-        let cells = Set((origin.col..<(origin.col + terrace.width)).flatMap { col in
-            (origin.row..<(origin.row + terrace.height)).map { GridPoint(col: col, row: $0) }
-        }.filter { contains($0) })
-        addPlateau(Plateau(cells: cells, ramps: [stairs[0]: .south, stairs[1]: .west], height: Self.terraceHeight))
+        let cells = Set((origin.col..<(origin.col + width)).flatMap { col in
+            (origin.row..<(origin.row + height)).map { GridPoint(col: col, row: $0) }
+        }.filter { contains($0) }).union(steps.filter { contains($0) })
+        addPlateau(Plateau(cells: cells, ramps: [steps[0]: .south, steps[1]: .west], height: Self.terraceHeight))
     }
 
     /// How high a town's terraces stand (points).

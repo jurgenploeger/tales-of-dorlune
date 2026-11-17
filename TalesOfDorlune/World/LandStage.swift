@@ -876,7 +876,7 @@ final class LandStage {
                                           GridPoint(col: o.col, row: last.row + 1), GridPoint(col: last.col + 1, row: last.row + 1)]
             for col in o.col...last.col {
                 // Along the front (south) and the back (north).
-                if terrace.stairs.contains(GridPoint(col: col, row: o.row)) {
+                if terrace.heads.contains(GridPoint(col: col, row: o.row)) {
                     posts.insert(GridPoint(col: col, row: o.row))
                     posts.insert(GridPoint(col: col + 1, row: o.row))
                 } else {
@@ -886,7 +886,7 @@ final class LandStage {
             }
             for row in o.row...last.row {
                 // Along the left (west) and the right (east).
-                if terrace.stairs.contains(GridPoint(col: o.col, row: row)) {
+                if terrace.heads.contains(GridPoint(col: o.col, row: row)) {
                     posts.insert(GridPoint(col: o.col, row: row))
                     posts.insert(GridPoint(col: o.col, row: row + 1))
                 } else {
@@ -1305,6 +1305,20 @@ final class LandStage {
                 slope.lineWidth = 1
                 slope.zPosition = topZ - 0.25
                 world.addChild(slope)
+                // Its side turned to you, a triangle of stone from the foot up to the head: the west
+                // side of the front stairs, the south side of the side ones.
+                let side = CGMutablePath()
+                side.addLines(between: ramp == .south
+                    ? [corner(c, r), corner(c, r + 1), corner(c, r + 1) + CGVector(dx: 0, dy: rise)]
+                    : [corner(c, r), corner(c + 1, r), corner(c + 1, r) + CGVector(dx: 0, dy: rise)])
+                side.closeSubpath()
+                let cheek = SKShapeNode(path: side)
+                cheek.fillColor = ramp == .south ? UIColor(red: 0.8, green: 0.66, blue: 0.46, alpha: 1)
+                                                 : UIColor(red: 0.64, green: 0.51, blue: 0.38, alpha: 1)
+                cheek.strokeColor = UIColor(red: 0.42, green: 0.3, blue: 0.22, alpha: 1)
+                cheek.lineWidth = 1
+                cheek.zPosition = topZ - 0.3
+                world.addChild(cheek)
                 let steps = 5
                 for step in 1..<steps {
                     let t = CGFloat(step) / CGFloat(steps)
@@ -1319,7 +1333,8 @@ final class LandStage {
             stroke(creases, color: UIColor(white: 0, alpha: 0.3), width: 1.5, z: topZ - 0.2)
             stroke(treads, color: UIColor(white: 1, alpha: 0.35), width: 1, z: topZ - 0.2)
             // Its shade on the ground away from the sun, a block its height (and its balustrade's).
-            canopy.addBlock(feet: plateau.cells.map { map.center(of: $0) }, height: rise + Self.railHeight * 0.5,
+            canopy.addBlock(feet: plateau.cells.filter { plateau.ramps[$0] == nil }.map { map.center(of: $0) },
+                            height: rise + Self.railHeight * 0.5,
                             half: tile * 0.70710678)
         }
     }

@@ -705,6 +705,12 @@ struct ContentTests {
                         #expect(map.ground[row][col] != .path, "map \(def.id): a road on its terrace at \(col), \(row)")
                     }
                 }
+                // Its stairs stand out in front of its walls, on no road, up to an opening in its rim
+                // (the user, 2026-11-17: Goldburg's stood part on a road).
+                for (stair, head) in zip(terrace.stairs, terrace.heads) where map.contains(stair) {
+                    #expect(map.ground[stair.row][stair.col] != .path, "map \(def.id): a terrace's stairs on a road at \(stair)")
+                    #expect(map.isWalkable(stair) && map.isWalkable(head), "map \(def.id): a terrace's stairs at \(stair) can't be climbed")
+                }
             }
         }
     }
@@ -803,8 +809,8 @@ struct ContentTests {
         for def in content.maps {
             let map = Layouts.of(def)
             #expect(map.buildings.count == (def.buildings ?? []).count, "map \(def.id) lost a building")
-            // The map's own buildings and the shops along the streets: on plain ground or a terrace's
-            // paved top, never on a road, and never on each other.
+            // The map's own buildings and the shops along the streets: on plain ground, never on a road,
+            // a terrace or each other.
             // A building of its own takes its own footprint (`MapDef.Building.size`), a shop the 3 × 2.
             let own = (def.buildings ?? []).map(\.footprint)
             var houses: [(String, GridPoint, (columns: ClosedRange<Int>, rows: ClosedRange<Int>))] =
@@ -818,6 +824,8 @@ struct ContentTests {
                         let ground = map.ground[cell.row][cell.col]
                         #expect(ground == .ground || ground == .accent, "map \(def.id): \(art) stands on \(ground) at \(cell)")
                         #expect(taken.insert(cell).inserted, "map \(def.id): \(art) overlaps another building at \(cell)")
+                        // Never on a terrace: drawn on the ground, it stood through it (the user, 2026-11-17).
+                        #expect(!map.plateaus.contains { $0.cells.contains(cell) }, "map \(def.id): \(art) stands on a terrace at \(cell)")
                     }
                 }
             }
