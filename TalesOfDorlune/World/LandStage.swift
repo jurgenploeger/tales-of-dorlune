@@ -121,6 +121,7 @@ final class LandStage {
             if reed.art == "water_rock" || reed.art == "shore_stones" { roundShadow(under: node, at: reed.cell) }
         }
         placeWaterfalls(plan.waterfalls)
+        placePondMotion()
         await pause()
         placeFence()
         placeBuildings()
@@ -461,6 +462,117 @@ final class LandStage {
                 node.zPosition = -99_000
                 layer(at: node.position).addChild(node)
             }
+        }
+    }
+
+    /// The water moving on the land's own lakes and rivers (`PondMotion`; not ice or chocolate): along the
+    /// near and side shores (down the screen, south and west of the water) a light dash lapping a pixel in
+    /// and out every 1.25 seconds, showing a while and gone a while; along the far shore (north and east)
+    /// the waterline creeping a pixel up the bank now and then; and out on the open water, a chunk at a
+    /// time, glints flickering (one every half second or so) and a drop rippling out every few seconds.
+    /// Unseeded: the land's layout stays what it was.
+    private func placePondMotion() {
+        guard (def.theme.water ?? "tile_water") == "tile_water" else { return }
+        var cells = map.river
+        for lake in map.lakes { cells.formUnion(lake.water) }
+        guard !cells.isEmpty else { return }
+        let tile = WorldMap.tileSize
+        var open: [GridPoint: [(point: CGPoint, cell: GridPoint)]] = [:]
+        for cell in cells.sorted(by: WorldMap.inOrder) where !map.bridgeCells.contains(cell) {
+            var shore = false
+            for (dc, dr) in [(1, 0), (-1, 0), (0, 1), (0, -1)] {
+                let next = GridPoint(col: cell.col + dc, row: cell.row + dr)
+                guard map.contains(next), !cells.contains(next) else { continue }
+                let ground = map.ground[next.row][next.col]
+                guard ground != .water, ground != .sea, ground != .away else { continue }
+                shore = true
+                // Up the screen is north and east at once: a shore that way is the far bank.
+                let far = dc + dr > 0
+                guard Double.random(in: 0..<1) < (far ? 0.4 : 0.6) else { continue }
+                // Along the edge, toward the land: the near shore's dashes two or three pixels out on
+                // the water, the far shore's creep at the waterline.
+                let along = Double.random(in: -0.3...0.3), inset = far ? 0.47 : 0.36
+                let offset = CGPoint(x: (Double(dc) * inset - Double(dr) * along) * tile, y: (Double(dr) * inset + Double(dc) * along) * tile)
+                let point = map.center(of: cell) + CGVector(dx: WorldMap.project(offset).x, dy: WorldMap.project(offset).y)
+                if far {
+                    let node = PondMotion.sprite(PondMotion.creep)
+                    node.alpha = 0
+                    node.run(.sequence([.wait(forDuration: .random(in: 0...6)), .repeatForever(.sequence([
+                        .fadeAlpha(to: 1, duration: 0), .wait(forDuration: 2.5, withRange: 2),
+                        .fadeAlpha(to: 0, duration: 0), .wait(forDuration: 4, withRange: 4),
+                    ]))]))
+                    onWater(node, at: point, cell: cell)
+                } else {
+                    // A pixel out toward the open water and back, as the ring of dashes steps out and in.
+                    let toward = WorldMap.project(CGPoint(x: -Double(dc), y: -Double(dr)))
+                    let length = max(0.001, (toward.x * toward.x + toward.y * toward.y).squareRoot())
+                    let step = CGVector(dx: (toward.x / length * PondMotion.pixel).rounded(), dy: (toward.y / length * PondMotion.pixel).rounded())
+                    let node = PondMotion.sprite(PondMotion.lap)
+                    node.alpha = 0
+                    node.run(.repeatForever(.sequence([
+                        .wait(forDuration: 1.25), .moveBy(x: step.dx, y: step.dy, duration: 0),
+                        .wait(forDuration: 1.25), .moveBy(x: -step.dx, y: -step.dy, duration: 0),
+                    ])))
+                    node.run(.sequence([.wait(forDuration: .random(in: 0...5)), .repeatForever(.sequence([
+                        .fadeAlpha(to: 1, duration: 0), .wait(forDuration: 1.5, withRange: 1.5),
+                        .fadeAlpha(to: 0, duration: 0), .wait(forDuration: 2, withRange: 2),
+                    ]))]))
+                    onWater(node, at: point, cell: cell)
+                }
+            }
+            if !shore {
+                let point = map.center(of: cell)
+                // Down on the water, with its height, for the glints and drops set round it.
+                open[Self.key(point.x, point.y), default: []].append((CGPoint(x: point.x, y: point.y + map.height(at: point)), cell))
+            }
+        }
+        // Glints and drops, a spawner for each chunk of open water.
+        for spots in open.values {
+            guard let first = spots.first else { continue }
+            let spawner = SKNode()
+            onWater(spawner, at: map.center(of: first.cell), cell: first.cell)
+            let base = spawner.position
+            let places = spots.map { $0.point }
+            let spot: () -> CGPoint = {
+                let pick = places[Int.random(in: 0..<places.count)]
+                let jitter = WorldMap.project(CGPoint(x: Double.random(in: -0.4...0.4) * tile, y: Double.random(in: -0.4...0.4) * tile))
+                return CGPoint(x: (pick.x + jitter.x - base.x).rounded(), y: (pick.y + jitter.y - base.y).rounded())
+            }
+            let glint = SKAction.run { [weak spawner] in
+                guard let spawner else { return }
+                let node = PondMotion.sprite(PondMotion.glint[0].texture)
+                node.position = spot()
+                spawner.addChild(node)
+                var steps: [SKAction] = []
+                for frame in PondMotion.glint {
+                    steps.append(.setTexture(frame.texture))
+                    steps.append(.wait(forDuration: frame.time))
+                }
+                steps.append(.removeFromParent())
+                node.run(.sequence(steps))
+            }
+            let drop = SKAction.run { [weak spawner] in
+                guard let spawner, let first = PondMotion.ripple.first else { return }
+                let node = PondMotion.sprite(first)
+                node.position = spot()
+                spawner.addChild(node)
+                node.run(.sequence([.animate(with: PondMotion.ripple, timePerFrame: 0.2), .removeFromParent()]))
+            }
+            spawner.run(.repeatForever(.sequence([.wait(forDuration: 0.55, withRange: 0.6), glint])))
+            spawner.run(.repeatForever(.sequence([.wait(forDuration: 3.5, withRange: 3), drop])))
+        }
+    }
+
+    /// Sets `node` down on the water at `point` (`cell`'s), as the lily pads are: down on a lake sunk with
+    /// the shore, just under the pads.
+    private func onWater(_ node: SKNode, at point: CGPoint, cell: GridPoint) {
+        node.position = CGPoint(x: point.x.rounded(), y: (point.y + map.height(at: point)).rounded())
+        if map.isSunken(cell), let z = flatZ(at: point) {
+            node.zPosition = z - 0.05
+            chunk(at: node.position).addChild(node)
+        } else {
+            node.zPosition = -99_010
+            layer(at: node.position).addChild(node)
         }
     }
 
