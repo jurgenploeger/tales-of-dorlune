@@ -332,6 +332,7 @@ final class LandStage {
         let node = addScenery(drawn, at: placement.cell, nudge: placement.nudge, sway: placement.sway, scale: placement.scale,
                               wind: placement.art)
         reflect(node, picture: drawn.texture, art: placement.art, cell: placement.cell)
+        addFire(to: node, art: placement.art)
         // Lit by a lamp nearby at night (`LampLight`): not a light itself, nor what moves in the wind
         // (its picture changes, the light's copy wouldn't).
         if !lamps.isEmpty, node.texture === drawn.texture, placement.art != "street_lamp", placement.prop?.glow == nil {
@@ -339,6 +340,20 @@ final class LandStage {
                                    from: lamps)
         }
         return node
+    }
+
+    /// A building's fire moving (`tools/fire_art.py`, the user, 2026-11-17: a forge's fire stood
+    /// still): its flame's frames, cut from its own picture at its own size, laid over it and played on
+    /// a loop, each building from a moment of its own so they don't flicker in step.
+    private func addFire(to node: SKSpriteNode, art id: String) {
+        let names = (0..<4).map { "fire_\(id)_\($0)" }
+        guard names.allSatisfy({ art.asset($0) != nil }) else { return }
+        let frames = names.map { art.sprite($0).texture }
+        let flame = SKSpriteNode(texture: frames[0], size: node.size)
+        flame.anchorPoint = node.anchorPoint
+        flame.zPosition = 0.01
+        node.addChild(flame)
+        flame.run(.sequence([.wait(forDuration: .random(in: 0...0.33)), .repeatForever(.animate(with: frames, timePerFrame: 0.11))]))
     }
 
     /// Its lights at night (`LampLight`): its town's street lamps, where their glow is, and its props

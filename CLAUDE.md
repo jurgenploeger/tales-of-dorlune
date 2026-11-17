@@ -217,6 +217,11 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   instead of swaying, caves keep the old sway (their depth of field swaps textures). Rerun it after
   redrawing a rigged sprite (`check_content.py` checks each rig fits); `--sheet` shows the clumps, `--gif`
   a grove in the wind.
+- `tools/fire_art.py`: a building's fire moving (Goldburg's forge, `blacksmith`): its flame's own pixels cut
+  into four frames (`fire_<id>_0` to `_3`, the first as drawn), each column of the flame reaching a pixel
+  higher or lower, a few pixels a step along its ramp, the glow round it pulsing; `LandStage.addFire` lays
+  them over the building and plays them. RD's art stays as drawn. Add a sprite to `FIRES` for another fire;
+  `--gif out.gif` shows it.
 - `TalesOfDorlune/Art/LampLight.swift`: street lamps and glowing props light what stands round them at night,
   after SpriteCook's normal-map article: which way each pixel faces from the sprite's outline alone
   (`OutlineNormals`: how far in from a clear pixel, a 5-pixel bevel, a little of its brightness), lit from the
