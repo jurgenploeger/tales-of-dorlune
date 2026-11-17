@@ -61,6 +61,8 @@ nonisolated final class WorldMap: @unchecked Sendable {
     /// road or another building, on the nearest clear plot (`placeOwnBuildings`).
     private(set) var buildings: [(art: String, anchor: GridPoint)] = []
     private(set) var streetDecor: [(art: String, cell: GridPoint)] = []
+    /// The cells the town's buildings and shops stand on, its own and its lots (`nearBuilding`).
+    private var buildingCells: Set<GridPoint> = []
     /// Raised terraces: their rectangles in grid cells (min corner inclusive), and stair cells.
     private(set) var terraces: [(origin: GridPoint, width: Int, height: Int, stairs: [GridPoint])] = []
     /// A town's raised terraces (`height(at:)`): each stands `height` points up; its rim is a wall
@@ -781,6 +783,19 @@ nonisolated final class WorldMap: @unchecked Sendable {
     }
 
     /// A free cell within `radius` cells of the map's centre, for planting around a town square.
+    /// Whether a building or shop stands within `reach` cells of `cell`, or within `reach + 1` up the
+    /// map behind it, where its walls and roof rise on the screen: a well set down there stood in
+    /// the corner of a house (the user's screenshot, 2026-11-17, Goldburg).
+    func nearBuilding(_ cell: GridPoint, reach: Int = 1) -> Bool {
+        guard !buildingCells.isEmpty else { return false }
+        for dr in -(reach + 1)...reach {
+            for dc in -(reach + 1)...reach where buildingCells.contains(GridPoint(col: cell.col + dc, row: cell.row + dr)) {
+                return true
+            }
+        }
+        return false
+    }
+
     func randomFreeCell(within radius: Int, using rng: inout SeededRandom) -> GridPoint? {
         for _ in 0..<400 {
             let cell = GridPoint(col: center.col + Int.random(in: -radius...radius, using: &rng),
@@ -1883,7 +1898,10 @@ nonisolated final class WorldMap: @unchecked Sendable {
                 for dr in -1...2 { used.insert(GridPoint(col: anchor.col + dc, row: anchor.row + dr)) }
             }
             for dc in -1...1 {
-                for dr in 0...1 { occupy(GridPoint(col: anchor.col + dc, row: anchor.row + dr), blocking: true) }
+                for dr in 0...1 {
+                    occupy(GridPoint(col: anchor.col + dc, row: anchor.row + dr), blocking: true)
+                    buildingCells.insert(GridPoint(col: anchor.col + dc, row: anchor.row + dr))
+                }
             }
             lots.append((art, anchor))
         }
@@ -1990,7 +2008,10 @@ nonisolated final class WorldMap: @unchecked Sendable {
             }
             guard let plot else { continue }
             for dc in footprint.columns {
-                for dr in footprint.rows { occupy(GridPoint(col: plot.col + dc, row: plot.row + dr), blocking: true) }
+                for dr in footprint.rows {
+                    occupy(GridPoint(col: plot.col + dc, row: plot.row + dr), blocking: true)
+                    buildingCells.insert(GridPoint(col: plot.col + dc, row: plot.row + dr))
+                }
             }
             buildings.append((building.art, plot))
         }

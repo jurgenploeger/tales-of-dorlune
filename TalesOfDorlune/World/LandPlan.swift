@@ -874,7 +874,10 @@ final class LandPlanner {
                         col: middle.col + Int.random(in: -spread...spread, using: &rng),
                         row: middle.row + Int.random(in: -spread...spread, using: &rng)
                     )
+                    // In town, nothing in the way set down against a building: a well stood in the
+                    // corner of a house (the user, 2026-11-17).
                     guard map.isFreeForScenery(cell, insideFence: placement.within != nil, blocking: placement.blocking),
+                          placement.within == nil || !placement.blocking || !map.nearBuilding(cell),
                           map.foreign[cell] == nil, !isCoast(cell), !placement.blocking || roomOnIsland(cell),
                           gap == 0 || !nearPath(cell, within: gap) else { continue }
                     var scale: CGFloat = 1
