@@ -79,9 +79,9 @@ def night(rgb, depth=1.0):
 # it one flat sheet of moonlit navy at a fraction of its alpha (plain alpha blending, no shader and no
 # render to a texture): it mixes every colour toward the same navy, which is what takes the colour out
 # of the grass and the water, as the per-colour grade does.
-MOON_MULTIPLY = np.array([0.6, 0.64, 0.84])
-MOON_HAZE = np.array([38.0, 46.0, 74.0])
-MOON_ALPHA = 0.42
+MOON_MULTIPLY = np.array([0.52, 0.58, 0.84])
+MOON_HAZE = np.array([22.0, 30.0, 70.0])
+MOON_ALPHA = 0.25
 
 
 def haze_night(day):

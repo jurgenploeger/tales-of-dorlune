@@ -14,9 +14,10 @@ final class Sky {
     /// as moonlight does (after SpriteCook's day and night colour table, made cheap: plain alpha
     /// blending, no shader and no render to a texture; `tools/night_preview.py`).
     private let haze = SKSpriteNode(color: Sky.hazeColor, size: CGSize(width: 3000, height: 3000))
-    private static let hazeColor = UIColor(red: 38 / 255, green: 46 / 255, blue: 74 / 255, alpha: 1)
+    private static let hazeColor = UIColor(red: 22 / 255, green: 30 / 255, blue: 70 / 255, alpha: 1)
     /// The haze's alpha at the deepest of the night.
-    private static let hazeAlpha = 0.42
+    /// 0.42 at first: every colour went grey and flat (the user, 2026-11-17: "the colors look very muted").
+    private static let hazeAlpha = 0.25
     private let camera: SKCameraNode
     /// The weather's rain, fog or snow, faded with the map's mood (`setMood`).
     private let weatherLayer = SKNode()
@@ -38,14 +39,14 @@ final class Sky {
     /// it, at hours of the day, eased between. The night's multiply is lighter than it was alone
     /// (0.42, 0.47, 0.78), as the haze darkens it too.
     private static let light: [(hour: Double, r: Double, g: Double, b: Double, haze: Double)] = [
-        (0, 0.6, 0.64, 0.84, 1),
-        (4.5, 0.6, 0.64, 0.84, 1),
+        (0, 0.52, 0.58, 0.84, 1),
+        (4.5, 0.52, 0.58, 0.84, 1),
         (6, 1, 0.8, 0.76, 0),
         (7.5, 1, 1, 1, 0),
         (16.5, 1, 1, 1, 0),
         (18, 1, 0.78, 0.6, 0),
-        (19.5, 0.6, 0.64, 0.84, 1),
-        (24, 0.6, 0.64, 0.84, 1),
+        (19.5, 0.52, 0.58, 0.84, 1),
+        (24, 0.52, 0.58, 0.84, 1),
     ]
 
     init?(map: MapDef, camera: SKCameraNode, start: Date?) {
