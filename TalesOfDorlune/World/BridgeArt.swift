@@ -20,6 +20,9 @@ enum BridgeArt {
         let cap: Tone, railLight: Tone, railDark: Tone
         /// Stone slabs, twice as deep as planks, their joints staggered, and no nails.
         var slabs = false
+        /// A sill of rough stones on the bank past each end, and the deck whole to its end; without,
+        /// the deck's last boards break off on the bank (`deckPicture`).
+        var sill = false
     }
 
     private static func look(_ material: WorldMap.Bridge.Material) -> Look {
@@ -29,10 +32,10 @@ enum BridgeArt {
                  cap: (164, 116, 70), railLight: (164, 116, 70), railDark: (112, 76, 46))
         case .stone:
             Look(plank: (156, 152, 144), gap: (92, 90, 90), beam: (124, 120, 114), edge: (78, 76, 78), nail: (92, 90, 90),
-                 cap: (184, 180, 170), railLight: (164, 160, 152), railDark: (108, 104, 102), slabs: true)
+                 cap: (184, 180, 170), railLight: (164, 160, 152), railDark: (108, 104, 102), slabs: true, sill: true)
         case .lacquer:
             Look(plank: (136, 92, 60), gap: (66, 42, 30), beam: (176, 50, 44), edge: (104, 28, 30), nail: (60, 44, 40),
-                 cap: (238, 190, 80), railLight: (206, 66, 54), railDark: (136, 36, 36))
+                 cap: (238, 190, 80), railLight: (206, 66, 54), railDark: (136, 36, 36), sill: true)
         case .rope:
             Look(plank: (188, 150, 100), gap: (70, 52, 38), beam: (150, 118, 76), edge: (96, 72, 46), nail: (70, 52, 38),
                  cap: (188, 150, 100), railLight: (206, 184, 136), railDark: (150, 126, 86))
@@ -58,12 +61,22 @@ enum BridgeArt {
     static func deckPicture(for bridge: WorldMap.Bridge, pixels: Int, palette: MapPalette?) -> (image: CGImage, frame: CGRect)? {
         guard pixels > 0 else { return nil }
         let before = bridge.landsAtStart ? overlap : 0, after = bridge.landsAtEnd ? overlap : 0
-        let cellsAlong = CGFloat(bridge.end - bridge.start + 1) + before + after
-        let shadow = max(2, pixels / 8), beamWidth = max(2, pixels / 10)
-        let deckWide = bridge.lanes * pixels
-        let across = deckWide + 2 * shadow
-        let along = Int((cellsAlong * CGFloat(pixels)).rounded())
         let style = look(bridge.material)
+        // How its ends meet the land (the user's picks from tools/bridge_preview.py --ends,
+        // 2026-11-17: "the overlap with the land and bridge, it's a straight line now"). Wood and
+        // rope: the deck's last boards break off raggedly on the bank, the road showing between
+        // them. Stone and red lacquer, which are built, not worn: the deck whole, and past each
+        // end a sill of rough stones on the bank, wider than the deck.
+        let worn = !style.sill
+        let sillDeep = style.sill ? max(6, pixels * 3 / 8) : 0
+        let lead = bridge.landsAtStart ? sillDeep : 0, tail = bridge.landsAtEnd ? sillDeep : 0
+        let shadow = max(2, pixels / 8), beamWidth = max(2, pixels / 10)
+        // The picture's margin either side of the deck: its shadow's, or a sill's reach past it.
+        let margin = style.sill ? max(shadow, pixels * 3 / 10) : shadow
+        let deckWide = bridge.lanes * pixels
+        let across = deckWide + 2 * margin
+        let deckAlong = Int(((CGFloat(bridge.end - bridge.start + 1) + before + after) * CGFloat(pixels)).rounded())
+        let along = deckAlong + lead + tail
         let plank = style.plank, gap = style.gap, beam = style.beam, edge = style.edge, nail = style.nail
         let plankDeep = style.slabs ? max(4, pixels / 2) : max(3, pixels / 4)
         // Grid-space orientation: x east, y north (image rows top down).
@@ -76,22 +89,43 @@ enum BridgeArt {
             bytes[index + 2] = UInt8(min(255, max(0, color.b * alpha)))
             bytes[index + 3] = UInt8(alpha * 255)
         }
-        for v in 0..<along {
+        let sillStone: Tone = (150, 146, 138), sillDark: Tone = (86, 84, 86)
+        let stoneWide = max(5, pixels * 7 / 16)
+        for row in 0..<along {
+            // The row within the deck itself; outside it, a sill's rows.
+            let v = row - lead
+            if v < 0 || v >= deckAlong {
+                // How far out from the deck's end this row is, and the sill across it: stones side
+                // by side, each its own shade, dark joints between them and a dark rim round it.
+                let out = v < 0 ? -v - 1 : v - deckAlong
+                for u in 0..<across {
+                    let x = bridge.northward ? u : row, y = bridge.northward ? row : u
+                    let stone = (u + (v < 0 ? 0 : stoneWide / 2)) / stoneWide
+                    let rim = out == 0 || out == sillDeep - 1 || u == 0 || u == across - 1
+                    if rim || (u + (v < 0 ? 0 : stoneWide / 2)) % stoneWide == 0 {
+                        put(x, y, sillDark)
+                    } else {
+                        var shade = 0.84 + 0.28 * noise(stone, bridge.lane &* 13 &+ (v < 0 ? 1 : 2))
+                        if out == 1 { shade *= 1.1 }
+                        if noise(u, out &* 5 &+ bridge.start) < 0.07 { shade *= 0.86 }
+                        put(x, y, (sillStone.r * shade, sillStone.g * shade, sillStone.b * shade))
+                    }
+                }
+                continue
+            }
             let board = v / plankDeep, inBoard = v % plankDeep
             // Each plank a little lighter or darker than the next.
             let tone = 0.92 + 0.16 * noise(board, bridge.lane &* 31 &+ bridge.start)
-            // How far onto a bank this row lies, in cells (0 over the water): there its boards
-            // break off raggedly, more of them gone the further on, and the road shows between
-            // them, so the deck gives way to the land instead of ending on it in a ruled line
-            // (the user, 2026-11-17: "the overlap with the land and bridge, it's a straight line
-            // now"; their pick from tools/bridge_preview.py --ends).
+            // How far onto a bank this row lies, in cells (0 over the water): there a worn deck's
+            // boards break off, more of them gone the further on.
             let onto = max(before > 0 ? before - CGFloat(v) / CGFloat(pixels) : 0,
-                           after > 0 ? CGFloat(v) / CGFloat(pixels) - (cellsAlong - after) : 0)
-            let gone = Double(max(0, (onto - 0.2) / 0.4))
+                           after > 0 ? after - CGFloat(deckAlong - 1 - v) / CGFloat(pixels) : 0)
+            let gone = worn ? Double(max(0, (onto - 0.2) / 0.4)) : 0
             for u in 0..<across {
-                let x = bridge.northward ? u : v, y = bridge.northward ? v : u
+                let x = bridge.northward ? u : row, y = bridge.northward ? row : u
+                let inside = u - margin
+                guard inside >= -shadow, inside < deckWide + shadow else { continue }
                 if gone > 0, noise(u / 2 &+ 3, v / 2 &+ 91 &+ bridge.lane) < gone * 1.15 { continue }
-                let inside = u - shadow
                 if inside < 0 || inside >= deckWide {
                     put(x, y, (0, 0, 0), alpha: 0.28)
                     continue
@@ -117,7 +151,8 @@ enum BridgeArt {
         }
         guard var image = Self.image(bytes, width: width, height: height) else { return nil }
         if let palette, let graded = Recolor.grade(palette, image: image) { image = graded }
-        let low = CGFloat(bridge.start) - before, side = CGFloat(bridge.lane) - CGFloat(shadow) / CGFloat(pixels)
+        let low = CGFloat(bridge.start) - before - CGFloat(lead) / CGFloat(pixels)
+        let side = CGFloat(bridge.lane) - CGFloat(margin) / CGFloat(pixels)
         let size = CGSize(width: CGFloat(width) / CGFloat(pixels), height: CGFloat(height) / CGFloat(pixels))
         return (image, CGRect(origin: bridge.northward ? CGPoint(x: side, y: low) : CGPoint(x: low, y: side), size: size))
     }
