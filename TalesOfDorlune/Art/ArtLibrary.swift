@@ -420,6 +420,86 @@ final class ArtLibrary {
         return texture
     }
 
+    /// A cell of a land's water, out from its shores, in the pond's tones (`pondTones`): each pixel the
+    /// tone `tone` gives for where it lies in the world (`GroundTiles.PondField.tone`), with the tile's own
+    /// ripples over it. One for each cell, as the tones change across a lake.
+    func pondTile(_ id: String, _ index: Int, cell: GridPoint, tone: (Double, Double) -> Int) -> SKTexture {
+        let key = "pond|\(id)|\(cell.col),\(cell.row)|\(index % 4)"
+        if let cached = blended[key] { return cached }
+        let size = max(tileImage(id).width, 16)
+        let texels = variantPixels(id, index, size: size)
+        var out = texels
+        let palette = Self.pondPalette(texels)
+        for py in 0..<size {
+            for px in 0..<size {
+                let x = Double(cell.col) + (Double(px) + 0.5) / Double(size)
+                let y = Double(cell.row) + 1 - (Double(py) + 0.5) / Double(size)
+                Self.paintPond(&out, (py * size + px) * 4, texels: texels, tone: tone(x, y), palette: palette, shade: 1)
+            }
+        }
+        let texture = makeTexture(out, size: size)
+        blended[key] = texture
+        return texture
+    }
+
+    /// The tones of a pond (after SpriteCook's "Pixel art pond water: reflections and ripples"; the user,
+    /// 2026-11-16: "Yes I want it in the game"): every water pixel one of a few, never a blend. 0 to 6
+    /// water from dark to light, each as bright against tone 3 as the article's, in a land's own water
+    /// colour (`water`, its tile's average: darker toward a deep blue-green, lighter toward a pale sky),
+    /// and 7 the shallows over the mud. Mirrored in `tools/pond_preview.py` (`toned`).
+    nonisolated static func pondTones(water: (r: Double, g: Double, b: Double)) -> [(r: Double, g: Double, b: Double)] {
+        let article: [(Double, Double, Double)] = [(0x1d, 0x3a, 0x44), (0x24, 0x50, 0x5a), (0x2c, 0x66, 0x70), (0x3a, 0x7f, 0x84),
+                                                   (0x5a, 0x9f, 0xa0), (0x8c, 0xc8, 0xc0), (0xc4, 0xec, 0xe2), (0x5a, 0x93, 0x84)]
+        func bright(_ c: (Double, Double, Double)) -> Double { 0.3 * c.0 + 0.59 * c.1 + 0.11 * c.2 }
+        let ref = bright(article[3]), low = bright(article[0]) / ref, top = bright(article[6]) / ref
+        let w = (water.r * 0.88, water.g * 0.88, water.b * 0.88)
+        let deep = (w.0 * 0.45 + 0.02, w.1 * 0.45 + 0.05, w.2 * 0.45 + 0.08)
+        let pale = (w.0 + (0.86 - w.0) * 0.75, w.1 + (0.96 - w.1) * 0.75, w.2 + (0.95 - w.2) * 0.75)
+        func clamp(_ v: Double) -> Double { max(0, min(1, v)) }
+        var tones: [(r: Double, g: Double, b: Double)] = []
+        for k in 0..<7 {
+            let f = bright(article[k]) / ref
+            if f <= 1 {
+                let t = (f - low) / (1 - low)
+                tones.append((clamp(deep.0 + (w.0 - deep.0) * t), clamp(deep.1 + (w.1 - deep.1) * t), clamp(deep.2 + (w.2 - deep.2) * t)))
+            } else {
+                let t = (f - 1) / (top - 1)
+                tones.append((clamp(w.0 + (pale.0 - w.0) * t), clamp(w.1 + (pale.1 - w.1) * t), clamp(w.2 + (pale.2 - w.2) * t)))
+            }
+        }
+        let mud = article[7]
+        tones.append((clamp((mud.0 / 255 + w.0) / 2), clamp((mud.1 / 255 + w.1) / 2), clamp((mud.2 / 255 + w.2) / 2)))
+        return tones
+    }
+
+    /// A water tile's tones (`pondTones`, from its average colour) and its average brightness.
+    nonisolated static func pondPalette(_ texels: [UInt8]) -> (tones: [(r: Double, g: Double, b: Double)], mean: Double) {
+        var r = 0.0, g = 0.0, b = 0.0
+        let count = max(1, texels.count / 4)
+        for i in stride(from: 0, to: count * 4, by: 4) {
+            r += Double(texels[i])
+            g += Double(texels[i + 1])
+            b += Double(texels[i + 2])
+        }
+        r /= Double(count) * 255
+        g /= Double(count) * 255
+        b /= Double(count) * 255
+        return (pondTones(water: (r, g, b)), 0.3 * r + 0.59 * g + 0.11 * b)
+    }
+
+    /// Pixel `index` of `out` in tone `tone`, the tile's own ripples (`texels` above or below its average)
+    /// kept over it, darkened by `shade`.
+    nonisolated static func paintPond(_ out: inout [UInt8], _ index: Int, texels: [UInt8],
+                                      tone: Int, palette: (tones: [(r: Double, g: Double, b: Double)], mean: Double), shade: Double) {
+        guard index + 2 < texels.count, index + 2 < out.count, !palette.tones.isEmpty else { return }
+        let lum = (0.3 * Double(texels[index]) + 0.59 * Double(texels[index + 1]) + 0.11 * Double(texels[index + 2])) / 255
+        let ripple = (lum - palette.mean) * 1.1
+        let colour = palette.tones[max(0, min(palette.tones.count - 1, tone))]
+        out[index] = UInt8(max(0, min(255, ((colour.r + ripple) * shade * 255).rounded())))
+        out[index + 1] = UInt8(max(0, min(255, ((colour.g + ripple) * shade * 255).rounded())))
+        out[index + 2] = UInt8(max(0, min(255, ((colour.b + ripple) * shade * 255).rounded())))
+    }
+
     /// A land's water two cells or more from any shore, out in a lake or a wide river: version `index`
     /// of its tile a shade deeper (`deepShade`), as `organicTile` darkens the water toward it from
     /// the shallows, so a lake has a middle instead of one flat blue.
@@ -661,9 +741,11 @@ final class ArtLibrary {
     /// of it. So what shows between the shapes, along an edge, is the same from both tiles either
     /// side of it, though a land next door draws the one past its border: with the land's own
     /// ground there, its patches stopped dead along the border (playtesting 2026-10-16).
-    func organicTile(base: String, layers: [GroundLayer], cell: GridPoint, variant: Int) -> SKTexture {
+    /// `pond`: the tone of a land's own water at a point of the world (`GroundTiles.PondField.tone`), its
+    /// lakes and rivers drawn in the pond's tones (`pondTones`) instead of shaded from the shore.
+    func organicTile(base: String, layers: [GroundLayer], cell: GridPoint, variant: Int, pond: ((Double, Double) -> Int)? = nil) -> SKTexture {
         let hasWater = layers.contains { $0.style == .water || $0.style == .cut }
-        let place = hasWater ? "@\(cell.col),\(cell.row)#\(variant)" : ""
+        let place = (hasWater ? "@\(cell.col),\(cell.row)#\(variant)" : "") + (pond == nil ? "" : "|pond")
         let key = "organic|\(base)|" + layers.map { "\($0.tile):\($0.mask):\($0.style):\($0.from?.land ?? ""):\($0.fade?.key ?? "")" }.joined(separator: "|") + place
         if let cached = blended[key] { return cached }
         let size = max(tileImage(base).width, 16)
@@ -731,6 +813,7 @@ final class ArtLibrary {
                 texels = variantPixels(layer.tile, pick, size: size)
             }
             let segments: [(x0: Double, y0: Double, x1: Double, y1: Double)] = shore ? [] : Self.strokes(mask: layer.mask)
+            let palette = pond != nil && layer.style == .water && layer.tile == "tile_water" ? Self.pondPalette(texels) : nil
             let pools: [(x: Double, y: Double)] = shore ? Self.pools(mask: layer.mask) : []
             let radius: Double = switch layer.style {
             case .road: 0.36
@@ -777,7 +860,12 @@ final class ArtLibrary {
                         }
                         // The blade's shadow on the water, just past its tip.
                         let shadowed = natural && grassy && reach > 0 && depth >= reach && depth < reach + 0.04
-                        if depth > 0 {
+                        if depth > 0, let pond, let palette {
+                            // In the pond's tones, by where it lies in the lake or river.
+                            let tone = pond(Double(cell.col) + 0.5 + x, Double(cell.row) + 0.5 + y)
+                            Self.paintPond(&out, index, texels: texels, tone: tone, palette: palette, shade: shadowed ? 0.7 : 1)
+                            out[index + 3] = 255
+                        } else if depth > 0 {
                             // Foam along the edge, broken here and there, with a few flecks out past it.
                             let foam = depth < 0.05 ? (speck < 0.75 ? 0.35 : 0.12) : (depth < 0.1 && speck < 0.12 ? 0.22 : 0)
                             let shallow = natural ? 0.3 * pow(max(0, 1 - depth / 0.4), 1.5) : 0
@@ -933,7 +1021,7 @@ final class ArtLibrary {
     }
 
     /// Centres of the water cells in a 5×5 mask, relative to the middle cell (x east, y north).
-    nonisolated private static func pools(mask: Int) -> [(x: Double, y: Double)] {
+    nonisolated static func pools(mask: Int) -> [(x: Double, y: Double)] {
         var points: [(x: Double, y: Double)] = []
         for bit in 0..<25 where mask & (1 << bit) != 0 {
             points.append((Double(bit % 5 - 2), Double(2 - bit / 5)))
@@ -943,7 +1031,7 @@ final class ArtLibrary {
 
     /// How far inside the water a point is (in cells, negative on land): each water cell adds a
     /// soft round blob, and the shore is where they add up to a threshold.
-    nonisolated private static func waterDepth(_ x: Double, _ y: Double, pools: [(x: Double, y: Double)], wobble: Double) -> Double {
+    nonisolated static func waterDepth(_ x: Double, _ y: Double, pools: [(x: Double, y: Double)], wobble: Double) -> Double {
         var field = 0.0
         for pool in pools {
             let dx = x - pool.x, dy = y - pool.y
@@ -976,7 +1064,7 @@ final class ArtLibrary {
 
     /// How far an edge bulges out (+) or in (-) at a point. Roads and patches repeat every tile;
     /// shorelines follow the point's place on the map, so lakes meander.
-    nonisolated private static func wobble(_ x: Double, _ y: Double, style: GroundLayer.Style, cell: GridPoint) -> Double {
+    nonisolated static func wobble(_ x: Double, _ y: Double, style: GroundLayer.Style, cell: GridPoint) -> Double {
         let turn: Double = 2 * Double.pi
         if style == .water || style == .cut {
             let gx: Double = Double(cell.col) + x

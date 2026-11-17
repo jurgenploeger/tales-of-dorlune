@@ -107,6 +107,9 @@ pet_dusk_azure_golden_cloud | newgame,level=163,map=snow_white_forest,pet=azure_
 continent_rocky | newgame,map=crystal_mountain,at=9_1,weather=clear,hour=12 | 8
 continent_rocky_coast | newgame,map=crystal_mountain,at=-31_-75,weather=clear,hour=12 | 8
 continent_swamp_edge | newgame,map=sunny_meadow,at=18_-56,weather=clear,hour=12 | 8
+# Sunny Meadow's river where it springs (2026-11-17): its waterfall, the shore dressed, and its water
+# in the pond's tones (GroundTiles.PondField).
+continent_waterfall | newgame,map=sunny_meadow,at=38_48,weather=clear,hour=12 | 8
 # A road running on from Frog Swamp into the Valley of Fear: its look fades across the band, not cut
 # at the border (playtesting 2026-10-15). Roads lined here and there (`LandPlanner.planRoadsides`):
 # a picket fence, a low stone wall, a row of the land's own props (lanterns, an avenue; along Frog

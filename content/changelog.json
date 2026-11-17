@@ -2,7 +2,7 @@
   "_note": "Newest first, one entry per big update with at most five lines that sum it up. The top version must match MARKETING_VERSION in project.yml (tools/check_content.py checks): a small change moves the top entry's version and date along and adds a line only if it's big enough to tell players. 1.0.0 is the App Store release.",
   "releases": [
     {
-      "version": "0.9.101",
+      "version": "0.9.102",
       "date": "2026-11-16",
       "title": "Beyond level 200",
       "notes": [
@@ -10,7 +10,7 @@
         "Reach level 200 for the Legend's Cape at the weaver.",
         "Your bag grows as you level, from 50 slots to 100 at level 200.",
         "Cave floors no longer glitch, and the cave map matches the world map.",
-        "Lakes and rivers have grassy edges and rocks in the shallows, and waterfalls where the rivers spring."
+        "Lakes and rivers have grassy edges, rocks in the shallows, water that deepens and mirrors the sky, and waterfalls where the rivers spring."
       ]
     },
     {

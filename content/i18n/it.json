@@ -1091,7 +1091,7 @@
     "Reach level 200 for the Legend's Cape at the weaver.": "Raggiungi il livello 200 per avere il Mantello della Leggenda dal tessitore.",
     "Your bag grows as you level, from 50 slots to 100 at level 200.": "La tua borsa cresce con il livello, da 50 spazi a 100 al livello 200.",
     "Cave floors no longer glitch, and the cave map matches the world map.": "Niente più difetti sui pavimenti delle grotte, e la mappa delle grotte è come quella del mondo.",
-    "Lakes and rivers have grassy edges and rocks in the shallows, and waterfalls where the rivers spring.": "Laghi e fiumi hanno sponde erbose e rocce nelle acque basse, e cascate dove nascono i fiumi.",
+    "Lakes and rivers have grassy edges, rocks in the shallows, water that deepens and mirrors the sky, and waterfalls where the rivers spring.": "Laghi e fiumi hanno sponde erbose, rocce nelle acque basse, acqua che si fa più profonda e riflette il cielo, e cascate dove nascono i fiumi.",
     "A living world": "Un mondo vivo",
     "Trees rustle in the wind and cast deep shade that stretches as the sun sinks; days last longer, and travel skips the clock ahead.": "Gli alberi frusciano nel vento e proiettano un'ombra fitta che si allunga al calar del sole; le giornate durano di più e viaggiare fa avanzare l'orologio.",
     "Waves roll in to the shore over shallows that follow every bay, and open fields no longer show a grid.": "Le onde arrivano a riva su bassi fondali che seguono ogni baia, e i campi aperti non mostrano più una griglia.",
@@ -3862,6 +3862,7 @@
     "Town Favourite": "Beniamino del Paese",
     "Faithful": "Fedele",
     "Old Friend": "Vecchio Amico",
+    "Lakes and rivers have grassy edges and rocks in the shallows, and waterfalls where the rivers spring.": "Laghi e fiumi hanno sponde erbose e rocce nelle acque basse, e cascate dove nascono i fiumi.",
     "Your bag holds 50 things now, every one a slot: {count} went to the bank.": "La tua borsa ora contiene 50 oggetti, ognuno occupa uno spazio: {count} sono andati in banca.",
     "with a {pet}": "con {pet}"
   }

@@ -235,7 +235,13 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   don't make a grid), ripples level on screen. Round a land's own water (`tile_water`, not ice or chocolate)
   `ArtLibrary.organicTile` adds depth and a bank: paler shallows by the shore, deeper water out from it (two
   cells out, `deepWaterTile`), broken foam, and a strip of damp earth and pebbles on the land; mirrored in
-  `tools/palette_preview.py`. It replaced a generated tile that repeated every 16 pixels; rerun it
+  `tools/palette_preview.py`. A land's own lakes and rivers are drawn in a pond's tones (after SpriteCook's
+  pond water article, the user's pick from `tools/pond_preview.py`, 2026-11-17): every water pixel one of
+  a few tones in the land's water colour (`ArtLibrary.pondTones`), by how far it lies from land and how far
+  below the far shore up the screen (`GroundTiles.PondField`, 16 spots a cell, worked out once a land:
+  dark out from the shore, the near half lighter where it mirrors the sky, a dark line under the far
+  bank), the tile's own ripples kept over them; the moving layers and reflections aren't in yet.
+  It replaced a generated tile that repeated every 16 pixels; rerun it
   after editing, `--preview out.png` shows them turned as the game draws them.
 - `tools/fx_art.py`: the same for the few battle marks that aren't light (`art/sprites/fx_*.png`: poison's bubble
   and the glossy marks by the HP bars, drawn smooth at 3×: poison's drop and the arrows for lowered and raised
