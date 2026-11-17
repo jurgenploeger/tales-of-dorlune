@@ -446,7 +446,8 @@ final class ArtLibrary {
     /// 2026-11-16: "Yes I want it in the game"): every water pixel one of a few, never a blend. 0 to 6
     /// water from dark to light, each as bright against tone 3 as the article's, in a land's own water
     /// colour (`water`, its tile's average: darker toward a deep blue-green, lighter toward a pale sky),
-    /// and 7 the shallows over the mud. Mirrored in `tools/pond_preview.py` (`toned`).
+    /// 7 the shallows over the mud, and 8 and 9 the far bank's mud and grass mirrored under it (the article's,
+    /// a little of the water in them). Mirrored in `tools/pond_preview.py` (`toned`).
     nonisolated static func pondTones(water: (r: Double, g: Double, b: Double)) -> [(r: Double, g: Double, b: Double)] {
         let article: [(Double, Double, Double)] = [(0x1d, 0x3a, 0x44), (0x24, 0x50, 0x5a), (0x2c, 0x66, 0x70), (0x3a, 0x7f, 0x84),
                                                    (0x5a, 0x9f, 0xa0), (0x8c, 0xc8, 0xc0), (0xc4, 0xec, 0xe2), (0x5a, 0x93, 0x84)]
@@ -469,6 +470,9 @@ final class ArtLibrary {
         }
         let mud = article[7]
         tones.append((clamp((mud.0 / 255 + w.0) / 2), clamp((mud.1 / 255 + w.1) / 2), clamp((mud.2 / 255 + w.2) / 2)))
+        for bank in [(0x2c, 0x3b, 0x36), (0x2d, 0x52, 0x46)] as [(Double, Double, Double)] {
+            tones.append((clamp(bank.0 / 255 * 0.75 + w.0 * 0.25), clamp(bank.1 / 255 * 0.75 + w.1 * 0.25), clamp(bank.2 / 255 * 0.75 + w.2 * 0.25)))
+        }
         return tones
     }
 

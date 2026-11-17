@@ -470,7 +470,8 @@ struct PondField {
     /// from the land, 3 at the shore (under 3 of a tile's 32 pixels), 2 a little out, 1 past 7 pixels;
     /// lighter on the near half where it mirrors the sky (3 from a quarter of the way down from the far
     /// shore, 4 from halfway); a dark line along the far shore where the bank meets it; the shallows'
-    /// tone along the near and side shores.
+    /// tone along the near and side shores; the far bank mirrored just under its line (9 its grass, 8
+    /// its mud).
     func tone(_ x: Double, _ y: Double) -> Int {
         let s = Self.samples
         let col = Int(x.rounded(.down)), row = Int(y.rounded(.down))
@@ -480,6 +481,9 @@ struct PondField {
         let land = Double(near[k]) / Double(s)
         let below = Double(up[k]), above = Double(down[k])
         if below <= 1, land < 0.12 { return 0 }
+        // The far bank mirrored a few pixels down from its waterline (the user, 2026-11-17: "do the
+        // things that are not done yet"): its grass, then its mud, before the water's own tones.
+        if below <= 3, land < 0.2 { return below <= 2 ? 9 : 8 }
         if land < 0.06, below > 3 { return 7 }
         var tone = land < 0.09 ? 3 : (land > 0.22 ? 1 : 2)
         if land >= 0.09 {
