@@ -2081,36 +2081,57 @@ nonisolated final class WorldMap: @unchecked Sendable {
     /// each, all plain ground with nothing on it, so it keeps off the streets, the plaza and the
     /// townsfolk's spots; then nothing else is built, set down or planted on it or its stairs.
     private func raiseTerrace(_ terrace: MapDef.Terrace) {
-        let width = terrace.width, height = terrace.height
-        func stairs(at origin: GridPoint) -> [GridPoint] {
+        var width = terrace.width, height = terrace.height
+        func stairs(at origin: GridPoint, _ width: Int, _ height: Int) -> [GridPoint] {
             [GridPoint(col: origin.col + width / 2, row: origin.row - 1), GridPoint(col: origin.col - 1, row: origin.row + height / 2)]
         }
-        func room(at origin: GridPoint, margin: Bool) -> Bool {
-            var need: [GridPoint] = []
+        let fence = Set(fenceCells)
+        let square = townSquare
+        // Inside the town's square, a cell in from its fence, never out in the countryside.
+        func inside(_ cell: GridPoint) -> Bool {
+            cell.col >= square.origin.col + Self.townBorder + 1 && cell.col < square.origin.col + square.width - Self.townBorder - 1
+                && cell.row >= square.origin.row + Self.townBorder + 1 && cell.row < square.origin.row + square.height - Self.townBorder - 1
+        }
+        func free(_ cell: GridPoint) -> Bool {
+            contains(cell) && inside(cell) && [.ground, .accent].contains(ground[cell.row][cell.col]) && !occupied.contains(cell) && !fence.contains(cell)
+        }
+        func room(at origin: GridPoint, _ width: Int, _ height: Int, margin: Bool) -> Bool {
+            let steps = stairs(at: origin, width, height)
+            let landings = [GridPoint(col: steps[0].col, row: steps[0].row - 1), GridPoint(col: steps[1].col - 1, row: steps[1].row)]
+            guard (steps + landings).allSatisfy(free) else { return false }
             let pad = margin ? 1 : 0
             for col in (origin.col - pad)..<(origin.col + width + pad) {
-                for row in (origin.row - pad)..<(origin.row + height + pad) { need.append(GridPoint(col: col, row: row)) }
+                for row in (origin.row - pad)..<(origin.row + height + pad) where !free(GridPoint(col: col, row: row)) { return false }
             }
-            let steps = stairs(at: origin)
-            need += steps + [GridPoint(col: steps[0].col, row: steps[0].row - 1), GridPoint(col: steps[1].col - 1, row: steps[1].row)]
-            return need.allSatisfy { contains($0) && ground[$0.row][$0.col] == .ground && !occupied.contains($0) }
+            return true
         }
+        // Its size as maps.json has it, else smaller, down to 6 by 4: the green towns' streets cross every
+        // few cells, and no gap in them held a 16 by 5 terrace with room round it, so it fell back onto a
+        // road (the tests caught Meadowbrook's, Rainbow City's and Larkspur's stairs on one). Out to 24 cells.
+        var sizes: [(Int, Int)] = []
+        for w in stride(from: terrace.width, through: min(6, terrace.width), by: -2) {
+            for h in stride(from: terrace.height, through: min(4, terrace.height), by: -1) { sizes.append((w, h)) }
+        }
+        sizes.sort { $0.0 * $0.1 > $1.0 * $1.1 }
         let wanted = offset(terrace.x, terrace.y)
         var origin = wanted
         search: for margin in [true, false] {
-            for radius in 0...10 {
-                for dr in -radius...radius {
-                    for dc in -radius...radius where max(abs(dc), abs(dr)) == radius {
-                        let candidate = GridPoint(col: wanted.col + dc, row: wanted.row + dr)
-                        if room(at: candidate, margin: margin) {
-                            origin = candidate
-                            break search
+            for size in sizes {
+                for radius in 0...24 {
+                    for dr in -radius...radius {
+                        for dc in -radius...radius where max(abs(dc), abs(dr)) == radius {
+                            let candidate = GridPoint(col: wanted.col + dc, row: wanted.row + dr)
+                            if room(at: candidate, size.0, size.1, margin: margin) {
+                                origin = candidate
+                                (width, height) = size
+                                break search
+                            }
                         }
                     }
                 }
             }
         }
-        let steps = stairs(at: origin)
+        let steps = stairs(at: origin, width, height)
         let heads = [GridPoint(col: steps[0].col, row: origin.row), GridPoint(col: origin.col, row: steps[1].row)]
         for col in origin.col..<(origin.col + width) {
             for row in origin.row..<(origin.row + height) {
