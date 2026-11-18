@@ -711,6 +711,17 @@ struct ContentTests {
                     #expect(map.ground[stair.row][stair.col] != .path, "map \(def.id): a terrace's stairs on a road at \(stair)")
                     #expect(map.isWalkable(stair) && map.isWalkable(head), "map \(def.id): a terrace's stairs at \(stair) can't be climbed")
                 }
+                // Whoever stands on the ground just behind it is drawn behind its top, and whoever
+                // stands on it in front (the user, 2026-11-18: "It shows me through the wall").
+                let back = GridPoint(col: terrace.origin.col + terrace.width / 2, row: terrace.origin.row + terrace.height)
+                let rim = GridPoint(col: back.col, row: back.row - 1)
+                if map.contains(back), let top = map.plateaus.first(where: { $0.cells.contains(rim) }) {
+                    let behind = try #require(map.depthBehindTerrace(map.center(of: back)), "map \(def.id): nobody's hidden behind its terrace at \(back)")
+                    #expect(behind < WorldMap.terraceTopZ(of: top.cells), "map \(def.id): shown through its terrace at \(back)")
+                    #expect(map.depthBehindTerrace(map.center(of: rim)) == nil, "map \(def.id): hidden behind its terrace on its top at \(rim)")
+                    let front = GridPoint(col: terrace.origin.col + terrace.width / 2, row: terrace.origin.row - 3)
+                    #expect(map.depthBehindTerrace(map.center(of: front)) == nil, "map \(def.id): hidden behind its terrace in front of it at \(front)")
+                }
             }
         }
     }
@@ -1923,9 +1934,15 @@ struct RulesTests {
         let npc = try #require(map.npcs?.first { $0.monster == "rat_king" })
         let level = try #require(npc.level)
         let waves = try #require(BattleController.bossWaves(npc, encounters: map.encounters, session: session))
-        // Two waves of ten of the map's own monsters, then the boss behind nine more (the middle
-        // of the first row of five, the one furthest from you).
-        #expect(waves.map(\.count) == [10, 10, 10])
+        // Two waves of six of the map's own monsters, then the boss behind five more (the middle
+        // of the first row of five, the one furthest from you): six at most, each standing for its
+        // share of the ten a wave held before, with that much more HP (the user, 2026-11-18).
+        #expect(waves.map(\.count) == [6, 6, 6])
+        #expect(waves[0].allSatisfy { abs($0.share - 10.0 / 6) < 0.001 } && waves[2].filter { $0.speciesID != "rat_king" }.allSatisfy { abs($0.share - 9.0 / 5) < 0.001 })
+        let firstFoe = try #require(waves[0].first)
+        let plain = try #require(firstFoe.speciesID.flatMap(Content.shared.monster)).stats(at: firstFoe.level)
+        #expect(firstFoe.stats.hp == Int((Double(plain.hp) * 10 / 6).rounded()) && firstFoe.hp == firstFoe.stats.hp)
+        #expect(firstFoe.stats.attack == max(1, Int((Double(plain.attack) * 10 / 6).rounded())) && firstFoe.stats.defense == plain.defense)
         #expect(waves[2][2].speciesID == "rat_king" && waves[2][2].level == level)
         #expect(waves[2].filter { $0.speciesID == "rat_king" }.count == 1)
         let monsters = waves.joined().filter { $0.speciesID != "rat_king" }
@@ -1939,7 +1956,7 @@ struct RulesTests {
 
         // The fight opens with the first wave and knows how many follow.
         let battle = try #require(BattleController.boss(npc, encounters: map.encounters, session: session))
-        #expect(battle.enemies.count == 10 && battle.wave == 1 && battle.waveCount == 3)
+        #expect(battle.enemies.count == 6 && battle.wave == 1 && battle.waveCount == 3)
         #expect(!battle.enemies.contains { $0.speciesID == "rat_king" })
         #if DEBUG
         // Debug wins (screenshots) take every wave down at once.

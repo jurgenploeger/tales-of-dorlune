@@ -166,6 +166,40 @@ struct GoldPill: View {
     }
 }
 
+/// Gold won, as a reward card shows it beside its EXP: the bag's coin and the amount in the card's
+/// own lettering, with no pill round it (the user, 2026-11-18: "The coin doesn't need to show in
+/// the label"). `coin`: the coin's size, a little smaller than EXP's star (`RewardStar`).
+struct GoldReward: View {
+    let amount: Int
+    var coin: CGFloat = 22
+
+    var body: some View {
+        HStack(spacing: 6) {
+            Group {
+                if let picture = ArtLibrary.shared.artImage(CoinsTile.art(for: 1)) {
+                    Image(uiImage: picture).resizable().interpolation(.none)
+                } else {
+                    IconImage(.coins, size: coin * 0.8).foregroundStyle(HUDStyle.gold)
+                }
+            }
+            .frame(width: coin, height: coin)
+            .shadow(color: .black.opacity(0.4), radius: 0, x: 0, y: 1)
+            Text("+" + amount.formatted())
+                .lineLimit(1)
+                .fixedSize()
+        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(L("{gold} gold", ["gold": amount]))
+    }
+}
+
+/// EXP won's star on a reward card, bigger than the gold's coin beside it (the user, 2026-11-18).
+struct RewardStar: View {
+    var body: some View {
+        IconImage(.star, size: 26).foregroundStyle(HUDStyle.exp)
+    }
+}
+
 /// A pill like the gold's (`GoldPill`), a pixel-art picture (`art`, from art/sprites) hanging over its
 /// left end in place of the coin: the world map's time of day and where you are (tools/hud_icon_art.py:
 /// the user, 2026-11-11, "The top left pills should become the same as the coin pill").

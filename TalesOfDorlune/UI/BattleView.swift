@@ -1645,6 +1645,9 @@ private struct ResultPanel: View {
                 if let level = result.newLevel {
                     LevelUpCard(session: session, level: level, onDone: advance)
                         .transition(.opacity)
+                } else if result.masteryPoints > 0 {
+                    LevelUpCard(session: session, level: session.data.hero.level, onDone: advance, mastery: result.masteryPoints)
+                        .transition(.opacity)
                 }
             case .companionLevelUp:
                 if let companion, let petID = companion.petID {
@@ -1661,7 +1664,8 @@ private struct ResultPanel: View {
             stage = .summary
         } else if stage == .summary, session.pendingPet != nil {
             stage = .release
-        } else if stage != .levelUp, stage != .companionLevelUp, result.newLevel != nil, session.canSpendSkillPoint {
+        } else if stage != .levelUp, stage != .companionLevelUp, result.newLevel != nil || result.masteryPoints > 0,
+                  session.canSpendSkillPoint {
             stage = .levelUp
         } else if stage != .companionLevelUp,
                   let grown = result.others.first(where: { up in up.petID.map { session.companionCanSpendSkillPoint($0) } ?? false }) {
@@ -1706,13 +1710,13 @@ private struct ResultPanel: View {
                     // None when you were out cold at the end (your friends won it).
                     if result.exp > 0 {
                         Label { Text(L("+{exp} EXP", ["exp": result.exp])) } icon: {
-                            IconImage(.star, size: 18).foregroundStyle(HUDStyle.exp)
+                            RewardStar()
                         }
                         // Always one line (playtesting 2026-10-30: it broke before EXP beside the coins).
                         .lineLimit(1)
                         .fixedSize()
                     }
-                    GoldPill(amount: result.gold, size: 15, sign: "+")
+                    GoldReward(amount: result.gold)
                 }
                 .font(HUDStyle.font(16))
                 .foregroundStyle(HUDStyle.cream)
@@ -2240,6 +2244,57 @@ private struct CenteredRows: Layout {
                 x += sizes[index].width + spacing
             }
             y += height + rowSpacing
+        }
+    }
+}
+
+/// What a treasure chest held, as a battle's pay is shown (the user, 2026-11-18: "the same modal
+/// window with the items/coins as the modal window after a fight"): its gold, and the item in a
+/// slot that fills (`LootGrid`).
+struct TreasureCard: View {
+    let chest: String
+    /// The chest's own picture, over its name (the user, 2026-11-18: "it should show the treasure
+    /// visual as well").
+    let art: String
+    let item: String
+    let gold: Int
+    let onClose: () -> Void
+
+    var body: some View {
+        ZStack {
+            Color.black.opacity(0.45).ignoresSafeArea()
+                .onTapGesture {}
+            VStack(spacing: 10) {
+                SpriteImage(art: art, size: 72)
+                    .padding(.top, 4)
+                VStack(spacing: 2) {
+                    Text(L("Treasure!"))
+                        .font(HUDStyle.font(26))
+                        .foregroundStyle(HUDStyle.gold)
+                        // Clear of the close button, and still centred.
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
+                        .padding(.horizontal, 18)
+                    Text(chest)
+                        .font(HUDStyle.font(12))
+                        .foregroundStyle(HUDStyle.cream)
+                }
+                if gold > 0 {
+                    GoldReward(amount: gold)
+                        .font(HUDStyle.font(16))
+                        .foregroundStyle(HUDStyle.cream)
+                }
+                LootGrid(loot: [(id: item, count: 1)])
+                Button(L("Continue"), action: onClose)
+                    .buttonStyle(PixelButtonStyle(tint: HUDStyle.gold))
+                    .padding(.top, 6)
+            }
+            .padding(HUDStyle.windowInset)
+            .frame(maxWidth: 420)
+            .gameWindow()
+            .windowCloseButton(onClose)
+            .popIn()
+            .padding(20)
         }
     }
 }

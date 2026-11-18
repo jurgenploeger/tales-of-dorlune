@@ -731,7 +731,11 @@ enum DebugLaunch {
                 // `at=terrace` (or `terrace_side`): at the foot of the town's first terrace's front (or side)
                 // stairs, wherever it found room (`WorldMap.raiseTerrace`).
                 let grid = WorldMap(def: def)
-                if let terrace = grid.terraces.first {
+                if let terrace = grid.terraces.first, at.hasSuffix("back") {
+                    // `at=terrace_back`: on the ground just behind its back, halfway along.
+                    session.playerPosition = grid.center(of: GridPoint(col: terrace.origin.col + terrace.width / 2,
+                                                                       row: terrace.origin.row + terrace.height))
+                } else if let terrace = grid.terraces.first {
                     let stair = terrace.stairs[at.hasSuffix("side") ? 1 : 0]
                     let foot = at.hasSuffix("side") ? GridPoint(col: stair.col - 1, row: stair.row) : GridPoint(col: stair.col, row: stair.row - 1)
                     session.playerPosition = grid.center(of: foot)

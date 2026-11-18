@@ -1689,8 +1689,9 @@ final class GameSession {
         data.chestsOpenedAt = (data.chestsOpenedAt ?? [:]).merging([chest.id: Date()]) { $1 }
         SoundEffects.shared.play(.chest)
         record(.collect, target: "gift_box")
-        post(L("Found {item} in the treasure chest!", ["item": found.name]), .reward)
-        if gold > 0 { post(L("+{gold} gold", ["gold": gold]), .reward) }
+        // In the chat; the chest's own window shows them (`TreasureCard`), so no toasts.
+        post(L("Found {item} in the treasure chest!", ["item": found.name]), .reward, toast: false)
+        if gold > 0 { post(L("+{gold} gold", ["gold": gold]), .reward, toast: false) }
         return found
     }
 

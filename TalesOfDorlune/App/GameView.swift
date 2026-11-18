@@ -62,6 +62,8 @@ struct GameView: View {
                         NPCDialogView(npc: npc, session: coordinator.session, onClose: coordinator.closeOverlay, onFight: coordinator.fightBoss,
                                       onBank: coordinator.openBank, cornered: coordinator.cornered == id)
                     }
+                case .treasure(let chest, let art, let item, let gold):
+                    TreasureCard(chest: chest, art: art, item: item, gold: gold, onClose: coordinator.closeOverlay)
                 case .bank(let id):
                     if let npc = Content.shared.npc(id) {
                         BankView(npc: npc, session: coordinator.session, onClose: coordinator.closeOverlay)

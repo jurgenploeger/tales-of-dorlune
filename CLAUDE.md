@@ -77,7 +77,8 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   (the user's pick from `tools/terrace_preview.py`, 2026-11-17): `tools/terrace_art.py` draws a cell's stretch of
   wall (sheared along its edge), of balustrade, a post and the flagstones; `LandStage.placePlateaus` lays them,
   `placeTerraces` the balustrade round the top, and the terrace casts its shade away from the sun as a block
-  (`CanopyShade.addBlock`). A cobbled path runs from the foot of each stair to the nearest street (`streetLink`), and nothing
+  (`CanopyShade.addBlock`). Its top is sorted behind its back corner, so whoever stands on the ground behind it
+  is sorted behind that (`WorldMap.depth(at:)`, `depthBehindTerrace`; they showed through it, the user, 2026-11-18). A cobbled path runs from the foot of each stair to the nearest street (`streetLink`), and nothing
   is built in the ring round it or two cells behind (the user, 2026-11-18). Caves' `WorldScene` keeps the old look.
 - How a blow lands in battle (`BattleScene.impact`, after SpriteCook's hit feel article): attacker and
   target stand still 5 frames (9 on a killing blow, `hitStop`: the two nodes paused, the stage plays
@@ -105,7 +106,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   colour turned a desert red), stopping at a town's wall (`blocks`, `WorldMap.fenceCells`), which casts its own, as do its towers and gates (`LandStage.placeFence`, `throughWalls`); drawn a `LandStage` chunk at a time while shown, again as the sun moves (`follow`,
   every half second from `ContinentScene.updateAir`, which casts walkers' shadows too: `Walker.shine`). A
   walker's shadow is its own frame laid the same way, as long for its height (`Walker.figure`, a dark copy
-  of the sprite's texture each frame, softened and fading toward its head by `Walker.soften`, kept just over the ground, `figureDepth`), with a soft round at its feet. On a
+  of the sprite's texture each frame, softened and fading toward its head by `Walker.soften`, kept just over the ground, `figureDepth`), with a soft round at its feet; both stand on the lowest row its first frame draws (`Walker.feet`, `standFigure`: hung off the sprite's anchor, a few pixels under the feet, they read as hovering, the user, 2026-11-18). On a
   hill or the sunk shore, and in caves, a prop keeps its round `Lighting.Shadow`. Keep the tool and the Swift in step.
 - `content/*.json`: all game data (maps, monsters, skills, items, quests, music, looks, crowd, announcements, the chat's
   filter (`moderation.json`, `ChatFilter`: what you type is starred out where it matches), titles,
@@ -324,6 +325,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   The wall is one cell's stretch that tiles side to side, 37 points to its merlons, its stretches along x a step darker (`pieces`' `shaded`);
   its walk (`city_wall_top`) is drawn by `TownFence.pieces` as a strip of its own back into the screen from the parapet's top
   (`BorderArt.wallTopLevel`, `wallThickness`): face on it looked flat, and the walk drawn on its face still read as thin (the user, 2026-11-18).
+  Along the walk's far edge stands a parapet too, the face's own merlons above the walk's level (the user, 2026-11-18: "The walls miss the ridge on the outer edge").
   The pieces are drawn with no edge smoothing (smoothed, a seam a pixel wide showed between every two). `--sheet out.png` previews them.
 - `tools/gate_art.py`: each town's own gate over its roads (maps.json town `gate`: Meadowbrook's thatched
   lychgate, Prismhaven's crystal keystone, Ingothold's gold and red cloth, Larkspur's bluebird); quests'

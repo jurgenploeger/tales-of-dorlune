@@ -268,7 +268,7 @@ final class LandStage {
             taken.remove(map.cell(at: npc.node.position))
             taken.insert(spot)
             npc.node.position = map.center(of: spot)
-            npc.node.zPosition = -npc.node.position.y
+            npc.node.zPosition = map.depth(at: npc.node.position)
         }
     }
 
@@ -1185,7 +1185,7 @@ final class LandStage {
             node.tagMode = .onDemand
             if npc.role == .boss { node.motion = IdleMotion.of(art: npc.art) }
             node.position = map.center(of: cell)
-            node.zPosition = -node.position.y
+            node.zPosition = map.depth(at: node.position)
             let marker = NameTag("!", size: 28)
             marker.position = CGPoint(x: 0, y: node.sprite.size.height + 18)
             marker.zPosition = 6_000
@@ -1491,12 +1491,13 @@ final class LandStage {
             let shadedStone = Self.meanColour(art.picture(of: southWalls[0])) ?? Self.stairShadedRiser
             let paving = Self.meanColour(art.picture(of: flags[0])) ?? Self.stairTread
             let pavingAlt = Self.meanColour(art.picture(of: flags[1])) ?? Self.stairTreadAlt
-            func shape(_ points: [CGPoint], fill: UIColor, z: CGFloat) {
+            func shape(_ points: [CGPoint], fill: UIColor, texture: SKTexture? = nil, z: CGFloat) {
                 let path = CGMutablePath()
                 path.addLines(between: points)
                 path.closeSubpath()
                 let node = SKShapeNode(path: path)
-                node.fillColor = fill
+                node.fillColor = texture == nil ? fill : .white
+                node.fillTexture = texture
                 node.strokeColor = Self.stairEdge
                 node.lineWidth = 1
                 node.lineJoin = .miter
@@ -1528,8 +1529,13 @@ final class LandStage {
                     side += ramp == .south ? [at(c, r + near, high), at(c, r + far, high)] : [at(c + near, r, high), at(c + far, r, high)]
                 }
                 side.append(ramp == .south ? at(c, r + 1, 0) : at(c + 1, r, 0))
-                // The west side of the front stairs is turned to the light, the south side of the side ones away.
-                shape(side, fill: ramp == .south ? litStone : shadedStone, z: topZ - 0.15)
+                // The west side of the front stairs is turned to the light, the south side of the side ones away:
+                // the wall's own stone turned that way (the user, 2026-11-18: "the sides of the stairs should
+                // show the rocks"), its picture over the stepped side as it is over a wall's stretch, the same
+                // edge from the ground to the top.
+                shape(side, fill: ramp == .south ? litStone : shadedStone,
+                      texture: ramp == .south ? westWalls[pick(cell, westWalls.count)] : southWalls[pick(cell, southWalls.count)],
+                      z: topZ - 0.15)
             }
             stroke(lips, color: UIColor(white: 1, alpha: 0.2), width: 1, z: topZ + 0.1)
             stroke(shadows, color: UIColor(white: 0, alpha: 0.28), width: 2, z: topZ - 0.45)
@@ -1571,11 +1577,7 @@ final class LandStage {
     }
 
     /// Where a terrace's top is sorted: just behind its back corner (`WorldScene.topZ`).
-    private static func topZ(of cells: Set<GridPoint>) -> CGFloat {
-        let tile = WorldMap.tileSize
-        let back = cells.map { WorldMap.project(CGPoint(x: CGFloat($0.col + 1) * tile, y: CGFloat($0.row + 1) * tile)).y }.max() ?? 0
-        return -back - 0.75
-    }
+    private static func topZ(of cells: Set<GridPoint>) -> CGFloat { WorldMap.terraceTopZ(of: cells) }
 
     /// White, solid along the top row and fading smoothly to clear at the bottom (tinted per land).
     private static let fogTexture: SKTexture = {

@@ -499,7 +499,7 @@ final class Crowd {
                     onChallenge?(profile)
                 }
             }
-            walker.zPosition = -walker.position.y
+            walker.zPosition = map.depth(at: walker.position)
             if let pet = member.pet {
                 // In a group at their side, with the next of them walking behind (as your friends'
                 // companions do); on their own, behind them.
@@ -509,7 +509,7 @@ final class Crowd {
                 } else {
                     pet.follow(walker, dt: dt, footstep: walker.footstep(behind: 36), canStand: standable)
                 }
-                pet.zPosition = -pet.position.y
+                pet.zPosition = map.depth(at: pet.position)
             }
         }
     }
@@ -860,6 +860,13 @@ final class Crowd {
 
     func position(of id: UUID) -> CGPoint? {
         members.first { $0.profile?.id == id }?.walker.position
+    }
+
+    /// Your friends here whose time online is over, or who've moved on to another land
+    /// (`GameSession.status(of:)`), log off: gone in a puff (the user, 2026-11-18: one stayed about,
+    /// offline in the Friends list, and could still be invited).
+    func logOff(_ gone: (UUID) -> Bool) {
+        for id in members.compactMap({ $0.profile?.id }) where gone(id) { remove(id, poof: true) }
     }
 
     /// They left: joined your party, or ran off after a duel.

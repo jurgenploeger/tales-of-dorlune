@@ -207,7 +207,7 @@ companions_many | newgame,level=80,pet=emerald_pegasus+water_slug+jelly,toys=10,
 landscape    | newgame,map=rainbow_city,landscape | 8
 rat_cavern   | newgame,map=rat_cavern            | 8
 cave_dark    | newgame,level=44,class=fighter,pet=pineapple,friends=2,map=rat_cavern | 15
-behind_wall  | newgame,map=rat_cavern,at=-3_3        | 8
+behind_wall  | newgame,map=rat_cavern,at=-5_5        | 8
 # Inside a cave where you come in from each land (from=<land>): on the side you walked into its mouth
 # from, north into the Gooey Grotto and the Hollow from Emerald Road (in at their south side), north into
 # the Rat Cavern from Shiverdell (south) and east from Lotus Land (west).
@@ -399,7 +399,7 @@ lair_tide    | newgame,level=170,map=water_temple,at=-37_6,weather=clear,hour=12
 lair_emerald | newgame,level=200,map=emerald_road,at=29_-24,weather=clear,hour=12 | 8
 lair_rock    | newgame,level=90,map=sleepy_town,summit=0,weather=clear,hour=12 | 8
 lair_wolf_peak | newgame,level=40,map=wolf_lair,summit=0,weather=clear,hour=12 | 8
-lair_rat     | newgame,level=60,map=rat_cavern,at=32_15 | 8
+lair_rat     | newgame,level=60,map=rat_cavern,at=56_28 | 8
 skills       | newgame,level=60,class=fighter,learn=bash+first_aid+power_strike+whirlwind,menu=character,sub=skills | 8
 skills_learn | newgame,level=20,class=mage,menu=character,sub=skills             | 8
 boss_oak     | newgame,level=28,map=smiling_forest,at=-66_-36,npc=oak_grove   | 15
@@ -464,6 +464,8 @@ terrace_top    | newgame,level=40,map=goldburg,at=11_17           | 8
 terrace_evening | newgame,level=40,map=goldburg,at=terrace,hour=17,weather=clear | 8
 terrace_morning | newgame,level=40,map=goldburg,at=terrace,hour=9,weather=clear | 8
 terrace_side  | newgame,level=40,map=goldburg,at=terrace_side,hour=12,weather=clear | 8
+# Standing just behind a terrace: hidden behind its top (the user, 2026-11-18: "It shows me through the wall").
+terrace_back  | newgame,level=40,map=goldburg,at=terrace_back,hour=12,weather=clear | 8
 hill_meadow    | newgame,map=sunny_meadow,hill=0                  | 8
 hill_top       | newgame,map=sunny_meadow,hill=0,ontop            | 8
 hill_twilight  | newgame,level=20,map=twilight_woods,hill=0,weather=clear,hour=12 | 8
@@ -1043,3 +1045,5 @@ web_port_boss     | newgame,level=95,class=fighter,pet=pineapple,friends=2,map=s
 web_port_levelup  | newgame,level=9,levelup,pet=pineapple,map=candy_mountain,battle=1,win,equip=golden_dragon_mail,clean | 30
 web_port_anywhere | newgame,level=30,class=mage,pet=bunny,map=rosen_lake,bridge=0,clean,nohud | 12
 web_port_explore  | newgame,level=43,class=fighter,friends=2,map=starfall_isle,at=0_2,clean,nohud | 12
+# The Valley of Fear at 139 : 79 by the world map's pin, where the land looked broken (the user, 2026-11-18).
+valley_broken | newgame,level=60,map=valley_of_fear,at=60_-19,hour=9,weather=clear | 8

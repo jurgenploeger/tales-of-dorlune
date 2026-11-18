@@ -81,6 +81,8 @@ nonisolated final class WorldMap: @unchecked Sendable {
     private(set) var plateaus: [Plateau] = []
     /// Which plateau each raised cell belongs to.
     private var plateauOf: [GridPoint: Int] = [:]
+    /// Where each plateau's top is sorted (`terraceTopZ`), in `plateaus`' order.
+    private var plateauTops: [CGFloat] = []
     /// The hills out in the fields (`theme.hills`).
     private(set) var hills: [Hill] = []
     /// Which hill each cell it rises over belongs to.
@@ -2249,6 +2251,41 @@ nonisolated final class WorldMap: @unchecked Sendable {
     private func addPlateau(_ plateau: Plateau) {
         for cell in plateau.cells { plateauOf[cell] = plateaus.count }
         plateaus.append(plateau)
+        plateauTops.append(Self.terraceTopZ(of: plateau.cells))
+    }
+
+    /// Where a terrace's top is sorted: just behind its back corner, so whoever stands on it is in
+    /// front of it (`LandStage.placePlateaus`).
+    static func terraceTopZ(of cells: Set<GridPoint>) -> CGFloat {
+        let back = cells.map { project(CGPoint(x: CGFloat($0.col + 1) * tileSize, y: CGFloat($0.row + 1) * tileSize)).y }.max() ?? 0
+        return -back - 0.75
+    }
+
+    /// How deep someone standing on the ground at `point` sorts: `-y`, or behind a terrace's top
+    /// where it stands in front of them (`depthBehindTerrace`).
+    func depth(at point: CGPoint) -> CGFloat { depthBehindTerrace(point) ?? -point.y }
+
+    /// Behind a terrace's top, for someone on the ground just behind it (north or east of it, the
+    /// top raised in front of them on the screen): the top is sorted by its back corner, so they'd be
+    /// drawn over it, showing through it (the user, 2026-11-18). Nil off the ground behind one.
+    /// Among themselves they keep their order (a little nearer the farther down the screen).
+    func depthBehindTerrace(_ point: CGPoint) -> CGFloat? {
+        guard !plateaus.isEmpty else { return nil }
+        let cell = rawCell(at: point)
+        guard plateauOf[cell] == nil else { return nil }
+        // The cells in front of theirs (lower on the screen) and over them once raised: down to three
+        // cells in front, no more than one to either side.
+        for reach in 1...6 {
+            for dc in 0...reach {
+                let dr = reach - dc
+                guard abs(dc - dr) <= 1 else { continue }
+                let near = GridPoint(col: cell.col - dc, row: cell.row - dr)
+                guard let index = plateauOf[near], plateaus[index].ramps[near] == nil else { continue }
+                let top = plateauTops[index]
+                return top - 1 + min(0.9, max(0, (-point.y - top) * 0.001))
+            }
+        }
+        return nil
     }
 
     /// A mountain's shape (`raiseHills`, `Hill.Lobe.front`): how far up its gentle back its top
@@ -2558,11 +2595,20 @@ nonisolated final class WorldMap: @unchecked Sendable {
         // either side. Its foothills, and its top once you're up, you walk anywhere as on a hill.
         // Only with a trail of its own up it: one whose trail didn't fit stays open all over, as a
         // hill is, or its top (and a chest or a boss set up there) could never be reached.
+        // Every summit of the range a trail climbs, not the mountain's alone (the user, 2026-11-18:
+        // "you're able to shortcut the road ... It should be too steep and you need to follow the
+        // road"), and the cell either side of a trail only where it doesn't join two of its legs
+        // (`trailBand`): where a trail doubled back the two sides met, a step across between them.
         if let mountain, trails.contains(where: { $0.lobe == mountain }) {
-            let byTrails = Set(onTrails.flatMap { cell in (-1...1).flatMap { dr in (-1...1).map { dc in GridPoint(col: cell.col + dc, row: cell.row + dr) } } })
+            let byTrails = Self.trailBand(trails.map { Self.cells(along: $0.points) })
+            let climbed = Set(trails.map(\.lobe))
             for cell in hill.cells where !byTrails.contains(cell) {
-                let rise = hill.rise(of: mountain, Double(cell.col) + 0.5, Double(cell.row) + 0.5)
-                if rise > Self.mountainFoot, rise < Self.mountainCrest { blocked.insert(cell) }
+                let x = Double(cell.col) + 0.5, y = Double(cell.row) + 0.5
+                let steep = climbed.contains { lobe in
+                    let rise = hill.rise(of: lobe, x, y)
+                    return rise > Self.mountainFoot && rise < Self.mountainCrest
+                }
+                if steep { blocked.insert(cell) }
             }
             // Nothing left you can't get to: its top with no trail up, or a pocket of its side.
             var reached = Set(ring.subtracting(hill.cells))
@@ -2631,6 +2677,35 @@ nonisolated final class WorldMap: @unchecked Sendable {
     /// at 1 a chest on the Shiverdell's summit stood on its blocked shoulder).
     private static let mountainFoot = 0.15
     private static let mountainCrest = 0.6
+
+    /// The ground you can walk by a mountain range's trails (`paths`, each its cells in order): the
+    /// trails, and the cell either side of them, but not one beside two stretches of trail far apart
+    /// along it or beside two trails, where it would join them: a shortcut across a bend.
+    static func trailBand(_ paths: [[GridPoint]]) -> Set<GridPoint> {
+        var band = Set(paths.joined())
+        // For each cell beside a trail: which trail, and the first and last step along it it's beside.
+        var beside: [GridPoint: (trail: Int, first: Int, last: Int, mixed: Bool)] = [:]
+        for (trail, path) in paths.enumerated() {
+            for (step, cell) in path.enumerated() {
+                for dr in -1...1 {
+                    for dc in -1...1 where dr != 0 || dc != 0 {
+                        let near = GridPoint(col: cell.col + dc, row: cell.row + dr)
+                        if let seen = beside[near] {
+                            beside[near] = (seen.trail, min(seen.first, step), max(seen.last, step), seen.mixed || seen.trail != trail)
+                        } else {
+                            beside[near] = (trail, step, step, false)
+                        }
+                    }
+                }
+            }
+        }
+        for (cell, seen) in beside where !seen.mixed && seen.last - seen.first <= Self.bandReach { band.insert(cell) }
+        return band
+    }
+
+    /// How many steps along a trail the cells beside one cell may span and it stays open
+    /// (`trailBand`): a cell on a straight or gently bending stretch is beside four or five.
+    private static let bandReach = 6
 
     /// The cells along a trail, one after another with no diagonal steps, so you can walk it.
     private static func cells(along trail: [CGPoint]) -> [GridPoint] {

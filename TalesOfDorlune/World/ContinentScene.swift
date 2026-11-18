@@ -420,6 +420,14 @@ final class ContinentScene: SKScene {
             let sun = here.flatMap { airs[$0.id]?.sky?.sun } ?? .noon
             for id in nearLands { lands[id]?.stage.follow(sun) }
             if Walker.sun != sun { Walker.shine(sun) }
+            // Your friends about whose time online is over, or who've gone on elsewhere, log off.
+            let friends = session.friends
+            for id in nearLands {
+                lands[id]?.stage.crowd?.logOff { [session] someone in
+                    guard let friend = friends.first(where: { $0.id == someone }), !session.isInParty(friend) else { return false }
+                    return session.status(of: friend) != .online(mapID: id)
+                }
+            }
         }
     }
 
@@ -502,6 +510,16 @@ final class ContinentScene: SKScene {
         return land.map.height(at: CGPoint(x: point.x - land.shift.dx, y: point.y - land.shift.dy))
     }
 
+    /// How deep someone standing at `point` sorts: `-y`, or behind a terrace's top where they're on
+    /// the ground just behind it (`WorldMap.depthBehindTerrace`), in the land's own depth less its shift.
+    func depth(at point: CGPoint) -> CGFloat {
+        guard let owner = store.land(at: Self.cell(at: point)), let land = lands[owner.id],
+              let local = land.map.depthBehindTerrace(CGPoint(x: point.x - land.shift.dx, y: point.y - land.shift.dy)) else {
+            return -point.y
+        }
+        return local - land.shift.dy
+    }
+
     // MARK: Walking
 
     override func update(_ currentTime: TimeInterval) {
@@ -532,16 +550,16 @@ final class ContinentScene: SKScene {
             let alongY = CGPoint(x: next.x, y: next.y + step.dy)
             if canStand(at: alongY) { next = alongY }
             player.position = next
-            player.zPosition = -next.y
+            player.zPosition = depth(at: next)
             player.face(Direction(stick, current: player.facing))
             player.setWalking(true)
         } else if player.path.isEmpty, let place = yourPlace() {
             // In a party you've joined: along at the back of its line, never off into a cave or aboard.
             player.walk(toward: place.spot, going: place.going, dt: dt) { [unowned self] in self.canStand(at: $0) && !self.leadsAway($0) }
-            player.zPosition = -player.position.y
+            player.zPosition = depth(at: player.position)
         } else {
             player.setWalking(player.followPath(dt: dt) || !player.path.isEmpty)
-            player.zPosition = -player.position.y
+            player.zPosition = depth(at: player.position)
         }
         if !isInputLocked {
             checkCell()
@@ -555,7 +573,7 @@ final class ContinentScene: SKScene {
         let inParty = session.joinedParty != nil || allies.contains { $0.waiting == nil }
         if let follower {
             follower.follow(player, dt: dt, footstep: player.footstep(behind: inParty ? 18 : 36), canStand: standable, beside: inParty)
-            follower.zPosition = -follower.position.y
+            follower.zPosition = depth(at: follower.position)
             follower.settle()
         }
         // Your friends line up behind you; those waiting for you turn to watch you come.
@@ -571,10 +589,10 @@ final class ContinentScene: SKScene {
             } else if ally.node.position.distance(to: player.position) < Walker.nameRange {
                 ally.node.face(Direction(player.position - ally.node.position, current: ally.node.facing))
             }
-            ally.node.zPosition = -ally.node.position.y
+            ally.node.zPosition = depth(at: ally.node.position)
             ally.node.settle()
             if let pet = ally.pet {
-                pet.zPosition = -pet.position.y
+                pet.zPosition = depth(at: pet.position)
                 pet.settle()
             }
         }
