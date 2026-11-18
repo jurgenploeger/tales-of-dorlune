@@ -1392,6 +1392,7 @@ private struct FriendsTab: View {
             case .all: break
             case .online: if !online { return false }
             case .offline: if online { return false }
+            case .nearby: if !online || !session.adventurersAround.contains(friend.id) { return false }
             }
             guard !query.isEmpty else { return true }
             var words = [friend.name, content.race(friend.raceID).name, content.classDef(friend.classID).name]
@@ -1500,13 +1501,16 @@ private nonisolated enum FriendSort: String, CaseIterable {
 
 /// Which friends the Friends window shows (`FriendsTab`).
 private nonisolated enum FriendShelf: String, CaseIterable {
-    case all, online, offline
+    /// `nearby`: near enough to ask along (the user, 2026-11-18: a pill of its own, in place of a
+    /// Nearby badge on each).
+    case all, online, offline, nearby
 
     var title: String {
         switch self {
         case .all: L("All")
         case .online: L("Online")
         case .offline: L("Offline")
+        case .nearby: L("Nearby")
         }
     }
 }
@@ -1599,7 +1603,7 @@ private struct FriendRow: View {
     }
 }
 
-/// A friend's status, in a small badge: waiting for you, near you, online or offline. None for one
+/// A friend's status, in a small badge: waiting for you, online or offline. None for one
 /// at your side: the Party group says so (the user, 2026-11-11: "The with you labels are not
 /// needed").
 private struct FriendStatusBadge: View {
@@ -1610,9 +1614,8 @@ private struct FriendStatusBadge: View {
         if session.isInParty(friend) {
             return session.whereabouts(of: friend) != nil ? (L("Waiting"), HUDStyle.orange) : nil
         }
-        let offline = session.status(of: friend) == .offline
-        if session.adventurersAround.contains(friend.id), !offline { return (L("Nearby"), HUDStyle.green) }
-        return offline ? (L("Offline"), HUDStyle.dim) : (L("Online"), HUDStyle.green)
+        // Online or offline only: who's near enough to ask along has the Nearby pill (the user, 2026-11-18).
+        return session.status(of: friend) == .offline ? (L("Offline"), HUDStyle.dim) : (L("Online"), HUDStyle.green)
     }
 
     var body: some View {
