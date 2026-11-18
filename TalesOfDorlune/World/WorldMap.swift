@@ -81,6 +81,8 @@ nonisolated final class WorldMap: @unchecked Sendable {
     private(set) var plateaus: [Plateau] = []
     /// Which plateau each raised cell belongs to.
     private var plateauOf: [GridPoint: Int] = [:]
+    /// Where each plateau's top is sorted (`terraceTopZ`), in `plateaus`' order.
+    private var plateauTops: [CGFloat] = []
     /// The hills out in the fields (`theme.hills`).
     private(set) var hills: [Hill] = []
     /// Which hill each cell it rises over belongs to.
@@ -2249,6 +2251,41 @@ nonisolated final class WorldMap: @unchecked Sendable {
     private func addPlateau(_ plateau: Plateau) {
         for cell in plateau.cells { plateauOf[cell] = plateaus.count }
         plateaus.append(plateau)
+        plateauTops.append(Self.terraceTopZ(of: plateau.cells))
+    }
+
+    /// Where a terrace's top is sorted: just behind its back corner, so whoever stands on it is in
+    /// front of it (`LandStage.placePlateaus`).
+    static func terraceTopZ(of cells: Set<GridPoint>) -> CGFloat {
+        let back = cells.map { project(CGPoint(x: CGFloat($0.col + 1) * tileSize, y: CGFloat($0.row + 1) * tileSize)).y }.max() ?? 0
+        return -back - 0.75
+    }
+
+    /// How deep someone standing on the ground at `point` sorts: `-y`, or behind a terrace's top
+    /// where it stands in front of them (`depthBehindTerrace`).
+    func depth(at point: CGPoint) -> CGFloat { depthBehindTerrace(point) ?? -point.y }
+
+    /// Behind a terrace's top, for someone on the ground just behind it (north or east of it, the
+    /// top raised in front of them on the screen): the top is sorted by its back corner, so they'd be
+    /// drawn over it, showing through it (the user, 2026-11-18). Nil off the ground behind one.
+    /// Among themselves they keep their order (a little nearer the farther down the screen).
+    func depthBehindTerrace(_ point: CGPoint) -> CGFloat? {
+        guard !plateaus.isEmpty else { return nil }
+        let cell = rawCell(at: point)
+        guard plateauOf[cell] == nil else { return nil }
+        // The cells in front of theirs (lower on the screen) and over them once raised: down to three
+        // cells in front, no more than one to either side.
+        for reach in 1...6 {
+            for dc in 0...reach {
+                let dr = reach - dc
+                guard abs(dc - dr) <= 1 else { continue }
+                let near = GridPoint(col: cell.col - dc, row: cell.row - dr)
+                guard let index = plateauOf[near], plateaus[index].ramps[near] == nil else { continue }
+                let top = plateauTops[index]
+                return top - 1 + min(0.9, max(0, (-point.y - top) * 0.001))
+            }
+        }
+        return nil
     }
 
     /// A mountain's shape (`raiseHills`, `Hill.Lobe.front`): how far up its gentle back its top

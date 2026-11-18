@@ -499,7 +499,7 @@ final class Crowd {
                     onChallenge?(profile)
                 }
             }
-            walker.zPosition = -walker.position.y
+            walker.zPosition = map.depth(at: walker.position)
             if let pet = member.pet {
                 // In a group at their side, with the next of them walking behind (as your friends'
                 // companions do); on their own, behind them.
@@ -509,7 +509,7 @@ final class Crowd {
                 } else {
                     pet.follow(walker, dt: dt, footstep: walker.footstep(behind: 36), canStand: standable)
                 }
-                pet.zPosition = -pet.position.y
+                pet.zPosition = map.depth(at: pet.position)
             }
         }
     }

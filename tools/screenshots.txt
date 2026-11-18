@@ -464,6 +464,8 @@ terrace_top    | newgame,level=40,map=goldburg,at=11_17           | 8
 terrace_evening | newgame,level=40,map=goldburg,at=terrace,hour=17,weather=clear | 8
 terrace_morning | newgame,level=40,map=goldburg,at=terrace,hour=9,weather=clear | 8
 terrace_side  | newgame,level=40,map=goldburg,at=terrace_side,hour=12,weather=clear | 8
+# Standing just behind a terrace: hidden behind its top (the user, 2026-11-18: "It shows me through the wall").
+terrace_back  | newgame,level=40,map=goldburg,at=terrace_back,hour=12,weather=clear | 8
 hill_meadow    | newgame,map=sunny_meadow,hill=0                  | 8
 hill_top       | newgame,map=sunny_meadow,hill=0,ontop            | 8
 hill_twilight  | newgame,level=20,map=twilight_woods,hill=0,weather=clear,hour=12 | 8

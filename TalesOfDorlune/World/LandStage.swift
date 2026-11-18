@@ -268,7 +268,7 @@ final class LandStage {
             taken.remove(map.cell(at: npc.node.position))
             taken.insert(spot)
             npc.node.position = map.center(of: spot)
-            npc.node.zPosition = -npc.node.position.y
+            npc.node.zPosition = map.depth(at: npc.node.position)
         }
     }
 
@@ -1185,7 +1185,7 @@ final class LandStage {
             node.tagMode = .onDemand
             if npc.role == .boss { node.motion = IdleMotion.of(art: npc.art) }
             node.position = map.center(of: cell)
-            node.zPosition = -node.position.y
+            node.zPosition = map.depth(at: node.position)
             let marker = NameTag("!", size: 28)
             marker.position = CGPoint(x: 0, y: node.sprite.size.height + 18)
             marker.zPosition = 6_000
@@ -1571,11 +1571,7 @@ final class LandStage {
     }
 
     /// Where a terrace's top is sorted: just behind its back corner (`WorldScene.topZ`).
-    private static func topZ(of cells: Set<GridPoint>) -> CGFloat {
-        let tile = WorldMap.tileSize
-        let back = cells.map { WorldMap.project(CGPoint(x: CGFloat($0.col + 1) * tile, y: CGFloat($0.row + 1) * tile)).y }.max() ?? 0
-        return -back - 0.75
-    }
+    private static func topZ(of cells: Set<GridPoint>) -> CGFloat { WorldMap.terraceTopZ(of: cells) }
 
     /// White, solid along the top row and fading smoothly to clear at the bottom (tinted per land).
     private static let fogTexture: SKTexture = {

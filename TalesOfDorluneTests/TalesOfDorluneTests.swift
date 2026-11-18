@@ -711,6 +711,17 @@ struct ContentTests {
                     #expect(map.ground[stair.row][stair.col] != .path, "map \(def.id): a terrace's stairs on a road at \(stair)")
                     #expect(map.isWalkable(stair) && map.isWalkable(head), "map \(def.id): a terrace's stairs at \(stair) can't be climbed")
                 }
+                // Whoever stands on the ground just behind it is drawn behind its top, and whoever
+                // stands on it in front (the user, 2026-11-18: "It shows me through the wall").
+                let back = GridPoint(col: terrace.origin.col + terrace.width / 2, row: terrace.origin.row + terrace.height)
+                let rim = GridPoint(col: back.col, row: back.row - 1)
+                if map.contains(back), let top = map.plateaus.first(where: { $0.cells.contains(rim) }) {
+                    let behind = try #require(map.depthBehindTerrace(map.center(of: back)), "map \(def.id): nobody's hidden behind its terrace at \(back)")
+                    #expect(behind < WorldMap.terraceTopZ(of: top.cells), "map \(def.id): shown through its terrace at \(back)")
+                    #expect(map.depthBehindTerrace(map.center(of: rim)) == nil, "map \(def.id): hidden behind its terrace on its top at \(rim)")
+                    let front = GridPoint(col: terrace.origin.col + terrace.width / 2, row: terrace.origin.row - 3)
+                    #expect(map.depthBehindTerrace(map.center(of: front)) == nil, "map \(def.id): hidden behind its terrace in front of it at \(front)")
+                }
             }
         }
     }
