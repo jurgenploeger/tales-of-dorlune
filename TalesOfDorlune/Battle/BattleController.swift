@@ -259,10 +259,17 @@ final class BattleController {
     /// How many fighters a boss wave held before `maxEnemies`, which its fighters stand for.
     static let fullWave = 10
 
-    /// A monster's stats when it stands for `share` of a bigger group: its HP times that.
+    /// A monster's stats when it stands for `share` of a bigger group: its HP, attack and magic times
+    /// that. Damage goes as attack (and magic) does, so a fight's monsters deal about as much a round
+    /// as the bigger group did, and take as long to wear down (the user, 2026-11-18: "Because there
+    /// are fewer monsters, their attack should be rebalanced").
     static func stronger(_ stats: Stats, share: Double) -> Stats {
+        guard share > 1 else { return stats }
         var stats = stats
-        if share > 1 { stats.hp = max(1, Int((Double(stats.hp) * share).rounded())) }
+        func times(_ value: Int) -> Int { max(1, Int((Double(value) * share).rounded())) }
+        stats.hp = times(stats.hp)
+        stats.attack = times(stats.attack)
+        stats.magic = times(stats.magic)
         return stats
     }
     /// How many levels lower each earlier wave of a boss fight stands, so ten at a time stays fair.

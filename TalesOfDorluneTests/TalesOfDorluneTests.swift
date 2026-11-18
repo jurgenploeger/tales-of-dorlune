@@ -1942,6 +1942,7 @@ struct RulesTests {
         let firstFoe = try #require(waves[0].first)
         let plain = try #require(firstFoe.speciesID.flatMap(Content.shared.monster)).stats(at: firstFoe.level)
         #expect(firstFoe.stats.hp == Int((Double(plain.hp) * 10 / 6).rounded()) && firstFoe.hp == firstFoe.stats.hp)
+        #expect(firstFoe.stats.attack == max(1, Int((Double(plain.attack) * 10 / 6).rounded())) && firstFoe.stats.defense == plain.defense)
         #expect(waves[2][2].speciesID == "rat_king" && waves[2][2].level == level)
         #expect(waves[2].filter { $0.speciesID == "rat_king" }.count == 1)
         let monsters = waves.joined().filter { $0.speciesID != "rat_king" }
