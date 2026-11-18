@@ -1,0 +1,16 @@
+---
+/** A sprite at a whole multiple of its pixels, never smoothed. */
+interface Props { sprite?: { src: string; w: number; h: number } | null; src?: string; alt?: string; box?: number; max?: number }
+const { sprite, src, alt = '', box = 56, max = 4 } = Astro.props;
+const s = sprite ?? (src ? { src, w: 0, h: 0 } : null);
+const scale = s && s.w ? Math.max(1, Math.min(max, Math.floor(box / Math.max(s.w, s.h)))) : 0;
+const small = s && s.w && Math.max(s.w, s.h) > box;
+---
+{s && (
+  <img
+    src={s.src} alt={alt} loading="lazy" decoding="async"
+    class={small ? undefined : 'pixel'}
+    width={scale ? s.w * scale : undefined} height={scale ? s.h * scale : undefined}
+    style={!scale ? `max-width:${box}px;max-height:${box}px` : small ? `width:auto;height:auto;max-width:${box}px;max-height:${box}px` : undefined}
+  />
+)}

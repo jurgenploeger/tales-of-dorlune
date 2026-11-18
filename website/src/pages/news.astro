@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+import { game } from '../lib/game';
+const date = (d: string) => new Date(d + 'T12:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+<Base title="What's new" description={`What's new in Tales of Dorlune: every update, newest first. The latest is version ${game.version}.`} crumbs={[{ name: "What's new" }]}>
+  <div class="card">
+    <h1>What's new</h1>
+    <p class="lead">Every update to Tales of Dorlune, newest first.</p>
+    {game.changelog.map((r: any) => (
+      <section>
+        <h2>{r.title}</h2>
+        <p class="eyebrow">Version {r.version} · {date(r.date)}</p>
+        <ul>{r.notes.map((n: string) => <li>{n}</li>)}</ul>
+      </section>
+    ))}
+  </div>
+</Base>

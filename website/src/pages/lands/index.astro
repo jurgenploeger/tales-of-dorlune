@@ -1,0 +1,43 @@
+---
+import Base from '../../layouts/Base.astro';
+import { game, levels, LAND_KIND, sortBy } from '../../lib/game';
+const lands = sortBy(game.lands, (l: any) => (l.levels ? l.levels[0] : l.start ? -1 : 0));
+const towns = game.lands.filter((l: any) => l.kind === 'town');
+const wild = sortBy(game.lands.filter((l: any) => l.kind !== 'town'), (l: any) => l.levels?.[0] ?? 0);
+const w = game.world;
+---
+<Base title="Lands: the world map of Dorlune" description={`The world map of Tales of Dorlune: ${game.counts.lands} lands and ${game.counts.towns} towns, each with its level range, monsters, bosses and quests.`} crumbs={[{ name: 'Guide', href: '/guide/' }, { name: 'Lands' }]}>
+  <div class="card">
+    <h1>Lands</h1>
+    <p>Dorlune is one continent you walk from end to end, with caves under it and an isle off its coast: {game.counts.lands} lands to fight through and {game.counts.towns} towns to rest in. Tap a land to read about it.</p>
+    <div class="worldmap">
+      <img src="/world.png" alt="A map of Dorlune, each land in the colour of its ground" width={w.w} height={w.h} class="pixel" />
+      {game.lands.filter((l: any) => w.spots[l.slug]).map((l: any) => (
+        <a href={`/lands/${l.slug}/`} class={l.kind} style={`left:${(w.spots[l.slug][0] * 100).toFixed(1)}%;top:${(w.spots[l.slug][1] * 100).toFixed(1)}%`}>
+          {l.name}{l.levels && <small>Lv {levels(l.levels)}</small>}
+        </a>
+      ))}
+    </div>
+    <h2>Towns</h2>
+    <div class="grid">
+      {towns.map((l: any) => <a class="tile" href={`/lands/${l.slug}/`}><div><strong>{l.name}</strong><span>{l.services.map((s: any) => s.role).filter((r: string, i: number, a: string[]) => a.indexOf(r) === i).length} kinds of service{l.start ? ' · where you start' : ''}</span></div></a>)}
+    </div>
+    <h2>Wild lands and caves</h2>
+    <div class="table-wrap">
+      <table class="cards">
+        <thead><tr><th>Land</th><th>Kind</th><th class="n">Levels</th><th>Boss</th><th class="n">Monsters</th></tr></thead>
+        <tbody>
+          {wild.map((l: any) => (
+            <tr>
+              <td><a href={`/lands/${l.slug}/`}>{l.name}</a></td>
+              <td data-label="Kind">{LAND_KIND[l.kind]}</td>
+              <td class="n" data-label="Levels">{levels(l.levels)}</td>
+              <td data-label="Boss">{l.bosses.length ? l.bosses.map((b: any, i: number) => <>{i > 0 && ', '}<a href={`/monsters/${b.slug}/`}>{b.name}</a> (Lv {b.level})</>) : '—'}</td>
+              <td class="n" data-label="Monsters">{l.monsters.length}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</Base>

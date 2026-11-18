@@ -1,0 +1,42 @@
+---
+import Base from '../../layouts/Base.astro';
+import Sprite from '../../components/Sprite.astro';
+import ListTools from '../../components/ListTools.astro';
+import { game, sortBy, num, ITEM_TYPES, ITEM_TYPE, CLASS_NAMES, STAT_NAMES } from '../../lib/game';
+const order = Object.keys(ITEM_TYPES);
+const items = sortBy(game.items, (i: any) => order.indexOf(i.type) * 100000 + (i.level ?? 0) * 100);
+const stats = (i: any) => i.stats ? Object.entries(i.stats).map(([k, v]) => `${STAT_NAMES[k] ?? k} ${(v as number) > 0 ? '+' : ''}${v}`).join(', ') : i.heal ? `Restores ${i.heal} HP` : i.mp ? `Restores ${i.mp} MP` : '';
+---
+<Base title="Items: weapons, armour, potions and materials" description={`All ${game.counts.items} items in Tales of Dorlune: their stats, the level you need, what they cost and where to get each one.`} crumbs={[{ name: 'Guide', href: '/guide/' }, { name: 'Items' }]}>
+  <div class="card">
+    <h1>Items</h1>
+    <p>{game.counts.items} things to find, buy, forge and wear. Each page says where to get it.</p>
+    <div class="filters" id="if">
+      <input type="search" placeholder="Find an item" aria-label="Find an item" />
+      <select data-key="type" aria-label="Kind"><option value="">Any kind</option>{order.map((t) => <option value={t}>{ITEM_TYPES[t]}</option>)}</select>
+      <select data-key="cls" aria-label="Class"><option value="">Any class</option><option value="fighter">Fighter</option><option value="mage">Mage</option><option value="tamer">Beast Tamer</option></select>
+      <span class="count" aria-live="polite"></span>
+    </div>
+    <div class="table-wrap">
+      <table class="cards" id="it">
+        <thead><tr>
+          <th data-sort="s"><button>Item</button></th><th data-sort="s"><button>Kind</button></th><th data-sort="n" class="n"><button>Level</button></th>
+          <th>Does</th><th>For</th><th data-sort="n" class="n"><button>Price</button></th>
+        </tr></thead>
+        <tbody>
+          {items.map((i: any) => (
+            <tr data-name={i.name.toLowerCase()} data-type={i.type} data-cls={(i.classes ?? ['fighter', 'mage', 'tamer']).join(' ')}>
+              <td data-v={i.name}><span class="cell-art"><Sprite sprite={i.sprite} box={32} max={1} /></span><a href={`/items/${i.slug}/`}>{i.name}</a></td>
+              <td data-label="Kind">{ITEM_TYPE[i.type]}</td>
+              <td class="n" data-label="Level" data-v={i.level ?? 0}>{i.level ?? '—'}</td>
+              <td data-label="Does">{stats(i) || '—'}</td>
+              <td data-label="For">{i.classes ? i.classes.map((c: string) => CLASS_NAMES[c] ?? c).join(', ') : 'Everyone'}</td>
+              <td class="n" data-label="Price" data-v={i.price}>{i.price ? num(i.price) : '—'}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <ListTools table="it" filters="if" />
+</Base>

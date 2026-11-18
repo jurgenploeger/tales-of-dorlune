@@ -1,0 +1,113 @@
+---
+import Base from '../../layouts/Base.astro';
+import Sprite from '../../components/Sprite.astro';
+import GetApp from '../../components/GetApp.astro';
+import Icon from '../../components/Icon.astro';
+import Stand from '../../components/Stand.astro';
+import { game, levels, pct, cap, LAND_KIND, wildLands, sortBy } from '../../lib/game';
+export function getStaticPaths() {
+  return game.lands.map((l: any) => ({ params: { slug: l.slug }, props: { l } }));
+}
+const { l } = Astro.props as any;
+const mon = (slug: string) => game.monsters.find((m: any) => m.slug === slug);
+const quests = sortBy(game.quests.filter((q: any) => q.land?.slug === l.slug), (q: any) => q.minLevel);
+const ROLE: Record<string, string> = { shop: 'Shop', smith: 'Blacksmith', healer: 'Healer', bank: 'Bank', barber: 'Barber', guild: 'Guild', weaver: 'Weaver' };
+const ROLE_DOES: Record<string, string> = {
+  healer: 'Rest here and your whole party is brand new.', bank: 'Keeps what your bag has no room for. Nothing in a bank is ever lost.',
+  smith: 'Forges weapons and armour from the materials monsters drop.', barber: 'A new hairstyle or colour, and dyes for your gear.',
+  guild: 'Join at level ' + game.classChoiceLevel + ' to choose your path.', weaver: 'Weaves capes for great deeds, and dyes your gear.', shop: '',
+};
+const i = wildLands.findIndex((o: any) => o.slug === l.slug);
+const desc = l.kind === 'town'
+  ? `${l.name}, a town in Tales of Dorlune: its shops, services, people and the quests they give.`
+  : `${l.name} in Tales of Dorlune, for levels ${levels(l.levels)}: its monsters${l.bosses.length ? `, its boss ${l.bosses[0].name}` : ''}, quests and the roads out.`;
+---
+<Base title={l.kind === 'town' ? `${l.name}: shops, people and quests` : `${l.name}: monsters, quests and levels ${levels(l.levels)}`} description={desc} crumbs={[{ name: 'Guide', href: '/guide/' }, { name: 'Lands', href: '/lands/' }, { name: l.name }]} scene={l}>
+  <Fragment slot="head">
+    <h1 class="gold-title">{l.name}</h1>
+        <ul class="chips">
+          <li><span class="chip">{LAND_KIND[l.kind]}</span></li>
+          {l.levels && <li><span class="chip rare">Levels {levels(l.levels)}</span></li>}
+          {l.start && <li><span class="chip">Where you start</span></li>}
+          {l.danger && <li><span class="chip boss">Danger zone</span></li>}
+          {l.waystone && <li><span class="chip">Waystone</span></li>}
+        </ul>
+  </Fragment>
+  {[...l.bosses, ...l.monsters.filter((m: any) => !m.rare)].slice(0, 5).map((m: any, n: number, a: any[]) => <Stand slot="stand" sprite={mon(m.slug)?.sprite} at={50 + (n + 1) * (46 / (a.length + 1))} href={`/monsters/${m.slug}/`} label={m.name} />)}
+  <div class="card">
+    <div class="entity">
+      <div>
+        {l.danger && <p class="note">A danger zone: other adventurers here may challenge you to a duel.</p>}
+        {l.above && <p>A deeper level of <a href={`/lands/${l.above.slug}/`}>{l.above.name}</a>, reached by the ladder down.</p>}
+
+        {l.monsters.length > 0 && <>
+          <h2>Monsters</h2>
+          <p>Battles here come at levels {levels(l.levels)}{l.groupSize && <>, {l.groupSize[0] === l.groupSize[1] ? l.groupSize[0] : `${l.groupSize[0]} to ${l.groupSize[1]}`} monsters at a time</>}.</p>
+          <div class="table-wrap"><table>
+            <thead><tr><th>Monster</th><th>Element</th><th>How often</th></tr></thead>
+            <tbody>{l.monsters.map((m: any) => (
+              <tr>
+                <td><span class="cell-art"><Sprite sprite={mon(m.slug)?.sprite} box={36} max={1} /></span><a href={`/monsters/${m.slug}/`}>{m.name}</a>{m.rare && <> <span class="chip rare">Rare</span></>}</td>
+                <td><span class={`chip el-${m.element}`}>{cap(m.element)}</span></td>
+                <td><div style="display:flex;align-items:center;gap:8px"><div class="bar" style="flex:1"><i style={`width:${Math.round(m.share * 100)}%`}></i></div>{pct(m.share)}</div></td>
+              </tr>
+            ))}</tbody>
+          </table></div>
+        </>}
+
+        {l.bosses.length > 0 && <>
+          <h2>Boss</h2>
+          <div class="grid">{l.bosses.map((b: any) => (
+            <a class="tile" href={`/monsters/${b.slug}/`}><div class="art"><Sprite sprite={mon(b.slug)?.sprite} box={56} max={1} /></div><div><strong>{b.name}</strong><span>Level {b.level}</span></div></a>
+          ))}</div>
+        </>}
+
+        {l.services.length > 0 && <>
+          <h2>Shops and services</h2>
+          {l.services.map((s: any) => (
+            <>
+              <h3>{s.name} <span class="small">· {ROLE[s.role]}</span></h3>
+              {ROLE_DOES[s.role] && <p>{ROLE_DOES[s.role]}</p>}
+              {s.stock.length > 0 && <details><summary>Sells {s.stock.length} things</summary><p>{s.stock.map((it: any, n: number) => <>{n > 0 && ', '}<a href={`/items/${it.slug}/`}>{it.name}</a></>)}</p></details>}
+            </>
+          ))}
+        </>}
+
+        {quests.length > 0 && <>
+          <h2>Quests given here</h2>
+          <div class="table-wrap"><table class="cards">
+            <thead><tr><th>Quest</th><th>From</th><th class="n">Level</th></tr></thead>
+            <tbody>{quests.map((q: any) => <tr><td><a href={`/quests/${q.slug}/`}>{q.title}</a></td><td data-label="From">{q.giver}</td><td class="n" data-label="Level">{q.minLevel}</td></tr>)}</tbody>
+          </table></div>
+        </>}
+
+        {l.locals.length > 0 && <>
+          <h2>People who live here</h2>
+          {l.locals.map((p: any) => <p><strong>{p.name}.</strong>{p.lines[0] && <> “{p.lines[0]}”</>}</p>)}
+        </>}
+
+        {l.exits.length > 0 && <>
+          <h2>Roads out</h2>
+          <ul>{l.exits.map((e: any) => (
+            <li><a href={`/lands/${e.slug}/`}>{e.name}</a>{e.ship ? ', by ship' : e.edge ? `, to the ${e.edge}` : ''}{e.requires && <>: opens after <a href={`/quests/${e.requires.slug}/`}>“{e.requires.name}”</a></>}</li>
+          ))}</ul>
+        </>}
+      </div>
+      <aside class="infobox">
+        <dl>
+          <dt>Kind</dt><dd>{LAND_KIND[l.kind]}</dd>
+          {l.levels && <><dt>Levels</dt><dd>{levels(l.levels)}</dd></>}
+          {l.monsters.length > 0 && <><dt>Monsters</dt><dd>{l.monsters.length}</dd></>}
+          {l.bosses.length > 0 && <><dt>Boss</dt><dd>{l.bosses.map((b: any) => b.name).join(', ')}</dd></>}
+          <dt>Quests</dt><dd>{quests.length}</dd>
+          {l.climate && <><dt>Climate</dt><dd>{cap(l.climate)}</dd></>}
+        </dl>
+      </aside>
+    </div>
+    {i >= 0 && <div class="prevnext">
+      {wildLands[i - 1] ? <a class="btn quiet small-btn" href={`/lands/${wildLands[i - 1].slug}/`}>← {wildLands[i - 1].name}</a> : <span></span>}
+      {wildLands[i + 1] && <a class="btn quiet small-btn" href={`/lands/${wildLands[i + 1].slug}/`}>{wildLands[i + 1].name} <Icon name="arrow-right" size={16} /></a>}
+    </div>}
+  </div>
+  <div style="margin-top:22px"><GetApp compact /></div>
+</Base>

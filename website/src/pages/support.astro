@@ -1,0 +1,29 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../lib/site';
+---
+<Base title="Support" description="Help with Tales of Dorlune: answers to common questions, and how to get in touch." crumbs={[{ name: 'Support' }]}>
+  <div class="card">
+    <h1>Support</h1>
+    <p class="lead">Stuck, or found something that isn't right? We'd like to hear about it.</p>
+    <h2>Get in touch</h2>
+    {site.supportEmail
+      ? <p>Write to <a href={`mailto:${site.supportEmail}`}>{site.supportEmail}</a>. It helps to say which version you're on (Settings shows it) and what you were doing.</p>
+      : <p>A contact address is on its way to this page.</p>}
+    <h2>Common questions</h2>
+    <h3>Where is my game saved?</h3>
+    <p>On your iPhone. The game has no account and doesn't keep your save anywhere else, so deleting the game deletes your saves.</p>
+    <h3>Does it need the internet?</h3>
+    <p>No. It plays offline.</p>
+    <h3>Are the other adventurers real people?</h3>
+    <p>No. The people you meet in the world are part of the game.</p>
+    <h3>A road is closed. How do I get through?</h3>
+    <p>A quest opens it. Find the land on the <a href="/lands/">lands page</a>: its roads say which quest.</p>
+    <h3>The fights are too hard.</h3>
+    <p>You may have walked ahead of your level. See <a href="/guide/leveling/">where to level</a>.</p>
+    <h3>How do I change the language?</h3>
+    <p>From the title screen or in Settings. The game speaks 11 languages.</p>
+    <h3>How do I befriend a monster?</h3>
+    <p>Weaken it, then throw a Seal Stone. <a href="/guide/start/#friends">More in the beginner's guide</a>.</p>
+  </div>
+</Base>

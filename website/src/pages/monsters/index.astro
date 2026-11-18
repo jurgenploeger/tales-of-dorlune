@@ -1,0 +1,43 @@
+---
+import Base from '../../layouts/Base.astro';
+import Sprite from '../../components/Sprite.astro';
+import ListTools from '../../components/ListTools.astro';
+import { game, monstersByLevel, wildLands, ELEMENTS, cap, levels, ease, expAt, span } from '../../lib/game';
+const kind = (m: any) => (m.boss ? 'boss' : m.rare ? 'rare' : 'common');
+---
+<Base title="Monsters: every monster in the Monster Book" description={`All ${game.counts.monsters} monsters in Tales of Dorlune: their element, level, where to find them and how easily each can be befriended.`} crumbs={[{ name: 'Guide', href: '/guide/' }, { name: 'Monsters' }]}>
+  <div class="card">
+    <h1>Monsters</h1>
+    <p>There are {game.counts.monsters} monsters to meet for your Monster Book, {game.counts.bosses} of them bosses. Weaken a wild one, then throw a Seal Stone to make it your friend.</p>
+    <div class="filters" id="mf">
+      <input type="search" placeholder="Find a monster" aria-label="Find a monster" />
+      <select data-key="element" aria-label="Element"><option value="">Any element</option>{ELEMENTS.map((e) => <option value={e}>{cap(e)}</option>)}</select>
+      <select data-key="kind" aria-label="Kind"><option value="">Any kind</option><option value="common">Common</option><option value="rare">Rare</option><option value="boss">Boss</option></select>
+      <select data-key="land" aria-label="Land"><option value="">Any land</option>{wildLands.map((l: any) => <option value={l.slug}>{l.name}</option>)}</select>
+      <span class="count" aria-live="polite"></span>
+    </div>
+    <div class="table-wrap">
+      <table class="cards" id="mt">
+        <thead><tr>
+          <th data-sort="s"><button>Monster</button></th><th data-sort="s"><button>Element</button></th>
+          <th data-sort="n" class="n"><button>Level</button></th><th>Found in</th>
+          <th data-sort="n" class="n"><button>EXP</button></th><th data-sort="n"><button>Befriend</button></th>
+        </tr></thead>
+        <tbody>
+          {monstersByLevel.map((m: any) => (
+            <tr data-name={m.name.toLowerCase()} data-element={m.element} data-kind={kind(m)} data-land={[...m.lands.map((l: any) => l.slug), m.bossAt?.land.slug].filter(Boolean).join(' ')}>
+              <td data-v={m.name}><span class="cell-art"><Sprite sprite={m.sprite} box={36} max={1} /></span><a href={`/monsters/${m.slug}/`}>{m.name}</a>{m.boss && <> <span class="chip boss">Boss</span></>}{m.rare && <> <span class="chip rare">Rare</span></>}</td>
+              <td data-label="Element" data-v={m.element}><span class={`chip el-${m.element}`}>{cap(m.element)}</span></td>
+              <td class="n" data-label="Level" data-v={m.level ? m.level[0] : 999}>{levels(m.level) || '—'}</td>
+              <td data-label="Found in">{m.bossAt ? m.bossAt.land.name : m.lands.map((l: any) => l.name).join(', ') || '—'}</td>
+              <td class="n" data-label="EXP" data-v={m.level ? expAt(m, m.level[0]) : 0}>{m.level ? span(expAt(m, m.level[0]), expAt(m, m.level[1])) : '—'}</td>
+              <td data-label="Befriend" data-v={m.captureRate}>{ease(m.captureRate)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <p class="small">Level is the range it turns up at in the wild. EXP is what one gives across those levels. Befriend is how willing it is: the weaker it is when you throw a Seal Stone, the better the stone holds.</p>
+  </div>
+  <ListTools table="mt" filters="mf" />
+</Base>

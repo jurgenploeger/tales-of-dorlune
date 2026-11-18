@@ -1,0 +1,39 @@
+---
+/** Makes the table `table` filter by the controls in `filters` and sort by its headers.
+    Rows carry data-name and data-<key> for each select[data-key]; th[data-sort] sorts by td[data-v]. */
+interface Props { table: string; filters: string }
+const { table, filters } = Astro.props;
+---
+<script is:inline define:vars={{ table, filters }}>
+  (() => {
+    const t = document.getElementById(table), f = document.getElementById(filters);
+    if (!t) return;
+    const rows = [...t.tBodies[0].rows];
+    const count = f && f.querySelector('.count');
+    const apply = () => {
+      const q = f ? (f.querySelector('input[type=search]')?.value || '').trim().toLowerCase() : '';
+      const picks = f ? [...f.querySelectorAll('select[data-key]')].map((s) => [s.dataset.key, s.value]) : [];
+      let n = 0;
+      for (const r of rows) {
+        const ok = (!q || r.dataset.name.includes(q)) && picks.every(([k, v]) => !v || (r.dataset[k] || '').split(' ').includes(v));
+        r.hidden = !ok; if (ok) n++;
+      }
+      if (count) count.textContent = n + ' of ' + rows.length;
+    };
+    if (f) { f.addEventListener('input', apply); f.addEventListener('change', apply); }
+    const q = new URLSearchParams(location.search);
+    if (f) for (const s of f.querySelectorAll('select[data-key]')) { const v = q.get(s.dataset.key); if (v) s.value = v; }
+    apply();
+    t.querySelectorAll('th[data-sort]').forEach((th) => {
+      const i = th.cellIndex, numeric = th.dataset.sort === 'n';
+      th.querySelector('button').addEventListener('click', () => {
+        const up = th.getAttribute('aria-sort') !== 'ascending';
+        t.querySelectorAll('th[aria-sort]').forEach((o) => o.removeAttribute('aria-sort'));
+        th.setAttribute('aria-sort', up ? 'ascending' : 'descending');
+        const key = (r) => { const c = r.cells[i]; const v = c.dataset.v ?? c.textContent.trim(); return numeric ? parseFloat(v) || 0 : v.toLowerCase(); };
+        rows.sort((a, b) => (key(a) < key(b) ? -1 : key(a) > key(b) ? 1 : 0) * (up ? 1 : -1));
+        rows.forEach((r) => t.tBodies[0].appendChild(r));
+      });
+    });
+  })();
+</script>

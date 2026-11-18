@@ -130,6 +130,10 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   here, or a reason in `skipped`; `check_content.py` checks each box and fill pixel. How to box them, the
   acceptance criteria and what went wrong before: the skill `.claude/skills/sprite-idle-animation` (its
   `scripts/eyes.py dump | zoom | fills | check` previews and checks every body, hairstyle, helmet and armour).
+- `website/`: talesofdorlune.com (Astro, hosted on Vercel with Root Directory `website`): a landing page and a guide
+  generated from `content/*.json`. `python3 website/tools/export.py` (pillow + numpy) rewrites its data, sprites and
+  world map; rerun it and commit after content or art changes. `website/README.md` has the rest; its look and words
+  follow the Figma brand guidelines.
 - `TalesOfDorlune/`: Swift code (World = maps and walking, Battle = combat, UI = SwiftUI HUD and menus).
 - Item icons are in the clean look (2026-10-26, docs/pixel-style.md *Item icons*: RD's Potion, the user's pick;
   its *Acceptance criteria* checklist is what every new or changed icon must meet):

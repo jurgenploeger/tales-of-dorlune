@@ -1,0 +1,251 @@
+---
+import '@fontsource/luckiest-guy';
+import '../styles/global.css';
+import { site } from '../lib/site';
+import { game } from '../lib/game';
+import Scene from '../components/Scene.astro';
+import Icon from '../components/Icon.astro';
+import Analytics from '@vercel/analytics/astro';
+
+interface Props {
+  title: string;
+  description: string;
+  crumbs?: { name: string; href?: string }[];
+  image?: string;
+  bare?: boolean;
+  jsonld?: object[];
+  /** A land whose scene opens the page, the title standing in its sky. */
+  scene?: { slug: string; sky: string[] };
+}
+const { title, description, crumbs = [], image = '/img/link-preview.png', bare = false, jsonld = [], scene } = Astro.props;
+const path = Astro.url.pathname;
+const canonical = new URL(path, site.url).href;
+const fullTitle = path === '/' ? title : `${title} | ${site.name}`;
+const nav = [
+  ['Guide', '/guide/'], ['Monsters', '/monsters/'], ['Lands', '/lands/'], ['Quests', '/quests/'],
+  ['Items', '/items/'], ['Classes', '/classes/'], ['News', '/news/'],
+];
+const trail = crumbs.length ? [{ name: 'Home', href: '/' }, ...crumbs] : [];
+const ld = [
+  ...jsonld,
+  ...(trail.length ? [{
+    '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+    itemListElement: trail.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, item: new URL(c.href ?? path, site.url).href })),
+  }] : []),
+];
+---
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="preload" href="/fonts/Allo-Dorlune.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#4a90e8" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0b1538" media="(prefers-color-scheme: dark)" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL(image, site.url).href} />
+    <meta name="twitter:card" content="summary_large_image" />
+    {site.appStoreId && <meta name="apple-itunes-app" content={`app-id=${site.appStoreId}`} />}
+    {ld.map((o) => <script type="application/ld+json" set:html={JSON.stringify(o)} />)}
+    <script is:inline>
+      try { const t = localStorage.getItem('theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <header class:list={['site-header', { over: bare, float: bare }]}>
+      <div class="wrap">
+        <a class="brand" href="/"><img src="/img/app-icon.png" alt="" width="40" height="40" class="pixel" />{site.name}</a>
+        <nav class="nav" aria-label="Main">
+          {nav.map(([name, href]) => <a href={href} aria-current={path.startsWith(href) ? 'page' : undefined}>{name}</a>)}
+        </nav>
+        <div class="header-tools">
+          <a class="icon-btn" id="find" href="/search/" aria-label="Search the guide" title="Search (press /)">
+            <Icon name="search" size={20} />
+          </a>
+          <button class="icon-btn" id="theme" type="button" aria-label="Switch between day and night"><Icon name="moon" class="at-day" /><Icon name="sun" class="at-night" /></button>
+        </div>
+      </div>
+    </header>
+    <main>
+      {bare ? <slot /> : (
+        <>
+          {scene && (
+            <Scene land={scene} scale={2} class="banner">
+              <div class="wrap">
+                <nav class="crumbs" aria-label="Breadcrumb">
+                  {trail.map((c, i) => <>{i > 0 && <span><Icon name="chevron-right" size={12} /></span>}{c.href ? <a href={c.href}>{c.name}</a> : c.name}</>)}
+                </nav>
+                <slot name="head" />
+              </div>
+              <slot name="stand" slot="stand" />
+            </Scene>
+          )}
+          <div class="page">
+            <div class="wrap">
+              {!scene && trail.length > 0 && (
+                <nav class="crumbs" aria-label="Breadcrumb">
+                  {trail.map((c, i) => <>{i > 0 && <span><Icon name="chevron-right" size={12} /></span>}{c.href ? <a href={c.href}>{c.name}</a> : c.name}</>)}
+                </nav>
+              )}
+              <slot />
+            </div>
+          </div>
+        </>
+      )}
+    </main>
+    <footer class="site-footer">
+      <div class="wrap">
+        <div class="cols">
+          <div>
+            <h2>THE GAME</h2>
+            <ul>
+              <li><a href="/">Tales of Dorlune</a></li>
+              <li><a href="/news/">What's new</a></li>
+              <li><a href="/press/">Press kit</a></li>
+            </ul>
+          </div>
+          <div>
+            <h2>THE GUIDE</h2>
+            <ul>
+              <li><a href="/guide/start/">Start here</a></li>
+              <li><a href="/guide/walkthrough/">Walkthrough</a></li>
+              <li><a href="/guide/leveling/">Where to level</a></li>
+              <li><a href="/monsters/">Monster Book</a></li>
+            </ul>
+          </div>
+          <div>
+            <h2>HELP</h2>
+            <ul>
+              <li><a href="/support/">Support</a></li>
+              <li><a href="/privacy/">Privacy policy</a></li>
+              {site.googleTag && <li><a href="/privacy/#cookies" data-reopen-consent>Cookie settings</a></li>}
+            </ul>
+          </div>
+        </div>
+        <p class="fine">Guide data from version {game.version} ({game.date}), straight from the game's own files. © {new Date().getFullYear()} {site.developer}.</p>
+      </div>
+    </footer>
+    <dialog id="spotlight" aria-label="Search the guide">
+      <form method="dialog" class="spot-field">
+        <Icon name="search" size={22} />
+        <input type="search" id="spot-q" placeholder="A monster, land, quest or item" aria-label="Search the guide" autocomplete="off" aria-controls="spot-list" />
+        <button class="spot-close" aria-label="Close search"><Icon name="close" size={16} /></button>
+      </form>
+      <ul id="spot-list" role="listbox"></ul>
+      <p id="spot-status" class="small" aria-live="polite">Type a name to look it up.</p>
+    </dialog>
+    <script is:inline>
+      (() => {
+        const dlg = document.getElementById('spotlight'), q = document.getElementById('spot-q'), list = document.getElementById('spot-list'), status = document.getElementById('spot-status');
+        if (!dlg.showModal) return;   // an old browser keeps the link to the search page
+        let rows = null, pick = 0;
+        const open = async () => {
+          if (dlg.open) return;
+          dlg.showModal(); q.value = ''; render(); q.focus();
+          if (!rows) { rows = await (await fetch('/search.json')).json(); render(); }   // what was typed while it loaded
+        };
+        const render = () => {
+          const words = q.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+          list.textContent = ''; pick = 0;
+          if (!words.length || !rows) { status.hidden = false; status.textContent = 'Type a name to look it up.'; return; }
+          const hits = rows.filter((r) => words.every((w) => r[0].toLowerCase().includes(w)))
+            .sort((a, b) => a[0].toLowerCase().indexOf(words[0]) - b[0].toLowerCase().indexOf(words[0]) || a[0].localeCompare(b[0])).slice(0, 8);
+          status.hidden = hits.length > 0; status.textContent = 'Nothing by that name. Try fewer letters.';
+          hits.forEach(([name, url, kind], i) => {
+            const li = document.createElement('li'), a = document.createElement('a'), k = document.createElement('span');
+            a.href = url; a.textContent = name; k.textContent = kind; a.appendChild(k); li.appendChild(a); li.setAttribute('role', 'option');
+            if (i === 0) li.setAttribute('aria-selected', 'true');
+            list.appendChild(li);
+          });
+        };
+        const move = (d) => {
+          const items = [...list.children]; if (!items.length) return;
+          items[pick].removeAttribute('aria-selected'); pick = (pick + d + items.length) % items.length;
+          items[pick].setAttribute('aria-selected', 'true'); items[pick].scrollIntoView({ block: 'nearest' });
+        };
+        document.getElementById('find').addEventListener('click', (e) => { e.preventDefault(); open(); });
+        document.addEventListener('keydown', (e) => {
+          const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName);
+          if ((e.key === '/' && !typing) || (e.key.toLowerCase() === 'k' && (e.metaKey || e.ctrlKey))) { e.preventDefault(); open(); }
+        });
+        q.addEventListener('input', render);
+        q.addEventListener('keydown', (e) => {
+          if (e.key === 'ArrowDown') { e.preventDefault(); move(1); }
+          else if (e.key === 'ArrowUp') { e.preventDefault(); move(-1); }
+          else if (e.key === 'Enter') { e.preventDefault(); const a = list.children[pick]?.querySelector('a'); if (a) location.href = a.href; }
+        });
+        dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); });
+      })();
+    </script>
+    <script is:inline>
+      // Over the homepage's sky the menu is clear; once you scroll it becomes the bar, and stays with you.
+      (() => {
+        const h = document.querySelector('.site-header.float'); if (!h) return;
+        const set = () => h.classList.toggle('over', window.scrollY < 24);
+        set(); addEventListener('scroll', set, { passive: true });
+      })();
+    </script>
+    <script is:inline>
+      document.getElementById('theme').addEventListener('click', () => {
+        const root = document.documentElement;
+        const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+        root.dataset.theme = dark ? 'light' : 'dark';
+        try { localStorage.setItem('theme', root.dataset.theme); } catch (e) {}
+      });
+    </script>
+    <Analytics />
+    {site.googleTag && (
+      <div id="consent" class="consent" role="dialog" aria-labelledby="consent-title" hidden>
+        <p id="consent-title"><strong>Can we count your visit with Google Analytics?</strong> It sets cookies to tell us which pages people read. Nothing changes in the game either way.</p>
+        <div class="consent-actions">
+          <button type="button" class="btn small-btn" data-consent="granted">Allow</button>
+          <button type="button" class="btn quiet small-btn" data-consent="denied">No thanks</button>
+        </div>
+      </div>
+    )}
+    {site.googleTag && (
+      <script is:inline define:vars={{ tag: site.googleTag }}>
+        // Google's tag loads only once a visitor has said yes; until then nothing of Google's runs.
+        (() => {
+          const box = document.getElementById('consent');
+          const read = () => { try { return localStorage.getItem('consent'); } catch (e) { return null; } };
+          const load = () => {
+            if (window.dataLayer) return;
+            window.dataLayer = [];
+            window.gtag = function () { dataLayer.push(arguments); };
+            gtag('js', new Date());
+            gtag('config', tag);
+            const s = document.createElement('script');
+            s.async = true; s.src = 'https://www.googletagmanager.com/gtag/js?id=' + tag;
+            document.head.appendChild(s);
+          };
+          const choice = read();
+          if (choice === 'granted') load(); else if (!choice) box.hidden = false;
+          box.addEventListener('click', (e) => {
+            const v = e.target.closest('[data-consent]')?.dataset.consent; if (!v) return;
+            try { localStorage.setItem('consent', v); } catch (err) {}
+            box.hidden = true;
+            if (v === 'granted') load();
+          });
+          // "Cookie settings" in the footer asks again.
+          document.querySelectorAll('[data-reopen-consent]').forEach((a) => a.addEventListener('click', (e) => {
+            e.preventDefault();
+            try { localStorage.removeItem('consent'); } catch (err) {}
+            if (window.dataLayer) { location.reload(); return; }
+            box.hidden = false; box.querySelector('button').focus();
+          }));
+        })();
+      </script>
+    )}
+  </body>
+</html>

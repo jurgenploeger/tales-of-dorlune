@@ -1,0 +1,35 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Search" description="Search the Tales of Dorlune guide: monsters, lands, quests, items and skills." crumbs={[{ name: 'Search' }]}>
+  <div class="card">
+    <h1>Search</h1>
+    <form class="filters" role="search" onsubmit="return false">
+      <input type="search" id="q" name="q" placeholder="A monster, land, quest or item" aria-label="Search the guide" autofocus />
+    </form>
+    <p id="status" class="small" aria-live="polite">Type a name to look it up.</p>
+    <div class="table-wrap" id="box" hidden><table><tbody id="results"></tbody></table></div>
+  </div>
+  <script is:inline>
+    (async () => {
+      const q = document.getElementById('q'), out = document.getElementById('results'), box = document.getElementById('box'), status = document.getElementById('status');
+      const rows = await (await fetch('/search.json')).json();
+      const run = () => {
+        const words = q.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+        out.textContent = '';
+        if (!words.length) { box.hidden = true; status.textContent = 'Type a name to look it up.'; return; }
+        const hits = rows.filter((r) => words.every((w) => r[0].toLowerCase().includes(w)))
+          .sort((a, b) => a[0].toLowerCase().indexOf(words[0]) - b[0].toLowerCase().indexOf(words[0]) || a[0].localeCompare(b[0]));
+        for (const [name, url, kind] of hits.slice(0, 60)) {
+          const tr = out.insertRow(), a = document.createElement('a');
+          a.href = url; a.textContent = name; tr.insertCell().appendChild(a); tr.insertCell().textContent = kind;
+        }
+        box.hidden = !hits.length;
+        status.textContent = hits.length ? (hits.length > 60 ? 'Showing the first 60 of ' + hits.length + '.' : hits.length + (hits.length === 1 ? ' result.' : ' results.')) : 'Nothing by that name. Try fewer letters.';
+        history.replaceState(null, '', words.length ? '?q=' + encodeURIComponent(q.value.trim()) : location.pathname);
+      };
+      q.value = new URLSearchParams(location.search).get('q') || '';
+      q.addEventListener('input', run); run();
+    })();
+  </script>
+</Base>

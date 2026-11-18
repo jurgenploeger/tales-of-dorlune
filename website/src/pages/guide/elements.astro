@@ -1,0 +1,24 @@
+---
+import Base from '../../layouts/Base.astro';
+import { game, ELEMENTS, cap, strongAgainst, weakTo } from '../../lib/game';
+const count = (e: string) => game.monsters.filter((m: any) => m.element === e).length;
+---
+<Base title="Elements: what beats what" description="The seven elements of Tales of Dorlune and how they match up: water beats fire, fire beats metal, metal beats wood, wood beats earth, earth beats water, and light and dark beat each other." crumbs={[{ name: 'Guide', href: '/guide/' }, { name: 'Elements' }]}>
+  <div class="card">
+    <h1>Elements</h1>
+    <p class="lead">Every monster has one of seven elements. Hit one with the element that beats it and the blow lands half as hard again; hit it with the one it beats and it lands a quarter softer.</p>
+    <p>Five go round in a ring: <strong>Water</strong> beats <strong>Fire</strong>, Fire beats <strong>Metal</strong>, Metal beats <strong>Wood</strong>, Wood beats <strong>Earth</strong>, and Earth beats Water. <strong>Light</strong> and <strong>Dark</strong> beat each other.</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Element</th><th>Hits harder</th><th>Is hit harder by</th><th class="n">Monsters</th></tr></thead>
+      <tbody>{ELEMENTS.map((e) => (
+        <tr>
+          <td><span class={`chip el-${e}`}>{cap(e)}</span></td>
+          <td>{strongAgainst(e).map((o) => <span class={`chip el-${o}`}>{cap(o)}</span>)}</td>
+          <td>{weakTo(e).map((o) => <span class={`chip el-${o}`}>{cap(o)}</span>)}</td>
+          <td class="n"><a href={`/monsters/?element=${e}`}>{count(e)}</a></td>
+        </tr>
+      ))}</tbody>
+    </table></div>
+    <p>Each monster's page says what to hit it with. A Mage's spells cover several elements, so pick the one that suits the land you're in.</p>
+  </div>
+</Base>

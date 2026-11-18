@@ -1,0 +1,34 @@
+---
+import Base from '../../layouts/Base.astro';
+import Sprite from '../../components/Sprite.astro';
+import Links from '../../components/Links.astro';
+import { game, cap, sortBy } from '../../lib/game';
+const KIND: Record<string, string> = { physical: 'Physical', magic: 'Magic', heal: 'Healing', revive: 'Revive', buff: 'Boost', curse: 'Curse', field: 'Outside battle' };
+const TARGET: Record<string, string> = { enemy: 'One foe', allEnemies: 'All foes', ally: 'One ally', allAllies: 'All allies', fallenAlly: 'A fainted ally' };
+const hero = sortBy(game.skills.filter((s: any) => s.classes.length), (s: any) => s.name);
+const wild = sortBy(game.skills.filter((s: any) => !s.classes.length), (s: any) => s.name);
+---
+<Base title="Skills and spells" description={`All ${game.counts.skills} skills and spells in Tales of Dorlune: what each does, its MP cost, its element, and who learns it.`} crumbs={[{ name: 'Guide', href: '/guide/' }, { name: 'Skills' }]}>
+  <div class="card">
+    <h1>Skills</h1>
+    <p>Each level gives you a skill point, to learn a new skill or to power one up. A skill grows from level 1 to 10, where it's mastered.</p>
+    {[['Skills your hero learns', hero], ['Skills only monsters and companions know', wild]].map(([title, list]: any) => (
+      <>
+        <h2>{title}</h2>
+        <div class="table-wrap"><table class="cards">
+          <thead><tr><th>Skill</th><th>Kind</th><th class="n">MP</th><th>Hits</th><th>What it does</th><th>Who has it</th></tr></thead>
+          <tbody>{list.map((s: any) => (
+            <tr id={s.slug}>
+              <td><span class="cell-art"><Sprite sprite={s.sprite} box={36} /></span><strong>{s.name}</strong></td>
+              <td data-label="Kind">{KIND[s.kind] ?? cap(s.kind)}{s.element && <> <span class={`chip el-${s.element}`}>{cap(s.element)}</span></>}</td>
+              <td class="n" data-label="MP">{s.mp}</td>
+              <td data-label="Hits">{TARGET[s.target] ?? s.target}</td>
+              <td data-label="What it does">{s.description ?? '—'}</td>
+              <td data-label="Who has it">{s.classes.length ? s.classes.map((c: any, n: number) => <>{n > 0 && ', '}<a href={`/classes/#${c.slug}`}>{c.class}</a> (Lv {c.level})</>) : <Links list={s.monsters.slice(0, 4)} base="monsters" />}{!s.classes.length && s.monsters.length > 4 && ` and ${s.monsters.length - 4} more`}</td>
+            </tr>
+          ))}</tbody>
+        </table></div>
+      </>
+    ))}
+  </div>
+</Base>
