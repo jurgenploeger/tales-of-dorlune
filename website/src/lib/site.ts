@@ -11,5 +11,5 @@ export const site = {
   supportEmail: '',
   developer: 'Jurgen Ploeger',
   /** The Google tag (Google Analytics). It loads only after a visitor allows it in the cookie notice. */
-  googleTag: 'GTM-MWKHH3LJ',
+  googleTag: 'G-MJW995DXDF',
 };

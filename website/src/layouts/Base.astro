@@ -224,9 +224,9 @@ const ld = [
             window.dataLayer = [];
             window.gtag = function () { dataLayer.push(arguments); };
             gtag('js', new Date());
+            gtag('config', tag);
             const s = document.createElement('script');
-            s.async = true; s.src = 'https://www.googletagmanager.com/gtm.js?id=' + tag;
-            dataLayer.push({ 'gtm.start': Date.now(), event: 'gtm.js' });
+            s.async = true; s.src = 'https://www.googletagmanager.com/gtag/js?id=' + tag;
             document.head.appendChild(s);
           };
           const choice = read();
