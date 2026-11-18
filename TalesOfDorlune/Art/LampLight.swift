@@ -87,6 +87,14 @@ final class LampLight {
         return made
     }
 
+    /// `node` shows only by night, as the lamps' light does: a building's lit windows
+    /// (`LandStage.addWindows`).
+    func follow(_ node: SKSpriteNode, strength: CGFloat = 1) {
+        node.alpha = night * strength
+        node.isHidden = night <= 0.01
+        lit.append(Lit(node: node, strength: strength))
+    }
+
     /// How dark it's grown, 0 by day to 1 at night (`Sky.darkness`): the lamps' light fades in with it.
     func setNight(_ amount: CGFloat) {
         let amount = max(0, min(1, amount))

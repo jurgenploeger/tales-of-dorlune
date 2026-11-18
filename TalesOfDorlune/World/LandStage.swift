@@ -333,6 +333,7 @@ final class LandStage {
                               wind: placement.art)
         reflect(node, picture: drawn.texture, art: placement.art, cell: placement.cell)
         addFire(to: node, art: placement.art)
+        addWindows(to: node, art: placement.art)
         // Lit by a lamp nearby at night (`LampLight`): not a light itself, nor what moves in the wind
         // (its picture changes, the light's copy wouldn't).
         if !lamps.isEmpty, node.texture === drawn.texture, placement.art != "street_lamp", placement.prop?.glow == nil {
@@ -340,6 +341,20 @@ final class LandStage {
                                    from: lamps)
         }
         return node
+    }
+
+    /// A building's windows lit at night (`tools/window_art.py`, the user, 2026-11-18: "during the
+    /// night the lights in houses should be brighter"): its windows' own picture laid over it above
+    /// the night's shade (`Sky`, 43 000 up), so they glow as drawn while the house dims; in as it
+    /// grows dark and out by day with the lamps' light (`LampLight.follow`).
+    private func addWindows(to node: SKSpriteNode, art id: String) {
+        let name = "windows_\(id)"
+        guard art.asset(name) != nil else { return }
+        let lit = SKSpriteNode(texture: art.sprite(name).texture, size: node.size)
+        lit.anchorPoint = node.anchorPoint
+        lit.zPosition = 43_100 - node.zPosition
+        node.addChild(lit)
+        LampLight.shared.follow(lit)
     }
 
     /// A building's fire moving (`tools/fire_art.py`, the user, 2026-11-17: a forge's fire stood

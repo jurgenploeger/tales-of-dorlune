@@ -1028,3 +1028,7 @@ place_candy   | newgame,level=80,map=candy_mountain,at=place,weather=clear,hour=
 place_valley  | newgame,level=60,map=valley_of_fear,at=place,weather=clear,hour=12 | 8
 place_shore   | newgame,level=10,map=pineapple_shore,at=place,weather=clear,hour=12 | 8
 place_rest    | newgame,map=sunny_meadow,at=place3,weather=clear,hour=12 | 8
+# Lit windows at night (`LandStage.addWindows`, tools/window_art.py, 2026-11-18).
+night_windows | newgame,map=meadowbrook,weather=clear,hour=23,nocurve | 8
+night_windows_curve | newgame,map=meadowbrook,weather=clear,hour=23,curve | 8
+night_windows_reset | newgame,map=meadowbrook,weather=clear,hour=12,nocurve | 4

@@ -230,6 +230,10 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   cell across down its middle in the colour of the land's `tile_town` (graded), their edge ragged stone by stone, sand
   (`tile_path`) with pebbles either side, and grass growing over the edges in clumps where the ground beside is green;
   the pattern repeats every four cells (`cobblePhase`), so its tiles are made for 16 places. Wild roads stay sand.
+- `tools/window_art.py`: lit windows at night: each building's warm, bright window panes cut into `windows_<id>.png`
+  (small patches only, so thatch and gold trim stay out; `SKIP` for what has none), laid over the building above the
+  night's shade by `LandStage.addWindows` and faded in with the dark (`LampLight.follow`). Rerun it after adding or
+  redrawing a building, and register any new `windows_<id>` in art/assets.json; `--sheet out.png` shows them at night.
 - `tools/fire_art.py`: a building's fire moving (Goldburg's forge, `blacksmith`): its flame's own pixels cut
   into four frames (`fire_<id>_0` to `_3`, the first as drawn), each column of the flame reaching a pixel
   higher or lower, a few pixels a step along its ramp, the glow round it pulsing; `LandStage.addFire` lays
