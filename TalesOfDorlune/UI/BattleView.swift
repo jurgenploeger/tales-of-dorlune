@@ -2253,6 +2253,9 @@ private struct CenteredRows: Layout {
 /// slot that fills (`LootGrid`).
 struct TreasureCard: View {
     let chest: String
+    /// The chest's own picture, over its name (the user, 2026-11-18: "it should show the treasure
+    /// visual as well").
+    let art: String
     let item: String
     let gold: Int
     let onClose: () -> Void
@@ -2262,6 +2265,8 @@ struct TreasureCard: View {
             Color.black.opacity(0.45).ignoresSafeArea()
                 .onTapGesture {}
             VStack(spacing: 10) {
+                SpriteImage(art: art, size: 72)
+                    .padding(.top, 4)
                 VStack(spacing: 2) {
                     Text(L("Treasure!"))
                         .font(HUDStyle.font(26))

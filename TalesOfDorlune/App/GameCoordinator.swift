@@ -62,9 +62,9 @@ final class GameCoordinator {
         case profile(Profile)
         /// Which town or waystone to travel to (`TravelPicker`), when there's more than one.
         case destinations(Travel)
-        /// What a treasure chest held, laid out as a battle's pay (`TreasureCard`): its name, the
-        /// item's id and the gold.
-        case treasure(chest: String, item: String, gold: Int)
+        /// What a treasure chest held, laid out as a battle's pay (`TreasureCard`): its name, its
+        /// picture, the item's id and the gold.
+        case treasure(chest: String, art: String, item: String, gold: Int)
     }
 
     /// A way to a town you've been to or a waystone you've woken: Bridge of Light (the skill's id) or
@@ -749,7 +749,7 @@ final class GameCoordinator {
             if let found = session.openChest(chest) {
                 session.save()
                 // What it held, in a window as a battle's pay (the user, 2026-11-18).
-                show(.treasure(chest: chest.name, item: found.id, gold: max(0, session.data.gold - before)))
+                show(.treasure(chest: chest.name, art: chest.art, item: found.id, gold: max(0, session.data.gold - before)))
             }
             // (Else the bag was full: `openChest` said so, and it stays shut till there's room.)
         } else {
