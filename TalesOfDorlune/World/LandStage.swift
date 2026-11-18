@@ -1005,13 +1005,35 @@ final class LandStage {
         for building in plan.buildings { addScenery(building) }
     }
 
-    /// A terrace's stairs: how many steps, and their sandstone (`tools/terrace_art.py`'s colours).
+    /// A terrace's stairs: how many steps, and their sandstone where the walls' own can't be read
+    /// (`meanColour` of the land's graded walls and paving is used).
     static let stairSteps = 6
     static let stairTread = UIColor(red: 0.9, green: 0.79, blue: 0.6, alpha: 1)
     static let stairTreadAlt = UIColor(red: 0.94, green: 0.83, blue: 0.64, alpha: 1)
     static let stairLitRiser = UIColor(red: 0.8, green: 0.66, blue: 0.47, alpha: 1)
     static let stairShadedRiser = UIColor(red: 0.64, green: 0.51, blue: 0.38, alpha: 1)
     static let stairEdge = UIColor(red: 0.45, green: 0.32, blue: 0.24, alpha: 1)
+
+    /// The mean colour of a picture's opaque pixels (a terrace's stone, as graded in its land).
+    static func meanColour(_ image: CGImage) -> UIColor? {
+        let width = image.width, height = image.height
+        guard width > 0, height > 0,
+              let context = CGContext(data: nil, width: width, height: height, bitsPerComponent: 8, bytesPerRow: width * 4,
+                                      space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue),
+              let data = context.data else { return nil }
+        context.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))
+        let pixels = data.bindMemory(to: UInt8.self, capacity: width * height * 4)
+        var red = 0.0, green = 0.0, blue = 0.0, count = 0.0
+        for index in 0..<(width * height) where pixels[index * 4 + 3] > 200 {
+            let alpha = Double(pixels[index * 4 + 3]) / 255
+            red += Double(pixels[index * 4]) / 255 / alpha
+            green += Double(pixels[index * 4 + 1]) / 255 / alpha
+            blue += Double(pixels[index * 4 + 2]) / 255 / alpha
+            count += 1
+        }
+        guard count > 0 else { return nil }
+        return UIColor(red: red / count, green: green / count, blue: blue / count, alpha: 1)
+    }
 
     /// How tall a terrace's balustrade stands (`tools/terrace_art.py` `RAIL`).
     static let railHeight: CGFloat = 14
@@ -1462,6 +1484,13 @@ final class LandStage {
             func at(_ x: CGFloat, _ y: CGFloat, _ z: CGFloat) -> CGPoint {
                 WorldMap.project(CGPoint(x: x * tile, y: y * tile)) + CGVector(dx: 0, dy: z)
             }
+            // In the walls' own stone, as graded in this land (the user, 2026-11-18: "The stairs of the
+            // terraces should have the same brick colors as the sides of the terraces"): the stairs'
+            // side and risers the mean colour of the wall turned the same way, the treads the top's paving's.
+            let litStone = Self.meanColour(art.picture(of: westWalls[0])) ?? Self.stairLitRiser
+            let shadedStone = Self.meanColour(art.picture(of: southWalls[0])) ?? Self.stairShadedRiser
+            let paving = Self.meanColour(art.picture(of: flags[0])) ?? Self.stairTread
+            let pavingAlt = Self.meanColour(art.picture(of: flags[1])) ?? Self.stairTreadAlt
             func shape(_ points: [CGPoint], fill: UIColor, z: CGFloat) {
                 let path = CGMutablePath()
                 path.addLines(between: points)
@@ -1484,14 +1513,14 @@ final class LandStage {
                     let z = topZ - 0.25 + 0.01 * CGFloat(count - k)
                     if ramp == .south {
                         shape([at(c, r + near, high), at(c + 1, r + near, high), at(c + 1, r + far, high), at(c, r + far, high)],
-                              fill: k % 2 == 0 ? Self.stairTread : Self.stairTreadAlt, z: z)
+                              fill: k % 2 == 0 ? paving : pavingAlt, z: z)
                         shape([at(c, r + near, low), at(c + 1, r + near, low), at(c + 1, r + near, high), at(c, r + near, high)],
-                              fill: Self.stairShadedRiser, z: z + 0.005)
+                              fill: shadedStone, z: z + 0.005)
                     } else {
                         shape([at(c + near, r, high), at(c + far, r, high), at(c + far, r + 1, high), at(c + near, r + 1, high)],
-                              fill: k % 2 == 0 ? Self.stairTread : Self.stairTreadAlt, z: z)
+                              fill: k % 2 == 0 ? paving : pavingAlt, z: z)
                         shape([at(c + near, r, low), at(c + near, r + 1, low), at(c + near, r + 1, high), at(c + near, r, high)],
-                              fill: Self.stairLitRiser, z: z + 0.005)
+                              fill: litStone, z: z + 0.005)
                     }
                 }
                 for k in 0..<count {
@@ -1500,7 +1529,7 @@ final class LandStage {
                 }
                 side.append(ramp == .south ? at(c, r + 1, 0) : at(c + 1, r, 0))
                 // The west side of the front stairs is turned to the light, the south side of the side ones away.
-                shape(side, fill: ramp == .south ? Self.stairLitRiser : Self.stairShadedRiser, z: topZ - 0.15)
+                shape(side, fill: ramp == .south ? litStone : shadedStone, z: topZ - 0.15)
             }
             stroke(lips, color: UIColor(white: 1, alpha: 0.2), width: 1, z: topZ + 0.1)
             stroke(shadows, color: UIColor(white: 0, alpha: 0.28), width: 2, z: topZ - 0.45)
