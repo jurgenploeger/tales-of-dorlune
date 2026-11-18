@@ -584,6 +584,9 @@ enum DebugLaunch {
             GameClock.frozenAt = Date()
         }
         Weather.forced = flags["weather"].flatMap(Weather.init(rawValue:))
+        // `curve` (or `nocurve`): the night by a curve on every pixel (Settings → Richer night colours), or not.
+        if flags["curve"] != nil { UserDefaults.standard.set(true, forKey: GameSettings.curveNightKey) }
+        if flags["nocurve"] != nil { UserDefaults.standard.set(false, forKey: GameSettings.curveNightKey) }
         if flags["book"] != nil {
             for (index, monster) in Content.shared.monsters.prefix(24).enumerated() {
                 session.sawMonster(monster.id, level: 3 + index)

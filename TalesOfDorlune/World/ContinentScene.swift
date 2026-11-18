@@ -341,9 +341,58 @@ final class ContinentScene: SKScene {
         }
     }
 
+    // MARK: Night by a curve
+
+    /// The night as a curve on every pixel (the user, 2026-11-18, after a post: "Never overlay
+    /// (multiply)! Either tint with an exponential like this: pow(color.rgb, 1.5 - TINT_RGB)"; to
+    /// try, Settings → Richer night colours, off unless switched on): the whole scene is drawn into a
+    /// picture and each pixel raised to a power per channel, so the darks deepen and the brights keep
+    /// their colour, where a multiply dims everything alike. Only while there's any shade to draw:
+    /// by plain daylight the scene draws straight to the screen as ever.
+    private lazy var nightCurve = SKUniform(name: "u_curve", vectorFloat3: SIMD3<Float>(1, 1, 1))
+    private lazy var nightGain = SKUniform(name: "u_gain", float: 1)
+    private lazy var nightShader: SKShader = {
+        let shader = SKShader(source: """
+        void main() {
+            vec4 c = texture2D(u_texture, v_tex_coord);
+            gl_FragColor = vec4(pow(max(c.rgb, vec3(0.0)), u_curve) * u_gain, c.a);
+        }
+        """)
+        shader.uniforms = [nightCurve, nightGain]
+        return shader
+    }()
+
+    /// Draws the skies' light by the curve, or leaves it to their own shades. Each sky's multiply
+    /// colour `m` becomes the power 1 + 2 × (1 - m): none by day, about 1.96, 1.84, 1.32 at night
+    /// (red and green deepen most, blue least), a warm dusk and a grey storm the same way; a
+    /// little dimmer all over at night.
+    private func curveNight() {
+        let curved = GameSettings.curveNight
+        var multiply = (r: 1.0, g: 1.0, b: 1.0)
+        var night = 0.0
+        for air in airs.values {
+            guard let sky = air.sky else { continue }
+            sky.curved = curved
+            guard air.mood > 0 else { continue }
+            multiply = (multiply.r * sky.shown.r, multiply.g * sky.shown.g, multiply.b * sky.shown.b)
+            night = max(night, sky.hazed)
+        }
+        let shaded = abs(1 - multiply.r) + abs(1 - multiply.g) + abs(1 - multiply.b) > 0.01
+        guard curved, shaded else {
+            if shouldEnableEffects { shouldEnableEffects = false }
+            return
+        }
+        nightCurve.vectorFloat3Value = SIMD3<Float>(Float(1 + 2 * (1 - multiply.r)), Float(1 + 2 * (1 - multiply.g)),
+                                                    Float(1 + 2 * (1 - multiply.b)))
+        nightGain.floatValue = Float(1 - 0.1 * night)
+        if shader !== nightShader { shader = nightShader }
+        if !shouldEnableEffects { shouldEnableEffects = true }
+    }
+
     /// The airs ease toward the land you're in's (over a second or so), its time of day and weather
     /// going on, its sun moved every half second.
     private func updateAir(_ dt: TimeInterval) {
+        defer { curveNight() }
         sunTimer -= dt
         let follow = sunTimer <= 0
         if follow { sunTimer = 0.5 }

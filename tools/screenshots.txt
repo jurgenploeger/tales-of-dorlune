@@ -1017,3 +1017,9 @@ place_woods_camp | newgame,level=20,map=twilight_woods,at=place2,weather=clear,h
 place_desert  | newgame,level=60,map=genie_desert,at=place,weather=clear,hour=12 | 8
 place_desert_camp | newgame,level=60,map=genie_desert,at=place2,weather=clear,hour=12 | 8
 groves_meadow | newgame,map=sunny_meadow,landscape,nohud,weather=clear,hour=12 | 8
+# The night by a curve on every pixel (Settings → Richer night colours, `ContinentScene.curveNight`, 2026-11-18),
+# beside the same scenes without it; the last puts the setting back for the scenes after.
+night_curve_town | newgame,level=40,map=goldburg,weather=clear,hour=23,curve | 8
+night_curve_meadow | newgame,map=sunny_meadow,weather=clear,hour=23,curve | 8
+dusk_curve_meadow | newgame,map=sunny_meadow,weather=clear,hour=18,curve | 8
+night_plain_meadow | newgame,map=sunny_meadow,weather=clear,hour=23,nocurve | 8
