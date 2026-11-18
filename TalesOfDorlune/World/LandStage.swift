@@ -1346,10 +1346,8 @@ final class LandStage {
     private func placePlateaus() {
         guard !map.plateaus.isEmpty else { return }
         let tile = WorldMap.tileSize
-        let tileSize = CGSize(width: tile, height: tile)
-        let flags = ["terrace_flag", "terrace_flag_2", "terrace_flag_3", "terrace_flag_4"].map {
-            SKTileGroup(tileDefinition: SKTileDefinition(texture: art.tileTexture($0), size: tileSize))
-        }
+        let flags = ["terrace_flag", "terrace_flag_2", "terrace_flag_3", "terrace_flag_4"].map { art.tileTexture($0) }
+        for flag in flags { flag.filteringMode = .nearest }
         // A cell's stretch of wall under a south edge (rising to the right) and a west one, three of each.
         let southWalls = ["terrace_wall_s", "terrace_wall_s_2", "terrace_wall_s_3"].map { art.sprite($0).texture }
         let westWalls = ["terrace_wall_w", "terrace_wall_w_2", "terrace_wall_w_3"].map { art.sprite($0).texture }
@@ -1372,17 +1370,15 @@ final class LandStage {
                 path.move(to: from)
                 path.addLine(to: to)
             }
-            // Its top: flagstones, its height up. The stairs are drawn as steps instead.
-            let (low, high) = plateau.bounds
-            let top = SKTileMapNode(tileSet: SKTileSet(tileGroups: flags), columns: high.col - low.col + 1,
-                                    rows: high.row - low.row + 1, tileSize: tileSize)
-            top.anchorPoint = .zero
-            for cell in plateau.cells where plateau.ramps[cell] == nil {
-                top.setTileGroup(flags[pick(cell, flags.count)], forColumn: cell.col - low.col, row: cell.row - low.row)
-            }
-            top.position = CGPoint(x: CGFloat(low.col) * tile, y: CGFloat(low.row) * tile)
+            // Its top: flagstones, its height up, a sprite a cell (a tile map here went undrawn on a
+            // phone, Ingothold's ground showing through: the user, 2026-11-18). A hair over a cell
+            // each, so no seam opens between them as they're turned. The stairs are drawn as steps.
             let grid = SKNode()
-            grid.addChild(top)
+            for cell in plateau.cells where plateau.ramps[cell] == nil {
+                let flag = SKSpriteNode(texture: flags[pick(cell, flags.count)], size: CGSize(width: tile + 0.5, height: tile + 0.5))
+                flag.position = CGPoint(x: (CGFloat(cell.col) + 0.5) * tile, y: (CGFloat(cell.row) + 0.5) * tile)
+                grid.addChild(flag)
+            }
             let raised = ContinentScene.projected(grid)
             raised.position.y = rise
             raised.zPosition = topZ
