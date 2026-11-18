@@ -2247,3 +2247,49 @@ private struct CenteredRows: Layout {
         }
     }
 }
+
+/// What a treasure chest held, as a battle's pay is shown (the user, 2026-11-18: "the same modal
+/// window with the items/coins as the modal window after a fight"): its gold, and the item in a
+/// slot that fills (`LootGrid`).
+struct TreasureCard: View {
+    let chest: String
+    let item: String
+    let gold: Int
+    let onClose: () -> Void
+
+    var body: some View {
+        ZStack {
+            Color.black.opacity(0.45).ignoresSafeArea()
+                .onTapGesture {}
+            VStack(spacing: 10) {
+                VStack(spacing: 2) {
+                    Text(L("Treasure!"))
+                        .font(HUDStyle.font(26))
+                        .foregroundStyle(HUDStyle.gold)
+                        // Clear of the close button, and still centred.
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
+                        .padding(.horizontal, 18)
+                    Text(chest)
+                        .font(HUDStyle.font(12))
+                        .foregroundStyle(HUDStyle.cream)
+                }
+                if gold > 0 {
+                    GoldPill(amount: gold, size: 15, sign: "+")
+                        .font(HUDStyle.font(16))
+                        .foregroundStyle(HUDStyle.cream)
+                }
+                LootGrid(loot: [(id: item, count: 1)])
+                Button(L("Continue"), action: onClose)
+                    .buttonStyle(PixelButtonStyle(tint: HUDStyle.gold))
+                    .padding(.top, 6)
+            }
+            .padding(HUDStyle.windowInset)
+            .frame(maxWidth: 420)
+            .gameWindow()
+            .windowCloseButton(onClose)
+            .popIn()
+            .padding(20)
+        }
+    }
+}

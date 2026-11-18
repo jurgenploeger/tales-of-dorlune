@@ -62,6 +62,9 @@ final class GameCoordinator {
         case profile(Profile)
         /// Which town or waystone to travel to (`TravelPicker`), when there's more than one.
         case destinations(Travel)
+        /// What a treasure chest held, laid out as a battle's pay (`TreasureCard`): its name, the
+        /// item's id and the gold.
+        case treasure(chest: String, item: String, gold: Int)
     }
 
     /// A way to a town you've been to or a waystone you've woken: Bridge of Light (the skill's id) or
@@ -741,12 +744,17 @@ final class GameCoordinator {
             // Something new turns up in it after a while (`GameSession.refillsAt`); just when isn't
             // said (playtesting 2026-10-16: "come back later" instead of the exact hours).
             session.post(L("The {chest} is empty. Come back later.", ["chest": chest.name.midSentence]))
-        } else if session.openChest(chest) != nil {
-            session.save()
-        } else if !session.canOpen(chest) {
+        } else if session.canOpen(chest) {
+            let before = session.data.gold
+            if let found = session.openChest(chest) {
+                session.save()
+                // What it held, in a window as a battle's pay (the user, 2026-11-18).
+                show(.treasure(chest: chest.name, item: found.id, gold: max(0, session.data.gold - before)))
+            }
+            // (Else the bag was full: `openChest` said so, and it stays shut till there's room.)
+        } else {
             session.post(L("The ribbon is tied tight. Maybe someone in town knows who it's for."))
         }
-        // (Else the bag was full: `openChest` said so, and it stays shut till there's room.)
     }
 
     /// A waystone (`NPCRole.waystone`): once its quest has woken it, anywhere you can travel to,
