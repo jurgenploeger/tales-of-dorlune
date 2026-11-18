@@ -16,7 +16,7 @@ const legs = [
     alt: 'A Seal Stone holds a wild Fluffy Bunny in Sunny Meadow: Sealed!' },
   { land: 'gumdrop-peaks', shot: 'battle', title: 'Battle side by side', tag: 'Spells, friends and companions',
     text: 'Turn-based battles, fought right where you stand. Take your time: nothing rushes you.',
-    alt: 'A spell bursts among six monsters on Gumdrop Peaks' },
+    alt: 'A spell bursts among six monsters on Gumdrop Peaks, with a rare Cotton Bun among them' },
   { land: 'prismhaven', shot: 'town', title: 'Busy towns to explore', tag: 'Shops, smiths and quests',
     text: `${c.quests} quests, each helping someone out. Many open the road onward.`,
     alt: 'The hero in the square of Prismhaven, among its shops and people' },
@@ -25,7 +25,7 @@ const legs = [
     alt: 'The Big Bad Wolf steps forward in the last wave of his fight' },
   { land: 'twilight-woods', shot: 'levelup', title: 'Choose your path', tag: 'Fighter, Mage or Beast Tamer',
     text: `Start as a Novice, join a guild at level ${game.classChoiceLevel}, and grow all the way to level ${c.maxLevel}.`,
-    alt: 'Victory, and a level up to level 10' },
+    alt: 'Victory: level 10, new stats, and the loot from the fight' },
   { land: 'briarmere', shot: 'anywhere', title: 'Play anywhere', tag: 'Offline, with no account to make',
     text: `Five minutes or a whole evening, upright or on its side, in ${c.languages} languages. The people you meet in the world are part of the game.`,
     alt: 'The hero and a companion cross a wooden bridge over a frozen lake' },
@@ -67,7 +67,7 @@ const jsonld = [{
           <div><span class="plate">{leg.tag}</span></div>
           <p class="on-sky">{leg.text}</p>
         </div>
-        <div class="phone" style={`--tilt:${n % 2 ? -1.5 : 1.5}deg`}><img src={`/img/shot-${leg.shot}.jpg`} alt={leg.alt} width="1600" height="804" loading="lazy" /></div>
+        <div class="phone" style={`--tilt:${n % 2 ? -1.5 : 1.5}deg`}><img src={`/img/port-${leg.shot}.jpg`} alt={leg.alt} width="640" height="1391" loading="lazy" /></div>
       </div>
       {residents(leg.land).map((m: any, k: number) => (
         <Stand slot="stand" sprite={m.sprite} at={(n % 2 ? 62 : 12) + k * 11} size={1.5} href={`/monsters/${m.slug}/`} label={m.name} flip={n % 2 === 1} />

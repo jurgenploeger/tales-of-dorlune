@@ -361,9 +361,13 @@ a.stand:hover img, a.stand:focus-visible img { filter: brightness(1.15); transfo
 .plate { display: inline-block; font-weight: 600; font-size: clamp(1rem, 2.2vw, 1.25rem); color: #fff8de; background: rgba(34, 22, 14, 0.86); border-radius: 8px; padding: 6px 14px; margin: 0 0 16px; }
 .on-sky { font-size: 1.15rem; font-weight: 500; max-width: 44ch; }
 
-/* A screenshot in the phone it's played on. */
-.phone { position: relative; background: #10131f; border-radius: clamp(18px, 3.2vw, 38px); padding: clamp(6px, 1vw, 12px); box-shadow: 0 0 0 2px #2c3350 inset, 0 18px 40px -12px rgba(14, 21, 51, 0.6), 0 6px 0 var(--midnight-deep); transform: rotate(var(--tilt, 0deg)); }
-.phone img { display: block; width: 100%; border-radius: clamp(12px, 2.3vw, 28px); }
+/* A screenshot in the phone it's played on, held upright: an iPhone's black bezel and rounded
+   corners, its side buttons, and the screen as the simulator shot it (Dynamic Island and all). */
+.phone { position: relative; justify-self: center; width: clamp(220px, 24vw, 290px); background: #0d0f18; border-radius: clamp(36px, 4.2vw, 50px); padding: clamp(8px, 0.9vw, 11px); box-shadow: 0 0 0 2px #3a4060 inset, 0 0 0 1px #000, 0 30px 60px -18px rgba(14, 21, 51, 0.65), 0 8px 0 var(--midnight-deep); transform: rotate(var(--tilt, 0deg)); }
+.phone::before, .phone::after { content: ''; position: absolute; width: 3px; border-radius: 2px; background: #2a2f45; }
+.phone::before { left: -3px; top: 22%; height: 9%; box-shadow: 0 calc(clamp(220px, 24vw, 290px) * 0.28) 0 #2a2f45; }
+.phone::after { right: -3px; top: 28%; height: 14%; }
+.phone img { display: block; width: 100%; height: auto; border-radius: clamp(28px, 3.4vw, 40px); }
 
 /* ---------- the landing: a walk across Dorlune ---------- */
 .site-header { transition: background-color 0.2s, box-shadow 0.2s, border-color 0.2s; }
@@ -376,9 +380,9 @@ a.stand:hover img, a.stand:focus-visible img { filter: brightness(1.15); transfo
 .top .logo { width: min(620px, 90vw); height: auto; filter: drop-shadow(0 10px 24px rgba(14, 21, 51, 0.25)); }
 .top .lead { margin: 0 auto 22px; max-width: 42ch; font-weight: 500; }
 .top .cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-.leg { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(20px, 5vw, 64px); align-items: center; max-width: var(--wrap); margin: 0 auto; padding: clamp(40px, 7vw, 88px) 16px clamp(16px, 3vw, 32px); }
+.leg { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(20px, 5vw, 64px); align-items: center; max-width: var(--wrap); margin: 0 auto; padding: clamp(40px, 7vw, 88px) 16px clamp(16px, 3vw, 32px); }
 .leg.flip > :first-child { order: 2; }
-@media (max-width: 800px) { .leg { grid-template-columns: 1fr; } .leg.flip > :first-child { order: 0; } }
+@media (max-width: 800px) { .leg { grid-template-columns: 1fr; } .leg.flip > :first-child { order: 0; } .phone { width: min(250px, 64vw); } }
 .where { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; margin: 0 0 10px; opacity: 0.9; text-decoration: none; color: inherit; }
 .where:hover { text-decoration: underline; }
 .numbers { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 26px; margin: 22px auto 0; padding: 0; list-style: none; font-weight: 600; max-width: 760px; }
