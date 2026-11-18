@@ -20,7 +20,9 @@ enum TownFence {
         let height = stone ? BorderArt.wallHeight : Self.height
         guard !fence.isEmpty, let source else { return }
         func has(_ dc: Int, _ dr: Int, _ cell: GridPoint) -> Bool { fence.contains(GridPoint(col: cell.col + dc, row: cell.row + dr)) }
-        for piece in pieces(cells: cells, picture: source, height: height) {
+        // A wall's stretches along the grid's x axis show their south face, turned from the light (from
+        // the upper left, as everything is): a step darker, as a terrace's south wall is.
+        for piece in pieces(cells: cells, picture: source, height: height, shaded: stone ? 0.8 : 1) {
             let node = SKSpriteNode(texture: piece.texture, size: piece.size)
             node.anchorPoint = piece.anchor
             node.position = map.center(of: piece.cell)
@@ -102,9 +104,12 @@ enum TownFence {
     /// from the cell's middle to each side it joins the next cell of the fence at, so the pieces
     /// join up and turn at the corners: what each cell shows, and the anchor to stand it on the
     /// cell's middle with. `height`: how tall the picture stands, in points.
-    static func pieces(cells: [GridPoint], picture source: CGImage, height: CGFloat) -> [(cell: GridPoint, texture: SKTexture, size: CGSize, anchor: CGPoint)] {
+    static func pieces(cells: [GridPoint], picture source: CGImage, height: CGFloat,
+                       shaded: CGFloat = 1) -> [(cell: GridPoint, texture: SKTexture, size: CGSize, anchor: CGPoint)] {
         let fence = Set(cells)
         guard !fence.isEmpty, let pickets = cropped(source) else { return [] }
+        // `shaded`: how much darker the stretches along x are drawn (their south face, from the light).
+        let southern = shaded < 1 ? dimmed(pickets, by: shaded) : pickets
         let tile = WorldMap.tileSize
         let c = CGFloat(0.5).squareRoot()
         // Half a cell along the grid's x axis on screen; along y it's (-dx, dy).
@@ -132,8 +137,8 @@ enum TownFence {
                     // the cell shows its half of the picture, so straight runs repeat seamlessly.
                     // The far halves (north, east) first.
                     if mask & 2 != 0 { draw(pickets, in: context, from: middle + north, along: north * -2, part: 0, height: height) }
-                    if mask & 1 != 0 { draw(pickets, in: context, from: middle + east * -1, along: east * 2, part: 1, height: height) }
-                    if mask & 4 != 0 { draw(pickets, in: context, from: middle + east * -1, along: east * 2, part: 0, height: height) }
+                    if mask & 1 != 0 { draw(southern, in: context, from: middle + east * -1, along: east * 2, part: 1, height: height) }
+                    if mask & 4 != 0 { draw(southern, in: context, from: middle + east * -1, along: east * 2, part: 0, height: height) }
                     if mask & 8 != 0 { draw(pickets, in: context, from: middle + north, along: north * -2, part: 1, height: height) }
                 }
             }
@@ -253,6 +258,24 @@ enum TownFence {
         let texture = SKTexture(cgImage: image)
         texture.filteringMode = .nearest
         return texture
+    }
+
+    /// The image with its colour multiplied by `factor` (its alpha as it is).
+    static func dimmed(_ image: CGImage, by factor: CGFloat) -> CGImage {
+        let width = image.width, height = image.height
+        guard let context = CGContext(data: nil, width: width, height: height, bitsPerComponent: 8, bytesPerRow: width * 4,
+                                      space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue),
+              let data = context.data
+        else { return image }
+        context.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))
+        let pixels = data.bindMemory(to: UInt8.self, capacity: width * height * 4)
+        for index in 0..<(width * height) {
+            for channel in 0..<3 {
+                let at = index * 4 + channel
+                pixels[at] = UInt8((CGFloat(pixels[at]) * factor).rounded())
+            }
+        }
+        return context.makeImage() ?? image
     }
 
     /// The image without its transparent margins.

@@ -310,7 +310,8 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   trail's end, on a summit, or in a cave; `check_content.py` keeps the way in clear.
 - `tools/city_wall_art.py`: a city's stone wall and round towers (`city_wall`, `city_tower`, placed by
   `TownFence.place` for town `walls: "stone"`), drawn as the town gate's rubble is, graded with the map's palette.
-  The wall is one cell's stretch that tiles side to side. `--sheet out.png` previews them.
+  The wall is one cell's stretch that tiles side to side, seen from a little above (its walk behind the battlements, 40 points;
+  face on alone it looked too flat, the user, 2026-11-18), its stretches along x a step darker (`pieces`' `shaded`). `--sheet out.png` previews them.
 - `tools/gate_art.py`: each town's own gate over its roads (maps.json town `gate`: Meadowbrook's thatched
   lychgate, Prismhaven's crystal keystone, Ingothold's gold and red cloth, Larkspur's bluebird); quests'
   gates across borders keep RD's `town_gate`. Each is laid out as `town_gate` is (`TownFence.widened` spans a
