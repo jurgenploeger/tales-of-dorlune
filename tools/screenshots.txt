@@ -207,7 +207,7 @@ companions_many | newgame,level=80,pet=emerald_pegasus+water_slug+jelly,toys=10,
 landscape    | newgame,map=rainbow_city,landscape | 8
 rat_cavern   | newgame,map=rat_cavern            | 8
 cave_dark    | newgame,level=44,class=fighter,pet=pineapple,friends=2,map=rat_cavern | 15
-behind_wall  | newgame,map=rat_cavern,at=-3_3        | 8
+behind_wall  | newgame,map=rat_cavern,at=-5_5        | 8
 # Inside a cave where you come in from each land (from=<land>): on the side you walked into its mouth
 # from, north into the Gooey Grotto and the Hollow from Emerald Road (in at their south side), north into
 # the Rat Cavern from Shiverdell (south) and east from Lotus Land (west).
@@ -399,7 +399,7 @@ lair_tide    | newgame,level=170,map=water_temple,at=-37_6,weather=clear,hour=12
 lair_emerald | newgame,level=200,map=emerald_road,at=29_-24,weather=clear,hour=12 | 8
 lair_rock    | newgame,level=90,map=sleepy_town,summit=0,weather=clear,hour=12 | 8
 lair_wolf_peak | newgame,level=40,map=wolf_lair,summit=0,weather=clear,hour=12 | 8
-lair_rat     | newgame,level=60,map=rat_cavern,at=32_15 | 8
+lair_rat     | newgame,level=60,map=rat_cavern,at=56_28 | 8
 skills       | newgame,level=60,class=fighter,learn=bash+first_aid+power_strike+whirlwind,menu=character,sub=skills | 8
 skills_learn | newgame,level=20,class=mage,menu=character,sub=skills             | 8
 boss_oak     | newgame,level=28,map=smiling_forest,at=-66_-36,npc=oak_grove   | 15

@@ -7214,8 +7214,8 @@
     {
       "id": "rat_cavern",
       "name": "Rat Cavern",
-      "width": 80,
-      "height": 60,
+      "width": 140,
+      "height": 100,
       "music": "cave",
       "battleMusic": "battle_dark",
       "crowd": {
@@ -7228,8 +7228,8 @@
           "gender": "male",
           "hair": "brown",
           "outfit": "gold",
-          "x": -10,
-          "y": -8,
+          "x": -18,
+          "y": -13,
           "roam": 3,
           "hold": "hand_axe",
           "wear": "leather_vest",
@@ -7247,8 +7247,8 @@
           "hair": "brown",
           "outfit": "green",
           "style": "spiky",
-          "x": -14,
-          "y": -7,
+          "x": -24,
+          "y": -12,
           "props": [
             {
               "art": "wooden_crates",
@@ -7424,7 +7424,7 @@
         {
           "edge": "south",
           "to": "valley_of_fear",
-          "at": -12
+          "at": -21
         },
         {
           "edge": "west",
@@ -7437,8 +7437,8 @@
           "name": "Rat King",
           "role": "boss",
           "art": "boss_rat_king",
-          "x": 32,
-          "y": 20,
+          "x": 56,
+          "y": 33,
           "greeting": "Squeak! Who dares enter MY cavern? Bow to the king!",
           "monster": "rat_king",
           "level": 58,
@@ -7531,8 +7531,8 @@
           "name": "Ratcatcher Bodkin",
           "role": "quests",
           "art": "npc_ratcatcher_bodkin",
-          "x": -12,
-          "y": -6,
+          "x": -21,
+          "y": -10,
           "greeting": "Rats! Rats everywhere! Good for business, bad for my nerves."
         }
       ],
@@ -7593,19 +7593,19 @@
         ]
       },
       "hub": [
-        -14,
-        -10
+        -24,
+        -17
       ],
       "trails": [
         {
           "to": [
-            24,
-            -22
+            42,
+            -37
           ],
           "via": [
             [
-              2,
-              -20
+              4,
+              -33
             ]
           ]
         }
