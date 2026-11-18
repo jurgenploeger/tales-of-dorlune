@@ -2842,34 +2842,38 @@ nonisolated final class WorldMap: @unchecked Sendable {
         return nil
     }
 
-    /// The cells of a place that are bare earth (drawn as the land's path): a farm's field (five by
-    /// three, behind its middle) and its yard in front; the paths in a cross between a graveyard's
-    /// plots; the ring round what stands in the middle of a ruin (its pillar), a rest (its well) or
-    /// a camp (its fire). Never the middle but a farm's, so that can stand there.
+    /// The cells of a place that are bare earth (drawn as the land's path), rounded, never a square
+    /// (the user, 2026-11-18: 3 × 3 squares read as "too blocky"): a farm's field (five by three
+    /// behind its middle, its back corners left to the grass) and a half round yard in front of it; an
+    /// oval clearing for a graveyard, its memorial in the middle and its graves round the rim; a round
+    /// one for a ruin's ring of stones and a rest's well; and a camp's trodden ground, round with a
+    /// lobe worn out to one side (east, west or south, by where it lies; never behind, where its tent
+    /// stands). Never the middle but a farm's, so what the place is there for can stand on it.
     static func earth(of kind: String, at middle: GridPoint) -> [GridPoint] {
-        var cells: [GridPoint] = []
+        var offsets: [(Int, Int)] = []
         switch kind {
         case "farm":
             for dc in -2...2 {
-                for dr in 0...2 { cells.append(GridPoint(col: middle.col + dc, row: middle.row + dr)) }
+                for dr in 0...2 where !(abs(dc) == 2 && dr == 2) { offsets.append((dc, dr)) }
             }
-            for dc in -1...1 {
-                for dr in -2...(-1) { cells.append(GridPoint(col: middle.col + dc, row: middle.row + dr)) }
-            }
+            offsets += [(-2, -1), (-1, -1), (0, -1), (1, -1), (2, -1), (-1, -2), (0, -2), (1, -2), (0, -3)]
         case "graveyard":
-            // Paths in a cross between its plots, a memorial in the middle.
-            for reach in 1...2 {
-                for (dc, dr) in [(reach, 0), (-reach, 0), (0, reach), (0, -reach)] {
-                    cells.append(GridPoint(col: middle.col + dc, row: middle.row + dr))
-                }
+            // dc² / 9 + dr² / 2.25 ≤ 1: seven across its middle row, five above and below.
+            for dc in -3...3 {
+                for dr in -1...1 where (dc, dr) != (0, 0) && Double(dc * dc) / 9 + Double(dr * dr) / 2.25 <= 1 { offsets.append((dc, dr)) }
+            }
+        case "ruin", "rest":
+            for dc in -2...2 {
+                for dr in -2...2 where (dc, dr) != (0, 0) && dc * dc + dr * dr <= 5 { offsets.append((dc, dr)) }
             }
         default:
-            // A ruin's, a rest's and a camp's ring round what stands in its middle.
-            for dc in -1...1 {
-                for dr in -1...1 where dc != 0 || dr != 0 { cells.append(GridPoint(col: middle.col + dc, row: middle.row + dr)) }
+            for dc in -2...2 {
+                for dr in -2...2 where (dc, dr) != (0, 0) && dc * dc + dr * dr <= 4 { offsets.append((dc, dr)) }
             }
+            let lobes = [[(2, 1), (2, -1), (3, 0)], [(-2, 1), (-2, -1), (-3, 0)], [(1, -2), (-1, -2), (0, -3)]]
+            offsets += lobes[abs(middle.col &* 31 &+ middle.row &* 17) % lobes.count]
         }
-        return cells
+        return offsets.map { GridPoint(col: middle.col + $0.0, row: middle.row + $0.1) }
     }
 
     private func scatterAccents(_ rng: inout SeededRandom) {
