@@ -184,6 +184,15 @@ final class Critters {
             let farm = farms[Int.random(in: 0..<farms.count, using: &rng)].middle
             return GridPoint(col: farm.col + Int.random(in: -1...1, using: &rng), row: farm.row + Int.random(in: -3...(-1), using: &rng))
         }
+        // Sheep and cows graze round a farm, off its field, where there's one.
+        if kind == "sheep" || kind == "cow", !farms.isEmpty {
+            let farm = farms[Int.random(in: 0..<farms.count, using: &rng)].middle
+            for _ in 0..<12 {
+                let cell = GridPoint(col: farm.col + Int.random(in: -7...7, using: &rng), row: farm.row + Int.random(in: -6...6, using: &rng))
+                let off = max(abs(cell.col - farm.col), abs(cell.row - farm.row)) > WorldMap.placeReach
+                if off, map.isFreeForScenery(cell, blocking: false) { return cell }
+            }
+        }
         return map.randomFreeCell(blocking: false, using: &rng)
     }
 
@@ -263,6 +272,14 @@ final class Critters {
             return Critter(frames: [CritterArt.drawn("mouse_a", CritterArt.mouse(step: false)),
                                     CritterArt.drawn("mouse_b", CritterArt.mouse(step: true))], at: point,
                            reach: 20, height: 0, time: 0.3, rest: .random(in: 0.5...4, using: &rng))
+        case "sheep", "cow":
+            // Out at grass (tools/critter_art.py draws them; no drawing of theirs in code): a step now and
+            // then, their heads down to graze in between, and a trot away when you come close. One cow
+            // in three is the brown one.
+            let name = kind == "cow" && Int.random(in: 0..<3, using: &rng) == 0 ? "cow_brown" : kind
+            return Critter(frames: [CritterArt.drawn(name + "_stand", SKTexture()), CritterArt.drawn(name + "_step", SKTexture())],
+                           peck: CritterArt.drawn(name + "_graze", SKTexture()), at: point,
+                           reach: 12, height: 0, time: 0.45, rest: .random(in: 2...7, using: &rng))
         default:
             return nil
         }

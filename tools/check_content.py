@@ -1003,7 +1003,7 @@ for map_def in maps.values():
     check_rules(palette.get("recolor", []), where)
 
 # The kinds `Critters.make` (TalesOfDorlune/World/Critters.swift) knows how to draw.
-CRITTER_KINDS = {"bunny", "frog", "crab", "songbird", "chick", "squirrel", "lizard", "mouse",
+CRITTER_KINDS = {"bunny", "sheep", "cow", "frog", "crab", "songbird", "chick", "squirrel", "lizard", "mouse",
                  "crow", "spider", "rat", "scorpion", "wisp"}
 ambience_keys = {"particles", "butterflies", "critters", "birds", "clouds", "tint", "tintAlpha", "vignette", "lightPatches", "sunbeams", "sun", "haze", "hazeAlpha", "focus", "darkness", "weather"}
 weather_kinds = {"clear", "cloudy", "rain", "storm", "fog", "snow"}

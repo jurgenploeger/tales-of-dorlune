@@ -320,7 +320,9 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   (`ambience.butterflies`, flapping open, half and closed), as PNGs
   (`art/sprites/critter_<name>.png`, loaded by `CritterArt.drawn`; one missing is drawn in Swift as before): the
   same shapes and sizes as `Critters.swift`, lit from the top left and outlined in a deep shade of each part.
-  Too small for pixel_kit's finish (it turned them muddy). `--sheet out.png` previews them.
+  Too small for pixel_kit's finish (it turned them muddy). `--sheet out.png` previews them. The sheep and cows out
+  at grass (2026-11-18, `sheep`, `cow`: standing, a step on, grazing; round a land's farms where it has them,
+  `Critters.home`) are drawn only here, with no drawing in Swift behind them.
 - `tools/hero_layers.py`: splits each race's walk sheet into paper-doll layers (bald `body_<race>`,
   `locks_<race>` for a beard, `hair_<style>_<race>` for every hairstyle in that sheet's own hair colour, a
   gender sheet's own hair as a style of its own (appearance.json `styles` with `sheet`), its outer edge a deep

@@ -1983,6 +1983,14 @@
           {
             "kind": "chick",
             "count": 5
+          },
+          {
+            "kind": "sheep",
+            "count": 4
+          },
+          {
+            "kind": "cow",
+            "count": 3
           }
         ],
         "birds": "songbirds"
@@ -3975,6 +3983,10 @@
           {
             "kind": "chick",
             "count": 4
+          },
+          {
+            "kind": "sheep",
+            "count": 3
           }
         ],
         "birds": "songbirds"
@@ -11031,6 +11043,14 @@
           {
             "kind": "chick",
             "count": 4
+          },
+          {
+            "kind": "sheep",
+            "count": 5
+          },
+          {
+            "kind": "cow",
+            "count": 3
           }
         ],
         "birds": "songbirds"
@@ -12107,6 +12127,10 @@
           {
             "kind": "chick",
             "count": 4
+          },
+          {
+            "kind": "cow",
+            "count": 2
           }
         ],
         "birds": "songbirds",
@@ -14366,6 +14390,14 @@
           {
             "kind": "chick",
             "count": 4
+          },
+          {
+            "kind": "sheep",
+            "count": 3
+          },
+          {
+            "kind": "cow",
+            "count": 2
           }
         ],
         "birds": "songbirds"
@@ -16557,6 +16589,10 @@
           },
           {
             "kind": "wisp",
+            "count": 2
+          },
+          {
+            "kind": "sheep",
             "count": 2
           }
         ]
