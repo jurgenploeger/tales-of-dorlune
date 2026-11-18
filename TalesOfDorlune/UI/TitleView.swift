@@ -363,22 +363,58 @@ extension TitleView {
     }
 }
 
-/// Release notes from content/changelog.json, newest first, five releases a page, in a window
-/// nearly as big as the screen. Only the newest is open; tap any other to read it.
+/// Release notes from content/changelog.json, newest first, as many releases a page as fill the
+/// window (the user, 2026-11-18: five a page left it half empty on a tall phone and cut short on its
+/// side), in a window nearly as big as the screen. Only the newest is open; tap any other to read it.
 private struct ChangelogPanel: View {
     /// The page showing, 0 being the newest (turning it scrolls back up to the top).
     @Binding var page: Int
     let onClose: () -> Void
     @State private var open: Set<String> = Set(Content.shared.releases.prefix(1).map(\.id))
+    /// How tall each release stands as it opens (the newest, with its notes) or closed (the rest),
+    /// measured off screen at the notes' width; and how tall the room for them is.
+    @State private var heights: [String: CGFloat] = [:]
+    @State private var room: CGFloat = 0
 
+    /// Before anything's measured, five a page, as it was.
     private static let perPage = 5
+    private static let spacing: CGFloat = 12
+    private static let inset: CGFloat = 16
     private var releases: [ReleaseNote] { Content.shared.releases }
-    private var pageCount: Int { max(1, (releases.count + Self.perPage - 1) / Self.perPage) }
+
+    /// The releases a page at a time: each page as many as fit the room, one at least. Packed as they
+    /// first stand (the newest open), so opening one later scrolls rather than reshuffling the pages.
+    private var pages: [[ReleaseNote]] {
+        let fits = room - Self.inset * 2
+        guard fits > 40, heights.count == releases.count else {
+            return stride(from: 0, to: releases.count, by: Self.perPage).map { Array(releases[$0..<min($0 + Self.perPage, releases.count)]) }
+        }
+        var pages: [[ReleaseNote]] = []
+        var current: [ReleaseNote] = []
+        var used: CGFloat = 0
+        for release in releases {
+            let tall = heights[release.id] ?? 0
+            let added = current.isEmpty ? tall : used + Self.spacing + tall
+            if !current.isEmpty, added > fits {
+                pages.append(current)
+                current = [release]
+                used = tall
+            } else {
+                current.append(release)
+                used = added
+            }
+        }
+        if !current.isEmpty { pages.append(current) }
+        return pages
+    }
+
+    private var pageCount: Int { max(1, pages.count) }
 
     /// This page's releases.
     private var shown: [ReleaseNote] {
-        let start = min(max(0, page), pageCount - 1) * Self.perPage
-        return Array(releases.dropFirst(start).prefix(Self.perPage))
+        let all = pages
+        guard !all.isEmpty else { return [] }
+        return all[min(max(0, page), all.count - 1)]
     }
 
     /// The scroll anchor at the notes' top.
@@ -390,7 +426,7 @@ private struct ChangelogPanel: View {
             ScrollViewReader { reader in
                 ScrollView {
                     notes
-                        .padding(16)
+                        .padding(Self.inset)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .id(Self.top)
                 }
@@ -401,6 +437,17 @@ private struct ChangelogPanel: View {
                 }
             }
             .frame(maxHeight: .infinity, alignment: .top)
+            // The room the notes have, and every release measured in it as it first stands.
+            .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { room = $0 }
+            .background(alignment: .topLeading) {
+                measuring
+                    .padding(.horizontal, Self.inset)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .hidden()
+                    .accessibilityHidden(true)
+                    .allowsHitTesting(false)
+            }
+            .onChange(of: pageCount) { if page > pageCount - 1 { page = pageCount - 1 } }
             // The pager stays at the window's foot, however short or long the page's notes.
             if pageCount > 1 {
                 pager
@@ -414,9 +461,19 @@ private struct ChangelogPanel: View {
         .popIn()
     }
 
+    /// Every release as it first stands (the newest open), each reporting its height.
+    private var measuring: some View {
+        VStack(alignment: .leading, spacing: Self.spacing) {
+            ForEach(releases) { release in
+                row(release, isOpen: release.id == releases.first?.id)
+                    .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { heights[release.id] = $0 }
+            }
+        }
+    }
+
     /// This page's releases.
     private var notes: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: Self.spacing) {
             ForEach(shown) { release in
                 let isOpen = open.contains(release.id)
                 VStack(alignment: .leading, spacing: 6) {
@@ -425,33 +482,49 @@ private struct ChangelogPanel: View {
                             if isOpen { open.remove(release.id) } else { open.insert(release.id) }
                         }
                     } label: {
-                        VStack(alignment: .leading, spacing: 2) {
-                            HStack(alignment: .firstTextBaseline) {
-                                Text("v\(release.version)").font(HUDStyle.font(16)).foregroundStyle(HUDStyle.gold)
-                                Spacer()
-                                Text(release.date).font(HUDStyle.font(10)).foregroundStyle(HUDStyle.dim)
-                                IconImage(isOpen ? .chevronUp : .chevronDown, size: 12)
-                                    .foregroundStyle(HUDStyle.dim)
-                            }
-                            Text(release.title).font(HUDStyle.font(13))
-                                .multilineTextAlignment(.leading)
-                                .fixedSize(horizontal: false, vertical: true)
-                        }
-                        .contentShape(Rectangle())
+                        header(release, isOpen: isOpen)
+                            .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
                     .accessibilityHint(isOpen ? L("Hides the notes") : L("Shows the notes"))
-                    if isOpen {
-                        ForEach(release.notes, id: \.self) { note in
-                            HStack(alignment: .firstTextBaseline, spacing: 6) {
-                                Text("•").foregroundStyle(HUDStyle.gold)
-                                Text(note).fixedSize(horizontal: false, vertical: true)
-                            }
-                            .font(HUDStyle.font(11))
-                        }
-                    }
+                    if isOpen { lines(release) }
                 }
             }
+        }
+    }
+
+    /// A release as it stands, for measuring: its header and, open, its notes.
+    private func row(_ release: ReleaseNote, isOpen: Bool) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            header(release, isOpen: isOpen)
+            if isOpen { lines(release) }
+        }
+    }
+
+    /// Its version, date and title.
+    private func header(_ release: ReleaseNote, isOpen: Bool) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            HStack(alignment: .firstTextBaseline) {
+                Text("v\(release.version)").font(HUDStyle.font(16)).foregroundStyle(HUDStyle.gold)
+                Spacer()
+                Text(release.date).font(HUDStyle.font(10)).foregroundStyle(HUDStyle.dim)
+                IconImage(isOpen ? .chevronUp : .chevronDown, size: 12)
+                    .foregroundStyle(HUDStyle.dim)
+            }
+            Text(release.title).font(HUDStyle.font(13))
+                .multilineTextAlignment(.leading)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+
+    /// Its notes, a line each.
+    private func lines(_ release: ReleaseNote) -> some View {
+        ForEach(release.notes, id: \.self) { note in
+            HStack(alignment: .firstTextBaseline, spacing: 6) {
+                Text("•").foregroundStyle(HUDStyle.gold)
+                Text(note).fixedSize(horizontal: false, vertical: true)
+            }
+            .font(HUDStyle.font(11))
         }
     }
 

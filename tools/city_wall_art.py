@@ -157,50 +157,46 @@ def city_wall():
     pits = rng.random((h, w)) < 0.05
     merlons = (3, 15)                                                   # each 7 wide, two a cell
 
-    # The far rim, rows 0 … 1: its top lit, its inner face (turned to you) in shade.
-    alpha[0:2] = True
+    # Between the merlons, low behind the parapet: the far rim, rows 5 … 6, its top lit and its inner
+    # face in shade, and the walk, rows 7 … 8, flagstones seen from above. A thin strip: as deep as the
+    # merlons stand tall, the wall read as thick as they stick out (the user, 2026-11-18).
+    alpha[5:9] = True
     for x in range(w):
-        light[0, x] = 0.62 if (x + 4) % 12 == 0 else 0.8
-        light[1, x] = 0.36
-    # The walk, rows 2 … 8: flagstones seen from above, the lightest flat thing on it but the caps,
-    # joints across it every half cell and once along it.
-    alpha[2:9] = True
-    for y in range(2, 9):
-        for x in range(w):
-            joint = (x + (0 if y < 5 else 6)) % 12 == 0 or y == 5
-            v = 0.84 - 0.02 * (y - 2) + tones[(x // 12) * 2 + (y >= 5)] * 0.4
-            light[y, x] = v - 0.16 if joint else v
+        light[5, x] = 0.62 if (x + 4) % 12 == 0 else 0.8
+        light[6, x] = 0.34
+        for y in (7, 8):
+            v = 0.84 - 0.04 * (y - 7) + tones[(x // 12) * 2 + (y == 8)] * 0.4
+            light[y, x] = v - 0.16 if (x + (0 if y == 7 else 6)) % 12 == 0 else v
     # The front parapet between the merlons, rows 9 … 13: its top lit, its face dressed stone.
     alpha[9:14] = True
     for x in range(w):
         light[9, x] = 0.86
         for y in range(10, 14):
             light[y, x] = 0.52 - 0.02 * (y - 10) - (0.16 if (x + 1) % 6 == 0 else 0)
-    # The merlons, rows 2 … 13, standing over the walk: a cap seen from above, a face of two dressed
-    # stones, lit down its left edge and in shade down its right, and its shadow on the walk to its right.
+    # The merlons, rows 0 … 13, standing well up past the walk: a cap seen from above, a face of two
+    # dressed stones, lit down its left edge and in shade down its right, its shadow on the walk.
     for left in merlons:
-        for y in range(2, 14):
+        for y in range(0, 14):
             for k in range(7):
                 x = left + k
-                if y == 2:
+                if y == 0:
                     v = 1.0
-                elif y == 3:
+                elif y == 1:
                     v = 0.72
-                elif y == 8:
+                elif y == 7:
                     v = 0.3                                              # the joint between its two stones
                 else:
-                    v = 0.46 + (0.06 if y in (4, 9) else 0) - 0.015 * (y - 4)
-                if k == 0 and y > 3:
+                    v = 0.46 + (0.06 if y in (2, 8) else 0) - 0.015 * (y - 2)
+                if k == 0 and y > 1:
                     v += 0.08
                 if k == 6:
                     v -= 0.2
                 light[y, x] = v
                 alpha[y, x] = True
-        # Outlined against the walk behind it, a deep shade of the stone, and its shadow on the walk.
-        for y in range(2, 9):
+        for y in range(5, 9):
             light[y, left - 1] = 0.12
             light[y, left + 7] = 0.12
-        for y in range(3, 9):
+        for y in range(6, 9):
             light[y, left + 8] -= 0.22
     # The coping, rows 14 … 15, standing out a pixel: lit along its top, its underside dark.
     alpha[14:16] = True
