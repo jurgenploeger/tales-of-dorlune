@@ -1361,6 +1361,11 @@ final class LandStage {
                     }
                 }
             }
+            // Only where nothing lies past the edge: on the continent a land (or this one, round its
+            // own lobes) can go on there, and the mist, a flat sheet over everything that stands,
+            // lay pale over its ground and trees, cut off straight (the user, 2026-11-18, the Valley
+            // of Fear: "the land looks broken").
+            guard clear(stride(from: span.lowerBound, to: span.upperBound + 1, by: 4)) else { continue }
             let low: CGFloat = clear(stride(from: span.lowerBound - 2, to: span.lowerBound - 22, by: -5)) ? 20 : 0
             let high: CGFloat = clear(stride(from: span.upperBound + 1, to: span.upperBound + 21, by: 5)) ? 20 : 0
             let wide = (CGFloat(span.upperBound - span.lowerBound) + low + high) * tile, deep = 8 * tile, beyond = 8 * tile
