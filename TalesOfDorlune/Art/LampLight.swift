@@ -87,6 +87,9 @@ final class LampLight {
         return made
     }
 
+    /// Whether it's dark enough for any of the night's light to show.
+    var isNight: Bool { night > 0.01 }
+
     /// `node` shows only by night, as the lamps' light does: a building's lit windows
     /// (`LandStage.addWindows`).
     func follow(_ node: SKSpriteNode, strength: CGFloat = 1) {
