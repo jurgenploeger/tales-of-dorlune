@@ -5399,7 +5399,7 @@ struct LayoutStepTests {
 
 /// A look at the Valley of Fear round where its land looked broken (the user, 2026-11-18: cell
 /// 139, 44): which hill owns each cell and how high it stands, printed for the log. Passes always.
-@Suite struct ValleyPatchLook {
+@MainActor @Suite struct ValleyPatchLook {
     @Test func valleyPatch() throws {
         let def = try #require(Content.shared.map("valley_of_fear"))
         let map = Layouts.of(def)
