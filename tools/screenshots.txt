@@ -170,6 +170,8 @@ gate_ingothold_morning | newgame,map=goldburg,at=-45_-3,landscape,weather=clear,
 gate_larkspur    | newgame,map=bluebird,at=-40_-3,landscape,weather=clear,hour=12 | 6
 city_gate    | newgame,map=goldburg,border=valley_of_fear,landscape,weather=clear,hour=12 | 6
 battle       | newgame,map=sunny_meadow,battle   | 15
+battle_night | newgame,map=sunny_meadow,battle,hour=23,weather=clear | 15
+battle_rain  | newgame,map=sunny_meadow,battle,hour=12,weather=storm | 15
 night        | newgame,map=meadowbrook,hour=22,weather=clear | 8
 dusk         | newgame,map=sunny_meadow,hour=18,weather=clear | 15
 rain         | newgame,map=sunny_meadow,hour=12,weather=rain  | 15
@@ -1049,3 +1051,7 @@ web_port_anywhere | newgame,level=30,class=mage,pet=bunny,map=rosen_lake,bridge=
 web_port_explore  | newgame,level=43,class=fighter,friends=2,map=starfall_isle,at=0_2,clean,nohud | 12
 # The Valley of Fear at 139 : 79 by the world map's pin, where the land looked broken (the user, 2026-11-18).
 valley_broken | newgame,level=60,map=valley_of_fear,at=60_-19,hour=9,weather=clear | 8
+valley_broken_wide | newgame,level=60,map=valley_of_fear,at=60_-19,hour=9,weather=clear,zoom=0.85,landscape | 8
+valley_broken_east | newgame,level=60,map=valley_of_fear,at=66_-25,hour=9,weather=clear,zoom=0.85,landscape | 8
+valley_nohills | newgame,level=60,map=valley_of_fear,at=60_-19,hour=9,weather=clear,hills=off | 8
+valley_tint  | newgame,level=60,map=valley_of_fear,at=60_-19,hour=9,weather=clear,hills=tint | 8

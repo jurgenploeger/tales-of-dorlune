@@ -99,10 +99,17 @@ enum TownFence {
         guard lines.contains(where: { $0.kind != .row }) else { return }
         let pickets = art.picture(of: art.sprite("fence").texture)
         let stones = BorderArt.lowWallPicture(palette: map.def.theme.palette)
+        let capstones = BorderArt.lowWallTop(palette: map.def.theme.palette)
         for line in lines where line.kind != .row {
             let wall = line.kind == .wall
             guard let picture = wall ? stones : pickets else { continue }
-            for piece in pieces(cells: line.cells, picture: picture, height: wall ? BorderArt.lowWallHeight : roadsideHeight) {
+            // A low wall shows how thick it is: its capstones going back from its top (the user,
+            // 2026-11-18: "These little walls are also very thin").
+            let made = wall
+                ? pieces(cells: line.cells, picture: picture, height: BorderArt.lowWallHeight, top: capstones,
+                         topLevel: BorderArt.lowWallHeight, thickness: BorderArt.lowWallThickness)
+                : pieces(cells: line.cells, picture: picture, height: roadsideHeight)
+            for piece in made {
                 let node = SKSpriteNode(texture: piece.texture, size: piece.size)
                 node.anchorPoint = piece.anchor
                 let foot = map.center(of: piece.cell)
@@ -119,8 +126,11 @@ enum TownFence {
     /// cell's middle with. `height`: how tall the picture stands, in points.
     /// `top`: a city wall's walk (`BorderArt.wallTop`), drawn over each stretch at `wallTopLevel`,
     /// going back into the screen (north from a stretch along x, east from one along y).
+    /// `topLevel` and `thickness`: how high the top lies (points) and how far back it goes (cells): a
+    /// city wall's walk, or a low wall's capstones (`BorderArt.lowWallTop`).
     static func pieces(cells: [GridPoint], picture source: CGImage, height: CGFloat,
-                       shaded: CGFloat = 1, top: CGImage? = nil) -> [(cell: GridPoint, texture: SKTexture, size: CGSize, anchor: CGPoint)] {
+                       shaded: CGFloat = 1, top: CGImage? = nil, topLevel: CGFloat = BorderArt.wallTopLevel,
+                       thickness: CGFloat = BorderArt.wallThickness) -> [(cell: GridPoint, texture: SKTexture, size: CGSize, anchor: CGPoint)] {
         let fence = Set(cells)
         guard !fence.isEmpty, let pickets = cropped(source) else { return [] }
         // `shaded`: how much darker the stretches along x are drawn (their south face, from the light).
@@ -131,12 +141,12 @@ enum TownFence {
         // Half a cell along the grid's x axis on screen; along y it's (-dx, dy).
         let east = CGVector(dx: c * tile / 2, dy: c * tile / 4)
         let north = CGVector(dx: -east.dx, dy: east.dy)
-        let deep = top == nil ? 0 : BorderArt.wallThickness
-        let lift = CGVector(dx: 0, dy: BorderArt.wallTopLevel)
+        let deep = top == nil ? 0 : thickness
+        let lift = CGVector(dx: 0, dy: topLevel)
         // A wall's parapet along the walk's outer edge too, merlons standing up from it (the user,
         // 2026-11-18: "The walls miss the ridge on the outer edge"): the face's own top, what of it
         // stands over the walk, from the top down to the walk's level.
-        let crestHeight = top == nil ? 0 : max(0, height - BorderArt.wallTopLevel)
+        let crestHeight = top == nil ? 0 : max(0, height - topLevel)
         let crestRows = Int((crestHeight / height * CGFloat(pickets.height)).rounded())
         let crest = crestRows > 0 ? pickets.cropping(to: CGRect(x: 0, y: 0, width: pickets.width, height: crestRows)) : nil
         let southernCrest = crest.map { shaded < 1 ? dimmed($0, by: shaded) : $0 }

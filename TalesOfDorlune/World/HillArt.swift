@@ -282,10 +282,15 @@ enum HillArt {
                 // Image rows run top down.
                 let index = ((sh - 1 - j) * sw + i) * 4
                 let field = hill.field(x, y)
-                if let hidden = look.hidden, hidden(GridPoint(col: Int(x.rounded(.down)), row: Int(y.rounded(.down)))) { continue }
+                let here = GridPoint(col: Int(x.rounded(.down)), row: Int(y.rounded(.down)))
+                if let hidden = look.hidden, hidden(here) { continue }
                 let trailDistance = Double(nearness[j * sw + i])
-                // Its outline, softened, and its trails' starts out on the ground in front.
-                var edge = min(1, max(0, (field + 0.06) / 0.25))
+                // Its outline, softened, and its trails' starts out on the ground in front. The soft
+                // edge only round its cells (`shown`): behind a mountain the field hovers just under
+                // nothing over a broad stretch, and its ground lay faintly over the flat land there,
+                // pale and mottled, cut off straight at the edge of its box (the user, 2026-11-18, the
+                // Valley of Fear: "the land looks broken").
+                var edge = shown.contains(here) ? min(1, max(0, (field + 0.06) / 0.25)) : 0
                 if field < 0.2 { edge = max(edge, min(1, max(0, (0.5 - trailDistance) / 0.1))) }
                 for channel in 0..<4 { mask[index + channel] = UInt8(edge * 255) }
                 guard field > 0 else { continue }

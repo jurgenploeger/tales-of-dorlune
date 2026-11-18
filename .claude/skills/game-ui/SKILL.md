@@ -191,6 +191,17 @@ Russian too; Chinese, Japanese and Korean shorter but taller. Never fix a width 
    (cosy MMOs and RPGs on iOS). Mobbin (`mobbin:search`) has real apps' screens but few games, and its
    search needs a paid Mobbin plan (on 2026-11-10 the account's was free: every search refused). Name what
    you take from a reference (a tab strip joined to the window, a row's layout), never copy a game's look.
+   **The Game UI Database** (gameuidatabase.com, the user's pick, 2026-11-18): about 80,000 screens from
+   2,000 games, by screen type. It's behind Cloudflare: curl and WebFetch get a 403, and headless Chromium
+   got one page before a "Verify you are human" check. Don't try to get past that: ask the user to pick
+   screens there and send them, and point them at the category. The ones that match our windows
+   (`index.php?&scrn=<id>`): Rewards and Experience 54, Results Screen 53, Item Get 33, Enemy Health &
+   Damage 143, Skill Use 172, Player Vitals 133, All Inventory 100 (Browse 71, Inspect Item 77, All
+   Equipping 76), All Buying & Trading 72 (Browse 85, Confirm Purchase 80), Crafting 75, Upgrading 73,
+   Change Skin or Accessory 20, Missions and Quests 81, Pinned Mission 155, Waypoints and Markers 163,
+   World Map 6, Area Map 91, Minimap 135, Dialogue & Speech 162, Daily and Timed Rewards 124, Calendar 108,
+   Challenges & Achievements 82, Friends List & Invite 196, Chat Shortcuts & Emotes 113, Settings Menu 26,
+   Mobile Controls 147. The images are their games' makers': for reference only, never in the game.
 3. **Propose before rebuilding.** For anything bigger than a spacing or colour fix, show the user a
    mock-up first: the current screen beside the proposal, at the phone's size, both orientations. An HTML
    page in the game's colours rendered with Playwright is quick (`HUDStyle`'s values; SF Pro Rounded isn't

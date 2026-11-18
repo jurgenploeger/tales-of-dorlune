@@ -202,6 +202,15 @@ final class Sky {
         apply()
     }
 
+    /// Lays its shade at depth `shade` (its haze just over it) and its weather round depth
+    /// `weather` (rain, snow and fog about a thousand either side; lightning's flash 13 500 over), for
+    /// a scene whose layers aren't the map's: a battle's, its shade under the fighters' bars.
+    func stack(shade depth: CGFloat, weather: CGFloat) {
+        shade.zPosition = depth
+        haze.zPosition = depth + 1
+        weatherLayer.zPosition = weather - 30_000
+    }
+
     // MARK: Weather
 
     private static func nodes(for weather: Weather) -> [SKNode] {

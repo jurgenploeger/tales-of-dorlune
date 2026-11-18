@@ -23,15 +23,30 @@ final class BattleScene: SKScene {
     /// While a skill with a crescent for its grand stroke plays: its colour and tier, till its blow
     /// lands (`impactAll`).
     private var crescent: (color: UIColor, level: Int)?
+    /// The land's time of day and weather, as over the map you left (`Sky`, on the same clock, so the
+    /// same hour and the same rain): the backdrop is pictured without them, as they hang on the
+    /// map's camera, and fights at night were lit as at noon (the user, 2026-11-18). Its shade lies
+    /// over the ground and the fighters, under their bars and the spells' light (`Sky.stack`).
+    private let skyHolder: SKCameraNode
+    private let sky: Sky?
+    private var lastUpdate: TimeInterval = 0
 
-    init(controller: BattleController, size: CGSize, backdrop: SKTexture?) {
+    init(controller: BattleController, size: CGSize, backdrop: SKTexture?, land: MapDef? = nil) {
         self.controller = controller
         self.backdrop = backdrop.map { Self.blur($0, radius: 5) ?? $0 }
+        let holder = SKCameraNode()
+        skyHolder = holder
+        sky = land.flatMap { Sky(map: $0, camera: holder, start: controller.session.data.startedAt) }
         super.init(size: size)
         scaleMode = .resizeFill
         anchorPoint = .zero
         backgroundColor = UIColor(red: 0.2, green: 0.35, blue: 0.3, alpha: 1)
         addChild(stage)
+        if let sky {
+            sky.stack(shade: 3_800, weather: 2_500)
+            skyHolder.position = CGPoint(x: size.width / 2, y: size.height / 2)
+            addChild(skyHolder)
+        }
         for fighter in controller.combatants {
             let actor = BattleActor(fighter: fighter, art: art)
             if fighter.isHero {
@@ -60,6 +75,9 @@ final class BattleScene: SKScene {
     private var chooserID: Int?
 
     override func update(_ currentTime: TimeInterval) {
+        let dt = lastUpdate == 0 ? 0 : min(0.1, currentTime - lastUpdate)
+        lastUpdate = currentTime
+        sky?.update(dt)
         // Checked each frame: the controller decides whose choice it is, and when.
         let deciding: [BattleController.Phase] = [.command, .items, .stones, .target]
         let chooser = controller.choosingForCompanion ? controller.companion : controller.hero
@@ -139,6 +157,7 @@ final class BattleScene: SKScene {
     }
 
     override func didChangeSize(_ oldSize: CGSize) {
+        skyHolder.position = CGPoint(x: size.width / 2, y: size.height / 2)
         layout()
     }
 

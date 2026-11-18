@@ -558,7 +558,7 @@ final class GameCoordinator {
         let controller = BattleController.encounter(encounters, session: session)
         SoundEffects.shared.play(.encounter)
         controller.onFinish = { [weak self] outcome in self?.endBattle(outcome) }
-        battleScene = BattleScene(controller: controller, size: mapScene.size, backdrop: backdrop)
+        battleScene = BattleScene(controller: controller, size: mapScene.size, backdrop: backdrop, land: currentLand)
         input.move = .zero
         battle = controller
         isReady = true
@@ -575,7 +575,7 @@ final class GameCoordinator {
         let group = session.nearbyGroup.contains { $0.id == rival.id } ? session.nearbyGroup : [rival]
         let controller = BattleController.duel(with: rival, group: group, session: session)
         controller.onFinish = { [weak self] outcome in self?.endBattle(outcome) }
-        battleScene = BattleScene(controller: controller, size: mapScene.size, backdrop: backdrop)
+        battleScene = BattleScene(controller: controller, size: mapScene.size, backdrop: backdrop, land: currentLand)
         input.move = .zero
         rivals = [rival] + group.filter { $0.id != rival.id }.prefix(GameSession.maxAllies)
         battle = controller
@@ -600,7 +600,7 @@ final class GameCoordinator {
         cornered = nil
         controller.onFinish = { [weak self] outcome in self?.endBattle(outcome) }
         // The map you're standing on, like any fight (without the boss: it's in the battle now).
-        battleScene = BattleScene(controller: controller, size: mapScene.size, backdrop: mapScene.battleBackdrop(hiding: npc.id))
+        battleScene = BattleScene(controller: controller, size: mapScene.size, backdrop: mapScene.battleBackdrop(hiding: npc.id), land: currentLand)
         input.move = .zero
         boss = npc
         battle = controller

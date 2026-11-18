@@ -212,8 +212,33 @@ enum BorderArt {
     private static let foot = PixelColor(0x5A5D68)
     private static let moss = PixelColor(0x5D7A3C)
 
-    /// How tall a low wall along a road stands (`lowWallPicture`), in points.
+    /// How tall a low wall along a road stands (`lowWallPicture`), in points, and how far its top
+    /// goes back into the screen (`lowWallTop`), in cells.
     static let lowWallHeight: CGFloat = 13
+    static let lowWallThickness: CGFloat = 0.4
+
+    /// A low wall's top, seen from above (`TownFence.pieces` lays it back from the coping): flat
+    /// capstones of uneven length in two rows, lit as they face the sky, mortar between, its far
+    /// edge a shade darker. Repeats every 32 pixels, as the face does.
+    static func lowWallTop(palette: MapPalette?) -> CGImage? {
+        var canvas = PixelCanvas(width: 32, height: 8)
+        canvas.fill(0, 0, 32, 8, mortar)
+        let rows: [(y: Int, height: Int, widths: [Int])] = [(0, 4, [6, 7, 5, 8, 6]), (4, 4, [8, 5, 7, 6, 6])]
+        for (number, row) in rows.enumerated() {
+            var x = 0
+            for (index, width) in row.widths.enumerated() {
+                let stone = blocks[(number * 2 + index) % blocks.count].shaded(1.12)
+                canvas.fill(x, row.y, width - 1, row.height - 1, stone)
+                // Its near edge catches the light; its far one a shade darker.
+                canvas.fill(x, row.y + row.height - 2, width - 1, 1, stone.shaded(1.1))
+                canvas.fill(x, row.y, width - 1, 1, stone.shaded(0.9))
+                x += width
+            }
+        }
+        for x in [3, 14, 22, 29] { canvas[x, 1] = moss }
+        let image = canvas.cgImage()
+        return palette.flatMap { Recolor.grade($0, image: image) } ?? image
+    }
 
     /// One cell's stretch of a low wall of field stones along a road (`LandPlanner.planRoadsides`),
     /// face on, to be slanted along its line (`TownFence.pieces`): a row of slabs set on edge along
