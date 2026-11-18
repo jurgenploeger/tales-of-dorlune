@@ -409,7 +409,8 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
 ## Rules
 - **Cloud sessions (Linux) can't build or run the app.** After editing `content/` or `art/assets.json`, run
   `python3 tools/check_content.py`. Keep Swift edits small and careful: nothing compiles a `claude/**`
-  branch by itself (a Screenshots run by hand does, below), only `.github/workflows/testflight.yml` after a push to `main`, so a mistake fails that
+  branch by itself (a Screenshots run by hand does, below), only `.github/workflows/testflight.yml` after a push to `main` (on GitHub's `xcode-27` runner, a release Xcode 27 and the iOS 27 SDK
+  App Store Connect asks for from April 2027; the Screenshots run can pick it too, input `runner`), so a mistake fails that
   TestFlight build (Xcode Cloud isn't used: its GitHub app was uninstalled on 2026-10-23). Read every
   changed line for what the compiler would catch (a name renamed in one place and not another broke 0.9.42).
 - **Never redraw Retro Diffusion's art in code** (the user, 2026-10-24: "that's actually really good"). Every
