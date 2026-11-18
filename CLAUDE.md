@@ -296,7 +296,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   below the far shore up the screen (`GroundTiles.PondField`, 16 spots a cell, worked out once a land:
   dark out from the shore, the near half lighter where it mirrors the sky, a dark line under the far
   bank), the tile's own ripples kept over them; moving in whole pixels (`PondMotion`, `LandStage.placePondMotion`:
-  dashes lapping the near shores, the far waterline creeping, glints and drops on the open water); and what
+  dashes lapping the near shores, a bright rim along them, `PondMotion.rims`, the far waterline creeping, glints and drops on the open water, many a second in the rain, `PondMotion.raining`; the user, 2026-11-18, after Daniil Ch.'s pond); and what
   stands just above the water mirrored in it (`LandStage.reflect`: flipped, squashed to 0.55, in the pond's
   dark tones a step darker than the water, only on its water, rows wobbling a pixel in four frames; painted
   on the CPU, as a shader for it didn't take on a phone and the reflections lay over the land).
