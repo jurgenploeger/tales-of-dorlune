@@ -128,6 +128,7 @@ const ld = [
             <ul>
               <li><a href="/support/">Support</a></li>
               <li><a href="/privacy/">Privacy policy</a></li>
+              {site.googleTag && <li><a href="/privacy/#cookies" data-reopen-consent>Cookie settings</a></li>}
             </ul>
           </div>
         </div>
@@ -203,5 +204,48 @@ const ld = [
       });
     </script>
     <Analytics />
+    {site.googleTag && (
+      <div id="consent" class="consent" role="dialog" aria-labelledby="consent-title" hidden>
+        <p id="consent-title"><strong>Can we count your visit with Google Analytics?</strong> It sets cookies to tell us which pages people read. Nothing changes in the game either way.</p>
+        <div class="consent-actions">
+          <button type="button" class="btn small-btn" data-consent="granted">Allow</button>
+          <button type="button" class="btn quiet small-btn" data-consent="denied">No thanks</button>
+        </div>
+      </div>
+    )}
+    {site.googleTag && (
+      <script is:inline define:vars={{ tag: site.googleTag }}>
+        // Google's tag loads only once a visitor has said yes; until then nothing of Google's runs.
+        (() => {
+          const box = document.getElementById('consent');
+          const read = () => { try { return localStorage.getItem('consent'); } catch (e) { return null; } };
+          const load = () => {
+            if (window.dataLayer) return;
+            window.dataLayer = [];
+            window.gtag = function () { dataLayer.push(arguments); };
+            gtag('js', new Date());
+            const s = document.createElement('script');
+            s.async = true; s.src = 'https://www.googletagmanager.com/gtm.js?id=' + tag;
+            dataLayer.push({ 'gtm.start': Date.now(), event: 'gtm.js' });
+            document.head.appendChild(s);
+          };
+          const choice = read();
+          if (choice === 'granted') load(); else if (!choice) box.hidden = false;
+          box.addEventListener('click', (e) => {
+            const v = e.target.closest('[data-consent]')?.dataset.consent; if (!v) return;
+            try { localStorage.setItem('consent', v); } catch (err) {}
+            box.hidden = true;
+            if (v === 'granted') load();
+          });
+          // "Cookie settings" in the footer asks again.
+          document.querySelectorAll('[data-reopen-consent]').forEach((a) => a.addEventListener('click', (e) => {
+            e.preventDefault();
+            try { localStorage.removeItem('consent'); } catch (err) {}
+            if (window.dataLayer) { location.reload(); return; }
+            box.hidden = false; box.querySelector('button').focus();
+          }));
+        })();
+      </script>
+    )}
   </body>
 </html>
