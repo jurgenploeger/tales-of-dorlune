@@ -30,7 +30,8 @@ enum TownFence {
         func has(_ dc: Int, _ dr: Int, _ cell: GridPoint) -> Bool { fence.contains(GridPoint(col: cell.col + dc, row: cell.row + dr)) }
         // A wall's stretches along the grid's x axis show their south face, turned from the light (from
         // the upper left, as everything is): a step darker, as a terrace's south wall is.
-        for piece in pieces(cells: cells, picture: source, height: height, shaded: stone ? 0.8 : 1) {
+        let top = stone ? art.gradedTile("city_wall_top", palette: palette) : nil
+        for piece in pieces(cells: cells, picture: source, height: height, shaded: stone ? 0.8 : 1, top: top) {
             let node = SKSpriteNode(texture: piece.texture, size: piece.size)
             node.anchorPoint = piece.anchor
             node.position = map.center(of: piece.cell)
@@ -116,18 +117,23 @@ enum TownFence {
     /// from the cell's middle to each side it joins the next cell of the fence at, so the pieces
     /// join up and turn at the corners: what each cell shows, and the anchor to stand it on the
     /// cell's middle with. `height`: how tall the picture stands, in points.
+    /// `top`: a city wall's walk (`BorderArt.wallTop`), drawn over each stretch at `wallTopLevel`,
+    /// going back into the screen (north from a stretch along x, east from one along y).
     static func pieces(cells: [GridPoint], picture source: CGImage, height: CGFloat,
-                       shaded: CGFloat = 1) -> [(cell: GridPoint, texture: SKTexture, size: CGSize, anchor: CGPoint)] {
+                       shaded: CGFloat = 1, top: CGImage? = nil) -> [(cell: GridPoint, texture: SKTexture, size: CGSize, anchor: CGPoint)] {
         let fence = Set(cells)
         guard !fence.isEmpty, let pickets = cropped(source) else { return [] }
         // `shaded`: how much darker the stretches along x are drawn (their south face, from the light).
         let southern = shaded < 1 ? dimmed(pickets, by: shaded) : pickets
+        let southernTop = top.map { shaded < 1 ? dimmed($0, by: shaded) : $0 }
         let tile = WorldMap.tileSize
         let c = CGFloat(0.5).squareRoot()
         // Half a cell along the grid's x axis on screen; along y it's (-dx, dy).
         let east = CGVector(dx: c * tile / 2, dy: c * tile / 4)
         let north = CGVector(dx: -east.dx, dy: east.dy)
-        let pad: CGFloat = 2
+        let deep = top == nil ? 0 : BorderArt.wallThickness
+        let lift = CGVector(dx: 0, dy: BorderArt.wallTopLevel)
+        let pad: CGFloat = 2 + (east.dx * deep).rounded(.up)
         let size = CGSize(width: east.dx * 2 + pad * 2, height: east.dy * 2 + height + pad * 2)
         let middle = CGPoint(x: size.width / 2, y: east.dy + pad)
         let anchor = CGPoint(x: 0.5, y: middle.y / size.height)
@@ -148,10 +154,27 @@ enum TownFence {
                     // north end to the south end, so it reads left to right on screen. Each half of
                     // the cell shows its half of the picture, so straight runs repeat seamlessly.
                     // The far halves (north, east) first.
-                    if mask & 2 != 0 { draw(pickets, in: context, from: middle + north, along: north * -2, part: 0, height: height) }
-                    if mask & 1 != 0 { draw(southern, in: context, from: middle + east * -1, along: east * 2, part: 1, height: height) }
-                    if mask & 4 != 0 { draw(southern, in: context, from: middle + east * -1, along: east * 2, part: 0, height: height) }
-                    if mask & 8 != 0 { draw(pickets, in: context, from: middle + north, along: north * -2, part: 1, height: height) }
+                    // A wall's walk first, back from its top, then its face over it.
+                    func walk(_ image: CGImage?, from origin: CGPoint, along: CGVector, back: CGVector, part: Int) {
+                        guard let image else { return }
+                        drawTop(image, in: context, from: origin + lift, along: along, back: back, part: part)
+                    }
+                    if mask & 2 != 0 {
+                        walk(top, from: middle + north, along: north * -2, back: east * deep, part: 0)
+                        draw(pickets, in: context, from: middle + north, along: north * -2, part: 0, height: height)
+                    }
+                    if mask & 1 != 0 {
+                        walk(southernTop, from: middle + east * -1, along: east * 2, back: north * deep, part: 1)
+                        draw(southern, in: context, from: middle + east * -1, along: east * 2, part: 1, height: height)
+                    }
+                    if mask & 4 != 0 {
+                        walk(southernTop, from: middle + east * -1, along: east * 2, back: north * deep, part: 0)
+                        draw(southern, in: context, from: middle + east * -1, along: east * 2, part: 0, height: height)
+                    }
+                    if mask & 8 != 0 {
+                        walk(top, from: middle + north, along: north * -2, back: east * deep, part: 1)
+                        draw(pickets, in: context, from: middle + north, along: north * -2, part: 1, height: height)
+                    }
                 }
             }
             guard let texture = textures[mask] else { continue }
@@ -256,6 +279,17 @@ enum TownFence {
         context.restoreGState()
     }
 
+    /// `image` laid flat from `origin`: its width along `along`, its height back along `back` (its top
+    /// row the far edge), clipped to its half `part`, as `draw` does a face.
+    private static func drawTop(_ image: CGImage, in context: CGContext, from origin: CGPoint, along: CGVector, back: CGVector, part: Int?) {
+        let w = CGFloat(image.width), h = CGFloat(image.height)
+        context.saveGState()
+        context.concatenate(CGAffineTransform(a: along.dx / w, b: along.dy / w, c: back.dx / h, d: back.dy / h, tx: origin.x, ty: origin.y))
+        if let part { context.clip(to: CGRect(x: CGFloat(part) * w / 2, y: 0, width: w / 2, height: h)) }
+        context.draw(image, in: CGRect(x: 0, y: 0, width: w, height: h))
+        context.restoreGState()
+    }
+
     /// A texture `size` points big, drawn at two pixels per point.
     private static func render(size: CGSize, _ body: (CGContext) -> Void) -> SKTexture {
         let scale: CGFloat = 2
@@ -264,6 +298,10 @@ enum TownFence {
                                       bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)
         else { return SKTexture() }
         context.interpolationQuality = .none
+        // Hard edges: smoothed, each piece's ends came out half clear and a seam a pixel wide showed
+        // between every two (the user, 2026-11-18).
+        context.setAllowsAntialiasing(false)
+        context.setShouldAntialias(false)
         context.scaleBy(x: scale, y: scale)
         body(context)
         guard let image = context.makeImage() else { return SKTexture() }
