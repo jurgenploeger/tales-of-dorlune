@@ -1934,9 +1934,14 @@ struct RulesTests {
         let npc = try #require(map.npcs?.first { $0.monster == "rat_king" })
         let level = try #require(npc.level)
         let waves = try #require(BattleController.bossWaves(npc, encounters: map.encounters, session: session))
-        // Two waves of ten of the map's own monsters, then the boss behind nine more (the middle
-        // of the first row of five, the one furthest from you).
-        #expect(waves.map(\.count) == [10, 10, 10])
+        // Two waves of six of the map's own monsters, then the boss behind five more (the middle
+        // of the first row of five, the one furthest from you): six at most, each standing for its
+        // share of the ten a wave held before, with that much more HP (the user, 2026-11-18).
+        #expect(waves.map(\.count) == [6, 6, 6])
+        #expect(waves[0].allSatisfy { abs($0.share - 10.0 / 6) < 0.001 } && waves[2].filter { $0.speciesID != "rat_king" }.allSatisfy { abs($0.share - 9.0 / 5) < 0.001 })
+        let firstFoe = try #require(waves[0].first)
+        let plain = try #require(firstFoe.speciesID.flatMap(Content.shared.monster)).stats(at: firstFoe.level)
+        #expect(firstFoe.stats.hp == Int((Double(plain.hp) * 10 / 6).rounded()) && firstFoe.hp == firstFoe.stats.hp)
         #expect(waves[2][2].speciesID == "rat_king" && waves[2][2].level == level)
         #expect(waves[2].filter { $0.speciesID == "rat_king" }.count == 1)
         let monsters = waves.joined().filter { $0.speciesID != "rat_king" }
@@ -1950,7 +1955,7 @@ struct RulesTests {
 
         // The fight opens with the first wave and knows how many follow.
         let battle = try #require(BattleController.boss(npc, encounters: map.encounters, session: session))
-        #expect(battle.enemies.count == 10 && battle.wave == 1 && battle.waveCount == 3)
+        #expect(battle.enemies.count == 6 && battle.wave == 1 && battle.waveCount == 3)
         #expect(!battle.enemies.contains { $0.speciesID == "rat_king" })
         #if DEBUG
         // Debug wins (screenshots) take every wave down at once.

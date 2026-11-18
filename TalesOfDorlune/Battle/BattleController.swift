@@ -249,8 +249,22 @@ final class BattleController {
         return controller
     }
 
-    /// How many fighters each wave of a boss fight has, the boss's own included.
-    static let waveSize = 10
+    /// How many fighters each wave of a boss fight has, the boss's own included: `maxEnemies`.
+    static let waveSize = maxEnemies
+    /// The most monsters a fight holds (the user, 2026-11-18: ten crammed the field, the back row's
+    /// bars over the front row's monsters): a row of five and one behind. A bigger group, as a map's
+    /// `groupSize` or a boss wave of `fullWave` would have it, comes as this many, each standing for
+    /// its share of it (`Combatant.share`, `stronger`).
+    static let maxEnemies = 6
+    /// How many fighters a boss wave held before `maxEnemies`, which its fighters stand for.
+    static let fullWave = 10
+
+    /// A monster's stats when it stands for `share` of a bigger group: its HP times that.
+    static func stronger(_ stats: Stats, share: Double) -> Stats {
+        var stats = stats
+        if share > 1 { stats.hp = max(1, Int((Double(stats.hp) * share).rounded())) }
+        return stats
+    }
     /// How many levels lower each earlier wave of a boss fight stands, so ten at a time stays fair.
     static let levelStep = 6
 
@@ -262,6 +276,11 @@ final class BattleController {
         guard let id = npc.monster, let species = session.content.monster(id) else { return nil }
         let level = npc.level ?? 10
         let followers = max(0, npc.minions ?? waveSize - 1)
+        // What each stands for: a wave of `fullWave`, the boss's minions `fullWave - 1` (or as many
+        // as it names, if it names more than fit).
+        let waveShare = Double(fullWave) / Double(waveSize)
+        let minionShare = Double(npc.minions ?? fullWave - 1) / Double(max(1, min(followers, waveSize - 1)))
+        let shown = min(followers, waveSize - 1)
         // Waves of monsters need the map's own; without them the boss stands alone.
         let count = (encounters?.monsters.isEmpty ?? true) ? 1 : max(1, npc.waves ?? 3)
         // The map's level range, kept below the boss's own.
@@ -269,7 +288,7 @@ final class BattleController {
         let highest = max(1, min(mapTop, level - 1))
         let lowest = min(encounters?.levels.first ?? 1, highest)
 
-        func monsters(_ amount: Int, wave: Int) -> [Combatant] {
+        func monsters(_ amount: Int, wave: Int, share: Double) -> [Combatant] {
             guard let encounters, amount > 0 else { return [] }
             let back = levelStep * (count - wave)
             let top = max(lowest, min(highest, level - 1 - back))
@@ -278,7 +297,7 @@ final class BattleController {
             for index in 0..<amount {
                 guard let kindID = pick(from: encounters.monsters), let kind = session.content.monster(kindID) else { continue }
                 let kindLevel = Int.random(in: bottom...top)
-                let stats = kind.stats(at: kindLevel)
+                let stats = stronger(kind.stats(at: kindLevel), share: share)
                 var monster = Combatant(
                     id: 100 * wave + 1 + index, side: .enemies, source: .wild(kindID), name: kind.name, art: kind.art,
                     level: kindLevel, element: kind.element, stats: stats, hp: stats.hp, mp: stats.mp,
@@ -286,18 +305,19 @@ final class BattleController {
                 )
                 monster.isRare = kind.rare == true
                 monster.wave = wave
+                monster.share = max(1, share)
                 group.append(monster)
             }
             return group
         }
 
-        var waves: [[Combatant]] = (1..<count).map { monsters(waveSize, wave: $0) }
+        var waves: [[Combatant]] = (1..<count).map { monsters(waveSize, wave: $0, share: waveShare) }
         let stats = species.stats(at: level)
         var boss = Combatant(id: 100 * count, side: .enemies, source: .wild(id), name: species.name, art: species.art,
                              level: level, element: species.element, stats: stats, hp: stats.hp, mp: stats.mp,
                              skills: species.skills, captureRate: 0)
         boss.wave = count
-        var lastWave = monsters(followers, wave: count)
+        var lastWave = monsters(shown, wave: count, share: minionShare)
         // The battle stands a side in rows of five, the first one furthest from you: the boss takes
         // the middle of that row, behind its minions.
         lastWave.insert(boss, at: min(5, lastWave.count + 1) / 2)
@@ -326,19 +346,23 @@ final class BattleController {
         let high = max(low, encounters.groupSize.last ?? low)
         let minLevel = encounters.levels.first ?? 1
         let maxLevel = max(minLevel, encounters.levels.last ?? minLevel)
-        // Small groups are common, the biggest rare (squaring the roll leans it low).
-        let count = min(high, low + Int(pow(Double.random(in: 0..<1), 2) * Double(high - low + 1)))
+        // Small groups are common, the biggest rare (squaring the roll leans it low). Over
+        // `maxEnemies`, that many come, each standing for its share of the group (`Combatant.share`).
+        let group = min(high, low + Int(pow(Double.random(in: 0..<1), 2) * Double(high - low + 1)))
+        let count = min(group, maxEnemies)
+        let share = Double(group) / Double(max(1, count))
         var enemies: [Combatant] = []
         for index in 0..<count {
             guard let id = pick(from: weights), let species = content.monster(id) else { continue }
             let level = Int.random(in: minLevel...maxLevel)
-            let stats = species.stats(at: level)
+            let stats = stronger(species.stats(at: level), share: share)
             var enemy = Combatant(
                 id: 10 + index, side: .enemies, source: .wild(id), name: species.name, art: species.art,
                 level: level, element: species.element, stats: stats, hp: stats.hp, mp: stats.mp,
                 skills: species.skills, captureRate: species.captureRate
             )
             enemy.isRare = species.rare == true
+            enemy.share = share
             enemies.append(enemy)
         }
         let engine = BattleEngine(party: party, enemies: enemies, content: content, captureBonus: session.heroClass.captureBonus ?? 1)
@@ -1328,9 +1352,12 @@ final class BattleController {
                 continue
             }
             guard let id = foe.speciesID, let species = content.monster(id) else { continue }
-            exp += Int((Double(species.exp) * (1 + 0.35 * Double(foe.level - 1))).rounded())
-            gold += Int((Double(species.gold) * (1 + 0.25 * Double(foe.level - 1))).rounded())
-            session.record(.defeat, target: id)
+            // Worth its share of the bigger group it stands for (`Combatant.share`).
+            exp += Int((Double(species.exp) * (1 + 0.35 * Double(foe.level - 1)) * foe.share).rounded())
+            gold += Int((Double(species.gold) * (1 + 0.25 * Double(foe.level - 1)) * foe.share).rounded())
+            // Counted toward a quest as many times, on average, as it stands for.
+            let kills = Int(foe.share) + (Double.random(in: 0..<1) < foe.share - Double(Int(foe.share)) ? 1 : 0)
+            for _ in 0..<max(1, kills) { session.record(.defeat, target: id) }
             session.beatMonster(id, level: foe.level)
         }
         // Into your purse (`GameSession.gainGold`).
@@ -1407,7 +1434,7 @@ final class BattleController {
             guard foe.side == .enemies, !foe.isCaptured, !foe.hasFled, case .wild = foe.source else { return false }
             return true
         }
-        let worth = defeatedWild.reduce(0) { $0 + GameSession.dropWorth(level: $1.level, heroLevel: heroLevel) }
+        let worth = defeatedWild.reduce(0) { $0 + GameSession.dropWorth(level: $1.level, heroLevel: heroLevel) * $1.share }
 
         // Whatever doesn't fit in the bag is left behind (`GameSession.addItem`), so only what does is
         // found. A potion about one fight in four, for three monsters at your level.
@@ -1446,7 +1473,7 @@ final class BattleController {
         for foe in defeatedWild {
             guard let id = foe.speciesID else { continue }
             let isBoss = content.monster(id)?.boss == true
-            let chance = min(0.5, 0.35 * GameSession.dropWorth(level: foe.level, heroLevel: heroLevel))
+            let chance = min(0.9, 0.35 * GameSession.dropWorth(level: foe.level, heroLevel: heroLevel) * foe.share)
             for _ in 0..<(isBoss ? 3 : 1) where isBoss || Double.random(in: 0..<1) < chance {
                 guard let material = session.materialDrop(level: foe.level), session.addItem(material.id) else { continue }
                 loot[material.id, default: 0] += 1

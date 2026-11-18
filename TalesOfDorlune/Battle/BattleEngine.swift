@@ -80,6 +80,10 @@ struct Combatant: Identifiable {
     var raceID: String?
     /// Which wave of a boss fight it comes in with (1 for everyone else).
     var wave = 1
+    /// How many of the old, bigger group a wild monster stands for (`BattleController.maxEnemies`):
+    /// fights hold six at most, each with that much more HP and worth that much more EXP, gold,
+    /// drops and quest kills, so a fight lasts and pays about as it did (the user, 2026-11-18).
+    var share = 1.0
     /// A companion: the fighter it came with, who it stands behind.
     var ownerID: Int?
     /// The monster kind of a companion that isn't wild (a rival's), for a Seal Stone to keep.
