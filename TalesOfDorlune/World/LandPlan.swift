@@ -192,11 +192,19 @@ final class LandPlanner {
             }
         }
         // Mossy rocks standing in the shallows (the user, 2026-11-16: "We should also have some rocks"),
-        // a few to a lake, in the water just off its shore; not where a bridge or a lily pad is.
+        // a few to a lake, in the water just off its shore; not where a lily pad is, nor within two cells
+        // of a bridge or jetty: one stood in front of a jetty's post and hid it (the user, 2026-11-18).
         let pads = Set(plan.lilyPads.map(\.cell))
+        let bridges = map.bridgeCells
+        func nearBridge(_ cell: GridPoint) -> Bool {
+            for dc in -2...2 {
+                for dr in -2...2 where bridges.contains(GridPoint(col: cell.col + dc, row: cell.row + dr)) { return true }
+            }
+            return false
+        }
         var rockRNG = SeededRandom(text: def.id + "/water-rocks")
         for shore in map.lakes.map({ $0.water }) + [map.river] {
-            for cell in shore.sorted(by: WorldMap.inOrder) where !map.bridgeCells.contains(cell) && !pads.contains(cell) {
+            for cell in shore.sorted(by: WorldMap.inOrder) where !nearBridge(cell) && !pads.contains(cell) {
                 let banks = [(1, 0), (-1, 0), (0, 1), (0, -1)].filter { offset in
                     let land = GridPoint(col: cell.col + offset.0, row: cell.row + offset.1)
                     return map.contains(land) && map.ground[land.row][land.col] != .water
