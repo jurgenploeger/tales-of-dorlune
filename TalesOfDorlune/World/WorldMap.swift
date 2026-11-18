@@ -2700,7 +2700,7 @@ nonisolated final class WorldMap: @unchecked Sendable {
                 attempts += 1
                 let middle = GridPoint(col: Int.random(in: 8..<max(9, columns - 8), using: &draw),
                                        row: Int.random(in: 8..<max(9, rows - 8), using: &draw))
-                guard !places.contains(where: { max(abs($0.middle.col - middle.col), abs($0.middle.row - middle.row)) < 18 }) else { continue }
+                guard !places.contains(where: { max(abs($0.middle.col - middle.col), abs($0.middle.row - middle.row)) < 14 }) else { continue }
                 // Its own ground, all open.
                 var fits = true
                 check: for dr in -reach...reach {
@@ -2765,8 +2765,9 @@ nonisolated final class WorldMap: @unchecked Sendable {
     }
 
     /// The cells of a place that are bare earth (drawn as the land's path): a farm's field (five by
-    /// three, behind its middle) and its yard in front; the ring inside a ruin's stones (not its
-    /// middle, where its pillar lies); a camp's trodden ground.
+    /// three, behind its middle) and its yard in front; the ring inside a ruin's stones or round a
+    /// rest's well (not its middle, where its pillar or well stands); a camp's trodden ground, a
+    /// graveyard's.
     static func earth(of kind: String, at middle: GridPoint) -> [GridPoint] {
         var cells: [GridPoint] = []
         switch kind {
@@ -2777,7 +2778,7 @@ nonisolated final class WorldMap: @unchecked Sendable {
             for dc in -1...1 {
                 for dr in -2...(-1) { cells.append(GridPoint(col: middle.col + dc, row: middle.row + dr)) }
             }
-        case "ruin":
+        case "ruin", "rest":
             for dc in -1...1 {
                 for dr in -1...1 where dc != 0 || dr != 0 { cells.append(GridPoint(col: middle.col + dc, row: middle.row + dr)) }
             }

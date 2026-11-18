@@ -1023,3 +1023,8 @@ night_curve_town | newgame,level=40,map=goldburg,weather=clear,hour=23,curve | 8
 night_curve_meadow | newgame,map=sunny_meadow,weather=clear,hour=23,curve | 8
 dusk_curve_meadow | newgame,map=sunny_meadow,weather=clear,hour=18,curve | 8
 night_plain_meadow | newgame,map=sunny_meadow,weather=clear,hour=23,nocurve | 8
+place_snow    | newgame,level=100,map=snow_white_forest,at=place,weather=clear,hour=12 | 8
+place_candy   | newgame,level=80,map=candy_mountain,at=place,weather=clear,hour=12 | 8
+place_valley  | newgame,level=60,map=valley_of_fear,at=place,weather=clear,hour=12 | 8
+place_shore   | newgame,level=10,map=pineapple_shore,at=place,weather=clear,hour=12 | 8
+place_rest    | newgame,map=sunny_meadow,at=place3,weather=clear,hour=12 | 8

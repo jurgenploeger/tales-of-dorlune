@@ -1884,6 +1884,10 @@
           {
             "kind": "ruin",
             "count": 1
+          },
+          {
+            "kind": "rest",
+            "count": 1
           }
         ]
       },
@@ -2151,7 +2155,7 @@
         "ground": "tile_sand",
         "path": "tile_path",
         "accent": "tile_shells",
-        "accentPatches": 90,
+        "accentPatches": 36,
         "water": "tile_water",
         "ponds": 32,
         "hills": {
@@ -2359,6 +2363,29 @@
             "art": "bush",
             "weight": 1
           }
+        ],
+        "places": [
+          {
+            "kind": "camp",
+            "count": 2,
+            "art": {
+              "tent": "beach_umbrella",
+              "seat": "driftwood"
+            }
+          },
+          {
+            "kind": "ruin",
+            "count": 1,
+            "art": {
+              "centre": "sandcastle",
+              "ring": "seashells"
+            }
+          }
+        ],
+        "groves": true,
+        "accentSize": [
+          3,
+          7
         ]
       },
       "exits": [
@@ -2962,6 +2989,10 @@
           {
             "kind": "camp",
             "count": 1
+          },
+          {
+            "kind": "graveyard",
+            "count": 1
           }
         ]
       },
@@ -3268,7 +3299,7 @@
         "ground": "tile_forest_floor",
         "path": "tile_path",
         "accent": "tile_flowers",
-        "accentPatches": 112,
+        "accentPatches": 45,
         "water": "tile_water",
         "ponds": 8,
         "fairyRings": {
@@ -3737,6 +3768,35 @@
             "every": 2,
             "weight": 2
           }
+        ],
+        "places": [
+          {
+            "kind": "farm",
+            "count": 1,
+            "art": {
+              "crop": "berry_bush"
+            }
+          },
+          {
+            "kind": "camp",
+            "count": 1
+          },
+          {
+            "kind": "rest",
+            "count": 1,
+            "art": {
+              "centre": "bird_bath"
+            }
+          },
+          {
+            "kind": "ruin",
+            "count": 1
+          }
+        ],
+        "groves": true,
+        "accentSize": [
+          3,
+          7
         ]
       },
       "exits": [
@@ -3822,6 +3882,10 @@
           {
             "kind": "songbird",
             "count": 3
+          },
+          {
+            "kind": "chick",
+            "count": 4
           }
         ],
         "birds": "songbirds"
@@ -5229,7 +5293,7 @@
         "blend": 5,
         "path": "tile_snow_path",
         "accent": "tile_grass",
-        "accentPatches": 45,
+        "accentPatches": 18,
         "water": "tile_ice",
         "ponds": 9,
         "hills": {
@@ -5524,6 +5588,25 @@
             "art": "snow_bush",
             "weight": 1
           }
+        ],
+        "places": [
+          {
+            "kind": "camp",
+            "count": 2
+          },
+          {
+            "kind": "ruin",
+            "count": 1,
+            "art": {
+              "ring": "ice_rock",
+              "centre": "snowman_prop"
+            }
+          }
+        ],
+        "groves": true,
+        "accentSize": [
+          3,
+          7
         ]
       },
       "exits": [
@@ -5910,7 +5993,7 @@
         "ground": "tile_swamp",
         "path": "tile_path",
         "accent": "tile_dark_grass",
-        "accentPatches": 68,
+        "accentPatches": 27,
         "water": "tile_water",
         "ponds": 12,
         "lakes": {
@@ -6154,6 +6237,32 @@
             "art": "autumn_reeds",
             "weight": 1
           }
+        ],
+        "places": [
+          {
+            "kind": "ruin",
+            "count": 1,
+            "art": {
+              "ring": "swamp_stump",
+              "centre": "glow_moss_rock"
+            }
+          },
+          {
+            "kind": "camp",
+            "count": 1
+          },
+          {
+            "kind": "graveyard",
+            "count": 1,
+            "art": {
+              "tree": "swamp_stump"
+            }
+          }
+        ],
+        "groves": true,
+        "accentSize": [
+          3,
+          7
         ]
       },
       "exits": [
@@ -6400,7 +6509,7 @@
         "ground": "tile_dark_grass",
         "path": "tile_path",
         "accent": "tile_scree",
-        "accentPatches": 68,
+        "accentPatches": 27,
         "hills": {
           "count": 3,
           "size": [
@@ -6602,6 +6711,28 @@
             "kind": "fence",
             "weight": 1
           }
+        ],
+        "places": [
+          {
+            "kind": "graveyard",
+            "count": 2
+          },
+          {
+            "kind": "ruin",
+            "count": 1
+          },
+          {
+            "kind": "camp",
+            "count": 1,
+            "art": {
+              "stores": "skull_bones"
+            }
+          }
+        ],
+        "groves": true,
+        "accentSize": [
+          3,
+          7
         ]
       },
       "exits": [
@@ -8586,8 +8717,13 @@
             "kind": "camp",
             "count": 2,
             "art": {
+              "stores": "desert_pot",
               "seat": "wooden_crates"
             }
+          },
+          {
+            "kind": "rest",
+            "count": 1
           }
         ]
       },
@@ -8975,7 +9111,7 @@
         "ground": "tile_scree",
         "path": "tile_path",
         "accent": "tile_cave_floor",
-        "accentPatches": 68,
+        "accentPatches": 27,
         "hills": {
           "count": 3,
           "size": [
@@ -9209,6 +9345,29 @@
             "kind": "fence",
             "weight": 1
           }
+        ],
+        "places": [
+          {
+            "kind": "camp",
+            "count": 2,
+            "art": {
+              "stores": "mine_cart",
+              "seat": "wooden_crates"
+            }
+          },
+          {
+            "kind": "ruin",
+            "count": 1,
+            "art": {
+              "ring": "crystal_shard",
+              "centre": "crystal_geode"
+            }
+          }
+        ],
+        "groves": true,
+        "accentSize": [
+          3,
+          7
         ]
       },
       "exits": [
@@ -9474,7 +9633,7 @@
         "ground": "tile_scree",
         "path": "tile_snow_path",
         "accent": "tile_snow",
-        "accentPatches": 90,
+        "accentPatches": 36,
         "hills": {
           "count": 3,
           "size": [
@@ -9719,6 +9878,28 @@
             "art": "snow_bush",
             "weight": 1
           }
+        ],
+        "places": [
+          {
+            "kind": "ruin",
+            "count": 2,
+            "art": {
+              "centre": "statue"
+            }
+          },
+          {
+            "kind": "rest",
+            "count": 1,
+            "art": {
+              "centre": "fountain",
+              "lamp": "moon_lantern_post"
+            }
+          }
+        ],
+        "groves": true,
+        "accentSize": [
+          3,
+          7
         ]
       },
       "exits": [
@@ -10056,7 +10237,7 @@
         "ground": "tile_grass",
         "path": "tile_path",
         "accent": "tile_flowers",
-        "accentPatches": 70,
+        "accentPatches": 28,
         "water": "tile_water",
         "ponds": 9,
         "fairyRings": {
@@ -10528,6 +10709,21 @@
             "every": 2,
             "weight": 1
           }
+        ],
+        "places": [
+          {
+            "kind": "farm",
+            "count": 1
+          },
+          {
+            "kind": "ruin",
+            "count": 1
+          }
+        ],
+        "groves": true,
+        "accentSize": [
+          3,
+          7
         ]
       },
       "ambience": {
@@ -10565,6 +10761,10 @@
           },
           {
             "kind": "songbird",
+            "count": 4
+          },
+          {
+            "kind": "chick",
             "count": 4
           }
         ],
@@ -11125,7 +11325,7 @@
         "ground": "tile_grass",
         "path": "tile_sugar_path",
         "accent": "tile_flowers",
-        "accentPatches": 105,
+        "accentPatches": 42,
         "water": "tile_chocolate",
         "ponds": 9,
         "fairyRings": {
@@ -11549,6 +11749,31 @@
             "art": "flowering_bush",
             "weight": 1
           }
+        ],
+        "places": [
+          {
+            "kind": "farm",
+            "count": 1,
+            "art": {
+              "crop": "lollipop_pink",
+              "scarecrow": "jack_in_the_box",
+              "stack": "giant_cupcake"
+            }
+          },
+          {
+            "kind": "rest",
+            "count": 1,
+            "art": {
+              "centre": "giant_cupcake",
+              "lamp": "candy_cane",
+              "stores": "gift_box"
+            }
+          }
+        ],
+        "groves": true,
+        "accentSize": [
+          3,
+          7
         ]
       },
       "ambience": {
@@ -11587,6 +11812,10 @@
           {
             "kind": "songbird",
             "count": 3
+          },
+          {
+            "kind": "chick",
+            "count": 4
           }
         ],
         "birds": "songbirds",
@@ -11801,7 +12030,7 @@
         "ground": "tile_dark_grass",
         "path": "tile_path",
         "accent": "tile_dark_flowers",
-        "accentPatches": 40,
+        "accentPatches": 16,
         "water": "tile_water",
         "ponds": 6,
         "fairyRings": {
@@ -12074,6 +12303,24 @@
             "every": 2,
             "weight": 1
           }
+        ],
+        "places": [
+          {
+            "kind": "camp",
+            "count": 1,
+            "art": {
+              "stores": "bone_pile"
+            }
+          },
+          {
+            "kind": "graveyard",
+            "count": 1
+          }
+        ],
+        "groves": true,
+        "accentSize": [
+          3,
+          7
         ]
       },
       "ambience": {
@@ -13239,7 +13486,7 @@
         "ground": "tile_grass",
         "path": "tile_path",
         "accent": "tile_flowers",
-        "accentPatches": 70,
+        "accentPatches": 28,
         "water": "tile_water",
         "ponds": 5,
         "lakes": {
@@ -13706,6 +13953,31 @@
             "every": 2,
             "weight": 2
           }
+        ],
+        "places": [
+          {
+            "kind": "rest",
+            "count": 1,
+            "art": {
+              "centre": "fountain"
+            }
+          },
+          {
+            "kind": "rest",
+            "count": 1,
+            "art": {
+              "centre": "bird_bath"
+            }
+          },
+          {
+            "kind": "farm",
+            "count": 1
+          }
+        ],
+        "groves": true,
+        "accentSize": [
+          3,
+          7
         ]
       },
       "ambience": {
@@ -13748,6 +14020,10 @@
           {
             "kind": "songbird",
             "count": 3
+          },
+          {
+            "kind": "chick",
+            "count": 4
           }
         ],
         "birds": "songbirds"
@@ -13945,7 +14221,7 @@
         "ground": "tile_swamp",
         "path": "tile_path",
         "accent": "tile_dark_grass",
-        "accentPatches": 30,
+        "accentPatches": 12,
         "water": "tile_water",
         "ponds": 3,
         "lakes": {
@@ -14186,6 +14462,24 @@
             "every": 2,
             "weight": 1
           }
+        ],
+        "places": [
+          {
+            "kind": "ruin",
+            "count": 1,
+            "art": {
+              "centre": "statue"
+            }
+          },
+          {
+            "kind": "camp",
+            "count": 1
+          }
+        ],
+        "groves": true,
+        "accentSize": [
+          3,
+          7
         ]
       },
       "ambience": {
@@ -14419,7 +14713,7 @@
         "ground": "tile_dark_grass",
         "path": "tile_path",
         "accent": "tile_scree",
-        "accentPatches": 30,
+        "accentPatches": 12,
         "hills": {
           "count": 2,
           "size": [
@@ -14643,6 +14937,26 @@
             "kind": "wall",
             "weight": 1
           }
+        ],
+        "places": [
+          {
+            "kind": "graveyard",
+            "count": 1
+          },
+          {
+            "kind": "rest",
+            "count": 1,
+            "art": {
+              "centre": "statue",
+              "lamp": "spooky_lantern",
+              "stores": "toy_blocks"
+            }
+          }
+        ],
+        "groves": true,
+        "accentSize": [
+          3,
+          7
         ]
       },
       "ambience": {
@@ -14977,7 +15291,7 @@
         "ground": "tile_sand",
         "path": "tile_path",
         "accent": "tile_shells",
-        "accentPatches": 40,
+        "accentPatches": 16,
         "water": "tile_water",
         "ponds": 6,
         "lakes": {
@@ -15218,6 +15532,29 @@
             "art": "bush",
             "weight": 1
           }
+        ],
+        "places": [
+          {
+            "kind": "camp",
+            "count": 2,
+            "art": {
+              "tent": "beach_umbrella",
+              "seat": "driftwood"
+            }
+          },
+          {
+            "kind": "ruin",
+            "count": 1,
+            "art": {
+              "centre": "sand_ruin",
+              "ring": "broken_pillar"
+            }
+          }
+        ],
+        "groves": true,
+        "accentSize": [
+          3,
+          7
         ]
       },
       "ambience": {
@@ -15446,7 +15783,7 @@
         "ground": "tile_dark_grass",
         "path": "tile_path",
         "accent": "tile_dark_flowers",
-        "accentPatches": 40,
+        "accentPatches": 16,
         "water": "tile_water",
         "ponds": 6,
         "fairyRings": {
@@ -15721,6 +16058,28 @@
             "kind": "fence",
             "weight": 2
           }
+        ],
+        "places": [
+          {
+            "kind": "farm",
+            "count": 1
+          },
+          {
+            "kind": "graveyard",
+            "count": 1
+          },
+          {
+            "kind": "rest",
+            "count": 1,
+            "art": {
+              "lamp": "spooky_lantern"
+            }
+          }
+        ],
+        "groves": true,
+        "accentSize": [
+          3,
+          7
         ]
       },
       "ambience": {
@@ -16072,7 +16431,7 @@
         "ground": "tile_desert",
         "path": "tile_path",
         "accent": "tile_sand",
-        "accentPatches": 30,
+        "accentPatches": 12,
         "water": "tile_water",
         "ponds": 4,
         "hills": {
@@ -16304,6 +16663,28 @@
             "art": "dry_bush",
             "weight": 1
           }
+        ],
+        "places": [
+          {
+            "kind": "ruin",
+            "count": 2,
+            "art": {
+              "centre": "sand_ruin",
+              "ring": "broken_pillar"
+            }
+          },
+          {
+            "kind": "camp",
+            "count": 1,
+            "art": {
+              "stores": "desert_pot"
+            }
+          }
+        ],
+        "groves": true,
+        "accentSize": [
+          3,
+          7
         ]
       },
       "ambience": {
@@ -16667,7 +17048,7 @@
         "ground": "tile_sand",
         "path": "tile_path",
         "accent": "tile_shells",
-        "accentPatches": 40,
+        "accentPatches": 16,
         "water": "tile_water",
         "ponds": 14,
         "hills": {
@@ -16871,6 +17252,29 @@
             "art": "bush",
             "weight": 1
           }
+        ],
+        "places": [
+          {
+            "kind": "camp",
+            "count": 1,
+            "art": {
+              "tent": "beach_umbrella",
+              "seat": "driftwood"
+            }
+          },
+          {
+            "kind": "ruin",
+            "count": 1,
+            "art": {
+              "centre": "sandcastle",
+              "ring": "seashells"
+            }
+          }
+        ],
+        "groves": true,
+        "accentSize": [
+          3,
+          7
         ]
       },
       "ambience": {
@@ -17146,7 +17550,7 @@
         "blend": 5,
         "path": "tile_snow_path",
         "accent": "tile_grass",
-        "accentPatches": 20,
+        "accentPatches": 8,
         "water": "tile_water",
         "ponds": 3,
         "lakes": {
@@ -17421,6 +17825,32 @@
             "art": "snow_bush",
             "weight": 1
           }
+        ],
+        "places": [
+          {
+            "kind": "camp",
+            "count": 1
+          },
+          {
+            "kind": "ruin",
+            "count": 1,
+            "art": {
+              "ring": "ice_rock",
+              "centre": "statue"
+            }
+          },
+          {
+            "kind": "rest",
+            "count": 1,
+            "art": {
+              "centre": "snowman_prop"
+            }
+          }
+        ],
+        "groves": true,
+        "accentSize": [
+          3,
+          7
         ]
       },
       "ambience": {
@@ -17673,7 +18103,7 @@
         "ground": "tile_scree",
         "path": "tile_path",
         "accent": "tile_cave_floor",
-        "accentPatches": 30,
+        "accentPatches": 12,
         "hills": {
           "count": 2,
           "size": [
@@ -17867,6 +18297,28 @@
             "every": 3,
             "weight": 1
           }
+        ],
+        "places": [
+          {
+            "kind": "ruin",
+            "count": 2,
+            "art": {
+              "ring": "broken_pillar",
+              "centre": "statue"
+            }
+          },
+          {
+            "kind": "rest",
+            "count": 1,
+            "art": {
+              "centre": "fountain"
+            }
+          }
+        ],
+        "groves": true,
+        "accentSize": [
+          3,
+          7
         ]
       },
       "ambience": {
@@ -18562,7 +19014,7 @@
         "ground": "tile_forest_floor",
         "path": "tile_path",
         "accent": "tile_flowers",
-        "accentPatches": 50,
+        "accentPatches": 20,
         "water": "tile_water",
         "ponds": 5,
         "fairyRings": {
@@ -18971,6 +19423,25 @@
             "kind": "wall",
             "weight": 1
           }
+        ],
+        "places": [
+          {
+            "kind": "ruin",
+            "count": 1
+          },
+          {
+            "kind": "camp",
+            "count": 1
+          },
+          {
+            "kind": "rest",
+            "count": 1
+          }
+        ],
+        "groves": true,
+        "accentSize": [
+          3,
+          7
         ]
       },
       "ambience": {
@@ -19331,7 +19802,7 @@
         "ground": "tile_grass",
         "path": "tile_path",
         "accent": "tile_flowers",
-        "accentPatches": 40,
+        "accentPatches": 16,
         "water": "tile_water",
         "ponds": 6,
         "lakes": {
@@ -19632,6 +20103,29 @@
             "art": "lilac_bush",
             "weight": 1
           }
+        ],
+        "places": [
+          {
+            "kind": "ruin",
+            "count": 1,
+            "art": {
+              "ring": "star_crystal",
+              "centre": "statue"
+            }
+          },
+          {
+            "kind": "rest",
+            "count": 1,
+            "art": {
+              "centre": "fountain",
+              "lamp": "moon_lantern_post"
+            }
+          }
+        ],
+        "groves": true,
+        "accentSize": [
+          3,
+          7
         ]
       },
       "ambience": {

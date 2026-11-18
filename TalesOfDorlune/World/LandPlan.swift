@@ -854,7 +854,8 @@ final class LandPlanner {
     /// The pieces of the land's places to find (`WorldMap.layPlaces` kept their ground and laid
     /// their earth and footpaths): a farm's crop in rows on its field (to walk through), a scarecrow
     /// behind it and haystacks by its yard; a ruin's ring of standing stones round a fallen pillar,
-    /// open where its footpath comes in; a camp's tent, its fire and what its people left about.
+    /// open where its footpath comes in; a camp's tent, its fire and what its people left about; a
+    /// graveyard's stones and lantern; a rest's well, benches and lamp.
     /// Nothing that's in the way stands on its earth or its footpath. Draws of their own.
     private func planPlaces() {
         guard !map.places.isEmpty else { return }
@@ -894,6 +895,23 @@ final class LandPlanner {
                     put(ring, at(dc, dr), blocking: true, scale: CGFloat.random(in: 0.85...1.05, using: &draw))
                 }
                 put(own["centre"] ?? "broken_pillar", m, blocking: true, nudged: false)
+            case "graveyard":
+                // Graves in a row behind and at either side, a lantern by the way in.
+                let stone = own["stone"] ?? "tombstone"
+                for (dc, dr) in [(-2, 2), (0, 2), (2, 2), (-2, 0), (2, 0), (-3, 2), (3, 1)] {
+                    guard Double.random(in: 0..<1, using: &draw) < 0.9 else { continue }
+                    put(stone, at(dc, dr), blocking: true, scale: CGFloat.random(in: 0.9...1.1, using: &draw))
+                }
+                put(own["light"] ?? "spooky_lantern", at(-2, -2), blocking: true, nudged: false)
+                put(own["tree"] ?? "dead_tree", at(3, 3), blocking: true)
+            case "rest":
+                // A well (or a fountain, a statue) with benches either side, a lamp and stores behind.
+                put(own["centre"] ?? "water_well", m, blocking: true, nudged: false)
+                let bench = own["bench"] ?? "bench"
+                put(bench, at(-2, 0), blocking: true, nudged: false)
+                put(bench, at(2, 0), blocking: true, nudged: false)
+                put(own["lamp"] ?? "street_lamp", at(2, 2), blocking: true, nudged: false)
+                put(own["stores"] ?? "barrels", at(-2, 2), blocking: true)
             default:
                 put(own["tent"] ?? "torn_tent", at(0, 2), blocking: true, scale: 1.3, nudged: false)
                 put(own["fire"] ?? "brazier", at(-2, 0), blocking: true, nudged: false)
@@ -930,7 +948,7 @@ final class LandPlanner {
     private func suits(_ placement: MapDef.PropPlacement, _ cell: GridPoint) -> Bool {
         guard def.theme.groves == true, placement.within == nil else { return true }
         let name = placement.art
-        if placement.blocking, name.contains("tree") || name.contains("palm") || name.contains("fir") || name.contains("willow") {
+        if placement.blocking, name.contains("tree") || name.contains("palm") || name.contains("pine") || name.contains("willow") {
             return grove(cell) > -0.12
         }
         if !placement.blocking, name.contains("daisy") || name.contains("flower") || name.contains("tulip") || name.contains("clover") {

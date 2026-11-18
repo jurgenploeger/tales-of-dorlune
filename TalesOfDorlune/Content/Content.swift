@@ -592,11 +592,13 @@ nonisolated struct MapDef: Decodable, Identifiable, Sendable {
     nonisolated struct Site: Decodable, Sendable {
         /// farm (a field of bare earth with a crop in rows, a scarecrow behind it, haystacks by its
         /// yard) | ruin (a ring of standing stones round a fallen pillar, worn earth inside it) |
-        /// camp (a tent by a fire on trodden ground, with what its people left about).
+        /// camp (a tent by a fire on trodden ground, with what its people left about) | graveyard (graves
+        /// in a row, a lantern, a dead tree) | rest (a well with benches, a lamp and stores).
         let kind: String
         let count: Int
         /// Its pieces' art where not the kind's own: `crop`, `scarecrow`, `stack` (a farm); `ring`,
-        /// `centre` (a ruin); `tent`, `fire`, `stores` (a camp).
+        /// `centre` (a ruin); `tent`, `fire`, `stores`, `seat` (a camp); `stone`, `light`, `tree` (a
+        /// graveyard); `centre`, `bench`, `lamp`, `stores` (a rest).
         let art: [String: String]?
     }
 

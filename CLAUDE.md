@@ -217,8 +217,8 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   instead of swaying, caves keep the old sway (their depth of field swaps textures). Rerun it after
   redrawing a rigged sprite (`check_content.py` checks each rig fits); `--sheet` shows the clumps, `--gif`
   a grove in the wind.
-- Less boring lands (the user's pick from `tools/land_preview.py`, 2026-11-17; in Sunny Meadow, Twilight Woods and
-  Genie Desert first, to roll out once seen): theme `places` are places to find, a farm, a ruin or a camp
+- Less boring lands (the user's pick from `tools/land_preview.py`, 2026-11-17; in every wild land since 2026-11-18,
+  each with pieces of its own): theme `places` are places to find, a farm, a ruin, a camp, a graveyard or a rest
   (`MapDef.Site`), each a few cells off a road with a footpath to it: `WorldMap.layPlaces` finds flat open ground
   before the hills are raised, keeps it and lays its earth as path (`WorldMap.earth`); `LandPlanner.planPlaces` sets
   its pieces down (a crop in rows, a scarecrow, haystacks; a ring of standing stones round a pillar; a tent, a fire
