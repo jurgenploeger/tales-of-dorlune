@@ -1941,7 +1941,8 @@ nonisolated final class WorldMap: @unchecked Sendable {
     /// Sets down the map's own buildings (a 3×2 footprint above the anchor, like the shops, or its own
     /// `size`) where maps.json puts them. One that would stand on a road, water, the town fence, a
     /// terrace's wall, an NPC or another building (maps.json put some right on a street) moves to the nearest plot
-    /// that's clear, ring by ring, up to 8 cells away. Never on a terrace or its stairs.
+    /// that's clear, ring by ring, up to 12 cells away (8 till the ground round the terraces was kept clear, 2026-11-18:
+    /// three of Ingothold's then found none). Never on a terrace or its stairs.
     /// Out on the road, like in town: no tree or bush on an NPC's spot or in front of it (down the
     /// screen, toward you), where it would hide them. A boss is big, and the trees around it tall,
     /// so it gets a wider clearing. You can still walk there.
@@ -2015,7 +2016,7 @@ nonisolated final class WorldMap: @unchecked Sendable {
             let footprint = building.footprint
             var plot: GridPoint?
             search: for clear in [true, false] {
-                for radius in 0...8 {
+                for radius in 0...12 {
                     for dr in -radius...radius {
                         for dc in -radius...radius where max(abs(dc), abs(dr)) == radius {
                             let candidate = GridPoint(col: wanted.col + dc, row: wanted.row + dr)
