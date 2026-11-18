@@ -137,19 +137,16 @@ p { margin: 0 0 1em; max-width: 64ch; }
 .site-header .wrap { display: flex; align-items: center; gap: 14px; min-height: 60px; flex-wrap: wrap; padding-top: 6px; padding-bottom: 6px; }
 .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); font-weight: 600; font-size: 1.15rem; white-space: nowrap; }
 .brand img { width: 40px; height: 40px; border-radius: 10px; border: 2px solid var(--edge); }
-.nav { display: flex; gap: 2px; flex: 1; overflow-x: auto; scrollbar-width: none; }
+.nav { display: flex; gap: 2px; margin-left: auto; overflow-x: auto; scrollbar-width: none; }
 .nav::-webkit-scrollbar { display: none; }
 .nav a { color: var(--ink); text-decoration: none; font-weight: 600; padding: 8px 11px; border-radius: 999px; white-space: nowrap; }
 .nav a:hover { background: var(--paper-2); }
 .nav a[aria-current='page'] { background: var(--midnight); color: var(--cream); }
 .header-tools { display: flex; align-items: center; gap: 8px; }
-.searchbox { display: flex; }
-.searchbox input { width: 150px; }
 @media (max-width: 860px) {
   .site-header .wrap { gap: 8px; }
   .nav { order: 3; flex-basis: 100%; margin: 0 -8px; }
   .header-tools { margin-left: auto; }
-  .searchbox input { width: 110px; }
 }
 
 /* ---------- controls ---------- */
@@ -173,7 +170,7 @@ select { padding-right: 30px; }
 .btn.small-btn { font-size: 0.95rem; padding: 6px 14px; min-height: 38px; box-shadow: 0 3px 0 var(--logo-ink); }
 .btn[aria-disabled='true'] { cursor: default; }
 .btn[aria-disabled='true']:hover { transform: none; box-shadow: 0 4px 0 var(--logo-ink); }
-.icon-btn { background: none; border: 2px solid var(--edge); color: var(--ink); border-radius: 999px; width: 40px; height: 40px; cursor: pointer; font-size: 1.1rem; line-height: 1; }
+.icon-btn { display: inline-grid; place-items: center; text-decoration: none; background: none; border: 2px solid var(--edge); color: var(--ink); border-radius: 999px; width: 40px; height: 40px; cursor: pointer; font-size: 1.1rem; line-height: 1; }
 
 /* ---------- paper ---------- */
 .card {
@@ -326,19 +323,22 @@ ul.plain li { padding: 3px 0; }
 .worldmap a small { display: block; font-weight: 500; font-size: 0.85em; }
 
 /* ---------- scenes: a land from the side, in the game's own art ---------- */
-.scene { position: relative; overflow: hidden; background: linear-gradient(to bottom, var(--sky-a), var(--sky-b)); color: var(--sky-text); --land-h: calc(132px * var(--px)); }
+.scene { position: relative; overflow: hidden; background: linear-gradient(to bottom, var(--sky-a), var(--sky-b)); color: #0f264d; --art-h: 230px; --land-h: calc(var(--art-h) * var(--px)); }
 .scene.dark { color: var(--cream); }
-.scene-sky { position: relative; z-index: 2; padding-bottom: calc(var(--land-h) * 0.9); }
-.scene-land { position: absolute; left: 0; right: 0; bottom: 0; height: var(--land-h); background: var(--art) repeat-x center bottom / auto var(--land-h); image-rendering: pixelated; z-index: 1; }
-.scene-stand { position: absolute; left: 0; right: 0; bottom: calc(15px * var(--px)); height: 0; z-index: 3; }
-.stand { position: absolute; bottom: 0; transform: translateX(-50%); line-height: 0; }
+.scene-sky { position: relative; z-index: 2; padding-bottom: calc(var(--land-h) * 0.8); }
+/* The land at the game's own angle, its far edge fading into the sky like the game's haze. */
+.scene-land { position: absolute; left: 0; right: 0; bottom: 0; height: var(--land-h); background: var(--art) no-repeat center bottom / auto var(--land-h); image-rendering: pixelated; z-index: 1;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 30%); mask-image: linear-gradient(to bottom, transparent 0, #000 30%); }
+@media (min-width: 2200px) { .scene-land { background-size: cover; } }
+.scene-stand { position: absolute; left: 0; right: 0; bottom: calc(var(--land-h) * 0.07); height: 0; z-index: 3; }
+.stand { position: absolute; bottom: 0; transform: translateX(-50%); line-height: 0; filter: drop-shadow(0 calc(2px * var(--px)) 0 rgba(14, 21, 51, 0.28)); }
 .stand img { height: auto; max-width: none; }
-a.stand:hover img, a.stand:focus-visible img { filter: drop-shadow(0 0 0 #fff) drop-shadow(0 calc(-1px * var(--px)) 0 #fff); }
+a.stand:hover img, a.stand:focus-visible img { filter: brightness(1.15); transform-origin: bottom; }
 .scene-clouds { position: absolute; inset: 0 0 auto 0; height: calc(96px * var(--px)); background: url(/img/clouds.png) repeat-x 0 0 / auto 100%; image-rendering: pixelated; opacity: 0.95; animation: drift 240s linear infinite; }
 @keyframes drift { to { background-position-x: calc(-640px * var(--px)); } }
 @media (prefers-reduced-motion: reduce) { .scene-clouds { animation: none; } }
 .scene-stars { position: absolute; inset: 0; background-image: radial-gradient(#fff 1px, transparent 1.6px), radial-gradient(#fff 1px, transparent 1.4px); background-size: 190px 170px, 130px 110px; background-position: 20px 30px, 90px 80px; opacity: 0.55; }
-@media (max-width: 700px) { .scene { --px: 2 !important; } }
+
 
 /* The captions of the App Store slides: the title in the logo's gold and outline, a tag on a dark plate. */
 .caption-title { font-family: var(--font-title); font-weight: 400; text-transform: uppercase; line-height: 1.02; font-size: clamp(2.2rem, 6vw, 4.2rem); margin: 0 0 14px; transform: rotate(-2deg); transform-origin: left bottom; }
@@ -353,7 +353,6 @@ a.stand:hover img, a.stand:focus-visible img { filter: drop-shadow(0 0 0 #fff) d
 .site-header.over { position: absolute; left: 0; right: 0; background: transparent; border: 0; box-shadow: none; }
 .site-header.over .brand, .site-header.over .nav a { color: #fff; text-shadow: 0 2px 0 rgba(14, 21, 51, 0.55); }
 .site-header.over .nav a:hover { background: rgba(14, 21, 51, 0.25); }
-.site-header.over input[type='search'] { background: rgba(255, 255, 255, 0.85); border-color: var(--midnight); }
 .site-header.over .icon-btn { background: rgba(255, 255, 255, 0.85); color: var(--midnight); border-color: var(--midnight); }
 .top { text-align: center; padding: clamp(96px, 13vw, 150px) 16px clamp(8px, 2vw, 24px); }
 .top .logo { width: min(620px, 90vw); height: auto; filter: drop-shadow(0 10px 24px rgba(14, 21, 51, 0.25)); }
@@ -370,6 +369,39 @@ a.stand:hover img, a.stand:focus-visible img { filter: drop-shadow(0 0 0 #fff) d
 .banner h1 { margin: 6px 0 8px; }
 .banner .crumbs, .banner .crumbs a { color: inherit; }
 .banner .chips { margin-bottom: 0; }
-.banner .scene-sky { padding-bottom: calc(var(--land-h) * 0.72); }
+.banner { --art-h: 120px; }
+.banner .scene-land { background-size: auto calc(230px * var(--px)); background-position: center 70%; }
+.banner .scene-sky { padding-bottom: calc(var(--land-h) * 0.85); }
 .banner + .page { padding-top: 0; }
 .banner + .page > .wrap > .card:first-child { margin-top: calc(-22px); position: relative; z-index: 4; }
+
+/* At night the scenes fall dark too: a night sky, the land dimmed and cooled, the clouds faint. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .scene { background: linear-gradient(to bottom, var(--night-top), var(--night-bottom)); color: var(--cream); }
+  :root:not([data-theme='light']) .scene-land { filter: brightness(0.5) saturate(0.85) contrast(1.05); }
+  :root:not([data-theme='light']) .scene-land::after { content: ''; position: absolute; inset: 0; background: rgba(29, 58, 112, 0.35); mix-blend-mode: multiply; }
+  :root:not([data-theme='light']) .scene-clouds { opacity: 0.16; }
+  :root:not([data-theme='light']) .stand img { filter: brightness(0.78); }
+  :root:not([data-theme='light']) .site-header.over .icon-btn, :root:not([data-theme='light']) .site-header.over input[type='search'] { background: rgba(14, 21, 51, 0.6); color: var(--cream); border-color: var(--cream); }
+  :root:not([data-theme='light']) .tagline-pill, :root:not([data-theme='light']) .btn.quiet { background: var(--cream); color: var(--midnight); }
+}
+:root[data-theme='dark'] .scene { background: linear-gradient(to bottom, var(--night-top), var(--night-bottom)); color: var(--cream); }
+:root[data-theme='dark'] .scene-land { filter: brightness(0.5) saturate(0.85) contrast(1.05); }
+:root[data-theme='dark'] .scene-land::after { content: ''; position: absolute; inset: 0; background: rgba(29, 58, 112, 0.35); mix-blend-mode: multiply; }
+:root[data-theme='dark'] .scene-clouds { opacity: 0.16; }
+:root[data-theme='dark'] .stand img { filter: brightness(0.78); }
+:root[data-theme='dark'] .site-header.over .icon-btn, :root[data-theme='dark'] .site-header.over input[type='search'] { background: rgba(14, 21, 51, 0.6); color: var(--cream); border-color: var(--cream); }
+:root[data-theme='dark'] .tagline-pill, :root[data-theme='dark'] .btn.quiet { background: var(--cream); color: var(--midnight); }
+
+/* ---------- the spotlight search ---------- */
+#spotlight { width: min(620px, calc(100vw - 24px)); margin: 12vh auto auto; padding: 0; color: var(--ink); background: var(--paper); border: 2px solid var(--edge); border-radius: 20px; box-shadow: 0 6px 0 var(--edge-deep), 0 30px 80px rgba(14, 21, 51, 0.5); overflow: hidden; }
+#spotlight::backdrop { background: rgba(14, 21, 51, 0.45); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+.spot-field { display: flex; align-items: center; gap: 10px; padding: 14px 16px; border-bottom: 2px solid var(--rule); }
+.spot-field input { flex: 1; min-width: 0; border: 0; border-radius: 0; padding: 4px 0; font-size: 1.2rem; background: none; outline: none; }
+.spot-close { font: inherit; font-size: 0.8rem; font-weight: 600; color: var(--ink-soft); background: var(--paper-2); border: 2px solid var(--rule); border-radius: 8px; padding: 2px 8px; cursor: pointer; }
+#spot-list { list-style: none; margin: 0; padding: 6px; max-height: 52vh; overflow-y: auto; }
+#spot-list a { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; padding: 10px 12px; border-radius: 12px; color: var(--ink); text-decoration: none; font-weight: 600; }
+#spot-list a span { font-weight: 500; font-size: 0.88rem; color: var(--ink-soft); white-space: nowrap; }
+#spot-list li[aria-selected] a, #spot-list a:hover { background: var(--paper-3); }
+#spot-status { margin: 0; padding: 14px 18px; }
+@media (prefers-reduced-transparency: reduce) { #spotlight::backdrop { -webkit-backdrop-filter: none; backdrop-filter: none; background: rgba(14, 21, 51, 0.8); } }

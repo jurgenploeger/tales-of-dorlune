@@ -259,7 +259,7 @@ def main():
                                  'stock': [iref(i) for i in npc.get('stock', [])],
                                  'given': [qref(q['id']) for q in quests if q['giver'] == npc['id']]})
         os.makedirs(os.path.join(SITE, 'public', 'scenes'), exist_ok=True)
-        scenes.scene(mp).save(os.path.join(SITE, 'public', 'scenes', l_slug[mp['id']] + '.png'), optimize=True)
+        scenes.view(mp).save(os.path.join(SITE, 'public', 'scenes', l_slug[mp['id']] + '.png'), optimize=True)
         out_lands.append({
             'slug': l_slug[mp['id']], 'name': mp['name'], 'kind': kind, 'sky': scenes.sky_of(mp), 'levels': enc.get('levels'),
             'groupSize': enc.get('groupSize'), 'depth': mp.get('depth'),
@@ -366,7 +366,7 @@ def main():
         'changelog': changelog,
         'world': world_map(maps, world, l_slug),
     }
-    scenes.scene(map_by[load('maps')['start']], width=960).save(os.path.join(SITE, 'public', 'scenes', 'hero.png'), optimize=True)
+    scenes.view(map_by[load('maps')['start']], height=290, seed=11).save(os.path.join(SITE, 'public', 'scenes', 'hero.png'), optimize=True)
     scenes.clouds().save(os.path.join(SITE, 'public', 'img', 'clouds.png'), optimize=True)
     os.makedirs(OUT, exist_ok=True)
     json.dump(game, open(os.path.join(OUT, 'game.json'), 'w'), ensure_ascii=False, separators=(',', ':'))

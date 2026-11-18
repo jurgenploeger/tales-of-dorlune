@@ -24,7 +24,7 @@ const maxStat = Math.max(...STATS.filter((s) => s !== 'hp').map((s) => statAt(m,
           {m.rare && <li><span class="chip rare">Rare</span></li>}
         </ul>
   </Fragment>
-  <Stand slot="stand" sprite={m.sprite} at={72} label={m.name} size={m.boss ? 1.5 : 1.5} />
+  <Stand slot="stand" sprite={m.sprite} at={72} label={m.name} size={1.5} />
   <div class="card">
     <div class="entity">
       <div>

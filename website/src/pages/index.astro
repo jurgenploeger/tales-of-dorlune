@@ -32,7 +32,6 @@ const legs = [
 const residents = (l: any) => [...l.bosses.map((b: any) => mon(b.slug)), ...l.monsters.filter((m: any) => !m.rare).map((m: any) => mon(m.slug))].filter(Boolean).slice(0, 3);
 const meadow = land('meadowbrook');
 const night = land('moonwhisper');
-const hero = game.races[0].sprite;
 const jsonld = [{
   '@context': 'https://schema.org', '@type': 'MobileApplication', name: site.name, operatingSystem: 'iOS',
   applicationCategory: 'GameApplication', description: `${site.name} is ${site.tagline} for iPhone.`, url: site.url,
@@ -41,7 +40,7 @@ const jsonld = [{
   potentialAction: { '@type': 'SearchAction', target: `${site.url}/search/?q={q}`, 'query-input': 'required name=q' } }];
 ---
 <Base title="Tales of Dorlune: a cozy pixel adventure for iPhone" description={`Explore ${c.lands} lands from the old stories, make friends of their monsters and set the tales right. A cozy pixel RPG for iPhone, with a full guide to its quests, monsters and lands.`} bare jsonld={jsonld}>
-  <Scene land={meadow} art="hero">
+  <Scene land={meadow} art="hero" artHeight={290}>
     <div class="top">
       <h1 style="margin:0"><img class="logo" src="/img/logo.png" alt="Tales of Dorlune" width="952" height="353" /></h1>
       <div><span class="tagline-pill">{site.tagline}</span></div>
@@ -54,9 +53,8 @@ const jsonld = [{
         <li><b>{c.lands}</b>lands</li><li><b>{c.monsters}</b>monsters</li><li><b>{c.bosses}</b>bosses</li><li><b>{c.maxLevel}</b>levels</li><li><b>{c.languages}</b>languages</li>
       </ul>
     </div>
-    <Stand slot="stand" sprite={hero} at={46} label="The hero" size={1.4} />
-    <Stand slot="stand" sprite={mon('fluffy-bunny')?.sprite} at={53} href="/monsters/fluffy-bunny/" label="Fluffy Bunny" />
-    <Stand slot="stand" sprite={mon('jelly-puff')?.sprite} at={61} href="/monsters/jelly-puff/" label="Jelly Puff" flip />
+    <Stand slot="stand" sprite={mon('jelly-puff')?.sprite} at={30} href="/monsters/jelly-puff/" label="Jelly Puff" size={1.5} />
+    <Stand slot="stand" sprite={mon('golden-hamster')?.sprite} at={70} href="/monsters/golden-hamster/" label="Golden Hamster" flip size={1.5} />
   </Scene>
 
   {legs.map((leg, n) => (
@@ -71,7 +69,7 @@ const jsonld = [{
         <div class="phone" style={`--tilt:${n % 2 ? -1.5 : 1.5}deg`}><img src={`/img/shot-${leg.shot}.jpg`} alt={leg.alt} width="1600" height="804" loading="lazy" /></div>
       </div>
       {residents(leg.land).map((m: any, k: number) => (
-        <Stand slot="stand" sprite={m.sprite} at={(n % 2 ? 62 : 12) + k * 11} href={`/monsters/${m.slug}/`} label={m.name} flip={n % 2 === 1} />
+        <Stand slot="stand" sprite={m.sprite} at={(n % 2 ? 62 : 12) + k * 11} size={1.5} href={`/monsters/${m.slug}/`} label={m.name} flip={n % 2 === 1} />
       ))}
     </Scene>
   ))}
