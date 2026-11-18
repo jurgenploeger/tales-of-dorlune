@@ -32,6 +32,12 @@ on:
         description: "The tests' build: Debug, or Release to time the maps (PerformanceTests) as a phone's build runs them."
         required: false
         default: "Debug"
+      runner:
+        description: "The machine: macos-26 (Xcode 26), or xcode-27 (Xcode 27 and the iOS 27 SDK, which App Store Connect asks for from April 2027)."
+        required: false
+        type: choice
+        options: [macos-26, xcode-27]
+        default: macos-26
 
 permissions:
   contents: write
@@ -45,7 +51,7 @@ jobs:
   # red or green in a few minutes.
   tests:
     if: inputs.run != 'screenshots'
-    runs-on: macos-26
+    runs-on: ${{ inputs.runner || 'macos-26' }}
     # The suite builds every map several times in a debug build: 23 minutes on 2026-10-12, over
     # 30 with the continent's tests, 38 before the coasts (2026-10-13) and past 42 after, so 45
     # cut it off before it could report; 47 at 0.5.3, and past 75 with 0.6.0's shores (2026-10-14).
@@ -110,7 +116,7 @@ jobs:
   screenshots:
     # On a private repository, a run by hand must name its scenes: all of them is hours of macOS time.
     if: inputs.run != 'tests' && (inputs.scenes != '' || !github.event.repository.private)
-    runs-on: macos-26
+    runs-on: ${{ inputs.runner || 'macos-26' }}
     # A full run of about 130 scenes (two of them filmed) takes two and a half hours at most, a
     # minute or so a scene; this leaves room. At 130 minutes, full runs were cut off before they
     # could publish anything.
