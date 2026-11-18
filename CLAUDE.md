@@ -77,7 +77,8 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   (the user's pick from `tools/terrace_preview.py`, 2026-11-17): `tools/terrace_art.py` draws a cell's stretch of
   wall (sheared along its edge), of balustrade, a post and the flagstones; `LandStage.placePlateaus` lays them,
   `placeTerraces` the balustrade round the top, and the terrace casts its shade away from the sun as a block
-  (`CanopyShade.addBlock`). Caves' `WorldScene` keeps the old look.
+  (`CanopyShade.addBlock`). A cobbled path runs from the foot of each stair to the nearest street (`streetLink`), and nothing
+  is built in the ring round it or two cells behind (the user, 2026-11-18). Caves' `WorldScene` keeps the old look.
 - How a blow lands in battle (`BattleScene.impact`, after SpriteCook's hit feel article): attacker and
   target stand still 5 frames (9 on a killing blow, `hitStop`: the two nodes paused, the stage plays
   on), the target white for 2 (`whiteFlash`, a shader: a tint can't light a dark outline), then pushed
