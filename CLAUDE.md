@@ -169,6 +169,11 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   and lifted a little so the word bounces, each in a thin outline of its own; all gold, each line in one smooth
   gradient with a light rim along the tops, in one thick dark outline dropping into a block shadow. One colour,
   no bands, no emblem, tagline or rays. The sky's light sits behind DORLUNE (`Brand.raysInLogo`).
+- `tools/allo_font.py`: the game's body text font (`HUDStyle.body`: speech, stories, descriptions, explanations,
+  notes), Allo (Josh Puckett, OFL, `tools/fonts/`) cut to one static instance, roundness 60, weight 560, named Allo
+  Dorlune (`TalesOfDorlune/Resources/Fonts/AlloDorlune-Body.ttf`, project.yml `UIAppFonts`; the user's pick from a
+  mock-up, 2026-11-18). Titles, names, buttons, rewards and numbers stay in `HUDStyle.font`. Latin only: other
+  scripts fall back to the system's font.
 - `tools/store_slides.py`: App Store slides from the landscape `store_land_*` screenshot scenes: captions in the
   logo's style, the title in its face and gold, in capitals, in its thick dark outline and block shadow, a tag on a dark plate in Open Sans (`tools/store_slides.json`, fonts in `tools/fonts/`), cropped clear of the Dynamic Island the
   simulator draws in, exported at 2622×1206 and 2868×1320 with no alpha.

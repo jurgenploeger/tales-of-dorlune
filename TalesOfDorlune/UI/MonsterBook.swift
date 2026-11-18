@@ -377,7 +377,7 @@ private struct MonsterPage: View {
 
             if let lore = monster.lore {
                 Text(lore)
-                    .font(HUDStyle.font(12))
+                    .font(HUDStyle.body(12))
                     .foregroundStyle(HUDStyle.cream)
                     .fixedSize(horizontal: false, vertical: true)
             }

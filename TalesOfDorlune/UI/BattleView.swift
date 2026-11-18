@@ -1232,7 +1232,7 @@ private struct SkillCard: View {
             }
             if let description = skill.description, !description.isEmpty {
                 Text(description)
-                    .font(HUDStyle.font(11))
+                    .font(HUDStyle.body(11))
                     .foregroundStyle(HUDStyle.cream.opacity(0.85))
                     .lineLimit(3)
                     .fixedSize(horizontal: false, vertical: true)

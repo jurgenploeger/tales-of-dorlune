@@ -252,7 +252,7 @@ private struct SkillDetail: View {
                     }
                     if let description = skill.description {
                         Text(description)
-                            .font(HUDStyle.font(10))
+                            .font(HUDStyle.body(10))
                             .foregroundStyle(HUDStyle.dim)
                             .fixedSize(horizontal: false, vertical: true)
                     }

@@ -522,7 +522,7 @@ private struct ChangelogPanel: View {
         ForEach(release.notes, id: \.self) { note in
             HStack(alignment: .firstTextBaseline, spacing: 6) {
                 Text("•").foregroundStyle(HUDStyle.gold)
-                Text(note).fixedSize(horizontal: false, vertical: true)
+                Text(note).font(HUDStyle.body(11)).fixedSize(horizontal: false, vertical: true)
             }
             .font(HUDStyle.font(11))
         }
@@ -742,7 +742,7 @@ private struct RaceCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             Text(race.name).font(HUDStyle.font(14)).foregroundStyle(selected ? HUDStyle.gold : HUDStyle.cream)
-            Text(race.description).font(HUDStyle.font(10)).foregroundStyle(HUDStyle.dim)
+            Text(race.description).font(HUDStyle.body(10)).foregroundStyle(HUDStyle.dim)
                 .fixedSize(horizontal: false, vertical: true)
             Text(L("HP {hp} · MP {mp} · ATK {attack} · DEF {defense} · MAG {magic} · SPD {speed}", ["hp": race.base.hp, "mp": race.base.mp, "attack": race.base.attack, "defense": race.base.defense, "magic": race.base.magic, "speed": race.base.speed]))
                 .font(HUDStyle.font(9))

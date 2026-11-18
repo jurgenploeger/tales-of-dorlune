@@ -65,6 +65,15 @@ enum HUDStyle {
         .system(size: size, weight: .heavy, design: .rounded)
     }
 
+    /// Body text: what people say, stories, descriptions, explanations and notes, in Allo Dorlune
+    /// (Allo at roundness 60 and weight 560, `tools/allo_font.py`; the user's pick from a mock-up,
+    /// 2026-11-18: lighter and more open than the heavy rounded face for anything you read through).
+    /// Titles, names, buttons, rewards and numbers stay in `font`. Scripts Allo lacks (Cyrillic,
+    /// Chinese, Japanese, Korean) fall back to the system's font, letter by letter.
+    static func body(_ size: CGFloat) -> Font {
+        .custom("AlloDorlune-Body", fixedSize: size)
+    }
+
     /// For numbers only (amounts, counters, coordinates, a level on its own): names and other words,
     /// a number among them too, are in `font` (2026-10-26), with `.monospacedDigit()` where digits tick.
     static func mono(_ size: CGFloat) -> Font {
@@ -926,7 +935,7 @@ struct NoticeBar: View {
         HStack(spacing: 10) {
             IconImage(icon, size: 16).foregroundStyle(tint)
             Text(text)
-                .font(HUDStyle.font(12))
+                .font(HUDStyle.body(12))
                 .foregroundStyle(HUDStyle.cream)
                 .fixedSize(horizontal: false, vertical: true)
             Spacer(minLength: 0)

@@ -10,7 +10,7 @@ options:
 settings:
   base:
     SWIFT_VERSION: "6.0"
-    MARKETING_VERSION: "0.9.113"
+    MARKETING_VERSION: "0.9.114"
     CURRENT_PROJECT_VERSION: "1"
 
 targets:
@@ -47,6 +47,8 @@ targets:
         # XcodeGen defaults these to 1.0 / 1; point them at the build settings instead.
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        # Body text's font (HUDStyle.body, tools/allo_font.py), from the bundle's root.
+        UIAppFonts: [AlloDorlune-Body.ttf]
         UILaunchScreen: {}
         UIRequiresFullScreen: true
         UIStatusBarHidden: true

@@ -55,7 +55,7 @@ struct ItemInfoCard: View {
                         header
                         if let text = item.description, !text.isEmpty {
                             Text(text)
-                                .font(HUDStyle.font(12))
+                                .font(HUDStyle.body(12))
                                 .foregroundStyle(HUDStyle.cream)
                                 .fixedSize(horizontal: false, vertical: true)
                         }
