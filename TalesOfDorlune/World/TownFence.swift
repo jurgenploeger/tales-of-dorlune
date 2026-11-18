@@ -281,7 +281,7 @@ enum TownFence {
 
     /// `image` laid flat from `origin`: its width along `along`, its height back along `back` (its top
     /// row the far edge), clipped to its half `part`, as `draw` does a face.
-    private static func drawTop(_ image: CGImage, in context: CGContext, from origin: CGPoint, along: CGVector, back: CGVector, part: Int?) {
+    nonisolated private static func drawTop(_ image: CGImage, in context: CGContext, from origin: CGPoint, along: CGVector, back: CGVector, part: Int?) {
         let w = CGFloat(image.width), h = CGFloat(image.height)
         context.saveGState()
         context.concatenate(CGAffineTransform(a: along.dx / w, b: along.dy / w, c: back.dx / h, d: back.dy / h, tx: origin.x, ty: origin.y))
