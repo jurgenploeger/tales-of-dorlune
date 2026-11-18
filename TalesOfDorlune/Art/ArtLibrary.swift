@@ -855,6 +855,16 @@ final class ArtLibrary {
                     let depth: Double
                     if shore {
                         depth = Self.waterDepth(x, y, pools: pools, wobble: wobble)
+                    } else if layer.cobbled {
+                        // A town street's edge is where its cells end: how far the point is from the nearest
+                        // cell round it that isn't street. Measured from the rounded strokes between its cells,
+                        // the edge dipped in near their corners inside a wide street too, and grass and sand
+                        // showed through the cobbles there (the user, 2026-11-17: "holes").
+                        var nearest = 1.0
+                        for bit in 0..<9 where layer.mask & (1 << bit) == 0 {
+                            nearest = min(nearest, Self.gap(x, y, to: (x: Double(bit % 3 - 1), y: Double(1 - bit / 3))))
+                        }
+                        depth = nearest + wobble
                     } else {
                         var distance = Double.infinity
                         for segment in segments { distance = min(distance, Self.distance(x, y, to: segment)) }
@@ -866,7 +876,8 @@ final class ArtLibrary {
                         guard depth > 0 else { continue }
                         if layer.cobbled, sand.count == out.count {
                             Self.townRoad(&out, index, x: x, y: y, depth: depth, rim: rim, cell: cell,
-                                          speck: Self.speck(px, py, cell), sand: sand, sandMean: sandMean, stone: stone)
+                                          speck: Self.speck(px, py, cell), sand: sand, sandMean: sandMean, stone: stone,
+                                          inside: layer.mask == (1 << 9) - 1)
                             continue
                         }
                         let shade = layer.style == .road && depth < rim ? 0.72 : 1
@@ -1168,11 +1179,12 @@ final class ArtLibrary {
     /// out over its edge in clumps, lit at their tips, with a shadow on the sand past them.
     nonisolated private static func townRoad(_ out: inout [UInt8], _ index: Int, x: Double, y: Double, depth: Double, rim: Double,
                                              cell: GridPoint, speck: Double, sand: [UInt8], sandMean: (Double, Double, Double),
-                                             stone: (Double, Double, Double)) {
+                                             stone: (Double, Double, Double), inside: Bool) {
         let phase = cobblePhase(cell)
         let wx = Double(phase / 4) + x + 0.5, wy = Double(phase % 4) + y + 0.5
         let grassy = Int(out[index + 1]) > Int(out[index]) + 8 && Int(out[index + 1]) > Int(out[index + 2]) + 8
-        let reach = grassy ? clumpReach(wx - wy) : -1
+        // Grass grows over the street's edges, never in a cell in the middle of it, where it showed as holes.
+        let reach = grassy && !inside ? clumpReach(wx - wy) : -1
         if depth < reach {
             // The grass over the edge: lit along its tips, a dark line where it ends.
             let shade = depth > reach - 0.03 ? 0.5 : depth > reach - 0.08 ? 1.2 : 1
@@ -1210,17 +1222,19 @@ final class ArtLibrary {
         let edge = second - best
         // Down the middle, past its sand; a stone at the edge in or out by a roll of its own.
         let core = depth + 0.1 * (hash(at.0, at.1, 21) - 0.5) > 0.2
-        if core, edge >= 0.1 {
-            if edge < 0.16 {
+        if core, edge >= 0.05 {
+            if edge < 0.1 {
                 colour = (stone.0 * 0.5, stone.1 * 0.46, stone.2 * 0.44)   // the stone's dark outline
             } else {
                 var tone = 0.86 + 0.24 * hash(at.0, at.1, 3)
-                if edge < 0.27 { tone *= at.3 > 0 ? 1.13 : 0.78 }       // lit on its north side
+                if edge < 0.2 { tone *= at.3 > 0 ? 1.13 : 0.8 }         // lit on its north side
                 if speck < 0.08 { tone *= 0.92 }
                 colour = (stone.0 * tone, stone.1 * tone, stone.2 * tone)
             }
         } else if core {
-            colour = (sandMean.0 * 0.62, sandMean.1 * 0.58, sandMean.2 * 0.56)   // the packed earth between the stones
+            // The joints between the stones, thin and in the stone's own shade: as packed earth, dark and
+            // wide, they read as holes (the user, 2026-11-17).
+            colour = (stone.0 * 0.62, stone.1 * 0.6, stone.2 * 0.6)
         } else if speck < 0.05, depth > 0.05 {
             // A pebble in the sand.
             let tone = speck < 0.025 ? 1.08 : 0.8

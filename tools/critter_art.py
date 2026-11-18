@@ -371,6 +371,75 @@ def bunny(fur, light, dark, hop):
     return c
 
 
+def sheep(pose, wool=0xF3EEE2, face=0x4E423E):
+    """A sheep out at grass (the user, 2026-11-18: grazing animals, drawn by our own skill first): a woolly
+    body in three tufts, a dark face and legs; standing, a step on, or its head down to graze."""
+    c = Critter(22, 16)
+    step = pose == "step"
+    for x in ((4, 14) if not step else (5, 13)):
+        c.rect(x, 12, 2, 4, face)
+    c.rect(7 if not step else 8, 12, 2, 3, shade_hex(face, 0.8))
+    c.rect(11 if not step else 10, 12, 2, 3, shade_hex(face, 0.8))
+    c.ell(1.8, 8.2, 1.5, 1.5, wool)
+    c.ell(9.5, 8.6, 7.6, 4.6, wool)
+    c.ell(5.2, 5.6, 3.0, 2.6, wool)
+    c.ell(9.8, 4.6, 3.3, 2.7, wool)
+    c.ell(14.2, 5.6, 3.0, 2.6, wool)
+    if pose == "graze":
+        c.ell(18.4, 11.6, 2.9, 2.6, face)
+        c.ell(16.6, 8.8, 2.3, 1.9, wool)
+        c.rect(15, 10, 2, 1, face)
+        c.dot(19, 11, 0xFFFFFF)
+    else:
+        c.ell(18.6, 7.4, 2.9, 2.9, face)
+        c.ell(17.4, 4.6, 2.4, 1.8, wool)
+        c.rect(15, 6, 2, 1, face)
+        c.dot(19, 7, 0xFFFFFF)
+    return c
+
+
+def cow(pose, coat=0xF4F1EA, patch=0x4A3B36):
+    """A cow: a long pale body with dark patches, short horns, a pink muzzle and udder; standing, a step
+    on, or its head down to graze."""
+    pink, horn = 0xF2B8B0, 0xE8DCC0
+    c = Critter(29, 21)
+    step = pose == "step"
+    for x in ((5, 17) if not step else (6, 16)):
+        c.rect(x, 14, 3, 6, coat)
+    c.rect(9 if not step else 10, 14, 2, 5, shade_hex(coat, 0.86))
+    c.rect(14 if not step else 13, 14, 2, 5, shade_hex(coat, 0.86))
+    c.rect(1, 7, 1, 6, patch)
+    c.ell(12.0, 10.0, 9.6, 5.4, coat)
+    c.ell(7.6, 8.2, 3.6, 2.8, patch)
+    c.ell(15.4, 11.6, 3.0, 2.3, patch)
+    c.ell(12.5, 15.2, 1.8, 1.2, pink)
+    if pose == "graze":
+        c.ell(23.6, 13.4, 3.5, 3.1, coat)
+        c.ell(25.6, 15.8, 2.3, 1.7, pink)
+        c.rect(20, 11, 2, 1, patch)
+        c.dot(23, 10, horn)
+        c.dot(25, 10, horn)
+        c.dot(24, 13, INK)
+        c.dot(26, 16, 0xC98A86)
+    else:
+        c.ell(23.6, 8.0, 3.5, 3.3, coat)
+        c.ell(25.8, 10.0, 2.3, 1.7, pink)
+        c.rect(19, 6, 2, 1, patch)
+        c.dot(22, 4, horn)
+        c.dot(25, 4, horn)
+        c.dot(24, 7, INK)
+        c.dot(26, 10, 0xC98A86)
+    for x in ((5, 17) if not step else (6, 16)):
+        for dx in range(3):
+            c.dot(x + dx, 19, patch)
+    return c
+
+
+def shade_hex(colour, k):
+    r, g, b = shade(rgb_of(colour), k)
+    return (r << 16) | (g << 8) | b
+
+
 def frog(hop):
     green, light, dark, belly = 0x6DBE45, 0x9BD86A, 0x3F8A2A, 0xD8EE9A
     c = Critter(13, 10)
@@ -524,6 +593,10 @@ def drawings():
     for pose in ("sit", "hop", "peck"):
         out[f"chick_{pose}"] = lambda p=pose: chick(p)
     out["frog_sit"], out["frog_hop"] = (lambda: frog(False)), (lambda: frog(True))
+    for pose in ("stand", "step", "graze"):
+        out[f"sheep_{pose}"] = lambda p=pose: sheep(p)
+        out[f"cow_{pose}"] = lambda p=pose: cow(p)
+        out[f"cow_brown_{pose}"] = lambda p=pose: cow(p, coat=0xB9824F, patch=0xF4F1EA)
     out["crab_down"], out["crab_up"] = (lambda: crab(False)), (lambda: crab(True))
     out["squirrel_sit"], out["squirrel_hop"] = (lambda: squirrel(False)), (lambda: squirrel(True))
     for kind, fn in (("spider", spider), ("rat", rat), ("scorpion", scorpion), ("lizard", lizard), ("mouse", mouse),

@@ -101,6 +101,7 @@ final class LandPlanner {
     /// The rest: what lines its roads, fairy rings, outcrops, the theme's props and the lands next
     /// door's, and signposts.
     func planTheRest(pause: () async -> Void) async {
+        planPlaces()
         planRoadsides()
         await pause()
         planFairyRings()
@@ -848,6 +849,114 @@ final class LandPlanner {
         }
     }
 
+    // MARK: Places
+
+    /// The pieces of the land's places to find (`WorldMap.layPlaces` kept their ground and laid
+    /// their earth and footpaths): a farm's crop in rows on its field (to walk through), a scarecrow
+    /// behind it and haystacks by its yard; a ruin's ring of standing stones round a fallen pillar,
+    /// open where its footpath comes in; a camp's tent, its fire and what its people left about; a
+    /// graveyard's stones and lantern; a rest's well, benches and lamp.
+    /// Nothing that's in the way stands on its earth or its footpath. Draws of their own.
+    private func planPlaces() {
+        guard !map.places.isEmpty else { return }
+        var draw = SeededRandom(text: def.id + "/place pieces")
+        func put(_ art: String, _ cell: GridPoint, blocking: Bool, scale: CGFloat = 1, nudged: Bool = true) {
+            guard map.owns(cell) else { return }
+            if blocking {
+                guard map.ground[cell.row][cell.col] != .path else { return }
+                map.occupy(cell, blocking: true)
+            }
+            var placement = Placement(art: art, cell: cell, scale: scale)
+            if nudged {
+                placement.nudge = CGVector(dx: CGFloat.random(in: -4...4, using: &draw), dy: CGFloat.random(in: -3...3, using: &draw))
+            }
+            plan.outcrops.append(placement)
+        }
+        for place in map.places {
+            let m = place.middle
+            let own = place.def.art ?? [:]
+            func at(_ dc: Int, _ dr: Int) -> GridPoint { GridPoint(col: m.col + dc, row: m.row + dr) }
+            switch place.def.kind {
+            case "farm":
+                let crop = own["crop"] ?? "pumpkin_patch"
+                for dc in -2...2 {
+                    for dr in 0...2 { put(crop, at(dc, dr), blocking: false, scale: 0.9, nudged: false) }
+                }
+                put(own["scarecrow"] ?? "scarecrow", at(0, 3), blocking: true)
+                let stack = own["stack"] ?? "haystack"
+                put(stack, at(2, -1), blocking: true)
+                put(stack, at(3, -2), blocking: true, scale: 0.85)
+                put(stack, at(-3, 1), blocking: true, scale: 0.9)
+            case "ruin":
+                let ring = own["ring"] ?? "standing_stone"
+                for (dc, dr) in [(0, 2), (2, 1), (2, -1), (0, -2), (-2, -1), (-2, 1), (1, 2), (-1, -2)] {
+                    // One or two have fallen.
+                    guard Double.random(in: 0..<1, using: &draw) < 0.85 else { continue }
+                    put(ring, at(dc, dr), blocking: true, scale: CGFloat.random(in: 0.85...1.05, using: &draw))
+                }
+                put(own["centre"] ?? "broken_pillar", m, blocking: true, nudged: false)
+            case "graveyard":
+                // Graves in a row behind and at either side, a lantern by the way in.
+                let stone = own["stone"] ?? "tombstone"
+                for (dc, dr) in [(-2, 2), (0, 2), (2, 2), (-2, 0), (2, 0), (-3, 2), (3, 1)] {
+                    guard Double.random(in: 0..<1, using: &draw) < 0.9 else { continue }
+                    put(stone, at(dc, dr), blocking: true, scale: CGFloat.random(in: 0.9...1.1, using: &draw))
+                }
+                put(own["light"] ?? "spooky_lantern", at(-2, -2), blocking: true, nudged: false)
+                put(own["tree"] ?? "dead_tree", at(3, 3), blocking: true)
+            case "rest":
+                // A well (or a fountain, a statue) with benches either side, a lamp and stores behind.
+                put(own["centre"] ?? "water_well", m, blocking: true, nudged: false)
+                let bench = own["bench"] ?? "bench"
+                put(bench, at(-2, 0), blocking: true, nudged: false)
+                put(bench, at(2, 0), blocking: true, nudged: false)
+                put(own["lamp"] ?? "street_lamp", at(2, 2), blocking: true, nudged: false)
+                put(own["stores"] ?? "barrels", at(-2, 2), blocking: true)
+            default:
+                put(own["tent"] ?? "torn_tent", at(0, 2), blocking: true, scale: 1.3, nudged: false)
+                put(own["fire"] ?? "brazier", at(-2, 0), blocking: true, nudged: false)
+                let stores = own["stores"] ?? "barrels"
+                put(stores, at(2, 1), blocking: true)
+                put(own["seat"] ?? "tree_stump", at(2, -1), blocking: true)
+                put(own["seat"] ?? "tree_stump", at(-2, -2), blocking: true)
+            }
+        }
+    }
+
+    // MARK: Groves
+
+    /// How wooded a cell is, about -1 to 1 (theme `groves`): slow waves across the land, its own by
+    /// its name, so there are woods where it's high and clearings where it's low.
+    private lazy var groveWaves: [(x: Double, y: Double, phase: Double, weight: Double)] = {
+        var draw = SeededRandom(text: self.def.id + "/groves")
+        return (0..<4).map { index -> (x: Double, y: Double, phase: Double, weight: Double) in
+            let angle = Double.random(in: 0..<(2 * Double.pi), using: &draw)
+            let pace = Double.random(in: 0.6...1.4, using: &draw) / 7 * (1 + Double(index) * 0.7)
+            return (x: cos(angle) * pace, y: sin(angle) * pace, phase: Double.random(in: 0..<(2 * Double.pi), using: &draw),
+                    weight: 1 / Double(index + 1))
+        }
+    }()
+
+    private func grove(_ cell: GridPoint) -> Double {
+        var sum = 0.0
+        for wave in groveWaves { sum += sin(Double(cell.col) * wave.x + Double(cell.row) * wave.y + wave.phase) * wave.weight }
+        return sum / 2.1
+    }
+
+    /// Where a prop may start a group in a land with `groves`: what's tall and in the way (trees)
+    /// only in the woods, flowers only out in the clearings, the rest anywhere.
+    private func suits(_ placement: MapDef.PropPlacement, _ cell: GridPoint) -> Bool {
+        guard def.theme.groves == true, placement.within == nil else { return true }
+        let name = placement.art
+        if placement.blocking, name.contains("tree") || name.contains("palm") || name.contains("pine") || name.contains("willow") {
+            return grove(cell) > -0.12
+        }
+        if !placement.blocking, name.contains("daisy") || name.contains("flower") || name.contains("tulip") || name.contains("clover") {
+            return grove(cell) < 0.05
+        }
+        return true
+    }
+
     /// Scenery from the theme. Props with `cluster` grow in groves around a random centre. None
     /// past the lines the land meets the lands beside it along (`WorldMap.foreign`), where theirs
     /// grows (`planSeamProps`).
@@ -858,7 +967,9 @@ final class LandPlanner {
             let gap = pathGap(placement)
             var placed = 0
             var attempts = 0
-            while placed < placement.count, attempts < placement.count * 3 {
+            // In a land with groves a group that doesn't suit where it fell is tried again elsewhere.
+            let tries = def.theme.groves == true ? 6 : 3
+            while placed < placement.count, attempts < placement.count * tries {
                 attempts += 1
                 await pause()
                 let found: GridPoint? = if let radius = placement.within {
@@ -867,6 +978,7 @@ final class LandPlanner {
                     map.randomFreeCell(blocking: placement.blocking, using: &rng)
                 }
                 guard let middle = found else { break }
+                guard suits(placement, middle) else { continue }
                 let wanted = min(groupSize, placement.count - placed)
                 var inGroup = 0
                 for index in 0..<(wanted * 5) where inGroup < wanted {
@@ -877,6 +989,7 @@ final class LandPlanner {
                     // In town, nothing in the way set down against a building: a well stood in the
                     // corner of a house (the user, 2026-11-17).
                     guard map.isFreeForScenery(cell, insideFence: placement.within != nil, blocking: placement.blocking),
+                          index == 0 || suits(placement, cell),
                           placement.within == nil || !placement.blocking || !map.nearBuilding(cell),
                           map.foreign[cell] == nil, !isCoast(cell), !placement.blocking || roomOnIsland(cell),
                           gap == 0 || !nearPath(cell, within: gap) else { continue }

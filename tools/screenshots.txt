@@ -467,6 +467,11 @@ hill_top       | newgame,map=sunny_meadow,hill=0,ontop            | 8
 hill_twilight  | newgame,level=20,map=twilight_woods,hill=0,weather=clear,hour=12 | 8
 hill_desert_mesa | newgame,level=60,map=genie_desert,hill=1,weather=clear,hour=12 | 8
 hill_rosen     | newgame,level=140,map=rosen_lake,hill=0,weather=clear,hour=12 | 8
+# Terraces in the rest of the wild lands (2026-11-17): a swamp, a dark valley, a beach and the snow.
+hill_swamp     | newgame,level=30,map=frog_swamp,hill=0,weather=clear,hour=12 | 8
+hill_valley    | newgame,level=60,map=valley_of_fear,hill=0,weather=clear,hour=12 | 8
+hill_beach     | newgame,level=10,map=pineapple_shore,hill=0,weather=clear,hour=12 | 8
+hill_snow      | newgame,level=100,map=snow_white_forest,hill=0,weather=clear,hour=12 | 8
 hill_candy     | newgame,level=60,map=candy_mountain,hill=1       | 8
 hill_desert    | newgame,level=60,map=genie_desert,hill=0         | 8
 hill_crystal   | newgame,level=90,map=crystal_mountain,hill=0     | 8
@@ -1003,3 +1008,27 @@ night_meadow_land | newgame,map=sunny_meadow,landscape,weather=clear,hour=23 | 8
 # Cobbled town streets: cobbles down the middle, sand and pebbles, grass over the edges (`ArtLibrary.townRoad`, 2026-11-17).
 town_streets | newgame,map=meadowbrook,weather=clear,hour=12 | 8
 town_streets_desert | newgame,level=40,map=goldburg,weather=clear,hour=12 | 8
+# Places to find, groves and clearings, broad flower meadows (`WorldMap.layPlaces`, `LandPlanner.grove`, 2026-11-18).
+place_farm    | newgame,map=sunny_meadow,at=place,weather=clear,hour=12 | 8
+place_farm_2  | newgame,map=sunny_meadow,at=place1,weather=clear,hour=12 | 8
+place_ruin    | newgame,map=sunny_meadow,at=place2,weather=clear,hour=12 | 8
+place_woods   | newgame,level=20,map=twilight_woods,at=place,weather=clear,hour=12 | 8
+place_woods_camp | newgame,level=20,map=twilight_woods,at=place2,weather=clear,hour=12 | 8
+place_desert  | newgame,level=60,map=genie_desert,at=place,weather=clear,hour=12 | 8
+place_desert_camp | newgame,level=60,map=genie_desert,at=place2,weather=clear,hour=12 | 8
+groves_meadow | newgame,map=sunny_meadow,landscape,nohud,weather=clear,hour=12 | 8
+# The night by a curve on every pixel (Settings → Richer night colours, `ContinentScene.curveNight`, 2026-11-18),
+# beside the same scenes without it; the last puts the setting back for the scenes after.
+night_curve_town | newgame,level=40,map=goldburg,weather=clear,hour=23,curve | 8
+night_curve_meadow | newgame,map=sunny_meadow,weather=clear,hour=23,curve | 8
+dusk_curve_meadow | newgame,map=sunny_meadow,weather=clear,hour=18,curve | 8
+night_plain_meadow | newgame,map=sunny_meadow,weather=clear,hour=23,nocurve | 8
+place_snow    | newgame,level=100,map=snow_white_forest,at=place,weather=clear,hour=12 | 8
+place_candy   | newgame,level=80,map=candy_mountain,at=place,weather=clear,hour=12 | 8
+place_valley  | newgame,level=60,map=valley_of_fear,at=place,weather=clear,hour=12 | 8
+place_shore   | newgame,level=10,map=pineapple_shore,at=place,weather=clear,hour=12 | 8
+place_rest    | newgame,map=sunny_meadow,at=place3,weather=clear,hour=12 | 8
+# Lit windows at night (`LandStage.addWindows`, tools/window_art.py, 2026-11-18).
+night_windows | newgame,map=meadowbrook,weather=clear,hour=23,nocurve | 8
+night_windows_curve | newgame,map=meadowbrook,weather=clear,hour=23,curve | 8
+night_windows_reset | newgame,map=meadowbrook,weather=clear,hour=12,nocurve | 4

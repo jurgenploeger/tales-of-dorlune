@@ -14,6 +14,8 @@ nonisolated enum GameSettings {
     static let dayAndNightKey = "dayAndNight"
     /// The weather comes and goes; off, the sky stays clear (`Weather.on`).
     static let weatherKey = "weather"
+    /// The night drawn by a curve on every pixel instead of a dark overlay (`ContinentScene.curveNight`), to try.
+    static let curveNightKey = "curveNight"
     /// The top-left HUD folds a party of three or more into one row (WorldHUD); the player can unfold it.
     static let partyFoldedKey = "partyFolded"
     /// Battles ask what your companion should do after the hero's choice; off, it fights on its own.
@@ -41,6 +43,7 @@ nonisolated enum GameSettings {
     static var haptics: Bool { value(hapticsKey, fallback: true) }
     static var dayAndNight: Bool { value(dayAndNightKey, fallback: true) }
     static var weather: Bool { value(weatherKey, fallback: true) }
+    static var curveNight: Bool { value(curveNightKey, fallback: false) }
     static var commandCompanion: Bool { value(commandCompanionKey, fallback: true) }
     static var battleSpeed: Double { value(battleSpeedKey, fallback: 1) }
     static var autoBattle: Bool { value(autoBattleKey, fallback: false) }

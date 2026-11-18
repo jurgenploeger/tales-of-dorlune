@@ -805,6 +805,24 @@ struct ContentTests {
         }
     }
 
+    /// A land's places to find (theme `places`: the user's pick from tools/land_preview.py, 2026-11-17) all
+    /// find room where there's any (one at least), their earth is laid and can be walked, on flat ground.
+    @Test func placesToFindAreLaidOut() {
+        for def in content.maps where def.theme.places?.isEmpty == false {
+            let map = Layouts.of(def)
+            let wanted = (def.theme.places ?? []).reduce(0) { $0 + $1.count }
+            // What each land found room for, for the log; a crowded land may not fit them all, but each has one.
+            print("🏕 \(def.id): \(map.places.count) of \(wanted) places, " + map.places.map { "\($0.def.kind) at \($0.middle.col),\($0.middle.row)" }.joined(separator: "; "))
+            #expect(!map.places.isEmpty, "map \(def.id): none of its \(wanted) places found room")
+            for place in map.places {
+                for cell in WorldMap.earth(of: place.def.kind, at: place.middle) {
+                    #expect(map.ground[cell.row][cell.col] == .path && map.isWalkable(cell), "map \(def.id): a \(place.def.kind)'s earth at \(cell)")
+                }
+                #expect(map.height(at: map.center(of: place.middle)) == 0, "map \(def.id): a \(place.def.kind) on a slope at \(place.middle)")
+            }
+        }
+    }
+
     @Test func housesStandOffTheRoads() {
         for def in content.maps {
             let map = Layouts.of(def)

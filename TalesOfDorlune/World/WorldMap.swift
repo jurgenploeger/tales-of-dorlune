@@ -63,6 +63,16 @@ nonisolated final class WorldMap: @unchecked Sendable {
     private(set) var streetDecor: [(art: String, cell: GridPoint)] = []
     /// The cells the town's buildings and shops stand on, its own and its lots (`nearBuilding`).
     private var buildingCells: Set<GridPoint> = []
+    /// The places to find out in the land (`layPlaces`): what kind, its middle, and which of its
+    /// theme's places it is.
+    nonisolated struct Site {
+        let def: MapDef.Site
+        let middle: GridPoint
+    }
+    private(set) var places: [Site] = []
+    /// The cells of plain ground that show the theme's richer ground (`MapDef.Theme.lush`) instead,
+    /// in broad soft patches (`layLush`). Still plain ground to everything but the drawing.
+    private(set) var lush: Set<GridPoint> = []
     /// A town's terraces: where each stands, its stairs (out in front of its walls, `raiseTerrace`) and
     /// the cells of its rim they come up to, open in its balustrade.
     private(set) var terraces: [(origin: GridPoint, width: Int, height: Int, stairs: [GridPoint], heads: [GridPoint])] = []
@@ -350,6 +360,11 @@ nonisolated final class WorldMap: @unchecked Sendable {
         lap("footpaths")
         sealCrags()
         lap("seal crags")
+        // Its places to find, on the flat ground the hills and their trails left: laid before the
+        // hills they took the room the mountains, the summits and a boss's lair needed (the tests said
+        // so of five lands).
+        if def.town == nil, def.theme.cave == nil, let wanted = def.theme.places { layPlaces(wanted) }
+        lap("places")
         if def.theme.accent != nil {
             if let patches = def.theme.accentPatches {
                 paintAccentPatches(patches, &rng)
@@ -358,6 +373,7 @@ nonisolated final class WorldMap: @unchecked Sendable {
             }
         }
         lap("accents")
+        if def.theme.lush != nil, def.theme.cave == nil { layLush() }
         markForeign()
         lap("foreign")
         layShore()
@@ -584,6 +600,9 @@ nonisolated final class WorldMap: @unchecked Sendable {
         case "mouth":
             guard let crag = pick(crags) else { return nil }
             return entryCell(from: crag.edge)
+        case "farm", "ruin", "camp", "graveyard", "rest":
+            // The middle of the land's nth place of that kind (`places`).
+            return pick(places.filter { $0.def.kind == name })?.middle
         case "harbor":
             // Beside where the pier leaves the land, on the side away from its ship.
             guard let harbor = pick(harbors) else { return nil }
@@ -2665,6 +2684,146 @@ nonisolated final class WorldMap: @unchecked Sendable {
         }
     }
 
+    /// Which plain ground shows the land's richer ground (theme `lush`): where slow waves across the
+    /// land, its own by its name, run high, so it lies in a few broad patches with soft edges; not
+    /// in the bands along its borders, where the land next door's ground comes over. Draws of its own.
+    private func layLush() {
+        var draw = SeededRandom(text: def.id + "/lush")
+        var waves: [(x: Double, y: Double, phase: Double, weight: Double)] = []
+        for index in 0..<4 {
+            let angle = Double.random(in: 0..<(2 * Double.pi), using: &draw)
+            let pace = Double.random(in: 0.6...1.4, using: &draw) / 6 * (1 + Double(index) * 0.7)
+            waves.append((x: cos(angle) * pace, y: sin(angle) * pace, phase: Double.random(in: 0..<(2 * Double.pi), using: &draw),
+                          weight: 1 / Double(index + 1)))
+        }
+        for row in 0..<rows {
+            for col in 0..<columns where ground[row][col] == .ground {
+                var sum = 0.0
+                for wave in waves { sum += sin(Double(col) * wave.x + Double(row) * wave.y + wave.phase) * wave.weight }
+                guard sum / 2.1 > 0.36 else { continue }
+                let cell = GridPoint(col: col, row: row)
+                if !seams.contains(where: { ($0.share(cell) ?? 0) > 0.03 }) { lush.insert(cell) }
+            }
+        }
+    }
+
+    // MARK: Places
+
+    /// How far round its middle a place keeps the ground for itself, in cells.
+    static let placeReach = 4
+
+    /// Finds room for the land's places to find (theme `places`) and lays their ground: each a few
+    /// cells off a road (5 to 12), on flat open ground of the land's own off its hills with nothing on it, well
+    /// clear of water, the coast, the lands next door and each other; a footpath from the road to
+    /// it; and its own earth, a farm's field and yard, the worn ring inside a ruin's stones, a
+    /// camp's trodden ground. Its cells are kept (`occupied`), so no hill, tree or anything else
+    /// takes them; `LandPlanner.planPlaces` sets its pieces down. Draws of its own, so the rest of
+    /// the land's layout draws as it did.
+    private func layPlaces(_ wanted: [MapDef.Site]) {
+        var draw = SeededRandom(text: def.id + "/places")
+        let reach = Self.placeReach
+        func open(_ cell: GridPoint) -> Bool {
+            owns(cell) && cell.col >= 2 && cell.row >= 2 && cell.col < columns - 2 && cell.row < rows - 2
+                && ground[cell.row][cell.col] == .ground && !occupied.contains(cell) && hillOf[cell] == nil
+                && !seams.contains(where: { ($0.share(cell) ?? 0) > 0.2 })
+        }
+        for place in wanted {
+            var made = 0, attempts = 0
+            while made < place.count, attempts < 1500 {
+                attempts += 1
+                let middle = GridPoint(col: Int.random(in: 8..<max(9, columns - 8), using: &draw),
+                                       row: Int.random(in: 8..<max(9, rows - 8), using: &draw))
+                guard !places.contains(where: { max(abs($0.middle.col - middle.col), abs($0.middle.row - middle.row)) < 14 }) else { continue }
+                // Its own ground, all open.
+                var fits = true
+                check: for dr in -reach...reach {
+                    for dc in -reach...reach where !open(GridPoint(col: middle.col + dc, row: middle.row + dr)) {
+                        fits = false
+                        break check
+                    }
+                }
+                guard fits else { continue }
+                // No water, sea or land next door close by (the shore slopes down toward them), and
+                // the nearest road, not too near.
+                var road: GridPoint?
+                var nearest = Int.max
+                var dry = true
+                scan: for dr in -12...12 {
+                    for dc in -12...12 {
+                        let cell = GridPoint(col: middle.col + dc, row: middle.row + dr)
+                        guard contains(cell) else { continue }
+                        let kind = ground[cell.row][cell.col]
+                        let far = max(abs(dc), abs(dr))
+                        if far <= reach + 3, kind == .water || kind == .sea || kind == .away {
+                            dry = false
+                            break scan
+                        }
+                        if kind == .path, hillOf[cell] == nil, far < nearest {
+                            nearest = far
+                            road = cell
+                        }
+                    }
+                }
+                guard dry, let road, nearest > reach else { continue }
+                // The footpath: straight from its middle to the road, over open ground all the way.
+                let steps = max(1, nearest * 2)
+                var way: [GridPoint] = []
+                var clear = true
+                for step in 0...steps {
+                    let t = Double(step) / Double(steps)
+                    let cell = GridPoint(col: Int((Double(middle.col) + Double(road.col - middle.col) * t).rounded()),
+                                         row: Int((Double(middle.row) + Double(road.row - middle.row) * t).rounded()))
+                    if way.last == cell { continue }
+                    let kind = ground[cell.row][cell.col]
+                    guard owns(cell), kind == .path || (kind == .ground && !occupied.contains(cell)),
+                          hillOf[cell] == nil, !blocked.contains(cell) else {
+                        clear = false
+                        break
+                    }
+                    way.append(cell)
+                }
+                guard clear else { continue }
+                // Its ground is its own from here on.
+                for dr in -reach...reach {
+                    for dc in -reach...reach { occupy(GridPoint(col: middle.col + dc, row: middle.row + dr), blocking: false) }
+                }
+                for cell in way {
+                    ground[cell.row][cell.col] = .path
+                    if !occupied.contains(cell) { occupy(cell, blocking: false) }
+                }
+                for cell in Self.earth(of: place.kind, at: middle) { ground[cell.row][cell.col] = .path }
+                places.append(Site(def: place, middle: middle))
+                made += 1
+            }
+        }
+    }
+
+    /// The cells of a place that are bare earth (drawn as the land's path): a farm's field (five by
+    /// three, behind its middle) and its yard in front; the ring inside a ruin's stones or round a
+    /// rest's well (not its middle, where its pillar or well stands); a camp's trodden ground, a
+    /// graveyard's.
+    static func earth(of kind: String, at middle: GridPoint) -> [GridPoint] {
+        var cells: [GridPoint] = []
+        switch kind {
+        case "farm":
+            for dc in -2...2 {
+                for dr in 0...2 { cells.append(GridPoint(col: middle.col + dc, row: middle.row + dr)) }
+            }
+            for dc in -1...1 {
+                for dr in -2...(-1) { cells.append(GridPoint(col: middle.col + dc, row: middle.row + dr)) }
+            }
+        case "ruin", "rest":
+            for dc in -1...1 {
+                for dr in -1...1 where dc != 0 || dr != 0 { cells.append(GridPoint(col: middle.col + dc, row: middle.row + dr)) }
+            }
+        default:
+            for dc in -1...1 {
+                for dr in -1...1 { cells.append(GridPoint(col: middle.col + dc, row: middle.row + dr)) }
+            }
+        }
+        return cells
+    }
+
     private func scatterAccents(_ rng: inout SeededRandom) {
         for row in 0..<rows {
             for col in 0..<columns where ground[row][col] == .ground && Double.random(in: 0..<1, using: &rng) < 0.06 {
@@ -2673,11 +2832,14 @@ nonisolated final class WorldMap: @unchecked Sendable {
         }
     }
 
-    /// Soft round patches — flower meadows, shell beaches.
+    /// Soft round patches — flower meadows, shell beaches (as big as the theme's `accentSize`).
     private func paintAccentPatches(_ count: Int, _ rng: inout SeededRandom) {
+        let sizes = def.theme.accentSize ?? []
+        let smallest = sizes.count == 2 ? max(1, sizes[0]) : 1.5
+        let biggest = sizes.count == 2 ? max(smallest, sizes[1]) : 4.5
         for _ in 0..<count {
             let middle = GridPoint(col: Int.random(in: 0..<columns, using: &rng), row: Int.random(in: 0..<rows, using: &rng))
-            let radius = Double.random(in: 1.5...4.5, using: &rng)
+            let radius = Double.random(in: smallest...biggest, using: &rng)
             let reach = Int(radius.rounded(.up))
             for dr in -reach...reach {
                 for dc in -reach...reach {

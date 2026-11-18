@@ -64,7 +64,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   (`here`) brings its music, air and encounters. Caves are scenes of their own (`WorldScene`), behind the card;
   `GameCoordinator.mapScene` is whichever you're in.
 - Terraced hills (maps.json theme `hills.terraces`, a step in points, with `bank` the faces' rock; Sunny Meadow
-  since 0.9.105, after `tools/cliff_preview.py`): `Hill.terrace` steps each range's height into flat levels with a
+  since 0.9.105, after `tools/cliff_preview.py`, every wild land's since 0.9.110; a mountain range stays smooth): `Hill.terrace` steps each range's height into flat levels with a
   sheer face, only where its slopes face you (`Hill.stepped`: stepped all round, the faces turned away were laid
   back by `unfold()` into long ramps in deep shade), the faces dwindling round its sides and its back the smooth
   slope you walk up (no trails);
@@ -217,11 +217,27 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   instead of swaying, caves keep the old sway (their depth of field swaps textures). Rerun it after
   redrawing a rigged sprite (`check_content.py` checks each rig fits); `--sheet` shows the clumps, `--gif`
   a grove in the wind.
+- Less boring lands (the user's pick from `tools/land_preview.py`, 2026-11-17; in every wild land since 2026-11-18,
+  each with pieces of its own): theme `places` are places to find, a farm, a ruin, a camp, a graveyard or a rest
+  (`MapDef.Site`), each a few cells off a road with a footpath to it: `WorldMap.layPlaces` finds flat open ground
+  the hills, their trails and the lairs left (after them: before, it took their room), keeps it and lays its earth as path (`WorldMap.earth`); `LandPlanner.planPlaces` sets
+  its pieces down (a crop in rows, a scarecrow, haystacks; a ring of standing stones round a pillar; a tent, a fire
+  and stores), its `art` naming other pieces. Theme `groves`: trees only start a group where a slow field is high
+  (`LandPlanner.grove`), flowers only where it's low, so there are woods and clearings. Theme `accentSize`: how big
+  the accent patches are, for broad meadows. Chicks live in a farm's yard (`Critters.home`). Debug `at=place`.
+  Each kind of place is a landmark too (`WorldMap.landmark`: `at: "farm"`, `"ruin"`…, `which`): every land has a
+  chest at one of its places (a potion or ether by its level, refilling as chests do) and someone living at another
+  (maps.json `locals`). Theme `lush`: a richer ground tile in broad soft patches over the plain ground
+  (`WorldMap.layLush`, `GroundTiles.lushMask`; the grass lands' `tile_rich_grass`). A brazier smokes (`LandStage.addSmoke`).
 - Town roads (the user's pick from `tools/road_preview.py`, 2026-11-17): in a town's square (`GroundTiles.inTown`,
   `WorldMap.townSquare`) every road cell is drawn by `ArtLibrary.townRoad` (`GroundLayer.cobbled`): cobbles about half a
   cell across down its middle in the colour of the land's `tile_town` (graded), their edge ragged stone by stone, sand
   (`tile_path`) with pebbles either side, and grass growing over the edges in clumps where the ground beside is green;
   the pattern repeats every four cells (`cobblePhase`), so its tiles are made for 16 places. Wild roads stay sand.
+- `tools/window_art.py`: lit windows at night: each building's warm, bright window panes cut into `windows_<id>.png`
+  (small patches only, so thatch and gold trim stay out; `SKIP` for what has none), laid over the building above the
+  night's shade by `LandStage.addWindows` and faded in with the dark (`LampLight.follow`). Rerun it after adding or
+  redrawing a building, and register any new `windows_<id>` in art/assets.json; `--sheet out.png` shows them at night.
 - `tools/fire_art.py`: a building's fire moving (Goldburg's forge, `blacksmith`): its flame's own pixels cut
   into four frames (`fire_<id>_0` to `_3`, the first as drawn), each column of the flame reaching a pixel
   higher or lower, a few pixels a step along its ramp, the glow round it pulsing; `LandStage.addFire` lays
@@ -304,7 +320,9 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   (`ambience.butterflies`, flapping open, half and closed), as PNGs
   (`art/sprites/critter_<name>.png`, loaded by `CritterArt.drawn`; one missing is drawn in Swift as before): the
   same shapes and sizes as `Critters.swift`, lit from the top left and outlined in a deep shade of each part.
-  Too small for pixel_kit's finish (it turned them muddy). `--sheet out.png` previews them.
+  Too small for pixel_kit's finish (it turned them muddy). `--sheet out.png` previews them. The sheep and cows out
+  at grass (2026-11-18, `sheep`, `cow`: standing, a step on, grazing; round a land's farms where it has them,
+  `Critters.home`) are drawn only here, with no drawing in Swift behind them.
 - `tools/hero_layers.py`: splits each race's walk sheet into paper-doll layers (bald `body_<race>`,
   `locks_<race>` for a beard, `hair_<style>_<race>` for every hairstyle in that sheet's own hair colour, a
   gender sheet's own hair as a style of its own (appearance.json `styles` with `sheet`), its outer edge a deep

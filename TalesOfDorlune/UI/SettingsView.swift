@@ -45,6 +45,7 @@ struct SettingsView: View {
     @AppStorage(GameSettings.hapticsKey) private var haptics = true
     @AppStorage(GameSettings.dayAndNightKey) private var dayAndNight = true
     @AppStorage(GameSettings.weatherKey) private var weather = true
+    @AppStorage(GameSettings.curveNightKey) private var curveNight = false
     @AppStorage(GameSettings.commandCompanionKey) private var commandCompanion = true
     @AppStorage(GameSettings.turnTimerKey) private var turnTimer = 10.0
     @AppStorage(GameSettings.battleSpeedKey) private var battleSpeed = 1.0
@@ -222,6 +223,12 @@ struct SettingsView: View {
                     Text(L("Off, it's always daytime."))
                         .font(HUDStyle.font(10))
                         .foregroundStyle(HUDStyle.dim)
+                    if dayAndNight {
+                        Toggle(L("Richer night colours (test)"), isOn: $curveNight)
+                        Text(L("Dusk and night keep their colours and contrast. It may slow the game: switch it off if it does."))
+                            .font(HUDStyle.font(10))
+                            .foregroundStyle(HUDStyle.dim)
+                    }
                     Toggle(L("Weather"), isOn: $weather)
                     Text(L("Off, the sky stays clear: no rain, storms, fog or snow."))
                         .font(HUDStyle.font(10))

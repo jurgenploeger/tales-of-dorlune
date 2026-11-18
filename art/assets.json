@@ -3043,6 +3043,118 @@
       }
     },
     {
+      "id": "windows_acorn_cottage",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_armour_shop",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_bank",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_bluebell_house",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_book_shop",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_crystal_cottage",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_dome_house",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_emerald_spire",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_flower_shop",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_garden_cottage",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_gem_workshop",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_item_shop",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_moon_pagoda",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_moonwell",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_round_cottage",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_sleepy_cottage",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_snow_cabin",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_star_observatory",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_stone_townhouse",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_swamp_stilt_hut",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_tailor_shop",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_tea_house",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_teapot_house",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_timber_house",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_tree_house",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_warrior_guild",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_weapon_shop",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_wildfolk_lodge",
+      "kind": "prop"
+    },
+    {
       "id": "fire_blacksmith_0",
       "kind": "prop"
     },

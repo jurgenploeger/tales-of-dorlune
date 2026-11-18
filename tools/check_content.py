@@ -581,6 +581,23 @@ for map_def in maps.values():
               f"{where} → size must be [smallest, biggest] reach in cells, 5 to 24")
         islands = lakes.get("islands", 0)
         check(isinstance(islands, int) and 0 <= islands <= lakes.get("count", 0), f"{where} → islands must be 0 to count")
+    if "places" in theme:
+        # Places to find out in a wild land (`WorldMap.layPlaces`, `LandPlanner.planPlaces`).
+        where = f"map {map_def['id']} places"
+        check("cave" not in theme and "town" not in map_def, f"{where} → only out in a wild land")
+        slots = {"farm": {"crop", "scarecrow", "stack"}, "ruin": {"ring", "centre"}, "camp": {"tent", "fire", "stores", "seat"},
+                 "graveyard": {"stone", "light", "tree"}, "rest": {"centre", "bench", "lamp", "stores"}}
+        for place in theme["places"] if isinstance(theme["places"], list) else []:
+            check(isinstance(place, dict) and set(place) <= {"kind", "count", "art"}, f"{where} → each must be {{kind, count, art}}")
+            kind = place.get("kind")
+            check(kind in slots, f"{where} → kind must be farm, ruin, camp, graveyard or rest, not {kind}")
+            check(isinstance(place.get("count"), int) and 1 <= place["count"] <= 4, f"{where} → count must be 1 to 4")
+            for slot, piece in (place.get("art") or {}).items():
+                check(slot in slots.get(kind, set()), f"{where} → a {kind} has no piece called {slot}")
+                check(piece in art, f"{where} → unknown art {piece}")
+    if "accentSize" in theme:
+        size = theme["accentSize"]
+        check(isinstance(size, list) and len(size) == 2 and 1 <= size[0] <= size[1] <= 12, f"map {map_def['id']} accentSize → [smallest, biggest], 1 to 12 cells")
     if "roadside" in theme:
         # What lines stretches of the roads (`LandPlanner.planRoadsides`).
         lines = theme["roadside"]
@@ -740,6 +757,9 @@ for map_def in maps.values():
         "mouth": any("cave" in (maps.get(exit["to"]) or {}).get("theme", {}) for exit in map_def["exits"]) and "cave" not in theme,
         "harbor": any(exit.get("ship") for exit in map_def["exits"]),
     }
+    # The land's places to find are landmarks too, by their kind (`WorldMap.landmark`).
+    for place in theme.get("places", []):
+        landmarks[place.get("kind")] = True
     for npc in map_def.get("npcs", []):
         if "at" in npc:
             check(landmarks.get(npc["at"]) is True, f"npc {npc['id']} → at a {npc['at']} the map {map_def['id']} hasn't got")
@@ -983,7 +1003,7 @@ for map_def in maps.values():
     check_rules(palette.get("recolor", []), where)
 
 # The kinds `Critters.make` (TalesOfDorlune/World/Critters.swift) knows how to draw.
-CRITTER_KINDS = {"bunny", "frog", "crab", "songbird", "chick", "squirrel", "lizard", "mouse",
+CRITTER_KINDS = {"bunny", "sheep", "cow", "frog", "crab", "songbird", "chick", "squirrel", "lizard", "mouse",
                  "crow", "spider", "rat", "scorpion", "wisp"}
 ambience_keys = {"particles", "butterflies", "critters", "birds", "clouds", "tint", "tintAlpha", "vignette", "lightPatches", "sunbeams", "sun", "haze", "hazeAlpha", "focus", "darkness", "weather"}
 weather_kinds = {"clear", "cloudy", "rain", "storm", "fog", "snow"}

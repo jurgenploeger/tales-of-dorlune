@@ -178,6 +178,7 @@ final class LandStage {
         critters?.update(dt: dt, player: you, visible: visible, flocks: isHere) { [map] in map.isWalkable(map.rawCell(at: $0)) }
         show(around: camera, scale: scale, screen: screen)
         canopy.draw()
+        coverPanes(dt)
     }
 
     /// Lays the shade under its scenery away from `sun` (`CanopyShade.follow`).
@@ -333,6 +334,8 @@ final class LandStage {
                               wind: placement.art)
         reflect(node, picture: drawn.texture, art: placement.art, cell: placement.cell)
         addFire(to: node, art: placement.art)
+        addWindows(to: node, art: placement.art)
+        if placement.art == "brazier" { addSmoke(to: node) }
         // Lit by a lamp nearby at night (`LampLight`): not a light itself, nor what moves in the wind
         // (its picture changes, the light's copy wouldn't).
         if !lamps.isEmpty, node.texture === drawn.texture, placement.art != "street_lamp", placement.prop?.glow == nil {
@@ -340,6 +343,123 @@ final class LandStage {
                                    from: lamps)
         }
         return node
+    }
+
+    /// Smoke rising from a fire (a camp's or a lair's brazier): a soft grey puff every half second
+    /// or so that drifts up, swells and fades; only while its chunk is in the scene.
+    private func addSmoke(to node: SKSpriteNode) {
+        let top = CGPoint(x: 0, y: node.size.height * (1 - node.anchorPoint.y) - 4)
+        let puff = SKAction.run { [weak node] in
+            guard let node else { return }
+            let smoke = SKSpriteNode(texture: SoftTextures.glow, size: CGSize(width: 12, height: 12))
+            smoke.color = UIColor(white: 0.55, alpha: 1)
+            smoke.colorBlendFactor = 1
+            smoke.alpha = 0.5
+            smoke.position = CGPoint(x: top.x + .random(in: -3...3), y: top.y)
+            smoke.zPosition = 0.02
+            node.addChild(smoke)
+            smoke.run(.sequence([
+                .group([.scale(to: .random(in: 2...2.8), duration: 2.4), .moveBy(x: .random(in: 4...12), y: 34, duration: 2.4),
+                        .fadeOut(withDuration: 2.4)]),
+                .removeFromParent(),
+            ]))
+        }
+        node.run(.repeatForever(.sequence([puff, .wait(forDuration: 0.55, withRange: 0.3)])))
+    }
+
+    /// A building's windows lit at night (`tools/window_art.py`, the user, 2026-11-18: "during the
+    /// night the lights in houses should be brighter"): its windows' own picture laid over it above
+    /// the night's shade (`Sky`, 43 000 up), so they glow as drawn while the house dims; in as it
+    /// grows dark and out by day with the lamps' light (`LampLight.follow`).
+    /// Each window is a sprite of its own (`windowBoxes`), put out while someone stands in front of
+    /// it (`coverPanes`): drawn above the shade, a pane would show over their head (the user,
+    /// 2026-11-18: "the lit panes shouldn't be over the hero's head").
+    private func addWindows(to node: SKSpriteNode, art id: String) {
+        let name = "windows_\(id)"
+        guard art.asset(name) != nil else { return }
+        let texture = art.sprite(name).texture
+        let picture = art.picture(of: texture)
+        let width = CGFloat(picture.width), height = CGFloat(picture.height)
+        guard width > 0, height > 0 else { return }
+        let lit = SKSpriteNode(color: .clear, size: .zero)
+        lit.zPosition = 43_100 - node.zPosition
+        node.addChild(lit)
+        LampLight.shared.follow(lit)
+        let sx = node.size.width / width, sy = node.size.height / height
+        let left = -node.anchorPoint.x * node.size.width, bottom = -node.anchorPoint.y * node.size.height
+        for box in windowBoxes(of: name, picture: picture) {
+            let part = SKTexture(rect: CGRect(x: box.minX / width, y: 1 - box.maxY / height, width: box.width / width,
+                                              height: box.height / height), in: texture)
+            part.filteringMode = .nearest
+            let pane = SKSpriteNode(texture: part, size: CGSize(width: box.width * sx, height: box.height * sy))
+            pane.position = CGPoint(x: left + box.midX * sx, y: bottom + (height - box.midY) * sy)
+            lit.addChild(pane)
+            // Where it shows in the land's points, and how far down the screen its building stands.
+            let middle = CGPoint(x: node.position.x + pane.position.x * node.xScale, y: node.position.y + pane.position.y)
+            panes.append(Pane(node: pane, box: CGRect(x: middle.x - pane.size.width / 2, y: middle.y - pane.size.height / 2,
+                                                      width: pane.size.width, height: pane.size.height), foot: node.position.y))
+        }
+    }
+
+    /// A building's lit window: its sprite, where it shows in the land's points, and its building's foot.
+    private struct Pane {
+        let node: SKSpriteNode
+        let box: CGRect
+        let foot: CGFloat
+    }
+    private var panes: [Pane] = []
+    private var paneTimer: TimeInterval = 0
+    /// The windows of each windows picture, in its pixels from its top left: panes within two pixels
+    /// of each other are one window.
+    private var windowBoxCache: [String: [CGRect]] = [:]
+
+    private func windowBoxes(of name: String, picture: CGImage) -> [CGRect] {
+        if let known = windowBoxCache[name] { return known }
+        let w = picture.width, h = picture.height
+        var boxes: [CGRect] = []
+        if let pixels = PixelImage.pixels(of: picture, width: w, height: h) {
+            var seen = [Bool](repeating: false, count: w * h)
+            for y0 in 0..<h {
+                for x0 in 0..<w where pixels[(y0 * w + x0) * 4 + 3] > 0 && !seen[y0 * w + x0] {
+                    var stack = [(x: x0, y: y0)]
+                    seen[y0 * w + x0] = true
+                    var minX = x0, maxX = x0, minY = y0, maxY = y0
+                    while let spot = stack.popLast() {
+                        minX = min(minX, spot.x); maxX = max(maxX, spot.x)
+                        minY = min(minY, spot.y); maxY = max(maxY, spot.y)
+                        for dy in -2...2 {
+                            for dx in -2...2 {
+                                let nx = spot.x + dx, ny = spot.y + dy
+                                guard nx >= 0, ny >= 0, nx < w, ny < h, !seen[ny * w + nx], pixels[(ny * w + nx) * 4 + 3] > 0 else { continue }
+                                seen[ny * w + nx] = true
+                                stack.append((x: nx, y: ny))
+                            }
+                        }
+                    }
+                    boxes.append(CGRect(x: minX, y: minY, width: maxX - minX + 1, height: maxY - minY + 1))
+                }
+            }
+        }
+        windowBoxCache[name] = boxes
+        return boxes
+    }
+
+    /// Puts out the lit windows someone stands in front of (lower on the screen than the building's
+    /// foot, their body over the pane), and lights them again once they've moved on. A few times a
+    /// second, and only by night.
+    private func coverPanes(_ dt: TimeInterval) {
+        guard !panes.isEmpty, LampLight.shared.isNight else { return }
+        paneTimer -= dt
+        guard paneTimer <= 0 else { return }
+        paneTimer = 0.12
+        let people = Walker.standing(in: world)
+        for pane in panes where pane.node.scene != nil {
+            let covered = people.contains { at in
+                at.y < pane.foot + 2 && CGRect(x: at.x - 13, y: at.y, width: 26, height: 54).intersects(pane.box)
+            }
+            let alpha: CGFloat = covered ? 0 : 1
+            if pane.node.alpha != alpha { pane.node.alpha = alpha }
+        }
     }
 
     /// A building's fire moving (`tools/fire_art.py`, the user, 2026-11-17: a forge's fire stood

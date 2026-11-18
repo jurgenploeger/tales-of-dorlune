@@ -111,16 +111,29 @@ final class Sky {
         return GameSession.SkyTint(r: step(color.r), g: step(color.g), b: step(color.b))
     }
 
+    /// Its light is drawn by the scene as a curve on every pixel instead (`ContinentScene.curveNight`,
+    /// Settings → Richer night colours): its own shade and haze are put away, and `shown` and
+    /// `hazed` say what they'd have been.
+    var curved = false {
+        didSet { if curved != oldValue { apply() } }
+    }
+    /// The colour its shade multiplies by now (white by day) and how much of its night haze shows,
+    /// as much of them as shows (`setMood`).
+    private(set) var shown: (r: Double, g: Double, b: Double) = (1, 1, 1)
+    private(set) var hazed: Double = 0
+
     private func apply() {
         // Less of it shows as plain daylight (white), never as a fainter shade: a multiplied colour
         // faded by alpha darkens toward black (crossing into a land, the screen went dark).
         let s = Double(strength)
         let r = 1 - (1 - color.r) * s, g = 1 - (1 - color.g) * s, b = 1 - (1 - color.b) * s
+        shown = (r, g, b)
+        hazed = night * s
         shade.color = UIColor(red: r, green: g, blue: b, alpha: 1)
         // Plain daylight changes nothing; skip drawing it.
-        shade.isHidden = r > 0.995 && g > 0.995 && b > 0.995
+        shade.isHidden = curved || (r > 0.995 && g > 0.995 && b > 0.995)
         haze.alpha = CGFloat(Self.hazeAlpha * night * s)
-        haze.isHidden = haze.alpha < 0.005
+        haze.isHidden = curved || haze.alpha < 0.005
     }
 
     /// The table's light at this hour, eased between its hours.

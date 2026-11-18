@@ -132,6 +132,14 @@ final class Walker: SKNode {
     /// Every walker there is, held weakly, so a new sun reaches them all (`shine`).
     private static let everyone = NSHashTable<Walker>.weakObjects()
 
+    /// Where everyone in the scene stands now, in `space`'s points (`LandStage.coverPanes`).
+    static func standing(in space: SKNode) -> [CGPoint] {
+        everyone.allObjects.compactMap { walker -> CGPoint? in
+            guard walker.scene != nil, !walker.isHidden, let parent = walker.parent else { return nil }
+            return parent.convert(walker.position, to: space)
+        }
+    }
+
     /// Hides everyone's cast shadow, or shows it again: out of a picture of the map
     /// (`ContinentScene.battleBackdrop`).
     static func hideFigures(_ hidden: Bool) {
