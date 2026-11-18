@@ -2481,9 +2481,9 @@ nonisolated final class WorldMap: @unchecked Sendable {
             let circle = lobe.footprint
             return (circle.x, circle.y, circle.radius * 1.05 + 1.5)
         }
-        let low = GridPoint(col: Int(extents.map { $0.x - $0.reach }.min()!.rounded(.down)),
+        var low = GridPoint(col: Int(extents.map { $0.x - $0.reach }.min()!.rounded(.down)),
                             row: Int(extents.map { $0.y - $0.reach }.min()!.rounded(.down)))
-        let high = GridPoint(col: Int(extents.map { $0.x + $0.reach }.max()!.rounded(.up)),
+        var high = GridPoint(col: Int(extents.map { $0.x + $0.reach }.max()!.rounded(.up)),
                              row: Int(extents.map { $0.y + $0.reach }.max()!.rounded(.up)))
         guard low.col >= 3, low.row >= 3, high.col < columns - 3, high.row < rows - 3 else { return false }
         func free(_ cell: GridPoint) -> Bool { isFreeForScenery(cell) && !claimed.contains(cell) }
@@ -2514,6 +2514,35 @@ nonisolated final class WorldMap: @unchecked Sendable {
         guard !cells.isEmpty else { return false }
         let ring = Set(cells.flatMap { cell in (-1...1).flatMap { dr in (-1...1).map { dc in GridPoint(col: cell.col + dc, row: cell.row + dr) } } })
         guard ring.allSatisfy(free) else { return false }
+        // A mountain's long gentle back can reach past the round it was placed by (`footprint`): its
+        // picture and its heights stopped at the box's edge in a straight, stepped line, the slope
+        // still raised there (the user, 2026-11-18, in the Valley of Fear). Placed where it was, its
+        // box grows till it holds all of it (within the map), and so do its cells.
+        if hill.lobes.contains(where: { $0.front != nil }) {
+            for _ in 0..<16 {
+                func rises(_ x: Double, _ y: Double) -> Bool { hill.field(x, y) > 0 }
+                let rowSpan = low.row...high.row, colSpan = low.col...high.col
+                let left = rowSpan.contains { rises(Double(low.col), Double($0) + 0.5) }
+                let right = rowSpan.contains { rises(Double(high.col), Double($0) + 0.5) }
+                let down = colSpan.contains { rises(Double($0) + 0.5, Double(low.row)) }
+                let up = colSpan.contains { rises(Double($0) + 0.5, Double(high.row)) }
+                let grown = (low: GridPoint(col: left ? max(1, low.col - 2) : low.col, row: down ? max(1, low.row - 2) : low.row),
+                             high: GridPoint(col: right ? min(columns - 1, high.col + 2) : high.col,
+                                             row: up ? min(rows - 1, high.row + 2) : high.row))
+                guard grown.low != low || grown.high != high else { break }
+                low = grown.low
+                high = grown.high
+            }
+            for row in low.row..<high.row {
+                for col in low.col..<high.col {
+                    let cell = GridPoint(col: col, row: row)
+                    // Never over another range's ground.
+                    guard !cells.contains(cell), owns(cell), !claimed.contains(cell), hillOf[cell] == nil else { continue }
+                    let spots = [(0.0, 0.0), (0.5, 0.0), (1.0, 0.0), (0.0, 0.5), (0.5, 0.5), (1.0, 0.5), (0.0, 1.0), (0.5, 1.0), (1.0, 1.0)]
+                    if spots.contains(where: { hill.field(Double(col) + $0.0, Double(row) + $0.1) > 0 }) { cells.insert(cell) }
+                }
+            }
+        }
         hill.cells = cells
         // Its heights, `samples` a cell, at the cells' corners and between.
         let samples = Hill.samples
