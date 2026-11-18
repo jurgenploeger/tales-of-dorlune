@@ -219,7 +219,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   a grove in the wind.
 - Less boring lands (the user's pick from `tools/land_preview.py`, 2026-11-17; in every wild land since 2026-11-18,
   each with pieces of its own): theme `places` are places to find, a farm, a ruin, a camp, a graveyard or a rest
-  (`MapDef.Site`), each a few cells off a road with a footpath to it: `WorldMap.layPlaces` finds flat open ground
+  (`MapDef.Site`), each a few cells off a road, a farm, rest or graveyard with a winding footpath to its edge (`hasFootpath`; straight to its middle, each was a stub ending in an empty square, the user, 2026-11-18), what it's there for in its middle: `WorldMap.layPlaces` finds flat open ground
   the hills, their trails and the lairs left (after them: before, it took their room), keeps it and lays its earth as path (`WorldMap.earth`); `LandPlanner.planPlaces` sets
   its pieces down (a crop in rows, a scarecrow, haystacks; a ring of standing stones round a pillar; a tent, a fire
   and stores), its `art` naming other pieces. Theme `groves`: trees only start a group where a slow field is high
