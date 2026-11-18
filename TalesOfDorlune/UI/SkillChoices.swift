@@ -315,8 +315,14 @@ struct LevelUpCard: View {
     let onDone: () -> Void
     var owner: UUID? = nil
     var name: String? = nil
+    /// Skill points just earned from mastery at the level cap (`GameSession.gainMastery`), for a
+    /// card of their own in place of a level's (the user, 2026-11-18).
+    var mastery = 0
 
     private var title: String {
+        if owner == nil, mastery > 0 {
+            return mastery == 1 ? L("You earned a skill point!") : L("You earned {count} skill points!", ["count": mastery])
+        }
         guard owner != nil, let name else { return L("Level {level}!", ["level": level]) }
         return L("{name} grew to level {level}!", ["name": name, "level": level])
     }

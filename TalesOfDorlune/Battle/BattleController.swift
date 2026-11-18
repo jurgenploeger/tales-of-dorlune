@@ -19,6 +19,9 @@ struct BattleResult {
     var story: BossStory?
     /// Monster cards new to the Book (monster ids), shown face up.
     var newCards: [String] = []
+    /// Skill points from mastery the win filled the bar for, at the level cap (`GameSession.gainMastery`):
+    /// the skill card follows, as after a level-up (the user, 2026-11-18).
+    var masteryPoints = 0
 }
 
 /// Someone else in the party who went up a level with a win: a friend or your companion.
@@ -360,6 +363,8 @@ final class BattleController {
 
     /// Set when the hero levels up during the victory payout.
     private var newLevel: Int?
+    /// Skill points from mastery this battle earned (`BattleResult.masteryPoints`).
+    private var masteryGained = 0
     private var levelsGained = 0
     /// Friends and your companion who went up a level with the win.
     private var othersLevelled: [LevelUp] = []
@@ -1192,7 +1197,8 @@ final class BattleController {
         let othersText = Set(othersLevelled.map(\.line)).union(newCardLines)
         result = BattleResult(outcome: outcome, lines: lines.filter { $0 != levelText && !othersText.contains($0) }, newLevel: newLevel,
                               exp: rewardEXP, gold: rewardGold, loot: found, levelsGained: levelsGained,
-                              others: othersLevelled, story: outcome == .victory ? story : nil, newCards: newCards)
+                              others: othersLevelled, story: outcome == .victory ? story : nil, newCards: newCards,
+                              masteryPoints: masteryGained)
         let won = outcome == .victory || outcome == .fled
         // The chat gets it all in words; the result card shows the pay as icons, so no toasts.
         var logged = lines
@@ -1337,7 +1343,9 @@ final class BattleController {
         } else {
             rewardEXP = exp
             let learnableBefore = Set(session.learnableSkills.map(\.id))
+            let masteredBefore = session.data.hero.masteryPoints ?? 0
             let levels = session.gainHeroEXP(exp)
+            masteryGained = (session.data.hero.masteryPoints ?? 0) - masteredBefore
             if levels > 0 {
                 newLevel = session.data.hero.level
                 levelsGained = levels

@@ -1645,6 +1645,9 @@ private struct ResultPanel: View {
                 if let level = result.newLevel {
                     LevelUpCard(session: session, level: level, onDone: advance)
                         .transition(.opacity)
+                } else if result.masteryPoints > 0 {
+                    LevelUpCard(session: session, level: session.data.hero.level, onDone: advance, mastery: result.masteryPoints)
+                        .transition(.opacity)
                 }
             case .companionLevelUp:
                 if let companion, let petID = companion.petID {
@@ -1661,7 +1664,8 @@ private struct ResultPanel: View {
             stage = .summary
         } else if stage == .summary, session.pendingPet != nil {
             stage = .release
-        } else if stage != .levelUp, stage != .companionLevelUp, result.newLevel != nil, session.canSpendSkillPoint {
+        } else if stage != .levelUp, stage != .companionLevelUp, result.newLevel != nil || result.masteryPoints > 0,
+                  session.canSpendSkillPoint {
             stage = .levelUp
         } else if stage != .companionLevelUp,
                   let grown = result.others.first(where: { up in up.petID.map { session.companionCanSpendSkillPoint($0) } ?? false }) {

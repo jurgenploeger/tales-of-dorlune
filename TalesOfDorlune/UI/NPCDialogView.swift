@@ -831,10 +831,12 @@ private struct QuestConversation: View {
 
     private func handIn(_ quest: QuestDef) {
         let level = session.data.hero.level
+        let masteredBefore = session.data.hero.masteryPoints ?? 0
         session.turnInQuest(quest.id)
         session.save()
         let reached = session.data.hero.level
-        finished = FinishedQuest(quest: quest, newLevel: reached > level ? reached : nil, levelsGained: reached - level)
+        finished = FinishedQuest(quest: quest, newLevel: reached > level ? reached : nil, levelsGained: reached - level,
+                                 masteryPoints: (session.data.hero.masteryPoints ?? 0) - masteredBefore)
         if reached > level {
             // The level-up jingle after the quest's own little fanfare.
             Task {
@@ -1162,6 +1164,8 @@ struct FinishedQuest {
     let quest: QuestDef
     let newLevel: Int?
     var levelsGained = 0
+    /// Skill points from mastery it filled the bar for, at the level cap: the skill card follows.
+    var masteryPoints = 0
 }
 
 /// "Quest complete!": what the quest paid, laid out like the victory card after a battle (EXP with
@@ -1202,6 +1206,9 @@ private struct QuestCompleteCard: View {
             if levelUp, let level = finished.newLevel {
                 LevelUpCard(session: session, level: level, onDone: onDone)
                     .transition(.opacity)
+            } else if levelUp, finished.masteryPoints > 0 {
+                LevelUpCard(session: session, level: session.data.hero.level, onDone: onDone, mastery: finished.masteryPoints)
+                    .transition(.opacity)
             } else {
                 card
             }
@@ -1210,7 +1217,7 @@ private struct QuestCompleteCard: View {
     }
 
     private func advance() {
-        if !levelUp, finished.newLevel != nil, session.canSpendSkillPoint {
+        if !levelUp, finished.newLevel != nil || finished.masteryPoints > 0, session.canSpendSkillPoint {
             levelUp = true
         } else {
             onDone()
