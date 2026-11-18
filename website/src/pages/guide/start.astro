@@ -1,0 +1,75 @@
+---
+import Base from '../../layouts/Base.astro';
+import GetApp from '../../components/GetApp.astro';
+import { game } from '../../lib/game';
+const item = (name: string) => game.items.find((i: any) => i.name === name);
+const seals = ['Seal Stone', 'Moon Seal', 'Heart Seal', 'Star Seal', 'Wishing Seal'].map(item).filter(Boolean);
+---
+<Base title="Start here: a beginner's guide" description="A beginner's guide to Tales of Dorlune: your first quests in Meadowbrook, how battles work, how to befriend a monster with a Seal Stone, and when to choose your path." crumbs={[{ name: 'Guide', href: '/guide/' }, { name: 'Start here' }]}>
+  <div class="card">
+    <h1>Start here</h1>
+    <p class="lead">You arrive in Meadowbrook as a new adventurer, with the whole of Dorlune ahead of you. Here's your first hour.</p>
+    <ul class="toc">
+      <li><a class="chip" href="#first">Your first quests</a></li><li><a class="chip" href="#battle">Battles</a></li>
+      <li><a class="chip" href="#friends">Making friends</a></li><li><a class="chip" href="#path">Your path</a></li>
+      <li><a class="chip" href="#town">In town</a></li><li><a class="chip" href="#tips">Good to know</a></li>
+    </ul>
+
+    <h2 id="first">Your first quests</h2>
+    <ol class="steps">
+      <li><strong>Talk to Elder Oak.</strong> He gives every new adventurer three gifts, a Wooden Sword, a Novice Ring and a Pet Egg, and asks you one question. Your answer decides what hatches. <a href="/quests/hope-of-meadowbrook/">“Hope of Meadowbrook”</a></li>
+      <li><strong>Hatch the egg from your Bag.</strong> Whatever comes out is your first companion. It fights beside you and earns a share of the EXP.</li>
+      <li><strong>Head east to Sunny Meadow.</strong> Elder Oak wants 3 Jelly Puffs beaten. Monsters aren't on the map: battles find you as you walk the wild. <a href="/quests/jelly-trouble/">“Jelly Trouble”</a></li>
+      <li><strong>Make a new friend.</strong> Next he asks you to befriend a monster with a Seal Stone. Trader Bo in Meadowbrook sells them. <a href="/quests/a-new-friend/">“A New Friend”</a></li>
+      <li><strong>Reach level {game.classChoiceLevel} and choose your path.</strong> <a href="/quests/choose-your-path/">“Choose Your Path”</a></li>
+    </ol>
+    <p>From there, the <a href="/guide/walkthrough/">walkthrough</a> takes you land by land.</p>
+
+    <h2 id="battle">Battles</h2>
+    <p>Battles are turn-based and happen where you stand. Each round you choose what to do: Attack, use a skill, or open More for items and Seal Stones. Your companions and friends take their turns beside you.</p>
+    <ul>
+      <li><strong>Elements matter.</strong> Water beats Fire, Fire beats Metal, Metal beats Wood, Wood beats Earth, Earth beats Water, and Light and Dark beat each other. The right element hits half as hard again. <a href="/guide/elements/">More on elements</a></li>
+      <li><strong>Skills cost MP.</strong> An Ether brings some back; so does a rest at the healer.</li>
+      <li><strong>Watch the levels.</strong> Every land has a level range. If the fights feel too hard, you've walked ahead of yourself: see <a href="/guide/leveling/">where to level</a>.</li>
+      <li><strong>Bosses come in waves.</strong> A boss sends its land's monsters at you first, then steps forward itself. Bring potions.</li>
+    </ul>
+
+    <h2 id="friends">Making friends</h2>
+    <p>Weaken a wild monster, then throw a Seal Stone. You can throw one at any monster at any HP, but the weaker it is, the better the stone holds. Each throw uses the stone up, whether it holds or not.</p>
+    <ul>
+      <li>You can travel with up to 5 companions.</li>
+      <li>Some monsters are far more willing than others: each <a href="/monsters/">monster's page</a> says how willing. Bosses can't be befriended.</li>
+      <li>A monster above your level is harder to hold, and stones hold a little worse each round a fight drags on.</li>
+      <li>Stronger stones hold more often.</li>
+    </ul>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Stone</th><th>What it does</th></tr></thead>
+      <tbody>{seals.map((s: any) => <tr><td><a href={`/items/${s.slug}/`}>{s.name}</a></td><td>{s.description}</td></tr>)}</tbody>
+    </table></div>
+    <p>The people you meet on the roads are part of the game too. Befriend an adventurer and they can join your party, with their own companions.</p>
+
+    <h2 id="path">Your path</h2>
+    <p>Everyone starts as a Novice. At level {game.classChoiceLevel}, visit one of the three guilds in Meadowbrook:</p>
+    <ul>{game.classes.filter((c: any) => c.guild).map((c: any) => <li><strong><a href={`/classes/#${c.slug}`}>{c.name}</a></strong> ({c.guild}): {c.description}</li>)}</ul>
+    <p>Each level gives you a skill point, to learn a new skill or to power one up. A skill is mastered at level 10.</p>
+
+    <h2 id="town">In town</h2>
+    <ul>
+      <li><strong>The healer</strong> rests your whole party.</li>
+      <li><strong>The shop</strong> sells potions, Seal Stones and gear for your level.</li>
+      <li><strong>The blacksmith</strong> forges weapons and armour from the wood, metal, gems and hides that monsters drop.</li>
+      <li><strong>The bank</strong> keeps what your bag has no room for. It's the one place nothing is ever lost.</li>
+      <li><strong>The barber and the weaver</strong> change your look and dye your gear.</li>
+    </ul>
+
+    <h2 id="tips">Good to know</h2>
+    <ul>
+      <li>A <a href="/items/homeward-feather/">Homeward Feather</a> carries you to a town you've been to. Keep one in your bag.</li>
+      <li>Some roads are closed until a quest opens them. Each <a href="/lands/">land's page</a> says which.</li>
+      <li>Collect the daily gift and do the daily bounties: they pay by your level, so they're always worth it.</li>
+      <li>The first card a kind of monster leaves goes in your Monster Book and raises one of your stats for good.</li>
+      <li>The game saves on your iPhone and plays offline. There's no account to make.</li>
+    </ul>
+  </div>
+  <div style="margin-top:22px"><GetApp compact /></div>
+</Base>

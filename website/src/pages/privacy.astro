@@ -1,0 +1,29 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../lib/site';
+---
+<Base title="Privacy policy" description="Tales of Dorlune collects no data. Your game is saved on your iPhone, and the game has no accounts, no ads and no analytics." crumbs={[{ name: 'Privacy policy' }]}>
+  <div class="card">
+    <h1>Privacy policy</h1>
+    <p class="lead">Tales of Dorlune collects nothing about you.</p>
+    <h2>The game</h2>
+    <ul>
+      <li><strong>No data is collected.</strong> The game doesn't send anything about you, your iPhone or how you play to us or to anyone else.</li>
+      <li><strong>No account.</strong> There's nothing to sign up for and nothing to sign in to.</li>
+      <li><strong>No ads and no analytics.</strong> The game has no advertising and no tracking of any kind.</li>
+      <li><strong>Your game stays on your iPhone.</strong> Saves are files on your device. Deleting the game deletes them.</li>
+      <li><strong>It plays offline.</strong> The other adventurers you meet and chat with are part of the game, not real people, and what you type in the chat never leaves your iPhone.</li>
+    </ul>
+    <h2>This website</h2>
+    <ul>
+      <li>This site sets no cookies and has no analytics or ads.</li>
+      <li>If you switch between day and night, your browser remembers the choice on your own device.</li>
+      <li>Like every website, the company that hosts it (Vercel) handles your request to show you the page, which involves your IP address.</li>
+    </ul>
+    <h2>Children</h2>
+    <p>Because the game collects no data from anyone, it collects none from children.</p>
+    <h2>Changes and questions</h2>
+    <p>If this policy changes, the new one will be on this page. {site.supportEmail ? <>Questions? Write to <a href={`mailto:${site.supportEmail}`}>{site.supportEmail}</a>.</> : <>Questions? See the <a href="/support/">support page</a>.</>}</p>
+    <p class="small">Last updated 18 November 2026.</p>
+  </div>
+</Base>

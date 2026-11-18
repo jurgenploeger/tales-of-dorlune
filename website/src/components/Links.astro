@@ -1,0 +1,6 @@
+---
+/** A list of links in a sentence: "A, B, C". `quoted` puts curly quotes round each name, as quests are written. */
+interface Props { list: { slug: string; name: string }[]; base: string; quoted?: boolean; join?: string }
+const { list, base, quoted = false, join = ', ' } = Astro.props;
+---
+{list.map((r, n) => <>{n > 0 && join}<a href={`/${base}/${r.slug}/`}>{quoted ? `“${r.name}”` : r.name}</a></>)}

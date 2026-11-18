@@ -1,0 +1,41 @@
+---
+import Base from '../../layouts/Base.astro';
+import Links from '../../components/Links.astro';
+import GetApp from '../../components/GetApp.astro';
+import { game, wildLands, levels, sortBy } from '../../lib/game';
+const questsIn = (slug: string) => sortBy(game.quests.filter((q: any) => q.land?.slug === slug), (q: any) => q.minLevel);
+/** The roads into a land, and the quest that opens each, if one does. */
+const waysIn = (slug: string) => game.lands.flatMap((o: any) => o.exits.filter((e: any) => e.slug === slug).map((e: any) => ({ from: o, requires: e.requires, ship: e.ship })));
+const towns = game.lands.filter((l: any) => l.kind === 'town');
+---
+<Base title="Walkthrough: from level 1 to 200" description={`A walkthrough of Tales of Dorlune, land by land in the order you'll meet them: how each road opens, the quests to do there and the boss at its end.`} crumbs={[{ name: 'Guide', href: '/guide/' }, { name: 'Walkthrough' }]}>
+  <div class="card">
+    <h1>Walkthrough</h1>
+    <p class="lead">Dorlune, land by land, in the order your level will take you through it. For each: how to get in, who has quests for you, and the boss waiting at its end.</p>
+    <p>New here? Read <a href="/guide/start/">Start here</a> first: it covers your first hour in Meadowbrook. Boss pages keep their endings behind a tap, so nothing here spoils the stories.</p>
+    <ul class="toc">{wildLands.map((l: any) => <li><a class="chip" href={`#${l.slug}`}>{l.name}</a></li>)}</ul>
+
+    <h2>The four towns</h2>
+    <p>Towns are where you rest, shop, bank and forge. You start in Meadowbrook; the others are a long walk off.</p>
+    <ul>{towns.map((t: any) => <li><a href={`/lands/${t.slug}/`}>{t.name}</a>: {t.services.map((s: any) => s.name).join(', ')}</li>)}</ul>
+
+    {wildLands.map((l: any) => {
+      const qs = questsIn(l.slug); const ways = waysIn(l.slug);
+      return (
+        <section id={l.slug}>
+          <h2>{l.name} <span class="chip rare" style="vertical-align:middle">Levels {levels(l.levels)}</span></h2>
+          {l.above && <p>Down the ladder from <a href={`/lands/${l.above.slug}/`}>{l.above.name}</a>.</p>}
+          {ways.length > 0 && <p><strong>Getting there.</strong> {ways.map((w: any, n: number) => <>{n > 0 && ' Or '}{n === 0 ? 'From ' : 'from '}<a href={`/lands/${w.from.slug}/`}>{w.from.name}</a>{w.ship && ', by ship'}{w.requires ? <>, once you've finished <a href={`/quests/${w.requires.slug}/`}>“{w.requires.name}”</a>.</> : '.'}</>)}</p>}
+          <p><strong>Monsters.</strong> <Links list={l.monsters.filter((m: any) => !m.rare)} base="monsters" />{l.monsters.some((m: any) => m.rare) && <>, and now and then a rare <Links list={l.monsters.filter((m: any) => m.rare)} base="monsters" join=" or " /></>}.</p>
+          {qs.length > 0 && <>
+            <p><strong>Quests.</strong></p>
+            <ul>{qs.map((q: any) => <li><a href={`/quests/${q.slug}/`}>{q.title}</a> <span class="small">· level {q.minLevel} · {q.giver}{q.opens.length > 0 && <> · opens the road to {q.opens.map((o: any) => o.to.name).join(' and ')}</>}</span></li>)}</ul>
+          </>}
+          {l.bosses.map((b: any) => <p><strong>Boss.</strong> <a href={`/monsters/${b.slug}/`}>{b.name}</a>, level {b.level}. Bring potions, and be near its level before you try.</p>)}
+          {l.exits.some((e: any) => e.requires) && <p><strong>Onward.</strong> {l.exits.filter((e: any) => e.requires).map((e: any, n: number) => <>{n > 0 && ' '}The road to <a href={`/lands/${e.slug}/`}>{e.name}</a> opens after <a href={`/quests/${e.requires.slug}/`}>“{e.requires.name}”</a>.</>)}</p>}
+        </section>
+      );
+    })}
+  </div>
+  <div style="margin-top:22px"><GetApp compact /></div>
+</Base>

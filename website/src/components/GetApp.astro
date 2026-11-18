@@ -1,0 +1,18 @@
+---
+import { site } from '../lib/site';
+interface Props { compact?: boolean }
+const { compact = false } = Astro.props;
+---
+{compact ? (
+  <div class="card get-app">
+    <img src="/img/app-icon.png" alt="" width="56" height="56" class="pixel" />
+    <p><strong>Tales of Dorlune</strong> is {site.tagline} for iPhone. It plays offline, with no account to make.</p>
+    {site.appStoreUrl
+      ? <a class="btn" href={site.appStoreUrl}>Get it on the App Store</a>
+      : <span class="btn" aria-disabled="true">Coming soon to the App Store</span>}
+  </div>
+) : (
+  site.appStoreUrl
+    ? <a class="btn" href={site.appStoreUrl}>Get it on the App Store</a>
+    : <span class="btn" aria-disabled="true">Coming soon to the App Store</span>
+)}

@@ -1,0 +1,99 @@
+---
+import Base from '../../layouts/Base.astro';
+import Sprite from '../../components/Sprite.astro';
+import GetApp from '../../components/GetApp.astro';
+import { game, monstersByLevel, STATS, STAT_NAMES, cap, levels, pct, statAt, strongAgainst, weakTo, ease, expAt, goldAt, span } from '../../lib/game';
+export function getStaticPaths() {
+  return monstersByLevel.map((m: any, i: number) => ({ params: { slug: m.slug }, props: { m, prev: monstersByLevel[i - 1], next: monstersByLevel[i + 1] } }));
+}
+const { m, prev, next } = Astro.props as any;
+const lv = m.level ?? [1, 1];
+const shown = [...new Set([lv[0], lv[1]])];
+const where = m.bossAt ? m.bossAt.land.name : m.lands.map((l: any) => l.name).join(', ');
+const desc = `${m.name}, ${m.boss ? 'a boss' : m.rare ? 'a rare monster' : 'a monster'} of ${cap(m.element)} in Tales of Dorlune${where ? `, found in ${where}` : ''}: its stats, skills${m.drops.length ? ', drops' : ''} and how to ${m.captureRate ? 'befriend' : 'beat'} it.`;
+const maxStat = Math.max(...STATS.filter((s) => s !== 'hp').map((s) => statAt(m, s, lv[1])));
+---
+<Base title={`${m.name}: location, stats${m.drops.length ? ', drops' : ''} and skills`} description={desc} crumbs={[{ name: 'Guide', href: '/guide/' }, { name: 'Monsters', href: '/monsters/' }, { name: m.name }]}>
+  <div class="card">
+    <h1>{m.name}</h1>
+    <div class="entity">
+      <div>
+        <ul class="chips">
+          <li><span class={`chip el-${m.element}`}>{cap(m.element)}</span></li>
+          {m.boss && <li><span class="chip boss">Boss</span></li>}
+          {m.rare && <li><span class="chip rare">Rare</span></li>}
+        </ul>
+        <p class="quote">{m.lore}</p>
+        {m.variantOf && <p>A rare colour of the <a href={`/monsters/${m.variantOf.slug}/`}>{m.variantOf.name}</a>: tougher, worth more EXP and gold, and harder to befriend.</p>}
+        {m.variants.length > 0 && <p>Also seen as: {m.variants.map((v: any, i: number) => <>{i > 0 && ', '}<a href={`/monsters/${v.slug}/`}>{v.name}</a></>)}.</p>}
+
+        <h2>Where to find it</h2>
+        {m.bossAt ? (
+          <p>{m.name} waits in <a href={`/lands/${m.bossAt.land.slug}/`}>{m.bossAt.land.name}</a> at level {m.bossAt.level}. The fight comes in {m.bossAt.waves} waves: the land's own monsters first, then {m.name}. It's back for a rematch each time you return.</p>
+        ) : m.lands.length ? (
+          <div class="table-wrap"><table>
+            <thead><tr><th>Land</th><th class="n">Levels</th><th>How often</th></tr></thead>
+            <tbody>{m.lands.map((l: any) => (
+              <tr><td><a href={`/lands/${l.slug}/`}>{l.name}</a></td><td class="n">{levels(l.levels)}</td>
+              <td><div style="display:flex;align-items:center;gap:8px"><div class="bar" style="flex:1"><i style={`width:${Math.round(l.share * 100)}%`}></i></div>{pct(l.share)}</div></td></tr>
+            ))}</tbody>
+          </table></div>
+        ) : <p>It isn't found in the wild.</p>}
+        {m.bossAt?.greeting && <p class="quote">“{m.bossAt.greeting}”</p>}
+
+        <h2>In battle</h2>
+        <p>
+          {strongAgainst(m.element).length > 0 && <>Its {cap(m.element)} attacks hit {strongAgainst(m.element).map(cap).join(' and ')} harder. </>}
+          {weakTo(m.element).length > 0 && <>Hit it with {weakTo(m.element).map(cap).join(' or ')} for half as much again.</>}
+          {' '}<a href="/guide/elements/">How elements work</a>
+        </p>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Stat</th>{shown.map((l) => <th class="n">Level {l}</th>)}<th></th></tr></thead>
+          <tbody>{STATS.map((s) => (
+            <tr><td>{STAT_NAMES[s]}</td>{shown.map((l) => <td class="n">{statAt(m, s, l)}</td>)}
+            <td style="width:35%">{s !== 'hp' && <div class="bar"><i style={`width:${Math.round((statAt(m, s, lv[1]) / maxStat) * 100)}%`}></i></div>}</td></tr>
+          ))}</tbody>
+        </table></div>
+        {m.skills.length > 0 && <p>Skills: {m.skills.map((s: any, i: number) => <>{i > 0 && ', '}<a href={`/skills/#${s.slug}`}>{s.name}</a></>)}.</p>}
+
+        {m.drops.length > 0 && <>
+          <h2>Drops</h2>
+          <p>Every win rolls each of these.</p>
+          <div class="table-wrap"><table>
+            <thead><tr><th>Item</th><th class="n">Chance</th></tr></thead>
+            <tbody>{m.drops.map((d: any) => <tr><td><a href={`/items/${d.slug}/`}>{d.name}</a></td><td class="n">{pct(d.chance)}</td></tr>)}</tbody>
+          </table></div>
+        </>}
+
+        {m.quests.length > 0 && <>
+          <h2>Quests</h2>
+          <ul>{m.quests.map((q: any) => <li><a href={`/quests/${q.slug}/`}>{q.name}</a></li>)}</ul>
+        </>}
+
+        {m.bossAt?.victory && (
+          <details class="spoiler">
+            <summary>Story spoiler: what happens when you win</summary>
+            <h3 style="margin-top:0">{m.bossAt.victory.title}</h3>
+            {(m.bossAt.victory.story ?? []).map((p: string) => <p>{p}</p>)}
+          </details>
+        )}
+      </div>
+
+      <aside class="infobox">
+        <div class="portrait"><Sprite sprite={m.sprite} box={160} max={4} alt={`${m.name}, as it looks in the game`} /></div>
+        <dl>
+          <dt>Element</dt><dd>{cap(m.element)}</dd>
+          <dt>Level</dt><dd>{levels(m.level) || '—'}</dd>
+          <dt>EXP</dt><dd>{span(expAt(m, lv[0]), expAt(m, lv[1]))}</dd>
+          <dt>Gold</dt><dd>{span(goldAt(m, lv[0]), goldAt(m, lv[1]))}</dd>
+          <dt>Befriend</dt><dd>{m.captureRate ? ease(m.captureRate) : "Can't be befriended"}</dd>
+        </dl>
+      </aside>
+    </div>
+    <div class="prevnext">
+      {prev ? <a class="btn quiet small-btn" href={`/monsters/${prev.slug}/`}>← {prev.name}</a> : <span></span>}
+      {next && <a class="btn quiet small-btn" href={`/monsters/${next.slug}/`}>{next.name} →</a>}
+    </div>
+  </div>
+  <div style="margin-top:22px"><GetApp compact /></div>
+</Base>

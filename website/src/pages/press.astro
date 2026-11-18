@@ -1,0 +1,36 @@
+---
+import Base from '../layouts/Base.astro';
+import { game } from '../lib/game';
+import { site } from '../lib/site';
+const c = game.counts;
+const shots = ['explore', 'battle', 'seal', 'boss', 'town', 'companion', 'levelup', 'night', 'anywhere'];
+---
+<Base title="Press kit" description="The Tales of Dorlune press kit: what the game is, the numbers, the logo, the app icon and screenshots." crumbs={[{ name: 'Press kit' }]}>
+  <div class="card">
+    <h1>Press kit</h1>
+    <p class="lead">Tales of Dorlune is {site.tagline} for iPhone. You explore lands from the old stories, make friends of their monsters and set the tales right, on your own and at your own pace.</p>
+    <h2>At a glance</h2>
+    <ul>
+      <li>{c.lands} lands from the old stories, and {c.towns} towns</li>
+      <li>{c.monsters} monsters in the Monster Book, {c.bosses} of them bosses out of the fairy tales</li>
+      <li>Three paths: Fighter, Mage or Beast Tamer</li>
+      <li>{c.maxLevel} levels to grow through, and {c.quests} quests</li>
+      <li>{c.languages} languages: {game.languages.join(', ')}</li>
+      <li>Plays offline, with no account to make. The people you meet in the world are part of the game.</li>
+      <li>For iPhone, upright or on its side. Made by {site.developer}.</li>
+    </ul>
+    <h2>The name</h2>
+    <p>Write it <strong>Tales of Dorlune</strong>: a capital T and D, a small “of”. Dorlune, one word, is the land. The tagline, “{site.tagline}”, is always lower case.</p>
+    <h2>Logo and icon</h2>
+    <div class="grid">
+      <a class="tile tall" href="/img/logo.png" download><img src="/img/logo.png" alt="The Tales of Dorlune logo" width="952" height="353" /><span>Logo, PNG with no background</span></a>
+      <a class="tile tall" href="/img/app-icon.png" download><img src="/img/app-icon.png" alt="The app icon" width="160" height="160" class="pixel" style="border-radius:22%" /><span>App icon, 512 px</span></a>
+    </div>
+    <p class="small">Please don't recolour, stretch or tilt the logo, and keep it on the sky, cream or bright art where you can.</p>
+    <h2>Screenshots</h2>
+    <p>Real screens from the game. Tap one for the full picture.</p>
+    <div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(280px,1fr))">
+      {shots.map((s) => <a href={`/img/shot-${s}.jpg`}><img class="shot" src={`/img/shot-${s}.jpg`} alt="A screen from Tales of Dorlune" width="1600" height="804" loading="lazy" /></a>)}
+    </div>
+  </div>
+</Base>

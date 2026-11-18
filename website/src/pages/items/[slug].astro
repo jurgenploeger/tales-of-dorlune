@@ -1,0 +1,57 @@
+---
+import Base from '../../layouts/Base.astro';
+import Sprite from '../../components/Sprite.astro';
+import Links from '../../components/Links.astro';
+import { game, num, pct, ITEM_TYPE, CLASS_NAMES, STAT_NAMES, cap } from '../../lib/game';
+export function getStaticPaths() {
+  return game.items.map((i: any) => ({ params: { slug: i.slug }, props: { i } }));
+}
+const { i } = Astro.props as any;
+const nowhere = !i.soldAt.length && !i.droppedBy.length && !i.questDrops.length && !i.rewardOf.length && !i.recipe.length && !i.chests.length && !i.make;
+const MAKE: Record<string, string> = { carve: 'Carved by hand, from the Bag.', join: 'Put together by hand, from the Bag.', mix: 'Mixed by hand from a gem and a Sheepskin, from the gem\'s card in the Bag.' };
+---
+<Base title={`${i.name}: stats and where to get it`} description={`${i.name}, ${ITEM_TYPE[i.type].toLowerCase()} in Tales of Dorlune${i.level ? ` for level ${i.level}` : ''}: what it does and where to get it. ${i.description}`} crumbs={[{ name: 'Guide', href: '/guide/' }, { name: 'Items', href: '/items/' }, { name: i.name }]}>
+  <div class="card">
+    <h1>{i.name}</h1>
+    <div class="entity">
+      <div>
+        <p class="quote">{i.description}</p>
+        {i.stats && <>
+          <h2>Stats</h2>
+          <ul class="chips">{Object.entries(i.stats).map(([k, v]) => <li><span class="chip">{STAT_NAMES[k] ?? cap(k)} {(v as number) > 0 ? '+' : ''}{v}</span></li>)}</ul>
+        </>}
+        <h2>Where to get it</h2>
+        <ul>
+          {i.soldAt.map((s: any) => <li>Sold by {s.shop} in <a href={`/lands/${s.land.slug}/`}>{s.land.name}</a>{i.price > 0 && <> for {num(i.price)} gold</>}</li>)}
+          {i.droppedBy.map((d: any) => <li>Dropped by <a href={`/monsters/${d.slug}/`}>{d.name}</a>, {pct(d.chance)} of the time</li>)}
+          {i.questDrops.map((d: any) => <li>Dropped by <Links list={d.from} base="monsters" /> during <a href={`/quests/${d.quest.slug}/`}>“{d.quest.name}”</a>, {pct(d.chance)} of the time</li>)}
+          {i.rewardOf.length > 0 && <li>Given for {i.rewardOf.map((r: any, n: number) => <>{n > 0 && ', '}<a href={`/quests/${r.slug}/`}>“{r.name}”</a></>)}</li>}
+          {i.chests.length > 0 && <li>In a treasure chest in <Links list={i.chests} base="lands" /></li>}
+          {i.recipe.length > 0 && <li>Forged by a blacksmith from {i.recipe.map((r: any, n: number) => <>{n > 0 && ', '}{r.count} × <a href={`/items/${r.slug}/`}>{r.name}</a></>)}</li>}
+          {i.make && <li>{MAKE[i.make] ?? 'Made by hand, from the Bag.'}</li>}
+          {i.type === 'material' && i.material !== 'quest' && i.material !== 'dye' && i.level && <li>Dropped by wild monsters of level {i.level} and up</li>}
+          {nowhere && i.type === 'cape' && <li>Woven by Orla the Weaver in Meadowbrook, for a deed done</li>}
+          {nowhere && i.type !== 'cape' && !(i.type === 'material' && i.level) && <li>From treasure chests, festive seasons or other rewards</li>}
+        </ul>
+        {(i.usedIn.length > 0 || i.wantedBy.length > 0) && <>
+          <h2>What it's for</h2>
+          <ul>
+            {i.wantedBy.length > 0 && <li>Asked for in {i.wantedBy.map((r: any, n: number) => <>{n > 0 && ', '}<a href={`/quests/${r.slug}/`}>“{r.name}”</a></>)}</li>}
+            {i.usedIn.length > 0 && <li>Forged into <Links list={i.usedIn} base="items" /></li>}
+          </ul>
+        </>}
+      </div>
+      <aside class="infobox">
+        <div class="portrait"><Sprite sprite={i.sprite} box={128} max={2} alt={i.name} /></div>
+        <dl>
+          <dt>Kind</dt><dd>{ITEM_TYPE[i.type]}</dd>
+          {i.level && <><dt>Level</dt><dd>{i.level}</dd></>}
+          <dt>For</dt><dd>{i.classes ? i.classes.map((c: string) => CLASS_NAMES[c] ?? c).join(', ') : 'Everyone'}</dd>
+          {i.heal && <><dt>Restores</dt><dd>{i.heal} HP</dd></>}
+          {i.mp && <><dt>Restores</dt><dd>{i.mp} MP</dd></>}
+          {i.price > 0 && <><dt>Price</dt><dd>{num(i.price)} gold</dd></>}
+        </dl>
+      </aside>
+    </div>
+  </div>
+</Base>

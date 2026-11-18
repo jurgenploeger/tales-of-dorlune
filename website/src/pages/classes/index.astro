@@ -1,0 +1,43 @@
+---
+import Base from '../../layouts/Base.astro';
+import Sprite from '../../components/Sprite.astro';
+import { game, STATS, STAT_NAMES } from '../../lib/game';
+const paths = game.classes.filter((c: any) => c.guild);
+const novice = game.classes.find((c: any) => !c.guild);
+---
+<Base title="Classes: Fighter, Mage and Beast Tamer" description={`The three paths in Tales of Dorlune, Fighter, Mage and Beast Tamer: what each grows a level, every skill and the level it's learned at, and the three races.`} crumbs={[{ name: 'Guide', href: '/guide/' }, { name: 'Classes' }]}>
+  <div class="card">
+    <h1>Classes</h1>
+    <p class="lead">Everyone starts as a Novice. At level {game.classChoiceLevel} you join a guild in Meadowbrook and choose your path.</p>
+    <ul class="toc">{paths.map((c: any) => <li><a class="chip" href={`#${c.slug}`}>{c.name}</a></li>)}<li><a class="chip" href="#races">Races</a></li></ul>
+
+    <h2>At a glance</h2>
+    <p>What each path adds to your stats every level.</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Path</th>{STATS.map((s) => <th class="n">{STAT_NAMES[s]}</th>)}</tr></thead>
+      <tbody>{game.classes.map((c: any) => <tr><td><a href={`#${c.slug}`}>{c.name}</a></td>{STATS.map((s) => <td class="n">+{c.growth[s]}</td>)}</tr>)}</tbody>
+    </table></div>
+
+    {[...paths, novice].map((c: any) => (
+      <section id={c.slug}>
+        <h2>{c.name}</h2>
+        <p>{c.description}{c.master && <> Join at the {c.guild}: talk to {c.master.name} in <a href={`/lands/${c.master.land.slug}/`}>{c.master.land.name}</a>.</>}</p>
+        <div class="table-wrap"><table class="cards">
+          <thead><tr><th>Skill</th><th class="n">Learned at</th><th class="n">MP</th><th>What it does</th></tr></thead>
+          <tbody>{c.skills.map((s: any) => (
+            <tr><td><a href={`/skills/#${s.slug}`}>{s.name}</a></td><td class="n" data-label="Learned at">Level {s.level}</td><td class="n" data-label="MP">{s.mp}</td><td data-label="What it does">{s.description}</td></tr>
+          ))}</tbody>
+        </table></div>
+      </section>
+    ))}
+
+    <section id="races">
+      <h2>Races</h2>
+      <p>You pick a race when you make your hero. It sets the stats you start from; your path does the rest.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Race</th>{STATS.map((s) => <th class="n">{STAT_NAMES[s]}</th>)}</tr></thead>
+        <tbody>{game.races.map((r: any) => <tr><td><span class="cell-art"><Sprite sprite={r.sprite} box={36} max={1} /></span><strong>{r.name}</strong><br /><span class="small">{r.description}</span></td>{STATS.map((s) => <td class="n">{r.base[s]}</td>)}</tr>)}</tbody>
+      </table></div>
+    </section>
+  </div>
+</Base>

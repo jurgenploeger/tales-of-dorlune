@@ -1,0 +1,80 @@
+---
+import Base from '../../layouts/Base.astro';
+import Sprite from '../../components/Sprite.astro';
+import GetApp from '../../components/GetApp.astro';
+import { game, questsByLevel, num, pct, objective } from '../../lib/game';
+export function getStaticPaths() {
+  return questsByLevel.map((q: any, i: number) => ({ params: { slug: q.slug }, props: { q, prev: questsByLevel[i - 1], next: questsByLevel[i + 1] } }));
+}
+const { q, prev, next } = Astro.props as any;
+const o = q.objective;
+const target = o.monster && game.monsters.find((m: any) => m.slug === o.monster.slug);
+const item = o.item && game.items.find((i: any) => i.slug === o.item.slug);
+const what = objective(q);
+---
+<Base title={`${q.title}: quest guide and rewards`} description={`How to finish “${q.title}” in Tales of Dorlune: ${what.toLowerCase()}. From ${q.giver}${q.land ? ` in ${q.land.name}` : ''}, at level ${q.minLevel}.`} crumbs={[{ name: 'Guide', href: '/guide/' }, { name: 'Quests', href: '/quests/' }, { name: q.title }]}>
+  <div class="card">
+    <h1>{q.title}</h1>
+    <div class="entity">
+      <div>
+        <p class="quote">{q.description}</p>
+
+        <h2>How to do it</h2>
+        <ol class="steps">
+          <li>Talk to <strong>{q.giver}</strong>{q.land && <> in <a href={`/lands/${q.land.slug}/`}>{q.land.name}</a></>}{q.minLevel > 1 && <> once you're level {q.minLevel}</>}{q.requires.length > 0 && <>, after finishing {q.requires.map((r: any, i: number) => <>{i > 0 && ' and '}<a href={`/quests/${r.slug}/`}>“{r.name}”</a></>)}</>}.</li>
+          {q.starterItems.length > 0 && <li>You're given {q.starterItems.map((s: any, i: number) => <>{i > 0 && ', '}<a href={`/items/${s.slug}/`}>{s.name}</a></>)}.</li>}
+          <li>
+            <strong>{what}.</strong>
+            {target && target.lands.length > 0 && <> You'll find {target.name} in {target.lands.map((l: any, i: number) => <>{i > 0 && ' and '}<a href={`/lands/${l.slug}/`}>{l.name}</a></>)}.</>}
+            {target && target.bossAt && <> {target.name} waits in <a href={`/lands/${target.bossAt.land.slug}/`}>{target.bossAt.land.name}</a> at level {target.bossAt.level}.</>}
+            {o.type === 'capture' && <> Weaken it first, then throw a Seal Stone.</>}
+            {o.type === 'chooseClass' && <> The three guild masters are in Meadowbrook. <a href="/classes/">Compare the paths</a>.</>}
+            {o.type === 'bring' && item && item.make && <> You make it by hand, from the Bag.</>}
+            {o.type === 'bring' && item && item.soldAt.length > 0 && <> {item.soldAt[0].shop} in {item.soldAt[0].land.name} sells it.</>}
+          </li>
+          {q.drops.map((d: any) => <li>While the quest's on, {d.from.map((f: any, i: number) => <>{i > 0 && ' and '}<a href={`/monsters/${f.slug}/`}>{f.name}</a></>)} {d.from.length > 1 ? 'drop' : 'drops'} <a href={`/items/${d.item.slug}/`}>{d.item.name}</a> about {pct(d.chance)} of the time.</li>)}
+          {o.type !== 'deliver' && <li>Go back to {q.giver} for your reward.</li>}
+        </ol>
+
+        {q.question && (
+          <details class="spoiler">
+            <summary>Spoiler: {q.giver}'s question and what each answer hatches</summary>
+            <p>“{q.question.text}”</p>
+            <ul>{q.question.answers.map((a: any) => <li>{a.text}: a <a href={`/monsters/${a.egg.slug}/`}>{a.egg.name}</a></li>)}</ul>
+          </details>
+        )}
+
+        <h2>Reward</h2>
+        <div class="reward"><ul>
+          {q.reward.exp > 0 && <li>{num(q.reward.exp)} EXP</li>}
+          {q.reward.gold > 0 && <li>{num(q.reward.gold)} gold</li>}
+          {q.reward.items.map((it: any) => <li><a href={`/items/${it.slug}/`}>{it.name}</a>{it.count > 1 && ` × ${it.count}`}</li>)}
+        </ul></div>
+
+        {(q.unlocks.length > 0 || q.opens.length > 0) && <>
+          <h2>What it opens</h2>
+          <ul>
+            {q.opens.map((r: any) => <li>The road from <a href={`/lands/${r.from.slug}/`}>{r.from.name}</a> to <a href={`/lands/${r.to.slug}/`}>{r.to.name}</a></li>)}
+            {q.unlocks.map((u: any) => <li>The quest <a href={`/quests/${u.slug}/`}>“{u.name}”</a></li>)}
+          </ul>
+        </>}
+      </div>
+      <aside class="infobox">
+        {q.giverSprite && <div class="portrait"><Sprite sprite={q.giverSprite} box={120} max={3} alt={q.giver} /></div>}
+        <dl>
+          <dt>From</dt><dd>{q.giver}</dd>
+          {q.land && <><dt>Where</dt><dd><a href={`/lands/${q.land.slug}/`}>{q.land.name}</a></dd></>}
+          <dt>Level</dt><dd>{q.minLevel}</dd>
+          {q.difficulty && <><dt>Difficulty</dt><dd>{'★'.repeat(q.difficulty)}</dd></>}
+          <dt>EXP</dt><dd>{num(q.reward.exp)}</dd>
+          <dt>Gold</dt><dd>{num(q.reward.gold)}</dd>
+        </dl>
+      </aside>
+    </div>
+    <div class="prevnext">
+      {prev ? <a class="btn quiet small-btn" href={`/quests/${prev.slug}/`}>← {prev.title}</a> : <span></span>}
+      {next && <a class="btn quiet small-btn" href={`/quests/${next.slug}/`}>{next.title} →</a>}
+    </div>
+  </div>
+  <div style="margin-top:22px"><GetApp compact /></div>
+</Base>

@@ -1,0 +1,40 @@
+---
+import Base from '../../layouts/Base.astro';
+import ListTools from '../../components/ListTools.astro';
+import { game, questsByLevel, num, objective } from '../../lib/game';
+const lands = [...new Map(game.quests.filter((q: any) => q.land).map((q: any) => [q.land.slug, q.land.name])).entries()];
+const band = (n: number) => (n < 30 ? '1' : n < 60 ? '30' : n < 100 ? '60' : n < 150 ? '100' : '150');
+---
+<Base title="Quests: every quest and its reward" description={`All ${game.counts.quests} quests in Tales of Dorlune: who gives each one, the level you need, what it asks and what it pays.`} crumbs={[{ name: 'Guide', href: '/guide/' }, { name: 'Quests' }]}>
+  <div class="card">
+    <h1>Quests</h1>
+    <p>There are {game.counts.quests} quests. Each helps someone out, and some open the road to the next land. Look for people with a mark over their heads.</p>
+    <div class="filters" id="qf">
+      <input type="search" placeholder="Find a quest" aria-label="Find a quest" />
+      <select data-key="land" aria-label="Land"><option value="">Any land</option>{lands.map(([s, n]) => <option value={s}>{n}</option>)}</select>
+      <select data-key="band" aria-label="Level"><option value="">Any level</option><option value="1">Levels 1–29</option><option value="30">Levels 30–59</option><option value="60">Levels 60–99</option><option value="100">Levels 100–149</option><option value="150">Levels 150–200</option></select>
+      <span class="count" aria-live="polite"></span>
+    </div>
+    <div class="table-wrap">
+      <table class="cards" id="qt">
+        <thead><tr>
+          <th data-sort="s"><button>Quest</button></th><th data-sort="n" class="n"><button>Level</button></th><th>From</th><th>What to do</th>
+          <th data-sort="n" class="n"><button>EXP</button></th><th data-sort="n" class="n"><button>Gold</button></th>
+        </tr></thead>
+        <tbody>
+          {questsByLevel.map((q: any) => (
+            <tr data-name={q.title.toLowerCase()} data-land={q.land?.slug} data-band={band(q.minLevel)}>
+              <td data-v={q.title}><a href={`/quests/${q.slug}/`}>{q.title}</a></td>
+              <td class="n" data-label="Level" data-v={q.minLevel}>{q.minLevel}</td>
+              <td data-label="From">{q.giver}{q.land && <>, {q.land.name}</>}</td>
+              <td data-label="What to do">{objective(q)}</td>
+              <td class="n" data-label="EXP" data-v={q.reward.exp}>{num(q.reward.exp)}</td>
+              <td class="n" data-label="Gold" data-v={q.reward.gold}>{num(q.reward.gold)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <ListTools table="qt" filters="qf" />
+</Base>

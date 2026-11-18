@@ -1,0 +1,127 @@
+---
+import '@fontsource/luckiest-guy';
+import '@fontsource-variable/fredoka';
+import '../styles/global.css';
+import { site } from '../lib/site';
+import { game } from '../lib/game';
+
+interface Props {
+  title: string;
+  description: string;
+  crumbs?: { name: string; href?: string }[];
+  image?: string;
+  bare?: boolean;
+  jsonld?: object[];
+}
+const { title, description, crumbs = [], image = '/img/link-preview.png', bare = false, jsonld = [] } = Astro.props;
+const path = Astro.url.pathname;
+const canonical = new URL(path, site.url).href;
+const fullTitle = path === '/' ? title : `${title} | ${site.name}`;
+const nav = [
+  ['Guide', '/guide/'], ['Monsters', '/monsters/'], ['Lands', '/lands/'], ['Quests', '/quests/'],
+  ['Items', '/items/'], ['Classes', '/classes/'], ['News', '/news/'],
+];
+const trail = crumbs.length ? [{ name: 'Home', href: '/' }, ...crumbs] : [];
+const ld = [
+  ...jsonld,
+  ...(trail.length ? [{
+    '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+    itemListElement: trail.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, item: new URL(c.href ?? path, site.url).href })),
+  }] : []),
+];
+---
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#4a90e8" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0b1538" media="(prefers-color-scheme: dark)" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL(image, site.url).href} />
+    <meta name="twitter:card" content="summary_large_image" />
+    {site.appStoreId && <meta name="apple-itunes-app" content={`app-id=${site.appStoreId}`} />}
+    {ld.map((o) => <script type="application/ld+json" set:html={JSON.stringify(o)} />)}
+    <script is:inline>
+      try { const t = localStorage.getItem('theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="brand" href="/"><img src="/img/app-icon.png" alt="" width="40" height="40" class="pixel" />{site.name}</a>
+        <nav class="nav" aria-label="Main">
+          {nav.map(([name, href]) => <a href={href} aria-current={path.startsWith(href) ? 'page' : undefined}>{name}</a>)}
+        </nav>
+        <div class="header-tools">
+          <form class="searchbox" action="/search/" role="search">
+            <input type="search" name="q" placeholder="Search" aria-label="Search the guide" />
+          </form>
+          <button class="icon-btn" id="theme" type="button" aria-label="Switch between day and night">☾</button>
+        </div>
+      </div>
+    </header>
+    <main>
+      {bare ? <slot /> : (
+        <div class="page">
+          <div class="wrap">
+            {trail.length > 0 && (
+              <nav class="crumbs" aria-label="Breadcrumb">
+                {trail.map((c, i) => <>{i > 0 && <span>›</span>}{c.href ? <a href={c.href}>{c.name}</a> : c.name}</>)}
+              </nav>
+            )}
+            <slot />
+          </div>
+        </div>
+      )}
+    </main>
+    <footer class="site-footer">
+      <div class="wrap">
+        <div class="cols">
+          <div>
+            <h2>THE GAME</h2>
+            <ul>
+              <li><a href="/">Tales of Dorlune</a></li>
+              <li><a href="/news/">What's new</a></li>
+              <li><a href="/press/">Press kit</a></li>
+            </ul>
+          </div>
+          <div>
+            <h2>THE GUIDE</h2>
+            <ul>
+              <li><a href="/guide/start/">Start here</a></li>
+              <li><a href="/guide/walkthrough/">Walkthrough</a></li>
+              <li><a href="/guide/leveling/">Where to level</a></li>
+              <li><a href="/monsters/">Monster Book</a></li>
+            </ul>
+          </div>
+          <div>
+            <h2>HELP</h2>
+            <ul>
+              <li><a href="/support/">Support</a></li>
+              <li><a href="/privacy/">Privacy policy</a></li>
+            </ul>
+          </div>
+        </div>
+        <p class="fine">Guide data from version {game.version} ({game.date}), straight from the game's own files. © {new Date().getFullYear()} {site.developer}.</p>
+      </div>
+    </footer>
+    <script is:inline>
+      document.getElementById('theme').addEventListener('click', () => {
+        const root = document.documentElement;
+        const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+        root.dataset.theme = dark ? 'light' : 'dark';
+        try { localStorage.setItem('theme', root.dataset.theme); } catch (e) {}
+      });
+    </script>
+  </body>
+</html>
