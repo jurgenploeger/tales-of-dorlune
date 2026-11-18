@@ -702,7 +702,7 @@ struct ExplainWindow: View {
                         // A paragraph a line of the text, apart.
                         ForEach(Array(text.split(separator: "\n").enumerated()), id: \.offset) { _, paragraph in
                             Text(String(paragraph))
-                                .font(HUDStyle.font(12))
+                                .font(HUDStyle.body(12))
                                 .foregroundStyle(HUDStyle.cream)
                                 .fixedSize(horizontal: false, vertical: true)
                         }
@@ -2422,7 +2422,7 @@ struct QuestRow: View {
                         .foregroundStyle(HUDStyle.gold.opacity(0.85))
                 }
                 if showsDescription {
-                    Text(quest.description).font(HUDStyle.font(11)).foregroundStyle(HUDStyle.dim)
+                    Text(quest.description).font(HUDStyle.body(11)).foregroundStyle(HUDStyle.dim)
                 }
                 if showsGiver && expanded {
                     QuestRewardsView(session: session, quest: quest, earned: false)
@@ -2579,7 +2579,7 @@ struct QuestWindow: View {
                         header
                         progress
                         Text(quest.description)
-                            .font(HUDStyle.font(12))
+                            .font(HUDStyle.body(12))
                             .foregroundStyle(HUDStyle.cream)
                             .fixedSize(horizontal: false, vertical: true)
                         // The section's title says which: what it pays, or what you earned.

@@ -162,13 +162,13 @@ struct NPCDialogView: View {
         // A boss that's cornered you: its story first, told, then what it says to you.
         if cornered, let lore = npc.monster.flatMap(session.content.monster)?.lore {
             Text(lore)
-                .font(HUDStyle.font(12))
+                .font(HUDStyle.body(12))
                 .foregroundStyle(HUDStyle.dim)
                 .fixedSize(horizontal: false, vertical: true)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
         Text(reply ?? npc.greeting)
-            .font(HUDStyle.font(13))
+            .font(HUDStyle.body(13))
             .fixedSize(horizontal: false, vertical: true)
             .frame(maxWidth: .infinity, alignment: .leading)
         // No scroll inside the speech window: it grows to hold what they say (the user, 2026-11-16:
@@ -673,7 +673,7 @@ private struct QuestConversation: View {
             // A favour you're carrying to them: what they say to it comes first.
             ErrandPanel(session: session, npcID: giver.id, reply: $reply)
             Text(lines[index])
-                .font(HUDStyle.font(13))
+                .font(HUDStyle.body(13))
                 .fixedSize(horizontal: false, vertical: true)
                 // No floor under a line or two: 50 points left a gap over the quest under it (the user,
                 // 2026-11-16: "the spacing between the text and that quest card is too big").
@@ -926,7 +926,7 @@ private struct GuildPanel: View {
         let skillList = path.skills.compactMap { unlock in session.content.skill(unlock.skill).map { L("{skill} (Lv {level})", ["skill": $0.name, "level": unlock.level]) } }.joined(separator: ", ")
         VStack(alignment: .leading, spacing: 8) {
             Text(L("{guild}: {className}", ["guild": path.guild ?? L("Guild"), "className": path.name])).font(HUDStyle.font(13)).foregroundStyle(HUDStyle.gold)
-            Text(path.description).font(HUDStyle.font(11))
+            Text(path.description).font(HUDStyle.body(11))
             Text(L("Skills: {skills}", ["skills": skillList]))
                 .font(HUDStyle.font(10))
                 .foregroundStyle(HUDStyle.dim)
@@ -992,7 +992,7 @@ extension GuildPanel {
                         }
                         if let description = skill.description {
                             Text(description)
-                                .font(HUDStyle.font(10))
+                                .font(HUDStyle.body(10))
                                 .foregroundStyle(HUDStyle.dim)
                                 .lineLimit(2)
                         }
