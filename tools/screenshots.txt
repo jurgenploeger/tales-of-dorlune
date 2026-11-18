@@ -85,6 +85,8 @@ continent_crossing | newgame,map=sunny_meadow,near=meadowbrook,crossing,landscap
 continent_early | newgame,map=sunny_meadow,near=meadowbrook,crossing,early,landscape,weather=clear,hour=12 | 1
 # The water (tools/water_art.py): Ingothold Lake's own lake, calm, and the sea past its shore.
 continent_lake | newgame,map=goldburg_lake,weather=clear,hour=12 | 8
+# The lake in the rain: rings on the water and the bright rim along its near shore (PondMotion, 2026-11-18).
+continent_lake_rain | newgame,map=goldburg_lake,weather=rain,hour=12 | 8
 # Where playtesting (2026-10-15, on a phone) saw the continent go wrong: Crystal Mountain's ground
 # gone under its scenery at night, its coast with no bank or foam, and Frog Swamp past Sunny
 # Meadow's south-east still its flat colour.
