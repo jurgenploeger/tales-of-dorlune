@@ -232,7 +232,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
 - Town roads (the user's pick from `tools/road_preview.py`, 2026-11-17): in a town's square (`GroundTiles.inTown`,
   `WorldMap.townSquare`) every road cell is drawn by `ArtLibrary.townRoad` (`GroundLayer.cobbled`): cobbles about half a
   cell across down its middle in the colour of the land's `tile_town` (graded), their edge ragged stone by stone, sand
-  (`tile_path`) with pebbles either side, and grass growing over the edges in clumps where the ground beside is green;
+  (`tile_path`) with pebbles either side, and grass growing over the edges in clumps where the ground beside is green, else the sand giving way to it raggedly (straight at the cell's edge it read as clipped, the user, 2026-11-18);
   the pattern repeats every four cells (`cobblePhase`), so its tiles are made for 16 places. Wild roads stay sand.
 - `tools/window_art.py`: lit windows at night: each building's warm, bright window panes cut into `windows_<id>.png`
   (small patches only, so thatch and gold trim stay out; `SKIP` for what has none), laid over the building above the

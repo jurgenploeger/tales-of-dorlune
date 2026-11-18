@@ -1185,6 +1185,11 @@ final class ArtLibrary {
         let grassy = Int(out[index + 1]) > Int(out[index]) + 8 && Int(out[index + 1]) > Int(out[index + 2]) + 8
         // Grass grows over the street's edges, never in a cell in the middle of it, where it showed as holes.
         let reach = grassy && !inside ? clumpReach(wx - wy) : -1
+        // Where the ground beside isn't green (a desert town's), the sand gives way to it raggedly, the
+        // ground's own pixels left as they are: cut straight at the cell's edge it read as clipped (the
+        // user, 2026-11-18, of Ingothold's streets).
+        let ragged = !grassy && !inside ? 0.02 + 0.6 * clumpReach(wx - wy + 0.5) * hash(Int((wx - wy) * 6), 7, 13) : -1
+        if depth < ragged { return }
         if depth < reach {
             // The grass over the edge: lit along its tips, a dark line where it ends.
             let shade = depth > reach - 0.03 ? 0.5 : depth > reach - 0.08 ? 1.2 : 1
@@ -1194,12 +1199,14 @@ final class ArtLibrary {
         }
         // The sand: the path tile's own light and dark, in its own colour without its flecks of grass.
         let meanLight = max(1, sandMean.0 + sandMean.1 + sandMean.2)
-        let light = min(1.15, max(0.85, (Double(sand[index]) + Double(sand[index + 1]) + Double(sand[index + 2])) / meanLight))
+        // Kept close to its mean: the tile's light grains, graded gold in a desert town, read as yellow
+        // blobs in a grid along every street (the user, 2026-11-18).
+        let light = min(1.05, max(0.95, (Double(sand[index]) + Double(sand[index + 1]) + Double(sand[index + 2])) / meanLight))
         let tint = isGreen(sand, index) ? 1 : light
         var colour = (sandMean.0 * tint, sandMean.1 * tint, sandMean.2 * tint)
         var shade = 1.0
         if grassy, depth < reach + 0.08 { shade = 0.68 }            // the clumps' shadow on the road
-        else if !grassy, depth < rim { shade = 0.72 }               // the road's darker rim, as before
+        else if !grassy, !inside, depth < ragged + 0.035 { shade = 0.86 }   // its ragged edge a little darker
         // The cobbles: a stone's cell on a jittered grid, two to a cell, repeating every eight.
         let gx = wx * 2, gy = wy * 2
         let cx = Int(gx.rounded(.down)), cy = Int(gy.rounded(.down))
