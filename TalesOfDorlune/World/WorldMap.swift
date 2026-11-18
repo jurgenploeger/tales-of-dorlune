@@ -340,8 +340,6 @@ nonisolated final class WorldMap: @unchecked Sendable {
         lap("lakes")
         if def.theme.cave == nil, let ponds { digPonds(ponds, &rng) }
         lap("ponds")
-        // Its places to find, before the hills, which keep off them as off its roads.
-        if def.town == nil, def.theme.cave == nil, let wanted = def.theme.places { layPlaces(wanted) }
         if def.town == nil, def.theme.cave == nil, let hills = def.theme.hills { raiseHills(hills, &rng) }
         lap("hills")
         // Each summit's top is the middle of its round, where it rises highest.
@@ -362,6 +360,11 @@ nonisolated final class WorldMap: @unchecked Sendable {
         lap("footpaths")
         sealCrags()
         lap("seal crags")
+        // Its places to find, on the flat ground the hills and their trails left: laid before the
+        // hills they took the room the mountains, the summits and a boss's lair needed (the tests said
+        // so of five lands).
+        if def.town == nil, def.theme.cave == nil, let wanted = def.theme.places { layPlaces(wanted) }
+        lap("places")
         if def.theme.accent != nil {
             if let patches = def.theme.accentPatches {
                 paintAccentPatches(patches, &rng)
@@ -2710,7 +2713,7 @@ nonisolated final class WorldMap: @unchecked Sendable {
     static let placeReach = 4
 
     /// Finds room for the land's places to find (theme `places`) and lays their ground: each a few
-    /// cells off a road (5 to 12), on flat open ground of the land's own with nothing on it, well
+    /// cells off a road (5 to 12), on flat open ground of the land's own off its hills with nothing on it, well
     /// clear of water, the coast, the lands next door and each other; a footpath from the road to
     /// it; and its own earth, a farm's field and yard, the worn ring inside a ruin's stones, a
     /// camp's trodden ground. Its cells are kept (`occupied`), so no hill, tree or anything else
@@ -2721,12 +2724,12 @@ nonisolated final class WorldMap: @unchecked Sendable {
         let reach = Self.placeReach
         func open(_ cell: GridPoint) -> Bool {
             owns(cell) && cell.col >= 2 && cell.row >= 2 && cell.col < columns - 2 && cell.row < rows - 2
-                && ground[cell.row][cell.col] == .ground && !occupied.contains(cell)
-                && !seams.contains(where: { ($0.share(cell) ?? 0) > 0.03 })
+                && ground[cell.row][cell.col] == .ground && !occupied.contains(cell) && hillOf[cell] == nil
+                && !seams.contains(where: { ($0.share(cell) ?? 0) > 0.2 })
         }
         for place in wanted {
             var made = 0, attempts = 0
-            while made < place.count, attempts < 400 {
+            while made < place.count, attempts < 1500 {
                 attempts += 1
                 let middle = GridPoint(col: Int.random(in: 8..<max(9, columns - 8), using: &draw),
                                        row: Int.random(in: 8..<max(9, rows - 8), using: &draw))
@@ -2751,11 +2754,11 @@ nonisolated final class WorldMap: @unchecked Sendable {
                         guard contains(cell) else { continue }
                         let kind = ground[cell.row][cell.col]
                         let far = max(abs(dc), abs(dr))
-                        if far <= reach + 5, kind == .water || kind == .sea || kind == .away {
+                        if far <= reach + 3, kind == .water || kind == .sea || kind == .away {
                             dry = false
                             break scan
                         }
-                        if kind == .path, far < nearest {
+                        if kind == .path, hillOf[cell] == nil, far < nearest {
                             nearest = far
                             road = cell
                         }
@@ -2772,7 +2775,8 @@ nonisolated final class WorldMap: @unchecked Sendable {
                                          row: Int((Double(middle.row) + Double(road.row - middle.row) * t).rounded()))
                     if way.last == cell { continue }
                     let kind = ground[cell.row][cell.col]
-                    guard owns(cell), kind == .ground || kind == .path, !blocked.contains(cell) else {
+                    guard owns(cell), kind == .path || (kind == .ground && !occupied.contains(cell)),
+                          hillOf[cell] == nil, !blocked.contains(cell) else {
                         clear = false
                         break
                     }
@@ -2785,7 +2789,7 @@ nonisolated final class WorldMap: @unchecked Sendable {
                 }
                 for cell in way {
                     ground[cell.row][cell.col] = .path
-                    occupy(cell, blocking: false)
+                    if !occupied.contains(cell) { occupy(cell, blocking: false) }
                 }
                 for cell in Self.earth(of: place.kind, at: middle) { ground[cell.row][cell.col] = .path }
                 places.append(Site(def: place, middle: middle))

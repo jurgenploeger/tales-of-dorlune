@@ -220,7 +220,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
 - Less boring lands (the user's pick from `tools/land_preview.py`, 2026-11-17; in every wild land since 2026-11-18,
   each with pieces of its own): theme `places` are places to find, a farm, a ruin, a camp, a graveyard or a rest
   (`MapDef.Site`), each a few cells off a road with a footpath to it: `WorldMap.layPlaces` finds flat open ground
-  before the hills are raised, keeps it and lays its earth as path (`WorldMap.earth`); `LandPlanner.planPlaces` sets
+  the hills, their trails and the lairs left (after them: before, it took their room), keeps it and lays its earth as path (`WorldMap.earth`); `LandPlanner.planPlaces` sets
   its pieces down (a crop in rows, a scarecrow, haystacks; a ring of standing stones round a pillar; a tent, a fire
   and stores), its `art` naming other pieces. Theme `groves`: trees only start a group where a slow field is high
   (`LandPlanner.grove`), flowers only where it's low, so there are woods and clearings. Theme `accentSize`: how big
