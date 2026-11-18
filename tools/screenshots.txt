@@ -164,6 +164,7 @@ village_fence | newgame,map=bluebird,at=8_-33,landscape,weather=clear,hour=12 | 
 # Each town's own gate (tools/gate_art.py) where its west road runs through its wall or fence.
 gate_meadowbrook | newgame,map=meadowbrook,at=-45_-3,landscape,weather=clear,hour=12 | 6
 gate_ingothold   | newgame,map=goldburg,at=-45_-3,landscape,weather=clear,hour=12 | 6
+gate_ingothold_morning | newgame,map=goldburg,at=-45_-3,landscape,weather=clear,hour=8 | 6
 gate_larkspur    | newgame,map=bluebird,at=-40_-3,landscape,weather=clear,hour=12 | 6
 city_gate    | newgame,map=goldburg,border=valley_of_fear,landscape,weather=clear,hour=12 | 6
 battle       | newgame,map=sunny_meadow,battle   | 15
