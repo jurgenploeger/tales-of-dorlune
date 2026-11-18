@@ -886,11 +886,12 @@ struct StatsPanel: View {
     let hp: Int
     let mp: Int
     let stats: Stats
-    /// At the level cap (`GameSession.levelCap`): the EXP bar full, ∞ over it (the user, 2026-11-16: "If I'm
-    /// already lvl 200, it should show the bar fully green here with the infinity symbol in the middle").
+    /// At the level cap (`GameSession.levelCap`): the EXP bar full (the user, 2026-11-16, with ∞ over it;
+    /// 2026-11-18, the percentage alone: "Remove the infinite icon, just show the percentage").
     var maxed = false
     /// The hero's skill points from mastery at the cap: the EXP bar fills toward the next one
-    /// (`GameSession.masteryBar`), ∞ over it still. Nil for a companion's, which stands full.
+    /// (`GameSession.masteryBar`), how full over it and a `NoticeBar` under it saying what it's for.
+    /// Nil for a companion's, which stands full.
     var mastery: Int? = nil
 
     private static let digits: CGFloat = 13
@@ -910,18 +911,17 @@ struct StatsPanel: View {
             // EXP last, under HP and MP, as the HUD's own block has it (playtesting 2026-11-01).
             if maxed, let mastery, let exp {
                 let percent = exp * 100 / max(1, GameSession.masteryBar)
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: 8) {
+                    // Only how full the bar is: ∞ beside it read as a glitch (the user, 2026-11-18).
                     StatBar(label: L("EXP"), value: exp, maximum: GameSession.masteryBar, color: HUDStyle.exp, labelWidth: 36, height: 20,
-                            labelSize: 15, numberSize: Self.digits, caption: "∞  \(percent)%")
+                            labelSize: 15, numberSize: Self.digits, caption: "\(percent)%")
                         .accessibilityValue(L("Highest level, mastery {percent}%", ["percent": percent]))
-                    Text(L("Mastery: every full bar is a skill point ({count} so far).", ["count": mastery]))
-                        .font(HUDStyle.font(10))
-                        .foregroundStyle(HUDStyle.dim)
-                        .padding(.leading, 36)
+                    // What the bar's for, in a notice of its own rather than a small grey line (the user, 2026-11-18).
+                    NoticeBar(text: L("Mastery: every full bar is a skill point ({count} so far).", ["count": mastery]))
                 }
             } else if maxed {
                 StatBar(label: L("EXP"), value: 1, maximum: 1, color: HUDStyle.exp, labelWidth: 36, height: 20,
-                        labelSize: 15, numberSize: Self.digits, caption: "∞")
+                        labelSize: 15, numberSize: Self.digits, caption: "100%")
                     .accessibilityValue(L("Highest level"))
             } else if let exp {
                 bar(L("EXP"), exp, expToNext, HUDStyle.exp)
