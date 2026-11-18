@@ -576,6 +576,7 @@ enum DebugLaunch {
         if let zoom = flags["zoom"].flatMap(Double.init) {
             WorldScene.zoomForDebug(CGFloat(zoom))
         }
+        ContinentScene.hillsForDebug = flags["hills"]
         #endif
         if let hour = flags["hour"].flatMap({ Int($0) }), (0..<24).contains(hour) {
             // The calendar opens at 9hr (`GameClock.hours`); start the game as long ago as it takes to get here.

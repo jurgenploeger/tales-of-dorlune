@@ -2034,6 +2034,22 @@ final class ContinentScene: SKScene {
             let square = await land.painters[job.painter].draw(job.corner, self.pause(for: land.def))
             // Made sprites here, on the scene's thread (`Painter.sprites(of:)`).
             let sprites = land.painters[job.painter].sprites(of: square)
+            #if DEBUG
+            // `hills=off`: none drawn, to see what lies under them; `hills=tint`: each hill's
+            // squares in a colour of its own, every other square paler, to see which draws what.
+            if Self.hillsForDebug == "off" { await breathe(); continue }
+            if Self.hillsForDebug == "tint" {
+                let odd = (job.corner.col / HillArt.square + job.corner.row / HillArt.square) % 2 == 0
+                let color = UIColor(hue: CGFloat(job.painter % 6) / 6, saturation: 1, brightness: odd ? 1 : 0.6, alpha: 1)
+                for sprite in sprites {
+                    let mark = SKSpriteNode(color: color, size: sprite.size)
+                    mark.anchorPoint = sprite.anchorPoint
+                    mark.alpha = 0.45
+                    mark.zPosition = 1
+                    sprite.addChild(mark)
+                }
+            }
+            #endif
             // Unless the chunk's been let go meanwhile (and maybe drawn again, with its own).
             guard chunks[job.chunk]?.things === things else { continue }
             for sprite in sprites {
@@ -2050,6 +2066,11 @@ final class ContinentScene: SKScene {
     /// for a mountain rising into it from further down: the loading card waits for the hills and
     /// shore within it (`lookAround`).
     private static let screenReach = 28
+
+    #if DEBUG
+    /// Debug flag `hills=off` or `hills=tint` (`paintWaiting`).
+    static var hillsForDebug: String?
+    #endif
 
     /// How far a square waiting to be drawn (`HillArt.square` cells a side), or a chunk's bank,
     /// lies from `cell`, in cells: none if it covers it.
