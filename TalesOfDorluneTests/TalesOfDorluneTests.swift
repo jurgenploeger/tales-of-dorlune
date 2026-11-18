@@ -5404,7 +5404,7 @@ struct LayoutStepTests {
         let def = try #require(Content.shared.map("valley_of_fear"))
         let map = Layouts.of(def)
         for (index, hill) in map.hills.enumerated() {
-            print("🔎 hill \(index): origin \(hill.origin) size \(hill.size) cells \(hill.cells.count) terrace \(String(describing: hill.terrace)) highest \(Int(hill.highest)) lobes \(hill.lobes.map { "(\(Int($0.x)),\(Int($0.y)) along \(Int($0.along)) across \(Int($0.across)) peak \(Int($0.peak)) front \(String(describing: $0.front)))" })")
+            print("⛰🔎 hill \(index): origin \(hill.origin) size \(hill.size) cells \(hill.cells.count) terrace \(String(describing: hill.terrace)) highest \(Int(hill.highest)) lobes \(hill.lobes.map { "(\(Int($0.x)),\(Int($0.y)) along \(Int($0.along)) across \(Int($0.across)) peak \(Int($0.peak)) front \(String(describing: $0.front)))" })")
         }
         for row in stride(from: 70, through: 20, by: -1) {
             var line = ""
@@ -5416,7 +5416,7 @@ struct LayoutStepTests {
                 let h = map.height(at: map.center(of: cell))
                 heights += h < 0.5 ? "." : h < 5 ? "1" : h < 20 ? "2" : h < 50 ? "3" : "4"
             }
-            print("🔎 \(String(format: "%3d", row)) \(line)  \(heights)")
+            print("⛰🔎 \(String(format: "%3d", row)) \(line)  \(heights)")
         }
         // The ground kinds too: plain, accent, path, lush and the rest, by their first letter.
         for row in stride(from: 70, through: 20, by: -1) {
@@ -5425,7 +5425,7 @@ struct LayoutStepTests {
                 let cell = GridPoint(col: col, row: row)
                 line += map.contains(cell) ? String(String(describing: map.ground[row][col]).prefix(1)) : " "
             }
-            print("🔎g \(String(format: "%3d", row)) \(line)")
+            print("⛰🔎g \(String(format: "%3d", row)) \(line)")
         }
     }
 }
