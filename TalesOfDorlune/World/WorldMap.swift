@@ -2714,8 +2714,8 @@ nonisolated final class WorldMap: @unchecked Sendable {
 
     /// Finds room for the land's places to find (theme `places`) and lays their ground: each a few
     /// cells off a road (5 to 12), on flat open ground of the land's own off its hills with nothing on it, well
-    /// clear of water, the coast, the lands next door and each other; a footpath from the road to
-    /// it; and its own earth, a farm's field and yard, the worn ring inside a ruin's stones, a
+    /// clear of water, the coast, the lands next door and each other; a winding footpath from the
+    /// road to some (`hasFootpath`); and its own earth, a farm's field and yard, the worn ring inside a ruin's stones, a
     /// camp's trodden ground. Its cells are kept (`occupied`), so no hill, tree or anything else
     /// takes them; `LandPlanner.planPlaces` sets its pieces down. Draws of its own, so the rest of
     /// the land's layout draws as it did.
@@ -2765,24 +2765,22 @@ nonisolated final class WorldMap: @unchecked Sendable {
                     }
                 }
                 guard dry, let road, nearest > reach else { continue }
-                // The footpath: straight from its middle to the road, over open ground all the way.
-                let steps = max(1, nearest * 2)
+                // The footpath, where the place has one (`hasFootpath`): from the road, winding, to the
+                // edge of its earth, never onto its middle, where what it's there for stands. Straight
+                // from the middle to the road, every one was the same stub ending in an empty square
+                // (the user, 2026-11-18), and it paved the middle, so a ruin's pillar and a rest's well
+                // were never set down (pieces in the way keep off a path).
+                let earth = Set(Self.earth(of: place.kind, at: middle))
                 var way: [GridPoint] = []
-                var clear = true
-                for step in 0...steps {
-                    let t = Double(step) / Double(steps)
-                    let cell = GridPoint(col: Int((Double(middle.col) + Double(road.col - middle.col) * t).rounded()),
-                                         row: Int((Double(middle.row) + Double(road.row - middle.row) * t).rounded()))
-                    if way.last == cell { continue }
-                    let kind = ground[cell.row][cell.col]
-                    guard owns(cell), kind == .path || (kind == .ground && !occupied.contains(cell)),
-                          hillOf[cell] == nil, !blocked.contains(cell) else {
-                        clear = false
-                        break
+                if Self.hasFootpath(place.kind) {
+                    let bend = Double.random(in: 0.3...0.5, using: &draw) * (Bool.random(using: &draw) ? 1 : -1)
+                    var found: [GridPoint]?
+                    for tried in [bend, -bend, 0] where found == nil {
+                        found = footpath(from: road, to: middle, bend: tried, earth: earth)
                     }
-                    way.append(cell)
+                    guard let found else { continue }
+                    way = found
                 }
-                guard clear else { continue }
                 // Its ground is its own from here on.
                 for dr in -reach...reach {
                     for dc in -reach...reach { occupy(GridPoint(col: middle.col + dc, row: middle.row + dr), blocking: false) }
@@ -2798,30 +2796,84 @@ nonisolated final class WorldMap: @unchecked Sendable {
         }
     }
 
-    /// The cells of a place that are bare earth (drawn as the land's path): a farm's field (five by
-    /// three, behind its middle) and its yard in front; the ring inside a ruin's stones or round a
-    /// rest's well (not its middle, where its pillar or well stands); a camp's trodden ground, a
-    /// graveyard's.
+    /// Whether a kind of place has a footpath from the road: a farm, a rest and a graveyard are
+    /// visited; a ruin and a camp are come upon, off the road with none, so the land isn't laced
+    /// with stubs.
+    static func hasFootpath(_ kind: String) -> Bool { kind == "farm" || kind == "rest" || kind == "graveyard" }
+
+    /// A footpath from `road` toward a place's `middle`, winding by `bend` (a share of its length
+    /// it swings out to the side; 0 is straight), one cell to the next side by side (never only corner to corner), and
+    /// ending at the first cell of the place's `earth` it reaches. Nil if it would cross anything but
+    /// open ground of the land's own or another path.
+    private func footpath(from road: GridPoint, to middle: GridPoint, bend: Double, earth: Set<GridPoint>) -> [GridPoint]? {
+        let ax = Double(road.col), ay = Double(road.row)
+        let bx = Double(middle.col), by = Double(middle.row)
+        let length = hypot(bx - ax, by - ay)
+        guard length > 0 else { return nil }
+        // A lazy S: a third of the way along it bows out to one side, two thirds back to the other.
+        let nx = -(by - ay) / length, ny = (bx - ax) / length
+        let c1x = ax + (bx - ax) / 3 + nx * bend * length, c1y = ay + (by - ay) / 3 + ny * bend * length
+        let c2x = ax + 2 * (bx - ax) / 3 - nx * bend * 0.7 * length, c2y = ay + 2 * (by - ay) / 3 - ny * bend * 0.7 * length
+        func ok(_ cell: GridPoint) -> Bool {
+            guard owns(cell), hillOf[cell] == nil, !blocked.contains(cell) else { return false }
+            let kind = ground[cell.row][cell.col]
+            return kind == .path || (kind == .ground && !occupied.contains(cell))
+        }
+        var way: [GridPoint] = []
+        let steps = max(8, Int(length * 4))
+        for step in 0...steps {
+            let t = Double(step) / Double(steps)
+            let u = 1 - t
+            let x = u * u * u * ax + 3 * u * u * t * c1x + 3 * u * t * t * c2x + t * t * t * bx
+            let y = u * u * u * ay + 3 * u * u * t * c1y + 3 * u * t * t * c2y + t * t * t * by
+            let cell = GridPoint(col: Int(x.rounded()), row: Int(y.rounded()))
+            guard way.last != cell else { continue }
+            var next = [cell]
+            if let last = way.last, last.col != cell.col, last.row != cell.row {
+                next.insert(GridPoint(col: cell.col, row: last.row), at: 0)
+            }
+            for square in next {
+                if earth.contains(square) { return way }
+                if square == middle { return nil }
+                guard ok(square) else { return nil }
+                way.append(square)
+            }
+        }
+        return nil
+    }
+
+    /// The cells of a place that are bare earth (drawn as the land's path), rounded, never a square
+    /// (the user, 2026-11-18: 3 × 3 squares read as "too blocky"): a farm's field (five by three
+    /// behind its middle, its back corners left to the grass) and a half round yard in front of it; an
+    /// oval clearing for a graveyard, its memorial in the middle and its graves round the rim; a round
+    /// one for a ruin's ring of stones and a rest's well; and a camp's trodden ground, round with a
+    /// lobe worn out to one side (east, west or south, by where it lies; never behind, where its tent
+    /// stands). Never the middle but a farm's, so what the place is there for can stand on it.
     static func earth(of kind: String, at middle: GridPoint) -> [GridPoint] {
-        var cells: [GridPoint] = []
+        var offsets: [(Int, Int)] = []
         switch kind {
         case "farm":
             for dc in -2...2 {
-                for dr in 0...2 { cells.append(GridPoint(col: middle.col + dc, row: middle.row + dr)) }
+                for dr in 0...2 where !(abs(dc) == 2 && dr == 2) { offsets.append((dc, dr)) }
             }
-            for dc in -1...1 {
-                for dr in -2...(-1) { cells.append(GridPoint(col: middle.col + dc, row: middle.row + dr)) }
+            offsets += [(-2, -1), (-1, -1), (0, -1), (1, -1), (2, -1), (-1, -2), (0, -2), (1, -2), (0, -3)]
+        case "graveyard":
+            // dc² / 9 + dr² / 2.25 ≤ 1: seven across its middle row, five above and below.
+            for dc in -3...3 {
+                for dr in -1...1 where (dc, dr) != (0, 0) && Double(dc * dc) / 9 + Double(dr * dr) / 2.25 <= 1 { offsets.append((dc, dr)) }
             }
         case "ruin", "rest":
-            for dc in -1...1 {
-                for dr in -1...1 where dc != 0 || dr != 0 { cells.append(GridPoint(col: middle.col + dc, row: middle.row + dr)) }
+            for dc in -2...2 {
+                for dr in -2...2 where (dc, dr) != (0, 0) && dc * dc + dr * dr <= 5 { offsets.append((dc, dr)) }
             }
         default:
-            for dc in -1...1 {
-                for dr in -1...1 { cells.append(GridPoint(col: middle.col + dc, row: middle.row + dr)) }
+            for dc in -2...2 {
+                for dr in -2...2 where (dc, dr) != (0, 0) && dc * dc + dr * dr <= 4 { offsets.append((dc, dr)) }
             }
+            let lobes = [[(2, 1), (2, -1), (3, 0)], [(-2, 1), (-2, -1), (-3, 0)], [(1, -2), (-1, -2), (0, -3)]]
+            offsets += lobes[abs(middle.col &* 31 &+ middle.row &* 17) % lobes.count]
         }
-        return cells
+        return offsets.map { GridPoint(col: middle.col + $0.0, row: middle.row + $0.1) }
     }
 
     private func scatterAccents(_ rng: inout SeededRandom) {

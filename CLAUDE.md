@@ -100,7 +100,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   slice per row of it, the top of the crown farthest (short at midday, long at evening), all merged into one,
   deepest at the foot and fading toward the tip, its edge blurred (`softness`; in hard steps it was too stark), soft flecks of light where the leaves part, and multiplied over the ground
   as the night's shade is, by one cool tint in every land (`CanopyShade.lean`: each palette's own shadow
-  colour turned a desert red), stopping at a town's wall (`blocks`, `WorldMap.fenceCells`); drawn a `LandStage` chunk at a time while shown, again as the sun moves (`follow`,
+  colour turned a desert red), stopping at a town's wall (`blocks`, `WorldMap.fenceCells`), which casts its own, as do its towers and gates (`LandStage.placeFence`, `throughWalls`); drawn a `LandStage` chunk at a time while shown, again as the sun moves (`follow`,
   every half second from `ContinentScene.updateAir`, which casts walkers' shadows too: `Walker.shine`). A
   walker's shadow is its own frame laid the same way, as long for its height (`Walker.figure`, a dark copy
   of the sprite's texture each frame, softened and fading toward its head by `Walker.soften`, kept just over the ground, `figureDepth`), with a soft round at its feet. On a
@@ -219,8 +219,8 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   a grove in the wind.
 - Less boring lands (the user's pick from `tools/land_preview.py`, 2026-11-17; in every wild land since 2026-11-18,
   each with pieces of its own): theme `places` are places to find, a farm, a ruin, a camp, a graveyard or a rest
-  (`MapDef.Site`), each a few cells off a road with a footpath to it: `WorldMap.layPlaces` finds flat open ground
-  the hills, their trails and the lairs left (after them: before, it took their room), keeps it and lays its earth as path (`WorldMap.earth`); `LandPlanner.planPlaces` sets
+  (`MapDef.Site`), each a few cells off a road, a farm, rest or graveyard with a winding footpath to its edge (`hasFootpath`; straight to its middle, each was a stub ending in an empty square, the user, 2026-11-18), what it's there for in its middle: `WorldMap.layPlaces` finds flat open ground
+  the hills, their trails and the lairs left (after them: before, it took their room), keeps it and lays its earth as path (`WorldMap.earth`: rounds, an oval, a lobed camp, never a square: "too blocky", the user, 2026-11-18; its pieces round the rim); `LandPlanner.planPlaces` sets
   its pieces down (a crop in rows, a scarecrow, haystacks; a ring of standing stones round a pillar; a tent, a fire
   and stores), its `art` naming other pieces. Theme `groves`: trees only start a group where a slow field is high
   (`LandPlanner.grove`), flowers only where it's low, so there are woods and clearings. Theme `accentSize`: how big
@@ -232,7 +232,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
 - Town roads (the user's pick from `tools/road_preview.py`, 2026-11-17): in a town's square (`GroundTiles.inTown`,
   `WorldMap.townSquare`) every road cell is drawn by `ArtLibrary.townRoad` (`GroundLayer.cobbled`): cobbles about half a
   cell across down its middle in the colour of the land's `tile_town` (graded), their edge ragged stone by stone, sand
-  (`tile_path`) with pebbles either side, and grass growing over the edges in clumps where the ground beside is green;
+  (`tile_path`) with pebbles either side, and grass growing over the edges in clumps where the ground beside is green, else the sand giving way to it raggedly (straight at the cell's edge it read as clipped, the user, 2026-11-18);
   the pattern repeats every four cells (`cobblePhase`), so its tiles are made for 16 places. Wild roads stay sand.
 - `tools/window_art.py`: lit windows at night: each building's warm, bright window panes cut into `windows_<id>.png`
   (small patches only, so thatch and gold trim stay out; `SKIP` for what has none), laid over the building above the
@@ -310,7 +310,8 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   trail's end, on a summit, or in a cave; `check_content.py` keeps the way in clear.
 - `tools/city_wall_art.py`: a city's stone wall and round towers (`city_wall`, `city_tower`, placed by
   `TownFence.place` for town `walls: "stone"`), drawn as the town gate's rubble is, graded with the map's palette.
-  The wall is one cell's stretch that tiles side to side. `--sheet out.png` previews them.
+  The wall is one cell's stretch that tiles side to side, seen from a little above (its walk behind the battlements, 40 points;
+  face on alone it looked too flat, the user, 2026-11-18), its stretches along x a step darker (`pieces`' `shaded`). `--sheet out.png` previews them.
 - `tools/gate_art.py`: each town's own gate over its roads (maps.json town `gate`: Meadowbrook's thatched
   lychgate, Prismhaven's crystal keystone, Ingothold's gold and red cloth, Larkspur's bluebird); quests'
   gates across borders keep RD's `town_gate`. Each is laid out as `town_gate` is (`TownFence.widened` spans a

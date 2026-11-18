@@ -196,7 +196,8 @@ enum BorderArt {
 
     /// How tall a city's wall stands, to the top of its battlements (points), and its towers
     /// (`TownFence.place`; art/sprites/city_wall.png and city_tower.png, `tools/city_wall_art.py`).
-    static let wallHeight: CGFloat = 32
+    /// 40 since it shows its wall-walk behind the battlements (the user, 2026-11-18: face on it "looks too flat").
+    static let wallHeight: CGFloat = 40
     static let towerSize = CGSize(width: 30, height: 60)
 
     /// The low wall's stones (`lowWallPicture`): grey blocks, a lit lip, mortar between.

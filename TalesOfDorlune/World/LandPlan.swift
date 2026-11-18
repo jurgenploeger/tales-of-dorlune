@@ -192,11 +192,19 @@ final class LandPlanner {
             }
         }
         // Mossy rocks standing in the shallows (the user, 2026-11-16: "We should also have some rocks"),
-        // a few to a lake, in the water just off its shore; not where a bridge or a lily pad is.
+        // a few to a lake, in the water just off its shore; not where a lily pad is, nor within two cells
+        // of a bridge or jetty: one stood in front of a jetty's post and hid it (the user, 2026-11-18).
         let pads = Set(plan.lilyPads.map(\.cell))
+        let bridges = map.bridgeCells
+        func nearBridge(_ cell: GridPoint) -> Bool {
+            for dc in -2...2 {
+                for dr in -2...2 where bridges.contains(GridPoint(col: cell.col + dc, row: cell.row + dr)) { return true }
+            }
+            return false
+        }
         var rockRNG = SeededRandom(text: def.id + "/water-rocks")
         for shore in map.lakes.map({ $0.water }) + [map.river] {
-            for cell in shore.sorted(by: WorldMap.inOrder) where !map.bridgeCells.contains(cell) && !pads.contains(cell) {
+            for cell in shore.sorted(by: WorldMap.inOrder) where !nearBridge(cell) && !pads.contains(cell) {
                 let banks = [(1, 0), (-1, 0), (0, 1), (0, -1)].filter { offset in
                     let land = GridPoint(col: cell.col + offset.0, row: cell.row + offset.1)
                     return map.contains(land) && map.ground[land.row][land.col] != .water
@@ -878,46 +886,52 @@ final class LandPlanner {
             func at(_ dc: Int, _ dr: Int) -> GridPoint { GridPoint(col: m.col + dc, row: m.row + dr) }
             switch place.def.kind {
             case "farm":
+                // Its crop in rows over the field (its back corners left to the grass), the scarecrow
+                // behind it, haystacks round the yard's rim.
                 let crop = own["crop"] ?? "pumpkin_patch"
                 for dc in -2...2 {
-                    for dr in 0...2 { put(crop, at(dc, dr), blocking: false, scale: 0.9, nudged: false) }
+                    for dr in 0...2 where !(abs(dc) == 2 && dr == 2) { put(crop, at(dc, dr), blocking: false, scale: 0.9, nudged: false) }
                 }
                 put(own["scarecrow"] ?? "scarecrow", at(0, 3), blocking: true)
                 let stack = own["stack"] ?? "haystack"
-                put(stack, at(2, -1), blocking: true)
-                put(stack, at(3, -2), blocking: true, scale: 0.85)
+                put(stack, at(3, -1), blocking: true)
+                put(stack, at(2, -3), blocking: true, scale: 0.85)
                 put(stack, at(-3, 1), blocking: true, scale: 0.9)
             case "ruin":
+                // A ring of stones round the rim of its round, one or two fallen; its pillar in the middle.
                 let ring = own["ring"] ?? "standing_stone"
-                for (dc, dr) in [(0, 2), (2, 1), (2, -1), (0, -2), (-2, -1), (-2, 1), (1, 2), (-1, -2)] {
-                    // One or two have fallen.
+                for (dc, dr) in [(0, 3), (2, 2), (3, 0), (2, -2), (0, -3), (-2, -2), (-3, 0), (-2, 2)] {
                     guard Double.random(in: 0..<1, using: &draw) < 0.85 else { continue }
                     put(ring, at(dc, dr), blocking: true, scale: CGFloat.random(in: 0.85...1.05, using: &draw))
                 }
                 put(own["centre"] ?? "broken_pillar", m, blocking: true, nudged: false)
             case "graveyard":
-                // Graves in a row behind and at either side, a lantern by the way in.
+                // A memorial in the middle of its oval; graves in a row along the back of it and a few
+                // along the front, a lantern by the way in and a dead tree at its corner.
+                put(own["centre"] ?? "statue", m, blocking: true, nudged: false)
                 let stone = own["stone"] ?? "tombstone"
-                for (dc, dr) in [(-2, 2), (0, 2), (2, 2), (-2, 0), (2, 0), (-3, 2), (3, 1)] {
-                    guard Double.random(in: 0..<1, using: &draw) < 0.9 else { continue }
-                    put(stone, at(dc, dr), blocking: true, scale: CGFloat.random(in: 0.9...1.1, using: &draw))
+                for (dc, dr) in [(-2, 2), (-1, 2), (0, 2), (1, 2), (2, 2), (-3, 1), (3, 1), (-2, -2), (-1, -2), (1, -2), (2, -2), (-3, -1), (3, -1)] {
+                    guard Double.random(in: 0..<1, using: &draw) < (dr > 0 ? 0.9 : 0.55) else { continue }
+                    put(stone, at(dc, dr), blocking: true, scale: CGFloat.random(in: 0.9...1.05, using: &draw))
                 }
-                put(own["light"] ?? "spooky_lantern", at(-2, -2), blocking: true, nudged: false)
-                put(own["tree"] ?? "dead_tree", at(3, 3), blocking: true)
+                put(own["light"] ?? "spooky_lantern", at(4, 0), blocking: true, nudged: false)
+                put(own["tree"] ?? "dead_tree", at(-4, 2), blocking: true)
             case "rest":
-                // A well (or a fountain, a statue) with benches either side, a lamp and stores behind.
+                // A well (or a fountain, a statue) in the middle of its round, benches either side of
+                // it on the rim, a lamp and stores behind.
                 put(own["centre"] ?? "water_well", m, blocking: true, nudged: false)
                 let bench = own["bench"] ?? "bench"
-                put(bench, at(-2, 0), blocking: true, nudged: false)
-                put(bench, at(2, 0), blocking: true, nudged: false)
+                put(bench, at(-3, 0), blocking: true, nudged: false)
+                put(bench, at(3, 0), blocking: true, nudged: false)
                 put(own["lamp"] ?? "street_lamp", at(2, 2), blocking: true, nudged: false)
                 put(own["stores"] ?? "barrels", at(-2, 2), blocking: true)
             default:
-                put(own["tent"] ?? "torn_tent", at(0, 2), blocking: true, scale: 1.3, nudged: false)
-                put(own["fire"] ?? "brazier", at(-2, 0), blocking: true, nudged: false)
+                // Its fire in the middle of the trodden ground, the tent behind, stores and seats round it.
+                put(own["fire"] ?? "brazier", m, blocking: true, nudged: false)
+                put(own["tent"] ?? "torn_tent", at(0, 3), blocking: true, scale: 1.3, nudged: false)
                 let stores = own["stores"] ?? "barrels"
-                put(stores, at(2, 1), blocking: true)
-                put(own["seat"] ?? "tree_stump", at(2, -1), blocking: true)
+                put(stores, at(-2, 2), blocking: true)
+                put(own["seat"] ?? "tree_stump", at(2, -2), blocking: true)
                 put(own["seat"] ?? "tree_stump", at(-2, -2), blocking: true)
             }
         }

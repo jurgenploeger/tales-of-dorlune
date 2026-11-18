@@ -9,7 +9,8 @@ palette, as it did the old ones.
     python3 tools/city_wall_art.py                 # → art/sprites/city_wall.png, city_tower.png
     python3 tools/city_wall_art.py --sheet out.png # both at 6×, the wall repeated as the game runs it
 
-`city_wall` is one cell's stretch, face on, 24 × 32 pixels for the wall's 32 points (`BorderArt.wallHeight`),
+`city_wall` is one cell's stretch, seen from a little above (the walk behind its battlements), 24 × 40 pixels
+for the wall's 40 points (`BorderArt.wallHeight`),
 which `TownFence.pieces` slants along each side of the wall's cells: it tiles from side to side (each
 course's stones wrap round), so stretches run on as one wall, and it has no outline at its sides. Its
 merlons stand on the cell's quarters, a gap at its middle and its ends, so the halves a corner turns
@@ -139,62 +140,91 @@ def grass(img, feet, seed, tufts):
 
 # ------------------------------------------------------------------------------------------ the wall
 
-WALL_W, WALL_H = 24, 32
+WALL_W, WALL_H = 24, 40
 
 
 def city_wall():
+    """Seen from a little above, as the towers are (the user, 2026-11-18: face on alone it "looks too
+    flat"): the far rim of the wall-walk across the top, the walk's flagstones behind the front
+    battlements, the merlons standing up in front with their caps lit and right sides in shade, a
+    coping casting its shadow down the face, the face's courses darkening toward the foot, and a
+    footing stepping out into the ground."""
     w, h = WALL_W, WALL_H
-    yy, xx = np.mgrid[0:h, 0:w]
     light = np.full((h, w), np.nan)
     alpha = np.zeros((h, w), bool)
     rng = np.random.default_rng(3)
-    tones = rng.normal(0, 0.05, 512)
+    tones = rng.normal(0, 0.06, 512)
     pits = rng.random((h, w)) < 0.05
+    merlons = (3, 15)                                                   # each 7 wide, two a cell
 
-    # Merlons on the cell's quarters, 7 wide with 5 between (two a cell), a gap at the middle and the ends,
-    # so a corner's two halves look alike: rows 0 … 6, each one stone under a capstone lit on top.
-    for left in (3, 15):
-        for y in range(0, 7):
+    # Between the merlons, low behind the parapet: the far rim, rows 5 … 6, its top lit and its inner
+    # face in shade, and the walk, rows 7 … 8, flagstones seen from above. A thin strip: as deep as the
+    # merlons stand tall, the wall read as thick as they stick out (the user, 2026-11-18).
+    alpha[5:9] = True
+    for x in range(w):
+        light[5, x] = 0.62 if (x + 4) % 12 == 0 else 0.8
+        light[6, x] = 0.34
+        for y in (7, 8):
+            v = 0.84 - 0.04 * (y - 7) + tones[(x // 12) * 2 + (y == 8)] * 0.4
+            light[y, x] = v - 0.16 if (x + (0 if y == 7 else 6)) % 12 == 0 else v
+    # The front parapet between the merlons, rows 9 … 13: its top lit, its face dressed stone.
+    alpha[9:14] = True
+    for x in range(w):
+        light[9, x] = 0.86
+        for y in range(10, 14):
+            light[y, x] = 0.52 - 0.02 * (y - 10) - (0.16 if (x + 1) % 6 == 0 else 0)
+    # The merlons, rows 0 … 13, standing well up past the walk: a cap seen from above, a face of two
+    # dressed stones, lit down its left edge and in shade down its right, its shadow on the walk.
+    for left in merlons:
+        for y in range(0, 14):
             for k in range(7):
                 x = left + k
-                if y < 2:
-                    v = 0.82 if y == 0 else 0.66                       # the capstone, seen from above
-                    v -= 0.08 * (k / 6)
-                    if k == 6:
-                        v -= 0.16
+                if y == 0:
+                    v = 1.0
+                elif y == 1:
+                    v = 0.72
+                elif y == 7:
+                    v = 0.3                                              # the joint between its two stones
                 else:
-                    v = rubble(y - 2, 6, k, 8 if k < 7 else 7, 0.56, tones[left])   # one stone, its joint under it
-                    if k == 6:
-                        v = (v if v != MORTAR else 0.3) - 0.12                         # its right side, in shade
+                    v = 0.46 + (0.06 if y in (2, 8) else 0) - 0.015 * (y - 2)
+                if k == 0 and y > 1:
+                    v += 0.08
+                if k == 6:
+                    v -= 0.2
                 light[y, x] = v
                 alpha[y, x] = True
-    # The coping along the wall-walk, rows 7 … 8: long slabs lit on top, a shadow line under them.
-    alpha[7:9] = True
+        for y in range(5, 9):
+            light[y, left - 1] = 0.12
+            light[y, left + 7] = 0.12
+        for y in range(6, 9):
+            light[y, left + 8] -= 0.22
+    # The coping, rows 14 … 15, standing out a pixel: lit along its top, its underside dark.
+    alpha[14:16] = True
     for x in range(w):
-        joint = (x + 2) % 12 == 0
-        light[7, x] = 0.56 if joint else 0.78 - 0.04 * ((x + 2) % 12) / 11
-        light[8, x] = 0.22 if joint else 0.5
-    # Courses of rubble, rows 9 … 28: 5, 4, 6 and 5 tall, stones 4 to 8 wide wrapping round the stretch.
-    heights = [5, 4, 6, 5]
+        light[14, x] = 0.6 if (x + 2) % 12 == 0 else 0.8
+        light[15, x] = 0.28
+    # The face, rows 16 … 35: courses of rubble, darker toward the foot, the coping's shadow on the top.
+    heights = [5, 5, 5, 5]
     layout = courses_along(w, heights, seed=11)
-    y = 9
+    y = 16
     for course, ch in zip(layout, heights):
         for dy in range(ch):
             for x in range(w):
                 number, p, wd = course[x]
-                base = 0.58 - 0.01 * (y - 9)                            # a little darker toward the foot
+                base = 0.6 - 0.012 * (y - 16)
                 light[y, x] = rubble(dy, ch, p, wd, base, tones[(number * 7) % 512], pits[y, x])
             alpha[y] = True
             y += 1
-    # Under the coping, its shadow on the top course.
-    light[9] -= 0.12
-    # The footing, rows 29 … 31: big flat stones stepping out, their top lit, dark into the ground.
-    alpha[29:32] = True
+    light[16] -= 0.2
+    light[17] -= 0.1
+    # The footing, rows 36 … 39: a course of big stones stepping out, its top lit, dark into the ground.
+    alpha[36:40] = True
     for x in range(w):
         joint = (x + 5) % 8 == 0
-        light[29, x] = MORTAR if joint else 0.62
-        light[30, x] = MORTAR if joint else 0.4
-        light[31, x] = 0.18
+        light[36, x] = 0.24
+        light[37, x] = MORTAR if joint else 0.56
+        light[38, x] = MORTAR if joint else 0.38
+        light[39, x] = 0.16
     img = to_image(light, alpha)
     img = outline(img, wrap_x=True)
     # Grass up against its foot, more in some places than others, wrapping round the stretch.

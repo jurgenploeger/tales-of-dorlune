@@ -939,9 +939,39 @@ final class LandStage {
     private func placeFence() {
         guard !map.fenceCells.isEmpty else { return }
         let before = Set(world.children.map { ObjectIdentifier($0) })
-        TownFence.place(cells: map.fenceCells, map: map, world: world, art: art, stone: def.town?.walls == "stone")
+        let stone = def.town?.walls == "stone"
+        let placed = TownFence.place(cells: map.fenceCells, map: map, world: world, art: art, stone: stone)
         // A city's stone walls and towers stand tall enough to hide someone too.
         for case let node as SKSpriteNode in world.children where !before.contains(ObjectIdentifier(node)) { see.note(node) }
+        // Their shade on the ground away from the sun, as everything's is (the user, 2026-11-18: "The
+        // walls also need shadows cast in the floor depending on the light. Same with the gates"): a
+        // stone wall as rounds a few points apart all along its line, from each cell's middle to the
+        // next one's, its height up; its towers by their outline; every gate (a village's too) by its
+        // arch's, laid as bands as a building's are.
+        if stone {
+            let fence = Set(map.fenceCells)
+            var feet: [CGPoint] = []
+            for cell in map.fenceCells {
+                let middle = map.center(of: cell)
+                feet.append(middle)
+                for next in [GridPoint(col: cell.col + 1, row: cell.row), GridPoint(col: cell.col, row: cell.row + 1)] where fence.contains(next) {
+                    let far = map.center(of: next)
+                    for k in 1..<4 {
+                        let t = CGFloat(k) / 4
+                        feet.append(CGPoint(x: middle.x + (far.x - middle.x) * t, y: middle.y + (far.y - middle.y) * t))
+                    }
+                }
+            }
+            canopy.addBlock(feet: feet, height: BorderArt.wallHeight - 6, half: 5, throughWalls: true)
+            for tower in placed.towers {
+                guard let texture = tower.texture else { continue }
+                canopy.add(tower, picture: art.picture(of: texture), throughWalls: true)
+            }
+        }
+        for gate in placed.gates {
+            guard let texture = gate.texture else { continue }
+            canopy.add(gate, picture: texture.cgImage(), walls: true, throughWalls: true)
+        }
     }
 
     /// The picket fences and low walls along stretches of its roads (`LandPlanner.planRoadsides`),
@@ -1346,10 +1376,8 @@ final class LandStage {
     private func placePlateaus() {
         guard !map.plateaus.isEmpty else { return }
         let tile = WorldMap.tileSize
-        let tileSize = CGSize(width: tile, height: tile)
-        let flags = ["terrace_flag", "terrace_flag_2", "terrace_flag_3", "terrace_flag_4"].map {
-            SKTileGroup(tileDefinition: SKTileDefinition(texture: art.tileTexture($0), size: tileSize))
-        }
+        let flags = ["terrace_flag", "terrace_flag_2", "terrace_flag_3", "terrace_flag_4"].map { art.tileTexture($0) }
+        for flag in flags { flag.filteringMode = .nearest }
         // A cell's stretch of wall under a south edge (rising to the right) and a west one, three of each.
         let southWalls = ["terrace_wall_s", "terrace_wall_s_2", "terrace_wall_s_3"].map { art.sprite($0).texture }
         let westWalls = ["terrace_wall_w", "terrace_wall_w_2", "terrace_wall_w_3"].map { art.sprite($0).texture }
@@ -1372,17 +1400,15 @@ final class LandStage {
                 path.move(to: from)
                 path.addLine(to: to)
             }
-            // Its top: flagstones, its height up. The stairs are drawn as steps instead.
-            let (low, high) = plateau.bounds
-            let top = SKTileMapNode(tileSet: SKTileSet(tileGroups: flags), columns: high.col - low.col + 1,
-                                    rows: high.row - low.row + 1, tileSize: tileSize)
-            top.anchorPoint = .zero
-            for cell in plateau.cells where plateau.ramps[cell] == nil {
-                top.setTileGroup(flags[pick(cell, flags.count)], forColumn: cell.col - low.col, row: cell.row - low.row)
-            }
-            top.position = CGPoint(x: CGFloat(low.col) * tile, y: CGFloat(low.row) * tile)
+            // Its top: flagstones, its height up, a sprite a cell (a tile map here went undrawn on a
+            // phone, Ingothold's ground showing through: the user, 2026-11-18). A hair over a cell
+            // each, so no seam opens between them as they're turned. The stairs are drawn as steps.
             let grid = SKNode()
-            grid.addChild(top)
+            for cell in plateau.cells where plateau.ramps[cell] == nil {
+                let flag = SKSpriteNode(texture: flags[pick(cell, flags.count)], size: CGSize(width: tile + 0.5, height: tile + 0.5))
+                flag.position = CGPoint(x: (CGFloat(cell.col) + 0.5) * tile, y: (CGFloat(cell.row) + 0.5) * tile)
+                grid.addChild(flag)
+            }
             let raised = ContinentScene.projected(grid)
             raised.position.y = rise
             raised.zPosition = topZ

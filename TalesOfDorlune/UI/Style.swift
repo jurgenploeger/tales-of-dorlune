@@ -199,7 +199,7 @@ struct StatBar: View {
     /// The label's and the numbers' sizes (bigger on the Character screen).
     var labelSize: CGFloat = 10
     var numberSize: CGFloat = 8
-    /// What it says over the bar in place of value/maximum (∞ on an EXP bar at the level cap).
+    /// What it says over the bar in place of value/maximum (how full an EXP bar is at the level cap).
     var caption: String? = nil
 
     private var fraction: CGFloat {
@@ -909,6 +909,37 @@ extension Stats {
             .filter { $0.1 != 0 }
             .map { "\($0.0) +\($0.1)" }
             .joined(separator: " · ")
+    }
+}
+
+/// A notice in a window: a line that tells you something worth knowing about what's above it (what
+/// the mastery bar at the level cap is for), on a lit plate (`GlassCard`) with an accent down its
+/// left side and an icon in the accent's colour, cream text wrapping as it needs. Not a warning:
+/// orange stays for those. (The user, 2026-11-18: "show a notice bar below it, instead of just this
+/// label".)
+struct NoticeBar: View {
+    let text: String
+    var icon: GameIcon = .sparkles
+    var tint: Color = HUDStyle.gold
+
+    var body: some View {
+        HStack(spacing: 10) {
+            IconImage(icon, size: 16).foregroundStyle(tint)
+            Text(text)
+                .font(HUDStyle.font(12))
+                .foregroundStyle(HUDStyle.cream)
+                .fixedSize(horizontal: false, vertical: true)
+            Spacer(minLength: 0)
+        }
+        .padding(.leading, 16)
+        .padding(.trailing, 12)
+        .padding(.vertical, 10)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(GlassCard(radius: 10, lit: true))
+        .overlay(alignment: .leading) {
+            Capsule().fill(tint).frame(width: 3).padding(.vertical, 8).padding(.leading, 6)
+        }
+        .accessibilityElement(children: .combine)
     }
 }
 

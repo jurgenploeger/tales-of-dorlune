@@ -164,6 +164,7 @@ village_fence | newgame,map=bluebird,at=8_-33,landscape,weather=clear,hour=12 | 
 # Each town's own gate (tools/gate_art.py) where its west road runs through its wall or fence.
 gate_meadowbrook | newgame,map=meadowbrook,at=-45_-3,landscape,weather=clear,hour=12 | 6
 gate_ingothold   | newgame,map=goldburg,at=-45_-3,landscape,weather=clear,hour=12 | 6
+gate_ingothold_morning | newgame,map=goldburg,at=-45_-3,landscape,weather=clear,hour=8 | 6
 gate_larkspur    | newgame,map=bluebird,at=-40_-3,landscape,weather=clear,hour=12 | 6
 city_gate    | newgame,map=goldburg,border=valley_of_fear,landscape,weather=clear,hour=12 | 6
 battle       | newgame,map=sunny_meadow,battle   | 15
@@ -461,6 +462,7 @@ terrace_stairs | newgame,level=40,map=goldburg,at=terrace,hour=12,weather=clear 
 terrace_top    | newgame,level=40,map=goldburg,at=11_17           | 8
 # The sandstone terraces' shade, long in the evening (`CanopyShade.addBlock`, 2026-11-17).
 terrace_evening | newgame,level=40,map=goldburg,at=terrace,hour=17,weather=clear | 8
+terrace_morning | newgame,level=40,map=goldburg,at=terrace,hour=9,weather=clear | 8
 terrace_side  | newgame,level=40,map=goldburg,at=terrace_side,hour=12,weather=clear | 8
 hill_meadow    | newgame,map=sunny_meadow,hill=0                  | 8
 hill_top       | newgame,map=sunny_meadow,hill=0,ontop            | 8

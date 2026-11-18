@@ -819,6 +819,11 @@ struct ContentTests {
                     #expect(map.ground[cell.row][cell.col] == .path && map.isWalkable(cell), "map \(def.id): a \(place.def.kind)'s earth at \(cell)")
                 }
                 #expect(map.height(at: map.center(of: place.middle)) == 0, "map \(def.id): a \(place.def.kind) on a slope at \(place.middle)")
+                // Its middle left for what stands there (a pillar, a well, a fire, a memorial): a
+                // footpath paved it once, and none was set down.
+                if place.def.kind != "farm" {
+                    #expect(map.ground[place.middle.row][place.middle.col] != .path, "map \(def.id): a \(place.def.kind)'s middle paved at \(place.middle)")
+                }
             }
         }
     }
