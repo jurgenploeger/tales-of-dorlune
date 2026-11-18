@@ -862,6 +862,13 @@ final class Crowd {
         members.first { $0.profile?.id == id }?.walker.position
     }
 
+    /// Your friends here whose time online is over, or who've moved on to another land
+    /// (`GameSession.status(of:)`), log off: gone in a puff (the user, 2026-11-18: one stayed about,
+    /// offline in the Friends list, and could still be invited).
+    func logOff(_ gone: (UUID) -> Bool) {
+        for id in members.compactMap({ $0.profile?.id }) where gone(id) { remove(id, poof: true) }
+    }
+
     /// They left: joined your party, or ran off after a duel.
     func remove(_ id: UUID, poof: Bool) {
         guard let found = members.first(where: { $0.profile?.id == id }) else { return }

@@ -2561,6 +2561,13 @@ final class WorldScene: SKScene {
             // Those heading off say goodbye, from among the crowd (a friend who left your party has
             // just rejoined it).
             for id in goodbyes { adventurerSays(GameSession.goodbyes.randomElement() ?? L("See you around!"), id) }
+            // Your friends here whose time online is over, or who've gone on elsewhere, log off
+            // (`Crowd.logOff`).
+            let friends = session.friends
+            crowd?.logOff { [session, def] someone in
+                guard let friend = friends.first(where: { $0.id == someone }), !session.isInParty(friend) else { return false }
+                return session.status(of: friend) != .online(mapID: def.id)
+            }
             refreshPiles()
             let nearby = crowd?.adventurer(near: player.position, within: 80)
             if session.nearbyAdventurer?.id != nearby?.id { session.nearbyAdventurer = nearby }

@@ -1569,8 +1569,8 @@ private struct FriendRow: View {
             // Theirs to leave, not yours: "Leave" read as you leaving (playtesting 2026-11-01).
             Button(L("Remove")) { session.leaveParty(friend.id) }
                 .buttonStyle(PixelButtonStyle(compact: true))
-        } else if !session.adventurersAround.contains(friend.id) {
-            // Friends have to be near you to join you: where they are says where to find them.
+        } else if !session.adventurersAround.contains(friend.id) || session.status(of: friend) == .offline {
+            // Friends have to be near you, and online, to join you: where they are says where to find them.
             EmptyView()
         } else if !session.partyIsFull {
             Button(L("Invite")) { session.askAlong(friend.id) }
@@ -1610,8 +1610,9 @@ private struct FriendStatusBadge: View {
         if session.isInParty(friend) {
             return session.whereabouts(of: friend) != nil ? (L("Waiting"), HUDStyle.orange) : nil
         }
-        if session.adventurersAround.contains(friend.id) { return (L("Nearby"), HUDStyle.green) }
-        return session.status(of: friend) == .offline ? (L("Offline"), HUDStyle.dim) : (L("Online"), HUDStyle.green)
+        let offline = session.status(of: friend) == .offline
+        if session.adventurersAround.contains(friend.id), !offline { return (L("Nearby"), HUDStyle.green) }
+        return offline ? (L("Offline"), HUDStyle.dim) : (L("Online"), HUDStyle.green)
     }
 
     var body: some View {

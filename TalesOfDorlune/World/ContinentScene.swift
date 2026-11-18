@@ -420,6 +420,14 @@ final class ContinentScene: SKScene {
             let sun = here.flatMap { airs[$0.id]?.sky?.sun } ?? .noon
             for id in nearLands { lands[id]?.stage.follow(sun) }
             if Walker.sun != sun { Walker.shine(sun) }
+            // Your friends about whose time online is over, or who've gone on elsewhere, log off.
+            let friends = session.friends
+            for id in nearLands {
+                lands[id]?.stage.crowd?.logOff { [session] someone in
+                    guard let friend = friends.first(where: { $0.id == someone }), !session.isInParty(friend) else { return false }
+                    return session.status(of: friend) != .online(mapID: id)
+                }
+            }
         }
     }
 
