@@ -2,10 +2,10 @@
 import Base from '../layouts/Base.astro';
 import { site } from '../lib/site';
 ---
-<Base title="Privacy policy" description="The game collects no data: your game is saved on your iPhone, with no accounts, ads or analytics. This website counts visits, and uses Google Analytics only if you allow it." crumbs={[{ name: 'Privacy policy' }]}>
+<Base title="Privacy policy" description="The game collects no data: your game is saved on your iPhone, with no accounts, ads or analytics. This website counts visits without cookies." crumbs={[{ name: 'Privacy policy' }]}>
   <div class="card">
     <h1>Privacy policy</h1>
-    <p class="lead">The game collects nothing about you. This website counts visits, and sets cookies only if you allow them.</p>
+    <p class="lead">The game collects nothing about you. This website only counts visits, without cookies and without knowing who you are.</p>
     <h2>The game</h2>
     <ul>
       <li><strong>No data is collected.</strong> The game doesn't send anything about you, your iPhone or how you play to us or to anyone else.</li>
@@ -16,9 +16,8 @@ import { site } from '../lib/site';
     </ul>
     <h2>This website</h2>
     <ul>
-      <li>It has no ads.</li>
+      <li>It sets no cookies and has no ads.</li>
       <li>It counts visits with Vercel Web Analytics, which uses no cookies and doesn't follow you from site to site. It records which page was opened, the page that linked to it, and roughly what kind of device, browser and country the visit came from. Visitors are counted without being identified.</li>
-      <li id="cookies"><strong>Google Analytics, only if you allow it.</strong> The first time you visit, a notice asks. If you choose Allow, Google Analytics sets cookies to tell us which pages are read and how people find the site; Google processes that data under its own privacy policy. If you choose No thanks, or ignore the notice, Google's code doesn't load at all. You can change your mind any time with Cookie settings at the foot of every page.</li>
       <li>If you switch between day and night, your browser remembers the choice on your own device.</li>
       <li>Like every website, the company that hosts it (Vercel) handles your request to show you the page, which involves your IP address.</li>
     </ul>
