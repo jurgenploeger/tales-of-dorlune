@@ -220,7 +220,43 @@ final class BattleScene: SKScene {
             let ceiling = area.maxY - actor.height * 0.92
             if actor.home.y > ceiling { actor.nudge(by: CGVector(dx: 0, dy: ceiling - actor.home.y)) }
         }
+        separateBars(in: area)
         showTargets(controller.validTargets)
+    }
+
+    /// Everyone's bars (the level chip, HP and MP under the feet) clear of everyone else's art and
+    /// bars (the user, 2026-11-18: "make sure the bars never overlap with other characters/monsters";
+    /// the row in front stood over the bars of the one behind). Whoever's bars are covered steps
+    /// the least way that clears them: up, away from the one in front, or to either side; again
+    /// till nothing's covered, or no step helps. A boss keeps its spot; the others step round it.
+    private func separateBars(in area: CGRect) {
+        let fighters = (controller.enemiesOnField + controller.party).compactMap { actors[$0.id] }
+        guard fighters.count > 1 else { return }
+        let left = (isPortrait ? 0 : view?.safeAreaInsets.left ?? 0) + 30
+        let right = size.width - (isPortrait ? 0 : view?.safeAreaInsets.right ?? 0) - 30
+        let gap: CGFloat = 2
+        for _ in 0..<30 {
+            var moved = false
+            for actor in fighters where !actor.isBoss {
+                let bar = actor.barFrame
+                guard let cover = fighters.lazy.filter({ $0 !== actor })
+                    .flatMap({ [$0.artFrame, $0.barFrame] })
+                    .first(where: { $0.intersects(bar) }) else { continue }
+                let ceiling = area.maxY - actor.height * 0.92
+                let options: [CGVector] = [
+                    CGVector(dx: 0, dy: cover.maxY - bar.minY + gap),
+                    CGVector(dx: cover.minX - bar.maxX - gap, dy: 0),
+                    CGVector(dx: cover.maxX - bar.minX + gap, dy: 0),
+                ].filter { step in
+                    let spot = actor.home + step
+                    return spot.x >= left && spot.x <= right && spot.y <= ceiling && spot.y >= area.minY
+                }
+                guard let step = options.min(by: { abs($0.dx) + abs($0.dy) < abs($1.dx) + abs($1.dy) }) else { continue }
+                actor.nudge(by: step)
+                moved = true
+            }
+            if !moved { break }
+        }
     }
 
     /// Fighters stand in diagonal lines of up to five, like Fairyland Online's battle formation; a bigger
@@ -1733,6 +1769,52 @@ final class BattleActor: SKNode {
 
     /// How big it stands on a crowded field (BattleScene's `fieldScale`), name plate and all.
     private(set) var fieldScale: CGFloat = 1
+
+    /// Where its bars stand on the field (the level chip, HP and MP), at its spot (`home`).
+    var barFrame: CGRect {
+        let frame = bar.calculateAccumulatedFrame()
+        return CGRect(x: home.x + frame.minX * fieldScale, y: home.y + frame.minY * fieldScale,
+                      width: frame.width * fieldScale, height: frame.height * fieldScale)
+    }
+
+    /// Where its art stands on the field, its picture's clear edges left out, at its spot (`home`).
+    var artFrame: CGRect {
+        let art = Self.artBounds(of: sprite.texture)
+        let width = sprite.size.width * fieldScale, height = sprite.size.height * fieldScale
+        let origin = CGPoint(x: home.x - width * sprite.anchorPoint.x, y: home.y - height * sprite.anchorPoint.y)
+        return CGRect(x: origin.x + art.minX * width, y: origin.y + art.minY * height,
+                      width: art.width * width, height: art.height * height)
+    }
+
+    /// The share of `texture`'s picture its art fills, from the bottom left (0...1 each way).
+    private static var artBoundsCache: [ObjectIdentifier: CGRect] = [:]
+    private static func artBounds(of texture: SKTexture?) -> CGRect {
+        guard let texture else { return CGRect(x: 0, y: 0, width: 1, height: 1) }
+        if let known = artBoundsCache[ObjectIdentifier(texture)] { return known }
+        var found = CGRect(x: 0, y: 0, width: 1, height: 1)
+        let image = ArtLibrary.shared.picture(of: texture)
+        let w = image.width, h = image.height
+        if w > 0, h > 0, let context = CGContext(data: nil, width: w, height: h, bitsPerComponent: 8, bytesPerRow: w * 4,
+                                                 space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue),
+           let data = context.data {
+            context.draw(image, in: CGRect(x: 0, y: 0, width: w, height: h))
+            let pixels = data.bindMemory(to: UInt8.self, capacity: w * h * 4)
+            var minX = w, maxX = -1, minY = h, maxY = -1
+            // Rows run top to bottom in memory.
+            for row in 0..<h {
+                for x in 0..<w where pixels[(row * w + x) * 4 + 3] > 24 {
+                    minX = min(minX, x); maxX = max(maxX, x)
+                    minY = min(minY, row); maxY = max(maxY, row)
+                }
+            }
+            if maxX >= minX, maxY >= minY {
+                found = CGRect(x: CGFloat(minX) / CGFloat(w), y: CGFloat(h - 1 - maxY) / CGFloat(h),
+                               width: CGFloat(maxX - minX + 1) / CGFloat(w), height: CGFloat(maxY - minY + 1) / CGFloat(h))
+            }
+        }
+        artBoundsCache[ObjectIdentifier(texture)] = found
+        return found
+    }
     /// How tall it stands on the field, shrunk with it.
     var height: CGFloat { sprite.size.height * fieldScale }
     var center: CGPoint { position + CGVector(dx: 0, dy: height * 0.45) }
