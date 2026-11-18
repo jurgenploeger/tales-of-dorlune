@@ -1710,13 +1710,13 @@ private struct ResultPanel: View {
                     // None when you were out cold at the end (your friends won it).
                     if result.exp > 0 {
                         Label { Text(L("+{exp} EXP", ["exp": result.exp])) } icon: {
-                            IconImage(.star, size: 18).foregroundStyle(HUDStyle.exp)
+                            RewardStar()
                         }
                         // Always one line (playtesting 2026-10-30: it broke before EXP beside the coins).
                         .lineLimit(1)
                         .fixedSize()
                     }
-                    GoldPill(amount: result.gold, size: 15, sign: "+")
+                    GoldReward(amount: result.gold)
                 }
                 .font(HUDStyle.font(16))
                 .foregroundStyle(HUDStyle.cream)
@@ -2280,7 +2280,7 @@ struct TreasureCard: View {
                         .foregroundStyle(HUDStyle.cream)
                 }
                 if gold > 0 {
-                    GoldPill(amount: gold, size: 15, sign: "+")
+                    GoldReward(amount: gold)
                         .font(HUDStyle.font(16))
                         .foregroundStyle(HUDStyle.cream)
                 }

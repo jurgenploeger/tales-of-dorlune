@@ -1268,13 +1268,11 @@ private struct QuestCompleteCard: View {
                 HStack(spacing: 18) {
                     if exp > 0 {
                         Label { Text(L("+{exp} EXP", ["exp": exp])) } icon: {
-                            IconImage(.star, size: 18).foregroundStyle(HUDStyle.exp)
+                            RewardStar()
                         }
                     }
                     if gold > 0 {
-                        Label { Text("+\(gold)") } icon: {
-                            IconImage(.coins, size: 18).foregroundStyle(HUDStyle.gold)
-                        }
+                        GoldReward(amount: gold)
                     }
                 }
                 .font(HUDStyle.font(16))
