@@ -133,8 +133,15 @@ enum TownFence {
         let north = CGVector(dx: -east.dx, dy: east.dy)
         let deep = top == nil ? 0 : BorderArt.wallThickness
         let lift = CGVector(dx: 0, dy: BorderArt.wallTopLevel)
+        // A wall's parapet along the walk's outer edge too, merlons standing up from it (the user,
+        // 2026-11-18: "The walls miss the ridge on the outer edge"): the face's own top, what of it
+        // stands over the walk, from the top down to the walk's level.
+        let crestHeight = top == nil ? 0 : max(0, height - BorderArt.wallTopLevel)
+        let crestRows = Int((crestHeight / height * CGFloat(pickets.height)).rounded())
+        let crest = crestRows > 0 ? pickets.cropping(to: CGRect(x: 0, y: 0, width: pickets.width, height: crestRows)) : nil
+        let southernCrest = crest.map { shaded < 1 ? dimmed($0, by: shaded) : $0 }
         let pad: CGFloat = 2 + (east.dx * deep).rounded(.up)
-        let size = CGSize(width: east.dx * 2 + pad * 2, height: east.dy * 2 + height + pad * 2)
+        let size = CGSize(width: east.dx * 2 + pad * 2, height: east.dy * 2 + height + pad * 2 + (east.dy * deep).rounded(.up))
         let middle = CGPoint(x: size.width / 2, y: east.dy + pad)
         let anchor = CGPoint(x: 0.5, y: middle.y / size.height)
 
@@ -154,10 +161,13 @@ enum TownFence {
                     // north end to the south end, so it reads left to right on screen. Each half of
                     // the cell shows its half of the picture, so straight runs repeat seamlessly.
                     // The far halves (north, east) first.
-                    // A wall's walk first, back from its top, then its face over it.
+                    // A wall's walk first, back from its top, and the parapet along its far edge
+                    // standing on it; then its face over them.
                     func walk(_ image: CGImage?, from origin: CGPoint, along: CGVector, back: CGVector, part: Int) {
                         guard let image else { return }
                         drawTop(image, in: context, from: origin + lift, along: along, back: back, part: part)
+                        let rim = image === top ? crest : southernCrest
+                        if let rim { draw(rim, in: context, from: origin + lift + back, along: along, part: part, height: crestHeight) }
                     }
                     if mask & 2 != 0 {
                         walk(top, from: middle + north, along: north * -2, back: east * deep, part: 0)
@@ -270,7 +280,7 @@ enum TownFence {
 
     /// `image` slanted along `along` from `origin` (its bottom edge follows the line, its sides
     /// stay upright). `part` 0 or 1 draws only the first or second half of it.
-    private static func draw(_ image: CGImage, in context: CGContext, from origin: CGPoint, along: CGVector, part: Int?, height: CGFloat) {
+    nonisolated private static func draw(_ image: CGImage, in context: CGContext, from origin: CGPoint, along: CGVector, part: Int?, height: CGFloat) {
         let w = CGFloat(image.width), h = CGFloat(image.height)
         context.saveGState()
         context.concatenate(CGAffineTransform(a: along.dx / w, b: along.dy / w, c: 0, d: height / h, tx: origin.x, ty: origin.y))

@@ -325,6 +325,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   The wall is one cell's stretch that tiles side to side, 37 points to its merlons, its stretches along x a step darker (`pieces`' `shaded`);
   its walk (`city_wall_top`) is drawn by `TownFence.pieces` as a strip of its own back into the screen from the parapet's top
   (`BorderArt.wallTopLevel`, `wallThickness`): face on it looked flat, and the walk drawn on its face still read as thin (the user, 2026-11-18).
+  Along the walk's far edge stands a parapet too, the face's own merlons above the walk's level (the user, 2026-11-18: "The walls miss the ridge on the outer edge").
   The pieces are drawn with no edge smoothing (smoothed, a seam a pixel wide showed between every two). `--sheet out.png` previews them.
 - `tools/gate_art.py`: each town's own gate over its roads (maps.json town `gate`: Meadowbrook's thatched
   lychgate, Prismhaven's crystal keystone, Ingothold's gold and red cloth, Larkspur's bluebird); quests'
