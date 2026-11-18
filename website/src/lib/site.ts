@@ -10,6 +10,7 @@ export const site = {
   /** Where players write to. While empty, the Support page says the address is on its way. */
   supportEmail: '',
   developer: 'Jurgen Ploeger',
-  /** The Google tag (Google Analytics). It loads only after a visitor allows it in the cookie notice. */
-  googleTag: 'G-MJW995DXDF',
+  /** The Google tag (Google Analytics, G-MJW995DXDF). Empty: the site has no cookie notice (the user, 2026-11-18),
+      and in the EU Google Analytics may only load once a visitor agrees. Set it to bring the notice back. */
+  googleTag: '',
 };
