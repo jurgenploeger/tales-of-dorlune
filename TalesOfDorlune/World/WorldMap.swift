@@ -70,6 +70,9 @@ nonisolated final class WorldMap: @unchecked Sendable {
         let middle: GridPoint
     }
     private(set) var places: [Site] = []
+    /// The cells of plain ground that show the theme's richer ground (`MapDef.Theme.lush`) instead,
+    /// in broad soft patches (`layLush`). Still plain ground to everything but the drawing.
+    private(set) var lush: Set<GridPoint> = []
     /// A town's terraces: where each stands, its stairs (out in front of its walls, `raiseTerrace`) and
     /// the cells of its rim they come up to, open in its balustrade.
     private(set) var terraces: [(origin: GridPoint, width: Int, height: Int, stairs: [GridPoint], heads: [GridPoint])] = []
@@ -367,6 +370,7 @@ nonisolated final class WorldMap: @unchecked Sendable {
             }
         }
         lap("accents")
+        if def.theme.lush != nil, def.theme.cave == nil { layLush() }
         markForeign()
         lap("foreign")
         layShore()
@@ -593,6 +597,9 @@ nonisolated final class WorldMap: @unchecked Sendable {
         case "mouth":
             guard let crag = pick(crags) else { return nil }
             return entryCell(from: crag.edge)
+        case "farm", "ruin", "camp", "graveyard", "rest":
+            // The middle of the land's nth place of that kind (`places`).
+            return pick(places.filter { $0.def.kind == name })?.middle
         case "harbor":
             // Beside where the pier leaves the land, on the side away from its ship.
             guard let harbor = pick(harbors) else { return nil }
@@ -2671,6 +2678,29 @@ nonisolated final class WorldMap: @unchecked Sendable {
                 parent = least
             }
             return (top.cell, top.cost)
+        }
+    }
+
+    /// Which plain ground shows the land's richer ground (theme `lush`): where slow waves across the
+    /// land, its own by its name, run high, so it lies in a few broad patches with soft edges; not
+    /// in the bands along its borders, where the land next door's ground comes over. Draws of its own.
+    private func layLush() {
+        var draw = SeededRandom(text: def.id + "/lush")
+        var waves: [(x: Double, y: Double, phase: Double, weight: Double)] = []
+        for index in 0..<4 {
+            let angle = Double.random(in: 0..<(2 * Double.pi), using: &draw)
+            let pace = Double.random(in: 0.6...1.4, using: &draw) / 6 * (1 + Double(index) * 0.7)
+            waves.append((x: cos(angle) * pace, y: sin(angle) * pace, phase: Double.random(in: 0..<(2 * Double.pi), using: &draw),
+                          weight: 1 / Double(index + 1)))
+        }
+        for row in 0..<rows {
+            for col in 0..<columns where ground[row][col] == .ground {
+                var sum = 0.0
+                for wave in waves { sum += sin(Double(col) * wave.x + Double(row) * wave.y + wave.phase) * wave.weight }
+                guard sum / 2.1 > 0.36 else { continue }
+                let cell = GridPoint(col: col, row: row)
+                if !seams.contains(where: { ($0.share(cell) ?? 0) > 0.03 }) { lush.insert(cell) }
+            }
         }
     }
 

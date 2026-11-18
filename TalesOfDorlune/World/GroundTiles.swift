@@ -211,6 +211,19 @@ final class GroundTiles {
     /// Which cells are plain ground, by `plainBase`.
     private var plainCache: [GridPoint: String?] = [:]
 
+    /// The cells of the 3×3 round `cell` that show the land's richer ground (`WorldMap.lush`), as `mask`
+    /// counts them (bit row * 3 + col, row 0 north); none where the theme has no `lush`.
+    private func lushMask(_ cell: GridPoint) -> Int {
+        guard theme.lush != nil, !map.lush.isEmpty else { return 0 }
+        var bits = 0
+        for dy in -1...1 {
+            for dx in -1...1 where map.lush.contains(GridPoint(col: cell.col + dx, row: cell.row + dy)) {
+                bits |= 1 << ((1 - dy) * 3 + dx + 1)
+            }
+        }
+        return bits
+    }
+
     /// The tile a cell shows if it's only plain ground, as `pick` draws it with no layers (no road,
     /// pond, patch, shore or a land next door's ground in it), else nil; nil off the land's box too.
     private func plainBase(_ cell: GridPoint) -> String? {
@@ -219,7 +232,7 @@ final class GroundTiles {
         if map.contains(cell) {
             let kind = map.ground[cell.row][cell.col]
             if kind != .sea, kind != .away, mask(cell, .path) == 0, mask(cell, .water) == 0,
-               !(patchAccent && theme.accent != nil && mask(cell, .accent) != 0) {
+               !(patchAccent && theme.accent != nil && mask(cell, .accent) != 0), lushMask(cell) == 0 {
                 let base = baseTile(cell, kind)
                 let band = map.seams.isEmpty ? nil : grounds(cell, base: base)
                 let near = sea.isEmpty ? 0 : seaPool(cell)
@@ -285,6 +298,9 @@ final class GroundTiles {
         // The grounds across the band first, under everything of this land's.
         let band = map.seams.isEmpty ? nil : grounds(cell, base: base)
         if let band { layers += band }
+        // The land's richer ground in its broad patches, under its accent's.
+        let lush = lushMask(cell)
+        if lush != 0, let rich = theme.lush { layers.append(.init(tile: rich, mask: lush, style: .patch)) }
         if patch != 0, let accent = theme.accent { layers.append(.init(tile: accent, mask: patch, style: .patch)) }
         let fade = road == 0 || map.seams.isEmpty ? nil : roadFade(cell)
         // In a town's square its roads are cobbled (`ArtLibrary.GroundLayer.cobbled`); out in the wild, sand.
@@ -317,12 +333,14 @@ final class GroundTiles {
             }
         } else if layers.isEmpty {
             chosen = wang(cell, base: base)
+        } else if let rich = theme.lush, lush == full, layers.count == 1 {
+            chosen = plain(rich, variant)
         } else if let accent = theme.accent, patch == full, road == 0, pond == 0, coast == 0 {
             chosen = plain(accent, variant)
         } else {
             // Shorelines depend on where they are (see organicTile), so each gets its own tile.
             let place = (pond != 0 || coast != 0 ? "@\(col),\(row)" : "") + (cobbled ? "|cob\(ArtLibrary.cobblePhase(cell))" : "")
-            let key = base + "|" + layers.map { "\($0.style)\($0.mask)\($0.from?.land ?? "")\($0.fade?.key ?? "")" }.joined(separator: "|") + place
+            let key = base + "|" + layers.map { "\($0.style)\($0.mask)\($0.tile)\($0.from?.land ?? "")\($0.fade?.key ?? "")" }.joined(separator: "|") + place
             var tone: ((Double, Double) -> Int)? = nil
             if pond != 0, let field = pondField { tone = { field.tone($0, $1) } }
             chosen = group(key) { art.organicTile(base: base, layers: layers, cell: cell, variant: variant, pond: tone) }

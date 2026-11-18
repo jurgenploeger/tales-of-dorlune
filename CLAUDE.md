@@ -225,6 +225,10 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   and stores), its `art` naming other pieces. Theme `groves`: trees only start a group where a slow field is high
   (`LandPlanner.grove`), flowers only where it's low, so there are woods and clearings. Theme `accentSize`: how big
   the accent patches are, for broad meadows. Chicks live in a farm's yard (`Critters.home`). Debug `at=place`.
+  Each kind of place is a landmark too (`WorldMap.landmark`: `at: "farm"`, `"ruin"`…, `which`): every land has a
+  chest at one of its places (a potion or ether by its level, refilling as chests do) and someone living at another
+  (maps.json `locals`). Theme `lush`: a richer ground tile in broad soft patches over the plain ground
+  (`WorldMap.layLush`, `GroundTiles.lushMask`; the grass lands' `tile_rich_grass`). A brazier smokes (`LandStage.addSmoke`).
 - Town roads (the user's pick from `tools/road_preview.py`, 2026-11-17): in a town's square (`GroundTiles.inTown`,
   `WorldMap.townSquare`) every road cell is drawn by `ArtLibrary.townRoad` (`GroundLayer.cobbled`): cobbles about half a
   cell across down its middle in the colour of the land's `tile_town` (graded), their edge ragged stone by stone, sand

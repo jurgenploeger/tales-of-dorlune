@@ -334,6 +334,7 @@ final class LandStage {
         reflect(node, picture: drawn.texture, art: placement.art, cell: placement.cell)
         addFire(to: node, art: placement.art)
         addWindows(to: node, art: placement.art)
+        if placement.art == "brazier" { addSmoke(to: node) }
         // Lit by a lamp nearby at night (`LampLight`): not a light itself, nor what moves in the wind
         // (its picture changes, the light's copy wouldn't).
         if !lamps.isEmpty, node.texture === drawn.texture, placement.art != "street_lamp", placement.prop?.glow == nil {
@@ -341,6 +342,28 @@ final class LandStage {
                                    from: lamps)
         }
         return node
+    }
+
+    /// Smoke rising from a fire (a camp's or a lair's brazier): a soft grey puff every half second
+    /// or so that drifts up, swells and fades; only while its chunk is in the scene.
+    private func addSmoke(to node: SKSpriteNode) {
+        let top = CGPoint(x: 0, y: node.size.height * (1 - node.anchorPoint.y) - 4)
+        let puff = SKAction.run { [weak node] in
+            guard let node else { return }
+            let smoke = SKSpriteNode(texture: SoftTextures.glow, size: CGSize(width: 12, height: 12))
+            smoke.color = UIColor(white: 0.55, alpha: 1)
+            smoke.colorBlendFactor = 1
+            smoke.alpha = 0.5
+            smoke.position = CGPoint(x: top.x + .random(in: -3...3), y: top.y)
+            smoke.zPosition = 0.02
+            node.addChild(smoke)
+            smoke.run(.sequence([
+                .group([.scale(to: .random(in: 2...2.8), duration: 2.4), .moveBy(x: .random(in: 4...12), y: 34, duration: 2.4),
+                        .fadeOut(withDuration: 2.4)]),
+                .removeFromParent(),
+            ]))
+        }
+        node.run(.repeatForever(.sequence([puff, .wait(forDuration: 0.55, withRange: 0.3)])))
     }
 
     /// A building's windows lit at night (`tools/window_art.py`, the user, 2026-11-18: "during the

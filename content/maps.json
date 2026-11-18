@@ -1377,6 +1377,19 @@
             "Barnaby talks to his bees. He says they talk back. I've never heard it.",
             "Best bread between here and Meadowbrook. Don't tell Meadowbrook."
           ]
+        },
+        {
+          "name": "Farmer Bram",
+          "at": "farm",
+          "which": 0,
+          "x": 0,
+          "y": -1,
+          "roam": 2,
+          "lines": [
+            "Mind the pumpkins! They bruise if you look at them wrong.",
+            "The scarecrow does his best. The crows aren't impressed.",
+            "Rain, sun, slimes in the cabbages. A farmer's work is never done."
+          ]
         }
       ],
       "width": 150,
@@ -1889,7 +1902,8 @@
             "kind": "rest",
             "count": 1
           }
-        ]
+        ],
+        "lush": "tile_rich_grass"
       },
       "exits": [
         {
@@ -2031,6 +2045,18 @@
           "x": -38,
           "y": -28,
           "greeting": "Shh. Slow movements, please. The bees are watching, and so am I."
+        },
+        {
+          "id": "sunny_meadow_place_chest",
+          "name": "Treasure Chest",
+          "role": "chest",
+          "art": "treasure_chest",
+          "at": "ruin",
+          "which": 0,
+          "x": 1,
+          "y": 1,
+          "greeting": "A chest, half buried among the old stones.",
+          "gives": "potion"
         }
       ]
     },
@@ -2145,6 +2171,19 @@
             "The Salty Gull has the best fish stew on the shore. It's the only one.",
             "Mud Eagles can spot a herring from the clouds. Clever birds. Rude, though.",
             "No light on the point, no boats in at night. It's as simple as that."
+          ]
+        },
+        {
+          "name": "Wanderer Pell",
+          "at": "camp",
+          "which": 0,
+          "x": -1,
+          "y": -1,
+          "roam": 2,
+          "lines": [
+            "Pull up a log. The fire's warm and the stew is nearly edible.",
+            "I've slept under every sky in Dorlune. This one's my favourite.",
+            "Travel light, friend, and never camp downwind of a jelly."
           ]
         }
       ],
@@ -2498,6 +2537,18 @@
           "x": -10,
           "y": -59,
           "greeting": "Every knot I tie, a crab snips. Every knot!"
+        },
+        {
+          "id": "pineapple_shore_place_chest",
+          "name": "Treasure Chest",
+          "role": "chest",
+          "art": "treasure_chest",
+          "at": "ruin",
+          "which": 0,
+          "x": 1,
+          "y": 1,
+          "greeting": "A chest, half buried among the old stones.",
+          "gives": "potion"
         }
       ],
       "buildings": [
@@ -2621,6 +2672,19 @@
             "Hettie's charcoal burns so slow you could cook a stew all week on it.",
             "Willow the Wisp drifts by now and then. We wave. It flickers.",
             "A Night Monkey took my best net last market. Bold as you like."
+          ]
+        },
+        {
+          "name": "Wanderer Isa",
+          "at": "camp",
+          "which": 0,
+          "x": -1,
+          "y": -1,
+          "roam": 2,
+          "lines": [
+            "Pull up a log. The fire's warm and the stew is nearly edible.",
+            "I've slept under every sky in Dorlune. This one's my favourite.",
+            "Travel light, friend, and never camp downwind of a jelly."
           ]
         }
       ],
@@ -3141,6 +3205,18 @@
           "x": 41,
           "y": -37,
           "greeting": "Soot on your boots? Then you've found Duskhollow."
+        },
+        {
+          "id": "twilight_woods_place_chest",
+          "name": "Treasure Chest",
+          "role": "chest",
+          "art": "treasure_chest",
+          "at": "ruin",
+          "which": 0,
+          "x": 1,
+          "y": 1,
+          "greeting": "A chest, half buried among the old stones.",
+          "gives": "potion"
         }
       ],
       "buildings": [
@@ -3292,6 +3368,19 @@
             "Moss says every tree in the orchard has a name. That one's Gertrude.",
             "A Wood Monkey threw an apple at me! It was a good apple, though.",
             "When I win the Apple Fair I'll get a ribbon as big as my head."
+          ]
+        },
+        {
+          "name": "Farmer Odette",
+          "at": "farm",
+          "which": 0,
+          "x": 0,
+          "y": -1,
+          "roam": 2,
+          "lines": [
+            "Mind the pumpkins! They bruise if you look at them wrong.",
+            "The scarecrow does his best. The crows aren't impressed.",
+            "Rain, sun, slimes in the cabbages. A farmer's work is never done."
           ]
         }
       ],
@@ -4057,6 +4146,18 @@
           "x": 24,
           "y": 48,
           "greeting": "Barrels! Kegs! Tubs! If it holds cider, I made it."
+        },
+        {
+          "id": "smiling_forest_place_chest",
+          "name": "Treasure Chest",
+          "role": "chest",
+          "art": "treasure_chest",
+          "at": "ruin",
+          "which": 0,
+          "x": 1,
+          "y": 1,
+          "greeting": "A chest, half buried among the old stones.",
+          "gives": "potion"
         }
       ]
     },
@@ -5286,6 +5387,19 @@
             "Granny Edda says Blanche turned up one winter and just stayed. Good thing too.",
             "Frost Apples are sweet as honey, if you can get them off a Snowman."
           ]
+        },
+        {
+          "name": "Wanderer Pell",
+          "at": "camp",
+          "which": 0,
+          "x": -1,
+          "y": -1,
+          "roam": 2,
+          "lines": [
+            "Pull up a log. The fire's warm and the stew is nearly edible.",
+            "I've slept under every sky in Dorlune. This one's my favourite.",
+            "Travel light, friend, and never camp downwind of a jelly."
+          ]
         }
       ],
       "theme": {
@@ -5764,6 +5878,18 @@
           "x": 3,
           "y": -7,
           "greeting": "Seven dwarfs, seven pairs of muddy boots, and one of me. Wipe your feet!"
+        },
+        {
+          "id": "snow_white_forest_place_chest",
+          "name": "Treasure Chest",
+          "role": "chest",
+          "art": "treasure_chest",
+          "at": "ruin",
+          "which": 0,
+          "x": 1,
+          "y": 1,
+          "greeting": "A chest, half buried among the old stones.",
+          "gives": "hi_ether"
         }
       ],
       "encounters": {
@@ -5986,6 +6112,19 @@
             "Ida's chased the Great Eel for forty years. It's chased her for forty-one.",
             "Slugs on the stilts again. Everything's slippery. My knees can't take it.",
             "Mud's good for you. Mungo says so, and he's a hundred and three."
+          ]
+        },
+        {
+          "name": "Wanderer Isa",
+          "at": "camp",
+          "which": 0,
+          "x": -1,
+          "y": -1,
+          "roam": 2,
+          "lines": [
+            "Pull up a log. The fire's warm and the stew is nearly edible.",
+            "I've slept under every sky in Dorlune. This one's my favourite.",
+            "Travel light, friend, and never camp downwind of a jelly."
           ]
         }
       ],
@@ -6384,6 +6523,18 @@
           "x": -48,
           "y": 33,
           "greeting": "Mind where you step. Half of Bogbottom is medicine and the other half is mud."
+        },
+        {
+          "id": "frog_swamp_place_chest",
+          "name": "Treasure Chest",
+          "role": "chest",
+          "art": "treasure_chest",
+          "at": "ruin",
+          "which": 0,
+          "x": 1,
+          "y": 1,
+          "greeting": "A chest, half buried among the old stones.",
+          "gives": "hi_potion"
         }
       ],
       "buildings": [
@@ -6501,6 +6652,19 @@
             "The Brave Mouse is my hero. He stood up to a Blaze Bull!",
             "Mabbott lets me dip the candles. I've made twelve. Eleven are lumpy.",
             "When I grow up I'll ring the bell, louder than Prue even."
+          ]
+        },
+        {
+          "name": "Wanderer Pell",
+          "at": "camp",
+          "which": 0,
+          "x": -1,
+          "y": -1,
+          "roam": 2,
+          "lines": [
+            "Pull up a log. The fire's warm and the stew is nearly edible.",
+            "I've slept under every sky in Dorlune. This one's my favourite.",
+            "Travel light, friend, and never camp downwind of a jelly."
           ]
         }
       ],
@@ -6982,6 +7146,18 @@
           "y": -5,
           "greeting": "An old standing stone carved with runes. Awake, they glow, and it can take you far away.",
           "quest": "shiverdell_waystone"
+        },
+        {
+          "id": "valley_of_fear_place_chest",
+          "name": "Treasure Chest",
+          "role": "chest",
+          "art": "treasure_chest",
+          "at": "ruin",
+          "which": 0,
+          "x": 1,
+          "y": 1,
+          "greeting": "A chest, half buried among the old stones.",
+          "gives": "hi_potion"
         }
       ],
       "decor": [
@@ -8430,6 +8606,19 @@
             "The well here never runs dry. Samira says it's luck. I say it's a genie.",
             "Mirage Wells is real, you know. Unlike the one you saw on the way here."
           ]
+        },
+        {
+          "name": "Traveller Wren",
+          "at": "rest",
+          "which": 0,
+          "x": 0,
+          "y": -1,
+          "roam": 2,
+          "lines": [
+            "Rest your feet a while. The road will still be there.",
+            "Best water for miles. I'd know, I've tried the others.",
+            "I'm only stopping a minute. I said that this morning."
+          ]
         }
       ],
       "theme": {
@@ -8874,6 +9063,18 @@
           "y": 25,
           "greeting": "An old standing stone carved with runes. Awake, they glow, and it can take you far away.",
           "quest": "desert_waystone"
+        },
+        {
+          "id": "genie_desert_place_chest",
+          "name": "Treasure Chest",
+          "role": "chest",
+          "art": "treasure_chest",
+          "at": "ruin",
+          "which": 0,
+          "x": 1,
+          "y": 1,
+          "greeting": "A chest, half buried among the old stones.",
+          "gives": "hi_potion"
         }
       ],
       "encounters": {
@@ -9104,6 +9305,19 @@
             "The Gem Crawlers eat the best crystals. We have to win them back.",
             "Pebble up on the summit is the oldest stone on the mountain. And the chattiest.",
             "One day I'll cut a crystal so clear you'll forget it's there."
+          ]
+        },
+        {
+          "name": "Wanderer Isa",
+          "at": "camp",
+          "which": 0,
+          "x": -1,
+          "y": -1,
+          "roam": 2,
+          "lines": [
+            "Pull up a log. The fire's warm and the stew is nearly edible.",
+            "I've slept under every sky in Dorlune. This one's my favourite.",
+            "Travel light, friend, and never camp downwind of a jelly."
           ]
         }
       ],
@@ -9476,6 +9690,18 @@
           "x": -9,
           "y": 1,
           "greeting": "Mind the Floating Stones. They float until they don't."
+        },
+        {
+          "id": "crystal_mountain_place_chest",
+          "name": "Treasure Chest",
+          "role": "chest",
+          "art": "treasure_chest",
+          "at": "ruin",
+          "which": 0,
+          "x": 1,
+          "y": 1,
+          "greeting": "A chest, half buried among the old stones.",
+          "gives": "hi_ether"
         }
       ],
       "decor": [
@@ -9626,6 +9852,19 @@
             "Bellamy's telescope can see the rabbit on the moon. Truly!",
             "Skeletons rattle up the steps some nights. My bunny hides in my hood.",
             "When the moon's full, the whole valley goes silver. You'll see."
+          ]
+        },
+        {
+          "name": "Traveller Tobin",
+          "at": "rest",
+          "which": 0,
+          "x": 0,
+          "y": -1,
+          "roam": 2,
+          "lines": [
+            "Rest your feet a while. The road will still be there.",
+            "Best water for miles. I'd know, I've tried the others.",
+            "I'm only stopping a minute. I said that this morning."
           ]
         }
       ],
@@ -10099,6 +10338,18 @@
           "x": -17,
           "y": -36,
           "greeting": "Lune taught me half of what I know about the stars. I taught her the other half."
+        },
+        {
+          "id": "moonglow_place_chest",
+          "name": "Treasure Chest",
+          "role": "chest",
+          "art": "treasure_chest",
+          "at": "ruin",
+          "which": 0,
+          "x": 1,
+          "y": 1,
+          "greeting": "A chest, half buried among the old stones.",
+          "gives": "hi_ether"
         }
       ],
       "decor": [
@@ -10227,6 +10478,19 @@
             "Wenna's washing line has been to more places than I have.",
             "Bryn's kites can lift a lamb clean off the ground. Don't ask me how I know.",
             "Kite Day is the best day of the year. Nobody works, and everybody runs."
+          ]
+        },
+        {
+          "name": "Farmer Bram",
+          "at": "farm",
+          "which": 0,
+          "x": 0,
+          "y": -1,
+          "roam": 2,
+          "lines": [
+            "Mind the pumpkins! They bruise if you look at them wrong.",
+            "The scarecrow does his best. The crows aren't impressed.",
+            "Rain, sun, slimes in the cabbages. A farmer's work is never done."
           ]
         }
       ],
@@ -10724,7 +10988,8 @@
         "accentSize": [
           3,
           7
-        ]
+        ],
+        "lush": "tile_rich_grass"
       },
       "ambience": {
         "particles": "leaves+dandelions",
@@ -10846,6 +11111,18 @@
           "x": 45,
           "y": 1,
           "greeting": "A kite's only a wish with a string on it. Want to see mine?"
+        },
+        {
+          "id": "northern_grassland_place_chest",
+          "name": "Treasure Chest",
+          "role": "chest",
+          "art": "treasure_chest",
+          "at": "ruin",
+          "which": 0,
+          "x": 1,
+          "y": 1,
+          "greeting": "A chest, half buried among the old stones.",
+          "gives": "potion"
         }
       ]
     },
@@ -11316,6 +11593,19 @@
             "Mind the Flame Sheep. One sneeze and the whole row smells of burnt sugar.",
             "Every year the Gala crown gets eaten before the Gala. Every year."
           ]
+        },
+        {
+          "name": "Farmer Odette",
+          "at": "farm",
+          "which": 0,
+          "x": 0,
+          "y": -1,
+          "roam": 2,
+          "lines": [
+            "Mind the pumpkins! They bruise if you look at them wrong.",
+            "The scarecrow does his best. The crows aren't impressed.",
+            "Rain, sun, slimes in the cabbages. A farmer's work is never done."
+          ]
         }
       ],
       "width": 166,
@@ -11774,7 +12064,8 @@
         "accentSize": [
           3,
           7
-        ]
+        ],
+        "lush": "tile_rich_grass"
       },
       "ambience": {
         "particles": "petals+sprinkles",
@@ -11891,6 +12182,18 @@
           "x": -55,
           "y": -4,
           "greeting": "Pull, fold, pull, fold. Toffee's all in the elbows."
+        },
+        {
+          "id": "candy_mountain_place_chest",
+          "name": "Treasure Chest",
+          "role": "chest",
+          "art": "treasure_chest",
+          "at": "rest",
+          "which": 0,
+          "x": 1,
+          "y": 1,
+          "greeting": "A chest left by the well for weary travellers.",
+          "gives": "potion"
         }
       ],
       "decor": [
@@ -12019,6 +12322,19 @@
             "Nobody believes me any more. Even when there really are wolves. Like now.",
             "Bo-Peep lost her sheep again. I didn't do it, honest.",
             "Grandmother Hazel gives me a muffin if I don't shout. I shout less now."
+          ]
+        },
+        {
+          "name": "Gravekeeper Moss",
+          "at": "graveyard",
+          "which": 0,
+          "x": 0,
+          "y": -1,
+          "roam": 2,
+          "lines": [
+            "Hush now. They've earned their rest.",
+            "I sweep the leaves and light the lantern. Someone should.",
+            "Every stone here has a story. Most of them end with a monster."
           ]
         }
       ],
@@ -12500,6 +12816,18 @@
           "x": 25,
           "y": -22,
           "greeting": "Come in, come in! Don't mind the wolf-shaped dent in the door."
+        },
+        {
+          "id": "wolf_lair_place_chest",
+          "name": "Treasure Chest",
+          "role": "chest",
+          "art": "treasure_chest",
+          "at": "camp",
+          "which": 0,
+          "x": 1,
+          "y": 0,
+          "greeting": "A chest by the fire. Whoever camped here left in a hurry.",
+          "gives": "hi_potion"
         }
       ],
       "decor": [
@@ -13477,6 +13805,19 @@
             "They say the swan girl on the island was a princess once. I believe it.",
             "Wisps drift over the water at dusk. Linnet spins their light into thread."
           ]
+        },
+        {
+          "name": "Farmer Bram",
+          "at": "farm",
+          "which": 0,
+          "x": 0,
+          "y": -1,
+          "roam": 2,
+          "lines": [
+            "Mind the pumpkins! They bruise if you look at them wrong.",
+            "The scarecrow does his best. The crows aren't impressed.",
+            "Rain, sun, slimes in the cabbages. A farmer's work is never done."
+          ]
         }
       ],
       "width": 170,
@@ -13978,7 +14319,8 @@
         "accentSize": [
           3,
           7
-        ]
+        ],
+        "lush": "tile_rich_grass"
       },
       "ambience": {
         "particles": "sparkles",
@@ -14115,6 +14457,18 @@
           "x": -47,
           "y": -18,
           "greeting": "Swan Lake lace is the finest anywhere. I learned the pattern from the swans themselves."
+        },
+        {
+          "id": "swan_lake_place_chest",
+          "name": "Treasure Chest",
+          "role": "chest",
+          "art": "treasure_chest",
+          "at": "rest",
+          "which": 0,
+          "x": 1,
+          "y": 1,
+          "greeting": "A chest left by the well for weary travellers.",
+          "gives": "hi_potion"
         }
       ]
     },
@@ -14214,6 +14568,19 @@
             "Sorrel says a dew pearl is a morning you can keep in your pocket.",
             "The Lantern Float is the prettiest night of the year. If it happens.",
             "Mister Mole digs tunnels under Lilypad Landing. Nobody minds, they're cosy."
+          ]
+        },
+        {
+          "name": "Wanderer Pell",
+          "at": "camp",
+          "which": 0,
+          "x": -1,
+          "y": -1,
+          "roam": 2,
+          "lines": [
+            "Pull up a log. The fire's warm and the stew is nearly edible.",
+            "I've slept under every sky in Dorlune. This one's my favourite.",
+            "Travel light, friend, and never camp downwind of a jelly."
           ]
         }
       ],
@@ -14569,6 +14936,18 @@
           "x": -32,
           "y": 13,
           "greeting": "Every morning I gather the dew from the lotus petals, before the sprites drink it all."
+        },
+        {
+          "id": "lotus_land_place_chest",
+          "name": "Treasure Chest",
+          "role": "chest",
+          "art": "treasure_chest",
+          "at": "ruin",
+          "which": 0,
+          "x": 1,
+          "y": 1,
+          "greeting": "A chest, half buried among the old stones.",
+          "gives": "hi_potion"
         }
       ],
       "buildings": [
@@ -14705,6 +15084,19 @@
             "A good puppet needs good wood. A good puppeteer needs patience.",
             "Otto mends everything. He mended my heart once. Well, my chair.",
             "The golden strings are the magic part. Without them it's just wood."
+          ]
+        },
+        {
+          "name": "Traveller Wren",
+          "at": "rest",
+          "which": 0,
+          "x": 0,
+          "y": -1,
+          "roam": 2,
+          "lines": [
+            "Rest your feet a while. The road will still be there.",
+            "Best water for miles. I'd know, I've tried the others.",
+            "I'm only stopping a minute. I said that this morning."
           ]
         }
       ],
@@ -15174,6 +15566,18 @@
           "x": -21,
           "y": 25,
           "greeting": "Bring me a broken toy and I'll mend it. Bring me a broken puppet and I'll mend it twice."
+        },
+        {
+          "id": "puppet_hill_place_chest",
+          "name": "Treasure Chest",
+          "role": "chest",
+          "art": "treasure_chest",
+          "at": "graveyard",
+          "which": 0,
+          "x": 0,
+          "y": 1,
+          "greeting": "A chest tucked behind the graves, untouched for years.",
+          "gives": "hi_potion"
         }
       ],
       "decor": [
@@ -15281,6 +15685,19 @@
             "Fitch shouts at the rafts. The rafts don't listen.",
             "The Golems came down from the mountain and now they won't go back.",
             "When I'm big I'll be a smelter, like Bruna. Or a raft."
+          ]
+        },
+        {
+          "name": "Wanderer Isa",
+          "at": "camp",
+          "which": 0,
+          "x": -1,
+          "y": -1,
+          "roam": 2,
+          "lines": [
+            "Pull up a log. The fire's warm and the stew is nearly edible.",
+            "I've slept under every sky in Dorlune. This one's my favourite.",
+            "Travel light, friend, and never camp downwind of a jelly."
           ]
         }
       ],
@@ -15666,6 +16083,18 @@
           "x": 16,
           "y": -41,
           "greeting": "Rafts in, rafts out, and not one of them on time."
+        },
+        {
+          "id": "goldburg_lake_place_chest",
+          "name": "Treasure Chest",
+          "role": "chest",
+          "art": "treasure_chest",
+          "at": "ruin",
+          "which": 0,
+          "x": 1,
+          "y": 1,
+          "greeting": "A chest, half buried among the old stones.",
+          "gives": "hi_potion"
         }
       ]
     },
@@ -15772,6 +16201,19 @@
             "My cat sleeps. Only my cat. Show-off.",
             "Bastian's coffee could wake a stone. Not the Craghulk, sadly.",
             "A Phantom told me a bedtime story once. It was very boring. Still didn't sleep."
+          ]
+        },
+        {
+          "name": "Farmer Odette",
+          "at": "farm",
+          "which": 0,
+          "x": 0,
+          "y": -1,
+          "roam": 2,
+          "lines": [
+            "Mind the pumpkins! They bruise if you look at them wrong.",
+            "The scarecrow does his best. The crows aren't impressed.",
+            "Rain, sun, slimes in the cabbages. A farmer's work is never done."
           ]
         }
       ],
@@ -16313,6 +16755,18 @@
           "x": -5,
           "y": -15,
           "greeting": "Coffee? Tea? A second coffee? We've got all night. We always have all night."
+        },
+        {
+          "id": "sleepy_town_place_chest",
+          "name": "Treasure Chest",
+          "role": "chest",
+          "art": "treasure_chest",
+          "at": "graveyard",
+          "which": 0,
+          "x": 0,
+          "y": 1,
+          "greeting": "A chest tucked behind the graves, untouched for years.",
+          "gives": "hi_ether"
         }
       ]
     },
@@ -16424,6 +16878,19 @@
             "Tamsin's herd grazes right up to our door. Very polite cows.",
             "Kestrel's been telling the same story for sixty years. It gets better.",
             "When the Great Drum sounds, every herd on the steppe comes home."
+          ]
+        },
+        {
+          "name": "Wanderer Pell",
+          "at": "camp",
+          "which": 0,
+          "x": -1,
+          "y": -1,
+          "roam": 2,
+          "lines": [
+            "Pull up a log. The fire's warm and the stew is nearly edible.",
+            "I've slept under every sky in Dorlune. This one's my favourite.",
+            "Travel light, friend, and never camp downwind of a jelly."
           ]
         }
       ],
@@ -16904,6 +17371,18 @@
           "y": -1,
           "greeting": "An old standing stone carved with runes. Awake, they glow, and it can take you far away.",
           "quest": "steppe_waystone"
+        },
+        {
+          "id": "secret_plain_place_chest",
+          "name": "Treasure Chest",
+          "role": "chest",
+          "art": "treasure_chest",
+          "at": "ruin",
+          "which": 0,
+          "x": 1,
+          "y": 1,
+          "greeting": "A chest, half buried among the old stones.",
+          "gives": "hi_ether"
         }
       ],
       "buildings": [
@@ -17038,6 +17517,19 @@
             "I've sneezed every day for forty years. I'm very good at it now.",
             "The monkeys stole the peppers and now they're sneezing in the trees.",
             "Little Crab grows persimmons, Ginger grows peppers. I grow tissues."
+          ]
+        },
+        {
+          "name": "Wanderer Isa",
+          "at": "camp",
+          "which": 0,
+          "x": -1,
+          "y": -1,
+          "roam": 2,
+          "lines": [
+            "Pull up a log. The fire's warm and the stew is nearly edible.",
+            "I've slept under every sky in Dorlune. This one's my favourite.",
+            "Travel light, friend, and never camp downwind of a jelly."
           ]
         }
       ],
@@ -17400,6 +17892,18 @@
           "x": 20,
           "y": -23,
           "greeting": "Salt from the sea, pepper from the hill. We season the whole coast, we do."
+        },
+        {
+          "id": "hachoo_island_place_chest",
+          "name": "Treasure Chest",
+          "role": "chest",
+          "art": "treasure_chest",
+          "at": "ruin",
+          "which": 0,
+          "x": 1,
+          "y": 1,
+          "greeting": "A chest, half buried among the old stones.",
+          "gives": "mega_ether"
         }
       ],
       "decor": [
@@ -17542,6 +18046,19 @@
             "Aldric lets me cross the bridge if I say the password. It's 'please'.",
             "Margery's soup is made of fish, onions and something wobbly.",
             "On Ice Lantern Night, the whole lake glows. Like a big moon lying down."
+          ]
+        },
+        {
+          "name": "Traveller Tobin",
+          "at": "rest",
+          "which": 0,
+          "x": 0,
+          "y": -1,
+          "roam": 2,
+          "lines": [
+            "Rest your feet a while. The road will still be there.",
+            "Best water for miles. I'd know, I've tried the others.",
+            "I'm only stopping a minute. I said that this morning."
           ]
         }
       ],
@@ -17996,6 +18513,18 @@
           "x": -60,
           "y": -15,
           "greeting": "Soup! Hot soup! The only thing in Icemoor that isn't frozen solid."
+        },
+        {
+          "id": "rosen_lake_place_chest",
+          "name": "Treasure Chest",
+          "role": "chest",
+          "art": "treasure_chest",
+          "at": "ruin",
+          "which": 0,
+          "x": 1,
+          "y": 1,
+          "greeting": "A chest, half buried among the old stones.",
+          "gives": "mega_ether"
         }
       ]
     },
@@ -18096,6 +18625,19 @@
             "Marisol dives for the old offerings. She brings me the bells.",
             "The Gem Crawlers pick the pearls out of the walls. Little thieves.",
             "Ondine says the Wavecrest Dragon guards the deepest hall. I'll stay up here."
+          ]
+        },
+        {
+          "name": "Traveller Wren",
+          "at": "rest",
+          "which": 0,
+          "x": 0,
+          "y": -1,
+          "roam": 2,
+          "lines": [
+            "Rest your feet a while. The road will still be there.",
+            "Best water for miles. I'd know, I've tried the others.",
+            "I'm only stopping a minute. I said that this morning."
           ]
         }
       ],
@@ -18502,6 +19044,18 @@
           "x": -8,
           "y": 7,
           "greeting": "A bed, a bowl and a bit of quiet. That's all a pilgrim needs, and all I've got."
+        },
+        {
+          "id": "water_temple_place_chest",
+          "name": "Treasure Chest",
+          "role": "chest",
+          "art": "treasure_chest",
+          "at": "ruin",
+          "which": 0,
+          "x": 1,
+          "y": 1,
+          "greeting": "A chest, half buried among the old stones.",
+          "gives": "mega_ether"
         }
       ],
       "buildings": [
@@ -19007,6 +19561,19 @@
             "Fennimore polishes a thousand lenses a year. His eyes are very tired.",
             "Odile drew my picture for her book. She made me taller. Good girl.",
             "Golden Clouds drift over the road and rain little drops of gold. Sticky."
+          ]
+        },
+        {
+          "name": "Traveller Tobin",
+          "at": "rest",
+          "which": 0,
+          "x": 0,
+          "y": -1,
+          "roam": 2,
+          "lines": [
+            "Rest your feet a while. The road will still be there.",
+            "Best water for miles. I'd know, I've tried the others.",
+            "I'm only stopping a minute. I said that this morning."
           ]
         }
       ],
@@ -19700,6 +20267,18 @@
           "y": -10,
           "greeting": "An old standing stone carved with runes. Awake, they glow, and it can take you far away.",
           "quest": "emerald_waystone"
+        },
+        {
+          "id": "emerald_road_place_chest",
+          "name": "Treasure Chest",
+          "role": "chest",
+          "art": "treasure_chest",
+          "at": "ruin",
+          "which": 0,
+          "x": 1,
+          "y": 1,
+          "greeting": "A chest, half buried among the old stones.",
+          "gives": "mega_ether"
         }
       ],
       "decor": [
@@ -19792,6 +20371,19 @@
             "Pip says the star on the hill is lonely. I'd be lonely too, so far from home.",
             "Shh! If you're very quiet, the lanterns hum.",
             "North of here there's a cave where the crystals sing. I'm too little to go."
+          ]
+        },
+        {
+          "name": "Traveller Wren",
+          "at": "rest",
+          "which": 0,
+          "x": 0,
+          "y": -1,
+          "roam": 2,
+          "lines": [
+            "Rest your feet a while. The road will still be there.",
+            "Best water for miles. I'd know, I've tried the others.",
+            "I'm only stopping a minute. I said that this morning."
           ]
         }
       ],
@@ -20126,7 +20718,8 @@
         "accentSize": [
           3,
           7
-        ]
+        ],
+        "lush": "tile_rich_grass"
       },
       "ambience": {
         "particles": "fireflies+sparkles",
@@ -20436,6 +21029,18 @@
               "Down in Glimmerbough the lanterns light up one by one. That night the star rises from the hill, slowly, and settles back into its place in the sky, and the wisps drift up after it."
             ]
           }
+        },
+        {
+          "id": "starfall_isle_place_chest",
+          "name": "Treasure Chest",
+          "role": "chest",
+          "art": "treasure_chest",
+          "at": "ruin",
+          "which": 0,
+          "x": 1,
+          "y": 1,
+          "greeting": "A chest, half buried among the old stones.",
+          "gives": "mega_ether"
         }
       ]
     },

@@ -557,6 +557,9 @@ nonisolated struct MapDef: Decodable, Identifiable, Sendable {
         /// when not given). Bigger, they're broad meadows of flowers or stretches of paler sand
         /// rather than dots (the user, 2026-11-17: "less boring lands").
         let accentSize: [Double]?
+        /// A richer ground in broad soft patches across the land's own (`WorldMap.layLush`,
+        /// `GroundTiles.lushMask`): darker, lusher grass in a meadow. A tile's id.
+        let lush: String?
         /// Trees and the like in woods with open clearings between them, flowers in drifts in the
         /// clearings, rather than everything spread evenly (`LandPlanner.grove`).
         let groves: Bool?

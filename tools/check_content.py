@@ -757,6 +757,9 @@ for map_def in maps.values():
         "mouth": any("cave" in (maps.get(exit["to"]) or {}).get("theme", {}) for exit in map_def["exits"]) and "cave" not in theme,
         "harbor": any(exit.get("ship") for exit in map_def["exits"]),
     }
+    # The land's places to find are landmarks too, by their kind (`WorldMap.landmark`).
+    for place in theme.get("places", []):
+        landmarks[place.get("kind")] = True
     for npc in map_def.get("npcs", []):
         if "at" in npc:
             check(landmarks.get(npc["at"]) is True, f"npc {npc['id']} → at a {npc['at']} the map {map_def['id']} hasn't got")
