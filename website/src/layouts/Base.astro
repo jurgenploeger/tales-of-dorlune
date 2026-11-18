@@ -5,6 +5,7 @@ import { site } from '../lib/site';
 import { game } from '../lib/game';
 import Scene from '../components/Scene.astro';
 import Icon from '../components/Icon.astro';
+import Analytics from '@vercel/analytics/astro';
 
 interface Props {
   title: string;
@@ -201,5 +202,6 @@ const ld = [
         try { localStorage.setItem('theme', root.dataset.theme); } catch (e) {}
       });
     </script>
+    <Analytics />
   </body>
 </html>

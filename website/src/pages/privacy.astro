@@ -2,10 +2,10 @@
 import Base from '../layouts/Base.astro';
 import { site } from '../lib/site';
 ---
-<Base title="Privacy policy" description="Tales of Dorlune collects no data. Your game is saved on your iPhone, and the game has no accounts, no ads and no analytics." crumbs={[{ name: 'Privacy policy' }]}>
+<Base title="Privacy policy" description="The game collects no data: your game is saved on your iPhone, with no accounts, ads or analytics. This website counts visits without cookies." crumbs={[{ name: 'Privacy policy' }]}>
   <div class="card">
     <h1>Privacy policy</h1>
-    <p class="lead">Tales of Dorlune collects nothing about you.</p>
+    <p class="lead">The game collects nothing about you. This website only counts visits, without cookies and without knowing who you are.</p>
     <h2>The game</h2>
     <ul>
       <li><strong>No data is collected.</strong> The game doesn't send anything about you, your iPhone or how you play to us or to anyone else.</li>
@@ -16,7 +16,8 @@ import { site } from '../lib/site';
     </ul>
     <h2>This website</h2>
     <ul>
-      <li>This site sets no cookies and has no analytics or ads.</li>
+      <li>This site sets no cookies and has no ads.</li>
+      <li>It counts visits with Vercel Web Analytics, which uses no cookies and doesn't follow you from site to site. It records which page was opened, the page that linked to it, and roughly what kind of device, browser and country the visit came from. Visitors are counted without being identified: nothing is stored on your device for it, and we can't tell who you are.</li>
       <li>If you switch between day and night, your browser remembers the choice on your own device.</li>
       <li>Like every website, the company that hosts it (Vercel) handles your request to show you the page, which involves your IP address.</li>
     </ul>
