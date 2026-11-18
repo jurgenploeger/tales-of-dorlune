@@ -366,7 +366,9 @@ a.stand:hover img, a.stand:focus-visible img { filter: brightness(1.15); transfo
 .phone img { display: block; width: 100%; border-radius: clamp(12px, 2.3vw, 28px); }
 
 /* ---------- the landing: a walk across Dorlune ---------- */
-.site-header.over { position: absolute; left: 0; right: 0; background: transparent; border: 0; box-shadow: none; }
+.site-header { transition: background-color 0.2s, box-shadow 0.2s, border-color 0.2s; }
+.site-header.float { position: fixed; left: 0; right: 0; }
+.site-header.over { background: transparent; border-bottom-color: transparent; box-shadow: none; }
 .site-header.over .brand, .site-header.over .nav a { color: #fff; text-shadow: 0 2px 0 rgba(14, 21, 51, 0.55); }
 .site-header.over .nav a:hover { background: rgba(14, 21, 51, 0.25); }
 .site-header.over .icon-btn { background: rgba(255, 255, 255, 0.85); color: var(--midnight); border-color: var(--midnight); }

@@ -61,7 +61,7 @@ const ld = [
     </script>
   </head>
   <body>
-    <header class:list={['site-header', { over: bare }]}>
+    <header class:list={['site-header', { over: bare, float: bare }]}>
       <div class="wrap">
         <a class="brand" href="/"><img src="/img/app-icon.png" alt="" width="40" height="40" class="pixel" />{site.name}</a>
         <nav class="nav" aria-label="Main">
@@ -183,6 +183,14 @@ const ld = [
           else if (e.key === 'Enter') { e.preventDefault(); const a = list.children[pick]?.querySelector('a'); if (a) location.href = a.href; }
         });
         dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); });
+      })();
+    </script>
+    <script is:inline>
+      // Over the homepage's sky the menu is clear; once you scroll it becomes the bar, and stays with you.
+      (() => {
+        const h = document.querySelector('.site-header.float'); if (!h) return;
+        const set = () => h.classList.toggle('over', window.scrollY < 24);
+        set(); addEventListener('scroll', set, { passive: true });
       })();
     </script>
     <script is:inline>
