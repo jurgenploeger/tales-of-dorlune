@@ -30,6 +30,11 @@ opens with). Its output is committed, so Vercel builds with Node alone.
 URLs come from the names players see (`/lands/prismhaven/`), never from content ids: some ids keep
 old names.
 
+## Icons
+
+Iconaut's (MIT), as in the game: `python3 website/tools/icons.py` vendors them into `src/icons/`, and
+`<Icon name="…" />` draws one inline. Add a name to the tool's `ICONS` for another.
+
 ## Vercel
 
 Project settings → Build and Deployment → Root Directory: `website`. Astro is detected by itself.
@@ -43,7 +48,9 @@ Project settings → Build and Deployment → Root Directory: `website`. Astro i
 
 The Figma brand guidelines (file `521ECWenGbx2IP3rLgtIWo`): the sky, gold, cream and midnight
 (`src/styles/global.css` holds the colour variables' values), Luckiest Guy in capitals for a few
-big words, Fredoka for the rest, and the voice of page 09: warm, plain, brief and true. British
+big words, Allo for the rest (the user's pick over Fredoka, 2026-11-18: rounded everywhere didn't feel
+premium; `public/fonts/Allo-Dorlune.woff2` is its variable font pinned to roundness 25 and cut to Latin
+with fonttools, OFL), and the voice of page 09: warm, plain, brief and true. British
 English, with the tagline's American "cozy". The game's glossy windows stay in the game. Only claims
 the game keeps: no prices, no online play, never Fairyland Online's names. The screenshots in
 `public/img/` are the `store_land_*` scenes from the `screenshots` branch, cropped clear of the

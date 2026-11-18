@@ -2,6 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import Sprite from '../../components/Sprite.astro';
 import GetApp from '../../components/GetApp.astro';
+import Icon from '../../components/Icon.astro';
 import Stand from '../../components/Stand.astro';
 import { game, questsByLevel, num, pct, objective } from '../../lib/game';
 export function getStaticPaths() {
@@ -79,7 +80,7 @@ const home = game.lands.find((l: any) => l.slug === q.land?.slug) ?? game.lands[
     </div>
     <div class="prevnext">
       {prev ? <a class="btn quiet small-btn" href={`/quests/${prev.slug}/`}>← {prev.title}</a> : <span></span>}
-      {next && <a class="btn quiet small-btn" href={`/quests/${next.slug}/`}>{next.title} →</a>}
+      {next && <a class="btn quiet small-btn" href={`/quests/${next.slug}/`}>{next.title} <Icon name="arrow-right" size={16} /></a>}
     </div>
   </div>
   <div style="margin-top:22px"><GetApp compact /></div>

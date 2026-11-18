@@ -1,4 +1,5 @@
 ---
+import Icon from '../components/Icon.astro';
 import Base from '../layouts/Base.astro';
 import GetApp from '../components/GetApp.astro';
 import Scene from '../components/Scene.astro';
@@ -80,12 +81,12 @@ const jsonld = [{
         <h2 style="margin-top:0">Everything in the game, looked up</h2>
         <p>Every monster, land, quest and item, straight from the game's own files, so it's right for version {game.version}.</p>
         <div class="grid">
-          <a class="tile" href="/guide/start/"><div><strong>Start here</strong><span>Your first hour in Dorlune</span></div></a>
-          <a class="tile" href="/guide/walkthrough/"><div><strong>Walkthrough</strong><span>The road from level 1 to {c.maxLevel}</span></div></a>
-          <a class="tile" href="/monsters/"><div><strong>Monsters</strong><span>All {c.monsters}, and where to find them</span></div></a>
-          <a class="tile" href="/lands/"><div><strong>Lands</strong><span>The world map and every land</span></div></a>
-          <a class="tile" href="/quests/"><div><strong>Quests</strong><span>All {c.quests}, with rewards</span></div></a>
-          <a class="tile" href="/items/"><div><strong>Items</strong><span>{c.items} things to find, buy and forge</span></div></a>
+          <a class="tile" href="/guide/start/"><span class="glyph"><Icon name="start" size={24} /></span><div><strong>Start here</strong><span>Your first hour in Dorlune</span></div></a>
+          <a class="tile" href="/guide/walkthrough/"><span class="glyph"><Icon name="walkthrough" size={24} /></span><div><strong>Walkthrough</strong><span>The road from level 1 to {c.maxLevel}</span></div></a>
+          <a class="tile" href="/monsters/"><span class="glyph"><Icon name="monsters" size={24} /></span><div><strong>Monsters</strong><span>All {c.monsters}, and where to find them</span></div></a>
+          <a class="tile" href="/lands/"><span class="glyph"><Icon name="lands" size={24} /></span><div><strong>Lands</strong><span>The world map and every land</span></div></a>
+          <a class="tile" href="/quests/"><span class="glyph"><Icon name="quests" size={24} /></span><div><strong>Quests</strong><span>All {c.quests}, with rewards</span></div></a>
+          <a class="tile" href="/items/"><span class="glyph"><Icon name="items" size={24} /></span><div><strong>Items</strong><span>{c.items} things to find, buy and forge</span></div></a>
         </div>
       </div>
       <div style="text-align:center;padding:clamp(28px,5vw,56px) 0 0">

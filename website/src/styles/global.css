@@ -1,3 +1,14 @@
+/* Running text is Allo (Josh Puckett, SIL Open Font License; https://allo.joshpuckett.me): the variable
+   font with its roundness set to 25 of 100 and cut down to Latin, so it's warm without being all
+   curves. Its weight and optical size still vary. Titles stay in Luckiest Guy. */
+@font-face {
+  font-family: 'Allo';
+  src: url('/fonts/Allo-Dorlune.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Tales of Dorlune's brand surfaces (the Figma brand guidelines, pages 03 Colour and 04 Typography):
    mostly sky, gold for the name and the buttons, cream paper, midnight for edges and words.
    The game's own glossy windows (HUDStyle) stay in the game. */
@@ -36,8 +47,8 @@
   --good: #1f7a3a;
   --warn: #b4530a;
 
-  --font-title: 'Luckiest Guy', 'Fredoka Variable', system-ui, sans-serif;
-  --font-body: 'Fredoka Variable', 'Fredoka', ui-rounded, system-ui, sans-serif;
+  --font-title: 'Luckiest Guy', 'Allo', system-ui, sans-serif;
+  --font-body: 'Allo', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --wrap: 1120px;
 }
 
@@ -87,7 +98,9 @@ body {
   margin: 0;
   font-family: var(--font-body);
   font-size: 1.0625rem;
-  line-height: 1.5;
+  line-height: 1.55;
+  font-optical-sizing: auto;
+  font-feature-settings: 'tnum' 0;
   color: var(--ink);
   background: var(--page-mid) linear-gradient(to bottom, var(--page-top) 0, var(--page-mid) 60vh, var(--page-bottom) 100vh) no-repeat;
   background-attachment: fixed;
@@ -97,8 +110,10 @@ body {
 }
 main { flex: 1; }
 img { max-width: 100%; height: auto; }
-a { color: var(--link); text-decoration-thickness: 0.08em; text-underline-offset: 0.15em; }
-a:hover { text-decoration-thickness: 0.14em; }
+/* Links are told apart by colour and weight; the underline comes on hover and keyboard focus. */
+a { color: var(--link); font-weight: 600; text-decoration: none; text-underline-offset: 0.18em; text-decoration-thickness: 0.09em; }
+a:hover, a:focus-visible { text-decoration: underline; }
+.btn:hover, .tile:hover, .chip:hover, .brand:hover, .nav a:hover, .stand:hover, .icon-btn:hover, #spot-list a:hover, .worldmap a:hover { text-decoration: none; }
 :focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; border-radius: 6px; }
 
 .wrap { width: 100%; max-width: var(--wrap); margin: 0 auto; padding: 0 16px; }
@@ -182,7 +197,8 @@ select { padding-right: 30px; }
 .page > .wrap > .card + .card, .stack > * + * { margin-top: 22px; }
 .crumbs { font-size: 0.92rem; font-weight: 500; margin: 0 0 12px; color: var(--sky-text); }
 .crumbs a { color: var(--sky-text); }
-.crumbs span { opacity: 0.7; margin: 0 6px; }
+.crumbs { display: flex; flex-wrap: wrap; align-items: center; }
+.crumbs span { opacity: 0.7; margin: 0 5px; display: inline-flex; }
 
 .grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); }
 .grid.tight { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
@@ -230,7 +246,7 @@ th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--rul
 thead th { background: var(--paper-3); font-weight: 600; white-space: nowrap; position: sticky; top: 0; }
 tbody tr:last-child td { border-bottom: 0; }
 tbody tr:nth-child(even) { background: color-mix(in srgb, var(--paper-2) 60%, transparent); }
-td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; font-feature-settings: 'tnum'; white-space: nowrap; }
 th button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; font-weight: 600; }
 th button::after { content: ' ↕'; opacity: 0.45; }
 th[aria-sort='ascending'] button::after { content: ' ↑'; opacity: 1; }
@@ -279,7 +295,7 @@ ul.plain li { padding: 3px 0; }
 .get-app img { width: 56px; height: 56px; border-radius: 13px; border: 2px solid var(--edge); }
 .get-app p { margin: 0; flex: 1 1 220px; }
 .site-footer { background: var(--midnight-deep); color: var(--cream); padding: 28px 0 36px; margin-top: 30px; font-size: 0.95rem; }
-.site-footer a { color: var(--cream); }
+.site-footer a { color: var(--cream); font-weight: 500; }
 .site-footer .cols { display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
 .site-footer h2 { font-family: var(--font-body); font-weight: 600; font-size: 0.85rem; letter-spacing: 0.12em; color: var(--gold); margin: 0 0 8px; }
 .site-footer ul { list-style: none; margin: 0; padding: 0; }
@@ -405,3 +421,13 @@ a.stand:hover img, a.stand:focus-visible img { filter: brightness(1.15); transfo
 #spot-list li[aria-selected] a, #spot-list a:hover { background: var(--paper-3); }
 #spot-status { margin: 0; padding: 14px 18px; }
 @media (prefers-reduced-transparency: reduce) { #spotlight::backdrop { -webkit-backdrop-filter: none; backdrop-filter: none; background: rgba(14, 21, 51, 0.8); } }
+
+/* ---------- icons (Iconaut) ---------- */
+.icon-btn svg { display: block; }
+.icon-btn .at-night { display: none; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme='light']) .icon-btn .at-day { display: none; } :root:not([data-theme='light']) .icon-btn .at-night { display: block; } }
+:root[data-theme='dark'] .icon-btn .at-day { display: none; }
+:root[data-theme='dark'] .icon-btn .at-night { display: block; }
+.spot-close { display: inline-grid; place-items: center; width: 30px; height: 30px; padding: 0; border-radius: 50%; }
+.tile .glyph { flex: none; width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; background: var(--midnight); color: var(--gold); }
+.btn svg { flex: none; }

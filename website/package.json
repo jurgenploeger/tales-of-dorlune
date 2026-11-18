@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.2.1",
-    "@fontsource-variable/fredoka": "^5.1.0",
     "@fontsource/luckiest-guy": "^5.1.0",
     "astro": "^5.0.0"
   }

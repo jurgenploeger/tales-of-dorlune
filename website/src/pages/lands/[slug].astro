@@ -2,6 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import Sprite from '../../components/Sprite.astro';
 import GetApp from '../../components/GetApp.astro';
+import Icon from '../../components/Icon.astro';
 import Stand from '../../components/Stand.astro';
 import { game, levels, pct, cap, LAND_KIND, wildLands, sortBy } from '../../lib/game';
 export function getStaticPaths() {
@@ -105,7 +106,7 @@ const desc = l.kind === 'town'
     </div>
     {i >= 0 && <div class="prevnext">
       {wildLands[i - 1] ? <a class="btn quiet small-btn" href={`/lands/${wildLands[i - 1].slug}/`}>← {wildLands[i - 1].name}</a> : <span></span>}
-      {wildLands[i + 1] && <a class="btn quiet small-btn" href={`/lands/${wildLands[i + 1].slug}/`}>{wildLands[i + 1].name} →</a>}
+      {wildLands[i + 1] && <a class="btn quiet small-btn" href={`/lands/${wildLands[i + 1].slug}/`}>{wildLands[i + 1].name} <Icon name="arrow-right" size={16} /></a>}
     </div>}
   </div>
   <div style="margin-top:22px"><GetApp compact /></div>

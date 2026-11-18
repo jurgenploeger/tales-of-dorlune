@@ -1,4 +1,5 @@
 ---
+import Icon from '../../components/Icon.astro';
 import Base from '../../layouts/Base.astro';
 import GetApp from '../../components/GetApp.astro';
 import { game } from '../../lib/game';
@@ -10,20 +11,20 @@ const c = game.counts;
     <p class="lead">Everything in Tales of Dorlune, looked up. It's built from the game's own files, so the numbers are the ones the game uses.</p>
     <h2>New to Dorlune?</h2>
     <div class="grid">
-      <a class="tile" href="/guide/start/"><div><strong>Start here</strong><span>Your first hour: the egg, your first fights and your first friend</span></div></a>
-      <a class="tile" href="/guide/walkthrough/"><div><strong>Walkthrough</strong><span>Land by land, from level 1 to {c.maxLevel}</span></div></a>
-      <a class="tile" href="/guide/leveling/"><div><strong>Where to level</strong><span>The right land for your level</span></div></a>
+      <a class="tile" href="/guide/start/"><span class="glyph"><Icon name="start" size={24} /></span><div><strong>Start here</strong><span>Your first hour: the egg, your first fights and your first friend</span></div></a>
+      <a class="tile" href="/guide/walkthrough/"><span class="glyph"><Icon name="walkthrough" size={24} /></span><div><strong>Walkthrough</strong><span>Land by land, from level 1 to {c.maxLevel}</span></div></a>
+      <a class="tile" href="/guide/leveling/"><span class="glyph"><Icon name="leveling" size={24} /></span><div><strong>Where to level</strong><span>The right land for your level</span></div></a>
     </div>
     <h2>Look it up</h2>
     <div class="grid">
-      <a class="tile" href="/monsters/"><div><strong>Monsters</strong><span>{c.monsters} in the Monster Book</span></div></a>
-      <a class="tile" href="/monsters/?kind=boss"><div><strong>Bosses</strong><span>{c.bosses} out of the fairy tales</span></div></a>
-      <a class="tile" href="/lands/"><div><strong>Lands</strong><span>{c.lands} lands, {c.towns} towns and the world map</span></div></a>
-      <a class="tile" href="/quests/"><div><strong>Quests</strong><span>{c.quests} quests and their rewards</span></div></a>
-      <a class="tile" href="/items/"><div><strong>Items</strong><span>{c.items} weapons, armour, potions and materials</span></div></a>
-      <a class="tile" href="/classes/"><div><strong>Classes</strong><span>Fighter, Mage and Beast Tamer</span></div></a>
-      <a class="tile" href="/skills/"><div><strong>Skills</strong><span>{c.skills} skills and spells</span></div></a>
-      <a class="tile" href="/guide/elements/"><div><strong>Elements</strong><span>What beats what</span></div></a>
+      <a class="tile" href="/monsters/"><span class="glyph"><Icon name="monsters" size={24} /></span><div><strong>Monsters</strong><span>{c.monsters} in the Monster Book</span></div></a>
+      <a class="tile" href="/monsters/?kind=boss"><span class="glyph"><Icon name="bosses" size={24} /></span><div><strong>Bosses</strong><span>{c.bosses} out of the fairy tales</span></div></a>
+      <a class="tile" href="/lands/"><span class="glyph"><Icon name="lands" size={24} /></span><div><strong>Lands</strong><span>{c.lands} lands, {c.towns} towns and the world map</span></div></a>
+      <a class="tile" href="/quests/"><span class="glyph"><Icon name="quests" size={24} /></span><div><strong>Quests</strong><span>{c.quests} quests and their rewards</span></div></a>
+      <a class="tile" href="/items/"><span class="glyph"><Icon name="items" size={24} /></span><div><strong>Items</strong><span>{c.items} weapons, armour, potions and materials</span></div></a>
+      <a class="tile" href="/classes/"><span class="glyph"><Icon name="classes" size={24} /></span><div><strong>Classes</strong><span>Fighter, Mage and Beast Tamer</span></div></a>
+      <a class="tile" href="/skills/"><span class="glyph"><Icon name="skills" size={24} /></span><div><strong>Skills</strong><span>{c.skills} skills and spells</span></div></a>
+      <a class="tile" href="/guide/elements/"><span class="glyph"><Icon name="elements" size={24} /></span><div><strong>Elements</strong><span>What beats what</span></div></a>
     </div>
   </div>
   <div style="margin-top:22px"><GetApp compact /></div>
