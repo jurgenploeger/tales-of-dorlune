@@ -2,6 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import Sprite from '../../components/Sprite.astro';
 import GetApp from '../../components/GetApp.astro';
+import Stand from '../../components/Stand.astro';
 import { game, levels, pct, cap, LAND_KIND, wildLands, sortBy } from '../../lib/game';
 export function getStaticPaths() {
   return game.lands.map((l: any) => ({ params: { slug: l.slug }, props: { l } }));
@@ -20,11 +21,9 @@ const desc = l.kind === 'town'
   ? `${l.name}, a town in Tales of Dorlune: its shops, services, people and the quests they give.`
   : `${l.name} in Tales of Dorlune, for levels ${levels(l.levels)}: its monsters${l.bosses.length ? `, its boss ${l.bosses[0].name}` : ''}, quests and the roads out.`;
 ---
-<Base title={l.kind === 'town' ? `${l.name}: shops, people and quests` : `${l.name}: monsters, quests and levels ${levels(l.levels)}`} description={desc} crumbs={[{ name: 'Guide', href: '/guide/' }, { name: 'Lands', href: '/lands/' }, { name: l.name }]}>
-  <div class="card">
-    <h1>{l.name}</h1>
-    <div class="entity">
-      <div>
+<Base title={l.kind === 'town' ? `${l.name}: shops, people and quests` : `${l.name}: monsters, quests and levels ${levels(l.levels)}`} description={desc} crumbs={[{ name: 'Guide', href: '/guide/' }, { name: 'Lands', href: '/lands/' }, { name: l.name }]} scene={l}>
+  <Fragment slot="head">
+    <h1 class="gold-title">{l.name}</h1>
         <ul class="chips">
           <li><span class="chip">{LAND_KIND[l.kind]}</span></li>
           {l.levels && <li><span class="chip rare">Levels {levels(l.levels)}</span></li>}
@@ -32,6 +31,11 @@ const desc = l.kind === 'town'
           {l.danger && <li><span class="chip boss">Danger zone</span></li>}
           {l.waystone && <li><span class="chip">Waystone</span></li>}
         </ul>
+  </Fragment>
+  {[...l.bosses, ...l.monsters.filter((m: any) => !m.rare)].slice(0, 5).map((m: any, n: number, a: any[]) => <Stand slot="stand" sprite={mon(m.slug)?.sprite} at={50 + (n + 1) * (46 / (a.length + 1))} href={`/monsters/${m.slug}/`} label={m.name} />)}
+  <div class="card">
+    <div class="entity">
+      <div>
         {l.danger && <p class="note">A danger zone: other adventurers here may challenge you to a duel.</p>}
         {l.above && <p>A deeper level of <a href={`/lands/${l.above.slug}/`}>{l.above.name}</a>, reached by the ladder down.</p>}
 

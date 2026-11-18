@@ -324,3 +324,52 @@ ul.plain li { padding: 3px 0; }
 .worldmap a.town { background: var(--gold); }
 .worldmap a:hover, .worldmap a:focus-visible { background: #fff; z-index: 2; }
 .worldmap a small { display: block; font-weight: 500; font-size: 0.85em; }
+
+/* ---------- scenes: a land from the side, in the game's own art ---------- */
+.scene { position: relative; overflow: hidden; background: linear-gradient(to bottom, var(--sky-a), var(--sky-b)); color: var(--sky-text); --land-h: calc(132px * var(--px)); }
+.scene.dark { color: var(--cream); }
+.scene-sky { position: relative; z-index: 2; padding-bottom: calc(var(--land-h) * 0.9); }
+.scene-land { position: absolute; left: 0; right: 0; bottom: 0; height: var(--land-h); background: var(--art) repeat-x center bottom / auto var(--land-h); image-rendering: pixelated; z-index: 1; }
+.scene-stand { position: absolute; left: 0; right: 0; bottom: calc(15px * var(--px)); height: 0; z-index: 3; }
+.stand { position: absolute; bottom: 0; transform: translateX(-50%); line-height: 0; }
+.stand img { height: auto; max-width: none; }
+a.stand:hover img, a.stand:focus-visible img { filter: drop-shadow(0 0 0 #fff) drop-shadow(0 calc(-1px * var(--px)) 0 #fff); }
+.scene-clouds { position: absolute; inset: 0 0 auto 0; height: calc(96px * var(--px)); background: url(/img/clouds.png) repeat-x 0 0 / auto 100%; image-rendering: pixelated; opacity: 0.95; animation: drift 240s linear infinite; }
+@keyframes drift { to { background-position-x: calc(-640px * var(--px)); } }
+@media (prefers-reduced-motion: reduce) { .scene-clouds { animation: none; } }
+.scene-stars { position: absolute; inset: 0; background-image: radial-gradient(#fff 1px, transparent 1.6px), radial-gradient(#fff 1px, transparent 1.4px); background-size: 190px 170px, 130px 110px; background-position: 20px 30px, 90px 80px; opacity: 0.55; }
+@media (max-width: 700px) { .scene { --px: 2 !important; } }
+
+/* The captions of the App Store slides: the title in the logo's gold and outline, a tag on a dark plate. */
+.caption-title { font-family: var(--font-title); font-weight: 400; text-transform: uppercase; line-height: 1.02; font-size: clamp(2.2rem, 6vw, 4.2rem); margin: 0 0 14px; transform: rotate(-2deg); transform-origin: left bottom; }
+.plate { display: inline-block; font-weight: 600; font-size: clamp(1rem, 2.2vw, 1.25rem); color: #fff8de; background: rgba(34, 22, 14, 0.86); border-radius: 8px; padding: 6px 14px; margin: 0 0 16px; }
+.on-sky { font-size: 1.15rem; font-weight: 500; max-width: 44ch; }
+
+/* A screenshot in the phone it's played on. */
+.phone { position: relative; background: #10131f; border-radius: clamp(18px, 3.2vw, 38px); padding: clamp(6px, 1vw, 12px); box-shadow: 0 0 0 2px #2c3350 inset, 0 18px 40px -12px rgba(14, 21, 51, 0.6), 0 6px 0 var(--midnight-deep); transform: rotate(var(--tilt, 0deg)); }
+.phone img { display: block; width: 100%; border-radius: clamp(12px, 2.3vw, 28px); }
+
+/* ---------- the landing: a walk across Dorlune ---------- */
+.site-header.over { position: absolute; left: 0; right: 0; background: transparent; border: 0; box-shadow: none; }
+.site-header.over .brand, .site-header.over .nav a { color: #fff; text-shadow: 0 2px 0 rgba(14, 21, 51, 0.55); }
+.site-header.over .nav a:hover { background: rgba(14, 21, 51, 0.25); }
+.site-header.over input[type='search'] { background: rgba(255, 255, 255, 0.85); border-color: var(--midnight); }
+.site-header.over .icon-btn { background: rgba(255, 255, 255, 0.85); color: var(--midnight); border-color: var(--midnight); }
+.top { text-align: center; padding: clamp(96px, 13vw, 150px) 16px clamp(8px, 2vw, 24px); }
+.top .logo { width: min(620px, 90vw); height: auto; filter: drop-shadow(0 10px 24px rgba(14, 21, 51, 0.25)); }
+.top .lead { margin: 0 auto 22px; max-width: 42ch; font-weight: 500; }
+.top .cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.leg { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(20px, 5vw, 64px); align-items: center; max-width: var(--wrap); margin: 0 auto; padding: clamp(40px, 7vw, 88px) 16px clamp(16px, 3vw, 32px); }
+.leg.flip > :first-child { order: 2; }
+@media (max-width: 800px) { .leg { grid-template-columns: 1fr; } .leg.flip > :first-child { order: 0; } }
+.where { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; margin: 0 0 10px; opacity: 0.9; text-decoration: none; color: inherit; }
+.where:hover { text-decoration: underline; }
+.numbers { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 26px; margin: 22px auto 0; padding: 0; list-style: none; font-weight: 600; max-width: 760px; }
+.numbers b { font-family: var(--font-title); font-weight: 400; font-size: 1.5em; margin-right: 5px; }
+.banner .wrap { padding-top: 18px; padding-bottom: 6px; }
+.banner h1 { margin: 6px 0 8px; }
+.banner .crumbs, .banner .crumbs a { color: inherit; }
+.banner .chips { margin-bottom: 0; }
+.banner .scene-sky { padding-bottom: calc(var(--land-h) * 0.72); }
+.banner + .page { padding-top: 0; }
+.banner + .page > .wrap > .card:first-child { margin-top: calc(-22px); position: relative; z-index: 4; }

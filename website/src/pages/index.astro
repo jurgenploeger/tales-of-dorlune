@@ -1,20 +1,38 @@
 ---
 import Base from '../layouts/Base.astro';
 import GetApp from '../components/GetApp.astro';
-import Sprite from '../components/Sprite.astro';
+import Scene from '../components/Scene.astro';
+import Stand from '../components/Stand.astro';
 import { site } from '../lib/site';
-import { game } from '../lib/game';
+import { game, levels } from '../lib/game';
 const c = game.counts;
-const features = [
-  { shot: 'battle', title: 'Battle side by side', text: 'Turn-based battles fought right where you stand, with spells, friends and companions at your side. Take your time: nothing rushes you.' },
-  { shot: 'seal', title: 'Make monsters your friends', text: `Weaken them, then throw a Seal Stone. There are ${c.monsters} monsters to meet for your Monster Book, and any you befriend can travel and fight beside you.` },
-  { shot: 'boss', title: 'Set the stories right', text: `The tales have been going wrong. ${c.bosses} bosses out of the fairy tales wait in their lairs, from the Rat King to the Big Bad Wolf.` },
-  { shot: 'town', title: 'Busy towns to explore', text: 'Shops, smiths, guilds and people with something to ask of you. Every quest helps someone out, and many open the road onward.' },
-  { shot: 'levelup', title: 'Choose your path', text: `Start as a Novice and join a guild at level ${game.classChoiceLevel}: Fighter, Mage or Beast Tamer. Then grow all the way to level ${c.maxLevel}.` },
-  { shot: 'anywhere', title: 'Play anywhere', text: `It plays offline, with no account to make, for five minutes or a whole evening. The people you meet in the world are part of the game. In ${c.languages} languages.` },
-];
-const parade = ['fluffy-bunny', 'pineapple-sprout', 'rat-king', 'big-bad-wolf', 'grumpy-old-oak', 'great-wisp']
-  .map((s) => game.monsters.find((m: any) => m.slug === s)).filter(Boolean);
+const land = (slug: string) => game.lands.find((l: any) => l.slug === slug);
+const mon = (slug: string) => game.monsters.find((m: any) => m.slug === slug);
+/** The walk: each stop a land, what you do there, a screen from it and who lives there. */
+const legs = [
+  { land: 'sunny-meadow', shot: 'seal', title: 'Make monsters your friends', tag: 'Weaken them, then throw a Seal Stone',
+    text: `There are ${c.monsters} monsters to meet for your Monster Book. Any you befriend can travel and fight beside you.`,
+    alt: 'A Seal Stone closes round a rare Sakura Bunny in Sunny Meadow' },
+  { land: 'gumdrop-peaks', shot: 'battle', title: 'Battle side by side', tag: 'Spells, friends and companions',
+    text: 'Turn-based battles, fought right where you stand. Take your time: nothing rushes you.',
+    alt: 'A spell bursts among six monsters on Gumdrop Peaks' },
+  { land: 'prismhaven', shot: 'town', title: 'Busy towns to explore', tag: 'Shops, smiths and quests',
+    text: `${c.quests} quests, each helping someone out. Many open the road onward.`,
+    alt: 'The hero in the square of Prismhaven, among its shops and people' },
+  { land: 'snow-white-forest', shot: 'boss', title: 'Set the stories right', tag: `${c.bosses} bosses out of the fairy tales`,
+    text: 'The tales have been going wrong. A Big Bad Wolf prowls the Snow White Forest, and he is only one of them.',
+    alt: 'The Big Bad Wolf steps forward in the last wave of his fight' },
+  { land: 'twilight-woods', shot: 'levelup', title: 'Choose your path', tag: 'Fighter, Mage or Beast Tamer',
+    text: `Start as a Novice, join a guild at level ${game.classChoiceLevel}, and grow all the way to level ${c.maxLevel}.`,
+    alt: 'Victory, and a level up to level 10' },
+  { land: 'briarmere', shot: 'anywhere', title: 'Play anywhere', tag: 'Offline, with no account to make',
+    text: `Five minutes or a whole evening, upright or on its side, in ${c.languages} languages. The people you meet in the world are part of the game.`,
+    alt: 'The hero and a companion cross a wooden bridge over a frozen lake' },
+].map((l) => ({ ...l, land: land(l.land) }));
+const residents = (l: any) => [...l.bosses.map((b: any) => mon(b.slug)), ...l.monsters.filter((m: any) => !m.rare).map((m: any) => mon(m.slug))].filter(Boolean).slice(0, 3);
+const meadow = land('meadowbrook');
+const night = land('moonwhisper');
+const hero = game.races[0].sprite;
 const jsonld = [{
   '@context': 'https://schema.org', '@type': 'MobileApplication', name: site.name, operatingSystem: 'iOS',
   applicationCategory: 'GameApplication', description: `${site.name} is ${site.tagline} for iPhone.`, url: site.url,
@@ -23,8 +41,8 @@ const jsonld = [{
   potentialAction: { '@type': 'SearchAction', target: `${site.url}/search/?q={q}`, 'query-input': 'required name=q' } }];
 ---
 <Base title="Tales of Dorlune: a cozy pixel adventure for iPhone" description={`Explore ${c.lands} lands from the old stories, make friends of their monsters and set the tales right. A cozy pixel RPG for iPhone, with a full guide to its quests, monsters and lands.`} bare jsonld={jsonld}>
-  <section class="hero">
-    <div class="wrap">
+  <Scene land={meadow} art="hero">
+    <div class="top">
       <h1 style="margin:0"><img class="logo" src="/img/logo.png" alt="Tales of Dorlune" width="952" height="353" /></h1>
       <div><span class="tagline-pill">{site.tagline}</span></div>
       <p class="lead">Explore lands from the old stories, make friends of their monsters and set the tales right, on your own and at your own pace.</p>
@@ -32,72 +50,52 @@ const jsonld = [{
         <GetApp />
         <a class="btn quiet" href="/guide/">Open the guide</a>
       </div>
+      <ul class="numbers">
+        <li><b>{c.lands}</b>lands</li><li><b>{c.monsters}</b>monsters</li><li><b>{c.bosses}</b>bosses</li><li><b>{c.maxLevel}</b>levels</li><li><b>{c.languages}</b>languages</li>
+      </ul>
     </div>
-    <div class="clouds" aria-hidden="true">
-      {[[2, 30], [14, 21], [25, 13], [98, 32], [86, 22], [74, 14]].map(([x, s]) => <i style={`left:${x}%;width:${s}vw;height:${s}vw`} />)}
-    </div>
-  </section>
+    <Stand slot="stand" sprite={hero} at={46} label="The hero" size={1.4} />
+    <Stand slot="stand" sprite={mon('fluffy-bunny')?.sprite} at={53} href="/monsters/fluffy-bunny/" label="Fluffy Bunny" />
+    <Stand slot="stand" sprite={mon('jelly-puff')?.sprite} at={61} href="/monsters/jelly-puff/" label="Jelly Puff" flip />
+  </Scene>
 
-  <div class="wrap hero-shot">
-    <img class="shot" src="/img/shot-explore.jpg" alt="The hero and a companion walk a sandy road through Starfall Isle's glowing woods" width="1600" height="804" />
-  </div>
-
-  <section class="band">
-    <div class="wrap">
-      <div class="card">
-        <div class="stats">
-          <div><b>{c.lands}</b><span>lands from the old stories</span></div>
-          <div><b>{c.monsters}</b><span>monsters in the Monster Book</span></div>
-          <div><b>{c.bosses}</b><span>bosses out of the fairy tales</span></div>
-          <div><b>3</b><span>paths: Fighter, Mage or Beast Tamer</span></div>
-          <div><b>{c.maxLevel}</b><span>levels to grow through</span></div>
-          <div><b>{c.languages}</b><span>languages</span></div>
+  {legs.map((leg, n) => (
+    <Scene land={leg.land} clouds={n % 2 === 0}>
+      <div class:list={['leg', { flip: n % 2 === 1 }]}>
+        <div>
+          <a class="where" href={`/lands/${leg.land.slug}/`}>{leg.land.name}{leg.land.levels && <>, levels {levels(leg.land.levels)}</>}</a>
+          <h2 class="caption-title gold-title">{leg.title}</h2>
+          <div><span class="plate">{leg.tag}</span></div>
+          <p class="on-sky">{leg.text}</p>
         </div>
+        <div class="phone" style={`--tilt:${n % 2 ? -1.5 : 1.5}deg`}><img src={`/img/shot-${leg.shot}.jpg`} alt={leg.alt} width="1600" height="804" loading="lazy" /></div>
       </div>
-    </div>
-  </section>
-
-  <section class="band" style="padding-top:0">
-    <div class="wrap">
-      {features.map((f) => (
-        <div class="feature">
-          <div class="feature-text card">
-            <h3>{f.title}</h3>
-            <p style="margin:0">{f.text}</p>
-          </div>
-          <img class="shot" src={`/img/shot-${f.shot}.jpg`} alt={`${f.title}: a screen from the game`} width="1600" height="804" loading="lazy" />
-        </div>
+      {residents(leg.land).map((m: any, k: number) => (
+        <Stand slot="stand" sprite={m.sprite} at={(n % 2 ? 62 : 12) + k * 11} href={`/monsters/${m.slug}/`} label={m.name} flip={n % 2 === 1} />
       ))}
-    </div>
-  </section>
+    </Scene>
+  ))}
 
-  <section class="band" style="padding-top:0">
-    <div class="wrap stack">
+  <Scene land={night}>
+    <div class="wrap" style="padding-top:clamp(40px,7vw,80px)">
       <div class="card">
-        <p class="eyebrow">The story</p>
-        <h2 style="margin-top:0">Fairy tales need a hero</h2>
-        <p>Long ago, the goddess Liora gathered the world's fairy tales into one land: Dorlune. Every tale found a home: Thumbelina's lotus pond, Snow White's forest, the Emerald Road to Oz and the golden sands of the Thousand and One Nights.</p>
-        <p>Lately the tales have been going wrong. A Big Bad Wolf prowls the Snow White Forest. A Rat King has cut off the dwarves of Ingothold. Nobody knows why. You arrive in Meadowbrook as a new adventurer, with the whole of Dorlune ahead of you.</p>
-        <div class="parade">
-          {parade.map((m: any) => <a href={`/monsters/${m.slug}/`}><Sprite sprite={m.sprite} box={96} max={2} alt="" />{m.name}</a>)}
-        </div>
-      </div>
-
-      <div class="card">
-        <p class="eyebrow">The guide</p>
         <h2 style="margin-top:0">Everything in the game, looked up</h2>
-        <p>Every monster, land, quest and item, straight from the game's own files, so it's always right for version {game.version}.</p>
+        <p>Every monster, land, quest and item, straight from the game's own files, so it's right for version {game.version}.</p>
         <div class="grid">
           <a class="tile" href="/guide/start/"><div><strong>Start here</strong><span>Your first hour in Dorlune</span></div></a>
           <a class="tile" href="/guide/walkthrough/"><div><strong>Walkthrough</strong><span>The road from level 1 to {c.maxLevel}</span></div></a>
-          <a class="tile" href="/monsters/"><div><strong>Monsters</strong><span>All {c.monsters}, with where to find them</span></div></a>
+          <a class="tile" href="/monsters/"><div><strong>Monsters</strong><span>All {c.monsters}, and where to find them</span></div></a>
           <a class="tile" href="/lands/"><div><strong>Lands</strong><span>The world map and every land</span></div></a>
           <a class="tile" href="/quests/"><div><strong>Quests</strong><span>All {c.quests}, with rewards</span></div></a>
           <a class="tile" href="/items/"><div><strong>Items</strong><span>{c.items} things to find, buy and forge</span></div></a>
         </div>
       </div>
-
-      <GetApp compact />
+      <div style="text-align:center;padding:clamp(28px,5vw,56px) 0 0">
+        <h2 class="caption-title gold-title" style="transform:none">Fairy tales need a hero</h2>
+        <p class="on-sky" style="margin:0 auto 20px">You arrive in Meadowbrook as a new adventurer, with the whole of Dorlune ahead of you.</p>
+        <GetApp />
+      </div>
     </div>
-  </section>
+    {[mon('rat-king'), mon('grumpy-old-oak'), mon('great-wisp')].map((m: any, k) => <Stand slot="stand" sprite={m?.sprite} at={[10, 50, 90][k]} href={`/monsters/${m?.slug}/`} label={m?.name} flip={k === 2} />)}
+  </Scene>
 </Base>

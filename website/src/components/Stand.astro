@@ -1,0 +1,11 @@
+---
+/** A sprite standing on a scene's ground, `at` percent across, at the scene's own pixel size. */
+interface Props { sprite?: { src: string; w: number; h: number } | null; at: number; href?: string; label?: string; flip?: boolean; size?: number }
+const { sprite, at, href, label, flip = false, size = 1 } = Astro.props;
+const Tag = href ? 'a' : 'span';
+---
+{sprite && (
+  <Tag class="stand" href={href} style={`left:${at}%`} aria-label={label} title={label}>
+    <img src={sprite.src} alt={href ? '' : label ?? ''} class="pixel" loading="lazy" style={`width:calc(${sprite.w}px * var(--px) * ${size});${flip ? 'transform:scaleX(-1)' : ''}`} width={sprite.w} height={sprite.h} />
+  </Tag>
+)}

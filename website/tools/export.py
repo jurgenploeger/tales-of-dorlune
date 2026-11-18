@@ -22,6 +22,8 @@ OUT = os.path.join(SITE, 'src', 'data')
 SPRITES = os.path.join(SITE, 'public', 'sprites')
 sys.path.insert(0, os.path.join(ROOT, 'tools'))
 import palette_preview as pp  # noqa: E402  (its `raw` builds a derived sprite)
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import scenes  # noqa: E402
 
 
 def load(name):
@@ -256,8 +258,10 @@ def main():
                 services.append({'name': npc['name'], 'role': role, 'greeting': npc.get('greeting'),
                                  'stock': [iref(i) for i in npc.get('stock', [])],
                                  'given': [qref(q['id']) for q in quests if q['giver'] == npc['id']]})
+        os.makedirs(os.path.join(SITE, 'public', 'scenes'), exist_ok=True)
+        scenes.scene(mp).save(os.path.join(SITE, 'public', 'scenes', l_slug[mp['id']] + '.png'), optimize=True)
         out_lands.append({
-            'slug': l_slug[mp['id']], 'name': mp['name'], 'kind': kind, 'levels': enc.get('levels'),
+            'slug': l_slug[mp['id']], 'name': mp['name'], 'kind': kind, 'sky': scenes.sky_of(mp), 'levels': enc.get('levels'),
             'groupSize': enc.get('groupSize'), 'depth': mp.get('depth'),
             'climate': mp.get('climate'), 'danger': bool(mp.get('danger')),
             'monsters': sorted([{**mref(k), 'share': round(v / total, 3), 'rare': bool(m_by[k].get('rare')),
@@ -362,6 +366,8 @@ def main():
         'changelog': changelog,
         'world': world_map(maps, world, l_slug),
     }
+    scenes.scene(map_by[load('maps')['start']], width=960).save(os.path.join(SITE, 'public', 'scenes', 'hero.png'), optimize=True)
+    scenes.clouds().save(os.path.join(SITE, 'public', 'img', 'clouds.png'), optimize=True)
     os.makedirs(OUT, exist_ok=True)
     json.dump(game, open(os.path.join(OUT, 'game.json'), 'w'), ensure_ascii=False, separators=(',', ':'))
     print({k: (len(v) if isinstance(v, list) else v) for k, v in game.items() if k not in ('changelog',)})

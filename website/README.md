@@ -23,7 +23,9 @@ python3 website/tools/export.py     # needs pillow + numpy
 It rewrites `src/data/game.json` (everything, cross-linked: where a monster lives, what drops an
 item, which quest opens a road) and `public/sprites/` (each sprite the site shows; a derived one is
 recoloured as the game does at load time) and `public/world.png` (the continent, from
-`content/world.json`). Its output is committed, so Vercel builds with Node alone.
+`content/world.json`), and `public/scenes/` (`tools/scenes.py`: each land from the side, its own scenery
+graded with its palette on a strip of its ground, which the homepage walks through and each guide page
+opens with). Its output is committed, so Vercel builds with Node alone.
 
 URLs come from the names players see (`/lands/prismhaven/`), never from content ids: some ids keep
 old names.

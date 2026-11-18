@@ -1,0 +1,16 @@
+---
+/** A land seen from the side: its sky, pixel clouds drifting, and a strip of its own scenery along the
+    foot. Whatever is slotted in `stand` stands on its ground; the default slot sits in the sky. */
+interface Props { land: { slug: string; sky: string[] }; art?: string; scale?: number; clouds?: boolean; class?: string }
+const { land, art, scale = 3, clouds = true, class: cls = '' } = Astro.props;
+const hex = (h: string) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+const [r, g, b] = hex(land.sky[0]);
+const dark = 0.299 * r + 0.587 * g + 0.114 * b < 90;
+---
+<div class:list={['scene', cls, { dark }]} style={`--sky-a:${land.sky[0]};--sky-b:${land.sky[1]};--px:${scale};--art:url(/scenes/${art ?? land.slug}.png)`}>
+  {clouds && !dark && <div class="scene-clouds" aria-hidden="true"></div>}
+  {dark && <div class="scene-stars" aria-hidden="true"></div>}
+  <div class="scene-sky"><slot /></div>
+  <div class="scene-land" aria-hidden="true"></div>
+  <div class="scene-stand"><slot name="stand" /></div>
+</div>

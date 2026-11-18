@@ -4,6 +4,7 @@ import '@fontsource-variable/fredoka';
 import '../styles/global.css';
 import { site } from '../lib/site';
 import { game } from '../lib/game';
+import Scene from '../components/Scene.astro';
 
 interface Props {
   title: string;
@@ -12,8 +13,10 @@ interface Props {
   image?: string;
   bare?: boolean;
   jsonld?: object[];
+  /** A land whose scene opens the page, the title standing in its sky. */
+  scene?: { slug: string; sky: string[] };
 }
-const { title, description, crumbs = [], image = '/img/link-preview.png', bare = false, jsonld = [] } = Astro.props;
+const { title, description, crumbs = [], image = '/img/link-preview.png', bare = false, jsonld = [], scene } = Astro.props;
 const path = Astro.url.pathname;
 const canonical = new URL(path, site.url).href;
 const fullTitle = path === '/' ? title : `${title} | ${site.name}`;
@@ -39,6 +42,7 @@ const ld = [
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="theme-color" content="#4a90e8" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#0b1538" media="(prefers-color-scheme: dark)" />
@@ -56,7 +60,7 @@ const ld = [
     </script>
   </head>
   <body>
-    <header class="site-header">
+    <header class:list={['site-header', { over: bare }]}>
       <div class="wrap">
         <a class="brand" href="/"><img src="/img/app-icon.png" alt="" width="40" height="40" class="pixel" />{site.name}</a>
         <nav class="nav" aria-label="Main">
@@ -72,16 +76,29 @@ const ld = [
     </header>
     <main>
       {bare ? <slot /> : (
-        <div class="page">
-          <div class="wrap">
-            {trail.length > 0 && (
-              <nav class="crumbs" aria-label="Breadcrumb">
-                {trail.map((c, i) => <>{i > 0 && <span>›</span>}{c.href ? <a href={c.href}>{c.name}</a> : c.name}</>)}
-              </nav>
-            )}
-            <slot />
+        <>
+          {scene && (
+            <Scene land={scene} scale={2} class="banner">
+              <div class="wrap">
+                <nav class="crumbs" aria-label="Breadcrumb">
+                  {trail.map((c, i) => <>{i > 0 && <span>›</span>}{c.href ? <a href={c.href}>{c.name}</a> : c.name}</>)}
+                </nav>
+                <slot name="head" />
+              </div>
+              <slot name="stand" slot="stand" />
+            </Scene>
+          )}
+          <div class="page">
+            <div class="wrap">
+              {!scene && trail.length > 0 && (
+                <nav class="crumbs" aria-label="Breadcrumb">
+                  {trail.map((c, i) => <>{i > 0 && <span>›</span>}{c.href ? <a href={c.href}>{c.name}</a> : c.name}</>)}
+                </nav>
+              )}
+              <slot />
+            </div>
           </div>
-        </div>
+        </>
       )}
     </main>
     <footer class="site-footer">
