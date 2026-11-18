@@ -1049,3 +1049,5 @@ web_port_anywhere | newgame,level=30,class=mage,pet=bunny,map=rosen_lake,bridge=
 web_port_explore  | newgame,level=43,class=fighter,friends=2,map=starfall_isle,at=0_2,clean,nohud | 12
 # The Valley of Fear at 139 : 79 by the world map's pin, where the land looked broken (the user, 2026-11-18).
 valley_broken | newgame,level=60,map=valley_of_fear,at=60_-19,hour=9,weather=clear | 8
+valley_broken_wide | newgame,level=60,map=valley_of_fear,at=60_-19,hour=9,weather=clear,zoom=0.85,landscape | 8
+valley_broken_east | newgame,level=60,map=valley_of_fear,at=66_-25,hour=9,weather=clear,zoom=0.85,landscape | 8
