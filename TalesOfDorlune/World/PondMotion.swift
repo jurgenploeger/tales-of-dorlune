@@ -40,6 +40,40 @@ enum PondMotion {
         return picture(17, 9, cells)
     }
 
+    /// Whether it's raining where you are (`ContinentScene.updateAir`): drops ring the open water many
+    /// times a second (`LandStage.placePondMotion`; the user, 2026-11-18: "Add the rain rings").
+    static var raining = false
+
+    /// A raindrop's rings: the drop's first four, quicker (`LandStage.placePondMotion`).
+    static var rainRipple: [SKTexture] { Array(ripple.prefix(4)) }
+
+    /// The bright rim along a near shore, one cell's edge of it (the user, 2026-11-18: "the bright shore
+    /// rim"): a line of light pixels stepping two across and one up, as the edge runs on screen,
+    /// broken here and there, a paler pixel at each end. `rising`: up to the right (an edge along the
+    /// grid's x, the water's south shore), else up to the left (its west shore). A few of each,
+    /// picked by where the edge lies, so a long shore doesn't repeat.
+    static let rims: [Bool: [SKTexture]] = [true: (0..<4).map { rim(rising: true, variant: $0) },
+                                            false: (0..<4).map { rim(rising: false, variant: $0) }]
+
+    private static func rim(rising: Bool, variant: Int) -> SKTexture {
+        let width = 22, height = 11
+        var random = SeededRandom(text: "pond rim \(rising) \(variant)")
+        var cells: [(Int, Int, UIColor)] = []
+        var gap = 0
+        for step in 0..<width {
+            // A short gap now and then (a pixel or two), never at the ends, so the cells' rims join.
+            if gap > 0 { gap -= 1; continue }
+            if step > 2, step < width - 3, Double.random(in: 0..<1, using: &random) < 0.08 {
+                gap = Int.random(in: 0...1, using: &random)
+                continue
+            }
+            let x = rising ? step : width - 1 - step
+            let y = height - 1 - step / 2
+            cells.append((x, y, step == 0 || step == width - 1 ? mid : light))
+        }
+        return picture(width, height, cells)
+    }
+
     /// A dash lapping at the shore: three pixels, light in the middle.
     static let lap = picture(3, 1, [(0, 0, mid), (1, 0, light), (2, 0, mid)])
     /// The far shore's waterline creeping up a pixel: two of its dark pixels.

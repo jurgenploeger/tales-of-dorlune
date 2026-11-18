@@ -637,6 +637,18 @@ final class LandStage {
                 shore = true
                 // Up the screen is north and east at once: a shore that way is the far bank.
                 let far = dc + dr > 0
+                if !far {
+                    // A bright rim along the near shore, at the water's edge (the user, 2026-11-18).
+                    let rising = dr != 0
+                    let variants = PondMotion.rims[rising] ?? []
+                    if !variants.isEmpty {
+                        let pick = abs(cell.col &* 31 &+ cell.row &* 17) % variants.count
+                        let rim = PondMotion.sprite(variants[pick])
+                        let edge = CGPoint(x: Double(dc) * 0.46 * tile, y: Double(dr) * 0.46 * tile)
+                        let at = map.center(of: cell) + CGVector(dx: WorldMap.project(edge).x, dy: WorldMap.project(edge).y)
+                        onWater(rim, at: at, cell: cell)
+                    }
+                }
                 guard Double.random(in: 0..<1) < (far ? 0.4 : 0.6) else { continue }
                 // Along the edge, toward the land: the near shore's dashes two or three pixels out on
                 // the water, the far shore's creep at the waterline.
@@ -709,6 +721,15 @@ final class LandStage {
             }
             spawner.run(.repeatForever(.sequence([.wait(forDuration: 0.55, withRange: 0.6), glint])))
             spawner.run(.repeatForever(.sequence([.wait(forDuration: 3.5, withRange: 3), drop])))
+            // In the rain, drops ring the water many times a second (the user, 2026-11-18).
+            let rain = SKAction.run { [weak spawner] in
+                guard let spawner, PondMotion.raining, let first = PondMotion.rainRipple.first else { return }
+                let node = PondMotion.sprite(first)
+                node.position = spot()
+                spawner.addChild(node)
+                node.run(.sequence([.animate(with: PondMotion.rainRipple, timePerFrame: 0.12), .removeFromParent()]))
+            }
+            spawner.run(.repeatForever(.sequence([.wait(forDuration: 0.25, withRange: 0.3), rain])))
         }
     }
 

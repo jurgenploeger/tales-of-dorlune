@@ -418,6 +418,9 @@ final class ContinentScene: SKScene {
             let tint = here.flatMap { airs[$0.id]?.sky?.tint } ?? .day
             if session.skyTint != tint { session.skyTint = tint }
             let sun = here.flatMap { airs[$0.id]?.sky?.sun } ?? .noon
+            // Rain rings the lakes' water where you are (`PondMotion.raining`).
+            let weather = here.flatMap { airs[$0.id]?.sky?.weather }
+            PondMotion.raining = weather == .rain || weather == .storm
             for id in nearLands { lands[id]?.stage.follow(sun) }
             if Walker.sun != sun { Walker.shine(sun) }
             // Your friends about whose time online is over, or who've gone on elsewhere, log off.
