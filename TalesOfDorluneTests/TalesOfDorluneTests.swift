@@ -805,6 +805,22 @@ struct ContentTests {
         }
     }
 
+    /// A land's places to find (theme `places`: the user's pick from tools/land_preview.py, 2026-11-17) all
+    /// find room, their earth is laid and can be walked, and a footpath joins each to a road.
+    @Test func placesToFindAreLaidOut() {
+        for def in content.maps where def.theme.places?.isEmpty == false {
+            let map = Layouts.of(def)
+            let wanted = (def.theme.places ?? []).reduce(0) { $0 + $1.count }
+            #expect(map.places.count == wanted, "map \(def.id): \(map.places.count) of its \(wanted) places found room")
+            for place in map.places {
+                for cell in WorldMap.earth(of: place.def.kind, at: place.middle) {
+                    #expect(map.ground[cell.row][cell.col] == .path && map.isWalkable(cell), "map \(def.id): a \(place.def.kind)'s earth at \(cell)")
+                }
+                #expect(map.height(at: map.center(of: place.middle)) == 0, "map \(def.id): a \(place.def.kind) on a slope at \(place.middle)")
+            }
+        }
+    }
+
     @Test func housesStandOffTheRoads() {
         for def in content.maps {
             let map = Layouts.of(def)

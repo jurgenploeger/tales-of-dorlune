@@ -11,7 +11,8 @@ import SpriteKit
 ///   gold=1457603   start with this much gold
 ///   map=<id>       start on a map from content/maps.json
 ///   at=x_y         start at this offset from the map's centre (e.g. at=0_14); at=terrace (or
-///                  terrace_side) at the foot of the first terrace's front (or side) stairs
+///                  terrace_side) at the foot of the first terrace's front (or side) stairs; at=place (place1…)
+///                  in front of the land's first (nth) place to find
 ///   ring=0         beside the land's first fairy ring (debug builds)
 ///   hill=n         start at the foot of the first trail up the map's nth range of hills (0 first);
 ///                  `hill=tallest` the range with the highest top, up its highest trail; `trail=k`
@@ -714,7 +715,16 @@ enum DebugLaunch {
         if let at = flags["at"]?.split(separator: ";").first ?? flags["at"].map({ Substring($0) }),
            let def = Content.shared.map(session.data.mapID) {
             let parts = at.split(separator: "_").compactMap { Int($0) }
-            if at.hasPrefix("terrace") {
+            if at.hasPrefix("place") {
+                // `at=place` (or `place1`, `place2`…): just in front of the land's first (or nth) place to find
+                // (`WorldMap.places`), on its footpath or yard.
+                let grid = WorldMap(def: def)
+                let index = Int(at.dropFirst(5)) ?? 0
+                if grid.places.indices.contains(index) {
+                    let middle = grid.places[index].middle
+                    session.playerPosition = grid.center(of: GridPoint(col: middle.col, row: middle.row - 3))
+                }
+            } else if at.hasPrefix("terrace") {
                 // `at=terrace` (or `terrace_side`): at the foot of the town's first terrace's front (or side)
                 // stairs, wherever it found room (`WorldMap.raiseTerrace`).
                 let grid = WorldMap(def: def)

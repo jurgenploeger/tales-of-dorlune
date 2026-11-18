@@ -553,6 +553,15 @@ nonisolated struct MapDef: Decodable, Identifiable, Sendable {
         let accent: String?
         /// Number of accent patches (flower meadows etc.); without it accents are scattered.
         let accentPatches: Int?
+        /// How far an accent patch reaches from its middle, in cells: [smallest, biggest] (1.5 to 4.5
+        /// when not given). Bigger, they're broad meadows of flowers or stretches of paler sand
+        /// rather than dots (the user, 2026-11-17: "less boring lands").
+        let accentSize: [Double]?
+        /// Trees and the like in woods with open clearings between them, flowers in drifts in the
+        /// clearings, rather than everything spread evenly (`LandPlanner.grove`).
+        let groves: Bool?
+        /// Places to find out in the land (`WorldMap.layPlaces`, `LandPlanner.planPlaces`).
+        let places: [Site]?
         /// Ground outside a fenced town.
         let border: String?
         /// Water tile for ponds.
@@ -576,6 +585,19 @@ nonisolated struct MapDef: Decodable, Identifiable, Sendable {
         /// beside rock mixed over 28 cells read as a glitch, a checkerboard of pink and blue
         /// (playtesting 2026-11-11, Briarmere).
         let blend: Double?
+    }
+
+    /// A place to find out in a wild land, a few cells off a road with a footpath to it, put together
+    /// from the land's own pieces (the user's pick from `tools/land_preview.py`, 2026-11-17).
+    nonisolated struct Site: Decodable, Sendable {
+        /// farm (a field of bare earth with a crop in rows, a scarecrow behind it, haystacks by its
+        /// yard) | ruin (a ring of standing stones round a fallen pillar, worn earth inside it) |
+        /// camp (a tent by a fire on trodden ground, with what its people left about).
+        let kind: String
+        let count: Int
+        /// Its pieces' art where not the kind's own: `crop`, `scarecrow`, `stack` (a farm); `ring`,
+        /// `centre` (a ruin); `tent`, `fire`, `stores` (a camp).
+        let art: [String: String]?
     }
 
     /// What lines a stretch of a land's road (`LandPlanner.planRoadsides`), on the cells beside it.

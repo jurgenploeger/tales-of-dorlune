@@ -581,6 +581,22 @@ for map_def in maps.values():
               f"{where} → size must be [smallest, biggest] reach in cells, 5 to 24")
         islands = lakes.get("islands", 0)
         check(isinstance(islands, int) and 0 <= islands <= lakes.get("count", 0), f"{where} → islands must be 0 to count")
+    if "places" in theme:
+        # Places to find out in a wild land (`WorldMap.layPlaces`, `LandPlanner.planPlaces`).
+        where = f"map {map_def['id']} places"
+        check("cave" not in theme and "town" not in map_def, f"{where} → only out in a wild land")
+        slots = {"farm": {"crop", "scarecrow", "stack"}, "ruin": {"ring", "centre"}, "camp": {"tent", "fire", "stores", "seat"}}
+        for place in theme["places"] if isinstance(theme["places"], list) else []:
+            check(isinstance(place, dict) and set(place) <= {"kind", "count", "art"}, f"{where} → each must be {{kind, count, art}}")
+            kind = place.get("kind")
+            check(kind in slots, f"{where} → kind must be farm, ruin or camp, not {kind}")
+            check(isinstance(place.get("count"), int) and 1 <= place["count"] <= 4, f"{where} → count must be 1 to 4")
+            for slot, piece in (place.get("art") or {}).items():
+                check(slot in slots.get(kind, set()), f"{where} → a {kind} has no piece called {slot}")
+                check(piece in art, f"{where} → unknown art {piece}")
+    if "accentSize" in theme:
+        size = theme["accentSize"]
+        check(isinstance(size, list) and len(size) == 2 and 1 <= size[0] <= size[1] <= 12, f"map {map_def['id']} accentSize → [smallest, biggest], 1 to 12 cells")
     if "roadside" in theme:
         # What lines stretches of the roads (`LandPlanner.planRoadsides`).
         lines = theme["roadside"]

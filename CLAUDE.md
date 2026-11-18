@@ -217,6 +217,14 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   instead of swaying, caves keep the old sway (their depth of field swaps textures). Rerun it after
   redrawing a rigged sprite (`check_content.py` checks each rig fits); `--sheet` shows the clumps, `--gif`
   a grove in the wind.
+- Less boring lands (the user's pick from `tools/land_preview.py`, 2026-11-17; in Sunny Meadow, Twilight Woods and
+  Genie Desert first, to roll out once seen): theme `places` are places to find, a farm, a ruin or a camp
+  (`MapDef.Site`), each a few cells off a road with a footpath to it: `WorldMap.layPlaces` finds flat open ground
+  before the hills are raised, keeps it and lays its earth as path (`WorldMap.earth`); `LandPlanner.planPlaces` sets
+  its pieces down (a crop in rows, a scarecrow, haystacks; a ring of standing stones round a pillar; a tent, a fire
+  and stores), its `art` naming other pieces. Theme `groves`: trees only start a group where a slow field is high
+  (`LandPlanner.grove`), flowers only where it's low, so there are woods and clearings. Theme `accentSize`: how big
+  the accent patches are, for broad meadows. Chicks live in a farm's yard (`Critters.home`). Debug `at=place`.
 - Town roads (the user's pick from `tools/road_preview.py`, 2026-11-17): in a town's square (`GroundTiles.inTown`,
   `WorldMap.townSquare`) every road cell is drawn by `ArtLibrary.townRoad` (`GroundLayer.cobbled`): cobbles about half a
   cell across down its middle in the colour of the land's `tile_town` (graded), their edge ragged stone by stone, sand

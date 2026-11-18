@@ -178,6 +178,12 @@ final class Critters {
                 if map.isFreeForScenery(cell, blocking: false) { return cell }
             }
         }
+        // Chicks peck about a farm's yard, where the land has one (`WorldMap.places`).
+        let farms = map.places.filter { $0.def.kind == "farm" }
+        if kind == "chick", !farms.isEmpty {
+            let farm = farms[Int.random(in: 0..<farms.count, using: &rng)].middle
+            return GridPoint(col: farm.col + Int.random(in: -1...1, using: &rng), row: farm.row + Int.random(in: -3...(-1), using: &rng))
+        }
         return map.randomFreeCell(blocking: false, using: &rng)
     }
 

@@ -1008,3 +1008,12 @@ night_meadow_land | newgame,map=sunny_meadow,landscape,weather=clear,hour=23 | 8
 # Cobbled town streets: cobbles down the middle, sand and pebbles, grass over the edges (`ArtLibrary.townRoad`, 2026-11-17).
 town_streets | newgame,map=meadowbrook,weather=clear,hour=12 | 8
 town_streets_desert | newgame,level=40,map=goldburg,weather=clear,hour=12 | 8
+# Places to find, groves and clearings, broad flower meadows (`WorldMap.layPlaces`, `LandPlanner.grove`, 2026-11-18).
+place_farm    | newgame,map=sunny_meadow,at=place,weather=clear,hour=12 | 8
+place_farm_2  | newgame,map=sunny_meadow,at=place1,weather=clear,hour=12 | 8
+place_ruin    | newgame,map=sunny_meadow,at=place2,weather=clear,hour=12 | 8
+place_woods   | newgame,level=20,map=twilight_woods,at=place,weather=clear,hour=12 | 8
+place_woods_camp | newgame,level=20,map=twilight_woods,at=place2,weather=clear,hour=12 | 8
+place_desert  | newgame,level=60,map=genie_desert,at=place,weather=clear,hour=12 | 8
+place_desert_camp | newgame,level=60,map=genie_desert,at=place2,weather=clear,hour=12 | 8
+groves_meadow | newgame,map=sunny_meadow,landscape,nohud,weather=clear,hour=12 | 8

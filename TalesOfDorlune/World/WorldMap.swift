@@ -63,6 +63,13 @@ nonisolated final class WorldMap: @unchecked Sendable {
     private(set) var streetDecor: [(art: String, cell: GridPoint)] = []
     /// The cells the town's buildings and shops stand on, its own and its lots (`nearBuilding`).
     private var buildingCells: Set<GridPoint> = []
+    /// The places to find out in the land (`layPlaces`): what kind, its middle, and which of its
+    /// theme's places it is.
+    nonisolated struct Site {
+        let def: MapDef.Site
+        let middle: GridPoint
+    }
+    private(set) var places: [Site] = []
     /// A town's terraces: where each stands, its stairs (out in front of its walls, `raiseTerrace`) and
     /// the cells of its rim they come up to, open in its balustrade.
     private(set) var terraces: [(origin: GridPoint, width: Int, height: Int, stairs: [GridPoint], heads: [GridPoint])] = []
@@ -330,6 +337,8 @@ nonisolated final class WorldMap: @unchecked Sendable {
         lap("lakes")
         if def.theme.cave == nil, let ponds { digPonds(ponds, &rng) }
         lap("ponds")
+        // Its places to find, before the hills, which keep off them as off its roads.
+        if def.town == nil, def.theme.cave == nil, let wanted = def.theme.places { layPlaces(wanted) }
         if def.town == nil, def.theme.cave == nil, let hills = def.theme.hills { raiseHills(hills, &rng) }
         lap("hills")
         // Each summit's top is the middle of its round, where it rises highest.
@@ -2665,6 +2674,121 @@ nonisolated final class WorldMap: @unchecked Sendable {
         }
     }
 
+    // MARK: Places
+
+    /// How far round its middle a place keeps the ground for itself, in cells.
+    static let placeReach = 4
+
+    /// Finds room for the land's places to find (theme `places`) and lays their ground: each a few
+    /// cells off a road (5 to 12), on flat open ground of the land's own with nothing on it, well
+    /// clear of water, the coast, the lands next door and each other; a footpath from the road to
+    /// it; and its own earth, a farm's field and yard, the worn ring inside a ruin's stones, a
+    /// camp's trodden ground. Its cells are kept (`occupied`), so no hill, tree or anything else
+    /// takes them; `LandPlanner.planPlaces` sets its pieces down. Draws of its own, so the rest of
+    /// the land's layout draws as it did.
+    private func layPlaces(_ wanted: [MapDef.Site]) {
+        var draw = SeededRandom(text: def.id + "/places")
+        let reach = Self.placeReach
+        func open(_ cell: GridPoint) -> Bool {
+            owns(cell) && cell.col >= 2 && cell.row >= 2 && cell.col < columns - 2 && cell.row < rows - 2
+                && ground[cell.row][cell.col] == .ground && !occupied.contains(cell)
+                && !seams.contains(where: { ($0.share(cell) ?? 0) > 0.03 })
+        }
+        for place in wanted {
+            var made = 0, attempts = 0
+            while made < place.count, attempts < 400 {
+                attempts += 1
+                let middle = GridPoint(col: Int.random(in: 8..<max(9, columns - 8), using: &draw),
+                                       row: Int.random(in: 8..<max(9, rows - 8), using: &draw))
+                guard !places.contains(where: { max(abs($0.middle.col - middle.col), abs($0.middle.row - middle.row)) < 18 }) else { continue }
+                // Its own ground, all open.
+                var fits = true
+                check: for dr in -reach...reach {
+                    for dc in -reach...reach where !open(GridPoint(col: middle.col + dc, row: middle.row + dr)) {
+                        fits = false
+                        break check
+                    }
+                }
+                guard fits else { continue }
+                // No water, sea or land next door close by (the shore slopes down toward them), and
+                // the nearest road, not too near.
+                var road: GridPoint?
+                var nearest = Int.max
+                var dry = true
+                scan: for dr in -12...12 {
+                    for dc in -12...12 {
+                        let cell = GridPoint(col: middle.col + dc, row: middle.row + dr)
+                        guard contains(cell) else { continue }
+                        let kind = ground[cell.row][cell.col]
+                        let far = max(abs(dc), abs(dr))
+                        if far <= reach + 5, kind == .water || kind == .sea || kind == .away {
+                            dry = false
+                            break scan
+                        }
+                        if kind == .path, far < nearest {
+                            nearest = far
+                            road = cell
+                        }
+                    }
+                }
+                guard dry, let road, nearest > reach else { continue }
+                // The footpath: straight from its middle to the road, over open ground all the way.
+                let steps = max(1, nearest * 2)
+                var way: [GridPoint] = []
+                var clear = true
+                for step in 0...steps {
+                    let t = Double(step) / Double(steps)
+                    let cell = GridPoint(col: Int((Double(middle.col) + Double(road.col - middle.col) * t).rounded()),
+                                         row: Int((Double(middle.row) + Double(road.row - middle.row) * t).rounded()))
+                    if way.last == cell { continue }
+                    let kind = ground[cell.row][cell.col]
+                    guard owns(cell), kind == .ground || kind == .path, !blocked.contains(cell) else {
+                        clear = false
+                        break
+                    }
+                    way.append(cell)
+                }
+                guard clear else { continue }
+                // Its ground is its own from here on.
+                for dr in -reach...reach {
+                    for dc in -reach...reach { occupy(GridPoint(col: middle.col + dc, row: middle.row + dr), blocking: false) }
+                }
+                for cell in way {
+                    ground[cell.row][cell.col] = .path
+                    occupy(cell, blocking: false)
+                }
+                for cell in Self.earth(of: place.kind, at: middle) { ground[cell.row][cell.col] = .path }
+                places.append(Site(def: place, middle: middle))
+                made += 1
+            }
+        }
+    }
+
+    /// The cells of a place that are bare earth (drawn as the land's path): a farm's field (five by
+    /// three, behind its middle) and its yard in front; the ring inside a ruin's stones (not its
+    /// middle, where its pillar lies); a camp's trodden ground.
+    static func earth(of kind: String, at middle: GridPoint) -> [GridPoint] {
+        var cells: [GridPoint] = []
+        switch kind {
+        case "farm":
+            for dc in -2...2 {
+                for dr in 0...2 { cells.append(GridPoint(col: middle.col + dc, row: middle.row + dr)) }
+            }
+            for dc in -1...1 {
+                for dr in -2...(-1) { cells.append(GridPoint(col: middle.col + dc, row: middle.row + dr)) }
+            }
+        case "ruin":
+            for dc in -1...1 {
+                for dr in -1...1 where dc != 0 || dr != 0 { cells.append(GridPoint(col: middle.col + dc, row: middle.row + dr)) }
+            }
+        default:
+            for dc in -1...1 {
+                for dr in -1...1 { cells.append(GridPoint(col: middle.col + dc, row: middle.row + dr)) }
+            }
+        }
+        return cells
+    }
+
     private func scatterAccents(_ rng: inout SeededRandom) {
         for row in 0..<rows {
             for col in 0..<columns where ground[row][col] == .ground && Double.random(in: 0..<1, using: &rng) < 0.06 {
@@ -2673,11 +2797,14 @@ nonisolated final class WorldMap: @unchecked Sendable {
         }
     }
 
-    /// Soft round patches — flower meadows, shell beaches.
+    /// Soft round patches — flower meadows, shell beaches (as big as the theme's `accentSize`).
     private func paintAccentPatches(_ count: Int, _ rng: inout SeededRandom) {
+        let sizes = def.theme.accentSize ?? []
+        let smallest = sizes.count == 2 ? max(1, sizes[0]) : 1.5
+        let biggest = sizes.count == 2 ? max(smallest, sizes[1]) : 4.5
         for _ in 0..<count {
             let middle = GridPoint(col: Int.random(in: 0..<columns, using: &rng), row: Int.random(in: 0..<rows, using: &rng))
-            let radius = Double.random(in: 1.5...4.5, using: &rng)
+            let radius = Double.random(in: smallest...biggest, using: &rng)
             let reach = Int(radius.rounded(.up))
             for dr in -reach...reach {
                 for dc in -reach...reach {
