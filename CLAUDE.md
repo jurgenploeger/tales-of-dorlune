@@ -100,7 +100,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   slice per row of it, the top of the crown farthest (short at midday, long at evening), all merged into one,
   deepest at the foot and fading toward the tip, its edge blurred (`softness`; in hard steps it was too stark), soft flecks of light where the leaves part, and multiplied over the ground
   as the night's shade is, by one cool tint in every land (`CanopyShade.lean`: each palette's own shadow
-  colour turned a desert red), stopping at a town's wall (`blocks`, `WorldMap.fenceCells`); drawn a `LandStage` chunk at a time while shown, again as the sun moves (`follow`,
+  colour turned a desert red), stopping at a town's wall (`blocks`, `WorldMap.fenceCells`), which casts its own, as do its towers and gates (`LandStage.placeFence`, `throughWalls`); drawn a `LandStage` chunk at a time while shown, again as the sun moves (`follow`,
   every half second from `ContinentScene.updateAir`, which casts walkers' shadows too: `Walker.shine`). A
   walker's shadow is its own frame laid the same way, as long for its height (`Walker.figure`, a dark copy
   of the sprite's texture each frame, softened and fading toward its head by `Walker.soften`, kept just over the ground, `figureDepth`), with a soft round at its feet. On a

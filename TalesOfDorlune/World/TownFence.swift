@@ -11,14 +11,22 @@ enum TownFence {
     /// A city wall's towers stand at most this many cells apart along a straight stretch.
     private static let towerEvery = 8
 
+    /// What it set down that casts shade (`LandStage.placeFence`): a city's towers and every gate.
+    struct Placed {
+        var towers: [SKSpriteNode] = []
+        var gates: [SKSpriteNode] = []
+    }
+
     /// `stone`: a city's wall (art/sprites/city_wall.png and city_tower.png, `tools/city_wall_art.py`)
     /// rather than a village's pickets.
-    static func place(cells: [GridPoint], map: WorldMap, world: SKNode, art: ArtLibrary, stone: Bool = false) {
+    @discardableResult
+    static func place(cells: [GridPoint], map: WorldMap, world: SKNode, art: ArtLibrary, stone: Bool = false) -> Placed {
+        var placed = Placed()
         let fence = Set(cells)
         let palette = map.def.theme.palette
         let source = stone ? art.gradedTile("city_wall", palette: palette) : art.sprite("fence").texture.cgImage()
         let height = stone ? BorderArt.wallHeight : Self.height
-        guard !fence.isEmpty, let source else { return }
+        guard !fence.isEmpty, let source else { return placed }
         func has(_ dc: Int, _ dr: Int, _ cell: GridPoint) -> Bool { fence.contains(GridPoint(col: cell.col + dc, row: cell.row + dr)) }
         // A wall's stretches along the grid's x axis show their south face, turned from the light (from
         // the upper left, as everything is): a step darker, as a terrace's south wall is.
@@ -50,11 +58,12 @@ enum TownFence {
                 node.position = map.center(of: cell)
                 node.zPosition = -node.position.y + 0.01
                 world.addChild(node)
+                placed.towers.append(node)
             }
         }
 
         // Gates: the two ends of each gap where a road runs through, joined by its arch (the town's own).
-        guard let arch = cropped(art.sprite(map.def.town?.gate ?? "town_gate").texture.cgImage()) else { return }
+        guard let arch = cropped(art.sprite(map.def.town?.gate ?? "town_gate").texture.cgImage()) else { return placed }
         var done: Set<GridPoint> = []
         for cell in cells where !done.contains(cell) {
             let links = [(1, 0), (0, 1), (-1, 0), (0, -1)].filter { has($0.0, $0.1, cell) }
@@ -71,8 +80,11 @@ enum TownFence {
             done.insert(other)
             // Draw from the west/north end to the east/south end.
             let (from, to) = step.0 + step.1 * -1 > 0 ? (cell, other) : (other, cell)
-            world.addChild(gate(arch, from: map.center(of: from), to: map.center(of: to)))
+            let node = gate(arch, from: map.center(of: from), to: map.center(of: to))
+            world.addChild(node)
+            placed.gates.append(node)
         }
+        return placed
     }
 
     /// How tall the pickets of a fence along a road stand (points): a little lower than a town's.

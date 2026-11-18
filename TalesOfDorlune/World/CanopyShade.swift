@@ -85,7 +85,9 @@ final class CanopyShade {
     }
 
     /// `node` casts shade from now on, its outline that of `picture` (its texture's).
-    func add(_ node: SKSpriteNode, picture: CGImage, walls: Bool = false) {
+    /// `throughWalls`: something standing in a town's wall itself (its gate), whose shade the wall
+    /// mustn't cut off at its own foot (`reachBeforeWall`).
+    func add(_ node: SKSpriteNode, picture: CGImage, walls: Bool = false, throughWalls: Bool = false) {
         guard let texture = node.texture, node.size.height >= Self.shortest else { return }
         let outline = Outline(texture: ObjectIdentifier(texture), anchor: node.anchorPoint.y)
         let unit = outlines[outline] ?? CanopyPainter.slices(of: picture, anchor: node.anchorPoint)
@@ -95,7 +97,7 @@ final class CanopyShade {
         let slices = unit.slices.map { CanopyPainter.Slice(dx: $0.dx * w, up: $0.up * h, half: $0.half * w) }
         // From where it stands up: the middle of a base of its own (`CanopyPainter.base`).
         let foot = CGPoint(x: node.position.x, y: node.position.y + unit.lift * h)
-        let caster = CanopyPainter.Caster(foot: foot, slices: slices, walls: walls)
+        let caster = CanopyPainter.Caster(foot: foot, slices: slices, walls: walls, throughWalls: throughWalls)
         let home = key(at: node.position)
         casters[home, default: []].append(caster)
         for dc in -Self.reachChunks...Self.reachChunks {
@@ -111,12 +113,14 @@ final class CanopyShade {
     /// as wide as a cell (`half` its half width on screen) from each cell's middle at every few points up,
     /// so together they lay its outline on the ground away from the sun, its shade as long as its
     /// height. What falls under the terrace itself is hidden by its top.
-    func addBlock(feet: [CGPoint], height: CGFloat, half: CGFloat) {
+    /// `throughWalls`: the town's wall itself (`LandStage.placeFence`), laid as rounds along its line,
+    /// its shade not cut off by the wall it is.
+    func addBlock(feet: [CGPoint], height: CGFloat, half: CGFloat, throughWalls: Bool = false) {
         guard height >= Self.shortest else { return }
         let slices = stride(from: CGFloat(0), through: height, by: 3).map { CanopyPainter.Slice(dx: 0, up: $0, half: half) }
         for foot in feet {
             let home = key(at: foot)
-            casters[home, default: []].append(CanopyPainter.Caster(foot: foot, slices: slices))
+            casters[home, default: []].append(CanopyPainter.Caster(foot: foot, slices: slices, throughWalls: throughWalls))
             for dc in -Self.reachChunks...Self.reachChunks {
                 for dr in -Self.reachChunks...Self.reachChunks {
                     let spot = GridPoint(col: home.col + dc, row: home.row + dr)
@@ -285,13 +289,16 @@ nonisolated enum CanopyPainter {
         /// a building's widest rows (its base's) laid a round shade out past the front of its base
         /// (playtesting 2026-11-16: "the weird round shadow in the front").
         let walls: Bool
+        /// Standing in the town's wall (the wall, its gates, its towers): its shade isn't cut off there.
+        let throughWalls: Bool
         let tallest: CGFloat
         let widest: CGFloat
 
-        init(foot: CGPoint, slices: [Slice], walls: Bool = false) {
+        init(foot: CGPoint, slices: [Slice], walls: Bool = false, throughWalls: Bool = false) {
             self.foot = foot
             self.slices = slices
             self.walls = walls
+            self.throughWalls = throughWalls
             tallest = slices.map(\.up).max() ?? 0
             widest = slices.map { abs($0.dx) + $0.half }.max() ?? 0
         }
@@ -321,7 +328,7 @@ nonisolated enum CanopyPainter {
         var mask = [Float](repeating: 0, count: full * full)
         var any = false
         for caster in job.casters {
-            let stop = reachBeforeWall(caster, job: job)
+            let stop = caster.throughWalls ? .greatestFiniteMagnitude : reachBeforeWall(caster, job: job)
             let tallest = max(1, caster.tallest)
             for slice in caster.slices where slice.up <= stop {
                 // Each run of the outline is a slice of a round crown: its shade a round on the
