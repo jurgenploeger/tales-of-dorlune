@@ -970,7 +970,7 @@ final class LandStage {
         }
         for gate in placed.gates {
             guard let texture = gate.texture else { continue }
-            canopy.add(gate, picture: texture.cgImage(), walls: true, throughWalls: true)
+            canopy.add(gate, picture: texture.cgImage(), walls: true, throughWalls: true, thin: true)
         }
     }
 

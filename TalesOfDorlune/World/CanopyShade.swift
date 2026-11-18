@@ -87,7 +87,8 @@ final class CanopyShade {
     /// `node` casts shade from now on, its outline that of `picture` (its texture's).
     /// `throughWalls`: something standing in a town's wall itself (its gate), whose shade the wall
     /// mustn't cut off at its own foot (`reachBeforeWall`).
-    func add(_ node: SKSpriteNode, picture: CGImage, walls: Bool = false, throughWalls: Bool = false) {
+    /// `thin`: as thin as a gate's arch (`Caster.thin`).
+    func add(_ node: SKSpriteNode, picture: CGImage, walls: Bool = false, throughWalls: Bool = false, thin: Bool = false) {
         guard let texture = node.texture, node.size.height >= Self.shortest else { return }
         let outline = Outline(texture: ObjectIdentifier(texture), anchor: node.anchorPoint.y)
         let unit = outlines[outline] ?? CanopyPainter.slices(of: picture, anchor: node.anchorPoint)
@@ -97,7 +98,7 @@ final class CanopyShade {
         let slices = unit.slices.map { CanopyPainter.Slice(dx: $0.dx * w, up: $0.up * h, half: $0.half * w) }
         // From where it stands up: the middle of a base of its own (`CanopyPainter.base`).
         let foot = CGPoint(x: node.position.x, y: node.position.y + unit.lift * h)
-        let caster = CanopyPainter.Caster(foot: foot, slices: slices, walls: walls, throughWalls: throughWalls)
+        let caster = CanopyPainter.Caster(foot: foot, slices: slices, walls: walls, throughWalls: throughWalls, thin: thin)
         let home = key(at: node.position)
         casters[home, default: []].append(caster)
         for dc in -Self.reachChunks...Self.reachChunks {
@@ -268,9 +269,6 @@ nonisolated enum CanopyPainter {
     /// A border round each chunk's picture worked out but not shown, so its rim and flecks meet the
     /// next chunk's.
     static let margin = 5
-    /// How deep a wall's band is (`Caster.walls`), in points either side of its line: the rows above
-    /// it overlap, so it's whole.
-    static let wallDepth: CGFloat = 2
 
     /// A run of one row of an outline: how far right of the foot its middle is, how high above the
     /// foot, and half its width: in points, or in the texture's widths and heights in an outline.
@@ -285,20 +283,24 @@ nonisolated enum CanopyPainter {
     struct Caster: Sendable {
         let foot: CGPoint
         let slices: [Slice]
-        /// A building: each run of its outline a wall's, laid as a thin band, not a round. As rounds,
-        /// a building's widest rows (its base's) laid a round shade out past the front of its base
-        /// (playtesting 2026-11-16: "the weird round shadow in the front").
+        /// A building: each run of its outline its cross-section at that height, a round set back from
+        /// its front by its depth. As rounds about its foot, a building's widest rows (its base's) laid
+        /// a round shade out past the front of its base (playtesting 2026-11-16: "the weird round
+        /// shadow in the front"); as thin bands, its shade at midday was a sliver (2026-11-18).
         let walls: Bool
         /// Standing in the town's wall (the wall, its gates, its towers): its shade isn't cut off there.
         let throughWalls: Bool
+        /// Thin as a gate's arch: each run laid as a band two points deep, not a round.
+        let thin: Bool
         let tallest: CGFloat
         let widest: CGFloat
 
-        init(foot: CGPoint, slices: [Slice], walls: Bool = false, throughWalls: Bool = false) {
+        init(foot: CGPoint, slices: [Slice], walls: Bool = false, throughWalls: Bool = false, thin: Bool = false) {
             self.foot = foot
             self.slices = slices
             self.walls = walls
             self.throughWalls = throughWalls
+            self.thin = thin
             tallest = slices.map(\.up).max() ?? 0
             widest = slices.map { abs($0.dx) + $0.half }.max() ?? 0
         }
@@ -336,9 +338,14 @@ nonisolated enum CanopyPainter {
                 // moved along the ground by the slice's height above the foot, and lighter the
                 // higher the slice, so the shade fades toward its tip.
                 let cx = caster.foot.x + slice.dx + job.fall.dx * slice.up - left
-                let cy = top - (caster.foot.y + job.fall.dy * slice.up)
+                // A gate's arch is thin: each run a band two points deep (`Caster.thin`).
+                let ry = caster.thin ? min(2, max(0.5, slice.half / 2)) : max(0.5, slice.half / 2)
+                // A building is a block: each slice its cross-section, a round as deep as it is wide,
+                // set back from its front so none lies out in front of its base (as rounds about its
+                // foot, one did, playtesting 2026-11-16; as thin bands, it cast only slivers at midday,
+                // the user, 2026-11-18).
+                let cy = top - (caster.foot.y + job.fall.dy * slice.up) - (caster.walls && !caster.thin ? ry : 0)
                 let depth = 1 - tipFade * Float(min(1, slice.up / tallest))
-                let ry = caster.walls ? min(wallDepth, max(0.5, slice.half / 2)) : max(0.5, slice.half / 2)
                 if fill(&mask, side: full, cx: cx, cy: cy, rx: slice.half, ry: ry, depth: depth) { any = true }
             }
         }

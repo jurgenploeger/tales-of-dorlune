@@ -1941,7 +1941,8 @@ nonisolated final class WorldMap: @unchecked Sendable {
     /// Sets down the map's own buildings (a 3×2 footprint above the anchor, like the shops, or its own
     /// `size`) where maps.json puts them. One that would stand on a road, water, the town fence, a
     /// terrace's wall, an NPC or another building (maps.json put some right on a street) moves to the nearest plot
-    /// that's clear, ring by ring, up to 8 cells away. Never on a terrace or its stairs.
+    /// that's clear, ring by ring, up to 12 cells away (8 till the ground round the terraces was kept clear, 2026-11-18:
+    /// three of Ingothold's then found none). Never on a terrace or its stairs.
     /// Out on the road, like in town: no tree or bush on an NPC's spot or in front of it (down the
     /// screen, toward you), where it would hide them. A boss is big, and the trees around it tall,
     /// so it gets a wider clearing. You can still walk there.
@@ -2015,7 +2016,7 @@ nonisolated final class WorldMap: @unchecked Sendable {
             let footprint = building.footprint
             var plot: GridPoint?
             search: for clear in [true, false] {
-                for radius in 0...8 {
+                for radius in 0...12 {
                     for dr in -radius...radius {
                         for dc in -radius...radius where max(abs(dc), abs(dr)) == radius {
                             let candidate = GridPoint(col: wanted.col + dc, row: wanted.row + dr)
@@ -2167,8 +2168,21 @@ nonisolated final class WorldMap: @unchecked Sendable {
             }
         }
         // Its stairs and the cell in front of each, kept clear to walk up.
-        for cell in steps + [GridPoint(col: steps[0].col, row: steps[0].row - 1), GridPoint(col: steps[1].col - 1, row: steps[1].row)] {
+        let landings = [GridPoint(col: steps[0].col, row: steps[0].row - 1), GridPoint(col: steps[1].col - 1, row: steps[1].row)]
+        for cell in steps + landings {
             occupy(cell, blocking: false)
+        }
+        // Nothing built round it (the user, 2026-11-18: "make sure no building are getting in the
+        // way"): a house's picture stood through its walls from in front and its back sat on the top
+        // from behind. Its ring kept clear, and two cells behind it, where a house reaches up into it.
+        for col in (origin.col - 1)...(origin.col + width + 1) {
+            for row in (origin.row - 1)...(origin.row + height + 1) {
+                let within = col >= origin.col && col < origin.col + width && row >= origin.row && row < origin.row + height
+                let cell = GridPoint(col: col, row: row)
+                if !within, contains(cell), !occupied.contains(cell), [.ground, .accent].contains(ground[row][col]) {
+                    occupy(cell, blocking: false)
+                }
+            }
         }
         terraces.append((origin, width, height, steps, heads))
         // It stands raised: walk up its stairs (front and side) and you're up on it.
@@ -2176,6 +2190,57 @@ nonisolated final class WorldMap: @unchecked Sendable {
             (origin.row..<(origin.row + height)).map { GridPoint(col: col, row: $0) }
         }.filter { contains($0) }).union(steps.filter { contains($0) })
         addPlateau(Plateau(cells: cells, ramps: [steps[0]: .south, steps[1]: .west], height: Self.terraceHeight))
+        // A path from the foot of each stair to the nearest street, so the stairs lead somewhere
+        // (the user, 2026-11-18: "The paths should align with the stairs"): straight out the way the
+        // stairs face where it can, else the shortest way round. Cobbled, as every road in town is.
+        for (landing, out) in zip(landings, [(0, -1), (-1, 0)]) {
+            for cell in streetLink(from: landing, toward: out, fence: fence, inside: inside) {
+                ground[cell.row][cell.col] = .path
+                if !occupied.contains(cell) { occupy(cell, blocking: false) }
+            }
+        }
+    }
+
+    /// The cells from `start` (the foot of a terrace's stair) to the first street cell, not counting
+    /// it: straight on `toward` where every cell is open ground, else the shortest way over open
+    /// ground (`BFS`), up to 16 cells. None where no street is in reach, or `start` is on one.
+    private func streetLink(from start: GridPoint, toward: (Int, Int), fence: Set<GridPoint>, inside: (GridPoint) -> Bool) -> [GridPoint] {
+        func open(_ cell: GridPoint) -> Bool {
+            contains(cell) && inside(cell) && plateauOf[cell] == nil && !fence.contains(cell) && !blocked.contains(cell)
+                && [.ground, .accent].contains(ground[cell.row][cell.col])
+        }
+        func street(_ cell: GridPoint) -> Bool { contains(cell) && ground[cell.row][cell.col] == .path && plateauOf[cell] == nil }
+        guard contains(start), !street(start) else { return [] }
+        var line: [GridPoint] = []
+        var cell = start
+        for _ in 0..<16 {
+            guard open(cell) else { break }
+            line.append(cell)
+            cell = GridPoint(col: cell.col + toward.0, row: cell.row + toward.1)
+            if street(cell) { return line }
+        }
+        var came: [GridPoint: GridPoint] = [start: start]
+        var queue = [start], index = 0
+        while index < queue.count {
+            let here = queue[index]
+            index += 1
+            var back = here, length = 0
+            while back != start { back = came[back] ?? start; length += 1 }
+            guard length < 16 else { continue }
+            for (dc, dr) in [toward, (1, 0), (-1, 0), (0, 1), (0, -1)] {
+                let next = GridPoint(col: here.col + dc, row: here.row + dr)
+                guard came[next] == nil else { continue }
+                if street(next) {
+                    var way = [here]
+                    while let previous = came[way[way.count - 1]], previous != way[way.count - 1] { way.append(previous) }
+                    return way.reversed()
+                }
+                guard open(next) else { continue }
+                came[next] = here
+                queue.append(next)
+            }
+        }
+        return []
     }
 
     /// How high a town's terraces stand (points).

@@ -107,8 +107,11 @@ def cast(mask, foot_x, foot_y, foot_row, s, H, W, walls=False):
             half = (run[-1] - run[0] + 1) / 2
             cx = foot_x - w / 2 + (run[0] + run[-1]) / 2 + ox * hs
             cy = foot_y + dy * hs
-            # A building's walls lay thin bands, not rounds (CanopyPainter.Caster.walls, wallDepth).
-            deep = min(2, half / 2) if walls else half / 2
+            # A building is a block: each slice its cross-section, a round as deep as it's wide, set
+            # back from its front so none lies out in front of its base (CanopyPainter.Caster.walls).
+            # As thin bands it cast slivers at midday (the user, 2026-11-18).
+            deep = half / 2
+            if walls: cy -= deep
             d.ellipse((cx - half, cy - deep, cx + half, cy + deep), fill=int(255 * depth))
     return np.asarray(im).astype(float) / 255
 

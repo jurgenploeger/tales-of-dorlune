@@ -157,47 +157,35 @@ def city_wall():
     pits = rng.random((h, w)) < 0.05
     merlons = (3, 15)                                                   # each 7 wide, two a cell
 
-    # Between the merlons, low behind the parapet: the far rim, rows 5 … 6, its top lit and its inner
-    # face in shade, and the walk, rows 7 … 8, flagstones seen from above. A thin strip: as deep as the
-    # merlons stand tall, the wall read as thick as they stick out (the user, 2026-11-18).
-    alpha[5:9] = True
-    for x in range(w):
-        light[5, x] = 0.62 if (x + 4) % 12 == 0 else 0.8
-        light[6, x] = 0.34
-        for y in (7, 8):
-            v = 0.84 - 0.04 * (y - 7) + tones[(x // 12) * 2 + (y == 8)] * 0.4
-            light[y, x] = v - 0.16 if (x + (0 if y == 7 else 6)) % 12 == 0 else v
+    # The wall's top is drawn by the game as a strip of its own going back into the screen
+    # (`city_wall_top`, `TownFence.pieces`): drawn here as part of the face, it sheared along the
+    # wall and read as more face, a thin wall (the user, 2026-11-18). Between the merlons, nothing.
     # The front parapet between the merlons, rows 9 … 13: its top lit, its face dressed stone.
     alpha[9:14] = True
     for x in range(w):
         light[9, x] = 0.86
         for y in range(10, 14):
             light[y, x] = 0.52 - 0.02 * (y - 10) - (0.16 if (x + 1) % 6 == 0 else 0)
-    # The merlons, rows 0 … 13, standing well up past the walk: a cap seen from above, a face of two
-    # dressed stones, lit down its left edge and in shade down its right, its shadow on the walk.
+    # The merlons, rows 3 … 13, standing up from the parapet: a cap lit on top, a face of two dressed
+    # stones, lit down its left edge and in shade down its right.
     for left in merlons:
-        for y in range(0, 14):
+        for y in range(3, 14):
             for k in range(7):
                 x = left + k
-                if y == 0:
+                if y == 3:
                     v = 1.0
-                elif y == 1:
+                elif y == 4:
                     v = 0.72
-                elif y == 7:
+                elif y == 8:
                     v = 0.3                                              # the joint between its two stones
                 else:
-                    v = 0.46 + (0.06 if y in (2, 8) else 0) - 0.015 * (y - 2)
-                if k == 0 and y > 1:
+                    v = 0.64 + (0.06 if y in (5, 9) else 0) - 0.02 * (y - 5)
+                if k == 0 and y > 4:
                     v += 0.08
                 if k == 6:
                     v -= 0.2
                 light[y, x] = v
                 alpha[y, x] = True
-        for y in range(5, 9):
-            light[y, left - 1] = 0.12
-            light[y, left + 7] = 0.12
-        for y in range(6, 9):
-            light[y, left + 8] -= 0.22
     # The coping, rows 14 … 15, standing out a pixel: lit along its top, its underside dark.
     alpha[14:16] = True
     for x in range(w):
@@ -227,8 +215,34 @@ def city_wall():
         light[39, x] = 0.16
     img = to_image(light, alpha)
     img = outline(img, wrap_x=True)
-    # Grass up against its foot, more in some places than others, wrapping round the stretch.
-    return grass(img, [h - 1] * w, 5, [(1, 4), (4, 2), (9, 3), (14, 2), (18, 5), (21, 3)])
+    # Grass up against its foot, more in some places than others, wrapping round the stretch; the
+    # empty rows over the merlons cut off (the game crops a picture to what's in it).
+    return grass(img, [h - 1] * w, 5, [(1, 4), (4, 2), (9, 3), (14, 2), (18, 5), (21, 3)])[3:]
+
+
+TOP_H = 10
+
+
+def city_wall_top():
+    """The wall's top, one cell's stretch, seen from above: the game shears it along the wall and back
+    into the screen from the parapet's top (`TownFence.pieces`, `BorderArt.wallTop`), so the wall shows
+    its thickness. Row 0 is the far edge: its outline, the back parapet's lit lip and its inner face;
+    then the walk's flagstones, two to a cell, darker toward the front parapet, whose shadow lies along
+    the near edge."""
+    w, h = WALL_W, TOP_H
+    rng = np.random.default_rng(9)
+    tones = rng.normal(0, 0.05, 16)
+    light = np.zeros((h, w))
+    for x in range(w):
+        light[0, x] = 0.12
+        light[1, x] = 0.86
+        light[2, x] = 0.42
+        for y in range(3, h):
+            joint = (x + (0 if y < 6 else 6)) % 12 == 0 or y == 6
+            v = 0.5 - 0.02 * (y - 3) + tones[(x // 12) * 2 + (y >= 6)]
+            light[y, x] = v - 0.14 if joint else v
+        light[h - 1, x] -= 0.12
+    return to_image(light, np.ones((h, w), bool))
 
 
 # ------------------------------------------------------------------------------------------ the tower
@@ -387,7 +401,7 @@ def city_tower():
 
 # ------------------------------------------------------------------------------------------ main
 
-DRAWINGS = {"city_wall": city_wall, "city_tower": city_tower}
+DRAWINGS = {"city_wall": city_wall, "city_wall_top": city_wall_top, "city_tower": city_tower}
 
 
 def main(argv):

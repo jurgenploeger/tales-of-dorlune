@@ -77,7 +77,8 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   (the user's pick from `tools/terrace_preview.py`, 2026-11-17): `tools/terrace_art.py` draws a cell's stretch of
   wall (sheared along its edge), of balustrade, a post and the flagstones; `LandStage.placePlateaus` lays them,
   `placeTerraces` the balustrade round the top, and the terrace casts its shade away from the sun as a block
-  (`CanopyShade.addBlock`). Caves' `WorldScene` keeps the old look.
+  (`CanopyShade.addBlock`). A cobbled path runs from the foot of each stair to the nearest street (`streetLink`), and nothing
+  is built in the ring round it or two cells behind (the user, 2026-11-18). Caves' `WorldScene` keeps the old look.
 - How a blow lands in battle (`BattleScene.impact`, after SpriteCook's hit feel article): attacker and
   target stand still 5 frames (9 on a killing blow, `hitStop`: the two nodes paused, the stage plays
   on), the target white for 2 (`whiteFlash`, a shader: a tint can't light a dark outline), then pushed
@@ -97,7 +98,8 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   continent everything `LandStage.addScenery` sets down on flat ground (trees, buildings, lamps, rocks; not
   under 12 points) lays its own outline on the ground away from the sun, each chunk's pixels worked out off
   the main thread (`CanopyPainter.render`: on it, the game went slow), a round
-  slice per row of it, the top of the crown farthest (short at midday, long at evening), all merged into one,
+  slice per row of it (a building's set back from its front by its depth, a block: as thin bands its midday shade was a sliver, 2026-11-18;
+  a gate's arch thin bands, `Caster.thin`), the top of the crown farthest (short at midday, long at evening), all merged into one,
   deepest at the foot and fading toward the tip, its edge blurred (`softness`; in hard steps it was too stark), soft flecks of light where the leaves part, and multiplied over the ground
   as the night's shade is, by one cool tint in every land (`CanopyShade.lean`: each palette's own shadow
   colour turned a desert red), stopping at a town's wall (`blocks`, `WorldMap.fenceCells`), which casts its own, as do its towers and gates (`LandStage.placeFence`, `throughWalls`); drawn a `LandStage` chunk at a time while shown, again as the sun moves (`follow`,
@@ -310,8 +312,10 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   trail's end, on a summit, or in a cave; `check_content.py` keeps the way in clear.
 - `tools/city_wall_art.py`: a city's stone wall and round towers (`city_wall`, `city_tower`, placed by
   `TownFence.place` for town `walls: "stone"`), drawn as the town gate's rubble is, graded with the map's palette.
-  The wall is one cell's stretch that tiles side to side, seen from a little above (its walk behind the battlements, 40 points;
-  face on alone it looked too flat, the user, 2026-11-18), its stretches along x a step darker (`pieces`' `shaded`). `--sheet out.png` previews them.
+  The wall is one cell's stretch that tiles side to side, 37 points to its merlons, its stretches along x a step darker (`pieces`' `shaded`);
+  its walk (`city_wall_top`) is drawn by `TownFence.pieces` as a strip of its own back into the screen from the parapet's top
+  (`BorderArt.wallTopLevel`, `wallThickness`): face on it looked flat, and the walk drawn on its face still read as thin (the user, 2026-11-18).
+  The pieces are drawn with no edge smoothing (smoothed, a seam a pixel wide showed between every two). `--sheet out.png` previews them.
 - `tools/gate_art.py`: each town's own gate over its roads (maps.json town `gate`: Meadowbrook's thatched
   lychgate, Prismhaven's crystal keystone, Ingothold's gold and red cloth, Larkspur's bluebird); quests'
   gates across borders keep RD's `town_gate`. Each is laid out as `town_gate` is (`TownFence.widened` spans a
