@@ -106,7 +106,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   colour turned a desert red), stopping at a town's wall (`blocks`, `WorldMap.fenceCells`), which casts its own, as do its towers and gates (`LandStage.placeFence`, `throughWalls`); drawn a `LandStage` chunk at a time while shown, again as the sun moves (`follow`,
   every half second from `ContinentScene.updateAir`, which casts walkers' shadows too: `Walker.shine`). A
   walker's shadow is its own frame laid the same way, as long for its height (`Walker.figure`, a dark copy
-  of the sprite's texture each frame, softened and fading toward its head by `Walker.soften`, kept just over the ground, `figureDepth`), with a soft round at its feet. On a
+  of the sprite's texture each frame, softened and fading toward its head by `Walker.soften`, kept just over the ground, `figureDepth`), with a soft round at its feet; both stand on the lowest row its first frame draws (`Walker.feet`, `standFigure`: hung off the sprite's anchor, a few pixels under the feet, they read as hovering, the user, 2026-11-18). On a
   hill or the sunk shore, and in caves, a prop keeps its round `Lighting.Shadow`. Keep the tool and the Swift in step.
 - `content/*.json`: all game data (maps, monsters, skills, items, quests, music, looks, crowd, announcements, the chat's
   filter (`moderation.json`, `ChatFilter`: what you type is starred out where it matches), titles,

@@ -178,7 +178,9 @@ final class Walker: SKNode {
     /// (`Lighting.Shadow.shape`), fainter by moonlight.
     func cast(from sun: Sun) {
         let (middle, size, turn) = Lighting.Shadow.shape(wide: Double(cycle.size.width) * 0.75, sun: sun)
-        shadow.position = CGPoint(x: middle.dx, y: middle.dy)
+        // Under its feet, a little toward the way the shade falls: halfway along the shade, it lay
+        // off from them and the walker seemed to hover (the user, 2026-11-18).
+        shadow.position = CGPoint(x: middle.dx * 0.3, y: middle.dy * 0.3 + feet)
         shadow.size = size
         shadow.zRotation = turn
         shadow.alpha = 0.45 * CGFloat(sun.strength)
@@ -203,6 +205,48 @@ final class Walker: SKNode {
         let frame = SIMD4<Float>(Float(rect.minY), Float(max(rect.height, 0.0001)),
                                  Float(rect.width / max(1, size.width) * 1.3), Float(rect.height / max(1, size.height) * 1.3))
         figure.setValue(SKAttributeValue(vectorFloat4: frame), forAttribute: "a_frame")
+    }
+
+    /// How far over its position its feet stand, in points: the lowest row anything's drawn in its
+    /// first frame, less the sprite's anchor. The figure turns about them, starting right under them,
+    /// and the round lies under them (the user, 2026-11-18: hung off the frame's anchor, a few pixels
+    /// under the feet, the shadows read as hovering).
+    private var feet: CGFloat = 0
+    /// Each frame's clear rows under its feet and its height, in its picture's pixels (`feetRows`), by texture.
+    private static var feetCache: [ObjectIdentifier: (rows: Int, tall: Int)] = [:]
+
+    /// How many rows at the bottom of `texture`'s picture are clear (under its feet), of how many.
+    private static func feetRows(_ texture: SKTexture) -> (rows: Int, tall: Int) {
+        if let known = feetCache[ObjectIdentifier(texture)] { return known }
+        let image = ArtLibrary.shared.picture(of: texture)
+        let w = image.width, h = image.height
+        var rows = 0
+        if w > 0, h > 0, let context = CGContext(data: nil, width: w, height: h, bitsPerComponent: 8, bytesPerRow: w * 4,
+                                                 space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue),
+           let data = context.data {
+            context.draw(image, in: CGRect(x: 0, y: 0, width: w, height: h))
+            let bytes = data.bindMemory(to: UInt8.self, capacity: w * h * 4)
+            // Rows run down from the top in memory: up from the last.
+            search: for row in stride(from: h - 1, through: 0, by: -1) {
+                for x in 0..<w where bytes[(row * w + x) * 4 + 3] > 24 { break search }
+                rows += 1
+            }
+            if rows >= h { rows = 0 }
+        }
+        feetCache[ObjectIdentifier(texture)] = (rows, h)
+        return (rows, h)
+    }
+
+    /// Stands the figure on its feet (`feet`): turning about them, its own feet under them.
+    private func standFigure() {
+        guard let first = cycle.frames(.down).first else { return }
+        let found = Self.feetRows(first)
+        let rows = CGFloat(found.rows), tall = CGFloat(max(1, found.tall))
+        // A pixel into the feet, so the shadow starts under them, not a hair below.
+        let share = min(0.5, (rows + 1) / tall)
+        feet = max(0, (rows / tall - sprite.anchorPoint.y) * cycle.size.height)
+        figure.anchorPoint = CGPoint(x: sprite.anchorPoint.x, y: share)
+        figure.position = CGPoint(x: 0, y: (share - sprite.anchorPoint.y) * cycle.size.height)
     }
 
     /// The figure shows the frame the sprite shows, and lies just over the ground (`figureDepth`)
@@ -246,6 +290,7 @@ final class Walker: SKNode {
         figure.shader = Self.soften
         showFrame()
         figure.zPosition = -1
+        standFigure()
         addChild(figure)
         figure.run(.repeatForever(.customAction(withDuration: 1) { [weak self] _, _ in self?.followFigure() }))
         cast(from: Self.sun)
@@ -270,6 +315,8 @@ final class Walker: SKNode {
         self.cycle = cycle
         sprite.size = cycle.size
         figure.size = cycle.size
+        standFigure()
+        cast(from: Self.sun)
         mirror()
         animate()
         blink()
