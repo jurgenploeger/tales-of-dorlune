@@ -1090,3 +1090,5 @@ grass_meadow | newgame,map=sunny_meadow,at=grass,landscape,weather=clear,hour=12
 grass_meadow_close | newgame,map=sunny_meadow,at=grass,zoom=2,weather=clear,hour=12 | 8
 grass_woods | newgame,level=20,map=twilight_woods,at=grass,landscape,weather=clear,hour=12 | 8
 grass_swan | newgame,level=40,map=swan_lake,at=grass1,weather=clear,hour=12 | 8
+# Flowers knee-high, planted at 0.55 to 0.7 (the user, 2026-11-19: "a flower shouldn't be just as tall as a tree").
+flowers_meadow | newgame,map=sunny_meadow,landscape,weather=clear,hour=12 | 8
