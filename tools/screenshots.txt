@@ -1053,3 +1053,7 @@ web_port_explore  | newgame,level=43,class=fighter,friends=2,map=starfall_isle,a
 valley_broken | newgame,level=60,map=valley_of_fear,at=60_-19,hour=9,weather=clear | 8
 valley_broken_wide | newgame,level=60,map=valley_of_fear,at=60_-19,hour=9,weather=clear,zoom=0.85,landscape | 8
 valley_broken_east | newgame,level=60,map=valley_of_fear,at=66_-25,hour=9,weather=clear,zoom=0.85,landscape | 8
+# Zoomed all the way in (the user, 2026-11-19: the map went blank, only the sky's blue, as they zoomed in).
+zoom_in_goldburg | newgame,level=200,class=fighter,map=goldburg,zoom=2.2 | 8
+zoom_in_desert | newgame,level=200,class=fighter,map=genie_desert,zoom=2.2 | 8
+zoom_in_curve | newgame,level=200,class=fighter,map=goldburg,zoom=2.2,curve,weather=rain | 8
