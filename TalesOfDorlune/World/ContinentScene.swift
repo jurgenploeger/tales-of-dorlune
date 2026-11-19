@@ -647,6 +647,8 @@ final class ContinentScene: SKScene {
             lands[id]?.stage.update(dt: dt, player: player.position, camera: cam.position, scale: cam.xScale, screen: size,
                                     isHere: id == here?.id)
         }
+        // Your legs hidden in tall grass (`Walker.wade`).
+        player.wade(here.flatMap { lands[$0.id]?.stage.wading(at: player.position, width: player.frameWidth) })
         updateAir(dt)
         if currentTime - lookedAround > 0.25 {
             lookedAround = currentTime

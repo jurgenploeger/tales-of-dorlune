@@ -204,10 +204,7 @@
             "blocking": false,
             "cluster": 2,
             "within": 10,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "size": [0.55, 0.7]
           },
           {
             "art": "sunflower",
@@ -216,10 +213,7 @@
             "cluster": 2,
             "sway": true,
             "within": 10,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "size": [0.55, 0.7]
           },
           {
             "art": "haystack",
@@ -299,6 +293,7 @@
           },
           {
             "art": "tulip_patch",
+            "size": [0.55, 0.7],
             "count": 60,
             "blocking": false,
             "within": 38,
@@ -320,6 +315,7 @@
           },
           {
             "art": "sunflower",
+            "size": [0.55, 0.7],
             "count": 40,
             "blocking": false,
             "within": 38,
@@ -327,6 +323,7 @@
           },
           {
             "art": "clover_patch",
+            "size": [0.55, 0.7],
             "count": 40,
             "blocking": false,
             "within": 38,
@@ -464,10 +461,7 @@
             "count": 60,
             "blocking": false,
             "cluster": 4,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "size": [0.55, 0.7]
           },
           {
             "art": "sunflower",
@@ -475,10 +469,7 @@
             "blocking": false,
             "cluster": 4,
             "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "size": [0.55, 0.7]
           }
         ],
         "accent": "tile_scree",
@@ -1427,6 +1418,7 @@
           "terraces": 44,
           "bank": "tile_cliff_rock"
         },
+        "tallGrass": { "patches": 4, "size": [1.6, 3], "art": "tall_grass" },
         "props": [
           {
             "art": "big_tree",
@@ -1506,10 +1498,7 @@
             "blocking": true,
             "cluster": 4,
             "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "size": [0.55, 0.7]
           },
           {
             "art": "mushroom",
@@ -1679,30 +1668,21 @@
             "blocking": false,
             "cluster": 3,
             "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "size": [0.55, 0.7]
           },
           {
             "art": "tulip_patch",
             "count": 27,
             "blocking": false,
             "cluster": 3,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "size": [0.55, 0.7]
           },
           {
             "art": "clover_patch",
             "count": 36,
             "blocking": false,
             "cluster": 4,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "size": [0.55, 0.7]
           },
           {
             "art": "haystack",
@@ -1793,10 +1773,7 @@
             "count": 120,
             "blocking": false,
             "cluster": 4,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "size": [0.55, 0.7]
           },
           {
             "art": "mossy_boulder",
@@ -2726,6 +2703,7 @@
           "terraces": 44,
           "bank": "tile_cliff_rock"
         },
+        "tallGrass": { "patches": 4, "size": [1.6, 3], "art": "tall_grass_dark" },
         "props": [
           {
             "art": "big_dark_tree",
@@ -2952,10 +2930,7 @@
             "count": 76,
             "blocking": false,
             "cluster": 4,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "size": [0.55, 0.7]
           },
           {
             "art": "mossy_boulder",
@@ -3718,20 +3693,14 @@
             "count": 334,
             "blocking": false,
             "cluster": 6,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "size": [0.55, 0.7]
           },
           {
             "art": "tulip_patch",
             "count": 77,
             "blocking": false,
             "cluster": 4,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "size": [0.55, 0.7]
           },
           {
             "art": "signpost",
@@ -3778,10 +3747,7 @@
             "count": 98,
             "blocking": false,
             "cluster": 4,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "size": [0.55, 0.7]
           },
           {
             "art": "mossy_boulder",
@@ -4379,10 +4345,7 @@
             "blocking": false,
             "cluster": 3,
             "within": 12,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "size": [0.55, 0.7]
           },
           {
             "art": "sunflower",
@@ -4391,10 +4354,7 @@
             "cluster": 2,
             "sway": true,
             "within": 12,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "size": [0.55, 0.7]
           },
           {
             "art": "wooden_crates",
@@ -4474,6 +4434,7 @@
           },
           {
             "art": "tulip_patch",
+            "size": [0.55, 0.7],
             "count": 72,
             "blocking": false,
             "within": 40,
@@ -4495,6 +4456,7 @@
           },
           {
             "art": "sunflower",
+            "size": [0.55, 0.7],
             "count": 48,
             "blocking": false,
             "within": 40,
@@ -4561,20 +4523,14 @@
             "count": 60,
             "blocking": false,
             "cluster": 4,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "size": [0.55, 0.7]
           },
           {
             "art": "clover_patch",
             "count": 60,
             "blocking": false,
             "cluster": 4,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "size": [0.55, 0.7]
           },
           {
             "art": "giant_flower",
@@ -4582,10 +4538,7 @@
             "blocking": true,
             "cluster": 3,
             "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "size": [0.55, 0.7]
           },
           {
             "art": "street_lamp",
@@ -6704,6 +6657,7 @@
           "terraces": 44,
           "bank": "tile_cliff_rock"
         },
+        "tallGrass": { "patches": 4, "size": [1.6, 3], "art": "tall_grass_dark" },
         "props": [
           {
             "art": "dead_tree",
@@ -7805,6 +7759,7 @@
           },
           {
             "art": "sunflower",
+            "size": [0.55, 0.7],
             "count": 28,
             "blocking": false,
             "within": 38,
@@ -7819,6 +7774,7 @@
           },
           {
             "art": "tulip_patch",
+            "size": [0.55, 0.7],
             "count": 30,
             "blocking": false,
             "cluster": 3,
@@ -10032,10 +9988,7 @@
             "blocking": false,
             "cluster": 5,
             "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ],
+            "size": [0.55, 0.7],
             "glow": "#D8D8FF"
           },
           {
@@ -10534,6 +10487,7 @@
           "terraces": 44,
           "bank": "tile_cliff_rock"
         },
+        "tallGrass": { "patches": 4, "size": [1.6, 3], "art": "tall_grass" },
         "props": [
           {
             "art": "big_tree",
@@ -10613,10 +10567,7 @@
             "blocking": true,
             "cluster": 4,
             "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "size": [0.55, 0.7]
           },
           {
             "art": "mushroom",
@@ -10786,30 +10737,21 @@
             "blocking": false,
             "cluster": 3,
             "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "size": [0.55, 0.7]
           },
           {
             "art": "tulip_patch",
             "count": 12,
             "blocking": false,
             "cluster": 3,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "size": [0.55, 0.7]
           },
           {
             "art": "clover_patch",
             "count": 16,
             "blocking": false,
             "cluster": 4,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "size": [0.55, 0.7]
           },
           {
             "art": "haystack",
@@ -10900,10 +10842,7 @@
             "count": 56,
             "blocking": false,
             "cluster": 4,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "size": [0.55, 0.7]
           },
           {
             "art": "mossy_boulder",
@@ -11692,10 +11631,7 @@
             "blocking": true,
             "cluster": 4,
             "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "size": [0.55, 0.7]
           },
           {
             "art": "candy_tree_lemon",
@@ -11943,30 +11879,21 @@
             "blocking": false,
             "cluster": 3,
             "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "size": [0.55, 0.7]
           },
           {
             "art": "tulip_patch",
             "count": 18,
             "blocking": false,
             "cluster": 3,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "size": [0.55, 0.7]
           },
           {
             "art": "clover_patch",
             "count": 24,
             "blocking": false,
             "cluster": 4,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "size": [0.55, 0.7]
           },
           {
             "art": "signpost",
@@ -12395,6 +12322,7 @@
           "terraces": 44,
           "bank": "tile_cliff_rock"
         },
+        "tallGrass": { "patches": 4, "size": [1.6, 3], "art": "tall_grass_dark" },
         "props": [
           {
             "art": "big_dark_tree",
@@ -13040,10 +12968,7 @@
             "blocking": false,
             "cluster": 3,
             "within": 12,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "size": [0.55, 0.7]
           },
           {
             "art": "sunflower",
@@ -13052,10 +12977,7 @@
             "cluster": 2,
             "sway": true,
             "within": 12,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "size": [0.55, 0.7]
           },
           {
             "art": "wooden_crates",
@@ -13147,6 +13069,7 @@
           },
           {
             "art": "tulip_patch",
+            "size": [0.55, 0.7],
             "count": 40,
             "blocking": false,
             "within": 32,
@@ -13168,6 +13091,7 @@
           },
           {
             "art": "poppy_patch",
+            "size": [0.55, 0.7],
             "count": 20,
             "blocking": false,
             "within": 32,
@@ -13175,6 +13099,7 @@
           },
           {
             "art": "clover_patch",
+            "size": [0.55, 0.7],
             "count": 30,
             "blocking": false,
             "within": 32,
@@ -13182,6 +13107,7 @@
           },
           {
             "art": "sunflower",
+            "size": [0.55, 0.7],
             "count": 14,
             "blocking": false,
             "within": 32,
@@ -13268,20 +13194,14 @@
             "count": 50,
             "blocking": false,
             "cluster": 4,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "size": [0.55, 0.7]
           },
           {
             "art": "poppy_patch",
             "count": 40,
             "blocking": false,
             "cluster": 5,
-            "size": [
-              0.8,
-              1.2
-            ],
+            "size": [0.55, 0.7],
             "sway": true
           },
           {
@@ -13880,6 +13800,7 @@
           "terraces": 44,
           "bank": "tile_cliff_rock"
         },
+        "tallGrass": { "patches": 4, "size": [1.6, 3], "art": "tall_grass" },
         "props": [
           {
             "art": "big_tree",
@@ -13959,10 +13880,7 @@
             "blocking": true,
             "cluster": 4,
             "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "size": [0.55, 0.7]
           },
           {
             "art": "mushroom",
@@ -14132,30 +14050,21 @@
             "blocking": false,
             "cluster": 3,
             "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "size": [0.55, 0.7]
           },
           {
             "art": "tulip_patch",
             "count": 12,
             "blocking": false,
             "cluster": 3,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "size": [0.55, 0.7]
           },
           {
             "art": "clover_patch",
             "count": 16,
             "blocking": false,
             "cluster": 4,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "size": [0.55, 0.7]
           },
           {
             "art": "haystack",
@@ -14236,10 +14145,7 @@
             "count": 96,
             "blocking": false,
             "cluster": 4,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "size": [0.55, 0.7]
           },
           {
             "art": "mossy_boulder",
@@ -15156,6 +15062,7 @@
           "terraces": 44,
           "bank": "tile_cliff_rock"
         },
+        "tallGrass": { "patches": 4, "size": [1.6, 3], "art": "tall_grass_dark" },
         "props": [
           {
             "art": "dead_tree",
@@ -19943,20 +19850,14 @@
             "count": 260,
             "blocking": false,
             "cluster": 6,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "size": [0.55, 0.7]
           },
           {
             "art": "tulip_patch",
             "count": 60,
             "blocking": false,
             "cluster": 4,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "size": [0.55, 0.7]
           },
           {
             "art": "signpost",
@@ -19968,10 +19869,7 @@
             "count": 90,
             "blocking": false,
             "cluster": 6,
-            "size": [
-              0.8,
-              1.2
-            ],
+            "size": [0.55, 0.7],
             "sway": true
           },
           {
@@ -20463,6 +20361,7 @@
           "terraces": 44,
           "bank": "tile_cliff_rock"
         },
+        "tallGrass": { "patches": 4, "size": [1.6, 3], "art": "tall_grass" },
         "props": [
           {
             "art": "wisp_lantern",
@@ -20492,10 +20391,7 @@
             "blocking": false,
             "cluster": 5,
             "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ],
+            "size": [0.55, 0.7],
             "glow": "#D8D8FF"
           },
           {
@@ -20585,10 +20481,7 @@
             "blocking": false,
             "cluster": 5,
             "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ],
+            "size": [0.55, 0.7],
             "glow": "#D8D8FF"
           },
           {

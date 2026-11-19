@@ -598,6 +598,17 @@ for map_def in maps.values():
     if "accentSize" in theme:
         size = theme["accentSize"]
         check(isinstance(size, list) and len(size) == 2 and 1 <= size[0] <= size[1] <= 12, f"map {map_def['id']} accentSize → [smallest, biggest], 1 to 12 cells")
+    if "tallGrass" in theme:
+        # Patches of tall grass you wade through (`WorldMap.layTallGrass`, `GrassField`, tools/grass_art.py).
+        grass = theme["tallGrass"]
+        where = f"map {map_def['id']} tallGrass"
+        check(isinstance(grass, dict) and set(grass) <= {"patches", "size", "art"}, f"{where} → {{patches, size, art}}")
+        check("cave" not in theme and not map_def.get("town"), f"{where} → only out in a wild land")
+        check(isinstance(grass.get("patches"), int) and 1 <= grass["patches"] <= 12, f"{where} → patches must be 1 to 12")
+        size = grass.get("size", [1.6, 3])
+        check(isinstance(size, list) and len(size) == 2 and 1 <= size[0] <= size[1] <= 6, f"{where} → size [smallest, biggest], 1 to 6 cells")
+        for d in range(4):
+            check(f"{grass.get('art')}_{d}" in art, f"{where} → no art {grass.get('art')}_{d} (tools/grass_art.py)")
     if "roadside" in theme:
         # What lines stretches of the roads (`LandPlanner.planRoadsides`).
         lines = theme["roadside"]

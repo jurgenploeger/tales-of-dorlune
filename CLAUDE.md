@@ -241,6 +241,15 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   chest at one of its places (a potion or ether by its level, refilling as chests do) and someone living at another
   (maps.json `locals`). Theme `lush`: a richer ground tile in broad soft patches over the plain ground
   (`WorldMap.layLush`, `GroundTiles.lushMask`; the grass lands' `tile_rich_grass`). A brazier smokes (`LandStage.addSmoke`).
+- Tall grass (the user's pick from `tools/grass_preview.py`, 2026-11-19, after SpriteCook's interactive tall grass article;
+  visual only, green wild lands only): theme `tallGrass` (`patches`, `size`, `art`) lays soft rounds of cells
+  (`WorldMap.layTallGrass`, kept from other scenery; debug `at=grass`), filled by `GrassField` with tufts about nine a
+  cell, each its own sprite sorted by its base; near you they lean away on a spring (2 pixels at most in front of your
+  legs, so they still hide them), rustle as you push in and are pressed flat a shade darker behind your feet, every
+  pose a frame of its sheet (`tools/grass_art.py`: four designs, leaning −8 to 8 pixels across, pressed by steps down,
+  in a grass tile's plain colours for the land's palette to grade; bladed, not rounded puffs: the user, 2026-11-19).
+  The land's people bend it too, and anyone in it has their legs cut along the grass's top in front of them
+  (`GrassField.cover`, `Walker.wade`: the sprite in an `SKCropNode`, a column a point wide each).
 - Town roads (the user's pick from `tools/road_preview.py`, 2026-11-17): in a town's square (`GroundTiles.inTown`,
   `WorldMap.townSquare`) every road cell is drawn by `ArtLibrary.townRoad` (`GroundLayer.cobbled`): cobbles about half a
   cell across down its middle in the colour of the land's `tile_town` (graded), their edge ragged stone by stone, sand
@@ -399,7 +408,8 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
 - `tools/pixel_scale.py`: how big each sprite's art pixels are on the map, in points (its PNG times its
   `scale`; a ground tile 44 points over 32 pixels), against a walker's 1, and the props planted at a
   random size (maps.json theme props' `size`); `--sheet out.png` lines them up at game size. Its rule:
-  docs/sprite-acceptance.md *One art pixel, one size*.
+  docs/sprite-acceptance.md *One art pixel, one size*. Flowers are planted at 0.55 to 0.7, their pixels
+  smaller than their neighbours' by the user's choice (2026-11-19: "a flower shouldn't be just as tall as a tree").
 - `tools/deslab.py`: cuts the raised slab of ground some generated buildings came with (`inn`, `magic_tower`) out
   of their sprites, so they stand on the map's ground; rerun it after regenerating one of them.
 - `tools/rd_fixes.py`: exact pixel fixes to RD sprites for what RD got wrong and the user asked to have fixed

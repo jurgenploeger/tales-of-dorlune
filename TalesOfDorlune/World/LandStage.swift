@@ -26,6 +26,8 @@ final class LandStage {
     /// Its passers-by, traders and locals (`Crowd`), and its animals (`Critters`).
     private(set) var crowd: Crowd?
     private var critters: Critters?
+    /// Its tall grass you wade through (`GrassField`), if it grows any.
+    private var grass: GrassField?
     /// Whether it's the land you're in: only then do its passers-by's chats reach yours.
     var isHere = false
     /// Where its own points lie in the continent's.
@@ -147,6 +149,7 @@ final class LandStage {
         for rock in plan.outcrops { addScenery(rock) }
         await pause()
         await placeProps(plan.props, seams: plan.seamProps, pause: pause)
+        placeTallGrass()
         placeRoadsides()
         placeSignposts(plan.signposts)
         placeCrags()
@@ -189,6 +192,7 @@ final class LandStage {
                              width: screen.width * scale, height: screen.height * scale)
         critters?.update(dt: dt, player: you, visible: visible, flocks: isHere) { [map] in map.isWalkable(map.rawCell(at: $0)) }
         show(around: camera, scale: scale, screen: screen)
+        if let grass, isHere || onScreen { wade(through: grass, dt: dt, you: you) }
         if !Self.isOffForDebug("shade") { canopy.draw() }
         coverPanes(dt)
     }
@@ -1310,6 +1314,38 @@ final class LandStage {
 
     /// A small sign where each road leaves the land, where the plan put it, its words over it
     /// (shown when you come to read it).
+    /// Its tall grass bent by you and its people near you, and cut over their legs (`Walker.wade`).
+    private func wade(through grass: GrassField, dt: TimeInterval, you: CGPoint) {
+        var waders: [GrassField.Wader] = []
+        if isHere { waders.append(GrassField.Wader(key: ObjectIdentifier(LandStage.self), feet: you)) }
+        for walker in crowd?.walkers ?? [] where walker.position.distance(to: you) < 700 {
+            guard grass.grows(near: map.rawCell(at: walker.position)) else {
+                walker.wade(nil)
+                continue
+            }
+            waders.append(GrassField.Wader(key: ObjectIdentifier(walker), feet: walker.position))
+            walker.wade(grass.cover(feet: walker.position, width: walker.frameWidth))
+        }
+        grass.update(dt: dt, waders: waders) { map.rawCell(at: $0) }
+    }
+
+    /// How much of you the grass in front of you hides (`GrassField.cover`), `point` in the
+    /// continent's points; nil out of it.
+    func wading(at point: CGPoint, width: Int) -> [CGFloat]? {
+        guard let grass else { return nil }
+        let feet = local(point)
+        guard grass.grows(near: map.rawCell(at: feet)) else { return nil }
+        return grass.cover(feet: feet, width: width)
+    }
+
+    /// Its tall grass (`GrassField`, theme `tallGrass`) over the patches its layout kept for it
+    /// (`WorldMap.tallGrass`), each tuft graded with the land's palette as its ground is.
+    private func placeTallGrass() {
+        guard let wanted = def.theme.tallGrass, !map.tallGrass.isEmpty, !Self.isOffForDebug("grass") else { return }
+        let designs = (0..<4).map { GrassField.frames(of: art.sprite("\(wanted.art)_\($0)").texture) }
+        grass = GrassField(cells: map.tallGrass, designs: designs, seed: def.id) { self.chunk(at: $0) }
+    }
+
     private func placeSignposts(_ planned: [(exit: MapDef.Exit, cell: GridPoint)]) {
         for (exit, cell) in planned {
             guard let destination = Content.shared.map(exit.to) else { continue }

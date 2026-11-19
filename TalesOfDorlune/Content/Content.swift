@@ -563,6 +563,8 @@ nonisolated struct MapDef: Decodable, Identifiable, Sendable {
         /// Trees and the like in woods with open clearings between them, flowers in drifts in the
         /// clearings, rather than everything spread evenly (`LandPlanner.grove`).
         let groves: Bool?
+        /// Patches of tall grass you wade through (`WorldMap.layTallGrass`, `TallGrass`).
+        let tallGrass: TallGrass?
         /// Places to find out in the land (`WorldMap.layPlaces`, `LandPlanner.planPlaces`).
         let places: [Site]?
         /// Ground outside a fenced town.
@@ -588,6 +590,15 @@ nonisolated struct MapDef: Decodable, Identifiable, Sendable {
         /// beside rock mixed over 28 cells read as a glitch, a checkerboard of pink and blue
         /// (playtesting 2026-11-11, Briarmere).
         let blend: Double?
+    }
+
+    /// Tall grass in a green wild land: how many patches, how far each reaches from its middle in
+    /// cells ([smallest, biggest], 1.6 to 3 when not given), and its tufts' art (`tall_grass` or
+    /// `tall_grass_dark`, from tools/grass_art.py, four designs each, `<art>_0` to `_3`).
+    nonisolated struct TallGrass: Decodable, Sendable {
+        let patches: Int
+        let size: [Double]?
+        let art: String
     }
 
     /// A place to find out in a wild land, a few cells off a road with a footpath to it, put together

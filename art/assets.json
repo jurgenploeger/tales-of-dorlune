@@ -2621,6 +2621,38 @@
       "kind": "prop"
     },
     {
+      "id": "tall_grass_0",
+      "kind": "prop"
+    },
+    {
+      "id": "tall_grass_1",
+      "kind": "prop"
+    },
+    {
+      "id": "tall_grass_2",
+      "kind": "prop"
+    },
+    {
+      "id": "tall_grass_3",
+      "kind": "prop"
+    },
+    {
+      "id": "tall_grass_dark_0",
+      "kind": "prop"
+    },
+    {
+      "id": "tall_grass_dark_1",
+      "kind": "prop"
+    },
+    {
+      "id": "tall_grass_dark_2",
+      "kind": "prop"
+    },
+    {
+      "id": "tall_grass_dark_3",
+      "kind": "prop"
+    },
+    {
       "id": "brazier",
       "kind": "prop"
     },

@@ -362,6 +362,62 @@ final class Walker: SKNode {
         figure.xScale = turn.xScale * (facing == .left || facing == .right ? Self.figureWidth.side : Self.figureWidth.front)
     }
 
+    // MARK: Wading
+
+    /// How wide its frame is, in whole points (for `wade`).
+    var frameWidth: Int { Int(cycle.size.width.rounded()) }
+
+    /// Holds the sprite once it's first waded through tall grass (`wade`), cutting off what the
+    /// grass in front of it hides.
+    private var wading: SKCropNode?
+    /// The cut's columns, a point wide each, across the frame from its left.
+    private var cutColumns: [SKSpriteNode] = []
+
+    /// Hides its legs in tall grass (`GrassField.cover`; after SpriteCook's interactive tall grass
+    /// article, the "wading cut"): `hidden[i]` is how many points over its feet are hidden in the
+    /// frame's column `i` from the left as it shows on screen, nil or all 0 for none. With only the
+    /// tufts sorted in front of it, its legs showed through the gaps between them.
+    func wade(_ hidden: [CGFloat]?) {
+        guard let hidden, hidden.contains(where: { $0 > 0 }) else {
+            if let wading, wading.maskNode != nil { wading.maskNode = nil }
+            return
+        }
+        let crop: SKCropNode
+        if let wading {
+            crop = wading
+        } else {
+            crop = SKCropNode()
+            sprite.removeFromParent()
+            crop.addChild(sprite)
+            turn.addChild(crop)
+            wading = crop
+        }
+        let width = Int(cycle.size.width.rounded())
+        if cutColumns.count != width {
+            let mask = SKNode()
+            cutColumns = (0..<width).map { _ in
+                let column = SKSpriteNode(color: .white, size: CGSize(width: 1, height: 1))
+                column.anchorPoint = CGPoint(x: 0, y: 0)
+                mask.addChild(column)
+                return column
+            }
+            crop.maskNode = mask
+        } else if crop.maskNode == nil, let mask = cutColumns.first?.parent {
+            crop.maskNode = mask
+        }
+        // From its feet to well over its head; mirrored with the sprite when it's turned.
+        let top = cycle.size.height * 2
+        let mirrored = turn.xScale < 0
+        for (index, column) in cutColumns.enumerated() {
+            let onScreen = mirrored ? width - 1 - index : index
+            let cut = onScreen < hidden.count ? max(0, hidden[onScreen]) : 0
+            // `hidden` counts from its position, where its feet stand.
+            let bottom = cut > 0 ? cut : -cycle.size.height
+            column.position = CGPoint(x: CGFloat(index) - CGFloat(width) / 2, y: bottom)
+            column.size = CGSize(width: 1, height: max(1, top - bottom))
+        }
+    }
+
     /// Shows the weapon in hand.
     func setWeapon(_ weapon: ItemDef?) {
         sprite.childNode(withName: "weapon")?.removeFromParent()
