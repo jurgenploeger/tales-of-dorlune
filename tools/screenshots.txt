@@ -1053,13 +1053,3 @@ web_port_explore  | newgame,level=43,class=fighter,friends=2,map=starfall_isle,a
 valley_broken | newgame,level=60,map=valley_of_fear,at=60_-19,hour=9,weather=clear | 8
 valley_broken_wide | newgame,level=60,map=valley_of_fear,at=60_-19,hour=9,weather=clear,zoom=0.85,landscape | 8
 valley_broken_east | newgame,level=60,map=valley_of_fear,at=66_-25,hour=9,weather=clear,zoom=0.85,landscape | 8
-valley_nohills | newgame,level=60,map=valley_of_fear,at=60_-19,hour=9,weather=clear,hills=off | 8
-valley_tint  | newgame,level=60,map=valley_of_fear,at=60_-19,hour=9,weather=clear,hills=tint | 8
-valley_off_crags | newgame,level=60,map=valley_of_fear,at=60_-19,hour=9,weather=clear,off=crags | 8
-valley_off_shade | newgame,level=60,map=valley_of_fear,at=60_-19,hour=9,weather=clear,off=shade | 8
-valley_off_lighting | newgame,level=60,map=valley_of_fear,at=60_-19,hour=9,weather=clear,off=lighting | 8
-valley_off_ambience | newgame,level=60,map=valley_of_fear,at=60_-19,hour=9,weather=clear,off=ambience | 8
-valley_off_sky | newgame,level=60,map=valley_of_fear,at=60_-19,hour=9,weather=clear,off=sky | 8
-valley_off_ground | newgame,level=60,map=valley_of_fear,at=60_-19,hour=9,weather=clear,off=ground | 8
-valley_off_variation | newgame,level=60,map=valley_of_fear,at=60_-19,hour=9,weather=clear,off=variation | 8
-valley_off_sea | newgame,level=60,map=valley_of_fear,at=60_-19,hour=9,weather=clear,off=sea | 8

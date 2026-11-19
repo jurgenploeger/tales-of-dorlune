@@ -41,10 +41,9 @@ final class LandStage {
     private var feet: [ObjectIdentifier: CGFloat] = [:]
     /// Shadows cast by its scenery on a hill or the sunk shore (`Lighting.Shadow`).
     private var shadows: [Lighting.Shadow] = []
-    /// The shade cast by everything it sets down on flat ground (`CanopyShade`), away from the sun
-    /// (`follow`), stopping at its town's wall or fence (`WorldMap.fenceCells`).
-    /// Debug flag `off=crags+shade+lighting+ambience+sky`: those overlays left out, to see which
-    /// one draws something on screen (the Valley of Fear's pale patch, 2026-11-19).
+    /// Debug flag `off=crags+shade+lighting+ambience+sky+ground+variation+sea`: those layers left
+    /// out, to see which one draws something on screen (it found the Valley of Fear's pale patch,
+    /// 2026-11-19: the sea's shallows over the ground, `ContinentScene.shallows`).
     static var offForDebug: Set<String> = []
     static func isOffForDebug(_ name: String) -> Bool {
         #if DEBUG
@@ -54,6 +53,8 @@ final class LandStage {
         #endif
     }
 
+    /// The shade cast by everything it sets down on flat ground (`CanopyShade`), away from the sun
+    /// (`follow`), stopping at its town's wall or fence (`WorldMap.fenceCells`).
     private lazy var canopy = CanopyShade(size: Self.chunkSize, walls: Set(map.fenceCells), map: map) { [unowned self] point in
         self.layer(at: point)
     }
@@ -1372,11 +1373,6 @@ final class LandStage {
                     }
                 }
             }
-            // Only where nothing lies past the edge: on the continent a land (or this one, round its
-            // own lobes) can go on there, and the mist, a flat sheet over everything that stands,
-            // lay pale over its ground and trees, cut off straight (the user, 2026-11-18, the Valley
-            // of Fear: "the land looks broken").
-            guard clear(stride(from: span.lowerBound, to: span.upperBound + 1, by: 4)) else { continue }
             let low: CGFloat = clear(stride(from: span.lowerBound - 2, to: span.lowerBound - 22, by: -5)) ? 20 : 0
             let high: CGFloat = clear(stride(from: span.upperBound + 1, to: span.upperBound + 21, by: 5)) ? 20 : 0
             let wide = (CGFloat(span.upperBound - span.lowerBound) + low + high) * tile, deep = 8 * tile, beyond = 8 * tile

@@ -2168,7 +2168,11 @@ final class ContinentScene: SKScene {
         let side = CGFloat(World.chunkSize) * WorldMap.tileSize
         let node = SKSpriteNode(texture: field, size: CGSize(width: side, height: side))
         node.anchorPoint = .zero
-        node.zPosition = 1
+        // Over the sea's tiles and still under the land: at 1 it came to the ground's own depth
+        // (the sea's layer is a point under the ground's), and where SpriteKit drew it after the
+        // ground, its palest tone, under the land, lay over a whole chunk of it, cut off straight
+        // at the chunk's edge (the user, 2026-11-18, the Valley of Fear: "the land looks broken").
+        node.zPosition = 0.5
         node.shader = Self.shallowShader
         return node
     }
