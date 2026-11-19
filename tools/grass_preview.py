@@ -44,8 +44,10 @@ def ramp_from(img):
     im = img[..., :3][img[..., 3] > 0.5] if img.shape[-1] == 4 else img.reshape(-1, 3)
     h, s, v = colorsys.rgb_to_hsv(*im.mean(0))
     out = []
-    for dv, dh, ds in [(-0.42, 0.06, 0.10), (-0.24, 0.03, 0.06), (-0.06, 0.0, 0.0), (0.10, -0.03, -0.05), (0.22, -0.06, -0.14)]:
-        r, g, b = colorsys.hsv_to_rgb((h + dh) % 1, min(1, max(0, s + ds)), min(1, max(0, v + dv)))
+    # Each step's value a share of the ground's, not a fixed step off it: from dark grass a fixed step
+    # down ran to black, and Twilight Woods' tufts read as navy blots (2026-11-19).
+    for share, dh, ds in [(0.42, 0.06, 0.10), (0.67, 0.03, 0.06), (0.92, 0.0, 0.0), (1.13, -0.03, -0.05), (1.3, -0.06, -0.14)]:
+        r, g, b = colorsys.hsv_to_rgb((h + dh) % 1, min(1, max(0, s + ds)), min(1, v * share))
         out.append((int(r * 255), int(g * 255), int(b * 255)))
     return out
 

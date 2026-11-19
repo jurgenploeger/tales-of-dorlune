@@ -648,7 +648,11 @@ final class ContinentScene: SKScene {
                                     isHere: id == here?.id)
         }
         // Your legs hidden in tall grass (`Walker.wade`).
-        player.wade(here.flatMap { lands[$0.id]?.stage.wading(at: player.position, width: player.frameWidth) })
+        let wading = here.flatMap { lands[$0.id]?.stage.wading(at: player.position, width: player.frameWidth) }
+        player.wade(wading)
+        #if DEBUG
+        wadeForDebug = wading.map { cut in "\(Int(cut.max() ?? 0))/\(cut.filter { $0 > 0 }.count)" } ?? "-"
+        #endif
         updateAir(dt)
         if currentTime - lookedAround > 0.25 {
             lookedAround = currentTime
@@ -1482,6 +1486,8 @@ final class ContinentScene: SKScene {
     /// (`showProgressForDebug`).
     private var builtForDebug: [String] = []
     private var progressForDebug: SKLabelNode?
+    /// The wading cut under you (`Walker.wade`): its highest, in points, and how many columns it hides.
+    private var wadeForDebug = "-"
 
     /// Debug launches: the lands laid out (and how long each took), the one being laid out, how many
     /// more are wanted and how many squares of hills and shore wait, at the foot of the screen.
@@ -1498,8 +1504,9 @@ final class ContinentScene: SKScene {
         }
         progressForDebug?.position = CGPoint(x: 0, y: -size.height / 2 + 6)
         let built = builtForDebug.suffix(4).joined(separator: ", ")
-        progressForDebug?.text = "built \(built) | building \(building ?? "-") | wanted \(wanted.count) | squares \(waiting.count)"
-            + (isReady ? " | ready" : "") + (isSettled ? " | settled" : "")
+        // The wading cut first, where the line isn't cut off by the screen's edge.
+        progressForDebug?.text = "wade \(wadeForDebug) | built \(built) | building \(building ?? "-") | wanted \(wanted.count)"
+            + " | squares \(waiting.count)" + (isReady ? " | ready" : "") + (isSettled ? " | settled" : "")
         // The curve's picture (`curveFits`): the scene's size in points at the camera's scale, and
         // whether the effect's on.
         if GameSettings.curveNight {
