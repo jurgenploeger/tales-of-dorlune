@@ -905,7 +905,19 @@ final class ArtLibrary {
                         let shadowed = natural && grassy && reach > 0 && depth >= reach && depth < reach + 0.04
                         if depth > 0, let pond, let palette {
                             // In the pond's tones, by where it lies in the lake or river.
-                            let tone = pond(Double(cell.col) + 0.5 + x, Double(cell.row) + 0.5 + y)
+                            var tone = pond(Double(cell.col) + 0.5 + x, Double(cell.row) + 0.5 + y)
+                            // The bright rim along a near shore (land down the screen, south and west of
+                            // the water), a pixel or two wide just past the grass's blades and their
+                            // shadow, along the waterline as it curves (the user, 2026-11-19: drawn a
+                            // cell's edge at a time, it ran in straight steps: "it should follow the curves").
+                            let pixel = 1 / Double(size)
+                            let start = natural && grassy && reach > 0 ? reach + 0.04 : 0
+                            if !shadowed, depth >= start, depth < start + 1.6 * pixel {
+                                let probe = (x: x - 2.5 * pixel, y: y - 2.5 * pixel)
+                                let below = Self.waterDepth(probe.x, probe.y, pools: pools,
+                                                            wobble: Self.wobble(probe.x, probe.y, style: layer.style, cell: cell))
+                                if below <= start { tone = 6 }
+                            }
                             Self.paintPond(&out, index, texels: texels, tone: tone, palette: palette, shade: shadowed ? 0.7 : 1)
                             out[index + 3] = 255
                         } else if depth > 0 {
