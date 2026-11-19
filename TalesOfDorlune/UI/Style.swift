@@ -282,13 +282,16 @@ struct WindowTitle: View {
     /// Room kept clear at the title's right, under the bar (the character a speech window's stands by).
     var trailingRoom: CGFloat = 0
     /// How many the window holds, in a count badge trailing the title (the user, 2026-11-11: "The
-    /// number of friends can be shown as a badge count trailing the header title").
-    var badge: Int?
+    /// number of friends can be shown as a badge count trailing the header title"), or how full it
+    /// is ("4/100", the Bag's; the user, 2026-11-19: "should be the same"), on `badgeFill` if given.
+    var badge: String?
+    var badgeFill: Color?
 
     init(_ title: String, detail: String? = nil, detailTint: Color? = nil, bar: Bool = true, trailingRoom: CGFloat = 0,
-         badge: Int? = nil, onClose: (() -> Void)? = nil) {
+         badge: String? = nil, badgeFill: Color? = nil, onClose: (() -> Void)? = nil) {
         self.title = title
         self.badge = badge
+        self.badgeFill = badgeFill
         self.detail = detail
         self.detailTint = detailTint
         self.bar = bar
@@ -313,14 +316,14 @@ struct WindowTitle: View {
                 .fixedSize(horizontal: false, vertical: true)
             if let badge {
                 // White on the bar's own deep blue, as an app's badge is.
-                Text("\(badge)")
+                Text(badge)
                     .font(HUDStyle.font(12))
                     .monospacedDigit()
                     .foregroundStyle(.white)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 2)
                     .frame(minWidth: 24)
-                    .background(Capsule().fill(HUDStyle.frameDark))
+                    .background(Capsule().fill(badgeFill ?? HUDStyle.frameDark))
                     .fixedSize()
                     .accessibilityLabel(L("{count} in all", ["count": badge]))
             }

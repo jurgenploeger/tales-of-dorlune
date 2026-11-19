@@ -216,13 +216,14 @@ extension MenuView {
             PageTabs(page: $settingsPage, title: { $0.title })
         case .friends:
             // How many friends you have, a badge after the name.
-            WindowTitle(window.menuTitle, badge: session.friends.isEmpty ? nil : session.friends.count)
+            WindowTitle(window.menuTitle, badge: session.friends.isEmpty ? nil : "\(session.friends.count)")
                 .padding(.bottom, 2)
         case .bag:
             // How full the bag is after its name (playtesting 2026-10-26: "add the x/50 behind the big
             // 'Inventory' title"): 50 slots, one for every item (`GameSession+Bank`); coins take none.
-            WindowTitle(window.menuTitle, detail: "\(session.bagSlotsUsed)/\(session.bagSize)",
-                        detailTint: session.bagSlotsFree == 0 ? HUDStyle.orange : nil)
+            // In the same badge as the Friends window's count (the user, 2026-11-19), orange when full.
+            WindowTitle(window.menuTitle, badge: "\(session.bagSlotsUsed)/\(session.bagSize)",
+                        badgeFill: session.bagSlotsFree == 0 ? HUDStyle.orange : nil)
                 .accessibilityValue(L("{used} of {slots} slots", ["used": session.bagSlotsUsed, "slots": session.bagSize]))
                 .padding(.bottom, 2)
         }
