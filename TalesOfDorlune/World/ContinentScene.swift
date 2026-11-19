@@ -372,7 +372,8 @@ final class ContinentScene: SKScene {
     /// draw. SpriteKit draws the whole scene, not only what's on screen, into the effect's picture
     /// (the bigger it held, the sooner it failed: zoomed in, or once a second land was near), and
     /// past what a picture can be it drew nothing, only the sky's blue (the user, 2026-11-19, on
-    /// walking into Shiverdell). Over it, the sky's own shade stands in.
+    /// walking into Shiverdell). Over it, the sky's own shade stands in. A guess for a phone: the
+    /// simulator drew 21,600 points across without fault (2026-11-19), so it can't find the edge.
     static let curveSizeLimit: CGFloat = 16_000
 
     /// Whether the scene fits `curveSizeLimit`, measured again when the lands near you change and
