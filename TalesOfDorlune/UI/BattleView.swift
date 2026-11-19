@@ -701,20 +701,11 @@ private struct MoreMenu: View {
 
     /// The panel's width (the row makes room for it to the right of More: `CommandPad.row`).
     static let width: CGFloat = 176
-    /// Upright, a column's width: the panel holds two side by side, so it stays low, under your
-    /// party's bars on the field (the user, 2026-11-19: one tall column opened right over your
-    /// hero's HP and MP). Two of them fit the narrowest phone's row (375 less 28).
-    private static let columnWidth: CGFloat = 168
     private static let spring = Animation.spring(response: 0.34, dampingFraction: 0.78)
-    @Environment(\.verticalSizeClass) private var verticalSizeClass
 
     private var entries: [MoreEntry] {
         skills.map { MoreEntry.skill($0) } + commands.enumerated().map { MoreEntry.command($0.element, $0.offset) }
     }
-
-    /// Upright, two columns (the panel as wide as the row there); on its side one, at the row's left
-    /// end, clear of the party standing right of the middle.
-    private var twoColumns: Bool { verticalSizeClass != .compact }
 
     var body: some View {
         // As the map's menu opens (`GameMenu`): the button grows into the panel from its corner,
@@ -768,29 +759,15 @@ private struct MoreMenu: View {
 
     /// What waits behind More, in a window of the button's blue.
     private var panel: some View {
-        let list = entries
-        return VStack(alignment: .leading, spacing: 2) {
-            if twoColumns {
-                // In pairs, read left to right, top to bottom.
-                ForEach(Array(stride(from: 0, to: list.count, by: 2)), id: \.self) { start in
-                    HStack(spacing: 2) {
-                        cell(list[start])
-                            .frame(width: Self.columnWidth, alignment: .leading)
-                        if start + 1 < list.count {
-                            cell(list[start + 1])
-                                .frame(width: Self.columnWidth, alignment: .leading)
-                        }
-                    }
-                }
-            } else {
-                ForEach(list) { entry in
-                    cell(entry)
-                }
+        // One column, always (the user, 2026-11-19: two side by side were "terrible").
+        VStack(alignment: .leading, spacing: 2) {
+            ForEach(entries) { entry in
+                cell(entry)
             }
         }
         .padding(.vertical, 6)
         .padding(.horizontal, 4)
-        .frame(width: twoColumns ? 2 * Self.columnWidth + 2 + 8 : Self.width, alignment: .leading)
+        .frame(width: Self.width, alignment: .leading)
         .fixedSize(horizontal: false, vertical: true)
         .background(
             RoundedRectangle(cornerRadius: 16, style: .continuous)

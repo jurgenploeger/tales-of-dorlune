@@ -2617,8 +2617,8 @@ private struct QuestListRow: View {
     }
 }
 
-/// A quest from the Quests list, in a window of its own over the menu, Back on its title bar: its
-/// number and how hard it is, its name, who asked and where they live, how far along you are, all of
+/// A quest from the Quests list, in a window of its own over the menu, its name on the title bar and
+/// the close button over the corner: its number and how hard it is, who asked and where they live, how far along you are, all of
 /// its story, and its rewards (what you earned, once it's done). A tap outside it goes back too.
 struct QuestWindow: View {
     let session: GameSession
@@ -2631,16 +2631,9 @@ struct QuestWindow: View {
                 .ignoresSafeArea()
                 .onTapGesture(perform: onBack)
             VStack(alignment: .leading, spacing: 0) {
-                HStack {
-                    Button(action: onBack) {
-                        Label(L("Back"), icon: .arrowLeft, size: 12)
-                    }
-                    .buttonStyle(PixelButtonStyle(compact: true))
-                    Spacer(minLength: 0)
-                }
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8)
-                .background(WindowBar())
+                // Its name on the bar and the close button over the corner, as every window has (the
+                // user, 2026-11-19: a close button at the top right, not a Back button).
+                WindowTitle(quest.title)
                 // Scrolls only when it can't all fit (a phone on its side, a long story).
                 FitOrScroll {
                     VStack(alignment: .leading, spacing: 12) {
@@ -2662,6 +2655,7 @@ struct QuestWindow: View {
             }
             .frame(maxWidth: 420, alignment: .leading)
             .gameWindow()
+            .windowCloseButton(onBack)
             .padding(24)
             .popIn()
         }
@@ -2676,11 +2670,6 @@ struct QuestWindow: View {
                 QuestNumber(number: session.questNumber(quest))
                 DifficultyBadge(difficulty: session.difficulty(of: quest))
             }
-            Text(quest.title)
-                .font(HUDStyle.font(18))
-                .foregroundStyle(HUDStyle.gold)
-                .fixedSize(horizontal: false, vertical: true)
-                .accessibilityAddTraits(.isHeader)
             if let giver = session.content.npc(quest.giver) {
                 let home = session.content.home(ofNPC: quest.giver)?.name
                 HStack(spacing: 8) {
