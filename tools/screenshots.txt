@@ -1058,6 +1058,15 @@ zoom_in_goldburg | newgame,level=200,class=fighter,map=goldburg,zoom=2.2 | 8
 zoom_in_desert | newgame,level=200,class=fighter,map=genie_desert,zoom=2.2 | 8
 zoom_in_curve | newgame,level=200,class=fighter,map=goldburg,zoom=2.2,curve,weather=rain | 8
 zoom_one_curve | newgame,level=200,class=fighter,map=goldburg,zoom=1,curve,weather=rain | 8
+# Walking into another land with the night curve on (the user, 2026-11-19: blank on reaching Shiverdell till
+# they zoomed in, which turns the curve off). The debug line reads the scene's size; `curveguard=off` draws the
+# curve however big it is, to see where it fails.
+curve_border_valley | newgame,level=60,map=valley_of_fear,border=twilight_woods,landscape,weather=clear,hour=23,curve | 12
+curve_border_valley_raw | newgame,level=60,map=valley_of_fear,border=twilight_woods,landscape,weather=clear,hour=23,curve,curveguard=off | 12
+curve_border_meadow | newgame,map=sunny_meadow,border=frog_swamp,landscape,weather=clear,hour=23,curve | 12
+curve_border_meadow_raw | newgame,map=sunny_meadow,border=frog_swamp,landscape,weather=clear,hour=23,curve,curveguard=off | 12
+curve_town_raw | newgame,level=40,map=goldburg,landscape,weather=clear,hour=23,curve,curveguard=off | 8
+curve_reset | newgame,map=sunny_meadow,weather=clear,hour=12,nocurve | 4
 # The UI review's improvements (2026-11-19): battle plate and More menu, victory EXP bar, level-up before → after,
 # Bag empty slots, tracked quest, quest progress, Show on map, shop tabs, smith Forge and materials, daily gift days.
 battle_plate      | newgame,level=30,class=fighter,pet=pineapple,map=sunny_meadow,battle=2,turntimer=40 | 15
