@@ -365,12 +365,18 @@ final class ContinentScene: SKScene {
         return shader
     }()
 
+    /// How far in you can zoom with the night drawn by the curve (`curveNight`).
+    static let curveZoomLimit: CGFloat = 1.0
+
     /// Draws the skies' light by the curve, or leaves it to their own shades. Each sky's multiply
     /// colour `m` becomes the power 1 + 2 × (1 - m): none by day, about 1.96, 1.84, 1.32 at night
     /// (red and green deepen most, blue least), a warm dusk and a grey storm the same way; a
     /// little dimmer all over at night.
     private func curveNight() {
-        let curved = GameSettings.curveNight
+        // Not zoomed in past the usual view: there SpriteKit drew nothing at all through the scene's
+        // effect, only the sky's blue behind it, till you zoomed back out (the user, 2026-11-19; at
+        // 2.2× in the screenshots too). The sky's own shade stands in meanwhile.
+        let curved = GameSettings.curveNight && WorldScene.zoom <= Self.curveZoomLimit
         var multiply = (r: 1.0, g: 1.0, b: 1.0)
         var night = 0.0
         for air in airs.values {
