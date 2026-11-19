@@ -77,6 +77,15 @@ nonisolated final class WorldMap: @unchecked Sendable {
     /// each patch. Walked through as plain ground; kept from other scenery.
     private(set) var tallGrass: Set<GridPoint> = []
     private(set) var grassPatches: [GridPoint] = []
+
+    /// Whether tall grass grows on `cell` or within `reach` cells of it.
+    func isNearTallGrass(_ cell: GridPoint, within reach: Int = 1) -> Bool {
+        guard !tallGrass.isEmpty else { return false }
+        for dr in -reach...reach {
+            for dc in -reach...reach where tallGrass.contains(GridPoint(col: cell.col + dc, row: cell.row + dr)) { return true }
+        }
+        return false
+    }
     /// A town's terraces: where each stands, its stairs (out in front of its walls, `raiseTerrace`) and
     /// the cells of its rim they come up to, open in its balustrade.
     private(set) var terraces: [(origin: GridPoint, width: Int, height: Int, stairs: [GridPoint], heads: [GridPoint])] = []
@@ -787,6 +796,9 @@ nonisolated final class WorldMap: @unchecked Sendable {
         let tile = ground[cell.row][cell.col]
         guard tile != .path, tile != .water else { return false }
         guard max(abs(cell.col - center.col), abs(cell.row - center.row)) > 2 else { return false }
+        // Nothing in the way right beside tall grass: a big mossy rock stood in the middle of a
+        // patch, spreading over the cells round its own (the user, 2026-11-19).
+        if blocking, isNearTallGrass(cell) { return false }
         if def.fence == true, (insideFence ? tile != .ground : tile != .border) { return false }
         for entry in entryCells where max(abs(cell.col - entry.col), abs(cell.row - entry.row)) <= 2 {
             return false

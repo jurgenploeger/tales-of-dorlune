@@ -850,6 +850,8 @@ final class LandPlanner {
             for cell in feet.sorted(by: { ($0.row, $0.col) < ($1.row, $1.col) }) {
                 guard Double.random(in: 0..<1, using: &draw) < 0.3 else { continue }
                 let kind = kinds[Int.random(in: 0..<kinds.count, using: &draw)]
+                // None in tall grass (`WorldMap.tallGrass`): ferns stood up out of it.
+                guard !map.tallGrass.contains(cell) else { continue }
                 var placement = Placement(art: kind, cell: cell, scale: CGFloat.random(in: 0.75...1.05, using: &draw))
                 placement.nudge = CGVector(dx: CGFloat.random(in: -7...7, using: &draw), dy: CGFloat.random(in: -5...5, using: &draw))
                 plan.outcrops.append(placement)
