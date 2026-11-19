@@ -1544,11 +1544,7 @@ private struct FriendRow: View {
                 Text(L("Lv {level} {race} {class}", ["level": friend.level, "race": session.content.race(friend.raceID).name, "class": session.content.classDef(friend.classID).name]))
                     .font(HUDStyle.font(10))
                     .foregroundStyle(HUDStyle.dim)
-                if let pet {
-                    Text(L("with their {name}", ["name": pet.name]))
-                        .font(HUDStyle.font(10))
-                        .foregroundStyle(HUDStyle.green)
-                }
+                // Their companion shows beside them; no line naming it too (the user, 2026-11-19).
                 place
             }
             Spacer(minLength: 6)
