@@ -272,6 +272,9 @@ final class ContinentScene: SKScene {
         let groundLayer = Self.projected(groundGrid)
         groundLayer.zPosition = -100_000
         layer.addChild(groundLayer)
+        // Debug `off=ground` / `off=sea`: those layers left out (`LandStage.offForDebug`).
+        groundLayer.isHidden = LandStage.isOffForDebug("ground")
+        seaLayer.isHidden = LandStage.isOffForDebug("sea")
         // Each lower than the last, the foam just below the bottom one, all under the land
         // (`WorldScene.bank`).
         for (step, grid) in bankGrids.enumerated() {
@@ -1956,7 +1959,7 @@ final class ContinentScene: SKScene {
         flat.position = CGPoint(x: CGFloat(place.origin.col) * tile, y: CGFloat(place.origin.row) * tile)
         let variation = Lighting.groundVariation(columns: map.columns, rows: map.rows, tile: tile, palette: theme.palette,
                                                  seed: def.id) { col, row in map.owns(GridPoint(col: col, row: row)) }
-        if let variation {
+        if let variation, !LandStage.isOffForDebug("variation") {
             variation.zPosition = 1
             flat.addChild(variation)
         }
