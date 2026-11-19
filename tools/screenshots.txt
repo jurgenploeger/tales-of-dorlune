@@ -1084,3 +1084,9 @@ worldmap_quest   | newgame,level=30,visited=all,taken=forest_friends,worldmap,ma
 smith_material_card | newgame,level=90,class=fighter,map=goldburg,npc=goldburg_smith,wares,info=red_yew | 8
 daily_gift_day3  | newgame,level=30,map=meadowbrook,gift=3 | 10
 daily_gift_day3_land | newgame,level=30,map=meadowbrook,gift=3,landscape | 10
+# Tall grass you wade through (`GrassField`, theme `tallGrass`, tools/grass_art.py; the user, 2026-11-19, after
+# SpriteCook's interactive tall grass article): standing in the middle of a land's first patch.
+grass_meadow | newgame,map=sunny_meadow,at=grass,landscape,weather=clear,hour=12 | 8
+grass_meadow_close | newgame,map=sunny_meadow,at=grass,zoom=2,weather=clear,hour=12 | 8
+grass_woods | newgame,level=20,map=twilight_woods,at=grass,landscape,weather=clear,hour=12 | 8
+grass_swan | newgame,level=40,map=swan_lake,at=grass1,weather=clear,hour=12 | 8

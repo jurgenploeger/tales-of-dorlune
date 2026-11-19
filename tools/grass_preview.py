@@ -33,15 +33,18 @@ FPS = 20
 # ---------- the tufts ----------
 
 def ramp(mid):
-    """Five greens from the land's grass tile, darkest first, hue-shifted as the house look is
-    (darks toward blue, lights toward yellow): docs/pixel-style.md."""
+    """Five greens from the land's grass tile as graded there (`ramp_from`)."""
     th = pp.maps[mid]['theme']
-    img = pp.sprite(th.get('ground', 'tile_grass'), th.get('palette'))
+    return ramp_from(pp.sprite(th.get('ground', 'tile_grass'), th.get('palette')))
+
+
+def ramp_from(img):
+    """Five greens from a grass tile's pixels, darkest first, hue-shifted as the house look is
+    (darks toward blue, lights toward yellow): docs/pixel-style.md."""
     im = img[..., :3][img[..., 3] > 0.5] if img.shape[-1] == 4 else img.reshape(-1, 3)
     h, s, v = colorsys.rgb_to_hsv(*im.mean(0))
     out = []
-    for i, (dv, dh, ds) in enumerate([(-0.42, 0.06, 0.10), (-0.24, 0.03, 0.06), (-0.06, 0.0, 0.0),
-                                      (0.10, -0.03, -0.05), (0.22, -0.06, -0.14)]):
+    for dv, dh, ds in [(-0.42, 0.06, 0.10), (-0.24, 0.03, 0.06), (-0.06, 0.0, 0.0), (0.10, -0.03, -0.05), (0.22, -0.06, -0.14)]:
         r, g, b = colorsys.hsv_to_rgb((h + dh) % 1, min(1, max(0, s + ds)), min(1, max(0, v + dv)))
         out.append((int(r * 255), int(g * 255), int(b * 255)))
     return out
@@ -63,24 +66,62 @@ def blade(img, x0, lean, height, curl, tone, ramp_, width=2):
 
 
 def tuft(design, ramp_):
-    """Four designs (`design` 0 to 3; flipped too in the patch): blades fanning from a solid base,
-    the back ones darker, the front ones lit."""
+    """Four designs (`design` 0 to 3; flipped too in the patch): a full, rounded clump, lit from the
+    top left. Its body a mound of two or three lobes filled to the base, shaded by height and side
+    (the dark at its foot and right, the light up its left); blade strokes run up through it, and
+    tapered tips stand out of its top edge."""
     rng = random.Random(design * 7 + 1)
     img = np.zeros((TH, TW, 4), np.uint8)
-    # The base: the bottom rows filled in the mid-dark green, rounded at its corners.
-    for y in range(TH - SOLID, TH):
-        inset = max(0, 3 - (y - (TH - SOLID))) if y < TH - SOLID + 3 else 0
-        inset = max(inset, 1 if y == TH - 1 else 0)
-        for x in range(2 + inset, TW - 2 - inset):
-            img[y, x] = ramp_[1] + (255,)
-    n = 10 + design % 3
-    for i in range(n):
-        back = i < n // 2
-        x0 = 2 + (TW - 6) * (i + 0.5) / n + rng.uniform(-1, 1)
-        lean = (x0 - TW / 2) * rng.uniform(0.5, 0.9) + rng.uniform(-1.5, 1.5)
-        height = rng.randint(TH - 6, TH) if not back else rng.randint(TH - 8, TH - 3)
-        tone = 1 if back else 2 + (1 if x0 < TW / 2 else 0)
-        blade(img, x0, lean, height, rng.uniform(-1, 1), tone, ramp_)
+    tone = np.full((TH, TW), -1, int)
+    # The mound: lobes, each a half ellipse standing on the base.
+    lobes = [(rng.uniform(4, 7), rng.uniform(9, 12), rng.uniform(4, 5.5)),
+             (rng.uniform(11, 14), rng.uniform(10, 13), rng.uniform(4, 5.5)),
+             (rng.uniform(7.5, 10.5), rng.uniform(12, 15), rng.uniform(4.5, 6))]
+    if design % 2: lobes = lobes[:2] + [(rng.uniform(8, 10), rng.uniform(11, 13), 6.5)]
+    top = np.full(TW, TH, float)
+    for cx, height, rx in lobes:
+        for x in range(TW):
+            d = (x + 0.5 - cx) / rx
+            if abs(d) < 1: top[x] = min(top[x], TH - height * math.sqrt(1 - d * d))
+    for x in range(TW):
+        for y in range(int(math.ceil(top[x])), TH):
+            if x < 1 or x > TW - 2: continue
+            up = (TH - y) / (TH - top[x] + 1e-6)            # 0 at the foot, 1 at the top
+            side = (x - TW / 2) / (TW / 2)                     # -1 left, 1 right
+            t = 1.2 + 1.6 * up - 0.9 * side
+            tone[y, x] = int(max(0, min(4, round(t))))
+    # The rim along the top a step lighter on the left, darker on the right.
+    for x in range(1, TW - 1):
+        y = int(math.ceil(top[x]))
+        if y < TH and tone[y, x] >= 0:
+            tone[y, x] = min(4, tone[y, x] + (1 if x < TW * 0.6 else 0))
+    # Blade strokes up through the mound: a dark gap and a lit blade side by side.
+    for i in range(5 + design % 2):
+        x = int(2 + (TW - 4) * (i + rng.uniform(0.2, 0.8)) / (5 + design % 2))
+        y0 = int(math.ceil(top[x])) + rng.randint(1, 3)
+        y1 = min(TH - 2, y0 + rng.randint(3, 6))
+        for y in range(y0, y1):
+            if 0 < x < TW - 1 and tone[y, x] >= 0: tone[y, x] = max(0, tone[y, x] - 1)
+            if x + 1 < TW - 1 and tone[y, x + 1] >= 0 and y < y1 - 1: tone[y, x + 1] = min(4, tone[y, x + 1] + 1)
+    # Tips standing out of the top: tapered, leaning outward, lit on the left.
+    for i in range(6 + design):
+        x0 = rng.uniform(2, TW - 3)
+        y0 = int(math.ceil(top[int(x0)])) + 1
+        tall = rng.randint(2, 4)
+        lean = (x0 - TW / 2) * 0.15 + rng.uniform(-0.6, 0.6)
+        for r in range(tall + 1):
+            x = int(round(x0 + lean * r))
+            y = y0 - r
+            if 0 <= x < TW and 0 <= y < TH:
+                tone[y, x] = 3 if x < TW * 0.55 else 2
+                if r == tall: tone[y, x] = 4 if x < TW * 0.55 else 3
+    # The foot: its last two rows the darkest greens, so it sits in the floor.
+    for y in (TH - 2, TH - 1):
+        for x in range(TW):
+            if tone[y, x] >= 0: tone[y, x] = min(tone[y, x], 1 if y == TH - 2 else 0)
+    for y in range(TH):
+        for x in range(TW):
+            if tone[y, x] >= 0: img[y, x] = ramp_[tone[y, x]] + (255,)
     return img
 
 

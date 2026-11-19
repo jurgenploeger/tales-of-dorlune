@@ -740,6 +740,14 @@ enum DebugLaunch {
                     let middle = grid.places[index].middle
                     session.playerPosition = grid.center(of: GridPoint(col: middle.col, row: middle.row - 3))
                 }
+            } else if at.hasPrefix("grass") {
+                // `at=grass` (or `grass1`, `grass2`…): in the middle of the land's first (or nth) patch of
+                // tall grass (`WorldMap.grassPatches`).
+                let grid = WorldMap(def: def)
+                let index = Int(at.dropFirst(5)) ?? 0
+                if grid.grassPatches.indices.contains(index) {
+                    session.playerPosition = grid.center(of: grid.grassPatches[index])
+                }
             } else if at.hasPrefix("terrace") {
                 // `at=terrace` (or `terrace_side`): at the foot of the town's first terrace's front (or side)
                 // stairs, wherever it found room (`WorldMap.raiseTerrace`).

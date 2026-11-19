@@ -241,6 +241,13 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   chest at one of its places (a potion or ether by its level, refilling as chests do) and someone living at another
   (maps.json `locals`). Theme `lush`: a richer ground tile in broad soft patches over the plain ground
   (`WorldMap.layLush`, `GroundTiles.lushMask`; the grass lands' `tile_rich_grass`). A brazier smokes (`LandStage.addSmoke`).
+- Tall grass (the user's pick from `tools/grass_preview.py`, 2026-11-19, after SpriteCook's interactive tall grass article;
+  visual only, green wild lands only): theme `tallGrass` (`patches`, `size`, `art`) lays soft rounds of cells
+  (`WorldMap.layTallGrass`, kept from other scenery; debug `at=grass`), filled by `GrassField` with tufts about nine a
+  cell, each its own sprite sorted by its base; near you they lean away on a spring (2 pixels at most in front of your
+  legs, so they still hide them), rustle as you push in and are pressed flat a shade darker behind your feet, every
+  pose a frame of its sheet (`tools/grass_art.py`: four designs, leaning −8 to 8 pixels across, pressed by steps down,
+  in a grass tile's plain colours for the land's palette to grade). No wading cut yet (the article's per-column cut).
 - Town roads (the user's pick from `tools/road_preview.py`, 2026-11-17): in a town's square (`GroundTiles.inTown`,
   `WorldMap.townSquare`) every road cell is drawn by `ArtLibrary.townRoad` (`GroundLayer.cobbled`): cobbles about half a
   cell across down its middle in the colour of the land's `tile_town` (graded), their edge ragged stone by stone, sand

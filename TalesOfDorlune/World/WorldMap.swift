@@ -73,6 +73,10 @@ nonisolated final class WorldMap: @unchecked Sendable {
     /// The cells of plain ground that show the theme's richer ground (`MapDef.Theme.lush`) instead,
     /// in broad soft patches (`layLush`). Still plain ground to everything but the drawing.
     private(set) var lush: Set<GridPoint> = []
+    /// Tall grass you wade through (theme `tallGrass`, `layTallGrass`): its cells, and the middle of
+    /// each patch. Walked through as plain ground; kept from other scenery.
+    private(set) var tallGrass: Set<GridPoint> = []
+    private(set) var grassPatches: [GridPoint] = []
     /// A town's terraces: where each stands, its stairs (out in front of its walls, `raiseTerrace`) and
     /// the cells of its rim they come up to, open in its balustrade.
     private(set) var terraces: [(origin: GridPoint, width: Int, height: Int, stairs: [GridPoint], heads: [GridPoint])] = []
@@ -386,6 +390,8 @@ nonisolated final class WorldMap: @unchecked Sendable {
         }
         bowBridges = bridges.filter(\.bowed)
         lap("shore")
+        if def.town == nil, def.theme.cave == nil, let grass = def.theme.tallGrass { layTallGrass(grass) }
+        lap("tall grass")
         if def.theme.cave == nil { sealPockets() }
         lap("pockets")
     }
@@ -602,6 +608,9 @@ nonisolated final class WorldMap: @unchecked Sendable {
         case "mouth":
             guard let crag = pick(crags) else { return nil }
             return entryCell(from: crag.edge)
+        case "grass":
+            // The middle of the land's nth patch of tall grass.
+            return pick(grassPatches)
         case "farm", "ruin", "camp", "graveyard", "rest":
             // The middle of the land's nth place of that kind (`places`).
             return pick(places.filter { $0.def.kind == name })?.middle
@@ -2844,6 +2853,61 @@ nonisolated final class WorldMap: @unchecked Sendable {
                 let cell = GridPoint(col: col, row: row)
                 if !seams.contains(where: { ($0.share(cell) ?? 0) > 0.03 }) { lush.insert(cell) }
             }
+        }
+    }
+
+    // MARK: Tall grass
+
+    /// Lays the land's patches of tall grass (theme `tallGrass`; the user, 2026-11-19, after
+    /// SpriteCook's interactive tall grass article): each a soft round of cells about a middle, on
+    /// flat plain ground of the land's own, off its roads, hills, shore, places and the lands next
+    /// door, its cells kept (`occupied`, not in the way) so nothing else grows in it. Draws of its
+    /// own, so the rest of the land's layout draws as it did.
+    private func layTallGrass(_ grass: MapDef.TallGrass) {
+        var draw = SeededRandom(text: def.id + "/grass")
+        let sizes = grass.size ?? [1.6, 3]
+        let low = sizes.first ?? 1.6, high = max(low, sizes.last ?? 3)
+        func suits(_ cell: GridPoint) -> Bool {
+            guard contains(cell), owns(cell), ground[cell.row][cell.col] == .ground, hillOf[cell] == nil, plateauOf[cell] == nil,
+                  foreign[cell] == nil, !isSunken(cell), !tallGrass.contains(cell),
+                  isFreeForScenery(cell, blocking: false) else { return false }
+            // A cell clear of the roads and paths, so the grass never closes over one.
+            for dr in -1...1 {
+                for dc in -1...1 {
+                    let near = GridPoint(col: cell.col + dc, row: cell.row + dr)
+                    if contains(near), ground[near.row][near.col] == .path { return false }
+                }
+            }
+            return true
+        }
+        var tries = 0
+        while grassPatches.count < grass.patches, tries < grass.patches * 40 {
+            tries += 1
+            let middle = GridPoint(col: Int.random(in: 1..<max(2, columns - 1), using: &draw),
+                                   row: Int.random(in: 1..<max(2, rows - 1), using: &draw))
+            guard suits(middle) else { continue }
+            let reach = Double.random(in: low...high, using: &draw)
+            // Squashed and turned a little, and its rim wobbling, so no two are the same round.
+            let stretch = Double.random(in: 0.7...1.3, using: &draw)
+            let wobble = (Double.random(in: 0..<(2 * Double.pi), using: &draw), Double.random(in: 0.12...0.25, using: &draw))
+            let span = Int(reach * 1.4) + 1
+            var cells: [GridPoint] = []
+            for dr in -span...span {
+                for dc in -span...span {
+                    let x = Double(dc) / stretch, y = Double(dr) * stretch
+                    let angle = atan2(y, x)
+                    let edge = reach * (1 + wobble.1 * sin(3 * angle + wobble.0))
+                    guard (x * x + y * y).squareRoot() <= edge else { continue }
+                    let cell = GridPoint(col: middle.col + dc, row: middle.row + dr)
+                    if suits(cell) { cells.append(cell) }
+                }
+            }
+            guard cells.count >= 5 else { continue }
+            for cell in cells {
+                tallGrass.insert(cell)
+                occupy(cell, blocking: false)
+            }
+            grassPatches.append(middle)
         }
     }
 
