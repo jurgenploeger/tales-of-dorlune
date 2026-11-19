@@ -311,11 +311,11 @@ final class ContinentScene: SKScene {
         init(stage: LandStage, camera: SKCameraNode, start: Date?, screen: CGSize) {
             let def = stage.def
             camera.addChild(layer)
-            ambience = Ambience(def.ambience, world: stage.air, camera: layer, bounds: stage.map.bounds, seed: def.id,
+            ambience = LandStage.isOffForDebug("ambience") ? nil : Ambience(def.ambience, world: stage.air, camera: layer, bounds: stage.map.bounds, seed: def.id,
                                 inside: { [weak stage] in stage?.onLand($0) ?? $0 })
-            lighting = Lighting(def.ambience, world: stage.air, camera: layer, bounds: stage.map.bounds, seed: def.id,
+            lighting = LandStage.isOffForDebug("lighting") ? nil : Lighting(def.ambience, world: stage.air, camera: layer, bounds: stage.map.bounds, seed: def.id,
                                 inside: { [weak stage] in stage?.onLand($0) ?? $0 })
-            sky = Sky(map: def, camera: layer, start: start)
+            sky = LandStage.isOffForDebug("sky") ? nil : Sky(map: def, camera: layer, start: start)
             ambience?.resize(to: screen)
             lighting?.resize(to: screen)
             if let sky { lighting?.sunlight(sky.sunlight) }
