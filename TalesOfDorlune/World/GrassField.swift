@@ -52,7 +52,6 @@ final class GrassField {
     private var byCell: [GridPoint: [Tuft]] = [:]
     /// Tufts still swinging or standing up after you've passed.
     private var settling: [ObjectIdentifier: Tuft] = [:]
-    private var last: CGPoint?
 
     /// Each design's frames, cut from its sheet: `[stage][lean + leans]`.
     static func frames(of sheet: SKTexture) -> [[SKTexture]] {
@@ -111,54 +110,131 @@ final class GrassField {
 
     var isEmpty: Bool { byCell.isEmpty }
 
-    /// A frame of the grass round your feet (`feet` in the land's own points, on `cell`).
-    func update(dt: TimeInterval, feet: CGPoint, cell: GridPoint) {
-        guard !byCell.isEmpty, dt > 0 else { return }
-        let moving = last.map { $0.distance(to: feet) > 0.01 } ?? false
-        last = feet
-        var near: [Tuft] = []
+    /// Someone walking through it: who (to tell whether they've moved since), and where their feet are
+    /// in the land's own points.
+    struct Wader {
+        let key: ObjectIdentifier
+        let feet: CGPoint
+    }
+
+    private var lastFeet: [ObjectIdentifier: CGPoint] = [:]
+
+    /// Whether there's grass on or beside `cell`.
+    func grows(near cell: GridPoint) -> Bool {
         for dr in -1...1 {
-            for dc in -1...1 {
-                if let tufts = byCell[GridPoint(col: cell.col + dc, row: cell.row + dr)] { near.append(contentsOf: tufts) }
+            for dc in -1...1 where byCell[GridPoint(col: cell.col + dc, row: cell.row + dr)] != nil { return true }
+        }
+        return false
+    }
+
+    /// A frame of the grass round everyone walking in it (you and the land's people near you):
+    /// `cell` finds the cell a point's on.
+    func update(dt: TimeInterval, waders: [Wader], cell: (CGPoint) -> GridPoint) {
+        guard !byCell.isEmpty, dt > 0 else { return }
+        var moving: [Bool] = []
+        var seen: [ObjectIdentifier: CGPoint] = [:]
+        for wader in waders {
+            moving.append(lastFeet[wader.key].map { $0.distance(to: wader.feet) > 0.01 } ?? false)
+            seen[wader.key] = wader.feet
+            let at = cell(wader.feet)
+            for dr in -1...1 {
+                for dc in -1...1 {
+                    for tuft in byCell[GridPoint(col: at.col + dc, row: at.row + dr)] ?? [] { settling[ObjectIdentifier(tuft)] = tuft }
+                }
             }
         }
-        for tuft in near { settling[ObjectIdentifier(tuft)] = tuft }
+        lastFeet = seen
         guard !settling.isEmpty else { return }
         // In steps of a quarter of the frame, so the spring keeps steady however long a frame took.
         let steps = 4
         let step = CGFloat(dt) / CGFloat(steps)
         for tuft in settling.values {
-            for _ in 0..<steps { Self.move(tuft, feet: feet, moving: moving, dt: step) }
+            // Bent by the nearest of those beside it, pressed by any it's just behind.
+            var nearest: Int?
+            var behind = false
+            for (index, wader) in waders.enumerated() where Self.isNear(tuft, wader.feet) {
+                if nearest.map({ abs(waders[$0].feet.x - tuft.base.x) > abs(wader.feet.x - tuft.base.x) }) ?? true { nearest = index }
+                if Self.isBehind(tuft, wader.feet) { behind = true }
+            }
+            let by = nearest.map { (feet: waders[$0].feet, moving: moving[$0]) }
+            for _ in 0..<steps { Self.move(tuft, by: by, behind: behind, dt: step) }
             show(tuft)
         }
-        settling = settling.filter { !$0.value.isStill || Self.isNear($0.value, feet) }
+        settling = settling.filter { entry in !entry.value.isStill || waders.contains { Self.isNear(entry.value, $0.feet) } }
     }
 
-    /// Whether you're beside it, close enough to bend it.
+    /// How much of a walker standing with its feet at `feet` the grass in front of it hides, column by
+    /// column across its frame (`width` points, from its left): the article's "wading cut". Each
+    /// column hidden from two points under the top of the grass drawn in front of it there, the cut
+    /// evened out over five columns, never more than 13 points; nil where nothing's hidden.
+    func cover(feet: CGPoint, width: Int) -> [CGFloat]? {
+        var tops = [CGFloat](repeating: 0, count: width)
+        var any = false
+        let left = feet.x - CGFloat(width) / 2
+        for tuft in tuftsNear(feet) {
+            let down = feet.y - tuft.base.y
+            // Only those standing in front of its feet, near enough to reach over them.
+            guard down >= 0, down < Self.frame.height else { continue }
+            let tall = Self.frame.height * (1 - 0.67 * Self.eased(tuft.press))
+            for index in 0..<width {
+                let u = (left + CGFloat(index) + 0.5 - tuft.base.x) / 8
+                guard abs(u) <= 1 else { continue }
+                // The clump's top: highest in its middle, lower toward its sides.
+                let top = tall * (0.85 - 0.35 * u * u) - down - 2
+                if top > tops[index] { tops[index] = top; any = true }
+            }
+        }
+        guard any else { return nil }
+        return (0..<width).map { index in
+            let window = tops[max(0, index - 2)...min(width - 1, index + 2)]
+            let even = window.reduce(0, +) / CGFloat(window.count)
+            return min(13, max(0, even)).rounded()
+        }
+    }
+
+    private func tuftsNear(_ feet: CGPoint) -> [Tuft] {
+        let grid = WorldMap.unproject(feet)
+        let at = GridPoint(col: Int((grid.x / WorldMap.tileSize).rounded(.down)), row: Int((grid.y / WorldMap.tileSize).rounded(.down)))
+        var found: [Tuft] = []
+        for dr in -1...1 {
+            for dc in -1...1 { found.append(contentsOf: byCell[GridPoint(col: at.col + dc, row: at.row + dr)] ?? []) }
+        }
+        return found
+    }
+
+    private static func eased(_ press: CGFloat) -> CGFloat { press * press * (3 - 2 * press) }
+
+    /// Whether someone's beside it, close enough to bend it.
     private static func isNear(_ tuft: Tuft, _ feet: CGPoint) -> Bool {
         let dx = tuft.base.x - feet.x, down = feet.y - tuft.base.y
         return abs(dx) < 13 && down > -11 && down < 9
     }
 
-    /// Its spring, its press and its rustle, a step on.
-    private static func move(_ tuft: Tuft, feet: CGPoint, moving: Bool, dt: CGFloat) {
-        // Across, and how far below your feet it stands (in front of you, on screen).
+    /// Whether it stands just behind someone's feet, where they've trodden: never at the patch's rim.
+    private static func isBehind(_ tuft: Tuft, _ feet: CGPoint) -> Bool {
         let dx = tuft.base.x - feet.x, down = feet.y - tuft.base.y
-        let near = isNear(tuft, feet)
-        if near, tuft.side == 0 { tuft.side = dx >= 0 ? 1 : -1 }
-        if !near { tuft.side = 0 }
-        let front = down >= 0 && down < 9 && abs(dx) < 9
-        let most = front ? frontLean : maxLean
-        let target = near ? tuft.side * most * max(0, 1 - abs(dx) / 13) : 0
-        if abs(target) > 1.5, tuft.cool <= 0, moving {
-            tuft.age = 0
-            tuft.cool = cooldown
+        return down >= -7 && down < 0 && abs(dx) < 7 && !tuft.edge
+    }
+
+    /// Its spring, its press and its rustle, a step on: bent `by` the one nearest beside it, if any.
+    private static func move(_ tuft: Tuft, by: (feet: CGPoint, moving: Bool)?, behind: Bool, dt: CGFloat) {
+        var target: CGFloat = 0
+        if let by {
+            // Across, and how far below their feet it stands (in front of them, on screen).
+            let dx = tuft.base.x - by.feet.x, down = by.feet.y - tuft.base.y
+            if tuft.side == 0 { tuft.side = dx >= 0 ? 1 : -1 }
+            let front = down >= 0 && down < 9 && abs(dx) < 9
+            target = tuft.side * (front ? frontLean : maxLean) * max(0, 1 - abs(dx) / 13)
+            if abs(target) > 1.5, tuft.cool <= 0, by.moving {
+                tuft.age = 0
+                tuft.cool = cooldown
+            }
+        } else {
+            tuft.side = 0
         }
         let w = 2 * CGFloat.pi * springHz
         tuft.velocity += (-w * w * (tuft.lean - target) - 2 * damping * w * tuft.velocity) * dt
         tuft.lean = min(maxLean, max(-maxLean, tuft.lean + tuft.velocity * dt))
-        // Just behind your feet: pressed down, never at the patch's rim.
-        let behind = down >= -7 && down < 0 && abs(dx) < 7 && !tuft.edge
         if behind {
             tuft.press = min(1, tuft.press + dt / pressIn)
         } else {

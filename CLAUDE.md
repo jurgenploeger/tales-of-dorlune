@@ -247,7 +247,9 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   cell, each its own sprite sorted by its base; near you they lean away on a spring (2 pixels at most in front of your
   legs, so they still hide them), rustle as you push in and are pressed flat a shade darker behind your feet, every
   pose a frame of its sheet (`tools/grass_art.py`: four designs, leaning −8 to 8 pixels across, pressed by steps down,
-  in a grass tile's plain colours for the land's palette to grade). No wading cut yet (the article's per-column cut).
+  in a grass tile's plain colours for the land's palette to grade; bladed, not rounded puffs: the user, 2026-11-19).
+  The land's people bend it too, and anyone in it has their legs cut along the grass's top in front of them
+  (`GrassField.cover`, `Walker.wade`: the sprite in an `SKCropNode`, a column a point wide each).
 - Town roads (the user's pick from `tools/road_preview.py`, 2026-11-17): in a town's square (`GroundTiles.inTown`,
   `WorldMap.townSquare`) every road cell is drawn by `ArtLibrary.townRoad` (`GroundLayer.cobbled`): cobbles about half a
   cell across down its middle in the colour of the land's `tile_town` (graded), their edge ragged stone by stone, sand

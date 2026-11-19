@@ -192,7 +192,7 @@ final class LandStage {
                              width: screen.width * scale, height: screen.height * scale)
         critters?.update(dt: dt, player: you, visible: visible, flocks: isHere) { [map] in map.isWalkable(map.rawCell(at: $0)) }
         show(around: camera, scale: scale, screen: screen)
-        if isHere, let grass { grass.update(dt: dt, feet: you, cell: map.rawCell(at: you)) }
+        if let grass, isHere || onScreen { wade(through: grass, dt: dt, you: you) }
         if !Self.isOffForDebug("shade") { canopy.draw() }
         coverPanes(dt)
     }
@@ -1314,6 +1314,30 @@ final class LandStage {
 
     /// A small sign where each road leaves the land, where the plan put it, its words over it
     /// (shown when you come to read it).
+    /// Its tall grass bent by you and its people near you, and cut over their legs (`Walker.wade`).
+    private func wade(through grass: GrassField, dt: TimeInterval, you: CGPoint) {
+        var waders: [GrassField.Wader] = []
+        if isHere { waders.append(GrassField.Wader(key: ObjectIdentifier(LandStage.self), feet: you)) }
+        for walker in crowd?.walkers ?? [] where walker.position.distance(to: you) < 700 {
+            guard grass.grows(near: map.rawCell(at: walker.position)) else {
+                walker.wade(nil)
+                continue
+            }
+            waders.append(GrassField.Wader(key: ObjectIdentifier(walker), feet: walker.position))
+            walker.wade(grass.cover(feet: walker.position, width: walker.frameWidth))
+        }
+        grass.update(dt: dt, waders: waders) { map.rawCell(at: $0) }
+    }
+
+    /// How much of you the grass in front of you hides (`GrassField.cover`), `point` in the
+    /// continent's points; nil out of it.
+    func wading(at point: CGPoint, width: Int) -> [CGFloat]? {
+        guard let grass else { return nil }
+        let feet = local(point)
+        guard grass.grows(near: map.rawCell(at: feet)) else { return nil }
+        return grass.cover(feet: feet, width: width)
+    }
+
     /// Its tall grass (`GrassField`, theme `tallGrass`) over the patches its layout kept for it
     /// (`WorldMap.tallGrass`), each tuft graded with the land's palette as its ground is.
     private func placeTallGrass() {
