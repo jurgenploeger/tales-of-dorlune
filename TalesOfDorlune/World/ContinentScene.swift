@@ -1738,9 +1738,9 @@ final class ContinentScene: SKScene {
             }
         }
         // Only the lands round you go about their lives; those far off wait, out of sight.
-        let near = Set(chunks.keys.flatMap { owners(of: $0) })
-        if near != nearLands { curveMeasureNow = true }
-        nearLands = near
+        let landsNear = Set(chunks.keys.flatMap { owners(of: $0) })
+        if landsNear != nearLands { curveMeasureNow = true }
+        nearLands = landsNear
         for (id, land) in lands where land.stage.world.isHidden == nearLands.contains(id) {
             land.stage.world.isHidden = !nearLands.contains(id)
             land.stage.world.isPaused = !nearLands.contains(id)
