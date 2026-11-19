@@ -31,7 +31,8 @@ struct MenuView: View {
     /// A tap on something in the Bag: its card, over the menu. Debug `inspect=<item>` opens one
     /// (unless it's for the gear grid, `change=`).
     @State private var inspecting: ItemDef? = DebugLaunch.changingSlot == nil ? DebugLaunch.inspectedItem.flatMap { Content.shared.item($0) } : nil
-    /// A tap on a quest in the Quests list: its window, over the menu. Debug `questcard=<quest>` opens one.
+    /// A tap on a quest in the Quests list: its window, over the menu. Debug `questcard=<quest>` opens
+    /// one, and so does the HUD's tracked quest, tapped (`GameSession.questToOpen`).
     @State private var openQuest: QuestDef? = DebugLaunch.openedQuest.flatMap { Content.shared.quest($0) }
     /// A tap on a friend: where they are, in a window over the menu (`FriendMapWindow`).
     @State private var openFriend: Adventurer?
@@ -43,6 +44,9 @@ struct MenuView: View {
         self.onClose = onClose
         self.onQuitToTitle = onQuitToTitle
         self.window = window
+        if window == .quests, let id = session.questToOpen, let quest = Content.shared.quest(id) {
+            _openQuest = State(initialValue: quest)
+        }
     }
 
     var body: some View {
@@ -123,6 +127,8 @@ struct MenuView: View {
             }
         }
         .foregroundStyle(HUDStyle.cream)
+        // The HUD's tracked quest opens once: the menu's Quests opens on the list next time.
+        .onAppear { session.questToOpen = nil }
     }
 }
 
@@ -2091,10 +2097,11 @@ private struct BagTab: View {
             // Unfiltered, the room left after them too, a faint empty slot for each free one (the user's UI
             // review, 2026-11-19: "17/59" over 17 tiles and a sheet of empty glass).
             let room = !searching && shelf == .all ? session.bagSlotsFree : 0
-            if shown.isEmpty && room == 0 {
+            if shown.isEmpty {
                 EmptyNote(searching || shelf != .all ? L("Nothing in your bag matches.") : L("Your bag is empty."), size: 11)
                     .padding(.vertical, 12)
-            } else {
+            }
+            if !shown.isEmpty || room > 0 {
                 grid(shown, room: room)
             }
         }
