@@ -2,6 +2,18 @@
   "_note": "Newest first, one entry per big update with at most five lines that sum it up. The top version must match MARKETING_VERSION in project.yml (tools/check_content.py checks): a small change moves the top entry's version and date along and adds a line only if it's big enough to tell players. 1.0.0 is the App Store release.",
   "releases": [
     {
+      "version": "0.9.120",
+      "date": "2026-11-19",
+      "title": "Clearer screens",
+      "notes": [
+        "Battles show your party's HP and MP, and the victory card fills your EXP bar.",
+        "Track a quest under the minimap, see each quest's progress, and find it on the map.",
+        "The Bag shows its empty slots; hold an item to equip or use it.",
+        "Shops have Buy and Sell tabs, and the smith says what you still need and where it comes from.",
+        "The daily gift shows the whole week's presents."
+      ]
+    },
+    {
       "version": "0.9.119",
       "date": "2026-11-19",
       "title": "Emotes",
