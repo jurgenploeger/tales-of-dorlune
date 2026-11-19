@@ -18,6 +18,21 @@ struct MapOverlay: View {
     /// The level shown when it isn't the one you're on, and its map once it's drawn.
     @State private var level: MapDef?
     @State private var levelPicture: CaveMap.Picture?
+    /// The land (or cave) to open the world map on in place of where you are (a quest's Show on map,
+    /// `GameSession.mapFocus`): the world map then shows even in a cave.
+    @State private var focus: String?
+
+    init(session: GameSession, cave: CaveMap.Picture? = nil, levels: [MapDef] = [],
+         loadLevel: @escaping @MainActor (MapDef) async -> CaveMap.Picture? = { _ in nil },
+         rows: Int = 0, onClose: @escaping () -> Void) {
+        self.session = session
+        self.cave = cave
+        self.levels = levels
+        self.loadLevel = loadLevel
+        self.rows = rows
+        self.onClose = onClose
+        _focus = State(initialValue: session.mapFocus)
+    }
 
     var body: some View {
         ZStack {
@@ -30,7 +45,7 @@ struct MapOverlay: View {
             // where you are under it, its map below. The world's: the atlas under the bar out to the
             // frame, the time and where you are over its top (playtesting 2026-10-26).
             VStack(spacing: 0) {
-                if let cave {
+                if let cave, focus == nil {
                     // The pills over the map's top left, the compass at its top right, as on the world
                     // map, and the levels' chips along its foot where the world map's controls are; no
                     // way to the world map (the user, 2026-11-16: "The two pills should be in exactly
@@ -47,11 +62,13 @@ struct MapOverlay: View {
                     // The time and your coordinates at the top left, no name over them: the pulsing mark
                     // on the map says where you are (the user, 2026-11-11: "Remove the top left title of
                     // where you are, that's obvious"); the map's controls along the bottom.
-                    WorldAtlas(session: session) {
+                    WorldAtlas(session: session, focus: focus) {
                         pills
                     }
                 }
             }
+            // Taken once: the next time the map opens, it opens on where you are.
+            .onAppear { session.mapFocus = nil }
             // As big as a menu window, the map filling what's left under the title.
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .gameWindow()

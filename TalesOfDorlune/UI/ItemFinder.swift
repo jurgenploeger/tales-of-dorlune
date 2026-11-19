@@ -308,16 +308,29 @@ struct ItemSlotGrid<Tile: View>: View {
     /// Puts the first id where the second is.
     let onMove: (_ id: String, _ target: String) -> Void
     let tile: (_ item: ItemDef, _ size: CGFloat) -> Tile
+    /// Slots the bag has room for still, after the items: drawn faint and empty, so how full it is
+    /// reads at a glance (the Bag, unfiltered; the user's UI review, 2026-11-19). Plain shapes, so
+    /// a hundred of them cost next to nothing.
+    var emptySlots = 0
+    /// A long press on a slot: its main action without its card (the Bag: Equip, or Use), for the
+    /// items that have one (`holdLabel` says what it is, for VoiceOver); nil, none.
+    var onHold: ((ItemDef) -> Void)?
+    var holdLabel: (ItemDef) -> String? = { _ in nil }
 
     init(items: [ItemDef],
          label: @escaping (ItemDef) -> String, hint: String? = nil,
+         emptySlots: Int = 0,
          onTap: @escaping (ItemDef) -> Void, onMove: @escaping (_ id: String, _ target: String) -> Void,
+         onHold: ((ItemDef) -> Void)? = nil, holdLabel: @escaping (ItemDef) -> String? = { _ in nil },
          @ViewBuilder tile: @escaping (_ item: ItemDef, _ size: CGFloat) -> Tile) {
         self.items = items
         self.label = label
         self.hint = hint
+        self.emptySlots = max(0, emptySlots)
         self.onTap = onTap
         self.onMove = onMove
+        self.onHold = onHold
+        self.holdLabel = holdLabel
         self.tile = tile
     }
 
@@ -326,6 +339,9 @@ struct ItemSlotGrid<Tile: View>: View {
     /// What a dragged slot carries besides its item: this grid's own mark, so a slot dropped on
     /// another grid (the bag's on the bank's) moves nothing there.
     @State private var scope = UUID().uuidString
+    /// The slot just held for its main action, and when: the tap its finger lifting may still make
+    /// is swallowed, so the card doesn't open over what the hold did.
+    @State private var held: (id: String, at: Date)?
 
     /// Between slots, and the most a slot grows to before another fits in the row.
     private static var spacing: CGFloat { 6 }
@@ -350,10 +366,17 @@ struct ItemSlotGrid<Tile: View>: View {
 
     var body: some View {
         let slot = self.slot
-        let cells = items.count
+        let cells = items.count + emptySlots
         let rows = max(1, (cells + columns - 1) / columns)
         let height = CGFloat(rows) * slot + CGFloat(rows - 1) * Self.spacing
         ZStack(alignment: .topLeading) {
+            // The room left, under the items so a lifted slot passes over it.
+            if emptySlots > 0 {
+                ForEach(items.count..<cells, id: \.self) { index in
+                    emptySlot(slot)
+                        .offset(x: corner(index).x, y: corner(index).y)
+                }
+            }
             ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
                 cell(item, at: index, slot: slot)
             }
@@ -363,6 +386,37 @@ struct ItemSlotGrid<Tile: View>: View {
         .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { width = $0 }
     }
 
+    /// An empty slot: a faint sunk tile where an item's would be, inset as the Bag's tiles are (5
+    /// points from the top and the right, for their count and arrow badges).
+    private func emptySlot(_ slot: CGFloat) -> some View {
+        let size = max(1, slot - 5)
+        let shape = RoundedRectangle(cornerRadius: size * 0.26)
+        return shape
+            .fill(Color.black.opacity(0.16))
+            .overlay(shape.strokeBorder(.white.opacity(0.07), lineWidth: 1))
+            .frame(width: size, height: size)
+            .padding(.top, 5)
+            .padding(.trailing, 5)
+            .frame(width: slot, height: slot)
+            .allowsHitTesting(false)
+            .accessibilityHidden(true)
+    }
+
+    /// Held a moment (before iOS lifts it to move it), a slot with a main action does it, with a
+    /// tap of the haptics.
+    private func hold(_ item: ItemDef) -> some Gesture {
+        LongPressGesture(minimumDuration: Self.holdTime, maximumDistance: 10)
+            .onEnded { _ in
+                guard let onHold else { return }
+                held = (item.id, Date())
+                Haptics.impact(.medium)
+                onHold(item)
+            }
+    }
+
+    /// How long a press is held for the main action.
+    private static var holdTime: Double { 0.3 }
+
     private func cell(_ item: ItemDef, at index: Int, slot: CGFloat) -> some View {
         let place = corner(index)
         let before = index > 0 ? items[index - 1] : nil
@@ -370,7 +424,15 @@ struct ItemSlotGrid<Tile: View>: View {
         return tile(item, slot)
             .frame(width: slot, height: slot)
             .contentShape(Rectangle())
-            .onTapGesture { onTap(item) }
+            .onTapGesture {
+                if let held, held.id == item.id, Date().timeIntervalSince(held.at) < 1.5 {
+                    self.held = nil
+                    return
+                }
+                onTap(item)
+            }
+            // Only on the slots with a main action: on the rest, holding lifts it straight away.
+            .simultaneousGesture(hold(item), including: onHold != nil && holdLabel(item) != nil ? .all : .none)
             .draggable(scope + "|" + item.id) {
                 tile(item, slot).frame(width: slot, height: slot)
             }
@@ -387,6 +449,11 @@ struct ItemSlotGrid<Tile: View>: View {
             .accessibilityHint(hint ?? "")
             .accessibilityAddTraits(.isButton)
             .accessibilityAction { onTap(item) }
+            .accessibilityActions {
+                if let action = holdLabel(item) {
+                    Button(action) { onHold?(item) }
+                }
+            }
             .accessibilityAction(named: L("Move earlier")) { if let before { onMove(item.id, before.id) } }
             .accessibilityAction(named: L("Move later")) { if let after { onMove(item.id, after.id) } }
     }

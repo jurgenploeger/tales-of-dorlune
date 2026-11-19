@@ -230,6 +230,8 @@ nonisolated struct SaveData: Codable, Sendable {
     /// Your order of the bag and of the bank, by item id (`GameSession+ItemOrder`): nil, the game's.
     var bagOrder: [String]?
     var bankOrder: [String]?
+    /// The quest followed on the HUD, under the minimap (`GameSession.trackedQuest`): nil, none.
+    var trackedQuest: String?
 }
 
 /// A day's bounties (the Quests tab): a few small jobs, new each calendar day.

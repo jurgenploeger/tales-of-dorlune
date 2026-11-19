@@ -205,6 +205,15 @@ final class GameSession {
     @ObservationIgnored var onCastField: ((SkillDef) -> Void)?
     /// The same for a travel item from the bag (a Homeward Feather).
     @ObservationIgnored var onTravel: ((ItemDef) -> Void)?
+    /// Set by the game while you're on a map: shows the world map in place of the window that's
+    /// open, on `mapFocus` when that's set (a quest's Show on map, `QuestWindow`).
+    @ObservationIgnored var onShowMap: (() -> Void)?
+    /// The land (or cave) the world map opens on next, in place of where you are: `MapOverlay`
+    /// takes it as it opens.
+    @ObservationIgnored var mapFocus: String?
+    /// A quest whose window the Quests window opens with next (the HUD's tracked quest, tapped):
+    /// `MenuView` takes it as it opens.
+    @ObservationIgnored var questToOpen: String?
 
     var content: Content { .shared }
 
