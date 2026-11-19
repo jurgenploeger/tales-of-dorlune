@@ -107,7 +107,30 @@ private struct SmithRecipeRow: View {
         .groupRow(gold: ready)
     }
 
+    /// Forge, gold when you have all it takes; else greyed and faded, as a control you can't use yet
+    /// looks, with why short and quiet under it ("Need 5 more", as the shop's "Need 30" under a price
+    /// you can't pay), and in full for VoiceOver. Still tappable: the smith says what's missing.
     private func forge(ready: Bool) -> some View {
+        let missing = session.ingredients(of: item).filter { $0.owned < $0.needed }
+        let short = missing.reduce(0) { $0 + $1.needed - $1.owned }
+        let list: String = missing.map { "\($0.material.name) ×\($0.needed - $0.owned)" }.joined(separator: ", ")
+        return VStack(spacing: 3) {
+            forgeButton(ready: ready)
+                .opacity(ready ? 1 : 0.5)
+                .accessibilityHint(ready ? "" : L("You still need {materials}", ["materials": list]))
+            if !ready && short > 0 {
+                Text(L("Need {count} more", ["count": short]))
+                    .font(HUDStyle.font(10))
+                    .monospacedDigit()
+                    .foregroundStyle(HUDStyle.dim)
+                    .lineLimit(1)
+                    .fixedSize()
+                    .accessibilityHidden(true)
+            }
+        }
+    }
+
+    private func forgeButton(ready: Bool) -> some View {
         Button(L("Forge")) {
             if session.craft(item.id) {
                 session.post(L("Forged a {item}!", ["item": item.name]), .reward)
@@ -130,16 +153,26 @@ private struct SmithRecipeRow: View {
     }
 
     /// The materials it takes and how many you have of each, under the whole row and wrapping onto
-    /// more lines as they need: four in a row squeezed each name into a column of letters.
+    /// more lines as they need: four in a row squeezed each name into a column of letters. Tap one
+    /// for its card, which says where it comes from (which monsters drop it, and where they live).
     private var materials: some View {
-        WrapRows(spacing: 10) {
+        WrapRows(spacing: 6) {
             ForEach(session.ingredients(of: item)) { part in
-                HStack(spacing: 3) {
-                    ItemIcon(item: part.material, size: 16)
-                    Text("\(part.material.name) \(part.owned)/\(part.needed)")
-                        .lineLimit(1)
-                        .foregroundStyle(part.owned >= part.needed ? HUDStyle.green : HUDStyle.dim)
+                Button { info = part.material } label: {
+                    HStack(spacing: 3) {
+                        ItemIcon(item: part.material, size: 16)
+                        Text("\(part.material.name) \(part.owned)/\(part.needed)")
+                            .lineLimit(1)
+                            .foregroundStyle(part.owned >= part.needed ? HUDStyle.green : HUDStyle.dim)
+                    }
+                    // A small label, a full-size tap (`frame(minHeight:)`), as it's a button now.
+                    .padding(.trailing, 4)
+                    .frame(minHeight: 34)
+                    .contentShape(Rectangle())
                 }
+                .buttonStyle(.plain)
+                .accessibilityLabel(L("{item}: you have {have} of {need}", ["item": part.material.name, "have": part.owned, "need": part.needed]))
+                .accessibilityHint(L("Shows where it comes from"))
             }
         }
         .font(HUDStyle.font(10))

@@ -1,23 +1,34 @@
 import SwiftUI
 
-/// The day's gift, the first time you're in the game that day: what it held, and where the round is.
+/// The day's gift, the first time you're in the game that day: what it held, and where the round is,
+/// as a card for each day of it (`GiftDays`). On Thanks, what it held flies off toward the Bag's
+/// button at the bottom right before the card closes (`flight`), unless Reduce Motion is on.
 struct DailyGiftCard: View {
     let session: GameSession
     let gift: GameSession.DailyGift
     let onClose: () -> Void
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    /// Where each of the gift's items stands on screen, for its flight to the Bag.
+    @State private var spots: [String: CGRect] = [:]
+    /// Thanks tapped: the items' copies are up over the card, the card fading.
+    @State private var flying = false
+    /// The copies on their way.
+    @State private var flown = false
 
     var body: some View {
+        let entries = RewardList.group(gift.items, in: session)
         ZStack {
-            Color.black.opacity(0.45)
+            Color.black.opacity(flying ? 0 : 0.45)
+                .animation(.easeOut(duration: 0.25), value: flying)
                 .ignoresSafeArea()
-                .onTapGesture(perform: onClose)
+                .onTapGesture(perform: thanks)
             VStack(spacing: 0) {
-                WindowTitle(L("Daily gift"), onClose: onClose)
+                WindowTitle(L("Daily gift"), onClose: thanks)
                 VStack(spacing: 12) {
                     Text(L("Day {day} of {days}", ["day": gift.day, "days": gift.days]))
                         .font(HUDStyle.font(14))
                         .foregroundStyle(HUDStyle.gold)
-                    GiftRound(current: gift.day, days: gift.days)
+                    GiftDays(session: session, current: gift.day)
                     if let greeting = gift.greeting {
                         // The first gift of a festive season brings its hat.
                         Text(greeting)
@@ -30,9 +41,12 @@ struct DailyGiftCard: View {
                         if gift.gold > 0 {
                             GoldPill(amount: gift.gold, size: 15)
                         }
-                        ForEach(RewardList.group(gift.items, in: session), id: \.item.id) { entry in
+                        ForEach(entries, id: \.item.id) { entry in
                             ItemIcon(item: entry.item, size: 38, count: entry.count)
                                 .accessibilityLabel(entry.count > 1 ? "\(entry.item.name) ×\(entry.count)" : entry.item.name)
+                                // Its copy flies from here (`flight`); it stays behind, hidden.
+                                .opacity(flying ? 0 : 1)
+                                .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) } action: { spots[entry.item.id] = $0 }
                         }
                     }
                     Text(L("A gift waits each day you play. Come back tomorrow for the next one!"))
@@ -40,17 +54,164 @@ struct DailyGiftCard: View {
                         .foregroundStyle(HUDStyle.dim)
                         .multilineTextAlignment(.center)
                         .fixedSize(horizontal: false, vertical: true)
-                    Button(L("Thanks!"), action: onClose)
+                    Button(L("Thanks!"), action: thanks)
                         .buttonStyle(PixelButtonStyle(tint: HUDStyle.gold, compact: true))
                 }
-                .padding(16)
+                .padding(HUDStyle.windowInset)
             }
-            .frame(maxWidth: 340)
+            .frame(maxWidth: 360)
             .gameWindow()
             .popIn()
             .padding(16)
+            // Fading as the copies leave it; they're there at once, where the icons were.
+            .opacity(flying ? 0 : 1)
+            .animation(.easeOut(duration: 0.25), value: flying)
+            .allowsHitTesting(!flying)
+
+            if flying {
+                flight(entries)
+            }
         }
         .foregroundStyle(HUDStyle.cream)
+    }
+
+    /// Closes the card: the gift's items first fly off to the Bag, the card fading under them (the
+    /// user, 2026-11-19), straight away with Reduce Motion or nothing to fly.
+    private func thanks() {
+        guard !flying else { return }
+        let items = RewardList.group(gift.items, in: session).filter { spots[$0.item.id] != nil }
+        guard !reduceMotion, !items.isEmpty else {
+            onClose()
+            return
+        }
+        flying = true
+        Task {
+            // A frame for the copies to stand where the icons were, then off they go.
+            try? await Task.sleep(for: .milliseconds(30))
+            flown = true
+            try? await Task.sleep(for: .milliseconds(Self.flightMilliseconds + 70 * items.count))
+            onClose()
+        }
+    }
+
+    private static let flightMilliseconds = 600
+
+    /// The items' copies, each from where it stood on the card to the Bag's button at the bottom
+    /// right (beside the menu's, `WorldHUD`), shrinking and fading as it goes, one after another.
+    private func flight(_ entries: [RewardList.Entry]) -> some View {
+        GeometryReader { proxy in
+            let origin = proxy.frame(in: .global).origin
+            // About where the Bag's button stands: in from the corner past the menu's button, inside
+            // the safe area as the HUD is.
+            let insets = proxy.safeAreaInsets
+            let target = CGPoint(x: proxy.size.width - insets.trailing - HUDMargins.side - 84,
+                                 y: proxy.size.height - max(insets.bottom, HUDMargins.side) - 36)
+            ForEach(Array(entries.enumerated()), id: \.element.item.id) { index, entry in
+                if let spot = spots[entry.item.id] {
+                    ItemIcon(item: entry.item, size: 38, count: entry.count)
+                        .scaleEffect(flown ? 0.45 : 1)
+                        .opacity(flown ? 0 : 1)
+                        .position(flown ? target : CGPoint(x: spot.midX - origin.x, y: spot.midY - origin.y))
+                        .animation(.easeIn(duration: Double(Self.flightMilliseconds) / 1000).delay(0.07 * Double(index)), value: flown)
+                }
+            }
+        }
+        .ignoresSafeArea()
+        .allowsHitTesting(false)
+        .accessibilityHidden(true)
+    }
+}
+
+/// The daily gift's round as a card for each day (the user, 2026-11-19): each with its own gift's
+/// picture (rewards.json `dailyGifts`), the days given ticked, today's lit in gold, the last (the
+/// best) bigger. In a row, scrolling sideways when a narrow phone can't fit it (`SideScroll`).
+struct GiftDays: View {
+    let session: GameSession
+    /// Today's place in the round, from 1; the days before it given.
+    let current: Int
+
+    var body: some View {
+        let gifts = session.content.rewards.dailyGifts
+        ViewThatFits(in: .horizontal) {
+            row(gifts)
+            SideScroll { row(gifts) }
+        }
+    }
+
+    private func row(_ gifts: [RewardsDef.Gift]) -> some View {
+        HStack(alignment: .bottom, spacing: 5) {
+            ForEach(Array(gifts.enumerated()), id: \.offset) { index, gift in
+                GiftDayCard(session: session, gift: gift, day: index + 1, current: current, best: index == gifts.count - 1)
+            }
+        }
+    }
+}
+
+/// One day of the daily gift's round (`GiftDays`): its gift's best item (or its coins), and its number.
+private struct GiftDayCard: View {
+    let session: GameSession
+    let gift: RewardsDef.Gift
+    let day: Int
+    let current: Int
+    /// The round's last day, the best gift: drawn bigger.
+    let best: Bool
+
+    var body: some View {
+        let today = day == current
+        let given = day < current
+        let picture: CGFloat = best ? 40 : 28
+        let gold = (gift.goldPerLevel ?? 0) * session.data.hero.level
+        let entries = RewardList.group(gift.items ?? [], in: session)
+        // The rarest thing in it stands for it; the first of the rarest.
+        let headline = entries.max { Content.shared.rarity(of: $0.item.id) < Content.shared.rarity(of: $1.item.id) }
+        VStack(spacing: 3) {
+            Group {
+                if let headline {
+                    ItemIcon(item: headline.item, size: picture, count: headline.count)
+                        // Coins as well as things: a coin in its corner.
+                        .overlay(alignment: .bottomLeading) {
+                            if gold > 0 { coin(size: picture * 0.45).offset(x: -4, y: 4) }
+                        }
+                } else {
+                    coin(size: picture)
+                }
+            }
+            .opacity(given ? 0.5 : 1)
+            // Given already: ticked.
+            .overlay {
+                if given {
+                    IconImage(.check, size: 12)
+                        .foregroundStyle(HUDStyle.ink)
+                        .frame(width: 18, height: 18)
+                        .background(Circle().fill(HUDStyle.green))
+                        .overlay(Circle().strokeBorder(.white, lineWidth: 1.5))
+                }
+            }
+            Text("\(day)")
+                .font(HUDStyle.font(10))
+                .monospacedDigit()
+                .foregroundStyle(today ? HUDStyle.gold : HUDStyle.dim)
+        }
+        .padding(.top, 6)
+        .padding(.bottom, 3)
+        .frame(width: best ? 52 : 38)
+        .background(GlassCard(radius: 8, lit: today, gold: today))
+        .shadow(color: today ? HUDStyle.gold.opacity(0.45) : .clear, radius: today ? 5 : 0)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(L("Day {day}: {gift}", ["day": day, "gift": describe(gold: gold, entries: entries)]))
+        .accessibilityValue(today ? L("Today") : given ? L("Claimed") : "")
+    }
+
+    private func coin(size: CGFloat) -> some View {
+        IconTile(icon: .coins, tint: Color(red: 0.62, green: 0.48, blue: 0.24), size: size,
+                 picture: ArtLibrary.shared.artImage(CoinsTile.art(for: max(1, (gift.goldPerLevel ?? 0) * session.data.hero.level))))
+    }
+
+    /// What the day's gift holds, for VoiceOver: "1,500 gold, Potion ×3".
+    private func describe(gold: Int, entries: [RewardList.Entry]) -> String {
+        var parts = entries.map { $0.count > 1 ? "\($0.item.name) ×\($0.count)" : $0.item.name }
+        if gold > 0 { parts.insert(L("{gold} gold", ["gold": gold]), at: 0) }
+        return parts.joined(separator: ", ")
     }
 }
 

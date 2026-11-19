@@ -547,8 +547,26 @@ struct ItemInfoCard: View {
         let dye = session.content.items.first { $0.dye != nil && $0.recipe?[item.id] != nil && item.material == "gem" }
         return VStack(alignment: .leading, spacing: 10) {
             if let level = item.level {
+                // Any monster of its level or more drops it (`GameSession.materialDrop`): where they
+                // live, the gentlest lands first, so the smith's "Red Yew 0/4" says where to go.
+                let lands = Self.lands(dropping: level, in: session.content)
+                let named = lands.count > 3 ? L("{items} and {count} more", ["items": lands.prefix(3).joined(separator: ", "), "count": lands.count - 3])
+                                            : lands.joined(separator: ", ")
                 section(L("Found on")) {
-                    Text(L("Monsters of level {level} and up", ["level": level])).font(HUDStyle.font(12)).foregroundStyle(HUDStyle.cream)
+                    Text(lands.isEmpty ? L("Monsters of level {level} and up", ["level": level])
+                                       : L("Monsters of level {level} and up, in {lands}", ["level": level, "lands": named]))
+                        .font(HUDStyle.font(12))
+                        .foregroundStyle(HUDStyle.cream)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+            let sellers = Self.sellers(of: item.id, in: session.content)
+            if !sellers.isEmpty {
+                section(L("Sold by")) {
+                    Text(sellers.joined(separator: ", "))
+                        .font(HUDStyle.font(12))
+                        .foregroundStyle(HUDStyle.cream)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
             }
             if let dye {
@@ -565,6 +583,29 @@ struct ItemInfoCard: View {
                     .foregroundStyle(HUDStyle.cream)
                     .fixedSize(horizontal: false, vertical: true)
             }
+        }
+    }
+
+    /// The lands (and caves) with monsters of `level` or more, where a material of that level drops:
+    /// the gentlest first, each named once.
+    static func lands(dropping level: Int, in content: Content) -> [String] {
+        let found: [(name: String, low: Int)] = content.maps.compactMap { map in
+            guard let encounters = map.encounters, !encounters.monsters.isEmpty,
+                  let high = encounters.levels.last, high >= level else { return nil }
+            return (name: map.name, low: encounters.levels.first ?? high)
+        }
+        var names: [String] = []
+        for land in found.sorted(by: { $0.low < $1.low }) where !names.contains(land.name) {
+            names.append(land.name)
+        }
+        return names
+    }
+
+    /// Who sells `itemID` and where: "Trader Bo in Meadowbrook".
+    static func sellers(of itemID: String, in content: Content) -> [String] {
+        content.maps.flatMap { map in
+            (map.npcs ?? []).filter { $0.stock?.contains(itemID) == true }
+                .map { L("{npc} in {place}", ["npc": $0.name, "place": map.name]) }
         }
     }
 
