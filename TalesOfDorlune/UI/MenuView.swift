@@ -148,7 +148,8 @@ extension MenuView {
                         }, onExplain: explain)
                     case .bag:
                         BagTab(session: session, note: $bagNote, hatchRequest: $hatchRequest,
-                               onInspect: { item in withAnimation(.spring(response: 0.3, dampingFraction: 0.86)) { inspecting = item } })
+                               onInspect: { item in withAnimation(.spring(response: 0.3, dampingFraction: 0.86)) { inspecting = item } },
+                               quickAction: { quickAction(for: $0) })
                     case .quests:
                         QuestsTab(session: session, page: $questsPage) { quest in
                             withAnimation(.spring(response: 0.3, dampingFraction: 0.86)) { openQuest = quest }
@@ -251,6 +252,20 @@ extension MenuView {
         // holds all it takes (`ItemDef.make`). A gem: mix its dye, with a Sheepskin.
         if let made = session.handmade(using: item) { return makeAction(made, close: close) }
         return nil
+    }
+
+    /// What a long press on an item in the Bag does, without opening its card (the user's UI review,
+    /// 2026-11-19): Equip for gear you can put on now, Use for what can be used here and now (a potion,
+    /// a feather home), through the same steps as its card's button. Nil for the rest: a hold lifts
+    /// them to move them, a tap opens their card.
+    func quickAction(for item: ItemDef) -> ItemInfoCard.Action? {
+        if ItemType.equipmentSlots.contains(item.type) {
+            guard session.count(of: item.id) > 0, session.equipIssue(item) == nil else { return nil }
+            return ItemInfoCard.Action(title: L("Equip")) { session.equip(item.id) }
+        }
+        let usable = (item.heal ?? 0) > 0 || (item.mp ?? 0) > 0 || item.travel == true
+        guard usable, let action = bagAction(for: item, close: {}), action.enabled else { return nil }
+        return action
     }
 
     /// A gem a quest wants pieced into something still mixes its dye (playtesting 2026-10-31: "I
@@ -2026,6 +2041,8 @@ private struct BagTab: View {
     @Binding var hatchRequest: ItemDef?
     /// A tap on an item: MenuView shows its card.
     let onInspect: (ItemDef) -> Void
+    /// A long press on an item: its main action, if it has one there and then (`MenuView.quickAction`).
+    let quickAction: (ItemDef) -> ItemInfoCard.Action?
     @State private var hatched: Pet?
     @State private var hatching = false
     @State private var search = ""
@@ -2071,11 +2088,14 @@ private struct BagTab: View {
                 shelf.holds(item) && (!wearableOnly || (ItemType.equipmentSlots.contains(item.type) && session.equipIssue(item) == nil))
             }
             let shown = ItemFinder.arrange(kinds, search: search, sort: sort, session: session)
-            if shown.isEmpty {
+            // Unfiltered, the room left after them too, a faint empty slot for each free one (the user's UI
+            // review, 2026-11-19: "17/59" over 17 tiles and a sheet of empty glass).
+            let room = !searching && shelf == .all ? session.bagSlotsFree : 0
+            if shown.isEmpty && room == 0 {
                 EmptyNote(searching || shelf != .all ? L("Nothing in your bag matches.") : L("Your bag is empty."), size: 11)
                     .padding(.vertical, 12)
             } else {
-                grid(shown)
+                grid(shown, room: room)
             }
         }
         .onChange(of: hatchRequest?.id) { _, id in
@@ -2122,8 +2142,9 @@ private struct BagTab: View {
 
     /// One slot per kind of item, its count in the corner from two up, the upgrade arrow on gear
     /// better than what you wear, gear you can't wear yet (too low a level, another class's) faded,
-    /// and a coin on what's up for trade.
-    private func grid(_ items: [ItemDef]) -> some View {
+    /// and a coin on what's up for trade; then `room` empty slots, one for each free slot. Held,
+    /// gear you can wear goes on and a potion is drunk (`quickAction`), as their card's button does.
+    private func grid(_ items: [ItemDef], room: Int) -> some View {
         ItemSlotGrid(items: items,
                      label: { item in
                          let count = session.count(of: item.id)
@@ -2131,8 +2152,11 @@ private struct BagTab: View {
                          return session.isForTrade(item.id) ? name + ", " + L("For trade") : name
                      },
                      hint: L("Shows what it does and who can use it"),
+                     emptySlots: room,
                      onTap: onInspect,
                      onMove: { move($0, onto: $1) },
+                     onHold: { item in quickAction(item)?.run() },
+                     holdLabel: { quickAction($0)?.title },
                      tile: { item, size in
                          let wearable = !ItemType.equipmentSlots.contains(item.type) || session.equipIssue(item) == nil
                          ItemIcon(item: item, size: size - 5, count: session.count(of: item.id), upgrade: session.isUpgrade(item))
