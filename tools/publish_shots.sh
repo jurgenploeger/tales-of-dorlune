@@ -24,6 +24,11 @@ for attempt in 1 2 3 4 5; do
     git update-index --add --cacheinfo "100644,$(git hash-object -w "$f"),$branch/$(basename "$f")"
   done
   git update-index --add --cacheinfo "100644,$(echo "$sha" | git hash-object -w --stdin),$branch/COMMIT"
+  # Vercel builds every branch pushed, the website from `website/`: here there's no website, and
+  # every run's push failed a preview build ("Root Directory 'website' does not exist", the user,
+  # 2026-11-19). A vercel.json of its own there turns this branch's deployments off.
+  git update-index --add --cacheinfo \
+    "100644,$(printf '{ "git": { "deploymentEnabled": false } }\n' | git hash-object -w --stdin),website/vercel.json"
   tree=$(git write-tree --missing-ok)   # the pictures it doesn't have are on the remote
   if [ ${#parent[@]} -gt 0 ] && [ "$tree" = "$(git rev-parse 'FETCH_HEAD^{tree}')" ]; then exit 0; fi
   commit=$(git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \

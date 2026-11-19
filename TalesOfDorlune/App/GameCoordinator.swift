@@ -150,6 +150,7 @@ final class GameCoordinator {
         announcer.start()
         session.onCastField = { [weak self] skill in self?.castField(skill) }
         session.onTravel = { [weak self] item in self?.travel(with: item) }
+        session.onShowMap = { [weak self] in self?.open(.worldMap) }
         SoundEffects.shared.preload()
     }
 

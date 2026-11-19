@@ -27,6 +27,8 @@ struct NPCDialogView: View {
     /// What a shop, a smith, the weaver or a barber has for you, open in a window of its own
     /// (`waresWindow`).
     @State private var browsing = DebugLaunch.opensWares
+    /// A shop's page: what it sells, or what it buys from you. Debug `sell=<item>` opens on Sell.
+    @State private var shopPage: ShopPage = DebugLaunch.shopDeal?.selling == true ? .sell : .buy
     @Environment(\.verticalSizeClass) private var verticalSizeClass
 
     var body: some View {
@@ -262,31 +264,60 @@ struct NPCDialogView: View {
 
     /// What they have, in a window as big as a menu window's (as the bank's is, `BankView`): their name,
     /// what they just said, and their wares under it. An item's card and how many to buy or sell open over it.
+    /// A shop's Buy and Sell are its pages, tabs on the title bar as every window's pages are
+    /// (`PageTabs`), its keeper's name over the page beside your gold.
     private func waresWindow(safeArea: EdgeInsets) -> some View {
-        ZStack {
+        let shop = npc.role == .shop
+        return ZStack {
             Color.black.opacity(0.5)
                 // Closing the wares closes the conversation under it too (the user, 2026-11-16: "When
                 // closing a modal like this, it should also close the conversation box with the character").
                 .onTapGesture(perform: onClose)
             VStack(spacing: 0) {
-                WindowTitle(npc.name, onClose: onClose)
+                if shop {
+                    PageTabs(page: $shopPage, title: { $0.title })
+                } else {
+                    WindowTitle(npc.name)
+                }
                 ScrollView {
                     VStack(alignment: .leading, spacing: 12) {
+                        if shop {
+                            // Who you're trading with, and what you have to spend.
+                            HStack(spacing: 8) {
+                                Text(npc.name)
+                                    .font(HUDStyle.font(15))
+                                    .foregroundStyle(HUDStyle.gold)
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.8)
+                                    .accessibilityAddTraits(.isHeader)
+                                Spacer(minLength: 8)
+                                GoldPill(amount: session.data.gold, size: 12)
+                            }
+                        }
                         if let reply {
                             Text(reply)
                                 .font(HUDStyle.font(12))
                                 .foregroundStyle(HUDStyle.cream)
                                 .fixedSize(horizontal: false, vertical: true)
                         }
-                        wares
+                        if shop {
+                            // Sliding in from its tab's side (`pageSlide`).
+                            ShopPanel(session: session, stock: npc.stock ?? [], selling: shopPage == .sell,
+                                      reply: $reply, info: $info, deal: $deal)
+                                .pageSlide(shopPage)
+                        } else {
+                            wares
+                        }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(14)
+                    .padding(HUDStyle.windowInset)
                 }
             }
             .foregroundStyle(HUDStyle.cream)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .gameWindow()
+            // Over the corner, whether the bar holds tabs or a name.
+            .windowCloseButton(onClose)
             .popIn()
             .menuWindowMargins()
             // The dialog runs under the notch and the home indicator; the window keeps clear of them.
@@ -301,7 +332,7 @@ struct NPCDialogView: View {
     @ViewBuilder
     private var wares: some View {
         switch npc.role {
-        case .shop: ShopPanel(session: session, stock: npc.stock ?? [], reply: $reply, info: $info, deal: $deal)
+        case .shop: ShopPanel(session: session, stock: npc.stock ?? [], selling: shopPage == .sell, reply: $reply, info: $info, deal: $deal)
         case .smith: SmithPanel(session: session, reply: $reply, info: $info)
         case .weaver: CapePanel(session: session, reply: $reply, info: $info)
         case .barber: BarberPanel(session: session, price: npc.price ?? 1000, reply: $reply)
@@ -433,15 +464,29 @@ private struct ShopDeal {
     var id: String { "\(selling ? "sell" : "buy").\(item.id)" }
 }
 
+/// A shop's pages (`PageTabs` on its window's bar): what it sells, and what it buys from you.
+/// Nonisolated like the other pages' enums.
+nonisolated enum ShopPage: String, CaseIterable {
+    case buy, sell
+
+    var title: String {
+        switch self {
+        case .buy: L("Buy")
+        case .sell: L("Sell")
+        }
+    }
+}
+
 private struct ShopPanel: View {
     let session: GameSession
     let stock: [String]
+    /// Its Sell page, what it buys from you, rather than what it sells (`ShopPage`).
+    let selling: Bool
     @Binding var reply: String?
     /// Tap an item for everything about it (who can use it, from what level).
     @Binding var info: ItemDef?
     /// A potion or material with more than one to buy or sell: how many, in a window of its own.
     @Binding var deal: ShopDeal?
-    @State private var selling = DebugLaunch.shopDeal?.selling ?? false
 
     /// Buys `count` and says so; what the shopkeeper says back.
     static func buy(_ item: ItemDef, _ count: Int, session: GameSession) -> String {
@@ -461,14 +506,6 @@ private struct ShopPanel: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                GoldPill(amount: session.data.gold, size: 12)
-                Spacer()
-                Button(L("Buy")) { selling = false }
-                    .buttonStyle(PixelButtonStyle(tint: selling ? HUDStyle.cream : HUDStyle.gold, compact: true))
-                Button(L("Sell")) { selling = true }
-                    .buttonStyle(PixelButtonStyle(tint: selling ? HUDStyle.gold : HUDStyle.cream, compact: true))
-            }
             if selling {
                 sellList
             } else {
@@ -490,8 +527,9 @@ private struct ShopPanel: View {
         HStack(spacing: 10) {
             Button { info = item } label: {
                 HStack(spacing: 10) {
-                    // How many you have already, as the Bag shows it: a badge on the icon.
-                    ItemIcon(item: item, size: 36)
+                    // How many you have already, as the Bag shows it: a badge on the icon. And gear
+                    // better than what you wear, the Bag's gold arrow (`GameSession.isUpgrade`).
+                    ItemIcon(item: item, size: 36, upgrade: session.isUpgrade(item))
                         .overlay(alignment: .topTrailing) {
                             let owned = session.count(of: item.id)
                             if owned > 0 {

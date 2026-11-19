@@ -41,6 +41,18 @@ final class LandStage {
     private var feet: [ObjectIdentifier: CGFloat] = [:]
     /// Shadows cast by its scenery on a hill or the sunk shore (`Lighting.Shadow`).
     private var shadows: [Lighting.Shadow] = []
+    /// Debug flag `off=crags+shade+lighting+ambience+sky+ground+variation+sea`: those layers left
+    /// out, to see which one draws something on screen (it found the Valley of Fear's pale patch,
+    /// 2026-11-19: the sea's shallows over the ground, `ContinentScene.shallows`).
+    static var offForDebug: Set<String> = []
+    static func isOffForDebug(_ name: String) -> Bool {
+        #if DEBUG
+        return offForDebug.contains(name)
+        #else
+        return false
+        #endif
+    }
+
     /// The shade cast by everything it sets down on flat ground (`CanopyShade`), away from the sun
     /// (`follow`), stopping at its town's wall or fence (`WorldMap.fenceCells`).
     private lazy var canopy = CanopyShade(size: Self.chunkSize, walls: Set(map.fenceCells), map: map) { [unowned self] point in
@@ -177,7 +189,7 @@ final class LandStage {
                              width: screen.width * scale, height: screen.height * scale)
         critters?.update(dt: dt, player: you, visible: visible, flocks: isHere) { [map] in map.isWalkable(map.rawCell(at: $0)) }
         show(around: camera, scale: scale, screen: screen)
-        canopy.draw()
+        if !Self.isOffForDebug("shade") { canopy.draw() }
         coverPanes(dt)
     }
 
@@ -637,18 +649,6 @@ final class LandStage {
                 shore = true
                 // Up the screen is north and east at once: a shore that way is the far bank.
                 let far = dc + dr > 0
-                if !far {
-                    // A bright rim along the near shore, at the water's edge (the user, 2026-11-18).
-                    let rising = dr != 0
-                    let variants = PondMotion.rims[rising] ?? []
-                    if !variants.isEmpty {
-                        let pick = abs(cell.col &* 31 &+ cell.row &* 17) % variants.count
-                        let rim = PondMotion.sprite(variants[pick])
-                        let edge = CGPoint(x: Double(dc) * 0.46 * tile, y: Double(dr) * 0.46 * tile)
-                        let at = map.center(of: cell) + CGVector(dx: WorldMap.project(edge).x, dy: WorldMap.project(edge).y)
-                        onWater(rim, at: at, cell: cell)
-                    }
-                }
                 guard Double.random(in: 0..<1) < (far ? 0.4 : 0.6) else { continue }
                 // Along the edge, toward the land: the near shore's dashes two or three pixels out on
                 // the water, the far shore's creep at the waterline.
@@ -1332,7 +1332,7 @@ final class LandStage {
     /// The crags round a cave's mouth: boulders strewn on the range past the land's edge, and the
     /// mist thickening out past it (`WorldScene.placeCrags`).
     private func placeCrags() {
-        guard !map.crags.isEmpty else { return }
+        guard !map.crags.isEmpty, !Self.isOffForDebug("crags") else { return }
         let tile = WorldMap.tileSize
         let colour = Self.fogColor(from: art.picture(of: art.tileTexture(def.theme.border ?? def.theme.ground)))
         for crag in map.crags {

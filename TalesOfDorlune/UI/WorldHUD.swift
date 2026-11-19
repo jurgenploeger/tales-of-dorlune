@@ -98,7 +98,18 @@ struct WorldHUD: View {
             VStack(alignment: .trailing, spacing: 6) {
                 HUDMinimap(coordinator: coordinator)
                     .coachTarget(.minimap)
+                // The quest you follow (Track, in its window), under the minimap; a tap opens it.
+                if let quest = session.trackedQuest {
+                    TrackedQuestPlate(session: session, quest: quest) {
+                        menuOpen = false
+                        session.questToOpen = quest.id
+                        coordinator.open(.menu(.quests))
+                    }
+                    .stepsAside(controlsHidden)
+                    .transition(.opacity)
+                }
             }
+            .animation(.easeOut(duration: 0.2), value: session.trackedQuest?.id)
             .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { minimapHeight = $0 }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
 
@@ -567,6 +578,70 @@ private struct TaggedBar: View {
                 .frame(width: 20, height: 11)
                 .background(RoundedRectangle(cornerRadius: 3).fill(HUDStyle.frameDark))
         }
+    }
+}
+
+/// The quest you follow (`GameSession.trackedQuest`, Track in its window), on a small plate under the
+/// minimap (the user's UI review, 2026-11-19): its name, and what's next under it, how far along
+/// ("0/10" over a thin bar), who to take it to, or who to report back to, in green once it's done.
+/// Hardly wider than the minimap, so it keeps clear of the notices in the middle, the compass on the
+/// minimap's rim and, on a 375-point phone, the top-left column (`TopLeft.width`); a long name runs
+/// onto a second line. A tap opens the quest's window.
+private struct TrackedQuestPlate: View {
+    let session: GameSession
+    let quest: QuestDef
+    let onOpen: () -> Void
+
+    private static let width: CGFloat = 140
+
+    var body: some View {
+        let status = session.status(of: quest)
+        let ready = status == .ready
+        Button {
+            SoundEffects.shared.play(.tap, volume: 0.7)
+            onOpen()
+        } label: {
+            VStack(alignment: .leading, spacing: 3) {
+                HStack(alignment: .firstTextBaseline, spacing: 4) {
+                    IconImage(MenuTab.quests.icon, size: 11)
+                        .foregroundStyle(HUDStyle.gold)
+                    Text(quest.title)
+                        .font(HUDStyle.font(11))
+                        .foregroundStyle(HUDStyle.cream)
+                        .lineLimit(2)
+                        .multilineTextAlignment(.leading)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                if case .active(let done, let goal) = status, quest.objective.type != .deliver {
+                    HStack(spacing: 5) {
+                        GlossyBar(fraction: CGFloat(done) / CGFloat(max(goal, 1)), color: HUDStyle.gold, height: 6)
+                        Text(verbatim: "\(done)/\(goal)")
+                            .font(HUDStyle.font(10))
+                            .monospacedDigit()
+                            .foregroundStyle(HUDStyle.gold)
+                            .fixedSize()
+                    }
+                } else if let step = session.nextStep(of: quest) {
+                    Text(step)
+                        .font(HUDStyle.font(10))
+                        .foregroundStyle(ready ? HUDStyle.green : HUDStyle.gold)
+                        .lineLimit(2)
+                        .multilineTextAlignment(.leading)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+            .padding(.horizontal, 8)
+            .padding(.vertical, 6)
+            .frame(width: Self.width, alignment: .leading)
+            .frame(minHeight: 34)
+            .background(HUDStyle.panel(shape: HUDStyle.hudPanelShape))
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(PressScaleStyle())
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(L("Tracked quest: {quest}", ["quest": quest.title]))
+        .accessibilityValue(session.nextStep(of: quest) ?? "")
+        .accessibilityHint(L("Shows its story and rewards"))
     }
 }
 

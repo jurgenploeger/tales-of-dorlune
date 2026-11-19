@@ -35,7 +35,8 @@ struct BattleView: View {
                 .allowsHitTesting(controller.phase != .animating || controller.isAuto)
 
             if controller.phase == .finished, let result = controller.result {
-                ResultPanel(result: result, session: controller.session, onContinue: controller.leave)
+                ResultPanel(result: result, session: controller.session,
+                            foes: controller.combatants.filter { $0.side == .enemies }.map(\.name), onContinue: controller.leave)
             }
         }
         .animation(.spring(response: 0.35, dampingFraction: 0.75), value: controller.phase)
@@ -43,32 +44,37 @@ struct BattleView: View {
         .animation(.spring(response: 0.35, dampingFraction: 0.75), value: controller.isAuto)
     }
 
-    /// Along the top: what just happened, centred.
+    /// Along the top: your party's HP and MP at the left (`PartyPlate`), what just happened in the
+    /// middle, and under them, in a boss fight, how far through its waves you are and the boss's HP.
+    /// Upright, the time to choose's pill in the middle beside your plate and the line under both,
+    /// as wide as ever; on its side, the pill and the line in a row beside the plate, as the
+    /// fighters' heads come up close under the top row there (`BattleScene.layout`). Whatever is
+    /// tallest in the first row, the waves and the boss's bar start under it.
     private var topBar: some View {
-        news
-            .frame(maxWidth: verticalSizeClass == .compact ? 520 : 360)
-            .frame(maxWidth: .infinity)
-    }
-
-    /// The top row's height: the field below is laid out clear of it (`BattleScene.portraitTopInset`).
-    private static let topRowHeight: CGFloat = 40
-
-    /// What just happened, and in a boss fight how far through its waves you are. With a turn
-    /// clock, the time left to choose in a pill over the line; on its side beside it instead, as
-    /// the fighters' heads come up close under the top row there (`BattleScene.layout`).
-    private var news: some View {
         VStack(spacing: 6) {
             if verticalSizeClass == .compact {
-                HStack(spacing: 8) {
-                    clockPill
-                    // As tall as the top row at least, so the field below doesn't shift with the message.
-                    logLine
-                        .frame(minHeight: Self.topRowHeight)
+                HStack(alignment: .top, spacing: 8) {
+                    PartyPlate(controller: controller, beside: true)
+                    HStack(spacing: 8) {
+                        clockPill
+                        // As tall as the top row at least, so the field below doesn't shift with the message.
+                        logLine
+                            .frame(minHeight: Self.topRowHeight)
+                    }
+                    .frame(maxWidth: 520)
+                    .frame(maxWidth: .infinity)
                 }
             } else {
-                clockPill
+                // The pill centred on the screen, the plate at the left (`PartyPlate.width` keeps
+                // clear of the pill on the narrowest phone).
+                ZStack(alignment: .topLeading) {
+                    clockPill
+                        .frame(maxWidth: .infinity)
+                    PartyPlate(controller: controller)
+                }
                 logLine
                     .frame(minHeight: Self.topRowHeight)
+                    .frame(maxWidth: 360)
             }
             if controller.waveCount > 1 {
                 WaveTracker(wave: controller.wave, total: controller.waveCount)
@@ -78,8 +84,12 @@ struct BattleView: View {
                     .transition(.opacity)
             }
         }
+        .frame(maxWidth: .infinity)
         .allowsHitTesting(false)
     }
+
+    /// The top row's height: the field below is laid out clear of it (`BattleScene.portraitTopInset`).
+    private static let topRowHeight: CGFloat = 40
 
     /// One slim line of what just happened, or two when it's long: a toast, as on the map.
     private var logLine: some View {
@@ -195,6 +205,92 @@ private struct WaveTracker: View {
         .background(Capsule().fill(HUDStyle.ink.opacity(0.8)))
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(wave == total ? L("Boss wave, the last of {total}", ["total": total]) : L("Wave {wave} of {total}", ["wave": wave, "total": total]))
+    }
+}
+
+/// Your hero's HP and MP as numbers at the top left, as the map's hero panel shows them
+/// (`WorldHUD`'s `StatusCluster`): your face and two bars with what's left of each over its whole
+/// (the user, 2026-11-19: with only the thin bars under the feet you judged a heal by a bar's
+/// length). Your companion, while one fights at your side, in a smaller row under yours (beside it
+/// on a phone on its side, so the plate stays as low as the top row), greyed once it's fainted.
+/// Friends keep the bars under their feet. It takes no taps.
+private struct PartyPlate: View {
+    let controller: BattleController
+    /// On its side: your companion beside you, not under you.
+    var beside = false
+
+    /// Upright, clear of the time to choose's pill centred on the narrowest phone (375 points: the
+    /// pill starts at about 151, the plate ends at 8 + 136).
+    static let width: CGFloat = 136
+
+    /// Your own companion on the field, standing or fainted (`BattleController.companion` is only
+    /// one that's standing).
+    private var companion: Combatant? {
+        guard let id = controller.session.activePet?.id else { return nil }
+        return controller.combatants.first { $0.petID == id }
+    }
+
+    var body: some View {
+        let layout = beside ? AnyLayout(HStackLayout(alignment: .top, spacing: 6))
+                            : AnyLayout(VStackLayout(alignment: .leading, spacing: 4))
+        layout {
+            if let hero = controller.hero {
+                row(hero, face: 32, bar: 11)
+                    .frame(width: Self.width)
+            }
+            if let pet = companion {
+                row(pet, face: 22, bar: 9)
+                    .frame(width: beside ? 122 : Self.width)
+            }
+        }
+        .allowsHitTesting(false)
+    }
+
+    /// A face in its round frame, and HP over MP, each with its numbers.
+    private func row(_ fighter: Combatant, face: CGFloat, bar: CGFloat) -> some View {
+        let down = fighter.hp <= 0
+        return HStack(spacing: 6) {
+            Image(uiImage: ArtLibrary.shared.face(fighter.art))
+                .interpolation(.none)
+                .resizable()
+                .scaledToFit()
+                .padding(face * 0.08)
+                .frame(width: face, height: face)
+                .background(Circle().fill(RadialGradient(colors: [HUDStyle.portrait, HUDStyle.portraitRim],
+                                                         center: UnitPoint(x: 0.4, y: 0.35), startRadius: 1, endRadius: face * 0.7)))
+                .clipShape(Circle())
+                .overlay(Circle().strokeBorder(HUDStyle.bevel, lineWidth: 2))
+            VStack(spacing: 3) {
+                tagged(L("HP"), value: fighter.hp, maximum: fighter.stats.hp, color: HUDStyle.hp, height: bar)
+                tagged(L("MP"), value: fighter.mp, maximum: fighter.stats.mp, color: HUDStyle.mp, height: bar)
+            }
+        }
+        .padding(.leading, 4)
+        .padding(.trailing, 6)
+        .padding(.vertical, 4)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(HUDStyle.panel(shape: HUDStyle.hudPanelShape))
+        .saturation(down ? 0 : 1)
+        .opacity(down ? 0.75 : 1)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(L("{name}: HP {hp} of {maxHP}, MP {mp} of {maxMP}",
+                              ["name": fighter.name, "hp": max(0, fighter.hp), "maxHP": fighter.stats.hp,
+                               "mp": fighter.mp, "maxMP": fighter.stats.mp]))
+    }
+
+    /// A bar with its numbers over it and its tag on a dark chip after it, as the map's are.
+    private func tagged(_ tag: String, value: Int, maximum: Int, color: Color, height: CGFloat) -> some View {
+        HStack(spacing: 3) {
+            StatBar(label: "", value: max(0, value), maximum: maximum, color: color, height: height)
+            Text(tag)
+                .font(HUDStyle.font(9))
+                .foregroundStyle(.white)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+                .padding(.horizontal, 1)
+                .frame(width: 20, height: 11)
+                .background(RoundedRectangle(cornerRadius: 3).fill(HUDStyle.frameDark))
+        }
     }
 }
 
@@ -607,6 +703,10 @@ private struct MoreMenu: View {
     static let width: CGFloat = 176
     private static let spring = Animation.spring(response: 0.34, dampingFraction: 0.78)
 
+    private var entries: [MoreEntry] {
+        skills.map { MoreEntry.skill($0) } + commands.enumerated().map { MoreEntry.command($0.element, $0.offset) }
+    }
+
     var body: some View {
         // As the map's menu opens (`GameMenu`): the button grows into the panel from its corner,
         // up and to the right over the row, the close button on the panel's top right corner
@@ -659,23 +759,15 @@ private struct MoreMenu: View {
 
     /// What waits behind More, in a window of the button's blue.
     private var panel: some View {
+        // One column, always (the user, 2026-11-19: two side by side were "terrible").
         VStack(alignment: .leading, spacing: 2) {
-            ForEach(skills) { skill in
-                skillRow(skill)
-                    .transition(.opacity)
-            }
-            ForEach(Array(commands.enumerated()), id: \.element) { index, id in
-                row(id)
-                    // One after another up from the button as it opens.
-                    .transition(.asymmetric(
-                        insertion: .offset(y: 14).combined(with: .opacity)
-                            .animation(Self.spring.delay(Double(commands.count - 1 - index) * 0.035)),
-                        removal: .opacity.animation(.easeOut(duration: 0.12))))
+            ForEach(entries) { entry in
+                cell(entry)
             }
         }
         .padding(.vertical, 6)
         .padding(.horizontal, 4)
-        .frame(width: Self.width)
+        .frame(width: Self.width, alignment: .leading)
         .fixedSize(horizontal: false, vertical: true)
         .background(
             RoundedRectangle(cornerRadius: 16, style: .continuous)
@@ -690,6 +782,22 @@ private struct MoreMenu: View {
             }
             .accessibilityLabel(L("Close"))
             .offset(x: OrangeCloseButton.overhang, y: -OrangeCloseButton.overhang)
+        }
+    }
+
+    @ViewBuilder
+    private func cell(_ entry: MoreEntry) -> some View {
+        switch entry {
+        case .skill(let skill):
+            skillRow(skill)
+                .transition(.opacity)
+        case .command(let id, let index):
+            row(id)
+                // One after another up from the button as it opens.
+                .transition(.asymmetric(
+                    insertion: .offset(y: 14).combined(with: .opacity)
+                        .animation(Self.spring.delay(Double(commands.count - 1 - index) * 0.035)),
+                    removal: .opacity.animation(.easeOut(duration: 0.12))))
         }
     }
 
@@ -790,6 +898,20 @@ private struct MoreMenu: View {
                             ? (controller.isAuto ? L("Auto is on. Tap to choose yourself.") : L("Auto: fight on your own."))
                             : isPace ? (fast ? L("Battle speed: double. Tap for normal.") : L("Battle speed: normal. Tap for double."))
                             : info.title)
+    }
+}
+
+/// One line in More's panel: a skill the row had no room for, or a command (`index`: its place
+/// among the commands, for their one-after-another opening).
+private nonisolated enum MoreEntry: Identifiable {
+    case skill(SkillDef)
+    case command(String, Int)
+
+    var id: String {
+        switch self {
+        case .skill(let skill): "skill:" + skill.id
+        case .command(let command, _): command
+        }
     }
 }
 
@@ -1601,6 +1723,8 @@ private struct ResultPanel: View {
     private static let inset: CGFloat = HUDStyle.windowInset
     let result: BattleResult
     let session: GameSession
+    /// The names of everyone you fought, to tell who dropped what (`drops`).
+    var foes: [String] = []
     let onContinue: () -> Void
 
     /// A boss's story first (the first time you beat it), then the summary; then, if needed, who
@@ -1610,9 +1734,10 @@ private struct ResultPanel: View {
     /// The companion that grew and has a point to spend, its card after yours.
     @State private var companion: LevelUp?
 
-    init(result: BattleResult, session: GameSession, onContinue: @escaping () -> Void) {
+    init(result: BattleResult, session: GameSession, foes: [String] = [], onContinue: @escaping () -> Void) {
         self.result = result
         self.session = session
+        self.foes = foes
         self.onContinue = onContinue
         _stage = State(initialValue: result.story == nil ? .summary : .story)
     }
@@ -1702,9 +1827,30 @@ private struct ResultPanel: View {
         .padding(20)
     }
 
+    /// Who dropped each thing found (item id to the monster's name), from the lines that said so
+    /// ("Golden Hamster dropped Green Bamboo Staff!", `BattleController.concludeVictory`), and those
+    /// lines, which the card leaves out: the finds' slots say it, under each (the user, 2026-11-19:
+    /// the card listed every drop twice).
+    private var drops: (sources: [String: String], told: Set<String>) {
+        var sources: [String: String] = [:]
+        var told: Set<String> = []
+        let names = Array(Set(foes)).sorted()
+        for entry in result.loot {
+            guard let item = Content.shared.item(entry.id) else { continue }
+            for name in names {
+                let line = L("{name} dropped {item}!", ["name": name, "item": item.name])
+                guard result.lines.contains(line) else { continue }
+                if sources[entry.id] == nil { sources[entry.id] = name }
+                told.insert(line)
+            }
+        }
+        return (sources, told)
+    }
+
     /// The pay, the level-up, what was found, and what else happened.
     private var details: some View {
-        VStack(spacing: 10) {
+        let found = self.drops
+        return VStack(spacing: 10) {
             if result.exp > 0 || result.gold > 0 {
                 HStack(spacing: 18) {
                     // None when you were out cold at the end (your friends won it).
@@ -1721,19 +1867,22 @@ private struct ResultPanel: View {
                 .font(HUDStyle.font(16))
                 .foregroundStyle(HUDStyle.cream)
             }
+            if result.exp > 0 {
+                ExpGainBar(session: session, exp: result.exp, levels: result.levelsGained, masteryPoints: result.masteryPoints)
+            }
             if let level = result.newLevel {
-                LevelUpBanner(level: level, gains: session.heroClass.growth * result.levelsGained)
+                LevelUpBanner(level: level, gains: session.heroClass.growth * result.levelsGained, after: session.heroStats)
             }
             if !result.others.isEmpty {
                 PartyLevelUps(others: result.others)
             }
             if !result.loot.isEmpty {
-                LootGrid(loot: result.loot)
+                LootGrid(loot: result.loot, sources: found.sources)
             }
             if !result.newCards.isEmpty {
                 NewCards(session: session, ids: result.newCards)
             }
-            ForEach(Array(result.lines.enumerated()), id: \.offset) { _, line in
+            ForEach(Array(result.lines.filter { !found.told.contains($0) }.enumerated()), id: \.offset) { _, line in
                 Text(line)
                     .font(HUDStyle.font(13))
                     .foregroundStyle(HUDStyle.cream)
@@ -1876,6 +2025,9 @@ private struct BossStoryCard: View {
 struct LootGrid: View {
     let loot: [(id: String, count: Int)]
     var title = L("Found")
+    /// Who dropped each (item id to a monster's name), in small dim letters under its name ("from
+    /// Golden Hamster"); none for what no one in particular left.
+    var sources: [String: String] = [:]
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     /// How many slots have filled so far, the one whose sparkles are flying, and the legendary glow.
@@ -1912,6 +2064,15 @@ struct LootGrid: View {
                                 .lineLimit(2)
                                 .multilineTextAlignment(.center)
                                 .opacity(index < shown ? 1 : 0)
+                            if let source = sources[entry.id] {
+                                Text(L("from {name}", ["name": source]))
+                                    .font(HUDStyle.font(10))
+                                    .foregroundStyle(HUDStyle.dim)
+                                    .lineLimit(2)
+                                    .minimumScaleFactor(0.8)
+                                    .multilineTextAlignment(.center)
+                                    .opacity(index < shown ? 1 : 0)
+                            }
                         }
                         .frame(width: 78)
                         .accessibilityElement(children: .combine)
@@ -2046,24 +2207,148 @@ private struct PartyLevelUps: View {
     }
 }
 
+/// The EXP a win brought, on the victory card under "+31 EXP" (the user, 2026-11-19): the bar to your
+/// next level filling from where it stood before the fight to where it stands now, rolling over for
+/// each level gained, the level beside it ticking up as it does, and how much is left to the next
+/// under it. At the level cap it's the mastery bar (`GameSession.masteryBar`), as the map's XP bar
+/// is there: each full one a skill point. All at once with Reduce Motion.
+private struct ExpGainBar: View {
+    let session: GameSession
+    /// What the fight brought, the levels it was worth and the skill points from mastery.
+    let exp: Int
+    let levels: Int
+    let masteryPoints: Int
+
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    /// How full the bar shows, and the level beside it (nil till it starts playing).
+    @State private var fill: CGFloat?
+    @State private var shownLevel: Int?
+    /// The level's little hop as the bar rolls over.
+    @State private var bump = false
+
+    /// A whole bar at `level`: to the next level, or the mastery bar at the cap.
+    private static func barLength(_ level: Int) -> Int {
+        level >= GameSession.levelCap ? GameSession.masteryBar : GameSession.expToNext(level: level)
+    }
+
+    private var level: Int { session.data.hero.level }
+    private var atCap: Bool { level >= GameSession.levelCap }
+    /// The level the fight started at.
+    private var startLevel: Int { max(1, level - levels) }
+    /// The times the bar fills up and starts again: each level, and each skill point from mastery.
+    private var rolls: Int { levels + masteryPoints }
+
+    /// Where the bar stood before the fight: the EXP now, plus what the levels and the skill points
+    /// gained took off it (`GameSession.gainHeroEXP`), less what the fight brought.
+    private var before: Int {
+        var total = session.data.hero.exp + masteryPoints * GameSession.masteryBar
+        for passed in startLevel..<level {
+            total += GameSession.expToNext(level: passed)
+        }
+        return max(0, total - exp)
+    }
+
+    private func fraction(_ value: Int, at level: Int) -> CGFloat {
+        let whole = Self.barLength(level)
+        return whole > 0 ? min(1, max(0, CGFloat(value) / CGFloat(whole))) : 0
+    }
+
+    /// How much is left to fill: to the next level, or at the cap to the next skill point.
+    private var caption: String {
+        let left = max(0, Self.barLength(level) - session.data.hero.exp).formatted()
+        return atCap ? L("{exp} to the next skill point", ["exp": left])
+            : L("{exp} to level {level}", ["exp": left, "level": level + 1])
+    }
+
+    var body: some View {
+        VStack(spacing: 3) {
+            HStack(spacing: 6) {
+                Text(L("Lv{level}", ["level": shownLevel ?? startLevel]))
+                    .font(HUDStyle.font(11).monospacedDigit())
+                    .foregroundStyle(bump ? HUDStyle.gold : HUDStyle.cream)
+                    .scaleEffect(bump ? 1.2 : 1)
+                    .fixedSize()
+                GlossyBar(fraction: fill ?? fraction(before, at: startLevel), color: HUDStyle.exp, height: GlossyBar.progress)
+            }
+            Text(caption)
+                .font(HUDStyle.font(10).monospacedDigit())
+                .foregroundStyle(HUDStyle.dim)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+        }
+        .frame(maxWidth: 260)
+        .task { await play() }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(L("Level {level}", ["level": level]))
+        .accessibilityValue(caption)
+    }
+
+    /// From before the fight to now: up to full and over for each roll (three at most played; a
+    /// bigger jump lands on its last), then on to where the bar stands now.
+    private func play() async {
+        guard fill == nil else { return }
+        let target = fraction(session.data.hero.exp, at: level)
+        guard !reduceMotion else {
+            fill = target
+            shownLevel = level
+            return
+        }
+        fill = fraction(before, at: startLevel)
+        shownLevel = startLevel
+        // While the card pops in.
+        try? await Task.sleep(for: .milliseconds(450))
+        let played = min(rolls, 3)
+        for step in 0..<played {
+            guard !Task.isCancelled else { return }
+            withAnimation(.easeIn(duration: 0.45)) { fill = 1 }
+            try? await Task.sleep(for: .milliseconds(480))
+            guard !Task.isCancelled else { return }
+            // Empty again at once, the level ticking up.
+            var instant = Transaction()
+            instant.disablesAnimations = true
+            withTransaction(instant) {
+                fill = 0
+                shownLevel = step == played - 1 ? level : min(level, (shownLevel ?? startLevel) + 1)
+            }
+            withAnimation(.spring(response: 0.25, dampingFraction: 0.5)) { bump = true }
+            try? await Task.sleep(for: .milliseconds(200))
+            withAnimation(.easeOut(duration: 0.25)) { bump = false }
+        }
+        guard !Task.isCancelled else { return }
+        withAnimation(.easeOut(duration: 0.6)) { fill = target }
+    }
+}
+
 /// A level-up, made a fuss of on the victory and quest cards: the new level on a gold medal in a
 /// slowly turning sunburst, stars flying off it, "LEVEL UP!", and what the new levels raised.
 struct LevelUpBanner: View {
     let level: Int
     /// What the levels raised: the class's growth for each level gained.
     let gains: Stats
+    /// The stats now, with the levels in them (`GameSession.heroStats`): given, each raised stat
+    /// shows from what it was to what it is ("ATK 24 → 26", the user, 2026-11-19), else only what
+    /// it gained ("ATK +2").
+    var after: Stats? = nil
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var shown = false
     @State private var burst = false
 
-    /// The stats that went up, in the Character tab's order.
-    private var raised: [(label: String, value: Int)] {
-        let all: [(label: String, value: Int)] = [
-            (L("HP"), gains.hp), (L("MP"), gains.mp), (L("ATK"), gains.attack),
-            (L("DEF"), gains.defense), (L("MAG"), gains.magic), (L("SPD"), gains.speed),
+    /// The stats that went up, in the Character tab's order, with what each is now (nil without `after`).
+    private var raised: [(label: String, value: Int, now: Int?)] {
+        let all: [(label: String, value: Int, now: Int?)] = [
+            (L("HP"), gains.hp, after?.hp), (L("MP"), gains.mp, after?.mp), (L("ATK"), gains.attack, after?.attack),
+            (L("DEF"), gains.defense, after?.defense), (L("MAG"), gains.magic, after?.magic), (L("SPD"), gains.speed, after?.speed),
         ]
         return all.filter { $0.value > 0 }
+    }
+
+    /// On its side, the gains in one line: "ATK 24 → 26  DEF 18 → 19", or "+2 ATK, +1 DEF" without `after`.
+    private var summaryLine: String {
+        guard after != nil else { return gains.bonusSummary }
+        return raised.map { stat in
+            stat.now.map { "\(stat.label) \($0 - stat.value) → \($0)" } ?? "\(stat.label) +\(stat.value)"
+        }.joined(separator: "   ")
     }
 
     var body: some View {
@@ -2074,8 +2359,8 @@ struct LevelUpBanner: View {
                     medal(size: 50)
                     VStack(alignment: .leading, spacing: 4) {
                         title(size: 22)
-                        Text(gains.bonusSummary)
-                            .font(HUDStyle.font(11))
+                        Text(summaryLine)
+                            .font(HUDStyle.font(11).monospacedDigit())
                             .foregroundStyle(HUDStyle.green)
                     }
                 }
@@ -2085,7 +2370,7 @@ struct LevelUpBanner: View {
                     title(size: 28)
                     CenteredRows(spacing: 5, rowSpacing: 5) {
                         ForEach(Array(raised.enumerated()), id: \.offset) { _, stat in
-                            chip(stat.label, stat.value)
+                            chip(stat.label, stat.value, now: stat.now)
                         }
                     }
                     Text(L("HP and MP fully restored"))
@@ -2165,11 +2450,15 @@ struct LevelUpBanner: View {
             .shadow(color: HUDStyle.orange.opacity(0.9), radius: 0, x: 2, y: 2)
     }
 
-    /// "HP +12": one raised stat, in a little dark pill.
-    private func chip(_ label: String, _ value: Int) -> some View {
-        let text: Text = Text(label + " ").foregroundStyle(HUDStyle.cream) + Text("+\(value)").foregroundStyle(HUDStyle.green)
+    /// "ATK 24 → 26" (or "ATK +2" without what it is now): one raised stat, in a little dark pill,
+    /// what it was dim and what it is green.
+    private func chip(_ label: String, _ value: Int, now: Int?) -> some View {
+        let change: Text = now.map { now in
+            Text(verbatim: "\(now - value) → ").foregroundStyle(HUDStyle.dim) + Text(verbatim: "\(now)").foregroundStyle(HUDStyle.green)
+        } ?? Text(verbatim: "+\(value)").foregroundStyle(HUDStyle.green)
+        let text: Text = Text(label + " ").foregroundStyle(HUDStyle.cream) + change
         return text
-            .font(HUDStyle.font(11))
+            .font(HUDStyle.font(11).monospacedDigit())
             .padding(.horizontal, 8)
             .padding(.vertical, 3)
             .background(Capsule().fill(HUDStyle.ink.opacity(0.7)))

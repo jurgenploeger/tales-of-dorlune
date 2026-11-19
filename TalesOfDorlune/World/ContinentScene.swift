@@ -272,6 +272,9 @@ final class ContinentScene: SKScene {
         let groundLayer = Self.projected(groundGrid)
         groundLayer.zPosition = -100_000
         layer.addChild(groundLayer)
+        // Debug `off=ground` / `off=sea`: those layers left out (`LandStage.offForDebug`).
+        groundLayer.isHidden = LandStage.isOffForDebug("ground")
+        seaLayer.isHidden = LandStage.isOffForDebug("sea")
         // Each lower than the last, the foam just below the bottom one, all under the land
         // (`WorldScene.bank`).
         for (step, grid) in bankGrids.enumerated() {
@@ -311,11 +314,11 @@ final class ContinentScene: SKScene {
         init(stage: LandStage, camera: SKCameraNode, start: Date?, screen: CGSize) {
             let def = stage.def
             camera.addChild(layer)
-            ambience = Ambience(def.ambience, world: stage.air, camera: layer, bounds: stage.map.bounds, seed: def.id,
+            ambience = LandStage.isOffForDebug("ambience") ? nil : Ambience(def.ambience, world: stage.air, camera: layer, bounds: stage.map.bounds, seed: def.id,
                                 inside: { [weak stage] in stage?.onLand($0) ?? $0 })
-            lighting = Lighting(def.ambience, world: stage.air, camera: layer, bounds: stage.map.bounds, seed: def.id,
+            lighting = LandStage.isOffForDebug("lighting") ? nil : Lighting(def.ambience, world: stage.air, camera: layer, bounds: stage.map.bounds, seed: def.id,
                                 inside: { [weak stage] in stage?.onLand($0) ?? $0 })
-            sky = Sky(map: def, camera: layer, start: start)
+            sky = LandStage.isOffForDebug("sky") ? nil : Sky(map: def, camera: layer, start: start)
             ambience?.resize(to: screen)
             lighting?.resize(to: screen)
             if let sky { lighting?.sunlight(sky.sunlight) }
@@ -362,12 +365,18 @@ final class ContinentScene: SKScene {
         return shader
     }()
 
+    /// How far in you can zoom with the night drawn by the curve (`curveNight`).
+    static let curveZoomLimit: CGFloat = 1.0
+
     /// Draws the skies' light by the curve, or leaves it to their own shades. Each sky's multiply
     /// colour `m` becomes the power 1 + 2 × (1 - m): none by day, about 1.96, 1.84, 1.32 at night
     /// (red and green deepen most, blue least), a warm dusk and a grey storm the same way; a
     /// little dimmer all over at night.
     private func curveNight() {
-        let curved = GameSettings.curveNight
+        // Not zoomed in past the usual view: there SpriteKit drew nothing at all through the scene's
+        // effect, only the sky's blue behind it, till you zoomed back out (the user, 2026-11-19; at
+        // 2.2× in the screenshots too). The sky's own shade stands in meanwhile.
+        let curved = GameSettings.curveNight && WorldScene.zoom <= Self.curveZoomLimit
         var multiply = (r: 1.0, g: 1.0, b: 1.0)
         var night = 0.0
         for air in airs.values {
@@ -1956,7 +1965,7 @@ final class ContinentScene: SKScene {
         flat.position = CGPoint(x: CGFloat(place.origin.col) * tile, y: CGFloat(place.origin.row) * tile)
         let variation = Lighting.groundVariation(columns: map.columns, rows: map.rows, tile: tile, palette: theme.palette,
                                                  seed: def.id) { col, row in map.owns(GridPoint(col: col, row: row)) }
-        if let variation {
+        if let variation, !LandStage.isOffForDebug("variation") {
             variation.zPosition = 1
             flat.addChild(variation)
         }
@@ -2165,7 +2174,11 @@ final class ContinentScene: SKScene {
         let side = CGFloat(World.chunkSize) * WorldMap.tileSize
         let node = SKSpriteNode(texture: field, size: CGSize(width: side, height: side))
         node.anchorPoint = .zero
-        node.zPosition = 1
+        // Over the sea's tiles and still under the land: at 1 it came to the ground's own depth
+        // (the sea's layer is a point under the ground's), and where SpriteKit drew it after the
+        // ground, its palest tone, under the land, lay over a whole chunk of it, cut off straight
+        // at the chunk's edge (the user, 2026-11-18, the Valley of Fear: "the land looks broken").
+        node.zPosition = 0.5
         node.shader = Self.shallowShader
         return node
     }

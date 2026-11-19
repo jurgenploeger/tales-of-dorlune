@@ -35,6 +35,7 @@ import SpriteKit
 ///   equip=a+b      start wearing these items (ids from content/items.json, joined with +)
 ///   bag=a+b        put these items in the bag
 ///   taken=a+b      these quests on, not done yet (a carving quest's Carve button on its piece's card)
+///   track=<quest>  that quest followed on the HUD under the minimap (taken first if it isn't)
 ///   done=a+b       these quests (ids from content/quests.json) already handed in (their treasures
 ///                  come by post, as for a save from before they gave them)
 ///   pet=<species>  a companion of that species (content/monsters.json), out with you
@@ -112,6 +113,7 @@ import SpriteKit
 ///   info=<item>    with npc=<a shop>: open that item's info card
 ///   worldmap       open the world map
 ///   turn=<deg>     with worldmap: the map opens turned that far clockwise (its compass turned with it)
+///   mapquest=<q>   with worldmap: the map opens on where that quest is done, as its Show on map does
 ///   visited=a+b    those lands visited (`all`: every one), for the world map
 ///   far            the lands next door aren't built: past the borders, their world map pictures
 ///   travel         every town visited, and the window for where a Homeward Feather takes you open;
@@ -577,6 +579,7 @@ enum DebugLaunch {
             WorldScene.zoomForDebug(CGFloat(zoom))
         }
         ContinentScene.hillsForDebug = flags["hills"]
+        LandStage.offForDebug = Set((flags["off"] ?? "").split(separator: "+").map(String.init))
         #endif
         if let hour = flags["hour"].flatMap({ Int($0) }), (0..<24).contains(hour) {
             // The calendar opens at 9hr (`GameClock.hours`); start the game as long ago as it takes to get here.
@@ -616,6 +619,13 @@ enum DebugLaunch {
         for (index, id) in taken.enumerated() {
             session.data.quests[id] = QuestProgress(state: .active, count: 0, taken: Date(timeIntervalSinceNow: Double(index - taken.count) * 60))
         }
+        #if DEBUG
+        // `track=<quest>`: that quest followed on the HUD (`GameSession.trackedQuest`), taken first if it isn't.
+        if let id = flags["track"], Content.shared.quest(id) != nil {
+            if session.data.quests[id] == nil { session.data.quests[id] = QuestProgress(state: .active, count: 0, taken: Date()) }
+            session.data.trackedQuest = id
+        }
+        #endif
         // `pet=a+b`: the first follows you, the rest wait on the Companions tab, each a little lower.
         for (index, species) in (flags["pet"]?.split(separator: "+").map(String.init) ?? []).enumerated() {
             guard let pet = session.makePet(species: species, level: max(1, session.data.hero.level - 15 - 10 * index)) else { continue }
@@ -1157,6 +1167,12 @@ enum DebugLaunch {
             for map in Content.shared.maps where seen == "all" || ids.contains(map.id) { coordinator.session.markVisited(map.id) }
         }
         if flags["worldmap"] != nil {
+            #if DEBUG
+            // `mapquest=<quest>`: on where that quest is done, as its Show on map opens it.
+            if let id = flags["mapquest"], let quest = Content.shared.quest(id) {
+                coordinator.session.mapFocus = coordinator.session.questPlace(of: quest)
+            }
+            #endif
             coordinator.open(.worldMap)
         }
         if flags["travel"] != nil {

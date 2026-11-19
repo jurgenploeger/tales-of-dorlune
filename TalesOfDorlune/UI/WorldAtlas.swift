@@ -19,6 +19,9 @@ struct WorldAtlas: View {
     let session: GameSession
     /// Over the map's top left corner: the time and your coordinates (`MapOverlay`).
     private let topLeading: AnyView
+    /// A land (or a cave) to open on in place of where you are, its name picked out: a quest's Show
+    /// on map (`GameSession.questPlace`).
+    private let focus: String?
     @State private var selected: String?
     /// The filter's dropdown (`filterMenu`) open.
     @State private var filtering = false
@@ -137,8 +140,9 @@ struct WorldAtlas: View {
         return (low, high.col - low.col, high.row - low.row)
     }
 
-    init(session: GameSession, @ViewBuilder topLeading: () -> some View) {
+    init(session: GameSession, focus: String? = nil, @ViewBuilder topLeading: () -> some View) {
         self.session = session
+        self.focus = focus
         self.topLeading = AnyView(topLeading())
     }
 
@@ -239,6 +243,8 @@ struct WorldAtlas: View {
         let squash = framing.squash
         let turned = CGAffineTransform(a: cosine, b: sine * squash, c: -sine, d: cosine * squash,
                                        tx: size.width / 2 + origin.x, ty: size.height / 2 + origin.y)
+        // Each land's name moved off the badges, locks, caves and you under it.
+        let nudges = nameNudges(marks, in: size)
         return ZStack(alignment: .topLeading) {
             // The picture rides in an overlay, so its size never moves the view's.
             Color.clear
@@ -255,6 +261,7 @@ struct WorldAtlas: View {
             ForEach(marks) { mark in
                 view(of: mark)
                     .position(point(of: mark.spot, in: size))
+                    .offset(y: nudges[mark.id] ?? 0)
             }
         }
         .frame(width: size.width, height: size.height)
@@ -270,7 +277,16 @@ struct WorldAtlas: View {
         opening.scale = clamped(min(size.width * 0.8 / CGFloat(here?.def.width ?? 150), size.height * 0.7 / CGFloat(here?.def.height ?? 120)),
                                 in: size)
         opening.rotation = DebugLaunch.mapTurn.map { CGFloat($0 * Double.pi / 180) } ?? (asSeen ? Self.seenTurn : 0)
-        if let cell = hereCell ?? lands.first.map({ GridPoint(col: $0.origin.col + $0.def.width / 2, row: $0.origin.row + $0.def.height / 2) }) {
+        // A quest's place (Show on map): that land filling most of the view, or its cave's mouth, its
+        // name picked out.
+        if let focus, let place = focusCell(of: focus) {
+            if let land = lands.first(where: { $0.def.id == focus }) {
+                opening.scale = clamped(min(size.width * 0.8 / CGFloat(max(1, land.def.width)), size.height * 0.7 / CGFloat(max(1, land.def.height))),
+                                        in: size)
+            }
+            opening.focus = spot(of: place)
+            selected = focus
+        } else if let cell = hereCell ?? lands.first.map({ GridPoint(col: $0.origin.col + $0.def.width / 2, row: $0.origin.row + $0.def.height / 2) }) {
             opening.focus = spot(of: cell)
         } else {
             opening.focus = CGPoint(x: CGFloat(columns) / 2, y: CGFloat(rows) / 2)
@@ -785,7 +801,21 @@ struct WorldAtlas: View {
             return GridPoint(col: origin.col + Int((grid.x / WorldMap.tileSize).rounded(.down)),
                              row: origin.row + Int((grid.y / WorldMap.tileSize).rounded(.down)))
         }
-        // On a cave's deeper level, where the cave over it opens: up its stairs (`NPCRole.stairs`).
+        return mouth(of: id)
+    }
+
+    /// Where a land lies on the continent (its middle), or where a cave opens there.
+    private func focusCell(of place: String) -> GridPoint? {
+        if let land = lands.first(where: { $0.def.id == place }) {
+            let middle = Content.shared.regions[place]?.middle ?? GridPoint(col: land.def.width / 2, row: land.def.height / 2)
+            return GridPoint(col: land.origin.col + middle.col, row: land.origin.row + middle.row)
+        }
+        return mouth(of: place)
+    }
+
+    /// Where a cave opens onto the continent: on a deeper level, where the cave over it does, up its
+    /// stairs (`NPCRole.stairs`).
+    private func mouth(of id: String) -> GridPoint? {
         var cave = id
         for _ in 0..<8 {
             guard let up = Content.shared.map(cave)?.npcs?.first(where: { $0.role == .stairs && !Content.shared.leadsDown($0) })?.to
@@ -856,6 +886,63 @@ struct WorldAtlas: View {
                     .accessibilityLabel(known ? def.name : L("Undiscovered place"))
                 }
             }
+        }
+    }
+
+    /// How far up or down each land's name moves on screen, by its mark's id, so it doesn't sit over a
+    /// badge, a group's number, a lock, a cave or the ring where you are (the user's UI review,
+    /// 2026-11-19: your ring sat inside "Pineapple Shore", "Meadowbrook" ran over a group's 8 and 2):
+    /// the first of a few places, nearest first, above or below its middle, that's clear of them all;
+    /// where none is, it stays put. Names stay upright however the map's turned, so the moves are
+    /// straight up and down the screen. Each name's width is guessed from its letters.
+    private func nameNudges(_ marks: [Mark], in size: CGSize) -> [String: CGFloat] {
+        var obstacles: [CGRect] = []
+        for mark in marks where mark.kind != .land {
+            let at = point(of: mark.spot, in: size)
+            // Off screen, it can't be in a name's way.
+            guard at.x > -60, at.y > -60, at.x < size.width + 60, at.y < size.height + 60 else { continue }
+            switch mark.kind {
+            case .here:
+                obstacles.append(CGRect(x: at.x - 15, y: at.y - 15, width: 30, height: 30))
+            case .badge, .lock:
+                let reach = (Self.badgeSize + (mark.count > 1 ? 4 : 0)) / 2 + 1
+                obstacles.append(CGRect(x: at.x - reach, y: at.y - reach, width: reach * 2, height: reach * 2))
+            case .cave:
+                // The dot over its name, when its name shows (`view(of:)`).
+                let named = framing.scale >= 1.2 || selected == mark.place
+                let width: CGFloat = named ? max(14, Self.guessedWidth(of: Content.shared.map(mark.place)?.name ?? "???", size: 11)) : 14
+                let height: CGFloat = named ? 28 : 14
+                obstacles.append(CGRect(x: at.x - width / 2, y: at.y - height / 2, width: width, height: height))
+            case .land:
+                break
+            }
+        }
+        guard !obstacles.isEmpty else { return [:] }
+        let tries: [CGFloat] = [-20, 20, -36, 36, -52, 52]
+        var nudges: [String: CGFloat] = [:]
+        for mark in marks where mark.kind == .land {
+            guard let def = Content.shared.map(mark.place) else { continue }
+            let at = point(of: mark.spot, in: size)
+            guard at.x > -200, at.y > -60, at.x < size.width + 200, at.y < size.height + 60 else { continue }
+            let state = status(of: def)
+            let known = state == .here || state == .visited
+            let width = Self.guessedWidth(of: known ? def.name : "???", size: 14) + (known && def.fence == true ? 15 : 0) + 4
+            let height: CGFloat = 20
+            func clear(_ lift: CGFloat) -> Bool {
+                let box = CGRect(x: at.x - width / 2, y: at.y + lift - height / 2, width: width, height: height)
+                return !obstacles.contains { $0.intersects(box) }
+            }
+            guard !clear(0), let lift = tries.first(where: clear) else { continue }
+            nudges[mark.id] = lift
+        }
+        return nudges
+    }
+
+    /// About how wide a line of the map's lettering is, in points: Latin letters a little over half
+    /// their size across, wider scripts (Chinese, Japanese, Korean) their whole size.
+    private static func guessedWidth(of text: String, size: CGFloat) -> CGFloat {
+        text.unicodeScalars.reduce(CGFloat(0)) { width, scalar in
+            width + (scalar.value < 0x2E80 ? size * 0.62 : size * 1.05)
         }
     }
 

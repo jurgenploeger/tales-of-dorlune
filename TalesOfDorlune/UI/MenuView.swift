@@ -31,7 +31,8 @@ struct MenuView: View {
     /// A tap on something in the Bag: its card, over the menu. Debug `inspect=<item>` opens one
     /// (unless it's for the gear grid, `change=`).
     @State private var inspecting: ItemDef? = DebugLaunch.changingSlot == nil ? DebugLaunch.inspectedItem.flatMap { Content.shared.item($0) } : nil
-    /// A tap on a quest in the Quests list: its window, over the menu. Debug `questcard=<quest>` opens one.
+    /// A tap on a quest in the Quests list: its window, over the menu. Debug `questcard=<quest>` opens
+    /// one, and so does the HUD's tracked quest, tapped (`GameSession.questToOpen`).
     @State private var openQuest: QuestDef? = DebugLaunch.openedQuest.flatMap { Content.shared.quest($0) }
     /// A tap on a friend: where they are, in a window over the menu (`FriendMapWindow`).
     @State private var openFriend: Adventurer?
@@ -43,6 +44,9 @@ struct MenuView: View {
         self.onClose = onClose
         self.onQuitToTitle = onQuitToTitle
         self.window = window
+        if window == .quests, let id = session.questToOpen, let quest = Content.shared.quest(id) {
+            _openQuest = State(initialValue: quest)
+        }
     }
 
     var body: some View {
@@ -123,6 +127,8 @@ struct MenuView: View {
             }
         }
         .foregroundStyle(HUDStyle.cream)
+        // The HUD's tracked quest opens once: the menu's Quests opens on the list next time.
+        .onAppear { session.questToOpen = nil }
     }
 }
 
@@ -148,7 +154,8 @@ extension MenuView {
                         }, onExplain: explain)
                     case .bag:
                         BagTab(session: session, note: $bagNote, hatchRequest: $hatchRequest,
-                               onInspect: { item in withAnimation(.spring(response: 0.3, dampingFraction: 0.86)) { inspecting = item } })
+                               onInspect: { item in withAnimation(.spring(response: 0.3, dampingFraction: 0.86)) { inspecting = item } },
+                               quickAction: { quickAction(for: $0) })
                     case .quests:
                         QuestsTab(session: session, page: $questsPage) { quest in
                             withAnimation(.spring(response: 0.3, dampingFraction: 0.86)) { openQuest = quest }
@@ -216,13 +223,14 @@ extension MenuView {
             PageTabs(page: $settingsPage, title: { $0.title })
         case .friends:
             // How many friends you have, a badge after the name.
-            WindowTitle(window.menuTitle, badge: session.friends.isEmpty ? nil : session.friends.count)
+            WindowTitle(window.menuTitle, badge: session.friends.isEmpty ? nil : "\(session.friends.count)")
                 .padding(.bottom, 2)
         case .bag:
             // How full the bag is after its name (playtesting 2026-10-26: "add the x/50 behind the big
             // 'Inventory' title"): 50 slots, one for every item (`GameSession+Bank`); coins take none.
-            WindowTitle(window.menuTitle, detail: "\(session.bagSlotsUsed)/\(session.bagSize)",
-                        detailTint: session.bagSlotsFree == 0 ? HUDStyle.orange : nil)
+            // In the same badge as the Friends window's count (the user, 2026-11-19), orange when full.
+            WindowTitle(window.menuTitle, badge: "\(session.bagSlotsUsed)/\(session.bagSize)",
+                        badgeFill: session.bagSlotsFree == 0 ? HUDStyle.orange : nil)
                 .accessibilityValue(L("{used} of {slots} slots", ["used": session.bagSlotsUsed, "slots": session.bagSize]))
                 .padding(.bottom, 2)
         }
@@ -250,6 +258,20 @@ extension MenuView {
         // holds all it takes (`ItemDef.make`). A gem: mix its dye, with a Sheepskin.
         if let made = session.handmade(using: item) { return makeAction(made, close: close) }
         return nil
+    }
+
+    /// What a long press on an item in the Bag does, without opening its card (the user's UI review,
+    /// 2026-11-19): Equip for gear you can put on now, Use for what can be used here and now (a potion,
+    /// a feather home), through the same steps as its card's button. Nil for the rest: a hold lifts
+    /// them to move them, a tap opens their card.
+    func quickAction(for item: ItemDef) -> ItemInfoCard.Action? {
+        if ItemType.equipmentSlots.contains(item.type) {
+            guard session.count(of: item.id) > 0, session.equipIssue(item) == nil else { return nil }
+            return ItemInfoCard.Action(title: L("Equip")) { session.equip(item.id) }
+        }
+        let usable = (item.heal ?? 0) > 0 || (item.mp ?? 0) > 0 || item.travel == true
+        guard usable, let action = bagAction(for: item, close: {}), action.enabled else { return nil }
+        return action
     }
 
     /// A gem a quest wants pieced into something still mixes its dye (playtesting 2026-10-31: "I
@@ -1544,11 +1566,7 @@ private struct FriendRow: View {
                 Text(L("Lv {level} {race} {class}", ["level": friend.level, "race": session.content.race(friend.raceID).name, "class": session.content.classDef(friend.classID).name]))
                     .font(HUDStyle.font(10))
                     .foregroundStyle(HUDStyle.dim)
-                if let pet {
-                    Text(L("with their {name}", ["name": pet.name]))
-                        .font(HUDStyle.font(10))
-                        .foregroundStyle(HUDStyle.green)
-                }
+                // Their companion shows beside them; no line naming it too (the user, 2026-11-19).
                 place
             }
             Spacer(minLength: 6)
@@ -1597,7 +1615,8 @@ private struct FriendRow: View {
         } else if !session.isInParty(friend) {
             Text(FriendMapWindow.whereabouts(of: friend, session: session))
                 .font(HUDStyle.font(10))
-                .foregroundStyle(session.status(of: friend) == .offline ? HUDStyle.dim : HUDStyle.green)
+                // Dim whether they're on or not: the ONLINE badge says that already (the user, 2026-11-19).
+                .foregroundStyle(HUDStyle.dim)
                 .fixedSize(horizontal: false, vertical: true)
         }
     }
@@ -2028,6 +2047,8 @@ private struct BagTab: View {
     @Binding var hatchRequest: ItemDef?
     /// A tap on an item: MenuView shows its card.
     let onInspect: (ItemDef) -> Void
+    /// A long press on an item: its main action, if it has one there and then (`MenuView.quickAction`).
+    let quickAction: (ItemDef) -> ItemInfoCard.Action?
     @State private var hatched: Pet?
     @State private var hatching = false
     @State private var search = ""
@@ -2073,11 +2094,15 @@ private struct BagTab: View {
                 shelf.holds(item) && (!wearableOnly || (ItemType.equipmentSlots.contains(item.type) && session.equipIssue(item) == nil))
             }
             let shown = ItemFinder.arrange(kinds, search: search, sort: sort, session: session)
+            // Unfiltered, the room left after them too, a faint empty slot for each free one (the user's UI
+            // review, 2026-11-19: "17/59" over 17 tiles and a sheet of empty glass).
+            let room = !searching && shelf == .all ? session.bagSlotsFree : 0
             if shown.isEmpty {
                 EmptyNote(searching || shelf != .all ? L("Nothing in your bag matches.") : L("Your bag is empty."), size: 11)
                     .padding(.vertical, 12)
-            } else {
-                grid(shown)
+            }
+            if !shown.isEmpty || room > 0 {
+                grid(shown, room: room)
             }
         }
         .onChange(of: hatchRequest?.id) { _, id in
@@ -2124,8 +2149,9 @@ private struct BagTab: View {
 
     /// One slot per kind of item, its count in the corner from two up, the upgrade arrow on gear
     /// better than what you wear, gear you can't wear yet (too low a level, another class's) faded,
-    /// and a coin on what's up for trade.
-    private func grid(_ items: [ItemDef]) -> some View {
+    /// and a coin on what's up for trade; then `room` empty slots, one for each free slot. Held,
+    /// gear you can wear goes on and a potion is drunk (`quickAction`), as their card's button does.
+    private func grid(_ items: [ItemDef], room: Int) -> some View {
         ItemSlotGrid(items: items,
                      label: { item in
                          let count = session.count(of: item.id)
@@ -2133,8 +2159,11 @@ private struct BagTab: View {
                          return session.isForTrade(item.id) ? name + ", " + L("For trade") : name
                      },
                      hint: L("Shows what it does and who can use it"),
+                     emptySlots: room,
                      onTap: onInspect,
                      onMove: { move($0, onto: $1) },
+                     onHold: { item in quickAction(item)?.run() },
+                     holdLabel: { quickAction($0)?.title },
                      tile: { item, size in
                          let wearable = !ItemType.equipmentSlots.contains(item.type) || session.equipIssue(item) == nil
                          ItemIcon(item: item, size: size - 5, count: session.count(of: item.id), upgrade: session.isUpgrade(item))
@@ -2535,10 +2564,15 @@ private struct QuestListRow: View {
                         .foregroundStyle(finished ? HUDStyle.dim : HUDStyle.cream)
                         .multilineTextAlignment(.leading)
                         .fixedSize(horizontal: false, vertical: true)
+                    progress(status)
                 }
                 Spacer(minLength: 6)
                 if finished {
                     IconImage(.badgeCheck, size: 14).foregroundStyle(HUDStyle.green)
+                } else if session.isTracked(quest) {
+                    // Followed on the HUD (Track, in its window).
+                    IconImage(.map, size: 14).foregroundStyle(HUDStyle.gold)
+                        .accessibilityLabel(L("Tracked"))
                 }
                 IconImage(.chevronDown, size: 14)
                     .rotationEffect(.degrees(-90))
@@ -2551,10 +2585,40 @@ private struct QuestListRow: View {
         .accessibilityValue(status == .ready ? L("Done! Report back") : finished ? L("Completed") : "")
         .accessibilityHint(L("Shows its story and rewards"))
     }
+
+    /// How far along an active quest is, under its name, so you needn't open each (the user's UI
+    /// review, 2026-11-19): a thin bar and its count, who to take it to, or that it's done.
+    @ViewBuilder
+    private func progress(_ status: GameSession.QuestStatus) -> some View {
+        switch status {
+        case .active where quest.objective.type == .deliver:
+            Text(L("Take it to {name}", ["name": quest.objective.target.flatMap(session.content.npc)?.name ?? ""]))
+                .font(HUDStyle.font(10))
+                .foregroundStyle(HUDStyle.gold)
+                .fixedSize(horizontal: false, vertical: true)
+        case .active(let done, let goal):
+            HStack(spacing: 6) {
+                GlossyBar(fraction: CGFloat(done) / CGFloat(max(goal, 1)), color: HUDStyle.gold, height: GlossyBar.progress)
+                    .frame(maxWidth: 140)
+                Text(verbatim: "\(done)/\(goal)")
+                    .font(HUDStyle.font(10))
+                    .monospacedDigit()
+                    .foregroundStyle(HUDStyle.gold)
+                    .fixedSize()
+            }
+            .padding(.top, 2)
+        case .ready:
+            Text(L("Done! Report back"))
+                .font(HUDStyle.font(10))
+                .foregroundStyle(HUDStyle.green)
+        default:
+            EmptyView()
+        }
+    }
 }
 
-/// A quest from the Quests list, in a window of its own over the menu, Back on its title bar: its
-/// number and how hard it is, its name, who asked and where they live, how far along you are, all of
+/// A quest from the Quests list, in a window of its own over the menu, its name on the title bar and
+/// the close button over the corner: its number and how hard it is, who asked and where they live, how far along you are, all of
 /// its story, and its rewards (what you earned, once it's done). A tap outside it goes back too.
 struct QuestWindow: View {
     let session: GameSession
@@ -2567,21 +2631,15 @@ struct QuestWindow: View {
                 .ignoresSafeArea()
                 .onTapGesture(perform: onBack)
             VStack(alignment: .leading, spacing: 0) {
-                HStack {
-                    Button(action: onBack) {
-                        Label(L("Back"), icon: .arrowLeft, size: 12)
-                    }
-                    .buttonStyle(PixelButtonStyle(compact: true))
-                    Spacer(minLength: 0)
-                }
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8)
-                .background(WindowBar())
+                // Its name on the bar and the close button over the corner, as every window has (the
+                // user, 2026-11-19: a close button at the top right, not a Back button).
+                WindowTitle(quest.title)
                 // Scrolls only when it can't all fit (a phone on its side, a long story).
                 FitOrScroll {
                     VStack(alignment: .leading, spacing: 12) {
                         header
                         progress
+                        follow
                         Text(quest.description)
                             .font(HUDStyle.body(12))
                             .foregroundStyle(HUDStyle.cream)
@@ -2597,6 +2655,7 @@ struct QuestWindow: View {
             }
             .frame(maxWidth: 420, alignment: .leading)
             .gameWindow()
+            .windowCloseButton(onBack)
             .padding(24)
             .popIn()
         }
@@ -2611,11 +2670,6 @@ struct QuestWindow: View {
                 QuestNumber(number: session.questNumber(quest))
                 DifficultyBadge(difficulty: session.difficulty(of: quest))
             }
-            Text(quest.title)
-                .font(HUDStyle.font(18))
-                .foregroundStyle(HUDStyle.gold)
-                .fixedSize(horizontal: false, vertical: true)
-                .accessibilityAddTraits(.isHeader)
             if let giver = session.content.npc(quest.giver) {
                 let home = session.content.home(ofNPC: quest.giver)?.name
                 HStack(spacing: 8) {
@@ -2626,6 +2680,59 @@ struct QuestWindow: View {
                 }
             }
         }
+    }
+
+    /// While you're on it, Track (one quest followed on the HUD, under the minimap, at a time); and Show
+    /// on map, the world map opening on where it's done (`GameSession.questPlace`): where its monsters
+    /// live, who to take it to, else and once it's ready, where its giver lives. Side by side, or one
+    /// over the other where they don't fit (a narrow phone, a long language).
+    @ViewBuilder
+    private var follow: some View {
+        let onIt = session.data.quests[quest.id]?.state == .active
+        let mappable = session.onShowMap != nil && session.questPlace(of: quest) != nil
+        if onIt || mappable {
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 12) {
+                    if mappable { mapButton }
+                    if onIt { trackSwitch.fixedSize() }
+                }
+                VStack(alignment: .leading, spacing: 10) {
+                    if onIt { trackSwitch }
+                    if mappable { mapButton }
+                }
+            }
+        }
+    }
+
+    /// Track: this quest's next step on the HUD, in place of the one followed before.
+    private var trackSwitch: some View {
+        Toggle(isOn: Binding(get: { session.isTracked(quest) }, set: { on in
+            SoundEffects.shared.play(.tap, volume: 0.7)
+            session.track(quest, on)
+            session.save()
+        })) {
+            Text(L("Track"))
+                .font(HUDStyle.font(12))
+                .foregroundStyle(HUDStyle.cream)
+                .lineLimit(1)
+                .fixedSize()
+        }
+        .toggleStyle(PixelSwitchStyle())
+        .accessibilityHint(L("Shows its next step under the minimap"))
+    }
+
+    private var mapButton: some View {
+        Button {
+            SoundEffects.shared.play(.tap, volume: 0.7)
+            session.mapFocus = session.questPlace(of: quest)
+            session.onShowMap?()
+        } label: {
+            Label(L("Show on map"), icon: .map, size: 12)
+                .lineLimit(1)
+                .fixedSize()
+        }
+        .buttonStyle(PixelButtonStyle(compact: true))
+        .accessibilityHint(L("Opens the world map where it's done"))
     }
 
     /// How far along it is: a count and a bar, who to take it to, ready to report, or done.
