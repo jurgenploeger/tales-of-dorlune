@@ -408,6 +408,15 @@ struct PondField {
     private var down: [Int32] = []
     /// Cells to the nearest land, up to `reach` spots.
     private var near: [Float] = []
+    /// How far down from the far shore each spot lies, 0 at it to 1 at the near one (`up` against
+    /// `up + down`), averaged with the water spots beside it across the screen and a little up and
+    /// down it: from one spot's count alone, wherever the far shore jumped (a bay, a point) the
+    /// mirrored sky's edge dropped straight down the screen in a sheer line (the user, 2026-11-19:
+    /// "the straight line in the lake water").
+    private var along: [Float] = []
+    /// Spots either way across the screen, and up and down it, `along` is averaged over.
+    private static let acrossReach = 14
+    private static let upReach = 3
 
     /// `isWater(cell, x, y)`: whether the point (x, y) of `cell` (-0.5...0.5 from its middle, y north) is water.
     init(cells: Set<GridPoint>, isWater: (GridPoint, Double, Double) -> Bool) {
@@ -447,6 +456,45 @@ struct PondField {
                 }
             }
         }
+        // How far down from the far shore, smoothed (`along`). Across the screen is one way along the
+        // grid and back the other (i + 1, j - 1); up it, both ways at once (i + 1, j + 1).
+        var raw = [Float](repeating: 0, count: count)
+        for index in 0..<count where water[index] {
+            let below = Float(up[index]), above = Float(down[index])
+            raw[index] = below / max(1, below + above)
+        }
+        // In two passes, across and then up and down, each cell's neighbours (two cells each way)
+        // looked up once: spot by spot through `spot(_:_:_:)`, a big lake took too long.
+        let starts = start, wet = water
+        func smooth(_ field: [Float], _ step: (Int) -> (di: Int, dj: Int), reach: Int) -> [Float] {
+            var out = field
+            for cell in ordered {
+                guard let base = starts[cell] else { continue }
+                var around = [Int?](repeating: nil, count: 25)
+                for dr in -2...2 {
+                    for dc in -2...2 { around[(dr + 2) * 5 + dc + 2] = starts[GridPoint(col: cell.col + dc, row: cell.row + dr)] }
+                }
+                for j in 0..<s {
+                    for i in 0..<s where wet[base + j * s + i] {
+                        var sum: Float = 0, weight: Float = 0
+                        for k in -reach...reach {
+                            let (di, dj) = step(k)
+                            let ii = i + di, jj = j + dj
+                            let dc = ii >= 0 ? ii / s : -((-ii + s - 1) / s), dr = jj >= 0 ? jj / s : -((-jj + s - 1) / s)
+                            guard abs(dc) <= 2, abs(dr) <= 2, let other = around[(dr + 2) * 5 + dc + 2] else { continue }
+                            let index = other + (jj - dr * s) * s + (ii - dc * s)
+                            guard wet[index] else { continue }
+                            sum += field[index]
+                            weight += 1
+                        }
+                        if weight > 0 { out[base + j * s + i] = sum / weight }
+                    }
+                }
+            }
+            return out
+        }
+        let across = smooth(raw, { (di: $0, dj: -$0) }, reach: Self.acrossReach)
+        along = smooth(across, { (di: $0, dj: $0) }, reach: Self.upReach)
         // The nearest land among the spots round each, nearest first.
         var offsets: [(di: Int, dj: Int, d: Float)] = []
         for dj in -Self.reach...Self.reach {
@@ -507,7 +555,7 @@ struct PondField {
         let j = min(s - 1, max(0, Int(((y - Double(row)) * Double(s)).rounded(.down))))
         guard let k = spot(GridPoint(col: col, row: row), i, j), water[k] else { return 3 }
         let land = Double(near[k]) / Double(s)
-        let below = Double(up[k]), above = Double(down[k])
+        let below = Double(up[k])
         if below <= 1, land < 0.12 { return 0 }
         // The far bank mirrored a few pixels down from its waterline (the user, 2026-11-17: "do the
         // things that are not done yet"): its grass, then its mud, before the water's own tones.
@@ -515,7 +563,7 @@ struct PondField {
         if land < 0.06, below > 3 { return 7 }
         var tone = land < 0.09 ? 3 : (land > 0.22 ? 1 : 2)
         if land >= 0.09 {
-            let along = below / max(1, below + above)
+            let along = Double(self.along[k])
             if along >= 0.47 {
                 tone = 4
             } else if along >= 0.23 {
