@@ -368,6 +368,38 @@ final class ContinentScene: SKScene {
     /// How far in you can zoom with the night drawn by the curve (`curveNight`).
     static let curveZoomLimit: CGFloat = 1.0
 
+    /// How big, in points at the camera's scale, everything the scene holds may be for its effect to
+    /// draw. SpriteKit draws the whole scene, not only what's on screen, into the effect's picture
+    /// (the bigger it held, the sooner it failed: zoomed in, or once a second land was near), and
+    /// past what a picture can be it drew nothing, only the sky's blue (the user, 2026-11-19, on
+    /// walking into Shiverdell). Over it, the sky's own shade stands in. A guess for a phone: the
+    /// simulator drew 21,600 points across without fault (2026-11-19), so it can't find the edge.
+    static let curveSizeLimit: CGFloat = 16_000
+
+    /// Whether the scene fits `curveSizeLimit`, measured again when the lands near you change and
+    /// every half second (`calculateAccumulatedFrame` goes through every node: not each frame).
+    private func curveFits() -> Bool {
+        #if DEBUG
+        if DebugLaunch.unguardedCurve { return true }
+        #endif
+        if curveFitTimer <= 0 || curveMeasureNow {
+            curveFitTimer = 0.5
+            curveMeasureNow = false
+            curveSpan = curveExtent()
+        }
+        return curveSpan <= Self.curveSizeLimit
+    }
+
+    /// The longer side of everything the scene holds, in points at the camera's scale.
+    private func curveExtent() -> CGFloat {
+        let frame = calculateAccumulatedFrame()
+        return max(frame.width, frame.height) / max(cam.xScale, 0.01)
+    }
+
+    private var curveFitTimer: TimeInterval = 0
+    private var curveMeasureNow = true
+    private var curveSpan: CGFloat = 0
+
     /// Draws the skies' light by the curve, or leaves it to their own shades. Each sky's multiply
     /// colour `m` becomes the power 1 + 2 × (1 - m): none by day, about 1.96, 1.84, 1.32 at night
     /// (red and green deepen most, blue least), a warm dusk and a grey storm the same way; a
@@ -376,7 +408,7 @@ final class ContinentScene: SKScene {
         // Not zoomed in past the usual view: there SpriteKit drew nothing at all through the scene's
         // effect, only the sky's blue behind it, till you zoomed back out (the user, 2026-11-19; at
         // 2.2× in the screenshots too). The sky's own shade stands in meanwhile.
-        let curved = GameSettings.curveNight && WorldScene.zoom <= Self.curveZoomLimit
+        let curved = GameSettings.curveNight && WorldScene.zoom <= Self.curveZoomLimit && curveFits()
         var multiply = (r: 1.0, g: 1.0, b: 1.0)
         var night = 0.0
         for air in airs.values {
@@ -403,6 +435,7 @@ final class ContinentScene: SKScene {
     private func updateAir(_ dt: TimeInterval) {
         defer { curveNight() }
         sunTimer -= dt
+        curveFitTimer -= dt
         let follow = sunTimer <= 0
         if follow { sunTimer = 0.5 }
         for (id, air) in airs {
@@ -1465,6 +1498,14 @@ final class ContinentScene: SKScene {
         let built = builtForDebug.suffix(4).joined(separator: ", ")
         progressForDebug?.text = "built \(built) | building \(building ?? "-") | wanted \(wanted.count) | squares \(waiting.count)"
             + (isReady ? " | ready" : "") + (isSettled ? " | settled" : "")
+        // The curve's picture (`curveFits`): the scene's size in points at the camera's scale, and
+        // whether the effect's on.
+        if GameSettings.curveNight {
+            let frame = calculateAccumulatedFrame()
+            progressForDebug?.text = (progressForDebug?.text ?? "")
+                + String(format: " | fx %.0fx%.0f /%.2f = %.0f ", frame.width, frame.height, cam.xScale, curveExtent())
+                + (shouldEnableEffects ? "on" : "off")
+        }
     }
     #endif
 
@@ -1698,7 +1739,9 @@ final class ContinentScene: SKScene {
             }
         }
         // Only the lands round you go about their lives; those far off wait, out of sight.
-        nearLands = Set(chunks.keys.flatMap { owners(of: $0) })
+        let landsNear = Set(chunks.keys.flatMap { owners(of: $0) })
+        if landsNear != nearLands { curveMeasureNow = true }
+        nearLands = landsNear
         for (id, land) in lands where land.stage.world.isHidden == nearLands.contains(id) {
             land.stage.world.isHidden = !nearLands.contains(id)
             land.stage.world.isPaused = !nearLands.contains(id)
