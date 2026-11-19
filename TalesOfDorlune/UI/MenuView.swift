@@ -2646,6 +2646,7 @@ struct QuestWindow: View {
                     VStack(alignment: .leading, spacing: 12) {
                         header
                         progress
+                        follow
                         Text(quest.description)
                             .font(HUDStyle.body(12))
                             .foregroundStyle(HUDStyle.cream)
@@ -2690,6 +2691,59 @@ struct QuestWindow: View {
                 }
             }
         }
+    }
+
+    /// While you're on it, Track (one quest followed on the HUD, under the minimap, at a time); and Show
+    /// on map, the world map opening on where it's done (`GameSession.questPlace`): where its monsters
+    /// live, who to take it to, else and once it's ready, where its giver lives. Side by side, or one
+    /// over the other where they don't fit (a narrow phone, a long language).
+    @ViewBuilder
+    private var follow: some View {
+        let onIt = session.data.quests[quest.id]?.state == .active
+        let mappable = session.onShowMap != nil && session.questPlace(of: quest) != nil
+        if onIt || mappable {
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 12) {
+                    if mappable { mapButton }
+                    if onIt { trackSwitch.fixedSize() }
+                }
+                VStack(alignment: .leading, spacing: 10) {
+                    if onIt { trackSwitch }
+                    if mappable { mapButton }
+                }
+            }
+        }
+    }
+
+    /// Track: this quest's next step on the HUD, in place of the one followed before.
+    private var trackSwitch: some View {
+        Toggle(isOn: Binding(get: { session.isTracked(quest) }, set: { on in
+            SoundEffects.shared.play(.tap, volume: 0.7)
+            session.track(quest, on)
+            session.save()
+        })) {
+            Text(L("Track"))
+                .font(HUDStyle.font(12))
+                .foregroundStyle(HUDStyle.cream)
+                .lineLimit(1)
+                .fixedSize()
+        }
+        .toggleStyle(PixelSwitchStyle())
+        .accessibilityHint(L("Shows its next step under the minimap"))
+    }
+
+    private var mapButton: some View {
+        Button {
+            SoundEffects.shared.play(.tap, volume: 0.7)
+            session.mapFocus = session.questPlace(of: quest)
+            session.onShowMap?()
+        } label: {
+            Label(L("Show on map"), icon: .map, size: 12)
+                .lineLimit(1)
+                .fixedSize()
+        }
+        .buttonStyle(PixelButtonStyle(compact: true))
+        .accessibilityHint(L("Opens the world map where it's done"))
     }
 
     /// How far along it is: a count and a bar, who to take it to, ready to report, or done.
