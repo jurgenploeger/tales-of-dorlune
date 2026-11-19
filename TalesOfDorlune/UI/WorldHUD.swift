@@ -583,15 +583,16 @@ private struct TaggedBar: View {
 
 /// The quest you follow (`GameSession.trackedQuest`, Track in its window), on a small plate under the
 /// minimap (the user's UI review, 2026-11-19): its name, and what's next under it, how far along
-/// ("0/10" over a thin bar), who to take it to, or who to report back to, in green once it's done. As
-/// wide as the minimap, so it keeps clear of the notices in the middle and the compass on its rim; a
-/// long name runs onto a second line. A tap opens the quest's window.
+/// ("0/10" over a thin bar), who to take it to, or who to report back to, in green once it's done.
+/// Hardly wider than the minimap, so it keeps clear of the notices in the middle, the compass on the
+/// minimap's rim and, on a 375-point phone, the top-left column (`TopLeft.width`); a long name runs
+/// onto a second line. A tap opens the quest's window.
 private struct TrackedQuestPlate: View {
     let session: GameSession
     let quest: QuestDef
     let onOpen: () -> Void
 
-    private static let width: CGFloat = 150
+    private static let width: CGFloat = 140
 
     var body: some View {
         let status = session.status(of: quest)
