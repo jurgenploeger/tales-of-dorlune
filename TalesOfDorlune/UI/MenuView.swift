@@ -1593,7 +1593,8 @@ private struct FriendRow: View {
         } else if !session.isInParty(friend) {
             Text(FriendMapWindow.whereabouts(of: friend, session: session))
                 .font(HUDStyle.font(10))
-                .foregroundStyle(session.status(of: friend) == .offline ? HUDStyle.dim : HUDStyle.green)
+                // Dim whether they're on or not: the ONLINE badge says that already (the user, 2026-11-19).
+                .foregroundStyle(HUDStyle.dim)
                 .fixedSize(horizontal: false, vertical: true)
         }
     }
