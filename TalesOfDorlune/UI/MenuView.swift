@@ -2564,10 +2564,15 @@ private struct QuestListRow: View {
                         .foregroundStyle(finished ? HUDStyle.dim : HUDStyle.cream)
                         .multilineTextAlignment(.leading)
                         .fixedSize(horizontal: false, vertical: true)
+                    progress(status)
                 }
                 Spacer(minLength: 6)
                 if finished {
                     IconImage(.badgeCheck, size: 14).foregroundStyle(HUDStyle.green)
+                } else if session.isTracked(quest) {
+                    // Followed on the HUD (Track, in its window).
+                    IconImage(.map, size: 14).foregroundStyle(HUDStyle.gold)
+                        .accessibilityLabel(L("Tracked"))
                 }
                 IconImage(.chevronDown, size: 14)
                     .rotationEffect(.degrees(-90))
@@ -2579,6 +2584,36 @@ private struct QuestListRow: View {
         .buttonStyle(.plain)
         .accessibilityValue(status == .ready ? L("Done! Report back") : finished ? L("Completed") : "")
         .accessibilityHint(L("Shows its story and rewards"))
+    }
+
+    /// How far along an active quest is, under its name, so you needn't open each (the user's UI
+    /// review, 2026-11-19): a thin bar and its count, who to take it to, or that it's done.
+    @ViewBuilder
+    private func progress(_ status: GameSession.QuestStatus) -> some View {
+        switch status {
+        case .active where quest.objective.type == .deliver:
+            Text(L("Take it to {name}", ["name": quest.objective.target.flatMap(session.content.npc)?.name ?? ""]))
+                .font(HUDStyle.font(10))
+                .foregroundStyle(HUDStyle.gold)
+                .fixedSize(horizontal: false, vertical: true)
+        case .active(let done, let goal):
+            HStack(spacing: 6) {
+                GlossyBar(fraction: CGFloat(done) / CGFloat(max(goal, 1)), color: HUDStyle.gold, height: GlossyBar.progress)
+                    .frame(maxWidth: 140)
+                Text(verbatim: "\(done)/\(goal)")
+                    .font(HUDStyle.font(10))
+                    .monospacedDigit()
+                    .foregroundStyle(HUDStyle.gold)
+                    .fixedSize()
+            }
+            .padding(.top, 2)
+        case .ready:
+            Text(L("Done! Report back"))
+                .font(HUDStyle.font(10))
+                .foregroundStyle(HUDStyle.green)
+        default:
+            EmptyView()
+        }
     }
 }
 
