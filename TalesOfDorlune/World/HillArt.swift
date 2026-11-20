@@ -10,8 +10,9 @@ import SpriteKit
 ///
 /// A range is too big for one picture, so it's drawn in squares `square` cells a side; and too deep to
 /// sort as one thing among the trees and walkers, so each square shows in strips `stripDepth` cells deep
-/// (up the screen), each sorted just behind its back edge (`strip(at:)`): whatever stands on a strip or
-/// in front of it is drawn over it, and whatever stands behind it is hidden by it.
+/// (up the screen), each sorted a strip behind its back edge (`strip(at:)`, `setBack`): whatever stands
+/// on a strip, in front of it or on the strip just behind it is drawn over it, and whatever stands
+/// farther behind it is hidden by it.
 enum HillArt {
     struct Look {
         /// The ground's tile pictures by cell, as the map has them.
@@ -107,18 +108,25 @@ enum HillArt {
     /// How far up the screen each strip reaches.
     static let stripHeight = depthStep * CGFloat(stripDepth)
 
+    /// How much farther back each strip is sorted than its back edge: a strip's height, so whoever
+    /// stands on a strip or just behind it is drawn over it and the strip in front, and is hidden
+    /// only by ground two strips or more in front. Sorted by its back edge alone, the slightest rise
+    /// just in front cut off their feet along its outline, aslant across the screen (the user,
+    /// 2026-11-20: "These terraces cut the characters at certain angles").
+    static let setBack = stripHeight
+
     /// Cells deep each strip of sunk ground is (`Hill.sunken`): a square's worth. Nothing standing
     /// behind sunk ground is ever hidden by it (it sinks away from them, down the screen), so it
     /// needn't be cut finer to sort among them.
     static let sunkenDepth = 2 * square
 
     /// The strip of raised ground over a point on the map (on the ground, not lifted): where it's
-    /// sorted, just behind its back edge, and how far up the screen it begins. The strip in front of
+    /// sorted, a strip behind its back edge (`setBack`), and how far up the screen it begins. The strip in front of
     /// it is sorted `stripHeight` higher. `depth`: `sunkenDepth` on sunk ground.
     static func strip(at ground: CGFloat, depth: Int = stripDepth) -> (z: CGFloat, start: CGFloat) {
         let height = depthStep * CGFloat(depth)
         let band = (ground / height).rounded(.down)
-        return (-(band + 1) * height - 0.75, band * height)
+        return (-(band + 1) * height - 0.75 - setBack, band * height)
     }
 
     /// A range made ready to draw (`painter(for:look:)`): what's the same all over it worked out once
@@ -700,8 +708,8 @@ enum HillArt {
                 let box = CGRect(x: CGFloat(least) * across - 1, y: CGFloat(from) * depthStep + CGFloat(lift.low) - 1,
                                  width: CGFloat(most - least) * across + 2,
                                  height: CGFloat(to - from) * depthStep + CGFloat(lift.high - lift.low) + 2)
-                // Just behind its back edge, as `strip(at:)` says.
-                let z = -CGFloat(to) * depthStep - 0.75
+                // Behind its back edge, as `strip(at:)` says.
+                let z = -CGFloat(to) * depthStep - 0.75 - HillArt.setBack
                 // Everything from the box's corner, worked out here in full precision, so the
                 // shader only ever handles small numbers (`lifting`): a phone's GPU, working in
                 // the land's own points thousands across, dropped rows of the ground, and what

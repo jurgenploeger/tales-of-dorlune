@@ -1418,7 +1418,7 @@
           "terraces": 44,
           "bank": "tile_cliff_rock"
         },
-        "tallGrass": { "patches": 4, "size": [1.6, 3], "art": "tall_grass" },
+        "tallGrass": { "patches": 10, "size": [2.2, 4.5], "art": "tall_grass" },
         "props": [
           {
             "art": "big_tree",
@@ -2703,7 +2703,7 @@
           "terraces": 44,
           "bank": "tile_cliff_rock"
         },
-        "tallGrass": { "patches": 4, "size": [1.6, 3], "art": "tall_grass_dark" },
+        "tallGrass": { "patches": 10, "size": [2.2, 4.5], "art": "tall_grass_dark" },
         "props": [
           {
             "art": "big_dark_tree",
@@ -6657,7 +6657,7 @@
           "terraces": 44,
           "bank": "tile_cliff_rock"
         },
-        "tallGrass": { "patches": 4, "size": [1.6, 3], "art": "tall_grass_dark" },
+        "tallGrass": { "patches": 10, "size": [2.2, 4.5], "art": "tall_grass_dark" },
         "props": [
           {
             "art": "dead_tree",
@@ -10487,7 +10487,7 @@
           "terraces": 44,
           "bank": "tile_cliff_rock"
         },
-        "tallGrass": { "patches": 4, "size": [1.6, 3], "art": "tall_grass" },
+        "tallGrass": { "patches": 10, "size": [2.2, 4.5], "art": "tall_grass" },
         "props": [
           {
             "art": "big_tree",
@@ -12322,7 +12322,7 @@
           "terraces": 44,
           "bank": "tile_cliff_rock"
         },
-        "tallGrass": { "patches": 4, "size": [1.6, 3], "art": "tall_grass_dark" },
+        "tallGrass": { "patches": 10, "size": [2.2, 4.5], "art": "tall_grass_dark" },
         "props": [
           {
             "art": "big_dark_tree",
@@ -13800,7 +13800,7 @@
           "terraces": 44,
           "bank": "tile_cliff_rock"
         },
-        "tallGrass": { "patches": 4, "size": [1.6, 3], "art": "tall_grass" },
+        "tallGrass": { "patches": 10, "size": [2.2, 4.5], "art": "tall_grass" },
         "props": [
           {
             "art": "big_tree",
@@ -15062,7 +15062,7 @@
           "terraces": 44,
           "bank": "tile_cliff_rock"
         },
-        "tallGrass": { "patches": 4, "size": [1.6, 3], "art": "tall_grass_dark" },
+        "tallGrass": { "patches": 10, "size": [2.2, 4.5], "art": "tall_grass_dark" },
         "props": [
           {
             "art": "dead_tree",
@@ -20361,7 +20361,7 @@
           "terraces": 44,
           "bank": "tile_cliff_rock"
         },
-        "tallGrass": { "patches": 4, "size": [1.6, 3], "art": "tall_grass" },
+        "tallGrass": { "patches": 10, "size": [2.2, 4.5], "art": "tall_grass" },
         "props": [
           {
             "art": "wisp_lantern",

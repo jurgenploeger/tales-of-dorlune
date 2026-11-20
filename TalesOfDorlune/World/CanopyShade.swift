@@ -88,10 +88,13 @@ final class CanopyShade {
     /// `throughWalls`: something standing in a town's wall itself (its gate), whose shade the wall
     /// mustn't cut off at its own foot (`reachBeforeWall`).
     /// `thin`: as thin as a gate's arch (`Caster.thin`).
-    func add(_ node: SKSpriteNode, picture: CGImage, walls: Bool = false, throughWalls: Bool = false, thin: Bool = false) {
+    /// `flatBase`: drawn on a base that lies flat on the ground, a palm in its pond (`flatBases`,
+    /// `CanopyPainter.pool`).
+    func add(_ node: SKSpriteNode, picture: CGImage, walls: Bool = false, throughWalls: Bool = false, thin: Bool = false,
+             flatBase: Bool = false) {
         guard let texture = node.texture, node.size.height >= Self.shortest else { return }
         let outline = Outline(texture: ObjectIdentifier(texture), anchor: node.anchorPoint.y)
-        let unit = outlines[outline] ?? CanopyPainter.slices(of: picture, anchor: node.anchorPoint)
+        let unit = outlines[outline] ?? CanopyPainter.slices(of: picture, anchor: node.anchorPoint, flatBase: flatBase)
         outlines[outline] = unit
         guard !unit.slices.isEmpty else { return }
         let w = node.size.width, h = node.size.height
@@ -109,6 +112,11 @@ final class CanopyShade {
             }
         }
     }
+
+    /// Sprites drawn on a base that lies flat on the ground: only what stands on it casts shade, not
+    /// the base (`CanopyPainter.pool`). Named one by one: found by their outline alone, the wide bases
+    /// of spires, tents and lamps' plinths, which stand, were taken for flat too.
+    static let flatBases: Set<String> = ["oasis_palm"]
 
     /// A raised terrace casts shade as a block `height` points tall (`LandStage.placePlateaus`): a round
     /// as wide as a cell (`half` its half width on screen) from each cell's middle at every few points up,
@@ -486,10 +494,40 @@ nonisolated enum CanopyPainter {
         return foot - lift
     }
 
+    /// A flat base wider than the base band (`base`) and narrowing to a neck above it: a palm in its
+    /// pond (`oasis_palm`; only for `CanopyShade.flatBases`). Looked for in the bottom `poolBand` of the picture: its
+    /// widest row there, and above it a row under `poolNeck` of that wide, with what stands over it.
+    static let poolBand = 0.6
+    static let poolNeck = 0.35
+
+    /// The row (from the top) a picture on a wide flat base stands up from, the middle of the base's
+    /// widest rows, and the neck's row and its columns: the base's rows from the neck down cast only
+    /// what's in line with the neck (the trunk), the rest of it lying flat on the ground (the user,
+    /// 2026-11-20: "It's strange how much shadow the round part below the palm tree casts"). Nil
+    /// where there's no such base. `widths` from the top; `solid(row, column)`.
+    static func pool(_ widths: [Int], width: Int, solid: (Int, Int) -> Bool) -> (standing: Int, neck: Int, columns: ClosedRange<Int>)? {
+        guard let top = widths.firstIndex(where: { $0 > 0 }), let foot = widths.lastIndex(where: { $0 > 0 }) else { return nil }
+        let start = foot - Int(Double(foot - top + 1) * poolBand)
+        guard start > top, foot - start >= 8 else { return nil }
+        let widest = (start...foot).max { widths[$0] < widths[$1] } ?? foot
+        let wide = widths[widest]
+        guard Double(wide) >= 0.6 * Double(widths.max() ?? 0) else { return nil }
+        // The neck: the narrowest row above the widest, under `poolNeck` of it, with more standing over it.
+        let neck = (start..<widest).min { widths[$0] < widths[$1] } ?? widest
+        guard neck < widest, widths[neck] > 0, Double(widths[neck]) < poolNeck * Double(wide), neck - top >= 6 else { return nil }
+        let near = (neck...foot).filter { Double(widths[$0]) >= 0.97 * Double(wide) }
+        guard !near.isEmpty else { return nil }
+        let standing = Int((Double(near.reduce(0, +)) / Double(near.count)).rounded())
+        let columns = (0..<width).filter { solid(neck, $0) }
+        guard let left = columns.first, let right = columns.last else { return nil }
+        return (standing, neck, max(0, left - 1)...min(width - 1, right + 1))
+    }
+
     /// `picture`'s outline as runs of each row (alpha over half), from where it stands up (`base`),
     /// in its widths and heights, and how far that is above the foot of a node anchored at `anchor`
     /// (in its heights): rows below it left out.
-    static func slices(of picture: CGImage, anchor: CGPoint) -> (slices: [Slice], lift: CGFloat) {
+    /// `flatBase`: its base lies flat on the ground (`pool`).
+    static func slices(of picture: CGImage, anchor: CGPoint, flatBase: Bool = false) -> (slices: [Slice], lift: CGFloat) {
         let w = picture.width, h = picture.height
         guard w > 0, h > 0 else { return ([], 0) }
         var pixels = [UInt8](repeating: 0, count: w * h * 4)
@@ -502,7 +540,8 @@ nonisolated enum CanopyPainter {
         }
         guard drawn else { return ([], 0) }
         let widths = (0..<h).map { row in (0..<w).reduce(0) { $0 + (pixels[(row * w + $1) * 4 + 3] > 127 ? 1 : 0) } }
-        guard let standing = base(widths) else { return ([], 0) }
+        let flat = flatBase ? pool(widths, width: w) { row, x in pixels[(row * w + x) * 4 + 3] > 127 } : nil
+        guard let standing = flat?.standing ?? base(widths) else { return ([], 0) }
         // Where it stands up from, in heights above the picture's bottom (never under the node's
         // foot: its sprite sinks a little into the ground), and above that foot.
         let from = max(anchor.y, (CGFloat(h - 1 - standing) + 0.5) / CGFloat(h))
@@ -513,8 +552,10 @@ nonisolated enum CanopyPainter {
             let up = (CGFloat(h - row) - 0.5) / CGFloat(h) - from
             guard up >= 0 else { continue }
             var start: Int?
+            // On a flat base, below its neck only what's in line with the neck stands.
+            let columns = flat.flatMap { row > $0.neck ? $0.columns : nil }
             for x in 0...w {
-                let solid = x < w && pixels[(row * w + x) * 4 + 3] > 127
+                let solid = x < w && pixels[(row * w + x) * 4 + 3] > 127 && columns?.contains(x) != false
                 if solid, start == nil { start = x }
                 if !solid, let from = start {
                     let middle = CGFloat(from + x) / 2 / CGFloat(w) - anchor.x

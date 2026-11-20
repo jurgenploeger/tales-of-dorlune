@@ -80,6 +80,32 @@ def base_row(mask):
     if lift < 3 or lift > band - 3: return foot
     return foot - lift
 
+FLAT_BASES = {'oasis_palm'}  # bases lying flat on the ground (CanopyShade.flatBases)
+POOL_BAND = 0.6   # a wide flat base lies in the bottom this much (CanopyPainter.poolBand)
+POOL_NECK = 0.35  # narrowing above it to under this much of its width (CanopyPainter.poolNeck)
+
+def pool(mask):
+    """A wide flat base narrowing to a neck above it (a palm in its pond), mirroring
+    `CanopyPainter.pool`: (standing row, neck row, (left, right) columns) or None. Below the neck only
+    the columns in line with it cast; the rest lies flat on the ground."""
+    widths = mask.sum(1)
+    rows = np.where(widths > 0)[0]
+    if not len(rows): return None
+    top, foot = rows[0], rows[-1]
+    start = foot - int((foot - top + 1) * POOL_BAND)
+    if start <= top or foot - start < 8: return None
+    widest = start + int(np.argmax(widths[start:foot + 1]))
+    wide = widths[widest]
+    if wide < 0.6 * widths.max(): return None
+    if widest <= start: return None
+    neck = start + int(np.argmin(widths[start:widest]))
+    if widths[neck] <= 0 or widths[neck] >= POOL_NECK * wide or neck - top < 6: return None
+    near = [r for r in range(neck, foot + 1) if widths[r] >= 0.97 * wide]
+    if not near: return None
+    standing = int(round(sum(near) / len(near)))
+    cols = np.where(mask[neck])[0]
+    return standing, neck, (max(0, cols[0] - 1), min(mask.shape[1] - 1, cols[-1] + 1))
+
 def cast(mask, foot_x, foot_y, foot_row, s, H, W, walls=False):
     """The silhouette `mask` (its foot on `foot_row`) laid on the ground from (foot_x, foot_y), away
     from the sun `s`. Each run of a row is taken as a slice of a round crown: its shade an ellipse as
@@ -125,7 +151,14 @@ def canopy(hour, flecks_phase=(0.0, 0.0)):
             mask = spr[..., 3] > 0.5
             rows = np.where(mask.any(1))[0]
             if not len(rows): continue
-            foot = base_row(mask)
+            flat = pool(mask) if art in FLAT_BASES else None
+            if flat:
+                foot, neck, (left, right) = flat
+                mask = mask.copy()
+                mask[neck + 1:, :left] = False
+                mask[neck + 1:, right + 1:] = False
+            else:
+                foot = base_row(mask)
             walls = pp.assets.get(art, {}).get('kind') == 'building'
             depth = np.maximum(depth, cast(mask, x0 + w / 2, y0 + foot, foot, s, H, W, walls))
         if not depth.any(): return

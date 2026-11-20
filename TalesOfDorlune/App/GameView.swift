@@ -144,7 +144,7 @@ struct GameView: View {
             coordinator.battle?.holdTurnClock(!active, for: "away")
             // No push left on the stick while away: a thumb on it as the app went was never let go.
             coordinator.input.move = .zero
-            if active { coordinator.welcomeBack() }
+            if active { coordinator.welcomeBack() } else { coordinator.session.wentAway() }
         }
         .statusBarHidden()
         .persistentSystemOverlays(.hidden)

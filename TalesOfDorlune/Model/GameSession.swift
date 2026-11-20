@@ -48,6 +48,10 @@ final class GameSession {
     @ObservationIgnored var partedGuests: [UUID: Adventurer] = [:]
     /// When the party you've joined heads off on its own (`passPartyTime`).
     @ObservationIgnored var joinedUntil: Date = .distantFuture
+    /// Since when the game's been closed or in the background, till `passPartyTime` next looks (from
+    /// launch, the whole time before it): whoever's time with you ran out then leaves quietly, with no
+    /// line in the chat for each (the user, 2026-11-20). Set by `wentAway`.
+    @ObservationIgnored var awaySince: Date? = .distantPast
     /// Whether the weaver has a cape for you (`capesWaiting`), as of the last time a milestone could
     /// have been met (`checkTitles`) or a cape was woven: the "!" over her, without working out every
     /// cape's progress each frame.
@@ -1253,7 +1257,8 @@ final class GameSession {
         save()
     }
 
-    func leaveParty(_ id: UUID) {
+    /// `quietly`: no line in the chat (a friend whose time ran out while you were away, `passPartyTime`).
+    func leaveParty(_ id: UUID, quietly: Bool = false) {
         guard let friend = data.friends?.first(where: { $0.id == id }) else { return }
         data.partyIDs?.removeAll { $0 == id }
         data.partyLeaves?[id.uuidString] = nil
@@ -1268,7 +1273,7 @@ final class GameSession {
             parted.waitingAt = nil
             partedGuests[id] = parted
         }
-        post(L("{name} left the party. See you around!", ["name": friend.name]))
+        if !quietly { post(L("{name} left the party. See you around!", ["name": friend.name])) }
         save()
     }
 
