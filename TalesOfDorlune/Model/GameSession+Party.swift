@@ -148,27 +148,41 @@ extension GameSession {
     /// (`stayLength`, from when they joined; one in your party in a game saved before 0.7.92, from now),
     /// then heads off on their own. A friend who leaves stays a friend, and won't come along again
     /// for a while (`restAfterStay`). Returns who just left your party, and who led the party you'd
-    /// joined if it just headed off, for the scene to have them say goodbye.
+    /// joined if it just headed off, for the scene to have them say goodbye. Whoever's time ran out
+    /// while the game was closed or away (`awaySince`) is gone quietly: not in `left`, nothing in the chat.
     func passPartyTime(now: Date = Date()) -> (left: [Adventurer], headedOff: Adventurer?) {
         var left: [Adventurer] = []
+        var leftWhileAway: [Adventurer] = []
+        let away = awaySince
+        awaySince = nil
         for friend in friendsAtYourSide {
             if let leaves = data.partyLeaves?[friend.id.uuidString] {
-                if leaves <= now { left.append(friend) }
+                if leaves <= now {
+                    if let away, leaves >= away { leftWhileAway.append(friend) } else { left.append(friend) }
+                }
             } else {
                 var leaves = data.partyLeaves ?? [:]
                 leaves[friend.id.uuidString] = now.addingTimeInterval(stayLength())
                 data.partyLeaves = leaves
             }
         }
-        if !left.isEmpty {
+        if !left.isEmpty || !leftWhileAway.isEmpty {
             var rests = (data.partyRests ?? [:]).filter { $0.value > now }
-            for friend in left { rests[friend.id.uuidString] = now.addingTimeInterval(Self.restAfterStay) }
+            for friend in left + leftWhileAway { rests[friend.id.uuidString] = now.addingTimeInterval(Self.restAfterStay) }
             data.partyRests = rests
             for friend in left { leaveParty(friend.id) }
+            // Their time ran out while you were away: gone when you're back, with no goodbye.
+            for friend in leftWhileAway { leaveParty(friend.id, quietly: true) }
         }
         var headedOff: Adventurer?
         if joinedParty != nil, joinedUntil <= now { headedOff = leaveJoinedParty(.headedOff) }
         return (left, headedOff)
+    }
+
+    /// The game's gone to the background: whoever's time with you runs out before you're back leaves
+    /// quietly (`awaySince`).
+    func wentAway(now: Date = Date()) {
+        if awaySince == nil { awaySince = now }
     }
 
     /// What someone says as they head off on their own after a while together.

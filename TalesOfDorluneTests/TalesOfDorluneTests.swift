@@ -3750,7 +3750,12 @@ struct RulesTests {
         #expect(session.data.partyLeaves?[momo.id.uuidString] == nil)
         #expect(session.askAlong(momo.id, roll: 0, now: start.addingTimeInterval(GameSession.declineFor + 102))?.accepted == false)
         #expect(session.askAlong(momo.id, roll: 0, now: start.addingTimeInterval(GameSession.restAfterStay + 102))?.accepted == true)
-        session.leaveParty(momo.id)
+        // Their time ran out while the game was in the background: gone when you're back, quietly.
+        session.data.partyLeaves = [momo.id.uuidString: start.addingTimeInterval(150)]
+        session.wentAway(now: start.addingTimeInterval(140))
+        let chatLines = session.chat.count
+        #expect(session.passPartyTime(now: start.addingTimeInterval(160)).left.isEmpty)
+        #expect(session.partyMembers.isEmpty && session.chat.count == chatLines)
         #expect(session.passPartyTime(now: start.addingTimeInterval(201)).headedOff?.name == "Ash")
         #expect(session.joinedParty == nil && session.fightersAtYourSide.isEmpty)
         // A party of four has no room for you and a friend of yours.
