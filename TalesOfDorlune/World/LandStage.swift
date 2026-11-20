@@ -948,7 +948,69 @@ final class LandStage {
             ship.run(.repeatForever(.sequence([rise, rise.reversed()])))
             ship.run(.repeatForever(.sequence([lean, lean.reversed(), lean.reversed(), lean])))
             world.addChild(ship)
+            placeShipInWater(ship, picture: art.picture(of: sprite.texture), rise: rise)
         }
+    }
+
+    /// The ship's shadow on the sea and its reflection in it (the user, 2026-11-20: it sat on the
+    /// water with neither): the reflection the ship flipped about its keel, squashed and in the
+    /// sea's dark tones, bobbing against it; the shadow a soft dark oval along its hull, away from
+    /// the sun. Both only over the sea's cells, so neither lies over the shore by its stern.
+    private func placeShipInWater(_ ship: SKSpriteNode, picture: CGImage, rise: SKAction) {
+        let width = picture.width, height = picture.height
+        guard width > 0, height > 0, let pixels = PixelImage.pixels(of: picture, width: width, height: height) else { return }
+        // Its keel: its lowest opaque row, from the top.
+        var footRow = height - 1
+        search: for row in stride(from: height - 1, through: 0, by: -1) {
+            for col in 0..<width where pixels[(row * width + col) * 4 + 3] > 127 {
+                footRow = row
+                break search
+            }
+        }
+        let tile = WorldMap.tileSize
+        let up = CGFloat(height - 1 - footRow) / CGFloat(height)
+        let foot = CGPoint(x: ship.position.x, y: ship.position.y + (up - ship.anchorPoint.y) * ship.size.height)
+        // The sea's cells round it, as the ground shows them.
+        let path = CGMutablePath()
+        let middle = map.rawCell(at: CGPoint(x: ship.position.x, y: ship.position.y + WorldMap.seaDrop))
+        for dr in -12...12 {
+            for dc in -12...12 {
+                let cell = GridPoint(col: middle.col + dc, row: middle.row + dr)
+                guard !map.contains(cell) || map.ground[cell.row][cell.col] == .sea else { continue }
+                let corners = [(0, 0), (1, 0), (1, 1), (0, 1)].map {
+                    WorldMap.project(CGPoint(x: CGFloat(cell.col + $0.0) * tile, y: CGFloat(cell.row + $0.1) * tile))
+                }
+                path.addLines(between: corners)
+                path.closeSubpath()
+            }
+        }
+        let mask = SKShapeNode(path: path)
+        mask.fillColor = .white
+        mask.strokeColor = .white
+        mask.lineWidth = 1
+        mask.position = CGPoint(x: 0, y: -WorldMap.seaDrop)
+        let water = SKCropNode()
+        water.maskNode = mask
+        water.zPosition = ship.zPosition - 0.5
+        // Its shadow, down the screen and a little right of its hull.
+        let shadow = SKSpriteNode(texture: SoftTextures.glow, size: CGSize(width: ship.size.width * 0.85, height: 26))
+        shadow.color = .black
+        shadow.colorBlendFactor = 1
+        shadow.alpha = 0.35
+        shadow.position = CGPoint(x: foot.x + 8, y: foot.y + 2)
+        water.addChild(shadow)
+        // Its reflection, flipped about its keel.
+        let mirror = SKSpriteNode(texture: ship.texture, size: ship.size)
+        mirror.anchorPoint = CGPoint(x: 0.5, y: up)
+        mirror.position = foot
+        mirror.xScale = ship.xScale
+        mirror.yScale = -0.55
+        mirror.color = UIColor(red: 0.04, green: 0.16, blue: 0.28, alpha: 1)
+        mirror.colorBlendFactor = 0.8
+        mirror.alpha = 0.45
+        mirror.run(.repeatForever(.sequence([rise.reversed(), rise])))
+        water.addChild(mirror)
+        world.addChild(water)
     }
 
     /// A step the way `edge` faces, in cells.

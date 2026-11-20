@@ -245,13 +245,13 @@ enum BridgeArt {
         // pick from tools/bridge_preview.py): along the side nearer you, the deck's thickness, piles
         // under it into the water, its shadow on the water, and its side, posts and rails mirrored
         // in the water, darker than it, swaying a point like ripples. A road's bridge and a
-        // footbridge, not a jetty or a pier (those stand on posts of their own).
+        // footbridge, a jetty and a harbor's pier.
         // A bow bridge: its deck, the wall under it and its reflection, one picture (`bowSprite`).
         if bridge.bowed, let bow = bowSprite(for: bridge, pixels: pixels, palette: palette) { world.addChild(bow) }
         // A jetty out into a lake too, on its own legs (the user, 2026-11-17: "because this bridge
-        // ends in the water, it should have wooden stands in the water"); not a harbor's pier
-        // (`railed` false), which stands on posts of its own.
-        if bridge.kind != .jetty || railed, !bridge.bowed, let side = fill(style.beam, shade: 0.5, palette: palette),
+        // ends in the water, it should have wooden stands in the water"), and a harbor's pier out
+        // over the sea (`railed` false; without, it lay flat on the sea: the user, 2026-11-20).
+        if !bridge.bowed, let side = fill(style.beam, shade: 0.5, palette: palette),
            let pile = fill(style.beam, shade: 0.4, palette: palette) {
             let thick = 5 * scale
             let edge = CGFloat(bridge.lane)
