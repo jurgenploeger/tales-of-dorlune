@@ -131,14 +131,14 @@ struct CoachMarksView: View {
         return VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 6) {
                 IconImage(step.icon, size: 16).foregroundStyle(HUDStyle.gold)
-                Text(step.title).font(HUDStyle.font(14)).foregroundStyle(HUDStyle.gold)
+                Text(step.title).font(HUDStyle.title(14)).foregroundStyle(HUDStyle.gold)
                 Spacer(minLength: 4)
                 Text("\(index + 1) / \(steps.count)").font(HUDStyle.font(10)).foregroundStyle(HUDStyle.dim)
             }
             // Clear of the close button in the corner.
             .padding(.trailing, 26)
             Text(step.text)
-                .font(HUDStyle.font(11))
+                .font(HUDStyle.body(11))
                 .foregroundStyle(HUDStyle.cream)
                 .fixedSize(horizontal: false, vertical: true)
             HStack(spacing: 8) {

@@ -64,9 +64,17 @@ and the glass under it) at least 3 : 1 apart, or a line between them, or they me
 brand's sky, its gold and midnight, and Luckiest Guy belong to the title and loading screens, **never inside
 a game window**.
 
-**Type.** SF Pro Rounded Heavy (`HUDStyle.font`) for every label, 10 to 17 pt in windows (18 for a window's
-title, up to 18 for a primary button). Numbers that tick: `.monospacedDigit()`; `HUDStyle.mono` only for
-numbers on their own. Nothing under 10 pt; body text 11 to 13.
+**Type.** Three faces (the user, 2026-11-20: Allo "throughout the app", the heavy rounded face "for
+headlines and titles only"):
+- `HUDStyle.title`, SF Pro Rounded Heavy: a window's title, section titles, tabs, a card's or hero's name
+  as its heading, banners ("Victory!", "LEVEL UP!"), level badges, the map's names and compass.
+- `HUDStyle.font`, Allo Dorlune Bold (weight 760): every other label (a row's name, buttons, prices,
+  rewards, chips, a quiet note by a control).
+- `HUDStyle.body`, Allo Dorlune Body (weight 620): what you read through (speech, chat, stories,
+  descriptions, explanations).
+10 to 17 pt in windows (18 for a window's title, up to 18 for a primary button). Numbers that tick:
+`.monospacedDigit()` (Allo has tabular figures); `HUDStyle.mono` only for numbers on their own. Nothing
+under 10 pt; body text 11 to 13.
 
 **Buttons are glossy and bevelled, never flat.** `PixelButtonStyle` (a capsule with a shine, a dark rim and
 a hard 3 pt shadow that presses down, and the tap sound), `primary: true` for a screen's main choice,

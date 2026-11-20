@@ -122,7 +122,7 @@ struct ProfileWindow: View {
                     }
                     HStack(spacing: 6) {
                         Text(person.name)
-                            .font(HUDStyle.font(18))
+                            .font(HUDStyle.title(18))
                             .foregroundStyle(person.hostile ? Color(uiColor: Crowd.hostileColor) : HUDStyle.cream)
                             .lineLimit(1)
                             .minimumScaleFactor(0.7)
@@ -137,7 +137,7 @@ struct ProfileWindow: View {
                         .foregroundStyle(HUDStyle.gold)
                     if let note {
                         Text(note.text)
-                            .font(HUDStyle.font(11))
+                            .font(HUDStyle.body(11))
                             .foregroundStyle(note.color)
                             .multilineTextAlignment(.center)
                             .fixedSize(horizontal: false, vertical: true)
@@ -287,7 +287,7 @@ struct ProfileWindow: View {
                 CompanionDoll(art: species.art, skills: species.skills.compactMap { session.content.skill($0) })
                 HStack(spacing: 6) {
                     Text(L("{owner}'s {monster}", ["owner": person.name, "monster": species.name]))
-                        .font(HUDStyle.font(18))
+                        .font(HUDStyle.title(18))
                         .lineLimit(1)
                         .minimumScaleFactor(0.7)
                     ElementBadge(element: species.element)

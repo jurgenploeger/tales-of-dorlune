@@ -482,8 +482,8 @@ struct WorldAtlas: View {
         // 8 points between their faces, each 2 in from its 44-point frame's edge.
         HStack(spacing: 4) {
             mapButton(IconImage(.user, size: 16), label: L("Where you are")) { centreOnHere() }
-            mapButton(Text("−").font(HUDStyle.font(18)), label: L("Zoom out")) { zoom(by: 1 / 1.6) }
-            mapButton(Text("+").font(HUDStyle.font(18)), label: L("Zoom in")) { zoom(by: 1.6) }
+            mapButton(Text("−").font(HUDStyle.title(18)), label: L("Zoom out")) { zoom(by: 1 / 1.6) }
+            mapButton(Text("+").font(HUDStyle.title(18)), label: L("Zoom in")) { zoom(by: 1.6) }
         }
     }
 
@@ -948,7 +948,7 @@ struct WorldAtlas: View {
 
     private func label(_ text: String, size: CGFloat, color: Color) -> some View {
         Text(text)
-            .font(HUDStyle.font(size))
+            .font(HUDStyle.title(size))
             .foregroundStyle(color)
             .lineLimit(1)
             .fixedSize()
@@ -1103,7 +1103,7 @@ struct MapCompass: View {
             ForEach(points, id: \.label) { point in
                 let radians = point.angle * Double.pi / 180
                 Text(point.label)
-                    .font(HUDStyle.font(size * (compact ? 0.22 : point.main ? 0.2 : 0.15)))
+                    .font(HUDStyle.title(size * (compact ? 0.22 : point.main ? 0.2 : 0.15)))
                     .foregroundStyle(point.main ? Self.needleRed : HUDStyle.ink)
                     .offset(x: CGFloat(sin(radians)) * size * reach, y: -CGFloat(cos(radians)) * size * reach)
             }

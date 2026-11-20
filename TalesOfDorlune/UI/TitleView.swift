@@ -505,7 +505,7 @@ private struct ChangelogPanel: View {
     private func header(_ release: ReleaseNote, isOpen: Bool) -> some View {
         VStack(alignment: .leading, spacing: 2) {
             HStack(alignment: .firstTextBaseline) {
-                Text("v\(release.version)").font(HUDStyle.font(16)).foregroundStyle(HUDStyle.gold)
+                Text("v\(release.version)").font(HUDStyle.title(16)).foregroundStyle(HUDStyle.gold)
                 Spacer()
                 Text(release.date).font(HUDStyle.font(10)).foregroundStyle(HUDStyle.dim)
                 IconImage(isOpen ? .chevronUp : .chevronDown, size: 12)

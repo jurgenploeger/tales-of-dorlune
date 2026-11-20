@@ -343,7 +343,7 @@ private struct MonsterPage: View {
                     .background(Circle().fill(Color(uiColor: monster.element.color).opacity(0.25)))
                 VStack(alignment: .leading, spacing: 4) {
                     Text(monster.name)
-                        .font(HUDStyle.font(17))
+                        .font(HUDStyle.title(17))
                         .foregroundStyle(HUDStyle.gold)
                     HStack(spacing: 6) {
                         ElementBadge(element: monster.element)
@@ -389,7 +389,7 @@ private struct MonsterPage: View {
                     VStack(alignment: .leading, spacing: 6) {
                         ForEach(Array(victory.story.enumerated()), id: \.offset) { _, paragraph in
                             Text(paragraph)
-                                .font(HUDStyle.font(11))
+                                .font(HUDStyle.body(11))
                                 .foregroundStyle(HUDStyle.cream)
                                 .fixedSize(horizontal: false, vertical: true)
                         }

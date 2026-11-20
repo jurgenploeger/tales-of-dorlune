@@ -134,7 +134,7 @@ struct SkillChoices: View {
                 if owner == nil {
                     // Your hero's new skills come from the guild master (greyed till then).
                     Text(L("New skills are learned at your guild, a skill point each. {hint}", ["hint": session.guildHint]))
-                        .font(HUDStyle.font(10))
+                        .font(HUDStyle.body(10))
                         .foregroundStyle(HUDStyle.dim)
                         .fixedSize(horizontal: false, vertical: true)
                 }
@@ -273,7 +273,7 @@ private struct SkillDetail: View {
                 if isNew, owner == nil {
                     // Your hero learns new skills from the guild master, not here.
                     Text(session.guildHint)
-                        .font(HUDStyle.font(10))
+                        .font(HUDStyle.body(10))
                         .foregroundStyle(HUDStyle.gold)
                         .multilineTextAlignment(.trailing)
                         .fixedSize(horizontal: false, vertical: true)
@@ -342,11 +342,11 @@ struct LevelUpCard: View {
         VStack(spacing: 12) {
             VStack(spacing: 2) {
                 Text(title)
-                    .font(HUDStyle.font(owner == nil ? 26 : 22))
+                    .font(HUDStyle.title(owner == nil ? 26 : 22))
                     .foregroundStyle(HUDStyle.gold)
                     .multilineTextAlignment(.center)
                 Text(hint(points))
-                    .font(HUDStyle.font(12))
+                    .font(HUDStyle.body(12))
                     .foregroundStyle(HUDStyle.cream)
                     .multilineTextAlignment(.center)
             }

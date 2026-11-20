@@ -10,7 +10,7 @@ options:
 settings:
   base:
     SWIFT_VERSION: "6.0"
-    MARKETING_VERSION: "0.9.123"
+    MARKETING_VERSION: "0.9.124"
     CURRENT_PROJECT_VERSION: "1"
 
 targets:
@@ -48,7 +48,7 @@ targets:
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         # Body text's font (HUDStyle.body, tools/allo_font.py), from the bundle's root.
-        UIAppFonts: [AlloDorlune-Body.ttf]
+        UIAppFonts: [AlloDorlune-Body.ttf, AlloDorlune-Bold.ttf]
         UILaunchScreen: {}
         UIRequiresFullScreen: true
         UIStatusBarHidden: true

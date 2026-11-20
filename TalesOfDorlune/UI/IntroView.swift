@@ -261,7 +261,7 @@ private struct PageTitle: View {
 
     var body: some View {
         Text(text)
-            .font(HUDStyle.font(24))
+            .font(HUDStyle.title(24))
             .foregroundStyle(HUDStyle.gold)
             .shadow(color: HUDStyle.frameDark, radius: 0, x: 1, y: 1)
             .fixedSize(horizontal: false, vertical: true)
@@ -273,7 +273,7 @@ private struct PageTitle: View {
 /// A slide's words under its title.
 private extension View {
     func slideText() -> some View {
-        font(HUDStyle.font(15))
+        font(HUDStyle.body(15))
             .foregroundStyle(HUDStyle.cream)
             .lineSpacing(2)
     }
@@ -642,10 +642,10 @@ struct IntroAtlas: View {
 
     private func controls(in size: CGSize) -> some View {
         VStack(spacing: 6) {
-            mapButton(Text("+").font(HUDStyle.font(16)), label: L("Zoom in")) {
+            mapButton(Text("+").font(HUDStyle.title(16)), label: L("Zoom in")) {
                 zoom(to: scale * 1.6, around: CGPoint(x: clearArea(in: size).midX, y: clearArea(in: size).midY), from: (scale: scale, pan: pan), in: size)
             }
-            mapButton(Text("−").font(HUDStyle.font(16)), label: L("Zoom out")) {
+            mapButton(Text("−").font(HUDStyle.title(16)), label: L("Zoom out")) {
                 zoom(to: scale / 1.6, around: CGPoint(x: clearArea(in: size).midX, y: clearArea(in: size).midY), from: (scale: scale, pan: pan), in: size)
             }
         }

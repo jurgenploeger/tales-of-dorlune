@@ -1805,7 +1805,7 @@ private struct ResultPanel: View {
     private var summary: some View {
         VStack(spacing: 10) {
             Text(title)
-                .font(HUDStyle.font(26))
+                .font(HUDStyle.title(26))
                 .foregroundStyle(result.outcome == .victory ? HUDStyle.gold : HUDStyle.cream)
                 // Clear of the close button, and still centred.
                 .lineLimit(1)
@@ -1958,7 +1958,7 @@ private struct BossStoryCard: View {
     private var heading: some View {
         VStack(spacing: 6) {
             Text(story.title)
-                .font(HUDStyle.font(22))
+                .font(HUDStyle.title(22))
                 .foregroundStyle(HUDStyle.gold)
                 .multilineTextAlignment(.center)
             HStack(spacing: 8) {
@@ -1975,7 +1975,7 @@ private struct BossStoryCard: View {
         VStack(spacing: 10) {
             ForEach(Array(story.paragraphs.enumerated()), id: \.offset) { index, paragraph in
                 Text(paragraph)
-                    .font(HUDStyle.font(14))
+                    .font(HUDStyle.body(14))
                     .foregroundStyle(HUDStyle.cream)
                     .multilineTextAlignment(.center)
                     .lineSpacing(2)
@@ -2146,7 +2146,7 @@ private struct NewCards: View {
     var body: some View {
         VStack(spacing: 6) {
             Text(ids.count == 1 ? L("New card!") : L("New cards!"))
-                .font(HUDStyle.font(14))
+                .font(HUDStyle.title(14))
                 .foregroundStyle(HUDStyle.gold)
             CenteredRows(spacing: 10, rowSpacing: 8) {
                 ForEach(ids, id: \.self) { id in
@@ -2179,7 +2179,7 @@ private struct PartyLevelUps: View {
     var body: some View {
         VStack(spacing: 6) {
             Text(others.count == 1 ? L("Level up!") : L("Level ups!"))
-                .font(HUDStyle.font(14))
+                .font(HUDStyle.title(14))
                 .foregroundStyle(HUDStyle.gold)
             CenteredRows(spacing: 6, rowSpacing: 6) {
                 ForEach(Array(others.enumerated()), id: \.offset) { _, other in
@@ -2425,9 +2425,9 @@ struct LevelUpBanner: View {
                 .shadow(color: HUDStyle.gold.opacity(0.9), radius: 10)
                 .frame(width: size, height: size)
             VStack(spacing: -4) {
-                Text(L("LV")).font(HUDStyle.font(size * 0.19))
+                Text(L("LV")).font(HUDStyle.title(size * 0.19))
                 Text("\(level)")
-                    .font(HUDStyle.font(size * 0.42))
+                    .font(HUDStyle.title(size * 0.42))
                     .minimumScaleFactor(0.5)
                     .lineLimit(1)
             }
@@ -2445,7 +2445,7 @@ struct LevelUpBanner: View {
 
     private func title(size: CGFloat) -> some View {
         Text(L("LEVEL UP!"))
-            .font(HUDStyle.font(size))
+            .font(HUDStyle.title(size))
             .foregroundStyle(HUDStyle.gold)
             .shadow(color: HUDStyle.orange.opacity(0.9), radius: 0, x: 2, y: 2)
     }
@@ -2558,7 +2558,7 @@ struct TreasureCard: View {
                     .padding(.top, 4)
                 VStack(spacing: 2) {
                     Text(L("Treasure!"))
-                        .font(HUDStyle.font(26))
+                        .font(HUDStyle.title(26))
                         .foregroundStyle(HUDStyle.gold)
                         // Clear of the close button, and still centred.
                         .lineLimit(1)
