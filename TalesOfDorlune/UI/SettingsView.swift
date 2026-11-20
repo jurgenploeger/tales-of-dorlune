@@ -274,7 +274,7 @@ struct SettingsView: View {
         VStack(alignment: .leading, spacing: 6) {
             HStack(spacing: 8) {
                 Text(title)
-                    .font(HUDStyle.font(13))
+                    .font(HUDStyle.title(13))
                     .foregroundStyle(HUDStyle.gold)
                     .fixedSize()
                 HUDStyle.gold.opacity(0.3).frame(height: 1)
