@@ -435,7 +435,9 @@ final class ArtLibrary {
     /// A cell of a land's water, out from its shores, in the pond's tones (`pondTones`): each pixel the
     /// tone `tone` gives for where it lies in the world (`GroundTiles.PondField.tone`), with the tile's own
     /// ripples over it. One for each cell, as the tones change across a lake.
-    func pondTile(_ id: String, _ index: Int, cell: GridPoint, tone: (Double, Double) -> Int) -> SKTexture {
+    /// `seaward`: how much of the sea's colour the water at a point takes (`seaTones`), near a river's mouth.
+    func pondTile(_ id: String, _ index: Int, cell: GridPoint, seaward: ((Double, Double) -> Double)? = nil,
+                  tone: (Double, Double) -> Int) -> SKTexture {
         let key = "pond|\(id)|\(cell.col),\(cell.row)|\(index % 4)"
         if let cached = blended[key] { return cached }
         let size = max(tileImage(id).width, 16)
@@ -446,7 +448,8 @@ final class ArtLibrary {
             for px in 0..<size {
                 let x = Double(cell.col) + (Double(px) + 0.5) / Double(size)
                 let y = Double(cell.row) + 1 - (Double(py) + 0.5) / Double(size)
-                Self.paintPond(&out, (py * size + px) * 4, texels: texels, tone: tone(x, y), palette: palette, shade: 1)
+                let sea = seaward.map { (tones: seaTones, share: $0(x, y)) }
+                Self.paintPond(&out, (py * size + px) * 4, texels: texels, tone: tone(x, y), palette: palette, shade: 1, sea: sea)
             }
         }
         let texture = makeTexture(out, size: size)
@@ -488,6 +491,14 @@ final class ArtLibrary {
         return tones
     }
 
+    /// The sea's own pond tones (`pondTones` of its average colour): the sea as it's drawn, graded for
+    /// no land, the same blue round every land. What a river turns to as it runs into it (`paintPond`).
+    private(set) lazy var seaTones: [(r: Double, g: Double, b: Double)] = {
+        let image = picture(of: tileTexture("raw:sea"))
+        guard image.width > 0, let texels = PixelImage.pixels(of: image, width: image.width, height: image.height) else { return [] }
+        return Self.pondPalette(texels).tones
+    }()
+
     /// Tile `id`'s pond tones and average brightness (`pondPalette`), as graded now.
     func pondPalette(of id: String) -> (tones: [(r: Double, g: Double, b: Double)], mean: Double) {
         Self.pondPalette(variantPixels(id, 0, size: max(tileImage(id).width, 16)))
@@ -510,12 +521,19 @@ final class ArtLibrary {
 
     /// Pixel `index` of `out` in tone `tone`, the tile's own ripples (`texels` above or below its average)
     /// kept over it, darkened by `shade`.
+    /// `sea`: the sea's own tones and how much of them to take (near a river's mouth, so the river
+    /// turns to the sea's colour as it runs into it instead of meeting it in a hard edge).
     nonisolated static func paintPond(_ out: inout [UInt8], _ index: Int, texels: [UInt8],
-                                      tone: Int, palette: (tones: [(r: Double, g: Double, b: Double)], mean: Double), shade: Double) {
+                                      tone: Int, palette: (tones: [(r: Double, g: Double, b: Double)], mean: Double), shade: Double,
+                                      sea: (tones: [(r: Double, g: Double, b: Double)], share: Double)? = nil) {
         guard index + 2 < texels.count, index + 2 < out.count, !palette.tones.isEmpty else { return }
         let lum = (0.3 * Double(texels[index]) + 0.59 * Double(texels[index + 1]) + 0.11 * Double(texels[index + 2])) / 255
         let ripple = (lum - palette.mean) * 1.1
-        let colour = palette.tones[max(0, min(palette.tones.count - 1, tone))]
+        var colour = palette.tones[max(0, min(palette.tones.count - 1, tone))]
+        if let sea, sea.share > 0, sea.tones.count == palette.tones.count {
+            let other = sea.tones[max(0, min(sea.tones.count - 1, tone))], t = min(1, sea.share)
+            colour = (colour.r + (other.r - colour.r) * t, colour.g + (other.g - colour.g) * t, colour.b + (other.b - colour.b) * t)
+        }
         out[index] = UInt8(max(0, min(255, ((colour.r + ripple) * shade * 255).rounded())))
         out[index + 1] = UInt8(max(0, min(255, ((colour.g + ripple) * shade * 255).rounded())))
         out[index + 2] = UInt8(max(0, min(255, ((colour.b + ripple) * shade * 255).rounded())))
@@ -764,7 +782,9 @@ final class ArtLibrary {
     /// ground there, its patches stopped dead along the border (playtesting 2026-10-16).
     /// `pond`: the tone of a land's own water at a point of the world (`GroundTiles.PondField.tone`), its
     /// lakes and rivers drawn in the pond's tones (`pondTones`) instead of shaded from the shore.
-    func organicTile(base: String, layers: [GroundLayer], cell: GridPoint, variant: Int, pond: ((Double, Double) -> Int)? = nil) -> SKTexture {
+    /// `seaward`: how much of the sea's colour its pond water takes at a point (`paintPond`).
+    func organicTile(base: String, layers: [GroundLayer], cell: GridPoint, variant: Int, pond: ((Double, Double) -> Int)? = nil,
+                     seaward: ((Double, Double) -> Double)? = nil) -> SKTexture {
         let hasWater = layers.contains { $0.style == .water || $0.style == .cut }
         let place = (hasWater ? "@\(cell.col),\(cell.row)#\(variant)" : "") + (pond == nil ? "" : "|pond")
         let key = "organic|\(base)|" + layers.map { "\($0.tile):\($0.mask):\($0.style):\($0.from?.land ?? ""):\($0.fade?.key ?? "")" }.joined(separator: "|") + place
@@ -918,7 +938,8 @@ final class ArtLibrary {
                                                             wobble: Self.wobble(probe.x, probe.y, style: layer.style, cell: cell))
                                 if below <= start { tone = 6 }
                             }
-                            Self.paintPond(&out, index, texels: texels, tone: tone, palette: palette, shade: shadowed ? 0.7 : 1)
+                            let sea = seaward.map { (tones: seaTones, share: $0(Double(cell.col) + 0.5 + x, Double(cell.row) + 0.5 + y)) }
+                            Self.paintPond(&out, index, texels: texels, tone: tone, palette: palette, shade: shadowed ? 0.7 : 1, sea: sea)
                             out[index + 3] = 255
                         } else if depth > 0 {
                             // Foam along the edge, broken here and there, with a few flecks out past it.
