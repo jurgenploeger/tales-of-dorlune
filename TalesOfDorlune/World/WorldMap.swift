@@ -2901,14 +2901,16 @@ nonisolated final class WorldMap: @unchecked Sendable {
             let reach = Double.random(in: low...high, using: &draw)
             // Squashed and turned a little, and its rim wobbling, so no two are the same round.
             let stretch = Double.random(in: 0.7...1.3, using: &draw)
+            // Two wobbles round the rim, a slow and a quick one, so it bulges and dips like a meadow's.
             let wobble = (Double.random(in: 0..<(2 * Double.pi), using: &draw), Double.random(in: 0.12...0.25, using: &draw))
-            let span = Int(reach * 1.4) + 1
+            let ripple = (Double.random(in: 0..<(2 * Double.pi), using: &draw), Double.random(in: 0.06...0.14, using: &draw))
+            let span = Int(reach * 1.9) + 1
             var cells: [GridPoint] = []
             for dr in -span...span {
                 for dc in -span...span {
                     let x = Double(dc) / stretch, y = Double(dr) * stretch
                     let angle = atan2(y, x)
-                    let edge = reach * (1 + wobble.1 * sin(3 * angle + wobble.0))
+                    let edge = reach * (1 + wobble.1 * sin(3 * angle + wobble.0) + ripple.1 * sin(7 * angle + ripple.0))
                     guard (x * x + y * y).squareRoot() <= edge else { continue }
                     let cell = GridPoint(col: middle.col + dc, row: middle.row + dr)
                     if suits(cell) { cells.append(cell) }

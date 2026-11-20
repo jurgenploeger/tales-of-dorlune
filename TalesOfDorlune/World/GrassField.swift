@@ -90,6 +90,12 @@ final class GrassField {
                     let frames = designs[Int.random(in: 0..<designs.count, using: &draw)]
                     let flipped = Bool.random(using: &draw)
                     let phase = CGFloat.random(in: 0..<1, using: &draw)
+                    // Along the rim, a tuft grows only where the patch reaches it: how much of the
+                    // cells round its spot are grass, blended smoothly between their middles, a
+                    // little ragged from tuft to tuft. Every cell filled to its edges, a patch was
+                    // a stack of squares (the user, 2026-11-20).
+                    let ragged = CGFloat.random(in: -0.18...0.18, using: &draw)
+                    if rim, Self.reach(of: cells, at: CGFloat(cell.col) + u, CGFloat(cell.row) + v) + ragged < 0.5 { continue }
                     // Only the tufts on the rim's outer side count as its edge.
                     let edge = rim && (u < 0.34 || u > 0.66 || v < 0.34 || v > 0.66)
                     let texture = frames[0][Self.leans]
@@ -106,6 +112,19 @@ final class GrassField {
             }
             byCell[cell] = tufts
         }
+    }
+
+    /// How far the patch reaches a spot (in cells, a cell's middle at +0.5): each nearby cell 1 if
+    /// it's grass, 0 if not, blended bilinearly between their middles, so the rim's 0.5 runs between
+    /// the cells' middles and cuts their corners instead of following their edges.
+    private static func reach(of cells: Set<GridPoint>, at x: CGFloat, _ y: CGFloat) -> CGFloat {
+        let fx = x - 0.5, fy = y - 0.5
+        let col = Int(fx.rounded(.down)), row = Int(fy.rounded(.down))
+        let tx = fx - CGFloat(col), ty = fy - CGFloat(row)
+        func grass(_ dc: Int, _ dr: Int) -> CGFloat { cells.contains(GridPoint(col: col + dc, row: row + dr)) ? 1 : 0 }
+        let bottom = grass(0, 0) * (1 - tx) + grass(1, 0) * tx
+        let top = grass(0, 1) * (1 - tx) + grass(1, 1) * tx
+        return bottom * (1 - ty) + top * ty
     }
 
     var isEmpty: Bool { byCell.isEmpty }
