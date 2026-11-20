@@ -90,6 +90,9 @@ final class Walker: SKNode {
     /// under the trees (-99,300), under all that stands, so a long shadow at evening runs over the
     /// ground, not over a tree behind.
     private static let figureDepth: CGFloat = -99_250
+    /// Where a speech bubble or emote lies in a map's scene: over the night's shade (`Sky`, 43,000)
+    /// and the lit windows (`LandStage.addWindows`, 43,100), under a lightning flash (43,500).
+    private static let bubbleDepth: CGFloat = 43_300
     /// Softens the figure (playtesting 2026-11-14: "a bit more softer and blurred gradient at the
     /// end, it's too stark"): each pixel's alpha taken from a few round it, so its edge is soft, and
     /// fading toward its head, the shadow's far end. `a_frame`: the frame's bottom and height in its
@@ -257,6 +260,7 @@ final class Walker: SKNode {
         if figure.xScale != turn.xScale * wide { figure.xScale = turn.xScale * wide }
         guard scene is ContinentScene || scene is WorldScene else {
             figure.zPosition = -1
+            bubble?.zPosition = 6_000
             return
         }
         var depth = zPosition + body.zPosition
@@ -266,6 +270,9 @@ final class Walker: SKNode {
             node = above.parent
         }
         figure.zPosition = Self.figureDepth - depth
+        // The bubble over the night's shade and the lit windows: under them it was dimmed, and a
+        // building's windows showed through it (the user, 2026-11-20). The nearer walker's on top.
+        bubble?.zPosition = Self.bubbleDepth + min(50, max(-50, depth * 0.001)) - (depth - body.zPosition)
     }
 
     /// `badge`: BOT after the name.
