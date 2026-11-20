@@ -36,7 +36,7 @@ struct TitleBadge: View {
         HStack(spacing: size * 0.3) {
             if legendary { IconImage(.star, size: size * 0.8) }
             Text(title.name)
-                .font(HUDStyle.font(size))
+                .font(HUDStyle.title(size))
                 .lineLimit(1)
                 .minimumScaleFactor(0.8)
             if legendary { IconImage(.star, size: size * 0.8) }

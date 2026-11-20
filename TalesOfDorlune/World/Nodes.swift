@@ -11,8 +11,9 @@ enum Nodes {
 
     /// A cream speech bubble with a little tail, anchored at the tail's tip.
     static func speechBubble(_ text: String, maxWidth: CGFloat = 150) -> SKSpriteNode {
+        // What people say is body text, in Allo Dorlune (`HUDStyle.body`).
         let base = UIFont.systemFont(ofSize: 11, weight: .bold)
-        let font = base.fontDescriptor.withDesign(.rounded).map { UIFont(descriptor: $0, size: 11) } ?? base
+        let font = UIFont(name: "AlloDorlune-Body", size: 11) ?? base
         let paragraph = NSMutableParagraphStyle()
         paragraph.alignment = .center
         let string = NSAttributedString(string: text, attributes: [.font: font, .foregroundColor: ink, .paragraphStyle: paragraph])

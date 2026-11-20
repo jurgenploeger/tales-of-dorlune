@@ -453,7 +453,7 @@ struct PageTabs<Page: Hashable & CaseIterable>: View {
             }
         } label: {
             Text(title(item))
-                .font(HUDStyle.font(13))
+                .font(HUDStyle.title(13))
                 .lineLimit(1)
                 .fixedSize()
                 // The one you're on in gold on the glass; the others in the title bar's lettering
@@ -752,7 +752,7 @@ struct SectionTitle: View {
     var body: some View {
         HStack(spacing: 8) {
             Text((detail.map { text + " · " + $0 } ?? text).uppercased())
-                .font(HUDStyle.font(11))
+                .font(HUDStyle.title(11))
                 .foregroundStyle(HUDStyle.gold)
                 .monospacedDigit()
                 .fixedSize()
@@ -812,7 +812,7 @@ private struct CharacterTab: View {
                 // The hero in the middle, what they wear in the slots around them.
                 PaperDoll(session: session, change: onChange)
                 // The name is chosen when the hero is made and stays.
-                Text(hero.name).font(HUDStyle.font(18))
+                Text(hero.name).font(HUDStyle.title(18))
                 if let title = session.wornTitle {
                     TitleBadge(title: title, size: 12)
                 }
@@ -925,7 +925,7 @@ struct StatsPanel: View {
             HStack(alignment: .firstTextBaseline) {
                 // Its gold rule runs on to the level.
                 SectionTitle(text: L("Stats"))
-                Text(level).font(HUDStyle.font(15))
+                Text(level).font(HUDStyle.title(15))
             }
             bar(L("HP"), hp, stats.hp, HUDStyle.hp)
             // Companions without magic have no MP to show.

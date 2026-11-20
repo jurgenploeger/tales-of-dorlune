@@ -278,7 +278,7 @@ struct ChatLineView: View {
         case .system:
             ruled {
                 Text(line.text)
-                    .font(HUDStyle.font(11))
+                    .font(HUDStyle.body(11))
                     .foregroundStyle(color)
                     .multilineTextAlignment(.center)
             }
@@ -289,7 +289,7 @@ struct ChatLineView: View {
                 IconImage(.sparkles, size: 14)
                     .foregroundStyle(HUDStyle.gold)
                 Text(line.text)
-                    .font(HUDStyle.font(12))
+                    .font(HUDStyle.body(12))
                     .foregroundStyle(HUDStyle.gold)
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
@@ -307,7 +307,7 @@ struct ChatLineView: View {
                     IconImage(ChatLineView.icon(of: line.tone ?? .system), size: 11)
                         .foregroundStyle(color)
                     Text(line.text)
-                        .font(HUDStyle.font(11))
+                        .font(HUDStyle.body(11))
                         .foregroundStyle(color)
                         .multilineTextAlignment(.center)
                         .fixedSize(horizontal: false, vertical: true)
@@ -336,7 +336,7 @@ struct ChatLineView: View {
                             .monospacedDigit()
                     }
                     Text(line.text)
-                        .font(HUDStyle.font(12))
+                        .font(HUDStyle.body(12))
                         .foregroundStyle(HUDStyle.cream)
                         .fixedSize(horizontal: false, vertical: true)
                         .frame(maxWidth: .infinity, alignment: .leading)

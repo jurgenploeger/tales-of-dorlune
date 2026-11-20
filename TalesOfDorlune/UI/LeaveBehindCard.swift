@@ -13,7 +13,7 @@ struct LeaveBehindCard: View {
         VStack(spacing: 12) {
             VStack(spacing: 3) {
                 Text(L("Party full!"))
-                    .font(HUDStyle.font(24))
+                    .font(HUDStyle.title(24))
                     .foregroundStyle(HUDStyle.gold)
                     // Clear of the close button, and still centred.
                     .lineLimit(1)

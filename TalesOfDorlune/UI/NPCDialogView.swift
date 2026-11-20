@@ -285,7 +285,7 @@ struct NPCDialogView: View {
                             // Who you're trading with, and what you have to spend.
                             HStack(spacing: 8) {
                                 Text(npc.name)
-                                    .font(HUDStyle.font(15))
+                                    .font(HUDStyle.title(15))
                                     .foregroundStyle(HUDStyle.gold)
                                     .lineLimit(1)
                                     .minimumScaleFactor(0.8)
@@ -1266,14 +1266,14 @@ private struct QuestCompleteCard: View {
         VStack(spacing: 10) {
             VStack(spacing: 2) {
                 Text(L("Quest complete!"))
-                    .font(HUDStyle.font(24))
+                    .font(HUDStyle.title(24))
                     .foregroundStyle(HUDStyle.gold)
                     // Clear of the close button, and still centred.
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
                     .padding(.horizontal, 18)
                 Text(quest.title)
-                    .font(HUDStyle.font(14))
+                    .font(HUDStyle.title(14))
                     .foregroundStyle(HUDStyle.cream)
                     .multilineTextAlignment(.center)
             }

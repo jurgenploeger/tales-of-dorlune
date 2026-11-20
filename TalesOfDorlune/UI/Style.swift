@@ -61,15 +61,24 @@ enum HUDStyle {
         Color.adaptive(light: Color(red: 0.12, green: 0.33, blue: 0.66), dark: Color(red: 0.07, green: 0.17, blue: 0.36)),
     ]
 
-    static func font(_ size: CGFloat) -> Font {
+    /// Headlines and titles only, in SF Pro Rounded Heavy: a window's title, a section's title, the
+    /// tabs, a card's or a hero's name as its heading, banners and big numbers (a level badge). The
+    /// user, 2026-11-20: "keep the other font more for headlines and titles only".
+    static func title(_ size: CGFloat) -> Font {
         .system(size: size, weight: .heavy, design: .rounded)
     }
 
+    /// Every other label (names in a row, buttons, prices, rewards, chips, notes on a control) in
+    /// Allo Dorlune Bold (Allo at roundness 60 and weight 760, `tools/allo_font.py`; the user,
+    /// 2026-11-20: "use it more throughout the app"). Headlines are in `title`.
+    static func font(_ size: CGFloat) -> Font {
+        .custom("AlloDorlune-Bold", fixedSize: size)
+    }
+
     /// Body text: what people say, stories, descriptions, explanations and notes, in Allo Dorlune
-    /// (Allo at roundness 60 and weight 560, `tools/allo_font.py`; the user's pick from a mock-up,
-    /// 2026-11-18: lighter and more open than the heavy rounded face for anything you read through).
-    /// Titles, names, buttons, rewards and numbers stay in `font`. Scripts Allo lacks (Cyrillic,
-    /// Chinese, Japanese, Korean) fall back to the system's font, letter by letter.
+    /// Body (weight 620; 560 until 2026-11-20, the user: "slightly thicker"; the user's pick from a
+    /// mock-up, 2026-11-18). Scripts Allo lacks (Cyrillic, Chinese, Japanese, Korean) fall back to
+    /// the system's font, letter by letter, in `font` and `body` alike.
     static func body(_ size: CGFloat) -> Font {
         .custom("AlloDorlune-Body", fixedSize: size)
     }
@@ -308,7 +317,7 @@ struct WindowTitle: View {
     var body: some View {
         HStack(spacing: 8) {
             text
-                .font(HUDStyle.font(bar ? 17 : 18))
+                .font(HUDStyle.title(bar ? 17 : 18))
                 .foregroundStyle(bar ? HUDStyle.barText : HUDStyle.gold)
                 .shadow(color: bar ? HUDStyle.barTextShadow : HUDStyle.frameDark, radius: 0, x: 0, y: 1)
                 .lineLimit(2)

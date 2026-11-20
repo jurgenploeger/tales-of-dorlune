@@ -170,7 +170,7 @@ private struct VignetteHUDView: View {
                     if let reward = hud.victory {
                         VStack(spacing: 4) {
                             Text(L("Victory!"))
-                                .font(HUDStyle.font(15))
+                                .font(HUDStyle.title(15))
                                 .foregroundStyle(HUDStyle.gold)
                             HStack(spacing: 10) {
                                 Label { Text(L("+{exp} EXP", ["exp": reward.exp])) } icon: { IconImage(.star, size: 11).foregroundStyle(HUDStyle.exp) }

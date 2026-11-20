@@ -172,7 +172,7 @@ struct ItemInfoCard: View {
             ItemIcon(item: item, size: 52)
             VStack(alignment: .leading, spacing: 2) {
                 Text(item.name)
-                    .font(HUDStyle.font(17))
+                    .font(HUDStyle.title(17))
                     .foregroundStyle(HUDStyle.gold)
                 // Its rarity in its colour before what kind it is (a common one says nothing).
                 let rarity = Content.shared.rarity(of: item.id)

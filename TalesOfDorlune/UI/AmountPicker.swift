@@ -35,7 +35,7 @@ struct AmountPicker: View {
         let count = self.count, top = self.top
         return HStack(spacing: 8) {
             // −, + and All the same size, the signs big enough to read at a glance (playtesting 2026-10-26).
-            Button { amount = max(1, count - 1) } label: { Self.face(Text(verbatim: "−").font(HUDStyle.font(22))) }
+            Button { amount = max(1, count - 1) } label: { Self.face(Text(verbatim: "−").font(HUDStyle.title(22))) }
                 .buttonStyle(PixelButtonStyle())
                 .disabled(count <= 1)
                 .opacity(count <= 1 ? 0.5 : 1)
@@ -50,7 +50,7 @@ struct AmountPicker: View {
             .buttonStyle(PressScaleStyle())
             .accessibilityLabel(coins ? L("Price: {gold}g", ["gold": count]) : L("Amount: {count}", ["count": count]))
             .accessibilityHint(coins ? L("Type the price") : L("Type how many"))
-            Button { amount = min(top, count + 1) } label: { Self.face(Text(verbatim: "+").font(HUDStyle.font(22))) }
+            Button { amount = min(top, count + 1) } label: { Self.face(Text(verbatim: "+").font(HUDStyle.title(22))) }
                 .buttonStyle(PixelButtonStyle())
                 .disabled(count >= top)
                 .opacity(count >= top ? 0.5 : 1)

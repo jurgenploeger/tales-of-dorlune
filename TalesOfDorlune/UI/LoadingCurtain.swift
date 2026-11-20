@@ -262,7 +262,7 @@ struct MapLoadingCard: View {
                 .raysAnchor()
                 .rotationEffect(.degrees(spin ? 360 : 0))
                 Text(mapName)
-                    .font(HUDStyle.font(24))
+                    .font(HUDStyle.title(24))
                     .foregroundStyle(Brand.midnight)
                     .lineLimit(1)
                     .minimumScaleFactor(0.6)
