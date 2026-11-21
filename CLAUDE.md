@@ -280,7 +280,8 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   (`OutlineNormals`: how far in from a clear pixel, a 5-pixel bevel, a little of its brightness), lit from the
   nearest lamp's way (one of eight) in three hard steps, a copy added over the sprite as its child, faded in by
   `Sky.darkness`, gone by day (so the drawn top-left light is never doubled). Not on what moves in the wind or
-  on the lamps themselves (`LandStage.addScenery`). `tools/normal_art.py out.png [ids]` mirrors it.
+  on the lamps themselves (`LandStage.addScenery`; a light is any art some land's props give a glow, wherever it's set
+  down, `LandStage.lights`: a rest's or lair's lantern, with no glow of its own, turned into a pale copy of itself). `tools/normal_art.py out.png [ids]` mirrors it.
 - `tools/building_art.py`: town houses and shops drawn in code with `pixel_kit`, so the towns don't build only
   with RD's few buildings and their recolours: a thatched and a timber-framed cottage, a stone townhouse, a
   round cottage, a teapot house, a garden cottage, and weapon, armour, tailor, flower, tea and book shops; and

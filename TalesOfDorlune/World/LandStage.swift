@@ -358,7 +358,7 @@ final class LandStage {
         }
         // Lit by a lamp nearby at night (`LampLight`): not a light itself, nor what moves in the wind
         // (its picture changes, the light's copy wouldn't).
-        if !lamps.isEmpty, node.texture === drawn.texture, placement.art != "street_lamp", placement.prop?.glow == nil {
+        if !lamps.isEmpty, node.texture === drawn.texture, !lights.contains(placement.art), placement.prop?.glow == nil {
             LampLight.shared.light(node, picture: art.picture(of: drawn.texture), key: "\(placement.art)@\(placement.land?.id ?? def.id)",
                                    from: lamps)
         }
@@ -510,6 +510,18 @@ final class LandStage {
         node.addChild(flame)
         flame.run(.sequence([.wait(forDuration: .random(in: 0...0.33)), .repeatForever(.animate(with: frames, timePerFrame: 0.11))]))
     }
+
+    /// What's a light itself, wherever the plan set it down: the street lamp, and every art some land's
+    /// props give a glow to. A rest's lamp, a lair's lanterns, a roadside row or a story's decor carry
+    /// no glow of their own (`Placement.prop`), and lit by the lamps round them (`LampLight`) a lantern
+    /// turned into a pale copy of itself (playtesting 2026-11-21, Starfall Isle's moon lanterns).
+    private lazy var lights: Set<String> = {
+        var lights: Set<String> = ["street_lamp"]
+        for land in Content.shared.maps {
+            for prop in land.theme.props where prop.glow != nil { lights.insert(prop.art) }
+        }
+        return lights
+    }()
 
     /// Its lights at night (`LampLight`): its town's street lamps, where their glow is, and its props
     /// that glow (lanterns, crystals, glowing mushrooms), in their glow's colour.

@@ -1170,7 +1170,7 @@
           "item_shop_red",
           "bakery",
           "magic_tower",
-          "house",
+          "post_office",
           "house_green",
           "house_purple",
           "mushroom_house",
@@ -1185,7 +1185,7 @@
           "timber_house",
           "tailor_shop",
           "thatched_cottage",
-          "mushroom_house",
+          "dairy_shop",
           "book_shop",
           "garden_cottage",
           "garden_cottage",
@@ -1206,7 +1206,7 @@
           "house",
           "mushroom_house",
           "flower_shop",
-          "house",
+          "dairy_shop",
           "thatched_cottage",
           "house_purple",
           "mushroom_house",
@@ -2011,7 +2011,7 @@
           "y": -26
         },
         {
-          "art": "house",
+          "art": "beekeeper_cottage",
           "x": -20,
           "y": 4
         },
@@ -3260,7 +3260,7 @@
           "y": 43
         },
         {
-          "art": "crooked_house",
+          "art": "owl_tower",
           "x": 42,
           "y": -35
         },
@@ -3270,7 +3270,7 @@
           "y": -5
         },
         {
-          "art": "mushroom_house_blue",
+          "art": "lantern_cottage",
           "x": 26,
           "y": -5
         }
@@ -4040,7 +4040,7 @@
           "y": -1
         },
         {
-          "art": "house_green",
+          "art": "woodcutter_cabin",
           "x": -52,
           "y": 7
         },
@@ -4055,7 +4055,7 @@
           "y": -24
         },
         {
-          "art": "mushroom_house",
+          "art": "stump_house",
           "x": -23,
           "y": -24
         }
@@ -4783,7 +4783,7 @@
           "mushroom_house",
           "mushroom_house_blue",
           "mushroom_house_gold",
-          "house",
+          "glass_lantern_shop",
           "house_green",
           "house_purple",
           "mushroom_house",
@@ -4792,7 +4792,7 @@
           "house",
           "teapot_house",
           "round_cottage",
-          "mushroom_house",
+          "painter_studio",
           "book_shop",
           "tailor_shop",
           "house",
@@ -4810,13 +4810,13 @@
           "stone_townhouse",
           "house_green",
           "stone_townhouse",
-          "mushroom_house",
+          "painter_studio",
           "mushroom_house_blue",
           "book_shop",
           "item_shop_red",
           "inn_teal",
           "bakery",
-          "house",
+          "glass_lantern_shop",
           "timber_house",
           "garden_cottage",
           "house",
@@ -6041,12 +6041,12 @@
       ],
       "buildings": [
         {
-          "art": "dwarf_cottage",
+          "art": "apple_cellar",
           "x": -17,
           "y": 44
         },
         {
-          "art": "snow_cabin",
+          "art": "carved_chalet",
           "x": 4,
           "y": -5
         },
@@ -6597,12 +6597,12 @@
       ],
       "buildings": [
         {
-          "art": "swamp_stilt_hut",
+          "art": "reed_boathouse",
           "x": 33,
           "y": 51
         },
         {
-          "art": "lily_cottage",
+          "art": "frog_hut",
           "x": -47,
           "y": 35
         },
@@ -8347,7 +8347,7 @@
           "y": 17
         },
         {
-          "art": "adobe_house_tall",
+          "art": "assay_office",
           "x": 3,
           "y": 17
         },
@@ -8372,7 +8372,7 @@
           "y": 9
         },
         {
-          "art": "adobe_house_tall",
+          "art": "miners_lodge",
           "x": 18,
           "y": 7
         },
@@ -8397,7 +8397,7 @@
           "y": -4
         },
         {
-          "art": "adobe_house_tall",
+          "art": "miners_lodge",
           "x": 12,
           "y": -4
         },
@@ -8422,7 +8422,7 @@
           "y": -7
         },
         {
-          "art": "adobe_house_tall",
+          "art": "assay_office",
           "x": -27,
           "y": -10
         },
@@ -8467,7 +8467,7 @@
           "y": 5
         },
         {
-          "art": "adobe_house_tall",
+          "art": "sandstone_house",
           "x": -19,
           "y": 9
         },
@@ -8492,7 +8492,7 @@
           "y": -24
         },
         {
-          "art": "adobe_house_tall",
+          "art": "spice_shop",
           "x": -10,
           "y": -27
         },
@@ -8517,7 +8517,7 @@
           "y": 25
         },
         {
-          "art": "adobe_house_tall",
+          "art": "spice_shop",
           "x": -11,
           "y": -5
         },
@@ -8542,7 +8542,7 @@
           "y": -26
         },
         {
-          "art": "adobe_house_tall",
+          "art": "sandstone_house",
           "x": -35,
           "y": -27
         },
@@ -11156,7 +11156,7 @@
           "y": 3
         },
         {
-          "art": "house_purple",
+          "art": "chime_cottage",
           "x": -21,
           "y": -18
         },
@@ -13475,11 +13475,11 @@
           "magic_tower",
           "mushroom_house",
           "house",
-          "house",
+          "aviary_shop",
           "house",
           "weapon_shop",
           "windmill",
-          "mushroom_house",
+          "music_hall",
           "inn_teal",
           "bakery",
           "item_shop_red",
@@ -13494,7 +13494,7 @@
           "round_cottage",
           "garden_cottage",
           "flower_shop",
-          "mushroom_house",
+          "music_hall",
           "house_green",
           "garden_cottage",
           "tea_house",
@@ -13506,7 +13506,7 @@
           "house_green",
           "armour_shop",
           "mushroom_house_blue",
-          "house",
+          "aviary_shop",
           "house_purple",
           "mushroom_house_blue",
           "house"
@@ -14465,7 +14465,7 @@
       },
       "buildings": [
         {
-          "art": "house_green",
+          "art": "swan_boathouse",
           "x": 4,
           "y": 5
         },
@@ -14475,7 +14475,7 @@
           "y": 35
         },
         {
-          "art": "house_purple",
+          "art": "lake_pavilion",
           "x": -46,
           "y": -16
         },
@@ -15030,12 +15030,12 @@
       ],
       "buildings": [
         {
-          "art": "lily_cottage",
+          "art": "lotus_pagoda",
           "x": 15,
           "y": 26
         },
         {
-          "art": "swamp_stilt_hut",
+          "art": "raft_teahouse",
           "x": -31,
           "y": 15
         },
@@ -16138,12 +16138,12 @@
           "y": -14
         },
         {
-          "art": "fisher_shack",
+          "art": "smokehouse",
           "x": 17,
           "y": -39
         },
         {
-          "art": "beach_hut",
+          "art": "dwarf_boathouse",
           "x": -23,
           "y": -4
         },
@@ -18590,7 +18590,7 @@
           "y": 5
         },
         {
-          "art": "snow_cabin",
+          "art": "ice_fishing_hut",
           "x": 43,
           "y": -38
         },
@@ -18605,7 +18605,7 @@
           "y": -10
         },
         {
-          "art": "snow_cabin",
+          "art": "briar_cottage",
           "x": 23,
           "y": -10
         }
