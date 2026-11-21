@@ -2667,6 +2667,16 @@
       "kind": "building"
     },
     {
+      "id": "beekeeper_cottage",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "chime_cottage",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
       "id": "standing_stone",
       "kind": "prop"
     },
@@ -3254,6 +3264,14 @@
     },
     {
       "id": "windows_spice_shop",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_beekeeper_cottage",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_chime_cottage",
       "kind": "prop"
     },
     {

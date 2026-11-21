@@ -1993,7 +1993,7 @@
           "y": -26
         },
         {
-          "art": "house",
+          "art": "beekeeper_cottage",
           "x": -20,
           "y": 4
         },
@@ -11042,7 +11042,7 @@
           "y": 3
         },
         {
-          "art": "house_purple",
+          "art": "chime_cottage",
           "x": -21,
           "y": -18
         },

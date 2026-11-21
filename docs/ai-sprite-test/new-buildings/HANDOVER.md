@@ -192,3 +192,9 @@ user picks by eye; what doesn't win isn't used.
   try's. The sandstone house misses two by a hair (`straight_edges` 0.42, needs ≤ 0.4; `form_relief` just under
   0.016); in for the user's eye. With the sandstone house and spice shop in its last four places, Ingothold's
   `adobe_house_tall` is gone. Night windows boxed: the sandstone's warm highlights lit up.
+- **Batch 3** (2026-11-21): all four at the asked size, 31 to 37 colours. The beekeeper's cottage and the chime
+  cottage pass every hard rule (the chime cottage came only as its 8× preview, every 8 × 8 block one colour, so
+  taken back to 96 exactly): in Sunny Meadow for its `house` and Windswept Downs for its `house_purple`. The red
+  barn's outline is already its darkest colour, no darker than what it rounds, and it's flat (`form_relief`
+  0.015); the shepherd's hut flat (0.014) and too straight (`straight_edges` 0.505, its fence): both back to
+  ChatGPT.

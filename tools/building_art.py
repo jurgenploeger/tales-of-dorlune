@@ -2040,7 +2040,10 @@ PICKED = {"thatched_cottage": ("art-variants/thatched_cottage/chatgpt_5.png", 1.
           "assay_office": ("art-variants/assay_office/chatgpt_2.png", 1.0),                     # Ingothold
           "miners_lodge": ("art-variants/miners_lodge/chatgpt_2.png", 1.0),                     # Ingothold
           "sandstone_house": ("art-variants/sandstone_house/chatgpt_1.png", 1.0),               # Ingothold
-          "spice_shop": ("art-variants/spice_shop/chatgpt_1.png", 1.0)}                         # Ingothold
+          "spice_shop": ("art-variants/spice_shop/chatgpt_1.png", 1.0),                         # Ingothold
+          "beekeeper_cottage": ("art-variants/beekeeper_cottage/chatgpt_1.png", 1.0),           # Sunny Meadow
+          # Delivered only as its 8× preview, every 8 × 8 block one colour: taken back to 96 exactly.
+          "chime_cottage": ("art-variants/chime_cottage/chatgpt_1.png", 1.0)}                   # Windswept Downs
 
 
 def picked(item):
