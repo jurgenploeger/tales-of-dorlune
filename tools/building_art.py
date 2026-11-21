@@ -2011,7 +2011,8 @@ PICKED = {"thatched_cottage": ("art-variants/thatched_cottage/chatgpt_5.png", 1.
           # bell_tower: ChatGPT's third try (chatgpt_3.png); its 29 colours left no single outline shade between
           # the two outline rules, so the half of its outline pixels darkest beside their inside took the sprite's
           # own colour nearest 30% lighter and the rest the one nearest 18% lighter (chatgpt_3_fixed.png).
-          "bell_tower": ("art-variants/bell_tower/chatgpt_3_fixed.png", 1.0)}
+          "bell_tower": ("art-variants/bell_tower/chatgpt_3_fixed.png", 1.0),
+          "lake_shrine": ("art-variants/lake_shrine/chatgpt_1.png", 1.0)}
 
 
 def picked(item):

@@ -57,3 +57,7 @@ sizes and foot rows written in, the shading spelled out, warm yellow only for pa
   all: **ours stays**, as agreed. ChatGPT's three tries kept in this folder.
 - **Acorn cottage**: 79 × 75, foot on row 92, exactly ours; outline fine, night lights only its two round
   windows. Flat (`form_relief` 0.0136, ours 0.0194): back for broad areas of shade.
+- **Lake shrine**: 78 × 64, foot on row 92, exactly ours; **passes every rule, 100%**, as delivered. In the
+  game. No warm panes, so no night lights (none before either).
+- **Acorn cottage, second try**: flatter still (`form_relief` 0.011) and its outline lost. Two tries, ours
+  passes (0.0194).
