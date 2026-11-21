@@ -14499,7 +14499,7 @@
       },
       "buildings": [
         {
-          "art": "house_green",
+          "art": "swan_boathouse",
           "x": 4,
           "y": 5
         },
@@ -14509,7 +14509,7 @@
           "y": 35
         },
         {
-          "art": "house_purple",
+          "art": "lake_pavilion",
           "x": -46,
           "y": -16
         },
@@ -16172,12 +16172,12 @@
           "y": -14
         },
         {
-          "art": "fisher_shack",
+          "art": "smokehouse",
           "x": 17,
           "y": -39
         },
         {
-          "art": "beach_hut",
+          "art": "dwarf_boathouse",
           "x": -23,
           "y": -4
         },

@@ -2055,7 +2055,12 @@ PICKED = {"thatched_cottage": ("art-variants/thatched_cottage/chatgpt_5.png", 1.
           "reed_boathouse": ("art-variants/reed_boathouse/chatgpt_1_fixed.png", 1.0),           # Frog Swamp
           "lotus_pagoda": ("art-variants/lotus_pagoda/chatgpt_1_fixed.png", 1.0),               # Lotus Land
           "frog_hut": ("art-variants/frog_hut/chatgpt_2_fixed.png", 1.0),                       # Frog Swamp
-          "raft_teahouse": ("art-variants/raft_teahouse/chatgpt_2.png", 1.0)}                   # Lotus Land
+          "raft_teahouse": ("art-variants/raft_teahouse/chatgpt_2.png", 1.0),                   # Lotus Land
+          # Three of these delivered only as 8× previews, every 8 × 8 block one colour: taken back to 96 exactly.
+          "swan_boathouse": ("art-variants/swan_boathouse/chatgpt_1_fixed.png", 1.0),           # Swan Lake
+          "lake_pavilion": ("art-variants/lake_pavilion/chatgpt_1.png", 1.0),                   # Swan Lake
+          "dwarf_boathouse": ("art-variants/dwarf_boathouse/chatgpt_1_fixed.png", 1.0),         # Ingothold Lake
+          "smokehouse": ("art-variants/smokehouse/chatgpt_1.png", 1.0)}                         # Ingothold Lake
 
 
 def picked(item):

@@ -218,3 +218,10 @@ user picks by eye; what doesn't win isn't used.
   then a touch too dark, snapped 10% lighter; the teahouse's outline now darker than inside it. Both miss only
   `form_relief` by a hair (0.015): in. Frog Swamp's frog hut (its eyes the windows lit at night) for a lily
   cottage, Lotus Land's teahouse for a stilt hut.
+- **Batch 7, lakes** (2026-11-21): the smokehouse, dwarf boathouse and lake pavilion delivered only as 8×
+  previews, every 8 × 8 block one colour, taken back to 96 exactly; all four at the asked size, 30 to 32 colours.
+  Each misses by a hair: the swan boathouse's outline too dark beside its inside, snapped 6% lighter, then every
+  hard rule; the dwarf boathouse's the same, then only `form_relief` (0.0159); the smokehouse `form_relief`
+  0.015; the pavilion `flat` 0.154 (needs ≤ 0.1536). All in: Swan Lake's swan boathouse and lake pavilion for a
+  green and the purple house, Ingothold Lake's smokehouse for the fisher shack and dwarf boathouse for the beach
+  hut. Night windows only on the panes, as cut.

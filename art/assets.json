@@ -2737,6 +2737,26 @@
       "kind": "building"
     },
     {
+      "id": "swan_boathouse",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "lake_pavilion",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "dwarf_boathouse",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "smokehouse",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
       "id": "standing_stone",
       "kind": "prop"
     },
@@ -3380,6 +3400,22 @@
     },
     {
       "id": "windows_raft_teahouse",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_swan_boathouse",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_lake_pavilion",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_dwarf_boathouse",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_smokehouse",
       "kind": "prop"
     },
     {
