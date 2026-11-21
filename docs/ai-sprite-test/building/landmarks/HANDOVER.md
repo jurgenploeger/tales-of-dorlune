@@ -76,3 +76,7 @@ drawn. They still miss hard rules (`sprite_check.py` warns: the observatory and 
 spire too few colours, the spire no dark outline, the lodge and guild `form_relief`). Night windows held to
 boxes round the panes (`window_art.BOXES`: beam studs on the lodge, gold bands on the spire lit up); the new
 moonwell has no warm panes, so `windows_moonwell` is gone.
+- **Re-shaded** (the shading follow-up): the **observatory's second try passes every rule, 100%** (`flat` fixed,
+  `form_relief` 0.017, 72 colours). The guild's third: soft 100% (its second 86%), its right tower and side in
+  shade, `form_relief` 0.0140 (0.0145 before; still short). The lodge's fourth, its outline snapped 12% lighter as
+  before: soft 100%, `form_relief` 0.0144 (0.0136 before; still short). All three in the game.

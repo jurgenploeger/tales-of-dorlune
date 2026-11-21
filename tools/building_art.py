@@ -2014,11 +2014,12 @@ PICKED = {"thatched_cottage": ("art-variants/thatched_cottage/chatgpt_5.png", 1.
           "bell_tower": ("art-variants/bell_tower/chatgpt_3_fixed.png", 1.0),
           "lake_shrine": ("art-variants/lake_shrine/chatgpt_1.png", 1.0),
           # The landmarks (docs/ai-sprite-test/building/landmarks): the user liked ChatGPT's over ours (2026-11-21).
-          # The lodge's and guild's second round, their outlines too dark beside their inside, each outline pixel
-          # snapped to the sprite's own colour nearest 12% lighter (*_fixed.png); the other three as first drawn.
-          "wildfolk_lodge": ("art-variants/wildfolk_lodge/chatgpt_3_fixed.png", 1.0),
-          "warrior_guild": ("art-variants/warrior_guild/chatgpt_2_fixed.png", 1.0),
-          "star_observatory": ("art-variants/star_observatory/chatgpt_1.png", 1.0),
+          # Re-shaded since: the lodge's fourth try, its outline too dark beside its inside, each outline pixel
+          # snapped to the sprite's own colour nearest 12% lighter (chatgpt_4_fixed.png); the guild's third and
+          # the observatory's second as drawn (the observatory passes every rule); the other two as first drawn.
+          "wildfolk_lodge": ("art-variants/wildfolk_lodge/chatgpt_4_fixed.png", 1.0),
+          "warrior_guild": ("art-variants/warrior_guild/chatgpt_3.png", 1.0),
+          "star_observatory": ("art-variants/star_observatory/chatgpt_2.png", 1.0),
           "moonwell": ("art-variants/moonwell/chatgpt_1.png", 1.0),
           "emerald_spire": ("art-variants/emerald_spire/chatgpt_1.png", 1.0),
           # The last two, the user's pick over the scores too (2026-11-21): the acorn cottage's third try (its big
