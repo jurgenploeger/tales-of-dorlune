@@ -10,7 +10,7 @@ The 1× PNG is the one that goes in the game; the preview is only for looking. I
 - Lit from the top left: highlights top left, shade bottom right.
 - Hue-shifted shading: shadows lean warmer or cooler, not just darker. 5 or more shades per colour family.
 - Shade in clusters of 3 to 6 pixels of one shade. Few single stray pixels: they look like noise on a phone.
-- A one-pixel outline all round in a deep shade of the colour it borders (deep brown, navy, forest green, plum), never pure black. Darker than everything inside it.
+- A one-pixel outline all round, tinted: a deep shade of each colour it borders, about half to three quarters as bright (dark golden brown round straw, deep blue round a blue door, forest green round leaves). Never pure black, never one dark line round everything. The pixels just inside it a mid shade, not the lightest.
 - About 20 to 40 colours in all.
 - Nothing else in the picture: no ground, slab, base or cast shadow under it (a few grass tufts at a building's foot at most), no text, no border, no grid lines.
 - Stay at the size asked. Count pixels: models tend to draw too big. If a size is given in pixels tall or wide, hit it exactly.
