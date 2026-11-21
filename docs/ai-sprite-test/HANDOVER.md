@@ -115,3 +115,23 @@ RD earns its money on the hard ones, so the switch is decided further up, not he
 For reference, RD costs about $0.04 a monster, $0.05 a boss, $0.07 a walk sheet (references/rd-prompts.md
 in the sprite-creation skill; $43.66 over 411 runs to 2026-10-29). Saving money matters less than the
 art: a sprite we'd have to fix by hand costs more than RD's few cents.
+
+## Results
+
+### Nano Banana (Gemini), 2026-11-21, three tries
+
+`results/nanobanana_*`. Try 1 came as a 1254-pixel PNG, tries 2 and 3 as 1024-pixel JPEGs.
+
+- **It ignored the grid size.** Asked for 40 × 40 at 16×, it drew on a grid of about 45 to 50, the
+  pineapple 45 to 46 art pixels tall (its blocks about 26 image pixels in try 1, 20 in tries 2 and 3). RD's
+  stands 35 tall on a 40 canvas.
+- **Squeezed to the game's size (`*_40`), the faces break:** try 1's eyes run together, try 3's smear.
+  Scored: 1 and 2 pass (83%), 3 fails (58%).
+- **At its own grid (`*_native`, `--height 45`), try 1 is a clean, good sprite:** square pixels, a
+  coloured outline, warm shading, big eyes with a catchlight. As a picture it holds up beside RD's. Tries 2
+  and 3 drift more: noisy texture, outlines nearly black, try 3 muddy round the eyes (JPEG doesn't help).
+- **Misses in all three:** too few shades per colour ramp (3 or 4; RD's art has 5 or more) and the
+  light not clearly from the top left. Tries 2 and 3 have the dark outline the Pixel Heroes marks ask for,
+  which RD's pineapple doesn't.
+- Verdict: **a near miss.** The style is close; the size isn't. A sprite at 45 art pixels can't go in a
+  40 canvas, and shrinking it ruins it. Next: retry with the size spelt out as blocks (below).
