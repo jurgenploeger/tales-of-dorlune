@@ -67,3 +67,12 @@ One new chat, the five images attached in this order:
   (`*_fixed.png`, 0.61 and 0.59). Left on each: `form_relief`, the lodge 0.01358 (ours 0.01365, a tie that
   fails), the guild 0.01454 (ours 0.0195, passes). Side by side the lodge reads nicer than ours; the guild
   paler and flatter. Both back for broad shade (prompt in the chat, 2026-11-21).
+
+## In the game (2026-11-21)
+
+"I still like all our chatgpt ones": the user's pick over the scores. All five in (`building_art.PICKED`): the
+lodge's try 3 and the guild's try 2 with their outlines fixed, the observatory, moonwell and spire as first
+drawn. They still miss hard rules (`sprite_check.py` warns: the observatory and moonwell `flat`, the moonwell and
+spire too few colours, the spire no dark outline, the lodge and guild `form_relief`). Night windows held to
+boxes round the panes (`window_art.BOXES`: beam studs on the lodge, gold bands on the spire lit up); the new
+moonwell has no warm panes, so `windows_moonwell` is gone.

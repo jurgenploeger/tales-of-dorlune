@@ -39,7 +39,10 @@ BOXES = {"thatched_cottage": [(60, 96, 0, 96)],
          "tailor_shop": [(50, 64, 0, 96)],
          "dome_house": [(52, 60, 32, 40), (55, 72, 52, 60)],
          "tree_house": [(40, 52, 0, 96)],
-         "round_cottage": [(40, 96, 0, 96)]}
+         "round_cottage": [(40, 96, 0, 96)],
+         "wildfolk_lodge": [(124, 140, 38, 92)],
+         "warrior_guild": [(112, 124, 50, 104)],
+         "emerald_spire": [(100, 109, 80, 92), (124, 137, 74, 100), (148, 160, 50, 124)]}
 
 
 def buildings():
