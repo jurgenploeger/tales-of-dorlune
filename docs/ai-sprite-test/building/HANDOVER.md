@@ -248,3 +248,10 @@ Darker overall than try 1, so its outline didn't stand apart from the body (`out
 under 0.55 of the sprite's middle light). `townhouse_chatgpt_2_outline85.png`, its 254 outline pixels 15%
 darker (the least that passes): **passes, every hard rule, 93% soft**. `townhouse_blind_pick.png` sets it
 against ours, between RD's house and the new thatched cottage; the key stays out of the repo till the pick.
+
+### The pick (2026-11-21)
+
+A was ours, B ChatGPT's try 2 with its outline 15% darker (`townhouse_blind_pick.key.json`). **The user
+picked ChatGPT's.** In the game as the cottage is: `art-variants/stone_townhouse/chatgpt_2.png`,
+`building_art.PICKED` with its outline factor 0.85; its night windows cut again (the panes and the lamp
+over the door). Two tries, against the cottage's five: the project instructions did their job.

@@ -1968,15 +1968,18 @@ for _name in HAND_DRAWN:
 
 
 # Buildings drawn better elsewhere and picked by the user, kept as drawn in art-variants/ and named here, so a
-# rerun copies the pick instead of drawing over it: the picked file and how much lighter its one-pixel
-# outline is made (the two outline rules, `outline_value` and `outline_rel`, leave a narrow window).
+# rerun copies the pick instead of drawing over it: the picked file and how much its one-pixel outline's
+# light is scaled (the two outline rules, `outline_value` and `outline_rel`, leave a narrow window).
 # thatched_cottage: ChatGPT's fifth try (docs/ai-sprite-test/building), picked blind over this tool's
 # drawing (the user, 2026-11-21), its 228 outline pixels 8% lighter so it passes pixel_style's bands.
-PICKED = {"thatched_cottage": ("art-variants/thatched_cottage/chatgpt_5.png", 1.08)}
+# stone_townhouse: ChatGPT's second try, picked blind the same day, its 254 outline pixels 15% darker
+# (drawn darker overall than the cottage, its outline didn't stand apart from the body).
+PICKED = {"thatched_cottage": ("art-variants/thatched_cottage/chatgpt_5.png", 1.08),
+          "stone_townhouse": ("art-variants/stone_townhouse/chatgpt_2.png", 0.85)}
 
 
 def picked(item):
-    """A picked building, as drawn, its outline lightened by its factor."""
+    """A picked building, as drawn, its outline's light scaled by its factor."""
     from scipy import ndimage
     path, lift = PICKED[item]
     a = np.asarray(Image.open(ROOT / path).convert("RGBA")).astype(float)

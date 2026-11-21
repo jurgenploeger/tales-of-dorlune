@@ -286,7 +286,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   planks, clay tiles, thatch, slate); each is drawn in a 96-pixel frame's coordinates and scaled about its
   foot to fill it as RD's do (`fit`). Registered in art/assets.json with no `request`, placed by maps.json's
   town `lots`; scored with `pixel_style.py check --kind building`. `--sheet out.png` previews them. One drawn
-  better by ChatGPT and picked blind by the user is copied, not drawn (`PICKED`: the thatched cottage, 2026-11-21,
+  better by ChatGPT and picked blind by the user is copied, not drawn (`PICKED`: the thatched cottage and the stone townhouse, 2026-11-21,
   kept in `art-variants/`; how: `docs/ai-sprite-test/`, `tools/ai_sprite_eval.py`).
 - `tools/crystal_art.py`: the Glimmerdeep's crystal scenery from the caves' own rock (its walls, floor, spires and
   geodes): each pixel's brightness laid on a ramp of crystal colours, as a `derive` can't tint the grey tiles.
