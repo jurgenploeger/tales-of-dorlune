@@ -32,3 +32,6 @@ Then as before: each checked, scored, one blind pick for all four, the winners i
   new instructions' measuring and 1× steps didn't happen. Snapped at 66 tall (`bank_chatgpt_1_96.png`):
   every hard rule, soft 93%; the shrink turns its green grass tufts grey-brown, as it muddied the flowers.
   Its 1× file asked for.
+- **Bank, try 2** (`bank_chatgpt_2.png`, `_8x`), after "you skipped the project's steps": a true 96 × 96
+  PNG, 75 × 69, foot on row 93, exactly ours as measured; 34 colours; the 8× an exact copy. Every hard rule,
+  soft 93% (ours 93%). Its coins orange, as asked.
