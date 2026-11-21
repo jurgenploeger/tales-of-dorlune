@@ -2727,6 +2727,16 @@
       "kind": "building"
     },
     {
+      "id": "frog_hut",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "raft_teahouse",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
       "id": "standing_stone",
       "kind": "prop"
     },
@@ -3362,6 +3372,14 @@
     },
     {
       "id": "windows_lotus_pagoda",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_frog_hut",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_raft_teahouse",
       "kind": "prop"
     },
     {

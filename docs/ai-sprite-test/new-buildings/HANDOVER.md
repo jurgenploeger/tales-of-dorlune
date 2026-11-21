@@ -214,3 +214,7 @@ user picks by eye; what doesn't win isn't used.
   lighter: all but `form_relief` 0.015. Both in: Frog Swamp's boathouse for a stilt hut, Lotus Land's pagoda for a
   lily cottage. Back to ChatGPT: the frog hut (`flat` 0.215, big single-colour areas; `form_relief` 0.014) and the
   raft teahouse (its outline no darker than inside it, nothing to snap to; `form_relief` 0.014).
+- **Frog hut and raft teahouse, second try:** the frog hut's flat areas broken up (`flat` passes), its outline
+  then a touch too dark, snapped 10% lighter; the teahouse's outline now darker than inside it. Both miss only
+  `form_relief` by a hair (0.015): in. Frog Swamp's frog hut (its eyes the windows lit at night) for a lily
+  cottage, Lotus Land's teahouse for a stilt hut.

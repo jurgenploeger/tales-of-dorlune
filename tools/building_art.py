@@ -2053,7 +2053,9 @@ PICKED = {"thatched_cottage": ("art-variants/thatched_cottage/chatgpt_5.png", 1.
           "ice_fishing_hut": ("art-variants/ice_fishing_hut/chatgpt_1.png", 1.0),               # Briarmere
           "briar_cottage": ("art-variants/briar_cottage/chatgpt_1.png", 1.0),                   # Briarmere
           "reed_boathouse": ("art-variants/reed_boathouse/chatgpt_1_fixed.png", 1.0),           # Frog Swamp
-          "lotus_pagoda": ("art-variants/lotus_pagoda/chatgpt_1_fixed.png", 1.0)}               # Lotus Land
+          "lotus_pagoda": ("art-variants/lotus_pagoda/chatgpt_1_fixed.png", 1.0),               # Lotus Land
+          "frog_hut": ("art-variants/frog_hut/chatgpt_2_fixed.png", 1.0),                       # Frog Swamp
+          "raft_teahouse": ("art-variants/raft_teahouse/chatgpt_2.png", 1.0)}                   # Lotus Land
 
 
 def picked(item):
