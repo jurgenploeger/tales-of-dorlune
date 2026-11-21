@@ -2617,6 +2617,146 @@
       "kind": "building"
     },
     {
+      "id": "post_office",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "dairy_shop",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "glass_lantern_shop",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "painter_studio",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "aviary_shop",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "music_hall",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "assay_office",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "miners_lodge",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "sandstone_house",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "spice_shop",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "beekeeper_cottage",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "chime_cottage",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "lantern_cottage",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "owl_tower",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "woodcutter_cabin",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "stump_house",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "apple_cellar",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "carved_chalet",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "ice_fishing_hut",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "briar_cottage",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "reed_boathouse",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "lotus_pagoda",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "frog_hut",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "raft_teahouse",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "swan_boathouse",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "lake_pavilion",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "dwarf_boathouse",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "smokehouse",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
       "id": "standing_stone",
       "kind": "prop"
     },
@@ -3164,6 +3304,118 @@
     },
     {
       "id": "windows_thatched_cottage",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_post_office",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_dairy_shop",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_glass_lantern_shop",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_painter_studio",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_aviary_shop",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_music_hall",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_assay_office",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_miners_lodge",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_sandstone_house",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_spice_shop",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_beekeeper_cottage",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_chime_cottage",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_lantern_cottage",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_owl_tower",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_woodcutter_cabin",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_stump_house",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_apple_cellar",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_carved_chalet",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_ice_fishing_hut",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_briar_cottage",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_reed_boathouse",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_lotus_pagoda",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_frog_hut",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_raft_teahouse",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_swan_boathouse",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_lake_pavilion",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_dwarf_boathouse",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_smokehouse",
       "kind": "prop"
     },
     {

@@ -42,6 +42,17 @@ BOXES = {"thatched_cottage": [(60, 96, 0, 96)],
          "round_cottage": [(40, 96, 0, 96)],
          "wildfolk_lodge": [(124, 140, 38, 92)],
          "acorn_cottage": [(38, 48, 28, 40), (60, 72, 48, 60)],
+         "dairy_shop": [(66, 79, 15, 45)],
+         "glass_lantern_shop": [(45, 56, 41, 52)],
+         "assay_office": [(58, 73, 21, 36)],
+         "miners_lodge": [(58, 73, 21, 34), (56, 71, 53, 61)],
+         "sandstone_house": [(39, 55, 25, 37), (66, 82, 25, 37)],
+         "spice_shop": [(63, 77, 18, 29)],
+         "stump_house": [(55, 70, 20, 75)],
+         "apple_cellar": [(64, 75, 23, 35), (64, 75, 55, 67)],
+         "reed_boathouse": [(58, 72, 26, 38), (58, 72, 55, 67)],
+         "frog_hut": [(28, 43, 20, 76)],
+         "raft_teahouse": [(63, 74, 28, 70)],
          "warrior_guild": [(112, 124, 50, 104)],
          "emerald_spire": [(100, 109, 80, 92), (124, 137, 74, 100), (148, 160, 50, 124)]}
 
@@ -58,11 +69,13 @@ def windows(name):
         return None
     im = np.asarray(Image.open(path).convert("RGBA")).astype(int)
     r, g, b, a = (im[..., i] for i in range(4))
-    warm = (a > 200) & (r >= 225) & (g >= 175) & (b <= g - 35) & (b >= 60) & (r - b >= 60)
+    inside = np.zeros(a.shape, bool)
+    for y0, y1, x0, x1 in BOXES.get(name, []):
+        inside[y0:y1, x0:x1] = True
+    # Inside a box a pane may be a pure yellow too (no blue in it at all: the glass lantern shop's), as gold
+    # trim can't sneak in there.
+    warm = (a > 200) & (r >= 225) & (g >= 175) & (b <= g - 35) & ((b >= 60) | inside) & (r - b >= 60)
     if name in BOXES:
-        inside = np.zeros(warm.shape, bool)
-        for y0, y1, x0, x1 in BOXES[name]:
-            inside[y0:y1, x0:x1] = True
         warm &= inside
     labels, count = ndimage.label(warm, structure=np.ones((3, 3)))
     keep = np.zeros(warm.shape, bool)

@@ -2025,7 +2025,42 @@ PICKED = {"thatched_cottage": ("art-variants/thatched_cottage/chatgpt_5.png", 1.
           # The last two, the user's pick over the scores too (2026-11-21): the acorn cottage's third try (its big
           # picture snapped to 96 by ai_sprite_eval.py, the best shaded of three) and the gem workshop's first.
           "acorn_cottage": ("art-variants/acorn_cottage/chatgpt_3.png", 1.0),
-          "gem_workshop": ("art-variants/gem_workshop/chatgpt_1.png", 1.0)}
+          "gem_workshop": ("art-variants/gem_workshop/chatgpt_1.png", 1.0),
+          # New buildings, drawn by ChatGPT for a land of their own (docs/ai-sprite-test/new-buildings), never drawn
+          # here: an outline too dark beside its inside snapped to the sprite's own colours 8% lighter (*_fixed.png).
+          "post_office": ("art-variants/post_office/chatgpt_1_fixed.png", 1.0),                 # Meadowbrook
+          "dairy_shop": ("art-variants/dairy_shop/chatgpt_1.png", 1.0),                         # Meadowbrook
+          "glass_lantern_shop": ("art-variants/glass_lantern_shop/chatgpt_1_fixed.png", 1.0),   # Prismhaven
+          "painter_studio": ("art-variants/painter_studio/chatgpt_1.png", 1.0),                 # Prismhaven
+          # The aviary's outline no darker than inside it, snapped to its own colours 30% darker.
+          "aviary_shop": ("art-variants/aviary_shop/chatgpt_1_fixed.png", 1.0),                 # Larkspur
+          "music_hall": ("art-variants/music_hall/chatgpt_1.png", 1.0),                         # Larkspur
+          # Ingothold's second try, asked for strong shading on clear sandstone blocks (its tall adobe looked
+          # washed out, the user, 2026-11-21).
+          "assay_office": ("art-variants/assay_office/chatgpt_2.png", 1.0),                     # Ingothold
+          "miners_lodge": ("art-variants/miners_lodge/chatgpt_2.png", 1.0),                     # Ingothold
+          "sandstone_house": ("art-variants/sandstone_house/chatgpt_1.png", 1.0),               # Ingothold
+          "spice_shop": ("art-variants/spice_shop/chatgpt_1.png", 1.0),                         # Ingothold
+          "beekeeper_cottage": ("art-variants/beekeeper_cottage/chatgpt_1.png", 1.0),           # Sunny Meadow
+          # Delivered only as its 8× preview, every 8 × 8 block one colour: taken back to 96 exactly.
+          "chime_cottage": ("art-variants/chime_cottage/chatgpt_1.png", 1.0),                   # Windswept Downs
+          "lantern_cottage": ("art-variants/lantern_cottage/chatgpt_1.png", 1.0),               # Twilight Woods
+          "owl_tower": ("art-variants/owl_tower/chatgpt_1.png", 1.0),                           # Twilight Woods
+          "woodcutter_cabin": ("art-variants/woodcutter_cabin/chatgpt_1.png", 1.0),             # Smiling Forest
+          "stump_house": ("art-variants/stump_house/chatgpt_1.png", 1.0),                       # Smiling Forest
+          "apple_cellar": ("art-variants/apple_cellar/chatgpt_1_fixed.png", 1.0),               # Snow White Forest
+          "carved_chalet": ("art-variants/carved_chalet/chatgpt_1_fixed.png", 1.0),             # Snow White Forest
+          "ice_fishing_hut": ("art-variants/ice_fishing_hut/chatgpt_1.png", 1.0),               # Briarmere
+          "briar_cottage": ("art-variants/briar_cottage/chatgpt_1.png", 1.0),                   # Briarmere
+          "reed_boathouse": ("art-variants/reed_boathouse/chatgpt_1_fixed.png", 1.0),           # Frog Swamp
+          "lotus_pagoda": ("art-variants/lotus_pagoda/chatgpt_1_fixed.png", 1.0),               # Lotus Land
+          "frog_hut": ("art-variants/frog_hut/chatgpt_2_fixed.png", 1.0),                       # Frog Swamp
+          "raft_teahouse": ("art-variants/raft_teahouse/chatgpt_2.png", 1.0),                   # Lotus Land
+          # Three of these delivered only as 8× previews, every 8 × 8 block one colour: taken back to 96 exactly.
+          "swan_boathouse": ("art-variants/swan_boathouse/chatgpt_1_fixed.png", 1.0),           # Swan Lake
+          "lake_pavilion": ("art-variants/lake_pavilion/chatgpt_1.png", 1.0),                   # Swan Lake
+          "dwarf_boathouse": ("art-variants/dwarf_boathouse/chatgpt_1_fixed.png", 1.0),         # Ingothold Lake
+          "smokehouse": ("art-variants/smokehouse/chatgpt_1.png", 1.0)}                         # Ingothold Lake
 
 
 def picked(item):
@@ -2045,7 +2080,7 @@ def main(argv):
         i = argv.index("--sheet")
         sheet = pathlib.Path(argv[i + 1])
         argv = argv[:i] + argv[i + 2:]
-    ids = argv or list(BUILDINGS)
+    ids = argv or list(dict.fromkeys([*BUILDINGS, *PICKED]))     # and the new ones only ChatGPT drew
     out = {}
     for item in ids:
         img = picked(item) if item in PICKED else fit(BUILDINGS[item]).render()
