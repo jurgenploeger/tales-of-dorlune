@@ -34,3 +34,22 @@ One new chat, the five images attached in this order:
 > Warm yellow only for window panes (the moon, stars and telescope not yellow). Follow the project's steps
 > exactly: measure, draw, check, and deliver the 1× PNG file for each, fully transparent, on its own canvas
 > (160 × 160, the spire 192 × 192) at exactly the size and foot row given above.
+
+## Results
+
+- **Wildfolk Lodge, try 1** (`wildfolk_lodge_chatgpt_1.png`): the size is right (160 × 160, 129 × 92, foot on
+  row 159, alpha clean, a true 1× grid). It fails two hard rules: `colour_density` 0.42 (34 colours on 8,180
+  pixels; a sprite this big needs 45 or more, ours has 80: the project's "at most 40" was written for 96-pixel
+  houses, now scaled with size) and `form_relief` 0.014 (ours fails it too, 0.014). Its outline isn't darker
+  than what it rounds (`outline_dark` 0: the mid wall tone all round), the logs one bright orange. Follow-up,
+  same chat:
+
+> The lodge is the right size, thanks. Keep its shape and everything on it, same size and foot row, but fix
+> three things. 1) Colours: these landmarks are much bigger than the houses, so use 60 to 90 colours, as more
+> shades in each ramp (logs, moss, stone, wood, the totem). 2) The outline: each outline pixel clearly darker,
+> about half as bright as the pixel just inside it: dark red-brown round the logs, deep green round the moss,
+> dark grey round the stones. 3) Shade the big forms in broad areas: the right-hand wing and the lodge's right
+> side in clear shade, a thick dark band under the moss roof's eave across the logs, the lower third of the log
+> walls a shade darker, the logs lit top left and darker toward the bottom right, the door and windows set deep
+> with a dark top and left edge. Then do the other four the same way: 60 to 90 colours each, outline half as
+> bright as what it borders.

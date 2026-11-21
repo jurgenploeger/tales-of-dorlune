@@ -13,7 +13,7 @@ Run these on the 1× PNG and fix and re-check until all pass, then report the nu
 - the canvas is the measured size;
 - the sprite's width and height are within 1 pixel of the measured ones, its foot on the same row;
 - every pixel is fully opaque or fully transparent (alpha 0 or 255 only);
-- at most 40 colours;
+- the colour count in its range: 20 to 40 for a 96 × 96 canvas, about 60 to 90 for a bigger one (at least 0.6 colours per 100 of the sprite's pixels, at most 1.2);
 - the 8× preview is exactly the 1× scaled up (every 8 × 8 block one colour).
 If you drew finer or bigger than the grid, redraw on the grid; never just shrink a big picture, as small details turn to mush.
 
@@ -23,8 +23,8 @@ If you drew finer or bigger than the grid, redraw on the grid; never just shrink
 - Shade the big forms as forms: a roof darker toward its eave with a band of shadow under it on the wall, the side away from the light in shade, doors and windows set in with a shadow on their top and left edge. Not each face in one flat tone.
 - Hue-shifted shading: shadows lean warmer or cooler, not just darker. 5 or more shades per colour family.
 - Shade in clusters of 3 to 6 pixels of one shade. Few single stray pixels: they look like noise on a phone.
-- A one-pixel outline all round, tinted: a deep shade of each colour it borders, about half to three quarters as bright (dark golden brown round straw, deep blue round a blue door, forest green round leaves). Never pure black, never one dark line round everything. The pixels just inside it a mid shade, not the lightest.
-- About 20 to 40 colours in all.
+- A one-pixel outline all round, tinted: a deep shade of each colour it borders, about half as bright as the pixel just inside it, so every outline pixel is clearly darker than its neighbour (dark golden brown round straw, deep blue round a blue door, forest green round leaves). Never pure black, never one dark line round everything. The pixels just inside it a mid shade, not the lightest.
+- About 20 to 40 colours in all on a 96 × 96 canvas; a bigger sprite needs more, about 60 to 90 on a 160 × 160 one, as more shades per ramp (a big wall in a few flat tones reads as flat).
 - Soft and rounded like the references: edges gently curved and uneven, no long ruler-straight lines.
 - Nothing else in the picture: no ground, slab, base or cast shadow under it (a few grass tufts at a building's foot at most), no text, no border, no grid lines.
 
