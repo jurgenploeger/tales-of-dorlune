@@ -7329,8 +7329,29 @@
         },
         "props": [
           {
+            "art": "mine_beam",
+            "count": 2,
+            "blocking": true
+          },
+          {
+            "art": "mine_cart",
+            "count": 4,
+            "blocking": true
+          },
+          {
+            "art": "boulder",
+            "count": 6,
+            "blocking": true,
+            "cluster": 3,
+            "size": [
+              0.75,
+              1.25
+            ],
+            "shadow": true
+          },
+          {
             "art": "stalagmite",
-            "count": 75,
+            "count": 10,
             "blocking": true,
             "cluster": 6,
             "size": [
@@ -7340,31 +7361,15 @@
             "shadow": true
           },
           {
-            "art": "boulder",
-            "count": 20,
-            "blocking": true,
-            "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
-            "shadow": true
-          },
-          {
             "art": "crystal",
             "count": 25,
-            "blocking": true,
+            "blocking": false,
             "cluster": 3,
             "size": [
               0.75,
               1.25
             ],
             "glow": "#9FE8FF"
-          },
-          {
-            "art": "mine_cart",
-            "count": 5,
-            "blocking": true
           },
           {
             "art": "skull_bones",
@@ -7385,7 +7390,7 @@
           {
             "art": "amber_crystal",
             "count": 15,
-            "blocking": true,
+            "blocking": false,
             "cluster": 3,
             "size": [
               0.75,
@@ -7417,7 +7422,7 @@
           {
             "art": "ore_vein",
             "count": 6,
-            "blocking": true,
+            "blocking": false,
             "cluster": 2,
             "size": [
               0.75,
@@ -7426,14 +7431,9 @@
             "glow": "#FFD27A"
           },
           {
-            "art": "mine_beam",
-            "count": 2,
-            "blocking": true
-          },
-          {
             "art": "glow_moss_rock",
             "count": 5,
-            "blocking": true,
+            "blocking": false,
             "cluster": 2,
             "size": [
               0.75,
@@ -11260,8 +11260,29 @@
         "ponds": 0,
         "props": [
           {
+            "art": "mine_beam",
+            "count": 2,
+            "blocking": true
+          },
+          {
+            "art": "mine_cart",
+            "count": 3,
+            "blocking": true
+          },
+          {
+            "art": "boulder",
+            "count": 5,
+            "blocking": true,
+            "cluster": 3,
+            "size": [
+              0.75,
+              1.25
+            ],
+            "shadow": true
+          },
+          {
             "art": "stalagmite",
-            "count": 150,
+            "count": 10,
             "blocking": true,
             "cluster": 6,
             "size": [
@@ -11271,31 +11292,15 @@
             "shadow": true
           },
           {
-            "art": "boulder",
-            "count": 40,
-            "blocking": true,
-            "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
-            "shadow": true
-          },
-          {
             "art": "crystal",
             "count": 25,
-            "blocking": true,
+            "blocking": false,
             "cluster": 3,
             "size": [
               0.75,
               1.25
             ],
             "glow": "#9FE8FF"
-          },
-          {
-            "art": "mine_cart",
-            "count": 5,
-            "blocking": true
           },
           {
             "art": "skull_bones",
@@ -11316,7 +11321,7 @@
           {
             "art": "amber_crystal",
             "count": 15,
-            "blocking": true,
+            "blocking": false,
             "cluster": 3,
             "size": [
               0.75,
@@ -11348,7 +11353,7 @@
           {
             "art": "ore_vein",
             "count": 6,
-            "blocking": true,
+            "blocking": false,
             "cluster": 2,
             "size": [
               0.75,
@@ -11357,14 +11362,9 @@
             "glow": "#FFD27A"
           },
           {
-            "art": "mine_beam",
-            "count": 2,
-            "blocking": true
-          },
-          {
             "art": "glow_moss_rock",
             "count": 5,
-            "blocking": true,
+            "blocking": false,
             "cluster": 2,
             "size": [
               0.75,
@@ -19269,8 +19269,29 @@
         "ponds": 0,
         "props": [
           {
+            "art": "mine_beam",
+            "count": 2,
+            "blocking": true
+          },
+          {
+            "art": "mine_cart",
+            "count": 5,
+            "blocking": true
+          },
+          {
+            "art": "boulder",
+            "count": 15,
+            "blocking": true,
+            "cluster": 3,
+            "size": [
+              0.75,
+              1.25
+            ],
+            "shadow": true
+          },
+          {
             "art": "stalagmite",
-            "count": 150,
+            "count": 15,
             "blocking": true,
             "cluster": 6,
             "size": [
@@ -19280,31 +19301,15 @@
             "shadow": true
           },
           {
-            "art": "boulder",
-            "count": 40,
-            "blocking": true,
-            "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
-            "shadow": true
-          },
-          {
             "art": "crystal",
             "count": 25,
-            "blocking": true,
+            "blocking": false,
             "cluster": 3,
             "size": [
               0.75,
               1.25
             ],
             "glow": "#9FE8FF"
-          },
-          {
-            "art": "mine_cart",
-            "count": 5,
-            "blocking": true
           },
           {
             "art": "skull_bones",
@@ -19325,7 +19330,7 @@
           {
             "art": "amber_crystal",
             "count": 15,
-            "blocking": true,
+            "blocking": false,
             "cluster": 3,
             "size": [
               0.75,
@@ -19357,7 +19362,7 @@
           {
             "art": "ore_vein",
             "count": 6,
-            "blocking": true,
+            "blocking": false,
             "cluster": 2,
             "size": [
               0.75,
@@ -19366,14 +19371,9 @@
             "glow": "#FFD27A"
           },
           {
-            "art": "mine_beam",
-            "count": 2,
-            "blocking": true
-          },
-          {
             "art": "glow_moss_rock",
             "count": 5,
-            "blocking": true,
+            "blocking": false,
             "cluster": 2,
             "size": [
               0.75,
@@ -21236,9 +21236,43 @@
         "ponds": 3,
         "props": [
           {
+            "art": "crystal_spire",
+            "count": 12,
+            "blocking": true,
+            "cluster": 4,
+            "size": [
+              0.8,
+              1.4
+            ],
+            "glow": "#9FE8FF"
+          },
+          {
+            "art": "amethyst_spire",
+            "count": 10,
+            "blocking": true,
+            "cluster": 4,
+            "size": [
+              0.8,
+              1.4
+            ],
+            "glow": "#C9A0FF"
+          },
+          {
+            "art": "crystal_geode",
+            "count": 6,
+            "blocking": true,
+            "cluster": 2,
+            "size": [
+              0.75,
+              1.2
+            ],
+            "shadow": true,
+            "glow": "#C9A0FF"
+          },
+          {
             "art": "crystal",
             "count": 80,
-            "blocking": true,
+            "blocking": false,
             "cluster": 4,
             "size": [
               0.9,
@@ -21249,7 +21283,7 @@
           {
             "art": "violet_crystal",
             "count": 45,
-            "blocking": true,
+            "blocking": false,
             "cluster": 3,
             "size": [
               0.9,
@@ -21260,7 +21294,7 @@
           {
             "art": "star_crystal",
             "count": 20,
-            "blocking": true,
+            "blocking": false,
             "cluster": 2,
             "size": [
               0.75,
@@ -21291,28 +21325,6 @@
             "glow": "#9FE8FF"
           },
           {
-            "art": "crystal_spire",
-            "count": 45,
-            "blocking": true,
-            "cluster": 4,
-            "size": [
-              0.8,
-              1.4
-            ],
-            "glow": "#9FE8FF"
-          },
-          {
-            "art": "amethyst_spire",
-            "count": 35,
-            "blocking": true,
-            "cluster": 4,
-            "size": [
-              0.8,
-              1.4
-            ],
-            "glow": "#C9A0FF"
-          },
-          {
             "art": "small_crystal_spire",
             "count": 90,
             "blocking": false,
@@ -21332,7 +21344,7 @@
           {
             "art": "glow_moss_rock",
             "count": 10,
-            "blocking": true,
+            "blocking": false,
             "cluster": 2,
             "size": [
               0.75,
@@ -21349,18 +21361,6 @@
               0.8,
               1.2
             ]
-          },
-          {
-            "art": "crystal_geode",
-            "count": 12,
-            "blocking": true,
-            "cluster": 2,
-            "size": [
-              0.75,
-              1.2
-            ],
-            "shadow": true,
-            "glow": "#C9A0FF"
           }
         ],
         "palette": {
@@ -21489,9 +21489,43 @@
         "ponds": 3,
         "props": [
           {
+            "art": "crystal_spire",
+            "count": 12,
+            "blocking": true,
+            "cluster": 4,
+            "size": [
+              0.8,
+              1.4
+            ],
+            "glow": "#9FE8FF"
+          },
+          {
+            "art": "amethyst_spire",
+            "count": 10,
+            "blocking": true,
+            "cluster": 4,
+            "size": [
+              0.8,
+              1.4
+            ],
+            "glow": "#C9A0FF"
+          },
+          {
+            "art": "crystal_geode",
+            "count": 6,
+            "blocking": true,
+            "cluster": 2,
+            "size": [
+              0.75,
+              1.2
+            ],
+            "shadow": true,
+            "glow": "#C9A0FF"
+          },
+          {
             "art": "crystal",
             "count": 80,
-            "blocking": true,
+            "blocking": false,
             "cluster": 4,
             "size": [
               0.9,
@@ -21502,7 +21536,7 @@
           {
             "art": "violet_crystal",
             "count": 45,
-            "blocking": true,
+            "blocking": false,
             "cluster": 3,
             "size": [
               0.9,
@@ -21513,7 +21547,7 @@
           {
             "art": "star_crystal",
             "count": 20,
-            "blocking": true,
+            "blocking": false,
             "cluster": 2,
             "size": [
               0.75,
@@ -21544,28 +21578,6 @@
             "glow": "#9FE8FF"
           },
           {
-            "art": "crystal_spire",
-            "count": 45,
-            "blocking": true,
-            "cluster": 4,
-            "size": [
-              0.8,
-              1.4
-            ],
-            "glow": "#9FE8FF"
-          },
-          {
-            "art": "amethyst_spire",
-            "count": 35,
-            "blocking": true,
-            "cluster": 4,
-            "size": [
-              0.8,
-              1.4
-            ],
-            "glow": "#C9A0FF"
-          },
-          {
             "art": "small_crystal_spire",
             "count": 90,
             "blocking": false,
@@ -21585,7 +21597,7 @@
           {
             "art": "glow_moss_rock",
             "count": 10,
-            "blocking": true,
+            "blocking": false,
             "cluster": 2,
             "size": [
               0.75,
@@ -21602,18 +21614,6 @@
               0.8,
               1.2
             ]
-          },
-          {
-            "art": "crystal_geode",
-            "count": 12,
-            "blocking": true,
-            "cluster": 2,
-            "size": [
-              0.75,
-              1.2
-            ],
-            "shadow": true,
-            "glow": "#C9A0FF"
           }
         ],
         "palette": {
@@ -21775,9 +21775,43 @@
         "ponds": 3,
         "props": [
           {
+            "art": "crystal_spire",
+            "count": 12,
+            "blocking": true,
+            "cluster": 4,
+            "size": [
+              0.8,
+              1.4
+            ],
+            "glow": "#9FE8FF"
+          },
+          {
+            "art": "amethyst_spire",
+            "count": 10,
+            "blocking": true,
+            "cluster": 4,
+            "size": [
+              0.8,
+              1.4
+            ],
+            "glow": "#C9A0FF"
+          },
+          {
+            "art": "crystal_geode",
+            "count": 6,
+            "blocking": true,
+            "cluster": 2,
+            "size": [
+              0.75,
+              1.2
+            ],
+            "shadow": true,
+            "glow": "#C9A0FF"
+          },
+          {
             "art": "crystal",
             "count": 80,
-            "blocking": true,
+            "blocking": false,
             "cluster": 4,
             "size": [
               0.9,
@@ -21788,7 +21822,7 @@
           {
             "art": "violet_crystal",
             "count": 45,
-            "blocking": true,
+            "blocking": false,
             "cluster": 3,
             "size": [
               0.9,
@@ -21799,7 +21833,7 @@
           {
             "art": "star_crystal",
             "count": 20,
-            "blocking": true,
+            "blocking": false,
             "cluster": 2,
             "size": [
               0.75,
@@ -21830,28 +21864,6 @@
             "glow": "#9FE8FF"
           },
           {
-            "art": "crystal_spire",
-            "count": 45,
-            "blocking": true,
-            "cluster": 4,
-            "size": [
-              0.8,
-              1.4
-            ],
-            "glow": "#9FE8FF"
-          },
-          {
-            "art": "amethyst_spire",
-            "count": 35,
-            "blocking": true,
-            "cluster": 4,
-            "size": [
-              0.8,
-              1.4
-            ],
-            "glow": "#C9A0FF"
-          },
-          {
             "art": "small_crystal_spire",
             "count": 90,
             "blocking": false,
@@ -21871,7 +21883,7 @@
           {
             "art": "glow_moss_rock",
             "count": 10,
-            "blocking": true,
+            "blocking": false,
             "cluster": 2,
             "size": [
               0.75,
@@ -21888,18 +21900,6 @@
               0.8,
               1.2
             ]
-          },
-          {
-            "art": "crystal_geode",
-            "count": 12,
-            "blocking": true,
-            "cluster": 2,
-            "size": [
-              0.75,
-              1.2
-            ],
-            "shadow": true,
-            "glow": "#C9A0FF"
           }
         ],
         "palette": {
