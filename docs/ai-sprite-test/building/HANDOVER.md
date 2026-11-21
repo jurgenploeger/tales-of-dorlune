@@ -225,3 +225,18 @@ the project). Prompt:
 >
 > Size: about 72 pixels wide and 82 tall, its foot on row 90 of the 96 × 96 canvas. Deliver the 1× PNG and
 > the 8× preview, as the project's instructions say.
+
+## B2 results
+
+### ChatGPT, try 1 (2026-11-21)
+
+`townhouse_chatgpt_1.png` as sent (1254 × 1254, no 1× file, a soft-edged background, blocks of about 10
+image pixels: drawn about 91 × 104, bigger than the 72 × 82 asked), `townhouse_chatgpt_1_96.png` snapped to
+82 tall, `townhouse_closeup_1.png` beside ours at 6×.
+
+- Snapped, it **passes every rule, 100%**, first try. Ours fails a hard one (straight edges, 0.57).
+- By eye: rounded scalloped slates, the dormer, a rounded stone chimney, stones of many sizes, ivy and the
+  window box, the green arched door with its step. Everything asked for is there.
+- The cost of the snap: the shrink (104 rows to 82) is ours, not its drawing, and leaves a few stray pixels
+  in the right window and the door. A clean 1× at the asked size from ChatGPT would avoid that.
+- Its night windows cut cleanly (only the panes: the roof is blue, unlike the straw).
