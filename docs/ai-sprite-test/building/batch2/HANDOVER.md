@@ -31,3 +31,11 @@ follow-ups taught us built in: the 1× files, and the big forms shaded):
 > do the first and wait for me to say "next".
 
 Then as batch 1: each checked, scored, one blind pick for all four, the winners in the game.
+
+## Results
+
+- **Market stall, try 1** (`market_tent_chatgpt_1_big.png`): the size measured right this time (78 × 64 on
+  the 96 canvas, foot on row 88; ours 78 × 64 on row 87), but no 1× file again. Snapped
+  (`market_tent_chatgpt_1_96.png`): soft 93%, misses two hard rules, as ours does: straight edges (0.46,
+  at most 0.4: the counter's long ruled top and corners) and form shading (0.012, needs 0.016: the counter's
+  front in one flat tone). By eye a clear step up from ours (rounded awning, wood grain, the pots).
