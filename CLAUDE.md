@@ -328,7 +328,8 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   the coins are. `--sheet out.png` previews them.
 - `tools/lair_art.py`: the pieces of the bosses' lairs no sprite had (a standing stone, a brazier, a gold hoard, a
   warning post, the Rat King's junk throne, a heap of bones, a hunter's torn tent, a broken pillar), drawn with
-  `pixel_kit` and scored as scenery. A boss's lair is maps.json `lair` on the boss: pieces round it, its way in to
+  `pixel_kit` and scored as scenery (the brazier and gold hoard redrawn by ChatGPT and copied, `PICKED`, the user's pick, 2026-11-21; ChatGPT's
+  blossom tree lost to ours). A boss's lair is maps.json `lair` on the boss: pieces round it, its way in to
   the south, turned by `LandPlanner.planLair` to face the way up its trail (else the land's middle); `lairRing`, a
   ring of the land's own tall scenery behind it and low in front, open toward the way in; `lairApproach`, pairs
   lining the way in; `lairSign`, a warning by its trail near where it starts. Its ground is kept for it before

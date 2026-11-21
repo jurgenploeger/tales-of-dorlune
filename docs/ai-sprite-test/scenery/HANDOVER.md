@@ -45,3 +45,6 @@ All three exactly the asked canvas, size and foot row, alpha clean (36 to 45 col
   (`_fixed.png`): passes, soft 100%, as ours. Softer and paler gold than ours, the gems clearer.
 - **Blossom tree:** outline overshot (0.44); passes only snapped 40% lighter (`_fixed.png`, 0.665). Smooth
   round clumps split by dark seams, two loose petals; ours is textured blossom. Both miss `hue_shift`.
+
+The user's pick (2026-11-21): "Keep our tree and the others chatgpt". The brazier and hoard are in
+(`lair_art.PICKED`); the tree stays ours.

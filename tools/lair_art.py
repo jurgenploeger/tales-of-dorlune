@@ -254,6 +254,12 @@ PROPS = {"standing_stone": standing_stone, "brazier": brazier, "wall_torch": wal
          "wall_torch_2": lambda: wall_torch(1), "wall_torch_3": lambda: wall_torch(2), "wall_torch_4": lambda: wall_torch(3), "gold_hoard": gold_hoard, "warning_post": warning_post,
          "junk_throne": junk_throne, "bone_pile": bone_pile, "torn_tent": torn_tent, "broken_pillar": broken_pillar}
 
+# Redrawn by ChatGPT and copied, not drawn (docs/ai-sprite-test/scenery; the user's pick, 2026-11-21): the brazier
+# as delivered (every rule, soft 100%), the hoard with its outline, too dark beside its inside, snapped to the
+# sprite's own colours 12% lighter.
+PICKED = {"brazier": "art-variants/brazier/chatgpt_1.png",
+          "gold_hoard": "art-variants/gold_hoard/chatgpt_1_fixed.png"}
+
 
 def main(argv):
     sheet = None
@@ -264,8 +270,11 @@ def main(argv):
     ids = argv or list(PROPS)
     out = {}
     for name in ids:
-        img = PROPS[name]().render(outline="tinted")
-        img = grounded(img) if img.height in (32, 64) else img
+        if name in PICKED:
+            img = Image.open(ROOT / PICKED[name]).convert("RGBA")
+        else:
+            img = PROPS[name]().render(outline="tinted")
+            img = grounded(img) if img.height in (32, 64) else img
         img.save(SPRITES / f"{name}.png")
         out[name] = img
     print(f"wrote {len(out)} lair props to art/sprites/")
