@@ -1992,7 +1992,10 @@ PICKED = {"thatched_cottage": ("art-variants/thatched_cottage/chatgpt_5.png", 1.
           "bank": ("art-variants/bank/chatgpt_2.png", 1.0),
           "timber_house": ("art-variants/timber_house/chatgpt_2.png", 0.9),
           "round_cottage": ("art-variants/round_cottage/chatgpt_1.png", 1.0),
-          "weapon_shop": ("art-variants/weapon_shop/chatgpt_2.png", 1.0)}
+          "weapon_shop": ("art-variants/weapon_shop/chatgpt_2.png", 1.0),
+          # Batch 4 (docs/ai-sprite-test/building/batch4), each passing as delivered.
+          "tea_house": ("art-variants/tea_house/chatgpt_1.png", 1.0),
+          "teapot_house": ("art-variants/teapot_house/chatgpt_1.png", 1.0)}
 
 
 def picked(item):

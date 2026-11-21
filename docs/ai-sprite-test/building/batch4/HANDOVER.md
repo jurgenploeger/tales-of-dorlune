@@ -20,3 +20,18 @@ Four more town buildings still drawn in code: the **armour shop**, **tea house**
 > Paper lanterns orange, signs not yellow, so only window panes light up at night. Follow the project's
 > steps exactly: measure, draw, check, and deliver the 1× PNG file for each:
 > every one on a 96 × 96 canvas, fully transparent, at exactly the size and foot row given above.
+
+## Results
+
+All four true 96 × 96 PNGs at exactly the sizes and foot rows in the prompt: sizes written into the prompt
+worked first time.
+
+| | ChatGPT's | ours |
+|---|---|---|
+| tea house | **passes**, soft 86% | passes |
+| teapot house | **passes**, soft 86% (`form_relief` 0.032, ours 0.027) | passes |
+| armour shop | `form_relief` 0.0156, needs 0.016 | passes |
+| garden cottage | too many colours for its size (`colour_density` 1.58, at most 1.4), outline not dark enough, `form_relief` 0.0159 | passes |
+
+The tea and teapot houses are in the game (`building_art.PICKED`). The armour shop and garden cottage go
+back for one fix each.
