@@ -1974,8 +1974,14 @@ for _name in HAND_DRAWN:
 # drawing (the user, 2026-11-21), its 228 outline pixels 8% lighter so it passes pixel_style's bands.
 # stone_townhouse: ChatGPT's second try, picked blind the same day, its 254 outline pixels 15% darker
 # (drawn darker overall than the cottage, its outline didn't stand apart from the body).
+# flower_shop, book_shop, tailor_shop, dome_house: ChatGPT's, drawn four at once in one chat and picked
+# blind (2026-11-21, docs/ai-sprite-test/building/batch1), each as delivered.
 PICKED = {"thatched_cottage": ("art-variants/thatched_cottage/chatgpt_5.png", 1.08),
-          "stone_townhouse": ("art-variants/stone_townhouse/chatgpt_2.png", 0.85)}
+          "stone_townhouse": ("art-variants/stone_townhouse/chatgpt_2.png", 0.85),
+          "flower_shop": ("art-variants/flower_shop/chatgpt_2.png", 1.0),
+          "book_shop": ("art-variants/book_shop/chatgpt_2.png", 1.0),
+          "tailor_shop": ("art-variants/tailor_shop/chatgpt_2.png", 1.0),
+          "dome_house": ("art-variants/dome_house/chatgpt_1.png", 1.0)}
 
 
 def picked(item):

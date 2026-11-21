@@ -30,9 +30,14 @@ SKIP = {"fence", "town_gate", "market_tent", "market_stall", "pavilion_tent", "d
         "bakery", "beach_hut", "adobe_house_tall", "windmill", "puppet_theater", "mushroom_house"}
 
 
-# Where a building's windows are, in rows, when bright warm pixels elsewhere would pass for panes too: the
-# thatched cottage's straw highlights are the windows' yellow, so only the rows under its roof count.
-ROWS = {"thatched_cottage": (60, 96)}
+# Where a building's windows are, as boxes (rows y0 to y1, columns x0 to x1), when bright warm pixels
+# elsewhere would pass for panes too: the thatched cottage's straw, the book shop's hanging sign, a yellow
+# cloth in the tailor's window, the dome house's sandstone along its wall top (the pictures ChatGPT drew,
+# 2026-11-21). Only pixels in a box count.
+BOXES = {"thatched_cottage": [(60, 96, 0, 96)],
+         "book_shop": [(55, 66, 40, 52)],
+         "tailor_shop": [(50, 64, 0, 96)],
+         "dome_house": [(52, 60, 32, 40), (55, 72, 52, 60)]}
 
 
 def buildings():
@@ -48,10 +53,11 @@ def windows(name):
     im = np.asarray(Image.open(path).convert("RGBA")).astype(int)
     r, g, b, a = (im[..., i] for i in range(4))
     warm = (a > 200) & (r >= 225) & (g >= 175) & (b <= g - 35) & (b >= 60) & (r - b >= 60)
-    if name in ROWS:
-        rows = np.zeros(warm.shape, bool)
-        rows[ROWS[name][0]:ROWS[name][1]] = True
-        warm &= rows
+    if name in BOXES:
+        inside = np.zeros(warm.shape, bool)
+        for y0, y1, x0, x1 in BOXES[name]:
+            inside[y0:y1, x0:x1] = True
+        warm &= inside
     labels, count = ndimage.label(warm, structure=np.ones((3, 3)))
     keep = np.zeros(warm.shape, bool)
     for index in range(1, count + 1):

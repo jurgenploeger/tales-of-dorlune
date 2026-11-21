@@ -96,3 +96,14 @@ for all four (A or B per row) against ours. The winners go in as the cottage and
   delivered**, the tailor shop's outline fixed too.
 
 `blind_pick.png`: all four against ours, sides shuffled per row; the key stays out of the repo till the pick.
+
+## The pick (2026-11-21)
+
+"ABBA": ChatGPT's in every row (`blind_pick.key.json`). All four in the game as delivered, no fix:
+`art-variants/<id>/`, `building_art.PICKED` (factor 1.0). Their night windows cut again, each held to boxes
+round its real panes (`window_art.BOXES`): the book shop's sign, a yellow cloth in the tailor's window and
+the dome house's sandstone highlights had lit up too. The flower shop has no panes; the flowers in its shop
+window glow.
+
+One chat for four worked: one follow-up for shading (two shops) and one for a missing 1× file, three of
+four needing no fix from us.
