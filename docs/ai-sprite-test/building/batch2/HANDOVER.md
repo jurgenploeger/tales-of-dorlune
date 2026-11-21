@@ -47,3 +47,16 @@ Then as batch 1: each checked, scored, one blind pick for all four, the winners 
     on so small a sprite (`colour_density`, hard), so it goes back to ChatGPT.
   Both flat ones beat ours on the same rule; a follow-up asks for the forms shaded deeper, the pavilion's
   outline darker.
+- **After the follow-up** (`pavilion_tent_chatgpt_2`, `market_tent_chatgpt_3`, `tree_house_chatgpt_2`,
+  `bluebell_house_chatgpt_1`; all true 96 × 96 at our sizes): each still misses a hard rule, but so does
+  each of ours, and none is worse:
+
+  | | ours fails | ChatGPT's fails |
+  |---|---|---|
+  | market stall | straight edges, `form_relief` 0.009 | `form_relief` 0.013 |
+  | tree house | `form_relief` 0.013 | `form_relief` 0.015 |
+  | bluebell house | `form_relief` 0.011 | `form_relief` 0.013 (and a weak outline, soft 71%) |
+  | pavilion tent | `form_relief` 0.015 | `outline_rel` 0.491 (its shading passes, 0.019) |
+
+  Small outline fixes in code didn't land (too many colours on these small sprites, or the other outline
+  rule out), so they go to the user's eye as they are: `blind_pick.png`, the key out of the repo till the pick.
