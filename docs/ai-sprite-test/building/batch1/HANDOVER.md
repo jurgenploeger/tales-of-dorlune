@@ -91,3 +91,8 @@ for all four (A or B per row) against ours. The winners go in as the cottage and
   a few jagged steps, light in small areas more than broad ones.
 - **Dome house** (`dome_house_chatgpt_1.png`): 59 × 81, foot on row 89, 39 colours, clean. **Passes every
   rule, 100%**, as delivered (`form_relief` 0.0195): the first that needs no fix at all.
+- **Book shop and tailor shop, re-shaded** (`book_shop_chatgpt_2.png`, `tailor_shop_chatgpt_2.png`): the
+  same sizes, clean, 40 colours; `form_relief` 0.0168 and 0.0165. **Both pass every rule, 100%, as
+  delivered**, the tailor shop's outline fixed too.
+
+`blind_pick.png`: all four against ours, sides shuffled per row; the key stays out of the repo till the pick.
