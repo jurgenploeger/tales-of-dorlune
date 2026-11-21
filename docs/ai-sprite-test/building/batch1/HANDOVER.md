@@ -89,3 +89,5 @@ for all four (A or B per row) against ours. The winners go in as the cottage and
   buckets' red, yellow and purple kept. Every hard rule passes (`form_relief` 0.018; ours fails it, 0.0155).
   Soft 79%, a point under 80, as RD's two lowest buildings: its outline a little grey (`outline_sat` 0.12),
   a few jagged steps, light in small areas more than broad ones.
+- **Dome house** (`dome_house_chatgpt_1.png`): 59 × 81, foot on row 89, 39 colours, clean. **Passes every
+  rule, 100%**, as delivered (`form_relief` 0.0195): the first that needs no fix at all.
