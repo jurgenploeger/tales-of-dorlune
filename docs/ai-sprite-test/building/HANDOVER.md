@@ -240,3 +240,11 @@ image pixels: drawn about 91 × 104, bigger than the 72 × 82 asked), `townhouse
 - The cost of the snap: the shrink (104 rows to 82) is ours, not its drawing, and leaves a few stray pixels
   in the right window and the door. A clean 1× at the asked size from ChatGPT would avoid that.
 - Its night windows cut cleanly (only the panes: the roof is blue, unlike the straw).
+
+### ChatGPT, try 2 (exact size)
+
+`townhouse_chatgpt_2.png` as delivered: a true 96 × 96 PNG, 72 × 82, its foot on row 90, 34 colours, clean.
+Darker overall than try 1, so its outline didn't stand apart from the body (`outline_dark` 0: no edge pixel
+under 0.55 of the sprite's middle light). `townhouse_chatgpt_2_outline85.png`, its 254 outline pixels 15%
+darker (the least that passes): **passes, every hard rule, 93% soft**. `townhouse_blind_pick.png` sets it
+against ours, between RD's house and the new thatched cottage; the key stays out of the repo till the pick.
