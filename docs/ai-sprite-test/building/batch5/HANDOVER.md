@@ -55,3 +55,5 @@ sizes and foot rows written in, the shading spelled out, warm yellow only for pa
 - **Gem workshop, third try** (from the first, broad areas asked for): 2006 pixels changed; `form_relief`
   0.0152 (needs 0.016), outline overshot (`outline_rel` 0.522). Two hard rules missed where ours passes them
   all: **ours stays**, as agreed. ChatGPT's three tries kept in this folder.
+- **Acorn cottage**: 79 × 75, foot on row 92, exactly ours; outline fine, night lights only its two round
+  windows. Flat (`form_relief` 0.0136, ours 0.0194): back for broad areas of shade.
