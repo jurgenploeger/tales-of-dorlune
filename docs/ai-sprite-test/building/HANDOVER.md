@@ -126,3 +126,33 @@ follow-up should tell whether it can be tidied:
 > (deep brown round the thatch and walls). Give the building a proper rounded foot with a darker bottom
 > edge and two or three grass tufts, and leave 6 empty rows under it at the bottom of the canvas. Make the
 > walls 3 or 4 pixels taller. Same 96 × 96, same 8× PNG, transparent.
+
+### ChatGPT, tries 2 and 3 (after the follow-up)
+
+`chatgpt_2.png`, `chatgpt_3.png` as sent (1254 × 1254, blocks of about 13 pixels: a 96 grid, but no 1× file
+this time and a soft-edged background), `chatgpt_2_96.png` and `chatgpt_3_96.png` snapped at their own
+height (66 and 64: the taller walls asked for), `compare_town_2.png`, `compare_closeup_2.png`.
+
+| | ours | try 1 | try 2 | try 3 |
+|---|---|---|---|---|
+| score | fail 86% | fail 71% | fail 86% | **fail 93%** |
+| hard rules missed | straight edges | outline vs inside | outline vs inside, flat | outline vs inside |
+| stray pixels / clusters | ok | too noisy | clusters too big | clusters a bit big |
+
+- **The noise is gone** and the foot is a proper rounded edge with grass tufts, the walls taller, standing
+  6 rows up. Try 3 is the cleanest building any model has drawn for us, and passes every soft rule but one.
+- **Both fail the outline rule, and that's the follow-up's fault, not ChatGPT's.** `outline_rel` asks that a
+  building's outline be a deep shade *of what it rounds* (0.55 or more of the inside's brightness), not a
+  near-black line: RD tints its outlines, and a dark line round everything is the commonest tell of art
+  drawn in code. The follow-up asked for "a darker outline", and it drew one dark plum line all round.
+  Try 1's outline was too light in absolute terms (0.41, at most 0.35) but already a hair too dark next to
+  its light thatch; the fix is a *tinted* outline, darker inside the edge, not a darker line.
+- Try 2 overshot to big flat clumps with no highlights (flat, a hard rule, by a hair). Try 3 sits between.
+
+Next follow-up, on try 3:
+
+> Very close, keep everything. One fix: the outline. Don't use one dark line all round. Make it a deep
+> shade of each colour it borders: a dark golden brown round the thatch, a dark warm grey-brown round the
+> walls, a deep blue round the door and shutters. And make the pixels just inside the outline a mid shade,
+> so the outline isn't next to the lightest colour. Add a few bright highlight pixels on the thatch's top
+> left. Deliver the 96 × 96 PNG at 1× as well as the 8× preview, background fully transparent.
