@@ -247,7 +247,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   asked; CI prints each land's props set down under half (🌳). It found the caves bare (nothing in the way could stand a cell from a
   passage's middle, and the mazes run everywhere): now never on a passage's middle, and only where the open cells
   round it stay one arc of five or more (`WorldMap.leavesWayRound`), so nothing cuts or narrows a way shut; the tunnel
-  caves (Rat Cavern, the Gooey Grotto, the Mysterious Cave), a cell wide, hold only a few things in the way
+  caves (Rat Cavern, the Gooey Grotto, the Whispering Hollow), a cell wide, hold only a few things in the way
   (carts, beams, boulders, stalagmites, listed first, rarest first), and their crystals, amber, ore and moss rocks
   are walked past, as are the Glimmerdeep's crystals, its spires and geodes first (the user's pick, 2026-11-21); and a
   town's well, statue and flower beds listed before its square's daisies, which had filled it first. Chicks live in a farm's yard (`Critters.home`). Debug `at=place`.
