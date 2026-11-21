@@ -187,3 +187,8 @@ user picks by eye; what doesn't win isn't used.
 >    balcony with a striped cloth, an arched door, clay pots by it.
 > 2. `spice_shop`: a little spice shop, sacks and baskets of red, orange and green spices out front, a striped
 >    awning, hanging dried peppers.
+- **Ingothold, second try** (`batch2b/`, asked for clear sandstone blocks and strong shading): the assay office,
+  miners' lodge and spice shop pass every hard rule as delivered; the assay office and lodge replace the first
+  try's. The sandstone house misses two by a hair (`straight_edges` 0.42, needs ≤ 0.4; `form_relief` just under
+  0.016); in for the user's eye. With the sandstone house and spice shop in its last four places, Ingothold's
+  `adobe_house_tall` is gone. Night windows boxed: the sandstone's warm highlights lit up.

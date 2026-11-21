@@ -2032,12 +2032,15 @@ PICKED = {"thatched_cottage": ("art-variants/thatched_cottage/chatgpt_5.png", 1.
           "dairy_shop": ("art-variants/dairy_shop/chatgpt_1.png", 1.0),                         # Meadowbrook
           "glass_lantern_shop": ("art-variants/glass_lantern_shop/chatgpt_1_fixed.png", 1.0),   # Prismhaven
           "painter_studio": ("art-variants/painter_studio/chatgpt_1.png", 1.0),                 # Prismhaven
-          # The aviary's outline no darker than inside it, snapped to its own colours 30% darker; the assay
-          # office's a hair too dark beside its inside, 4% lighter.
+          # The aviary's outline no darker than inside it, snapped to its own colours 30% darker.
           "aviary_shop": ("art-variants/aviary_shop/chatgpt_1_fixed.png", 1.0),                 # Larkspur
           "music_hall": ("art-variants/music_hall/chatgpt_1.png", 1.0),                         # Larkspur
-          "assay_office": ("art-variants/assay_office/chatgpt_1_fixed.png", 1.0),               # Ingothold
-          "miners_lodge": ("art-variants/miners_lodge/chatgpt_1.png", 1.0)}                     # Ingothold
+          # Ingothold's second try, asked for strong shading on clear sandstone blocks (its tall adobe looked
+          # washed out, the user, 2026-11-21).
+          "assay_office": ("art-variants/assay_office/chatgpt_2.png", 1.0),                     # Ingothold
+          "miners_lodge": ("art-variants/miners_lodge/chatgpt_2.png", 1.0),                     # Ingothold
+          "sandstone_house": ("art-variants/sandstone_house/chatgpt_1.png", 1.0),               # Ingothold
+          "spice_shop": ("art-variants/spice_shop/chatgpt_1.png", 1.0)}                         # Ingothold
 
 
 def picked(item):

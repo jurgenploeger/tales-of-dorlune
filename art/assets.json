@@ -2657,6 +2657,16 @@
       "kind": "building"
     },
     {
+      "id": "sandstone_house",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "spice_shop",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
       "id": "standing_stone",
       "kind": "prop"
     },
@@ -3236,6 +3246,14 @@
     },
     {
       "id": "windows_miners_lodge",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_sandstone_house",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_spice_shop",
       "kind": "prop"
     },
     {
