@@ -199,3 +199,29 @@ against ours.
 `tools/building_art.py` `PICKED` with its outline lift, so a rerun writes the same sprite; its night window
 lights cut by `tools/window_art.py`, held to the rows under its roof (`ROWS`: the straw's highlights are the
 panes' yellow).
+
+# Test B2: the stone townhouse
+
+Of our 29 other code-drawn buildings, 11 fail a hard rule. The **stone townhouse** (`stone_townhouse`) is
+the most used of them (five lots, in Meadowbrook and other towns) and the cottage's own family: 93% soft,
+failing only the hard one the old cottage failed, long straight edges (a box with ruled walls and roof).
+
+Keep: 96 × 96, about **72 wide and 82 tall**, its foot on **row 90**; a blue-grey slate roof with a dormer
+window and a chimney on the right; light stone walls; two arched lit windows; a green arched door in the
+middle of the front, with a stone step; a window box with pink flowers and ivy up the left. Window panes
+warm yellow (night lights).
+
+Attach `stone_townhouse_8x.png` in a new chat of the project (the instructions and reference sheets are in
+the project). Prompt:
+
+> Redraw this building from my game in the style of the reference buildings: a stone townhouse, 96 × 96,
+> shown at 8×. Keep it the same building: a blue-grey slate roof with a dormer window and a chimney on the
+> right, light stone walls, two arched windows with warm yellow light, a green arched door in the middle of
+> the front with a stone step, a window box with pink flowers, ivy up the left.
+>
+> Make it soft and rounded like the references, not a box: the roof's edges and ridge gently curved and
+> uneven, slates in rounded rows, walls slightly bulging, stones of different sizes with rounded corners.
+> No long ruler-straight lines anywhere.
+>
+> Size: about 72 pixels wide and 82 tall, its foot on row 90 of the 96 × 96 canvas. Deliver the 1× PNG and
+> the 8× preview, as the project's instructions say.
