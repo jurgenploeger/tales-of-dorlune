@@ -6334,7 +6334,7 @@
             "count": 35,
             "blocking": false,
             "near": {
-              "water": 1
+              "water": 3
             },
             "cluster": 4,
             "size": [
@@ -14845,7 +14845,7 @@
             "count": 16,
             "blocking": false,
             "near": {
-              "water": 1
+              "water": 3
             },
             "cluster": 4,
             "size": [
@@ -20014,7 +20014,7 @@
             "count": 110,
             "blocking": false,
             "near": {
-              "path": 2
+              "path": 3
             },
             "cluster": 4,
             "size": [
