@@ -35,3 +35,5 @@ sizes and foot rows written in, the shading spelled out, warm yellow only for pa
 - **Crystal cottage**: exact size; outline not dark enough beside the body, `form_relief` 0.014 (ours 0.0214).
 - **Bell tower**: exact size; outline not dark enough, `form_relief` 0.013 (ours 0.0179), one colour too many.
   Both go back for a fix.
+- **Gem workshop**: 79 × 56, foot on row 92, exactly ours; its night lights catch only its window's panes.
+  Soft 93%, but flat (`form_relief` 0.0139, ours 0.0166): back for the same shading fix.
