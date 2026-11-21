@@ -1,0 +1,26 @@
+# Batch 3: the most-used town buildings (2026-11-21)
+
+These pass the style check but are still drawn in code, and stand in the most lots: the **bank** (34, in every
+town), the **timber-framed house** and the **round cottage** (six each) and the **weapon shop** (five).
+
+The first batch with the project instructions of 2026-11-21 (`../../chatgpt-project-instructions.md`): ChatGPT
+measures each size from the attached picture and checks its own 1× file, so the prompt names no sizes.
+
+One chat in the project, all four 8× images attached, in this order:
+
+> Redraw these 4 buildings from my game, in the order attached, as the project's instructions say:
+> 1. **bank**: a little white-columned bank with a red tiled roof, a gold coin emblem on the front and a
+>    round coin sign on the right, a wooden door between the columns, lit windows, a patch of grass at its
+>    foot.
+> 2. **timber_house**: a two-storey timber-framed house, a red tiled roof and a chimney, four lit windows,
+>    flower boxes, a green door.
+> 3. **round_cottage**: a round white stone cottage with a tall pointed teal-tiled roof, a gold finial and a
+>    round gold window in the roof, a wooden arched door, a lit window, ivy on the left.
+> 4. **weapon_shop**: a stone weapon shop with a red tiled roof, a lit window under the gable, a shop window
+>    with swords and axes on a rack, a dark wooden door, a rack of spears on the left, a hanging sign on the
+>    right with crossed blades.
+>
+> The bank's coins are gold, a deeper orange-gold than the windows' warm yellow, so they don't light up at
+> night.
+
+Then as before: each checked, scored, one blind pick for all four, the winners in the game.
