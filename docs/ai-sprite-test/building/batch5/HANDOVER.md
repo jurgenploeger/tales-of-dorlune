@@ -26,3 +26,12 @@ sizes and foot rows written in, the shading spelled out, warm yellow only for pa
 > shadow on their top and left edge. Warm yellow only for window panes. Follow the project's steps exactly:
 > measure, draw, check, and deliver the 1× PNG file for each: every one on a 96 × 96 canvas, fully
 > transparent, at exactly the size and foot row given above.
+
+## Results
+
+- **Yurt**: 70 × 79, foot on row 87, exactly ours; **passes** (`form_relief` 0.0183, ours 0.0162). Its drawn
+  smoke (rows 9 to 25) cut out, as the game now puffs moving smoke from its smoke hole (`LandStage.smokeHoles`,
+  the user: "the smoke needs to be animated"). In the game.
+- **Crystal cottage**: exact size; outline not dark enough beside the body, `form_relief` 0.014 (ours 0.0214).
+- **Bell tower**: exact size; outline not dark enough, `form_relief` 0.013 (ours 0.0179), one colour too many.
+  Both go back for a fix.

@@ -2001,7 +2001,10 @@ PICKED = {"thatched_cottage": ("art-variants/thatched_cottage/chatgpt_5.png", 1.
           # sprite's own colour nearest 20% lighter, so it passes outline_rel without new colours.
           "garden_cottage": ("art-variants/garden_cottage/chatgpt_2_fixed.png", 1.0),
           # armour_shop: ChatGPT's third try, shaded deeper after two a hair flat.
-          "armour_shop": ("art-variants/armour_shop/chatgpt_3.png", 1.0)}
+          "armour_shop": ("art-variants/armour_shop/chatgpt_3.png", 1.0),
+          # yurt: ChatGPT's (batch 5) with its drawn smoke cut out (rows 0 to 25's grey and white), as the
+          # game puffs moving smoke from its smoke hole instead (LandStage.smokeHoles).
+          "yurt": ("art-variants/yurt/chatgpt_1_nosmoke.png", 1.0)}
 
 
 def picked(item):

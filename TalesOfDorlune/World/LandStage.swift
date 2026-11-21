@@ -351,7 +351,11 @@ final class LandStage {
         reflect(node, picture: drawn.texture, art: placement.art, cell: placement.cell)
         addFire(to: node, art: placement.art)
         addWindows(to: node, art: placement.art)
-        if placement.art == "brazier" { addSmoke(to: node) }
+        if placement.art == "brazier" {
+            addSmoke(to: node)
+        } else if let hole = Self.smokeHoles[placement.art] {
+            addSmoke(to: node, from: hole)
+        }
         // Lit by a lamp nearby at night (`LampLight`): not a light itself, nor what moves in the wind
         // (its picture changes, the light's copy wouldn't).
         if !lamps.isEmpty, node.texture === drawn.texture, placement.art != "street_lamp", placement.prop?.glow == nil {
@@ -361,10 +365,25 @@ final class LandStage {
         return node
     }
 
-    /// Smoke rising from a fire (a camp's or a lair's brazier): a soft grey puff every half second
-    /// or so that drifts up, swells and fades; only while its chunk is in the scene.
-    private func addSmoke(to node: SKSpriteNode) {
-        let top = CGPoint(x: 0, y: node.size.height * (1 - node.anchorPoint.y) - 4)
+    /// Where smoke rises from a building whose picture has a smoke hole or chimney, as a fraction of
+    /// its picture from the top left: the yurt's smoke hole at the tip of its cone (ChatGPT's
+    /// drawing, its drawn puffs cut out so the smoke moves; the user, 2026-11-21: "the smoke needs
+    /// to be animated").
+    private static let smokeHoles: [String: CGPoint] = [
+        "yurt": CGPoint(x: 47.0 / 96, y: 25.0 / 96),
+    ]
+
+    /// Smoke rising from a fire (a camp's or a lair's brazier, from the top of its picture) or a
+    /// building's smoke hole (`hole`, `smokeHoles`): a soft grey puff every half second or so that
+    /// drifts up, swells and fades; only while its chunk is in the scene.
+    private func addSmoke(to node: SKSpriteNode, from hole: CGPoint? = nil) {
+        let top: CGPoint
+        if let hole {
+            top = CGPoint(x: (hole.x - node.anchorPoint.x) * node.size.width,
+                          y: (1 - hole.y - node.anchorPoint.y) * node.size.height)
+        } else {
+            top = CGPoint(x: 0, y: node.size.height * (1 - node.anchorPoint.y) - 4)
+        }
         let puff = SKAction.run { [weak node] in
             guard let node else { return }
             let smoke = SKSpriteNode(texture: SoftTextures.glow, size: CGSize(width: 12, height: 12))
