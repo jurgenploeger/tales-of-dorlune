@@ -43,3 +43,9 @@ Then as before: each checked, scored, one blind pick for all four, the winners i
 - **Round cottage** (`round_cottage_chatgpt_1.png`): a true 96 × 96 PNG, 58 × 81, foot on row 89, exactly
   ours; 35 colours. **Passes as delivered**, soft 93% (`form_relief` 0.017). Its night lights would catch
   its gold finial too (rows 10 to 12): a `window_art.BOXES` entry from row 40 when it goes in.
+- **Weapon shop** (`weapon_shop_chatgpt_1_8x.png`, only the 8× sent, but an exact 8× of a 96 grid, so
+  `weapon_shop_chatgpt_1.png` is its 1× without loss): 77 × 63, foot on row 89, exactly ours; 31 colours.
+  Soft 93%, but flat (`form_relief` 0.014, needs 0.016) where ours passes: a shading follow-up first.
+
+`blind_pick.png`: the bank, timber house (outline 10% darker) and round cottage against ours; the key stays
+out of the repo till the pick. The weapon shop joins the next pick.
