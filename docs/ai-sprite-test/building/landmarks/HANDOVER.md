@@ -61,3 +61,9 @@ One new chat, the five images attached in this order:
   90 and got 36), and four of five with no outline darker than what it rounds. Side by side they're plainer:
   fewer stones, stars and carvings. **Ours kept for all five.** At 160 pixels ChatGPT draws as it does at 96,
   just bigger and so emptier; the houses won because ours were weak there, not here.
+- **Second round, lodge (try 3) and warrior guild (try 2):** the follow-up worked on colours and flat areas:
+  76 and 75 colours, `flat` passes, the lodge soft 100%. Both outlines overshot (`outline_rel` 0.51 and 0.50);
+  each outline pixel snapped to the sprite's own colour nearest 12% lighter, no new colours, fixes both
+  (`*_fixed.png`, 0.61 and 0.59). Left on each: `form_relief`, the lodge 0.01358 (ours 0.01365, a tie that
+  fails), the guild 0.01454 (ours 0.0195, passes). Side by side the lodge reads nicer than ours; the guild
+  paler and flatter. Both back for broad shade (prompt in the chat, 2026-11-21).
