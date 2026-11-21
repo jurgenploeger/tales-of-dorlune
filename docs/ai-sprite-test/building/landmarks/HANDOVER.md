@@ -53,3 +53,11 @@ One new chat, the five images attached in this order:
 > walls a shade darker, the logs lit top left and darker toward the bottom right, the door and windows set deep
 > with a dark top and left edge. Then do the other four the same way: 60 to 90 colours each, outline half as
 > bright as what it borders.
+- **All five, one chat** (`*_chatgpt_1.png`, the lodge `_2`): every one at exactly the asked canvas, size and
+  foot row, alpha clean. But every one fails hard rules, where three of ours pass everything (the warrior
+  guild, moonwell and spire) and the other two miss one each (the observatory `flat` 0.155 by a hair, the
+  lodge `form_relief`). ChatGPT's: `flat` 0.16 to 0.27 (broad single-tone areas, clusters of 9 to 14 pixels
+  where 2 to 5 are wanted), 30 to 37 colours where 45 or more are needed (the lodge's follow-up asked for 60 to
+  90 and got 36), and four of five with no outline darker than what it rounds. Side by side they're plainer:
+  fewer stones, stars and carvings. **Ours kept for all five.** At 160 pixels ChatGPT draws as it does at 96,
+  just bigger and so emptier; the houses won because ours were weak there, not here.
