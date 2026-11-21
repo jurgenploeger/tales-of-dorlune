@@ -27,7 +27,23 @@ SPR = ROOT / "art" / "sprites"
 BIGGEST = 64
 FEWEST = 6
 SKIP = {"fence", "town_gate", "market_tent", "market_stall", "pavilion_tent", "desert_tent", "yurt", "blacksmith",
-        "bakery", "beach_hut", "thatched_cottage", "adobe_house_tall", "windmill", "puppet_theater", "mushroom_house"}
+        "bakery", "beach_hut", "adobe_house_tall", "windmill", "puppet_theater", "mushroom_house"}
+
+
+# Where a building's windows are, as boxes (rows y0 to y1, columns x0 to x1), when bright warm pixels
+# elsewhere would pass for panes too: the thatched cottage's straw, the book shop's hanging sign, a yellow
+# cloth in the tailor's window, the dome house's sandstone along its wall top (the pictures ChatGPT drew,
+# 2026-11-21). Only pixels in a box count.
+BOXES = {"thatched_cottage": [(60, 96, 0, 96)],
+         "book_shop": [(55, 66, 40, 52)],
+         "tailor_shop": [(50, 64, 0, 96)],
+         "dome_house": [(52, 60, 32, 40), (55, 72, 52, 60)],
+         "tree_house": [(40, 52, 0, 96)],
+         "round_cottage": [(40, 96, 0, 96)],
+         "wildfolk_lodge": [(124, 140, 38, 92)],
+         "acorn_cottage": [(38, 48, 28, 40), (60, 72, 48, 60)],
+         "warrior_guild": [(112, 124, 50, 104)],
+         "emerald_spire": [(100, 109, 80, 92), (124, 137, 74, 100), (148, 160, 50, 124)]}
 
 
 def buildings():
@@ -43,11 +59,16 @@ def windows(name):
     im = np.asarray(Image.open(path).convert("RGBA")).astype(int)
     r, g, b, a = (im[..., i] for i in range(4))
     warm = (a > 200) & (r >= 225) & (g >= 175) & (b <= g - 35) & (b >= 60) & (r - b >= 60)
+    if name in BOXES:
+        inside = np.zeros(warm.shape, bool)
+        for y0, y1, x0, x1 in BOXES[name]:
+            inside[y0:y1, x0:x1] = True
+        warm &= inside
     labels, count = ndimage.label(warm, structure=np.ones((3, 3)))
     keep = np.zeros(warm.shape, bool)
     for index in range(1, count + 1):
         patch = labels == index
-        if 4 <= patch.sum() <= BIGGEST:           # not a speck of bright brick either
+        if (2 if name in BOXES else 4) <= patch.sum() <= BIGGEST:   # not a speck of bright brick (in a box, a pane)
             keep |= patch
     if keep.sum() < FEWEST:
         return None

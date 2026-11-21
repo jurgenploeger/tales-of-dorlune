@@ -3127,10 +3127,6 @@
       "kind": "prop"
     },
     {
-      "id": "windows_moonwell",
-      "kind": "prop"
-    },
-    {
       "id": "windows_round_cottage",
       "kind": "prop"
     },
@@ -3164,6 +3160,10 @@
     },
     {
       "id": "windows_teapot_house",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_thatched_cottage",
       "kind": "prop"
     },
     {

@@ -242,7 +242,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   Each kind of place is a landmark too (`WorldMap.landmark`: `at: "farm"`, `"ruin"`…, `which`): every land has a
   chest at one of its places (a potion or ether by its level, refilling as chests do) and someone living at another
   (maps.json `locals`). Theme `lush`: a richer ground tile in broad soft patches over the plain ground
-  (`WorldMap.layLush`, `GroundTiles.lushMask`; the grass lands' `tile_rich_grass`). A brazier smokes (`LandStage.addSmoke`).
+  (`WorldMap.layLush`, `GroundTiles.lushMask`; the grass lands' `tile_rich_grass`). A brazier smokes (`LandStage.addSmoke`), and so does a building's smoke hole (`LandStage.smokeHoles`: the yurt's, its drawn smoke cut out of ChatGPT's picture).
 - Tall grass (the user's pick from `tools/grass_preview.py`, 2026-11-19, after SpriteCook's interactive tall grass article;
   visual only, green wild lands only): theme `tallGrass` (`patches`, `size`, `art`) lays soft rounds of cells
   (`WorldMap.layTallGrass`, kept from other scenery; debug `at=grass`), filled by `GrassField` with tufts about nine a
@@ -285,7 +285,10 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   and roofs are surfaces with a building material's pattern at the sprite's pixels (stone blocks, plaster,
   planks, clay tiles, thatch, slate); each is drawn in a 96-pixel frame's coordinates and scaled about its
   foot to fill it as RD's do (`fit`). Registered in art/assets.json with no `request`, placed by maps.json's
-  town `lots`; scored with `pixel_style.py check --kind building`. `--sheet out.png` previews them.
+  town `lots`; scored with `pixel_style.py check --kind building`. `--sheet out.png` previews them. One redrawn
+  by ChatGPT is copied, not drawn (`PICKED`, kept in `art-variants/`: 29 of them since 2026-11-21, every building drawn in code (the five
+  landmarks, the acorn cottage and gem workshop the user's pick over the scores); how: `docs/ai-sprite-test/`,
+  `tools/ai_sprite_eval.py`). After eight blind picks all went to ChatGPT, the user dropped them (2026-11-21).
 - `tools/crystal_art.py`: the Glimmerdeep's crystal scenery from the caves' own rock (its walls, floor, spires and
   geodes): each pixel's brightness laid on a ramp of crystal colours, as a `derive` can't tint the grey tiles.
   Rerun it after editing a ramp; `--sheet out.png` previews them.
@@ -325,7 +328,8 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   the coins are. `--sheet out.png` previews them.
 - `tools/lair_art.py`: the pieces of the bosses' lairs no sprite had (a standing stone, a brazier, a gold hoard, a
   warning post, the Rat King's junk throne, a heap of bones, a hunter's torn tent, a broken pillar), drawn with
-  `pixel_kit` and scored as scenery. A boss's lair is maps.json `lair` on the boss: pieces round it, its way in to
+  `pixel_kit` and scored as scenery (the brazier and gold hoard redrawn by ChatGPT and copied, `PICKED`, the user's pick, 2026-11-21; ChatGPT's
+  blossom tree lost to ours). A boss's lair is maps.json `lair` on the boss: pieces round it, its way in to
   the south, turned by `LandPlanner.planLair` to face the way up its trail (else the land's middle); `lairRing`, a
   ring of the land's own tall scenery behind it and low in front, open toward the way in; `lairApproach`, pairs
   lining the way in; `lairSign`, a warning by its trail near where it starts. Its ground is kept for it before

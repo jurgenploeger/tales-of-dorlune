@@ -112,6 +112,27 @@ user wants otherwise.
 - Fix in code only what the user asked to have fixed (a slab under a building: `tools/deslab.py`;
   armour colour: `wear_art.MATERIAL`).
 
+### Redrawn by ChatGPT (on trial, 2026-11-21)
+The user draws in a ChatGPT project (its instructions: `docs/ai-sprite-test/chatgpt-project-instructions.md`,
+the RD reference sheets as its files) and brings the PNGs here. It's free per try; it has redrawn one of
+our code-drawn buildings well enough to be picked blind over ours (the thatched cottage, five tries). It
+missed sizes on a monster, so it isn't a route for creatures or walk sheets yet. What worked:
+- Ask for the 1× PNG and an 8× preview; check the 1× is exactly the preview shrunk (a clean delivery needs
+  nothing done). Otherwise `tools/ai_sprite_eval.py <png> --rd <id> --kind <kind>` snaps it to the grid,
+  scores it and sheets it beside the sprite it replaces.
+- Follow-ups name the rule by its numbers (`pixel_style.py check`), one or two fixes at a time. A building's
+  outline must be tinted, a deep shade of what it rounds: "darker" alone gives one dark line round
+  everything, which fails `outline_rel`.
+- A building ChatGPT redraws replaces ours once it's at our size and at least as good on `pixel_style.py`'s
+  hard rules (where ours fails one, ChatGPT's may fail the same one less): no blind pick since 2026-11-21,
+  when every one of eight had gone to ChatGPT and the user said "we don't need to do blind tests anymore".
+  It's kept as drawn in `art-variants/<id>/`, named in the family's tool (`building_art.PICKED`) so a rerun
+  copies it, any small fix written there too (an outline a few percent lighter or darker).
+- Its night windows: `window_art.BOXES` round its real panes when a sign, cloth, finial or highlight shares
+  their yellow.
+- Many small pushes in a day hit Vercel's free limit (100 deployments): push once a batch.
+- Rerun what's cut from it (`tools/window_art.py` for a building's night windows).
+
 ### Wiring it into the game
 A sprite nobody uses isn't done.
 - A monster: `content/monsters.json` (`art`, `motion`), plus eyes or a `skipped` reason in
