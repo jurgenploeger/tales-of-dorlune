@@ -2677,6 +2677,26 @@
       "kind": "building"
     },
     {
+      "id": "lantern_cottage",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "owl_tower",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "woodcutter_cabin",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "stump_house",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
       "id": "standing_stone",
       "kind": "prop"
     },
@@ -3272,6 +3292,22 @@
     },
     {
       "id": "windows_chime_cottage",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_lantern_cottage",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_owl_tower",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_woodcutter_cabin",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_stump_house",
       "kind": "prop"
     },
     {

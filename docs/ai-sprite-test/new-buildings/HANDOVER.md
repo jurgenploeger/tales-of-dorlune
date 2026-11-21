@@ -198,3 +198,9 @@ user picks by eye; what doesn't win isn't used.
   barn's outline is already its darkest colour, no darker than what it rounds, and it's flat (`form_relief`
   0.015); the shepherd's hut flat (0.014) and too straight (`straight_edges` 0.505, its fence): both back to
   ChatGPT.
+- **Batch 4** (2026-11-21): all four at the asked size, 31 to 39 colours. The stump house passes every hard rule;
+  the woodcutter's cabin, owl tower and lantern cottage miss `form_relief` by a hair (0.014 to 0.015), the owl
+  tower's outline no darker than its dark wood: all four in for the user's eye. Twilight Woods: the lantern
+  cottage for its blue mushroom house, the owl tower (its eyes the window lit at night) for its crooked house.
+  Smiling Forest: the woodcutter's cabin for its green house, the stump house for its mushroom house (its sawn
+  top boxed out of the night lights).

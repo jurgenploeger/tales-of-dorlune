@@ -3209,7 +3209,7 @@
           "y": 43
         },
         {
-          "art": "crooked_house",
+          "art": "owl_tower",
           "x": 42,
           "y": -35
         },
@@ -3219,7 +3219,7 @@
           "y": -5
         },
         {
-          "art": "mushroom_house_blue",
+          "art": "lantern_cottage",
           "x": 26,
           "y": -5
         }
@@ -3968,7 +3968,7 @@
           "y": -1
         },
         {
-          "art": "house_green",
+          "art": "woodcutter_cabin",
           "x": -52,
           "y": 7
         },
@@ -3983,7 +3983,7 @@
           "y": -24
         },
         {
-          "art": "mushroom_house",
+          "art": "stump_house",
           "x": -23,
           "y": -24
         }
