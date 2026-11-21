@@ -2637,6 +2637,26 @@
       "kind": "building"
     },
     {
+      "id": "aviary_shop",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "music_hall",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "assay_office",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "miners_lodge",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
       "id": "standing_stone",
       "kind": "prop"
     },
@@ -3200,6 +3220,22 @@
     },
     {
       "id": "windows_painter_studio",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_aviary_shop",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_music_hall",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_assay_office",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_miners_lodge",
       "kind": "prop"
     },
     {

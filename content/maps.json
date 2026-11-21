@@ -8251,7 +8251,7 @@
           "y": 17
         },
         {
-          "art": "adobe_house_tall",
+          "art": "assay_office",
           "x": 3,
           "y": 17
         },
@@ -8276,7 +8276,7 @@
           "y": 9
         },
         {
-          "art": "adobe_house_tall",
+          "art": "miners_lodge",
           "x": 18,
           "y": 7
         },
@@ -8301,7 +8301,7 @@
           "y": -4
         },
         {
-          "art": "adobe_house_tall",
+          "art": "miners_lodge",
           "x": 12,
           "y": -4
         },
@@ -8326,7 +8326,7 @@
           "y": -7
         },
         {
-          "art": "adobe_house_tall",
+          "art": "assay_office",
           "x": -27,
           "y": -10
         },
@@ -13371,11 +13371,11 @@
           "magic_tower",
           "mushroom_house",
           "house",
-          "house",
+          "aviary_shop",
           "house",
           "weapon_shop",
           "windmill",
-          "mushroom_house",
+          "music_hall",
           "inn_teal",
           "bakery",
           "item_shop_red",
@@ -13390,7 +13390,7 @@
           "round_cottage",
           "garden_cottage",
           "flower_shop",
-          "mushroom_house",
+          "music_hall",
           "house_green",
           "garden_cottage",
           "tea_house",
@@ -13402,7 +13402,7 @@
           "house_green",
           "armour_shop",
           "mushroom_house_blue",
-          "house",
+          "aviary_shop",
           "house_purple",
           "mushroom_house_blue",
           "house"

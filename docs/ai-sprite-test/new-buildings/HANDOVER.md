@@ -171,3 +171,19 @@ user picks by eye; what doesn't win isn't used.
   and dairy (two), Prismhaven's lantern shop and painter's studio (two each), each in place of a lot that was a
   plain `house` or `mushroom_house`. Night windows boxed: the dairy's pale wall foot lit, and the lantern shop's
   panes are a pure yellow with no blue in them, so inside a box `window_art` now takes those too.
+- **Batch 2** (2026-11-21, as first listed): all four at the asked size (74 to 78 wide, 70 to 78 tall, foot on
+  row 89, 35 to 39 colours). The aviary's outline no darker than inside it, snapped to its own colours 30% darker,
+  and the assay office's a hair too dark beside it, 4% lighter: both pass every hard rule, as the miners' lodge
+  does as delivered. The music hall's outline is already its darkest colour, nothing to snap to; in as drawn,
+  `form_relief` 0.015 (needs 0.016). Larkspur: the aviary and music hall in two lots each (for `house` and
+  `mushroom_house`). Ingothold: the assay office and miners' lodge in four of the eight places its washed-out
+  `adobe_house_tall` (RD) stood, the user's ask ("looks more blurry than others"); the other four wait for
+  `sandstone_house` and `spice_shop`:
+
+> Draw 2 more new buildings for Ingothold, a desert mining town of sandstone and red clay tiles, the same way
+> as the last ones. Give the sandstone clear blocks and strong shading (a sunlit front, the side and the shadow
+> under the eaves clearly darker), so they don't look washed out on the sandy ground.
+> 1. `sandstone_house`: a tall two-storey house of rounded sandstone blocks, a red clay tile roof, a wooden
+>    balcony with a striped cloth, an arched door, clay pots by it.
+> 2. `spice_shop`: a little spice shop, sacks and baskets of red, orange and green spices out front, a striped
+>    awning, hanging dried peppers.

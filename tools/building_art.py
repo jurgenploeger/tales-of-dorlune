@@ -2031,7 +2031,13 @@ PICKED = {"thatched_cottage": ("art-variants/thatched_cottage/chatgpt_5.png", 1.
           "post_office": ("art-variants/post_office/chatgpt_1_fixed.png", 1.0),                 # Meadowbrook
           "dairy_shop": ("art-variants/dairy_shop/chatgpt_1.png", 1.0),                         # Meadowbrook
           "glass_lantern_shop": ("art-variants/glass_lantern_shop/chatgpt_1_fixed.png", 1.0),   # Prismhaven
-          "painter_studio": ("art-variants/painter_studio/chatgpt_1.png", 1.0)}                 # Prismhaven
+          "painter_studio": ("art-variants/painter_studio/chatgpt_1.png", 1.0),                 # Prismhaven
+          # The aviary's outline no darker than inside it, snapped to its own colours 30% darker; the assay
+          # office's a hair too dark beside its inside, 4% lighter.
+          "aviary_shop": ("art-variants/aviary_shop/chatgpt_1_fixed.png", 1.0),                 # Larkspur
+          "music_hall": ("art-variants/music_hall/chatgpt_1.png", 1.0),                         # Larkspur
+          "assay_office": ("art-variants/assay_office/chatgpt_1_fixed.png", 1.0),               # Ingothold
+          "miners_lodge": ("art-variants/miners_lodge/chatgpt_1.png", 1.0)}                     # Ingothold
 
 
 def picked(item):
