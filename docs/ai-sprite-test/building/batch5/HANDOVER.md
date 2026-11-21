@@ -61,3 +61,7 @@ sizes and foot rows written in, the shading spelled out, warm yellow only for pa
   game. No warm panes, so no night lights (none before either).
 - **Acorn cottage, second try**: flatter still (`form_relief` 0.011) and its outline lost. Two tries, ours
   passes (0.0194).
+- **Acorn cottage, third try, and gem workshop, fourth** (`*_big.png`, only the big pictures; snapped to 96 by
+  `ai_sprite_eval.py`): both flat again, `form_relief` 0.015 and 0.012, the gem workshop's outline not dark
+  (`outline_dark` 0.05) and its roof a grid of ruler-straight slates pressing the shop down. Ours pass every
+  hard rule: **ours stay**, for good this time.
