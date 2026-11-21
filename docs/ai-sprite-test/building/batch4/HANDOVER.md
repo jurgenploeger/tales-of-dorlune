@@ -40,3 +40,6 @@ back for one fix each.
   each outline pixel moved to the sprite's own colour nearest 20% lighter (no new colours): **passes**, soft
   93%, in the game (`chatgpt_2_fixed.png`). The armour shop's second try changed 471 pixels but stayed a hair
   flat (`form_relief` 0.0154; ours 0.0195).
+- **Armour shop, third try** (shaded "much stronger"): `form_relief` 0.0161, **passes**, soft 93%. In the game.
+  Gentle shading asks barely moved this number; spelling out each shadow (side wall, eave band, bottom third,
+  window and door set in) did.
