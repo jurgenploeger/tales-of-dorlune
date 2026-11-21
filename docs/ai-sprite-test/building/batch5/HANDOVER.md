@@ -48,3 +48,7 @@ sizes and foot rows written in, the shading spelled out, warm yellow only for pa
   night lights (none before either).
 - **Gem workshop, second try**: 880 pixels changed, but still flat (`form_relief` 0.0137, needs 0.016; ours
   0.0166) and its outline now no darker than its body (`outline_dark` 0). Worse than its first try.
+- **Bell tower, third try**: 86 pixels changed, its outline further off (0.463). Snapping to its own shades
+  jumps from 0.494 (too dark beside) to 0.667 (not dark at all); lifting the half of its outline pixels
+  darkest beside their inside one step further than the rest lands between (0.564, `outline_dark` 0.35):
+  **passes**, soft 100%, 29 colours. In the game (`chatgpt_3_fixed.png`).

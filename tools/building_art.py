@@ -2007,7 +2007,11 @@ PICKED = {"thatched_cottage": ("art-variants/thatched_cottage/chatgpt_5.png", 1.
           "yurt": ("art-variants/yurt/chatgpt_1_nosmoke.png", 1.0),
           # crystal_cottage: ChatGPT's second try (chatgpt_2.png), each outline pixel moved to the sprite's own
           # colour nearest 24% lighter (chatgpt_2_fixed.png), as the garden cottage's: its outline had overshot.
-          "crystal_cottage": ("art-variants/crystal_cottage/chatgpt_2_fixed.png", 1.0)}
+          "crystal_cottage": ("art-variants/crystal_cottage/chatgpt_2_fixed.png", 1.0),
+          # bell_tower: ChatGPT's third try (chatgpt_3.png); its 29 colours left no single outline shade between
+          # the two outline rules, so the half of its outline pixels darkest beside their inside took the sprite's
+          # own colour nearest 30% lighter and the rest the one nearest 18% lighter (chatgpt_3_fixed.png).
+          "bell_tower": ("art-variants/bell_tower/chatgpt_3_fixed.png", 1.0)}
 
 
 def picked(item):
