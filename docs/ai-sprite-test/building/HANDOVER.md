@@ -92,3 +92,37 @@ It's better if:
 If it wins, one thing changes in how we work: the cottage stops being a drawing in code (rebuilt by
 `building_art.py` on every rerun) and becomes a picked picture, as RD's are, kept in `art-variants/` and
 named in the tool so a rerun doesn't draw over it. That's your call when we get there.
+
+## Results (2026-11-21)
+
+### ChatGPT, try 1
+
+`chatgpt_1.png` (96 × 96, as delivered), `chatgpt_1_8x.png` (768 × 768), `chatgpt_1_raised.png` (moved up 6
+rows to stand where ours does), `compare_town.png` (beside RD's house and sleepy cottage at 4×),
+`compare_closeup.png` (ours and its at 6×).
+
+- **A real sprite.** It sent a true 96 × 96 PNG beside the 8× picture: the big one is exactly the small one
+  at 8×, every 8 × 8 block flat, 39 colours, a clean transparent background, no half-transparent pixels.
+  78 × 60, exactly as asked. Nothing to snap or clean: the first general model's picture that's usable
+  as delivered.
+- **It's still our cottage:** the thatch, the chimney, the blue door on the lower left, two lit windows with
+  blue shutters, the flower box, the climbing plant. The window panes are warm yellow for the night lights.
+- **By eye, a clear step toward RD's look:** a rounded, lumpy thatch in clumps where ours is an even,
+  boxy slab; plaster walls with stones; the odd side wall gone. Beside RD's house and sleepy cottage it
+  looks like the same game; ours doesn't.
+- **Scored: fails, 71%** (ours: fails, 86%). It now passes the hard rule ours failed (straight edges: 0.26,
+  ours 0.46), but misses others: the thatch is **too noisy** (stray single pixels 0.31, the limit 0.25;
+  clusters 2.1 pixels, RD's 2.3 to 5.2), its **outline a little light** (0.41, RD's at most 0.35), and,
+  by a hair, the hard rule that the outline is darker than what's inside (0.543, needs 0.546).
+- **Two slips:** it stands on the canvas's last row (ours stands 6 rows up), and its foot is a flat cut, as
+  if cropped, with no edge or tufts. The walls are short under a heavy roof.
+
+Verdict: **promising, not done.** The first try that's plainly better than ours by eye, but it fails the
+numbers on noise, and those numbers are what keep a sprite looking like RD's on the phone at 1×. One
+follow-up should tell whether it can be tidied:
+
+> Much better. Keep everything, with these fixes: the thatch is too noisy. Draw it in bigger, smoother
+> clumps of 3 to 6 pixels of one shade, with fewer single stray pixels. Make the outline a darker shade
+> (deep brown round the thatch and walls). Give the building a proper rounded foot with a darker bottom
+> edge and two or three grass tufts, and leave 6 empty rows under it at the bottom of the canvas. Make the
+> walls 3 or 4 pixels taller. Same 96 × 96, same 8× PNG, transparent.
