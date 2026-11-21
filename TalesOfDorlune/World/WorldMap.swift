@@ -786,11 +786,14 @@ nonisolated final class WorldMap: @unchecked Sendable {
     /// Whether scenery may go in `cell`: free, off roads and water, clear of the centre and
     /// the arrival spots, and (in fenced towns) outside the fence.
     /// `insideFence` lets town-square planting use the town's ground, not just its border.
-    /// Things you can walk through (`blocking` false) may sit in a cave's passages.
+    /// Things you can walk through (`blocking` false) may sit in a cave's passages; what's in the way
+    /// never on a passage's middle, and only where it leaves the way round it open (`leavesWayRound`).
     func isFreeForScenery(_ cell: GridPoint, insideFence: Bool = false, blocking: Bool = true) -> Bool {
         guard cell.col >= 1, cell.row >= 1, cell.col < columns - 1, cell.row < rows - 1 else { return false }
         guard !occupied.contains(cell) else { return false }
-        if blocking, !passages.isEmpty, (-1...1).contains(where: { dc in (-1...1).contains { dr in passages.contains(GridPoint(col: cell.col + dc, row: cell.row + dr)) } }) {
+        // Kept a cell off every passage's middle, nothing in the way stood anywhere once the caves
+        // were mazes, their passages all through them (LandPlanTests, 2026-11-21: bare floors).
+        if blocking, !passages.isEmpty, passages.contains(cell) || !leavesWayRound(cell) {
             return false
         }
         let tile = ground[cell.row][cell.col]
@@ -804,6 +807,21 @@ nonisolated final class WorldMap: @unchecked Sendable {
             return false
         }
         return true
+    }
+
+    /// Whether something in the way in `cell` leaves the cells you can walk to round it joined: they
+    /// run round it in one unbroken arc, of five at least (open floor, or along a wall), so it
+    /// never cuts a passage in two nor stands in a narrow one. Each of the arc's cells is a step
+    /// from the next, so you walk round it.
+    private func leavesWayRound(_ cell: GridPoint) -> Bool {
+        let ring = [(0, 1), (1, 1), (1, 0), (1, -1), (0, -1), (-1, -1), (-1, 0), (-1, 1)]
+        let open = ring.map { isWalkable(GridPoint(col: cell.col + $0.0, row: cell.row + $0.1)) }
+        let count = open.filter { $0 }.count
+        guard count >= 5 else { return false }
+        if count == ring.count { return true }
+        // Arcs begin where a closed cell is followed by an open one; one arc, one beginning.
+        let starts = (0..<ring.count).filter { !open[$0] && open[($0 + 1) % ring.count] }.count
+        return starts == 1
     }
 
     private var cachedEntryCells: [GridPoint]?
