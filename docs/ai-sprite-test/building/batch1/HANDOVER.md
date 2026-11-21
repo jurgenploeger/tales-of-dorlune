@@ -68,3 +68,20 @@ Each comes back here: checked for a clean 1× at the asked size, scored (`pixel_
 building`), a small written-down outline fix where the two outline rules need it, then one blind-pick sheet
 for all four (A or B per row) against ours. The winners go in as the cottage and townhouse did
 (`building_art.PICKED`).
+
+## Results (one chat for all four, 2026-11-21)
+
+- **Flower shop:** only the big picture, drawn finer than the grid (blocks of about 11 image pixels); snapped,
+  every hard rule, soft 79%, but the shrink muddies its 2-to-3-pixel flowers. Its 1× file asked for.
+- **Book shop** (`book_shop_chatgpt_1.png`): a true 96 × 96 PNG, 78 × 67, foot on row 89, 40 colours.
+  Soft 100%; misses one hard rule by a hair: `form_relief` 0.0150, needs 0.016 (its big forms lit a little
+  flat; ours 0.0163, ChatGPT's cottage 0.0199 and townhouse 0.0185).
+- **Tailor shop** (`tailor_shop_chatgpt_1.png`): a true 96 × 96 PNG, 78 × 68, foot on row 89, 40 colours.
+  Its outline didn't stand apart from the body (the townhouse's miss); `tailor_shop_chatgpt_1_outline90.png`,
+  10% darker, fixes it: soft 100%, and the same hair's miss on `form_relief` (0.0157; ours 0.0168).
+- Form shading is the drawing's job, not a fix in code. Follow-up for both, in the same chat:
+
+> The book shop and tailor shop are lit a little flat. Keep everything, but shade the big forms more: the
+> roof darker toward its eave with a band of shadow under the eaves on the wall, the side wall in shade, the
+> front wall darker toward its foot and its right side, the shop window and door set in with a shadow on
+> their top and left edge. Same sizes, same 1× PNGs and 8× previews.
