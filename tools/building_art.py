@@ -1967,6 +1967,65 @@ for _name in HAND_DRAWN:
         by_hand(BUILDINGS[_name])
 
 
+# Buildings drawn better elsewhere and picked by the user, kept as drawn in art-variants/ and named here, so a
+# rerun copies the pick instead of drawing over it: the picked file and how much its one-pixel outline's
+# light is scaled (the two outline rules, `outline_value` and `outline_rel`, leave a narrow window).
+# thatched_cottage: ChatGPT's fifth try (docs/ai-sprite-test/building), picked blind over this tool's
+# drawing (the user, 2026-11-21), its 228 outline pixels 8% lighter so it passes pixel_style's bands.
+# stone_townhouse: ChatGPT's second try, picked blind the same day, its 254 outline pixels 15% darker
+# (drawn darker overall than the cottage, its outline didn't stand apart from the body).
+# flower_shop, book_shop, tailor_shop, dome_house: ChatGPT's, drawn four at once in one chat and picked
+# blind (2026-11-21, docs/ai-sprite-test/building/batch1), each as delivered.
+PICKED = {"thatched_cottage": ("art-variants/thatched_cottage/chatgpt_5.png", 1.08),
+          "stone_townhouse": ("art-variants/stone_townhouse/chatgpt_2.png", 0.85),
+          "flower_shop": ("art-variants/flower_shop/chatgpt_2.png", 1.0),
+          "book_shop": ("art-variants/book_shop/chatgpt_2.png", 1.0),
+          "tailor_shop": ("art-variants/tailor_shop/chatgpt_2.png", 1.0),
+          "dome_house": ("art-variants/dome_house/chatgpt_1.png", 1.0),
+          # Batches 2 and 3 (docs/ai-sprite-test/building/batch2, batch3): the user judged every ChatGPT
+          # redraw better than ours and stopped the blind picks (2026-11-21). The timber house's outline 10%
+          # darker; the weapon shop's second try, re-shaded after its first was a hair flat.
+          "market_tent": ("art-variants/market_tent/chatgpt_3.png", 1.0),
+          "pavilion_tent": ("art-variants/pavilion_tent/chatgpt_2.png", 1.0),
+          "tree_house": ("art-variants/tree_house/chatgpt_2.png", 1.0),
+          "bluebell_house": ("art-variants/bluebell_house/chatgpt_1.png", 1.0),
+          "bank": ("art-variants/bank/chatgpt_2.png", 1.0),
+          "timber_house": ("art-variants/timber_house/chatgpt_2.png", 0.9),
+          "round_cottage": ("art-variants/round_cottage/chatgpt_1.png", 1.0),
+          "weapon_shop": ("art-variants/weapon_shop/chatgpt_2.png", 1.0),
+          # Batch 4 (docs/ai-sprite-test/building/batch4), each passing as delivered.
+          "tea_house": ("art-variants/tea_house/chatgpt_1.png", 1.0),
+          "teapot_house": ("art-variants/teapot_house/chatgpt_1.png", 1.0),
+          # garden_cottage: ChatGPT sent only its big picture (chatgpt_2_big.png); chatgpt_2_fixed.png is it
+          # snapped to 78 x 50 (tools/ai_sprite_eval.py, 32 colours) and each outline pixel moved to the
+          # sprite's own colour nearest 20% lighter, so it passes outline_rel without new colours.
+          "garden_cottage": ("art-variants/garden_cottage/chatgpt_2_fixed.png", 1.0),
+          # armour_shop: ChatGPT's third try, shaded deeper after two a hair flat.
+          "armour_shop": ("art-variants/armour_shop/chatgpt_3.png", 1.0),
+          # yurt: ChatGPT's (batch 5) with its drawn smoke cut out (rows 0 to 25's grey and white), as the
+          # game puffs moving smoke from its smoke hole instead (LandStage.smokeHoles).
+          "yurt": ("art-variants/yurt/chatgpt_1_nosmoke.png", 1.0),
+          # crystal_cottage: ChatGPT's second try (chatgpt_2.png), each outline pixel moved to the sprite's own
+          # colour nearest 24% lighter (chatgpt_2_fixed.png), as the garden cottage's: its outline had overshot.
+          "crystal_cottage": ("art-variants/crystal_cottage/chatgpt_2_fixed.png", 1.0),
+          # bell_tower: ChatGPT's third try (chatgpt_3.png); its 29 colours left no single outline shade between
+          # the two outline rules, so the half of its outline pixels darkest beside their inside took the sprite's
+          # own colour nearest 30% lighter and the rest the one nearest 18% lighter (chatgpt_3_fixed.png).
+          "bell_tower": ("art-variants/bell_tower/chatgpt_3_fixed.png", 1.0),
+          "lake_shrine": ("art-variants/lake_shrine/chatgpt_1.png", 1.0)}
+
+
+def picked(item):
+    """A picked building, as drawn, its outline's light scaled by its factor."""
+    from scipy import ndimage
+    path, lift = PICKED[item]
+    a = np.asarray(Image.open(ROOT / path).convert("RGBA")).astype(float)
+    solid = a[..., 3] > 0
+    edge = solid & ~ndimage.binary_erosion(solid)
+    a[edge, :3] = np.clip(a[edge, :3] * lift, 0, 255)
+    return Image.fromarray(a.round().astype(np.uint8), "RGBA")
+
+
 def main(argv):
     sheet = None
     if "--sheet" in argv:
@@ -1976,7 +2035,7 @@ def main(argv):
     ids = argv or list(BUILDINGS)
     out = {}
     for item in ids:
-        img = fit(BUILDINGS[item]).render()
+        img = picked(item) if item in PICKED else fit(BUILDINGS[item]).render()
         img.save(SPRITES / f"{item}.png")
         out[item] = img
     print(f"wrote {len(out)} buildings to art/sprites/")

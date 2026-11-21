@@ -242,7 +242,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   Each kind of place is a landmark too (`WorldMap.landmark`: `at: "farm"`, `"ruin"`…, `which`): every land has a
   chest at one of its places (a potion or ether by its level, refilling as chests do) and someone living at another
   (maps.json `locals`). Theme `lush`: a richer ground tile in broad soft patches over the plain ground
-  (`WorldMap.layLush`, `GroundTiles.lushMask`; the grass lands' `tile_rich_grass`). A brazier smokes (`LandStage.addSmoke`).
+  (`WorldMap.layLush`, `GroundTiles.lushMask`; the grass lands' `tile_rich_grass`). A brazier smokes (`LandStage.addSmoke`), and so does a building's smoke hole (`LandStage.smokeHoles`: the yurt's, its drawn smoke cut out of ChatGPT's picture).
 - Tall grass (the user's pick from `tools/grass_preview.py`, 2026-11-19, after SpriteCook's interactive tall grass article;
   visual only, green wild lands only): theme `tallGrass` (`patches`, `size`, `art`) lays soft rounds of cells
   (`WorldMap.layTallGrass`, kept from other scenery; debug `at=grass`), filled by `GrassField` with tufts about nine a
@@ -285,7 +285,10 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   and roofs are surfaces with a building material's pattern at the sprite's pixels (stone blocks, plaster,
   planks, clay tiles, thatch, slate); each is drawn in a 96-pixel frame's coordinates and scaled about its
   foot to fill it as RD's do (`fit`). Registered in art/assets.json with no `request`, placed by maps.json's
-  town `lots`; scored with `pixel_style.py check --kind building`. `--sheet out.png` previews them.
+  town `lots`; scored with `pixel_style.py check --kind building`. `--sheet out.png` previews them. One redrawn
+  by ChatGPT is copied, not drawn (`PICKED`, kept in `art-variants/`: 22 of them since 2026-11-21, the town houses
+  and shops, the tents and stall, the tree, bluebell and dome houses; how: `docs/ai-sprite-test/`,
+  `tools/ai_sprite_eval.py`). After eight blind picks all went to ChatGPT, the user dropped them (2026-11-21).
 - `tools/crystal_art.py`: the Glimmerdeep's crystal scenery from the caves' own rock (its walls, floor, spires and
   geodes): each pixel's brightness laid on a ramp of crystal colours, as a `derive` can't tint the grey tiles.
   Rerun it after editing a ramp; `--sheet out.png` previews them.
