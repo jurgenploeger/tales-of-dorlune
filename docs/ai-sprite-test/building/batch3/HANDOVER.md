@@ -40,3 +40,6 @@ Then as before: each checked, scored, one blind pick for all four, the winners i
 - **Timber house, its 1×** (`timber_house_chatgpt_2.png`): 71 × 81, foot on row 89, exactly ours; 35
   colours; its night lights catch only the 16 panes of its four windows. Its outline didn't stand apart from
   the body (the townhouse's miss); `timber_house_chatgpt_2_outline90.png`, 10% darker: **passes**, soft 86%.
+- **Round cottage** (`round_cottage_chatgpt_1.png`): a true 96 × 96 PNG, 58 × 81, foot on row 89, exactly
+  ours; 35 colours. **Passes as delivered**, soft 93% (`form_relief` 0.017). Its night lights would catch
+  its gold finial too (rows 10 to 12): a `window_art.BOXES` entry from row 40 when it goes in.
