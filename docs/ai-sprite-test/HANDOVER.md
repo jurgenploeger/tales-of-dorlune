@@ -135,3 +135,11 @@ art: a sprite we'd have to fix by hand costs more than RD's few cents.
   which RD's pineapple doesn't.
 - Verdict: **a near miss.** The style is close; the size isn't. A sprite at 45 art pixels can't go in a
   40 canvas, and shrinking it ruins it. Next: retry with the size spelt out as blocks (below).
+
+Follow-up for Gemini, in the same chat as try 1:
+
+> Close, but too big: your pixel blocks are about 26 image pixels, so the pineapple is about 45 pixels
+> tall. Redraw the same pineapple on a 40 × 40 grid where the whole monster, crown to feet, is exactly 35
+> blocks tall and about 24 wide. Output 640 × 640, every block exactly 16 × 16 image pixels. Fewer, bigger
+> pixels: keep the eyes 3 blocks tall with a 1-block white catchlight. Give each colour 5 shades, lit from
+> the top left.
