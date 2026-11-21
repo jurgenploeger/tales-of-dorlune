@@ -137,13 +137,6 @@
             "shadow": true
           },
           {
-            "art": "statue",
-            "count": 1,
-            "blocking": true,
-            "within": 20,
-            "shadow": true
-          },
-          {
             "art": "bird_bath",
             "count": 2,
             "blocking": true,
