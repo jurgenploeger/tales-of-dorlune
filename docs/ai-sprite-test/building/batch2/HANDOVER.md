@@ -60,3 +60,8 @@ Then as batch 1: each checked, scored, one blind pick for all four, the winners 
 
   Small outline fixes in code didn't land (too many colours on these small sprites, or the other outline
   rule out), so they go to the user's eye as they are: `blind_pick.png`, the key out of the repo till the pick.
+
+## In the game (2026-11-21)
+
+The user: "All chatgpts are better, we don't need to do blind tests anymore." Every building here is in
+(`building_art.PICKED`, `art-variants/<id>/`), the blind pick sheet unanswered and its key kept for the record.

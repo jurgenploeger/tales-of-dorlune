@@ -1981,7 +1981,18 @@ PICKED = {"thatched_cottage": ("art-variants/thatched_cottage/chatgpt_5.png", 1.
           "flower_shop": ("art-variants/flower_shop/chatgpt_2.png", 1.0),
           "book_shop": ("art-variants/book_shop/chatgpt_2.png", 1.0),
           "tailor_shop": ("art-variants/tailor_shop/chatgpt_2.png", 1.0),
-          "dome_house": ("art-variants/dome_house/chatgpt_1.png", 1.0)}
+          "dome_house": ("art-variants/dome_house/chatgpt_1.png", 1.0),
+          # Batches 2 and 3 (docs/ai-sprite-test/building/batch2, batch3): the user judged every ChatGPT
+          # redraw better than ours and stopped the blind picks (2026-11-21). The timber house's outline 10%
+          # darker; the weapon shop as delivered though a hair flat (form_relief 0.014), by the user's call.
+          "market_tent": ("art-variants/market_tent/chatgpt_3.png", 1.0),
+          "pavilion_tent": ("art-variants/pavilion_tent/chatgpt_2.png", 1.0),
+          "tree_house": ("art-variants/tree_house/chatgpt_2.png", 1.0),
+          "bluebell_house": ("art-variants/bluebell_house/chatgpt_1.png", 1.0),
+          "bank": ("art-variants/bank/chatgpt_2.png", 1.0),
+          "timber_house": ("art-variants/timber_house/chatgpt_2.png", 0.9),
+          "round_cottage": ("art-variants/round_cottage/chatgpt_1.png", 1.0),
+          "weapon_shop": ("art-variants/weapon_shop/chatgpt_1.png", 1.0)}
 
 
 def picked(item):

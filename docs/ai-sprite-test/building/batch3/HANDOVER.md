@@ -49,3 +49,8 @@ Then as before: each checked, scored, one blind pick for all four, the winners i
 
 `blind_pick.png`: the bank, timber house (outline 10% darker) and round cottage against ours; the key stays
 out of the repo till the pick. The weapon shop joins the next pick.
+
+## In the game (2026-11-21)
+
+The user: "All chatgpts are better, we don't need to do blind tests anymore." Every building here is in
+(`building_art.PICKED`, `art-variants/<id>/`), the blind pick sheet unanswered and its key kept for the record.

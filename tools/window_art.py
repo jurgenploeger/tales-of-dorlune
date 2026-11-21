@@ -37,7 +37,9 @@ SKIP = {"fence", "town_gate", "market_tent", "market_stall", "pavilion_tent", "d
 BOXES = {"thatched_cottage": [(60, 96, 0, 96)],
          "book_shop": [(55, 66, 40, 52)],
          "tailor_shop": [(50, 64, 0, 96)],
-         "dome_house": [(52, 60, 32, 40), (55, 72, 52, 60)]}
+         "dome_house": [(52, 60, 32, 40), (55, 72, 52, 60)],
+         "tree_house": [(40, 52, 0, 96)],
+         "round_cottage": [(40, 96, 0, 96)]}
 
 
 def buildings():
