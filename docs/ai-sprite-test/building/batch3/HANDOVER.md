@@ -24,3 +24,11 @@ One chat in the project, all four 8× images attached, in this order:
 > night.
 
 Then as before: each checked, scored, one blind pick for all four, the winners in the game.
+
+## Results
+
+- **Bank, try 1** (`bank_chatgpt_1_big.png`): only the big picture again (1254 × 1254, a soft-edged
+  background), about 65 × 66 on the 96 canvas, foot on row 91: not the measured 75 × 69 on row 93, so the
+  new instructions' measuring and 1× steps didn't happen. Snapped at 66 tall (`bank_chatgpt_1_96.png`):
+  every hard rule, soft 93%; the shrink turns its green grass tufts grey-brown, as it muddied the flowers.
+  Its 1× file asked for.
