@@ -248,7 +248,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   passage's middle, and the mazes run everywhere): now never on a passage's middle, and only where the open cells
   round it stay one arc of five or more (`WorldMap.leavesWayRound`), so nothing cuts or narrows a way shut; the tunnel
   caves (Rat Cavern, the Gooey Grotto, the Whispering Hollow), a cell wide, hold only a few things in the way
-  (carts, beams, boulders, stalagmites, listed first, rarest first), and their crystals, amber, ore and moss rocks
+  (carts, beams, boulders, stalagmites, listed first, a few each; no boulders in Rat Cavern, too big for its tunnels), and their crystals, amber, ore and moss rocks
   are walked past, as are the Glimmerdeep's crystals, its spires and geodes first (the user's pick, 2026-11-21); and a
   town's well, statue and flower beds listed before its square's daisies, which had filled it first. Chicks live in a farm's yard (`Critters.home`). Debug `at=place`.
   Each kind of place is a landmark too (`WorldMap.landmark`: `at: "farm"`, `"ruin"`…, `which`): every land has a

@@ -140,7 +140,7 @@
             "art": "statue",
             "count": 1,
             "blocking": true,
-            "within": 14,
+            "within": 20,
             "shadow": true
           },
           {
@@ -157,7 +157,7 @@
               0.9,
               1.1
             ],
-            "within": 10
+            "within": 16
           },
           {
             "art": "flowering_bush",
@@ -7330,28 +7330,17 @@
         "props": [
           {
             "art": "mine_beam",
-            "count": 2,
+            "count": 1,
             "blocking": true
           },
           {
             "art": "mine_cart",
-            "count": 4,
+            "count": 2,
             "blocking": true
           },
           {
-            "art": "boulder",
-            "count": 6,
-            "blocking": true,
-            "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
-            "shadow": true
-          },
-          {
             "art": "stalagmite",
-            "count": 10,
+            "count": 4,
             "blocking": true,
             "cluster": 6,
             "size": [
@@ -11260,18 +11249,8 @@
         "ponds": 0,
         "props": [
           {
-            "art": "mine_beam",
-            "count": 2,
-            "blocking": true
-          },
-          {
-            "art": "mine_cart",
-            "count": 3,
-            "blocking": true
-          },
-          {
             "art": "boulder",
-            "count": 5,
+            "count": 2,
             "blocking": true,
             "cluster": 3,
             "size": [
@@ -11281,8 +11260,18 @@
             "shadow": true
           },
           {
+            "art": "mine_beam",
+            "count": 1,
+            "blocking": true
+          },
+          {
+            "art": "mine_cart",
+            "count": 2,
+            "blocking": true
+          },
+          {
             "art": "stalagmite",
-            "count": 10,
+            "count": 4,
             "blocking": true,
             "cluster": 6,
             "size": [
@@ -19269,18 +19258,8 @@
         "ponds": 0,
         "props": [
           {
-            "art": "mine_beam",
-            "count": 2,
-            "blocking": true
-          },
-          {
-            "art": "mine_cart",
-            "count": 5,
-            "blocking": true
-          },
-          {
             "art": "boulder",
-            "count": 15,
+            "count": 4,
             "blocking": true,
             "cluster": 3,
             "size": [
@@ -19290,8 +19269,18 @@
             "shadow": true
           },
           {
+            "art": "mine_beam",
+            "count": 2,
+            "blocking": true
+          },
+          {
+            "art": "mine_cart",
+            "count": 4,
+            "blocking": true
+          },
+          {
             "art": "stalagmite",
-            "count": 15,
+            "count": 6,
             "blocking": true,
             "cluster": 6,
             "size": [
