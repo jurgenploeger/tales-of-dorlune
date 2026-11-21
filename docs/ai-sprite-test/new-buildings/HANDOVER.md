@@ -209,3 +209,8 @@ user picks by eye; what doesn't win isn't used.
   rule as delivered (the briar cottage soft 100%); the apple cellar's and chalet's outlines a touch too dark
   beside their inside, snapped 8% lighter: pass. Snow White Forest: the chalet for a snow cabin, the apple cellar
   for a dwarf cottage. Briarmere: the ice-fishing hut and briar cottage for its two snow cabins.
+- **Batch 6, water** (2026-11-21): all four at the asked size, 31 to 37 colours, but weaker. The lotus pagoda's
+  outline too dark beside its inside, snapped 14% lighter: every hard rule, soft 79%. The reed boathouse's, 20%
+  lighter: all but `form_relief` 0.015. Both in: Frog Swamp's boathouse for a stilt hut, Lotus Land's pagoda for a
+  lily cottage. Back to ChatGPT: the frog hut (`flat` 0.215, big single-colour areas; `form_relief` 0.014) and the
+  raft teahouse (its outline no darker than inside it, nothing to snap to; `form_relief` 0.014).

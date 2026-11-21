@@ -6504,7 +6504,7 @@
       ],
       "buildings": [
         {
-          "art": "swamp_stilt_hut",
+          "art": "reed_boathouse",
           "x": 33,
           "y": 51
         },
@@ -14890,7 +14890,7 @@
       ],
       "buildings": [
         {
-          "art": "lily_cottage",
+          "art": "lotus_pagoda",
           "x": 15,
           "y": 26
         },

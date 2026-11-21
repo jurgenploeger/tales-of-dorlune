@@ -2717,6 +2717,16 @@
       "kind": "building"
     },
     {
+      "id": "reed_boathouse",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "lotus_pagoda",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
       "id": "standing_stone",
       "kind": "prop"
     },
@@ -3344,6 +3354,14 @@
     },
     {
       "id": "windows_briar_cottage",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_reed_boathouse",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_lotus_pagoda",
       "kind": "prop"
     },
     {
