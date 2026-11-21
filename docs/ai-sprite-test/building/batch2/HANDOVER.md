@@ -39,3 +39,11 @@ Then as batch 1: each checked, scored, one blind pick for all four, the winners 
   (`market_tent_chatgpt_1_96.png`): soft 93%, misses two hard rules, as ours does: straight edges (0.46,
   at most 0.4: the counter's long ruled top and corners) and form shading (0.012, needs 0.016: the counter's
   front in one flat tone). By eye a clear step up from ours (rounded awning, wood grain, the pots).
+- **Market stall try 2, pavilion tent and tree house** (all true 96 × 96 PNGs at exactly our sizes and foot
+  rows: the instructions' measuring worked):
+  - market stall: straight edges fixed; still flat (`form_relief` 0.013, needs 0.016; ours 0.0093). Soft 93%.
+  - tree house: flat too (0.013; ours 0.0128). Soft 93%.
+  - pavilion tent: its outline doesn't stand apart from the body. Darkening it in code adds too many colours
+    on so small a sprite (`colour_density`, hard), so it goes back to ChatGPT.
+  Both flat ones beat ours on the same rule; a follow-up asks for the forms shaded deeper, the pavilion's
+  outline darker.
