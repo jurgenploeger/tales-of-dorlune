@@ -5966,12 +5966,12 @@
       ],
       "buildings": [
         {
-          "art": "dwarf_cottage",
+          "art": "apple_cellar",
           "x": -17,
           "y": 44
         },
         {
-          "art": "snow_cabin",
+          "art": "carved_chalet",
           "x": 4,
           "y": -5
         },
@@ -18399,7 +18399,7 @@
           "y": 5
         },
         {
-          "art": "snow_cabin",
+          "art": "ice_fishing_hut",
           "x": 43,
           "y": -38
         },
@@ -18414,7 +18414,7 @@
           "y": -10
         },
         {
-          "art": "snow_cabin",
+          "art": "briar_cottage",
           "x": 23,
           "y": -10
         }

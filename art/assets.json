@@ -2697,6 +2697,26 @@
       "kind": "building"
     },
     {
+      "id": "apple_cellar",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "carved_chalet",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "ice_fishing_hut",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "briar_cottage",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
       "id": "standing_stone",
       "kind": "prop"
     },
@@ -3308,6 +3328,22 @@
     },
     {
       "id": "windows_stump_house",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_apple_cellar",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_carved_chalet",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_ice_fishing_hut",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_briar_cottage",
       "kind": "prop"
     },
     {

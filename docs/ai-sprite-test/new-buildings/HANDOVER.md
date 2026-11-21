@@ -204,3 +204,8 @@ user picks by eye; what doesn't win isn't used.
   cottage for its blue mushroom house, the owl tower (its eyes the window lit at night) for its crooked house.
   Smiling Forest: the woodcutter's cabin for its green house, the stump house for its mushroom house (its sawn
   top boxed out of the night lights).
+- **Batch 5, snow** (2026-11-21, the prompt asked for snow in lumpy drifts shaded pale blue and outlined deep
+  blue-grey): all four at the asked size, 31 to 36 colours. The ice-fishing hut and briar cottage pass every hard
+  rule as delivered (the briar cottage soft 100%); the apple cellar's and chalet's outlines a touch too dark
+  beside their inside, snapped 8% lighter: pass. Snow White Forest: the chalet for a snow cabin, the apple cellar
+  for a dwarf cottage. Briarmere: the ice-fishing hut and briar cottage for its two snow cabins.

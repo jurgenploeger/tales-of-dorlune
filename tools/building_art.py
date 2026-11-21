@@ -2047,7 +2047,11 @@ PICKED = {"thatched_cottage": ("art-variants/thatched_cottage/chatgpt_5.png", 1.
           "lantern_cottage": ("art-variants/lantern_cottage/chatgpt_1.png", 1.0),               # Twilight Woods
           "owl_tower": ("art-variants/owl_tower/chatgpt_1.png", 1.0),                           # Twilight Woods
           "woodcutter_cabin": ("art-variants/woodcutter_cabin/chatgpt_1.png", 1.0),             # Smiling Forest
-          "stump_house": ("art-variants/stump_house/chatgpt_1.png", 1.0)}                       # Smiling Forest
+          "stump_house": ("art-variants/stump_house/chatgpt_1.png", 1.0),                       # Smiling Forest
+          "apple_cellar": ("art-variants/apple_cellar/chatgpt_1_fixed.png", 1.0),               # Snow White Forest
+          "carved_chalet": ("art-variants/carved_chalet/chatgpt_1_fixed.png", 1.0),             # Snow White Forest
+          "ice_fishing_hut": ("art-variants/ice_fishing_hut/chatgpt_1.png", 1.0),               # Briarmere
+          "briar_cottage": ("art-variants/briar_cottage/chatgpt_1.png", 1.0)}                   # Briarmere
 
 
 def picked(item):
