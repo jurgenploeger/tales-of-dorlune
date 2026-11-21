@@ -244,7 +244,10 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   "building" (`LandPlanner.cellNear`, `isNear`): mushrooms and ferns under the trees, stumps and logs among
   them, pebbles by the paths, shells and driftwood by the sea. `LandPlanTests.everyPropIsSetDown` counts what
   each prop sets down (a rule can silently never fire): every one at least once, a `near` one half as often as
-  asked; CI prints each land's props set down under half (🌳). Chicks live in a farm's yard (`Critters.home`). Debug `at=place`.
+  asked; CI prints each land's props set down under half (🌳). It found the caves bare (nothing in the way could stand a cell from a
+  passage's middle, and the mazes run everywhere): now never on a passage's middle, and only where the open cells
+  round it stay one arc of five or more (`WorldMap.leavesWayRound`), so nothing cuts or narrows a way shut; and a
+  town's well, statue and flower beds listed before its square's daisies, which had filled it first. Chicks live in a farm's yard (`Critters.home`). Debug `at=place`.
   Each kind of place is a landmark too (`WorldMap.landmark`: `at: "farm"`, `"ruin"`…, `which`): every land has a
   chest at one of its places (a potion or ether by its level, refilling as chests do) and someone living at another
   (maps.json `locals`). Theme `lush`: a richer ground tile in broad soft patches over the plain ground
