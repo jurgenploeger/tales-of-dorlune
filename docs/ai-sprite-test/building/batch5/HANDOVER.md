@@ -46,3 +46,5 @@ sizes and foot rows written in, the shading spelled out, warm yellow only for pa
   lift reaches 0.542 only as the outline stops reading dark. The stone just inside its edge is too dark for
   any outline to sit between: back to ChatGPT for lighter stone by the edge. It has no warm yellow panes, so no
   night lights (none before either).
+- **Gem workshop, second try**: 880 pixels changed, but still flat (`form_relief` 0.0137, needs 0.016; ours
+  0.0166) and its outline now no darker than its body (`outline_dark` 0). Worse than its first try.
