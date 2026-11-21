@@ -40,3 +40,9 @@ sizes and foot rows written in, the shading spelled out, warm yellow only for pa
 - **Crystal cottage, second try**: shading fixed (`form_relief` 0.0187), its outline overshot (`outline_rel`
   0.463); each outline pixel moved to the sprite's own colour nearest 24% lighter (1.22 to 1.28 all pass):
   **passes**, soft 93%. In the game (`chatgpt_2_fixed.png`).
+- **Bell tower, second try**: 58 × 85, foot on row 93; shading fixed (`form_relief` 0.0172), soft 100%, but
+  its outline overshot (`outline_rel` 0.513). No lift lands: its 29 colours are its limit at this size
+  (`colour_density`), snapping to its own shades jumps from 0.527 straight to an outline too light, and a free
+  lift reaches 0.542 only as the outline stops reading dark. The stone just inside its edge is too dark for
+  any outline to sit between: back to ChatGPT for lighter stone by the edge. It has no warm yellow panes, so no
+  night lights (none before either).
