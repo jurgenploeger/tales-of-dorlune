@@ -37,3 +37,6 @@ Then as before: each checked, scored, one blind pick for all four, the winners i
   soft 93% (ours 93%). Its coins orange, as asked.
 - **Timber house, try 1** (`timber_house_chatgpt_1_big.png`): measured right (71 × 81, foot on row 90; ours
   71 × 81 on 89) but no 1× file. Snapped: every hard rule, soft 93%. Its 1× asked for.
+- **Timber house, its 1×** (`timber_house_chatgpt_2.png`): 71 × 81, foot on row 89, exactly ours; 35
+  colours; its night lights catch only the 16 panes of its four windows. Its outline didn't stand apart from
+  the body (the townhouse's miss); `timber_house_chatgpt_2_outline90.png`, 10% darker: **passes**, soft 86%.
