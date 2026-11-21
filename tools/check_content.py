@@ -976,6 +976,38 @@ for map_def in maps.values():
             check(isinstance(prop.get(key, False), bool), f"map {map_def['id']} prop {prop['art']} → {key} must be true or false")
         spread = prop.get("spread", 1)
         check(isinstance(spread, int) and spread > 0, f"map {map_def['id']} prop {prop['art']} → spread must be a positive whole number")
+        check(prop.get("kind") is None or isinstance(prop["kind"], str), f"map {map_def['id']} prop {prop['art']} → kind must be a word")
+
+def prop_family(prop):
+    """`MapDef.PropPlacement.family`: its `kind`, or guessed from its art's name. Keep the two in step."""
+    if prop.get("kind"):
+        return prop["kind"]
+    art, blocking = prop["art"], prop["blocking"]
+    has = lambda words: any(w in art for w in words)
+    if blocking and has(["tree", "palm", "pine", "willow"]):
+        return "tree"
+    if not blocking and has(["daisy", "flower", "tulip", "clover"]):
+        return "flower"
+    for family, words in (("mushroom", ["mushroom", "toadstool"]), ("rock", ["boulder", "rock"]), ("bush", ["bush", "thicket", "fern"])):
+        if has(words):
+            return family
+    return art
+
+# `near` (`LandPlanner.near`): what a prop keeps near is the land's ground ("water", "sea", "path",
+# "building") or a kind or art of a prop its theme sets down before it, as props are planted in order.
+for map_def in maps.values():
+    earlier = set()
+    for prop in map_def["theme"].get("props", []):
+        near = prop.get("near")
+        if near is not None:
+            where = f"map {map_def['id']} prop {prop['art']}"
+            check(isinstance(near, dict) and near, f"{where} → near must be {{what: cells}}")
+            for key, reach in (near if isinstance(near, dict) else {}).items():
+                check(isinstance(reach, int) and not isinstance(reach, bool) and 1 <= reach <= 8,
+                      f"{where} → near {key} must be 1 to 8 cells")
+                check(key in {"water", "sea", "path", "building"} or key in earlier,
+                      f"{where} → near {key}: no {key} among the props before it (nor water, sea, path or building)")
+        earlier |= {prop_family(prop), prop["art"]}
 
 rule_keys = {"hue", "minSaturation", "maxSaturation", "minValue", "maxValue", "to", "shift", "spread", "saturation", "value",
              "saturationOffset", "valueOffset"}

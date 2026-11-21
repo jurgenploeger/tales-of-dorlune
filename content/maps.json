@@ -1504,6 +1504,9 @@
             "art": "mushroom",
             "count": 135,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 3,
             "size": [
               0.75,
@@ -1604,6 +1607,9 @@
             "art": "pebbles",
             "count": 158,
             "blocking": false,
+            "near": {
+              "path": 2
+            },
             "cluster": 3,
             "size": [
               0.8,
@@ -1625,6 +1631,9 @@
             "art": "purple_mushroom",
             "count": 68,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 3,
             "size": [
               0.75,
@@ -1635,6 +1644,9 @@
             "art": "toadstool",
             "count": 45,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 3,
             "size": [
               0.75,
@@ -1645,6 +1657,9 @@
             "art": "tree_stump",
             "count": 22,
             "blocking": true,
+            "near": {
+              "tree": 3
+            },
             "size": [
               0.7,
               1.3
@@ -1761,6 +1776,9 @@
             "art": "fern_clump",
             "count": 160,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 5,
             "sway": true,
             "size": [
@@ -2262,6 +2280,9 @@
             "art": "pebbles",
             "count": 135,
             "blocking": false,
+            "near": {
+              "path": 2
+            },
             "cluster": 3,
             "size": [
               0.8,
@@ -2283,6 +2304,10 @@
             "art": "seashells",
             "count": 45,
             "blocking": false,
+            "near": {
+              "sea": 3,
+              "water": 2
+            },
             "cluster": 3,
             "size": [
               0.8,
@@ -2293,6 +2318,10 @@
             "art": "driftwood",
             "count": 22,
             "blocking": false,
+            "near": {
+              "sea": 3,
+              "water": 2
+            },
             "size": [
               0.8,
               1.2
@@ -2331,6 +2360,10 @@
             "art": "message_bottle",
             "count": 14,
             "blocking": false,
+            "near": {
+              "sea": 3,
+              "water": 2
+            },
             "size": [
               0.8,
               1.0
@@ -2779,6 +2812,9 @@
             "art": "glow_mushroom",
             "count": 606,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 6,
             "size": [
               0.75,
@@ -2824,6 +2860,9 @@
             "art": "purple_mushroom",
             "count": 270,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 5,
             "size": [
               0.75,
@@ -2834,6 +2873,9 @@
             "art": "blue_mushroom",
             "count": 270,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 5,
             "size": [
               0.75,
@@ -2880,6 +2922,9 @@
             "art": "fern",
             "count": 1011,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 8,
             "sway": true,
             "size": [
@@ -2900,7 +2945,10 @@
           {
             "art": "fallen_log",
             "count": 42,
-            "blocking": true
+            "blocking": true,
+            "near": {
+              "tree": 3
+            }
           },
           {
             "art": "thicket",
@@ -2918,6 +2966,9 @@
             "art": "fern_clump",
             "count": 101,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 5,
             "sway": true,
             "size": [
@@ -3492,6 +3543,9 @@
             "art": "mushroom",
             "count": 334,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 6,
             "size": [
               0.75,
@@ -3593,6 +3647,9 @@
             "art": "toadstool",
             "count": 180,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 5,
             "size": [
               0.75,
@@ -3625,6 +3682,9 @@
             "art": "pebbles",
             "count": 141,
             "blocking": false,
+            "near": {
+              "path": 2
+            },
             "cluster": 4,
             "size": [
               0.8,
@@ -3635,6 +3695,9 @@
             "art": "tree_stump",
             "count": 77,
             "blocking": true,
+            "near": {
+              "tree": 3
+            },
             "size": [
               0.7,
               1.3
@@ -3644,12 +3707,18 @@
           {
             "art": "fallen_log",
             "count": 39,
-            "blocking": true
+            "blocking": true,
+            "near": {
+              "tree": 3
+            }
           },
           {
             "art": "fern",
             "count": 899,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 8,
             "sway": true,
             "size": [
@@ -3735,6 +3804,9 @@
             "art": "fern_clump",
             "count": 131,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 5,
             "sway": true,
             "size": [
@@ -5567,6 +5639,9 @@
             "art": "frost_fern",
             "count": 942,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 8,
             "sway": true,
             "size": [
@@ -6172,6 +6247,9 @@
             "art": "glow_mushroom",
             "count": 306,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 5,
             "size": [
               0.75,
@@ -6229,6 +6307,9 @@
             "art": "blue_mushroom",
             "count": 66,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 3,
             "size": [
               0.75,
@@ -6239,6 +6320,9 @@
             "art": "toadstool",
             "count": 44,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 3,
             "size": [
               0.75,
@@ -6249,6 +6333,9 @@
             "art": "lotus",
             "count": 35,
             "blocking": false,
+            "near": {
+              "water": 1
+            },
             "cluster": 4,
             "size": [
               0.8,
@@ -6269,12 +6356,18 @@
           {
             "art": "cattail_log",
             "count": 13,
-            "blocking": true
+            "blocking": true,
+            "near": {
+              "water": 2
+            }
           },
           {
             "art": "fern",
             "count": 875,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 8,
             "sway": true,
             "size": [
@@ -6702,6 +6795,9 @@
             "art": "glow_mushroom",
             "count": 90,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 4,
             "size": [
               0.75,
@@ -10573,6 +10669,9 @@
             "art": "mushroom",
             "count": 60,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 3,
             "size": [
               0.75,
@@ -10673,6 +10772,9 @@
             "art": "pebbles",
             "count": 70,
             "blocking": false,
+            "near": {
+              "path": 2
+            },
             "cluster": 3,
             "size": [
               0.8,
@@ -10694,6 +10796,9 @@
             "art": "purple_mushroom",
             "count": 30,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 3,
             "size": [
               0.75,
@@ -10704,6 +10809,9 @@
             "art": "toadstool",
             "count": 20,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 3,
             "size": [
               0.75,
@@ -10714,6 +10822,9 @@
             "art": "tree_stump",
             "count": 10,
             "blocking": true,
+            "near": {
+              "tree": 3
+            },
             "size": [
               0.7,
               1.3
@@ -10830,6 +10941,9 @@
             "art": "fern_clump",
             "count": 75,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 5,
             "sway": true,
             "size": [
@@ -11768,6 +11882,9 @@
             "art": "mushroom",
             "count": 90,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 3,
             "size": [
               0.75,
@@ -11846,6 +11963,9 @@
             "art": "purple_mushroom",
             "count": 45,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 3,
             "size": [
               0.75,
@@ -11856,6 +11976,9 @@
             "art": "toadstool",
             "count": 30,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 3,
             "size": [
               0.75,
@@ -12398,6 +12521,9 @@
             "art": "glow_mushroom",
             "count": 360,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 6,
             "size": [
               0.75,
@@ -12443,6 +12569,9 @@
             "art": "purple_mushroom",
             "count": 160,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 5,
             "size": [
               0.75,
@@ -12453,6 +12582,9 @@
             "art": "blue_mushroom",
             "count": 160,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 5,
             "size": [
               0.75,
@@ -12499,6 +12631,9 @@
             "art": "fern",
             "count": 600,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 8,
             "sway": true,
             "size": [
@@ -12519,7 +12654,10 @@
           {
             "art": "fallen_log",
             "count": 25,
-            "blocking": true
+            "blocking": true,
+            "near": {
+              "tree": 3
+            }
           }
         ],
         "palette": {
@@ -13886,6 +14024,9 @@
             "art": "mushroom",
             "count": 60,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 3,
             "size": [
               0.75,
@@ -13986,6 +14127,9 @@
             "art": "pebbles",
             "count": 70,
             "blocking": false,
+            "near": {
+              "path": 2
+            },
             "cluster": 3,
             "size": [
               0.8,
@@ -14007,6 +14151,9 @@
             "art": "purple_mushroom",
             "count": 30,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 3,
             "size": [
               0.75,
@@ -14017,6 +14164,9 @@
             "art": "toadstool",
             "count": 20,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 3,
             "size": [
               0.75,
@@ -14027,6 +14177,9 @@
             "art": "tree_stump",
             "count": 10,
             "blocking": true,
+            "near": {
+              "tree": 3
+            },
             "size": [
               0.7,
               1.3
@@ -14133,6 +14286,9 @@
             "art": "fern_clump",
             "count": 128,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 5,
             "sway": true,
             "size": [
@@ -14602,6 +14758,9 @@
             "art": "glow_mushroom",
             "count": 140,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 5,
             "size": [
               0.75,
@@ -14659,6 +14818,9 @@
             "art": "blue_mushroom",
             "count": 30,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 3,
             "size": [
               0.75,
@@ -14669,6 +14831,9 @@
             "art": "toadstool",
             "count": 20,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 3,
             "size": [
               0.75,
@@ -14679,6 +14844,9 @@
             "art": "lotus",
             "count": 16,
             "blocking": false,
+            "near": {
+              "water": 1
+            },
             "cluster": 4,
             "size": [
               0.8,
@@ -14699,12 +14867,18 @@
           {
             "art": "cattail_log",
             "count": 6,
-            "blocking": true
+            "blocking": true,
+            "near": {
+              "water": 2
+            }
           },
           {
             "art": "fern",
             "count": 400,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 8,
             "sway": true,
             "size": [
@@ -15107,6 +15281,9 @@
             "art": "glow_mushroom",
             "count": 40,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 4,
             "size": [
               0.75,
@@ -15738,6 +15915,9 @@
             "art": "pebbles",
             "count": 60,
             "blocking": false,
+            "near": {
+              "path": 2
+            },
             "cluster": 3,
             "size": [
               0.8,
@@ -15759,6 +15939,10 @@
             "art": "seashells",
             "count": 20,
             "blocking": false,
+            "near": {
+              "sea": 3,
+              "water": 2
+            },
             "cluster": 3,
             "size": [
               0.8,
@@ -15769,6 +15953,10 @@
             "art": "driftwood",
             "count": 10,
             "blocking": false,
+            "near": {
+              "sea": 3,
+              "water": 2
+            },
             "size": [
               0.8,
               1.2
@@ -15807,6 +15995,10 @@
             "art": "message_bottle",
             "count": 8,
             "blocking": false,
+            "near": {
+              "sea": 3,
+              "water": 2
+            },
             "size": [
               0.8,
               1.0
@@ -16260,6 +16452,9 @@
             "art": "glow_mushroom",
             "count": 360,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 6,
             "size": [
               0.75,
@@ -16305,6 +16500,9 @@
             "art": "purple_mushroom",
             "count": 160,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 5,
             "size": [
               0.75,
@@ -16315,6 +16513,9 @@
             "art": "blue_mushroom",
             "count": 160,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 5,
             "size": [
               0.75,
@@ -16361,6 +16562,9 @@
             "art": "fern",
             "count": 600,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 8,
             "sway": true,
             "size": [
@@ -16381,7 +16585,10 @@
           {
             "art": "fallen_log",
             "count": 25,
-            "blocking": true
+            "blocking": true,
+            "near": {
+              "tree": 3
+            }
           },
           {
             "art": "sleeping_cat",
@@ -17570,6 +17777,9 @@
             "art": "pebbles",
             "count": 60,
             "blocking": false,
+            "near": {
+              "path": 2
+            },
             "cluster": 3,
             "size": [
               0.8,
@@ -17591,6 +17801,10 @@
             "art": "seashells",
             "count": 20,
             "blocking": false,
+            "near": {
+              "sea": 3,
+              "water": 2
+            },
             "cluster": 3,
             "size": [
               0.8,
@@ -17601,6 +17815,10 @@
             "art": "driftwood",
             "count": 10,
             "blocking": false,
+            "near": {
+              "sea": 3,
+              "water": 2
+            },
             "size": [
               0.8,
               1.2
@@ -17639,6 +17857,10 @@
             "art": "message_bottle",
             "count": 12,
             "blocking": false,
+            "near": {
+              "sea": 3,
+              "water": 2
+            },
             "size": [
               0.8,
               1.0
@@ -18209,6 +18431,9 @@
             "art": "frost_fern",
             "count": 500,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 8,
             "sway": true,
             "size": [
@@ -19649,6 +19874,9 @@
             "art": "mushroom",
             "count": 260,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 6,
             "size": [
               0.75,
@@ -19750,6 +19978,9 @@
             "art": "toadstool",
             "count": 140,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 5,
             "size": [
               0.75,
@@ -19782,6 +20013,9 @@
             "art": "pebbles",
             "count": 110,
             "blocking": false,
+            "near": {
+              "path": 2
+            },
             "cluster": 4,
             "size": [
               0.8,
@@ -19792,6 +20026,9 @@
             "art": "tree_stump",
             "count": 60,
             "blocking": true,
+            "near": {
+              "tree": 3
+            },
             "size": [
               0.7,
               1.3
@@ -19801,12 +20038,18 @@
           {
             "art": "fallen_log",
             "count": 30,
-            "blocking": true
+            "blocking": true,
+            "near": {
+              "tree": 3
+            }
           },
           {
             "art": "fern",
             "count": 700,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 8,
             "sway": true,
             "size": [
@@ -20488,6 +20731,9 @@
             "art": "glow_mushroom",
             "count": 220,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 6,
             "size": [
               0.75,
@@ -20499,6 +20745,9 @@
             "art": "blue_mushroom",
             "count": 80,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 4,
             "size": [
               0.75,
@@ -20538,6 +20787,9 @@
             "art": "fern",
             "count": 420,
             "blocking": false,
+            "near": {
+              "tree": 2
+            },
             "cluster": 8,
             "sway": true,
             "size": [
@@ -20570,6 +20822,10 @@
             "art": "seashells",
             "count": 20,
             "blocking": false,
+            "near": {
+              "sea": 3,
+              "water": 2
+            },
             "cluster": 3,
             "size": [
               0.8,
@@ -20580,6 +20836,10 @@
             "art": "driftwood",
             "count": 8,
             "blocking": false,
+            "near": {
+              "sea": 3,
+              "water": 2
+            },
             "size": [
               0.8,
               1.2

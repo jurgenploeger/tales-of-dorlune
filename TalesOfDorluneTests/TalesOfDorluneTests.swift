@@ -5095,6 +5095,43 @@ struct LandPlanTests {
         return (map, planner.plan)
     }
 
+    /// Every prop a land's theme asks for is set down, and one that keeps near something (`near`) at
+    /// least half as often as asked (SpriteCook's wave function collapse article, 2026-11-21: count
+    /// what each rule places, as a rule can silently never fire). Each land's props set down less than
+    /// half as often as asked are printed (🌳) for tuning their counts.
+    @Test func everyPropIsSetDown() async {
+        for def in content.maps {
+            let (_, plan) = await planned(def)
+            let props = def.theme.props
+            #expect(plan.propCounts.count == props.count, "\(def.id): \(plan.propCounts.count) counts for \(props.count) props")
+            var short: [String] = []
+            for (prop, placed) in zip(props, plan.propCounts) where prop.count > 0 {
+                let share = Double(placed) / Double(prop.count)
+                if share < 0.5 { short.append("\(prop.art) \(placed)/\(prop.count)") }
+                #expect(placed > 0, "\(def.id): none of its \(prop.count) \(prop.art) set down")
+                if prop.near != nil {
+                    #expect(share >= 0.5, "\(def.id): only \(placed) of its \(prop.count) \(prop.art) set down near \(prop.near ?? [:])")
+                }
+            }
+            if !short.isEmpty { print("🌳 \(def.id): \(short.joined(separator: ", "))") }
+        }
+    }
+
+    /// What keeps near something stands near it: every mushroom planted under the trees within reach
+    /// of one (`LandPlanner.isNear`).
+    @Test func propsKeepNearWhatTheyAsk() async throws {
+        let def = try #require(content.map("sunny_meadow"))
+        let (_, plan) = await planned(def)
+        let trees = Set(plan.props.filter { $0.prop?.family == "tree" }.map(\.cell))
+        let near = plan.props.filter { $0.prop?.near?["tree"] != nil }
+        #expect(!near.isEmpty, "nothing in Sunny Meadow keeps near the trees")
+        for placement in near {
+            let reach = max(1, placement.prop?.near?["tree"] ?? 1)
+            let close = trees.contains { max(abs($0.col - placement.cell.col), abs($0.row - placement.cell.row)) <= reach }
+            #expect(close, "\(placement.art) at \(placement.cell) is more than \(reach) cells from a tree")
+        }
+    }
+
     /// Every boss stands in its lair (`NPCDef.lair`, `LandPlanner.planLair`; playtesting 2026-10-23:
     /// bosses stood about on open ground): most of its pieces set down round it, and never walled in,
     /// so you can walk from the boss out over the land.
