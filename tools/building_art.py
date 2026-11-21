@@ -1967,6 +1967,25 @@ for _name in HAND_DRAWN:
         by_hand(BUILDINGS[_name])
 
 
+# Buildings drawn better elsewhere and picked by the user, kept as drawn in art-variants/ and named here, so a
+# rerun copies the pick instead of drawing over it: the picked file and how much lighter its one-pixel
+# outline is made (the two outline rules, `outline_value` and `outline_rel`, leave a narrow window).
+# thatched_cottage: ChatGPT's fifth try (docs/ai-sprite-test/building), picked blind over this tool's
+# drawing (the user, 2026-11-21), its 228 outline pixels 8% lighter so it passes pixel_style's bands.
+PICKED = {"thatched_cottage": ("art-variants/thatched_cottage/chatgpt_5.png", 1.08)}
+
+
+def picked(item):
+    """A picked building, as drawn, its outline lightened by its factor."""
+    from scipy import ndimage
+    path, lift = PICKED[item]
+    a = np.asarray(Image.open(ROOT / path).convert("RGBA")).astype(float)
+    solid = a[..., 3] > 0
+    edge = solid & ~ndimage.binary_erosion(solid)
+    a[edge, :3] = np.clip(a[edge, :3] * lift, 0, 255)
+    return Image.fromarray(a.round().astype(np.uint8), "RGBA")
+
+
 def main(argv):
     sheet = None
     if "--sheet" in argv:
@@ -1976,7 +1995,7 @@ def main(argv):
     ids = argv or list(BUILDINGS)
     out = {}
     for item in ids:
-        img = fit(BUILDINGS[item]).render()
+        img = picked(item) if item in PICKED else fit(BUILDINGS[item]).render()
         img.save(SPRITES / f"{item}.png")
         out[item] = img
     print(f"wrote {len(out)} buildings to art/sprites/")

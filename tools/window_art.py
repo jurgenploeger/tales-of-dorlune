@@ -27,7 +27,12 @@ SPR = ROOT / "art" / "sprites"
 BIGGEST = 64
 FEWEST = 6
 SKIP = {"fence", "town_gate", "market_tent", "market_stall", "pavilion_tent", "desert_tent", "yurt", "blacksmith",
-        "bakery", "beach_hut", "thatched_cottage", "adobe_house_tall", "windmill", "puppet_theater", "mushroom_house"}
+        "bakery", "beach_hut", "adobe_house_tall", "windmill", "puppet_theater", "mushroom_house"}
+
+
+# Where a building's windows are, in rows, when bright warm pixels elsewhere would pass for panes too: the
+# thatched cottage's straw highlights are the windows' yellow, so only the rows under its roof count.
+ROWS = {"thatched_cottage": (60, 96)}
 
 
 def buildings():
@@ -43,6 +48,10 @@ def windows(name):
     im = np.asarray(Image.open(path).convert("RGBA")).astype(int)
     r, g, b, a = (im[..., i] for i in range(4))
     warm = (a > 200) & (r >= 225) & (g >= 175) & (b <= g - 35) & (b >= 60) & (r - b >= 60)
+    if name in ROWS:
+        rows = np.zeros(warm.shape, bool)
+        rows[ROWS[name][0]:ROWS[name][1]] = True
+        warm &= rows
     labels, count = ndimage.label(warm, structure=np.ones((3, 3)))
     keep = np.zeros(warm.shape, bool)
     for index in range(1, count + 1):

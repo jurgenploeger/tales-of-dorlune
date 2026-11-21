@@ -190,3 +190,12 @@ smaller clumps on the thatch.
 Verdict: **the first AI-drawn sprite that clears the bar RD's art sets**, with one small, written-down
 touch (like `tools/rd_fixes.py`'s exact fixes). Whether it goes in the game is the user's pick, blind
 against ours.
+
+## The pick (2026-11-21)
+
+`blind_pick.png`, its key `blind_pick.key.json`: A was ours, B ChatGPT's try 5 with its outline 8% lighter.
+**The user picked ChatGPT's** ("Chatgpt is better"). It's in the game: kept as delivered in
+`art-variants/thatched_cottage/chatgpt_5.png` (the old drawing beside it, `drawn_in_code.png`), named in
+`tools/building_art.py` `PICKED` with its outline lift, so a rerun writes the same sprite; its night window
+lights cut by `tools/window_art.py`, held to the rows under its roof (`ROWS`: the straw's highlights are the
+panes' yellow).
