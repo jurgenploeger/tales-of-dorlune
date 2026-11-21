@@ -85,3 +85,7 @@ for all four (A or B per row) against ours. The winners go in as the cottage and
 > roof darker toward its eave with a band of shadow under the eaves on the wall, the side wall in shade, the
 > front wall darker toward its foot and its right side, the shop window and door set in with a shadow on
 > their top and left edge. Same sizes, same 1× PNGs and 8× previews.
+- **Flower shop, its own 1×** (`flower_shop_chatgpt_2.png`): 78 × 49, foot on row 88, 40 colours, clean; the
+  buckets' red, yellow and purple kept. Every hard rule passes (`form_relief` 0.018; ours fails it, 0.0155).
+  Soft 79%, a point under 80, as RD's two lowest buildings: its outline a little grey (`outline_sat` 0.12),
+  a few jagged steps, light in small areas more than broad ones.
