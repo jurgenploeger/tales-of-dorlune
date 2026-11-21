@@ -1995,7 +1995,11 @@ PICKED = {"thatched_cottage": ("art-variants/thatched_cottage/chatgpt_5.png", 1.
           "weapon_shop": ("art-variants/weapon_shop/chatgpt_2.png", 1.0),
           # Batch 4 (docs/ai-sprite-test/building/batch4), each passing as delivered.
           "tea_house": ("art-variants/tea_house/chatgpt_1.png", 1.0),
-          "teapot_house": ("art-variants/teapot_house/chatgpt_1.png", 1.0)}
+          "teapot_house": ("art-variants/teapot_house/chatgpt_1.png", 1.0),
+          # garden_cottage: ChatGPT sent only its big picture (chatgpt_2_big.png); chatgpt_2_fixed.png is it
+          # snapped to 78 x 50 (tools/ai_sprite_eval.py, 32 colours) and each outline pixel moved to the
+          # sprite's own colour nearest 20% lighter, so it passes outline_rel without new colours.
+          "garden_cottage": ("art-variants/garden_cottage/chatgpt_2_fixed.png", 1.0)}
 
 
 def picked(item):

@@ -35,3 +35,8 @@ worked first time.
 
 The tea and teapot houses are in the game (`building_art.PICKED`). The armour shop and garden cottage go
 back for one fix each.
+- **After the fixes:** the garden cottage came as the big picture only (78 × 50 on the 96 canvas, foot on
+  row 92); snapped to 32 colours its shading passes (`form_relief` 0.0178) but its outline overshot (0.525);
+  each outline pixel moved to the sprite's own colour nearest 20% lighter (no new colours): **passes**, soft
+  93%, in the game (`chatgpt_2_fixed.png`). The armour shop's second try changed 471 pixels but stayed a hair
+  flat (`form_relief` 0.0154; ours 0.0195).
