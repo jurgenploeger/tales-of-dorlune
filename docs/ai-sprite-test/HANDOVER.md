@@ -128,19 +128,24 @@ RD's own pineapple, for the record: passes at 92%, with 14 shades in its yellow 
 |---|---|---|---|---|---|
 | sent as | 1254 PNG, **transparent** | 1254 PNG | 1254 PNG | 1024 JPEG | 1024 JPEG |
 | grid it drew on (sprite height) | 44 | 48 | 44 | 45 | 46 |
-| squeezed to 40 × 40 | fail 75% | fail 75% | pass 83% | pass 83% | fail 58% |
-| at its own grid | fail 75% | fail 75% | pass 83% | pass 83% | fail 67% |
-| shades per ramp (RD: 14) | 2 | 1.5 | 4 | 3 | 3 |
+| squeezed to 40 × 40 | fail 75% | fail 75% | pass 83% | pass 92% | fail 75% |
+| at its own grid | fail 75% | fail 75% | pass 83% | pass 92% | pass 83% |
+| shades per ramp (RD: 14) | 1 | 7 | 4 | 6.5 | 5 |
+
+Rescored after the scorer learnt to merge near-identical colours (the models' noise had split flat
+areas into many close shades). The first scoring had Gemini 2 at 83% and the shades at 1.5 to 4; those
+numbers were the old scorer's, not the art's.
 
 (Gemini's try 1 was a mix-up: it's the same file as ChatGPT's try 3, so it's scored as ChatGPT's.)
 
 - **Neither drew at the size asked.** All five are 44 to 48 art pixels tall; RD's stands 35 on a 40
   canvas. Squeezed to fit, the faces break (eyes run together, catchlights lost).
 - **ChatGPT draws the cleaner grid:** square, even pixels, a crisp outline in a deep shade of each colour,
-  big readable faces, and once a truly transparent background. But it's **flat**: one or two shades per
-  colour where RD has fourteen, big plain fills, a simple diamond pattern. It reads as clip-art pixel art,
-  not as RD's textured, many-shaded look.
-- **Gemini's shading is closer to RD's** (more texture in the skin, more variation), but its grid drifts:
+  big readable faces, and once a truly transparent background. But tries 1 and 3 are flat (big plain
+  fills, a simple diamond pattern) and read as clip-art pixel art, not RD's textured look. Try 2 has more
+  shades (7) but still big, even areas.
+- **Gemini's shading is closer to RD's** (more texture in the skin, more variation; try 2 scores 92%, as RD's
+  does), but its grid drifts:
   noisy pixels, near-black outlines, try 3 muddy round the eyes. The JPEGs don't help.
 - **Beside RD's at game size, none of them belongs yet.** They're bigger, flatter (ChatGPT) or noisier
   (Gemini), and their outlines are heavier than RD's.

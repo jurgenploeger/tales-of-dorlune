@@ -9,11 +9,12 @@ clear. This brings one back to the game's grid and holds it to what Retro Diffus
    height by default), each new pixel the colour covering most of its block (no blending);
 3. its colours are cut to at most `--colours` (RD's monsters use 18 to 33);
 4. it's placed on a 40 × 40 canvas (64 for a boss) standing where RD's stand;
-5. `pixel_style.py check --kind creature` scores it, and the Pixel Heroes marks
-   (docs/sprite-acceptance.md) are measured: outline, inner lines, saturation;
+5. `pixel_style.py check --kind <kind>` scores it (creature by default; building, scenery...), and for a
+   creature the Pixel Heroes marks (docs/sprite-acceptance.md): outline, inner lines, saturation;
 6. a sheet puts it beside RD's own drawing of the same thing, at 1x and 8x, on grass and the battle field.
 
-    python3 tools/ai_sprite_eval.py <image> --rd monster_snowman --out docs/ai-sprite-test/results/chatgpt_1
+    python3 tools/ai_sprite_eval.py <image> --rd monster_pineapple --out docs/ai-sprite-test/results/chatgpt_1
+    python3 tools/ai_sprite_eval.py <image> --rd thatched_cottage --kind building --out .../building/chatgpt_1
 
 Writes <out>.png (the sprite as the game would load it) and <out>_sheet.png. Needs pillow + numpy.
 """
@@ -82,7 +83,28 @@ def to_grid(a, height):
     return out
 
 
+def merge_near(a, distance=18):
+    """Colours a few steps apart (the model's noise and blur) become one, the commonest of them."""
+    solid = a[..., 3] > 0
+    px = a[solid][:, :3].astype(int)
+    vals, inv, counts = np.unique(px, axis=0, return_inverse=True, return_counts=True)
+    order = np.argsort(-counts)
+    palette, mapping = [], np.zeros(len(vals), int)
+    for i in order:
+        for j, c in enumerate(palette):
+            if np.abs(vals[i] - c).sum() <= distance:
+                mapping[i] = j
+                break
+        else:
+            mapping[i] = len(palette)
+            palette.append(vals[i])
+    out = a.copy()
+    out[solid, :3] = np.array(palette)[mapping[inv.ravel()]]
+    return out
+
+
 def reduce_colours(a, n):
+    a = merge_near(a)
     alpha = a[..., 3]
     rgb = Image.fromarray(a[..., :3])
     q = rgb.quantize(colors=n, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE).convert("RGB")
@@ -153,9 +175,10 @@ def sheet(ours, ref, path):
 def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("image")
-    p.add_argument("--rd", help="the RD sprite id to compare with (art/sprites/<id>.png)")
+    p.add_argument("--rd", help="the sprite id to compare with (art/sprites/<id>.png): RD's, or the one being redrawn")
+    p.add_argument("--kind", default="creature", help="pixel_style.py's band set: creature, building, scenery, icon")
     p.add_argument("--out", required=True)
-    p.add_argument("--canvas", type=int, default=40)
+    p.add_argument("--canvas", type=int, help="the PNG's size (default: the compared sprite's, else 40)")
     p.add_argument("--height", type=int, help="art pixels tall (default: the RD sprite's height)")
     p.add_argument("--colours", type=int, default=28)
     p.add_argument("--tolerance", type=int, default=60)
@@ -164,6 +187,8 @@ def main():
     ref = None
     if args.rd:
         ref = np.array(Image.open(os.path.join(ROOT, "art/sprites", args.rd + ".png")).convert("RGBA"))
+    if args.canvas is None:
+        args.canvas = ref.shape[0] if ref is not None else 40
     height = args.height
     if height is None:
         height = (np.ptp(np.nonzero(ref[..., 3])[0]) + 1) if ref is not None else args.canvas - 6
@@ -177,16 +202,17 @@ def main():
     sheet(a, ref, args.out + "_sheet.png")
 
     print(f"{args.out}.png  ({args.canvas}x{args.canvas}, {height} art pixels tall)")
-    print("\nPixel Heroes marks:")
-    for k, v in marks(a).items():
-        print(f"   {k:42} {v:.3f}" if isinstance(v, float) else f"   {k:42} {v}")
-    if ref is not None:
-        print(f"\nRD's {args.rd} for comparison:")
-        for k, v in marks(ref).items():
+    if args.kind == "creature":
+        print("\nPixel Heroes marks:")
+        for k, v in marks(a).items():
             print(f"   {k:42} {v:.3f}" if isinstance(v, float) else f"   {k:42} {v}")
+        if ref is not None:
+            print(f"\n{args.rd} for comparison:")
+            for k, v in marks(ref).items():
+                print(f"   {k:42} {v:.3f}" if isinstance(v, float) else f"   {k:42} {v}")
     print()
     sys.stdout.flush()
-    subprocess.call([sys.executable, os.path.join(ROOT, "tools/pixel_style.py"), "check", "--kind", "creature", args.out + ".png"]
+    subprocess.call([sys.executable, os.path.join(ROOT, "tools/pixel_style.py"), "check", "--kind", args.kind, args.out + ".png"]
                     + ([os.path.join(ROOT, "art/sprites", args.rd + ".png")] if args.rd else []))
 
 
