@@ -238,7 +238,13 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   its pieces down (a crop in rows, a scarecrow, haystacks; a ring of standing stones round a pillar; a tent, a fire
   and stores), its `art` naming other pieces. Theme `groves`: trees only start a group where a slow field is high
   (`LandPlanner.grove`), flowers only where it's low, so there are woods and clearings. Theme `accentSize`: how big
-  the accent patches are, for broad meadows. Chicks live in a farm's yard (`Critters.home`). Debug `at=place`.
+  the accent patches are, for broad meadows. Theme prop `near` (after SpriteCook's wave function collapse article, 2026-11-21): a prop grows only
+  within so many cells of something, a kind of prop set down before it (`PropPlacement.family`: `kind`, or
+  guessed from its art's name; `tools/check_content.py` mirrors it) or the land's "water", "sea", "path" or
+  "building" (`LandPlanner.cellNear`, `isNear`): mushrooms and ferns under the trees, stumps and logs among
+  them, pebbles by the paths, shells and driftwood by the sea. `LandPlanTests.everyPropIsSetDown` counts what
+  each prop sets down (a rule can silently never fire): every one at least once, a `near` one half as often as
+  asked; CI prints each land's props set down under half (🌳). Chicks live in a farm's yard (`Critters.home`). Debug `at=place`.
   Each kind of place is a landmark too (`WorldMap.landmark`: `at: "farm"`, `"ruin"`…, `which`): every land has a
   chest at one of its places (a potion or ether by its level, refilling as chests do) and someone living at another
   (maps.json `locals`). Theme `lush`: a richer ground tile in broad soft patches over the plain ground
