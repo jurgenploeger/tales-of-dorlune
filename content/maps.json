@@ -140,7 +140,7 @@
             "art": "statue",
             "count": 1,
             "blocking": true,
-            "within": 11,
+            "within": 14,
             "shadow": true
           },
           {
@@ -12643,10 +12643,10 @@
           },
           {
             "art": "fallen_log",
-            "count": 25,
+            "count": 12,
             "blocking": true,
             "near": {
-              "tree": 3
+              "tree": 4
             }
           }
         ],
