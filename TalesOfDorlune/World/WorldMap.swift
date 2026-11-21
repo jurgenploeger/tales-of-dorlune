@@ -62,7 +62,7 @@ nonisolated final class WorldMap: @unchecked Sendable {
     private(set) var buildings: [(art: String, anchor: GridPoint)] = []
     private(set) var streetDecor: [(art: String, cell: GridPoint)] = []
     /// The cells the town's buildings and shops stand on, its own and its lots (`nearBuilding`).
-    private var buildingCells: Set<GridPoint> = []
+    private(set) var buildingCells: Set<GridPoint> = []
     /// The places to find out in the land (`layPlaces`): what kind, its middle, and which of its
     /// theme's places it is.
     nonisolated struct Site {

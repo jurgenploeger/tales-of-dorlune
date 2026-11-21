@@ -714,6 +714,27 @@ nonisolated struct MapDef: Decodable, Identifiable, Sendable {
         /// Plant only within this many cells of the map's centre, inside a town's fence too
         /// (flower beds around the square). Otherwise props go anywhere free (in towns: the border).
         let within: Int?
+        /// What kind of thing it is (`family`), when its art's name doesn't say: "tree", "flower",
+        /// "mushroom", "rock", "bush".
+        let kind: String?
+        /// Grow only near something, every one of a group within so many cells of one of these: a
+        /// kind of prop the theme sets down before it (a `family` or an art), or "water", "sea",
+        /// "path" or "building" (`LandPlanner.near`; mushrooms under the trees, shells by the sea,
+        /// after SpriteCook's wave function collapse article, 2026-11-21).
+        let near: [String: Int]?
+
+        /// Its kind: `kind`, or guessed from its art's name (a tree is in the way, a flower isn't). With
+        /// none of these, its art.
+        var family: String {
+            if let kind { return kind }
+            func has(_ words: [String]) -> Bool { words.contains { art.contains($0) } }
+            if blocking, has(["tree", "palm", "pine", "willow"]) { return "tree" }
+            if !blocking, has(["daisy", "flower", "tulip", "clover"]) { return "flower" }
+            if has(["mushroom", "toadstool"]) { return "mushroom" }
+            if has(["boulder", "rock"]) { return "rock" }
+            if has(["bush", "thicket", "fern"]) { return "bush" }
+            return art
+        }
     }
 
     nonisolated struct FairyRings: Decodable, Sendable {

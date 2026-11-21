@@ -48,6 +48,9 @@ struct LandPlan {
     var fairyRings: [GridPoint] = []
     var outcrops: [Placement] = []
     var props: [Placement] = []
+    /// How many of each of the theme's props were set down, in its order (`MapDef.Theme.props`): a
+    /// test holds them to what's asked (`LandPlanTests`).
+    var propCounts: [Int] = []
     var seamProps: [Placement] = []
     var signposts: [(exit: MapDef.Exit, cell: GridPoint)] = []
     /// What lines stretches of its roads (`LandPlanner.planRoadsides`). A row's props are among
@@ -963,14 +966,90 @@ final class LandPlanner {
     /// only in the woods, flowers only out in the clearings, the rest anywhere.
     private func suits(_ placement: MapDef.PropPlacement, _ cell: GridPoint) -> Bool {
         guard def.theme.groves == true, placement.within == nil else { return true }
-        let name = placement.art
-        if placement.blocking, name.contains("tree") || name.contains("palm") || name.contains("pine") || name.contains("willow") {
-            return grove(cell) > -0.12
+        switch placement.family {
+        case "tree" where placement.blocking: return grove(cell) > -0.12
+        case "flower" where !placement.blocking: return grove(cell) < 0.05
+        default: return true
         }
-        if !placement.blocking, name.contains("daisy") || name.contains("flower") || name.contains("tulip") || name.contains("clover") {
-            return grove(cell) < 0.05
+    }
+
+    /// The cells of the theme's props set down so far, by kind and by art (`near`).
+    private var placedCells: [String: [GridPoint]] = [:]
+    private var placedSets: [String: Set<GridPoint>] = [:]
+
+    /// The land's own water, sea, paths and buildings, the cells of each, worked out the first time a
+    /// prop keeps near one.
+    private var groundCells: [String: (list: [GridPoint], set: Set<GridPoint>)] = [:]
+
+    private func remember(_ placement: MapDef.PropPlacement, at cell: GridPoint) {
+        for key in Set([placement.family, placement.art]) {
+            placedCells[key, default: []].append(cell)
+            placedSets[key, default: []].insert(cell)
         }
-        return true
+    }
+
+    /// The cells of what a prop keeps near (`MapDef.PropPlacement.near`): a kind of prop or an art
+    /// set down so far, or the land's own "water", "sea", "path" or "building" cells.
+    private func anchors(_ key: String) -> (list: [GridPoint], set: Set<GridPoint>) {
+        let ground: Ground? = switch key {
+        case "water": .water
+        case "sea": .sea
+        case "path": .path
+        default: nil
+        }
+        guard ground != nil || key == "building" else {
+            return (placedCells[key] ?? [], placedSets[key] ?? [])
+        }
+        if let known = groundCells[key] { return known }
+        var list: [GridPoint] = []
+        if key == "building" {
+            list = map.buildingCells.sorted { ($0.row, $0.col) < ($1.row, $1.col) }
+        } else {
+            for row in 0..<map.rows {
+                for col in 0..<map.columns where map.ground[row][col] == ground {
+                    let cell = GridPoint(col: col, row: row)
+                    // The sea is everyone's; water, paths and buildings only the land's own.
+                    if ground == .sea || map.owns(cell) { list.append(cell) }
+                }
+            }
+        }
+        let found = (list: list, set: Set(list))
+        groundCells[key] = found
+        return found
+    }
+
+    /// Whether `cell` lies within reach of one of what a prop keeps near.
+    private func isNear(_ cell: GridPoint, _ near: [String: Int]) -> Bool {
+        for (key, reach) in near {
+            let set = anchors(key).set
+            guard !set.isEmpty else { continue }
+            let reach = max(1, reach)
+            for dr in -reach...reach {
+                for dc in -reach...reach where set.contains(GridPoint(col: cell.col + dc, row: cell.row + dr)) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
+    /// A free cell near one of what a prop keeps near, for a group's middle: beside one of them picked
+    /// at random. None if there's nothing of the kind, or no room round what there is.
+    private func cellNear(_ near: [String: Int], blocking: Bool) -> GridPoint? {
+        // Sorted: a dictionary's order changes from one launch to the next, and the land must not.
+        let keys = near.keys.sorted()
+        guard !keys.isEmpty else { return nil }
+        for _ in 0..<60 {
+            let key = keys[Int.random(in: 0..<keys.count, using: &rng)]
+            let list = anchors(key).list
+            guard !list.isEmpty else { continue }
+            let anchor = list[Int.random(in: 0..<list.count, using: &rng)]
+            let reach = max(1, near[key] ?? 1)
+            let cell = GridPoint(col: anchor.col + Int.random(in: -reach...reach, using: &rng),
+                                 row: anchor.row + Int.random(in: -reach...reach, using: &rng))
+            if map.owns(cell), map.isFreeForScenery(cell, blocking: blocking) { return cell }
+        }
+        return nil
     }
 
     /// Scenery from the theme. Props with `cluster` grow in groves around a random centre. None
@@ -982,6 +1061,7 @@ final class LandPlanner {
             let spread = max(1, placement.spread ?? Int(Double(groupSize).squareRoot().rounded()) + 1)
             let gap = pathGap(placement)
             var placed = 0
+            defer { plan.propCounts.append(placed) }
             var attempts = 0
             // In a land with groves a group that doesn't suit where it fell is tried again elsewhere.
             let tries = def.theme.groves == true ? 6 : 3
@@ -990,6 +1070,8 @@ final class LandPlanner {
                 await pause()
                 let found: GridPoint? = if let radius = placement.within {
                     map.randomFreeCell(within: radius, using: &rng)
+                } else if let near = placement.near {
+                    cellNear(near, blocking: placement.blocking)
                 } else {
                     map.randomFreeCell(blocking: placement.blocking, using: &rng)
                 }
@@ -1008,12 +1090,14 @@ final class LandPlanner {
                           index == 0 || suits(placement, cell),
                           placement.within == nil || !placement.blocking || !map.nearBuilding(cell),
                           map.foreign[cell] == nil, !isCoast(cell), !placement.blocking || roomOnIsland(cell),
-                          gap == 0 || !nearPath(cell, within: gap) else { continue }
+                          gap == 0 || !nearPath(cell, within: gap),
+                          placement.near.map({ isNear(cell, $0) }) ?? true else { continue }
                     var scale: CGFloat = 1
                     if let range = placement.size, range.count == 2, range[0] <= range[1] {
                         scale = CGFloat(Double.random(in: range[0]...range[1], using: &rng))
                     }
                     plan.props.append(plant(placement, at: cell, scale: scale))
+                    remember(placement, at: cell)
                     inGroup += 1
                 }
                 placed += inGroup
@@ -1055,7 +1139,8 @@ final class LandPlanner {
             for placement in land.theme.props where placement.within == nil {
                 guard Double.random(in: 0..<1, using: &random) < Double(placement.count) / area else { continue }
                 guard map.isFreeForScenery(cell, blocking: placement.blocking), !isCoast(cell),
-                      !placement.blocking || roomOnIsland(cell) else { break }
+                      !placement.blocking || roomOnIsland(cell),
+                      placement.near.map({ isNear(cell, $0) }) ?? true else { break }
                 var scale: CGFloat = 1
                 if let range = placement.size, range.count == 2, range[0] <= range[1] {
                     scale = CGFloat(Double.random(in: range[0]...range[1], using: &random))
