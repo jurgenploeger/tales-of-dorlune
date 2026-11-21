@@ -175,3 +175,18 @@ Verdict: **one step short.** Plainly better than ours by eye and by the hard rul
 by the soft ones. The fix the numbers ask for: a darker band of shade 2 or 3 pixels wide just inside the
 roof's and walls' edge (under the eaves especially), with the outline a shade darker again, and slightly
 smaller clumps on the thatch.
+
+### ChatGPT, try 5 (a band of shade inside the edge)
+
+`chatgpt_5.png` as delivered (96 × 96, clean, 40 colours, foot on row 89); `chatgpt_5_outline108.png`, its
+228 outline pixels 8% lighter; `compare_town_5.png` (4×) and `compare_town_5_1x.png` (game size).
+
+- As delivered: **soft 93%** (RD's buildings: 79% to 100%), every hard rule but one: the outline overshot
+  to a little too dark beside what it rounds (`outline_rel` 0.511, needs 0.546; try 4 was on the other side).
+  The two outline rules leave a narrow window: at most 0.35 bright, at least 0.55 of what's inside.
+- **With its outline 8% lighter it passes:** every hard rule, soft 86% (only the outline's absolute
+  light, now 0.38, and one grid-like run miss), level with 9 of RD's 29 buildings. 43 colours.
+
+Verdict: **the first AI-drawn sprite that clears the bar RD's art sets**, with one small, written-down
+touch (like `tools/rd_fixes.py`'s exact fixes). Whether it goes in the game is the user's pick, blind
+against ours.
