@@ -52,3 +52,6 @@ sizes and foot rows written in, the shading spelled out, warm yellow only for pa
   jumps from 0.494 (too dark beside) to 0.667 (not dark at all); lifting the half of its outline pixels
   darkest beside their inside one step further than the rest lands between (0.564, `outline_dark` 0.35):
   **passes**, soft 100%, 29 colours. In the game (`chatgpt_3_fixed.png`).
+- **Gem workshop, third try** (from the first, broad areas asked for): 2006 pixels changed; `form_relief`
+  0.0152 (needs 0.016), outline overshot (`outline_rel` 0.522). Two hard rules missed where ours passes them
+  all: **ours stays**, as agreed. ChatGPT's three tries kept in this folder.
