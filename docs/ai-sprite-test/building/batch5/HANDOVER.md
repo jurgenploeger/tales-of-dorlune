@@ -65,3 +65,7 @@ sizes and foot rows written in, the shading spelled out, warm yellow only for pa
   `ai_sprite_eval.py`): both flat again, `form_relief` 0.015 and 0.012, the gem workshop's outline not dark
   (`outline_dark` 0.05) and its roof a grid of ruler-straight slates pressing the shop down. Ours pass every
   hard rule: **ours stay**, for good this time.
+- **In after all** (the user, 2026-11-21: "Put the acorn cottage and gem workshop ChatGPT ones in too"): the
+  acorn's third try (best shaded of three) and the gem workshop's first (a true 1× file, one hard miss, where its
+  third overshot its outline and its fourth lost it). Their night windows in boxes; inside a box a pane of 2 or 3
+  pixels now counts (`window_art`), so all four of the acorn's round panes light, not one.

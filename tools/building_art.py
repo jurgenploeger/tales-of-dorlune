@@ -2020,7 +2020,11 @@ PICKED = {"thatched_cottage": ("art-variants/thatched_cottage/chatgpt_5.png", 1.
           "warrior_guild": ("art-variants/warrior_guild/chatgpt_2_fixed.png", 1.0),
           "star_observatory": ("art-variants/star_observatory/chatgpt_1.png", 1.0),
           "moonwell": ("art-variants/moonwell/chatgpt_1.png", 1.0),
-          "emerald_spire": ("art-variants/emerald_spire/chatgpt_1.png", 1.0)}
+          "emerald_spire": ("art-variants/emerald_spire/chatgpt_1.png", 1.0),
+          # The last two, the user's pick over the scores too (2026-11-21): the acorn cottage's third try (its big
+          # picture snapped to 96 by ai_sprite_eval.py, the best shaded of three) and the gem workshop's first.
+          "acorn_cottage": ("art-variants/acorn_cottage/chatgpt_3.png", 1.0),
+          "gem_workshop": ("art-variants/gem_workshop/chatgpt_1.png", 1.0)}
 
 
 def picked(item):

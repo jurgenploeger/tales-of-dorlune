@@ -41,6 +41,7 @@ BOXES = {"thatched_cottage": [(60, 96, 0, 96)],
          "tree_house": [(40, 52, 0, 96)],
          "round_cottage": [(40, 96, 0, 96)],
          "wildfolk_lodge": [(124, 140, 38, 92)],
+         "acorn_cottage": [(38, 48, 28, 40), (60, 72, 48, 60)],
          "warrior_guild": [(112, 124, 50, 104)],
          "emerald_spire": [(100, 109, 80, 92), (124, 137, 74, 100), (148, 160, 50, 124)]}
 
@@ -67,7 +68,7 @@ def windows(name):
     keep = np.zeros(warm.shape, bool)
     for index in range(1, count + 1):
         patch = labels == index
-        if 4 <= patch.sum() <= BIGGEST:           # not a speck of bright brick either
+        if (2 if name in BOXES else 4) <= patch.sum() <= BIGGEST:   # not a speck of bright brick (in a box, a pane)
             keep |= patch
     if keep.sum() < FEWEST:
         return None
