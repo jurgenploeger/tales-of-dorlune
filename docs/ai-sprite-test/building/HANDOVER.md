@@ -156,3 +156,22 @@ Next follow-up, on try 3:
 > walls, a deep blue round the door and shutters. And make the pixels just inside the outline a mid shade,
 > so the outline isn't next to the lightest colour. Add a few bright highlight pixels on the thatch's top
 > left. Deliver the 96 × 96 PNG at 1× as well as the 8× preview, background fully transparent.
+
+### ChatGPT, try 4 (the tinted outline)
+
+`chatgpt_4.png` (96 × 96) and `chatgpt_4_8x.png`, as delivered; `compare_town_4.png`.
+
+- **Delivered clean again:** a true 96 × 96 PNG, the 8× an exact copy, only clear or solid pixels, 39
+  colours, 78 wide, its foot on row 89 as the instructions ask. Nothing snapped or fixed.
+- **Every hard rule passes**, the outline one included (0.559, needs 0.546). Of RD's own 29 buildings,
+  15 miss a hard rule.
+- **Soft 71%, needs 80%:** the outline still a little light in absolute terms (0.44, RD's at most 0.35),
+  clumps a bit big (5.7, RD's up to 5.2), and two misses by a hair (broad light areas 0.543 for 0.55, one
+  grid-like run 0.035 for 0.033). RD's buildings score 79% to 100% soft, so this is below every one of them.
+- Darkening its outline in code didn't help: the two outline rules together want the band just inside the
+  edge darker too, and doing that in code added too many colours. It's for the drawing to fix.
+
+Verdict: **one step short.** Plainly better than ours by eye and by the hard rules; not yet at RD's level
+by the soft ones. The fix the numbers ask for: a darker band of shade 2 or 3 pixels wide just inside the
+roof's and walls' edge (under the eaves especially), with the outline a shade darker again, and slightly
+smaller clumps on the thatch.
