@@ -116,30 +116,43 @@ For reference, RD costs about $0.04 a monster, $0.05 a boss, $0.07 a walk sheet 
 in the sprite-creation skill; $43.66 over 411 runs to 2026-10-29). Saving money matters less than the
 art: a sprite we'd have to fix by hand costs more than RD's few cents.
 
-## Results
+## Results (2026-11-21)
 
-### Nano Banana (Gemini), 2026-11-21, three tries
+`results/`: each try as sent, `*_40` squeezed to the game's size beside RD's, `*_native` snapped at the
+grid the model actually drew on. `compare_native.png` and `compare_40.png` line them all up.
 
-`results/nanobanana_*`. Try 1 came as a 1254-pixel PNG, tries 2 and 3 as 1024-pixel JPEGs.
+RD's own pineapple, for the record: passes at 92%, with 14 shades in its yellow ramp, and it misses
+"lit from the top left" too (so that one isn't held against anyone).
 
-- **It ignored the grid size.** Asked for 40 × 40 at 16×, it drew on a grid of about 45 to 50, the
-  pineapple 45 to 46 art pixels tall (its blocks about 26 image pixels in try 1, 20 in tries 2 and 3). RD's
-  stands 35 tall on a 40 canvas.
-- **Squeezed to the game's size (`*_40`), the faces break:** try 1's eyes run together, try 3's smear.
-  Scored: 1 and 2 pass (83%), 3 fails (58%).
-- **At its own grid (`*_native`, `--height 45`), try 1 is a clean, good sprite:** square pixels, a
-  coloured outline, warm shading, big eyes with a catchlight. As a picture it holds up beside RD's. Tries 2
-  and 3 drift more: noisy texture, outlines nearly black, try 3 muddy round the eyes (JPEG doesn't help).
-- **Misses in all three:** too few shades per colour ramp (3 or 4; RD's art has 5 or more) and the
-  light not clearly from the top left. Tries 2 and 3 have the dark outline the Pixel Heroes marks ask for,
-  which RD's pineapple doesn't.
-- Verdict: **a near miss.** The style is close; the size isn't. A sprite at 45 art pixels can't go in a
-  40 canvas, and shrinking it ruins it. Next: retry with the size spelt out as blocks (below).
+| | ChatGPT 1 | ChatGPT 2 | ChatGPT 3 | Gemini 2 | Gemini 3 |
+|---|---|---|---|---|---|
+| sent as | 1254 PNG, **transparent** | 1254 PNG | 1254 PNG | 1024 JPEG | 1024 JPEG |
+| grid it drew on (sprite height) | 44 | 48 | 44 | 45 | 46 |
+| squeezed to 40 × 40 | fail 75% | fail 75% | pass 83% | pass 83% | fail 58% |
+| at its own grid | fail 75% | fail 75% | pass 83% | pass 83% | fail 67% |
+| shades per ramp (RD: 14) | 2 | 1.5 | 4 | 3 | 3 |
 
-Follow-up for Gemini, in the same chat as try 1:
+(Gemini's try 1 was a mix-up: it's the same file as ChatGPT's try 3, so it's scored as ChatGPT's.)
 
-> Close, but too big: your pixel blocks are about 26 image pixels, so the pineapple is about 45 pixels
-> tall. Redraw the same pineapple on a 40 × 40 grid where the whole monster, crown to feet, is exactly 35
-> blocks tall and about 24 wide. Output 640 × 640, every block exactly 16 × 16 image pixels. Fewer, bigger
-> pixels: keep the eyes 3 blocks tall with a 1-block white catchlight. Give each colour 5 shades, lit from
-> the top left.
+- **Neither drew at the size asked.** All five are 44 to 48 art pixels tall; RD's stands 35 on a 40
+  canvas. Squeezed to fit, the faces break (eyes run together, catchlights lost).
+- **ChatGPT draws the cleaner grid:** square, even pixels, a crisp outline in a deep shade of each colour,
+  big readable faces, and once a truly transparent background. But it's **flat**: one or two shades per
+  colour where RD has fourteen, big plain fills, a simple diamond pattern. It reads as clip-art pixel art,
+  not as RD's textured, many-shaded look.
+- **Gemini's shading is closer to RD's** (more texture in the skin, more variation), but its grid drifts:
+  noisy pixels, near-black outlines, try 3 muddy round the eyes. The JPEGs don't help.
+- **Beside RD's at game size, none of them belongs yet.** They're bigger, flatter (ChatGPT) or noisier
+  (Gemini), and their outlines are heavier than RD's.
+
+Verdict: **neither passes Test 1.** Both get the idea and miss the two things that make it our game's art:
+the size (one art pixel, one size) and RD's dense, many-shaded texture. Fixable by prompt? Size maybe; the
+shading depth is the harder one. One more round decides it:
+
+Follow-up, in the same chat as each tool's best try (ChatGPT 3, Gemini 2):
+
+> Close, but too big and too flat. Your pixel blocks make the pineapple about 45 pixels tall. Redraw the
+> same pineapple on a 40 × 40 grid where the whole monster, crown to feet, is exactly 35 blocks tall and
+> about 24 wide. Output 640 × 640, every block exactly 16 × 16 image pixels. Shade it like the reference:
+> each colour in 6 to 8 shades, the skin textured with many small pixel clusters of different shades, not
+> big flat areas. Eyes 3 blocks tall with a 1-block white catchlight. Transparent background, PNG.
