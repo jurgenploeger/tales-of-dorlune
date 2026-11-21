@@ -35,3 +35,13 @@ One chat in the project, the three `_8x.png` attached in this order:
 Scored as scenery against ours. The tree also needs its wind rig made again (`tools/wind_art.py`, its crown cut
 into leaf clumps by colour; `check_content.py` checks the rig fits), and its `big_` twin follows by `derive`.
 The brazier smokes from its top (`LandStage.addSmoke`); its fire stays as drawn.
+
+## Results
+
+All three exactly the asked canvas, size and foot row, alpha clean (36 to 45 colours).
+- **Brazier:** passes every rule, soft 100% (ours 82%: its outline too dark, too much highlight). A brighter
+  fire, cleaner legs.
+- **Gold hoard:** outline overshot (`outline_rel` 0.53); snapped to its own colours 12% lighter
+  (`_fixed.png`): passes, soft 100%, as ours. Softer and paler gold than ours, the gems clearer.
+- **Blossom tree:** outline overshot (0.44); passes only snapped 40% lighter (`_fixed.png`, 0.665). Smooth
+  round clumps split by dark seams, two loose petals; ours is textured blossom. Both miss `hue_shift`.
