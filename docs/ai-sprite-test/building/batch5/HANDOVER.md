@@ -37,3 +37,6 @@ sizes and foot rows written in, the shading spelled out, warm yellow only for pa
   Both go back for a fix.
 - **Gem workshop**: 79 × 56, foot on row 92, exactly ours; its night lights catch only its window's panes.
   Soft 93%, but flat (`form_relief` 0.0139, ours 0.0166): back for the same shading fix.
+- **Crystal cottage, second try**: shading fixed (`form_relief` 0.0187), its outline overshot (`outline_rel`
+  0.463); each outline pixel moved to the sprite's own colour nearest 24% lighter (1.22 to 1.28 all pass):
+  **passes**, soft 93%. In the game (`chatgpt_2_fixed.png`).
