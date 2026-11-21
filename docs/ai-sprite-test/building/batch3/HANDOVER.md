@@ -54,3 +54,5 @@ out of the repo till the pick. The weapon shop joins the next pick.
 
 The user: "All chatgpts are better, we don't need to do blind tests anymore." Every building here is in
 (`building_art.PICKED`, `art-variants/<id>/`), the blind pick sheet unanswered and its key kept for the record.
+- **Weapon shop, re-shaded** (`weapon_shop_chatgpt_2.png`): 77 × 63, foot on row 89; `form_relief` 0.0177:
+  **passes**, soft 86%. In the game in place of the first try.
