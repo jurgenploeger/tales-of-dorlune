@@ -35,3 +35,5 @@ Then as before: each checked, scored, one blind pick for all four, the winners i
 - **Bank, try 2** (`bank_chatgpt_2.png`, `_8x`), after "you skipped the project's steps": a true 96 × 96
   PNG, 75 × 69, foot on row 93, exactly ours as measured; 34 colours; the 8× an exact copy. Every hard rule,
   soft 93% (ours 93%). Its coins orange, as asked.
+- **Timber house, try 1** (`timber_house_chatgpt_1_big.png`): measured right (71 × 81, foot on row 90; ours
+  71 × 81 on 89) but no 1× file. Snapped: every hard rule, soft 93%. Its 1× asked for.
