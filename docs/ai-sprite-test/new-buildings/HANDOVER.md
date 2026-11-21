@@ -162,3 +162,12 @@ Each comes back here: a clean 1× at the size, scored (`pixel_style.py check --k
 fix in code if needed (as for the redraws), its night windows cut (`window_art.py`, `BOXES` if anything else
 lights), registered in `art/assets.json`, and given lots in its land (maps.json `buildings`, town `lots`). The
 user picks by eye; what doesn't win isn't used.
+
+## Results
+
+- **Batch 1** (2026-11-21): all four at the asked size (58 to 76 wide, 64 to 81 tall, foot on row 89, 36 to 44
+  colours, alpha clean). The post office's and lantern shop's outlines too dark beside their inside, snapped 8%
+  lighter (`*_fixed.png`): every hard rule passes on all four. In the game: Meadowbrook's post office (one lot)
+  and dairy (two), Prismhaven's lantern shop and painter's studio (two each), each in place of a lot that was a
+  plain `house` or `mushroom_house`. Night windows boxed: the dairy's pale wall foot lit, and the lantern shop's
+  panes are a pure yellow with no blue in them, so inside a box `window_art` now takes those too.

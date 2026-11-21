@@ -2617,6 +2617,26 @@
       "kind": "building"
     },
     {
+      "id": "post_office",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "dairy_shop",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "glass_lantern_shop",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "painter_studio",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
       "id": "standing_stone",
       "kind": "prop"
     },
@@ -3164,6 +3184,22 @@
     },
     {
       "id": "windows_thatched_cottage",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_post_office",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_dairy_shop",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_glass_lantern_shop",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_painter_studio",
       "kind": "prop"
     },
     {

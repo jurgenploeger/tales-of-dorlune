@@ -42,6 +42,8 @@ BOXES = {"thatched_cottage": [(60, 96, 0, 96)],
          "round_cottage": [(40, 96, 0, 96)],
          "wildfolk_lodge": [(124, 140, 38, 92)],
          "acorn_cottage": [(38, 48, 28, 40), (60, 72, 48, 60)],
+         "dairy_shop": [(66, 79, 15, 45)],
+         "glass_lantern_shop": [(45, 56, 41, 52)],
          "warrior_guild": [(112, 124, 50, 104)],
          "emerald_spire": [(100, 109, 80, 92), (124, 137, 74, 100), (148, 160, 50, 124)]}
 
@@ -58,11 +60,13 @@ def windows(name):
         return None
     im = np.asarray(Image.open(path).convert("RGBA")).astype(int)
     r, g, b, a = (im[..., i] for i in range(4))
-    warm = (a > 200) & (r >= 225) & (g >= 175) & (b <= g - 35) & (b >= 60) & (r - b >= 60)
+    inside = np.zeros(a.shape, bool)
+    for y0, y1, x0, x1 in BOXES.get(name, []):
+        inside[y0:y1, x0:x1] = True
+    # Inside a box a pane may be a pure yellow too (no blue in it at all: the glass lantern shop's), as gold
+    # trim can't sneak in there.
+    warm = (a > 200) & (r >= 225) & (g >= 175) & (b <= g - 35) & ((b >= 60) | inside) & (r - b >= 60)
     if name in BOXES:
-        inside = np.zeros(warm.shape, bool)
-        for y0, y1, x0, x1 in BOXES[name]:
-            inside[y0:y1, x0:x1] = True
         warm &= inside
     labels, count = ndimage.label(warm, structure=np.ones((3, 3)))
     keep = np.zeros(warm.shape, bool)

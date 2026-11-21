@@ -2025,7 +2025,13 @@ PICKED = {"thatched_cottage": ("art-variants/thatched_cottage/chatgpt_5.png", 1.
           # The last two, the user's pick over the scores too (2026-11-21): the acorn cottage's third try (its big
           # picture snapped to 96 by ai_sprite_eval.py, the best shaded of three) and the gem workshop's first.
           "acorn_cottage": ("art-variants/acorn_cottage/chatgpt_3.png", 1.0),
-          "gem_workshop": ("art-variants/gem_workshop/chatgpt_1.png", 1.0)}
+          "gem_workshop": ("art-variants/gem_workshop/chatgpt_1.png", 1.0),
+          # New buildings, drawn by ChatGPT for a land of their own (docs/ai-sprite-test/new-buildings), never drawn
+          # here: an outline too dark beside its inside snapped to the sprite's own colours 8% lighter (*_fixed.png).
+          "post_office": ("art-variants/post_office/chatgpt_1_fixed.png", 1.0),                 # Meadowbrook
+          "dairy_shop": ("art-variants/dairy_shop/chatgpt_1.png", 1.0),                         # Meadowbrook
+          "glass_lantern_shop": ("art-variants/glass_lantern_shop/chatgpt_1_fixed.png", 1.0),   # Prismhaven
+          "painter_studio": ("art-variants/painter_studio/chatgpt_1.png", 1.0)}                 # Prismhaven
 
 
 def picked(item):
@@ -2045,7 +2051,7 @@ def main(argv):
         i = argv.index("--sheet")
         sheet = pathlib.Path(argv[i + 1])
         argv = argv[:i] + argv[i + 2:]
-    ids = argv or list(BUILDINGS)
+    ids = argv or list(dict.fromkeys([*BUILDINGS, *PICKED]))     # and the new ones only ChatGPT drew
     out = {}
     for item in ids:
         img = picked(item) if item in PICKED else fit(BUILDINGS[item]).render()
