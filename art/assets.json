@@ -10429,6 +10429,50 @@
       "kind": "prop"
     },
     {
+      "id": "firefly_jar_post",
+      "kind": "prop"
+    },
+    {
+      "id": "twisted_root_arch",
+      "kind": "prop"
+    },
+    {
+      "id": "chopped_woodpile",
+      "kind": "prop"
+    },
+    {
+      "id": "sheep_fence",
+      "kind": "prop"
+    },
+    {
+      "id": "teddy_bear",
+      "kind": "prop"
+    },
+    {
+      "id": "bubbling_cauldron",
+      "kind": "prop"
+    },
+    {
+      "id": "crow_post",
+      "kind": "prop"
+    },
+    {
+      "id": "rocking_horse",
+      "kind": "prop"
+    },
+    {
+      "id": "tin_soldier",
+      "kind": "prop"
+    },
+    {
+      "id": "donut_rock",
+      "kind": "prop"
+    },
+    {
+      "id": "marshmallow_stack",
+      "kind": "prop"
+    },
+    {
       "id": "tile_crystal_rock",
       "kind": "tile",
       "request": {

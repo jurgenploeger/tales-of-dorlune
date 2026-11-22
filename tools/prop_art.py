@@ -728,6 +728,17 @@ PICKED = {
     "lobster_pots": "art-variants/lobster_pots/chatgpt_1_fixed.png",             # Ingothold Lake
     "giant_dandelion": "art-variants/giant_dandelion/chatgpt_1.png",             # Sneezle Sands
     "pepper_shaker": "art-variants/pepper_shaker/chatgpt_1_fixed.png",           # Sneezle Sands
+    "firefly_jar_post": "art-variants/firefly_jar_post/chatgpt_1_fixed.png",     # Twilight Woods
+    "twisted_root_arch": "art-variants/twisted_root_arch/chatgpt_1.png",         # Twilight Woods
+    "chopped_woodpile": "art-variants/chopped_woodpile/chatgpt_1.png",           # Big Bad Wolf's Lair
+    "sheep_fence": "art-variants/sheep_fence/chatgpt_1.png",                     # Dozywick
+    "teddy_bear": "art-variants/teddy_bear/chatgpt_1.png",                       # Dozywick
+    "bubbling_cauldron": "art-variants/bubbling_cauldron/chatgpt_1.png",         # Shiverdell
+    "crow_post": "art-variants/crow_post/chatgpt_1.png",                         # Shiverdell
+    "rocking_horse": "art-variants/rocking_horse/chatgpt_1.png",                 # Marionette Rise
+    "tin_soldier": "art-variants/tin_soldier/chatgpt_1.png",                     # Marionette Rise
+    "donut_rock": "art-variants/donut_rock/chatgpt_1.png",                       # Gumdrop Peaks
+    "marshmallow_stack": "art-variants/marshmallow_stack/chatgpt_1.png",         # Gumdrop Peaks
 }
 
 

@@ -113,3 +113,9 @@ The torch, lanterns, firefly jar and fallen star get a `glow`.
   cairns and hay carts, Swan Lake's swan topiaries and rowboats by the water, Pineapple Shore's fruit carts and tiki
   torches (glowing), Ingothold Lake's fish racks and lobster pots by the water, Sneezle Sands' giant dandelions
   (their seed puffs move in the wind, `wind_art.py`) and pepper shakers.
+- **Batch B, woods and dark lands** (2026-11-22): 11 of the 12 (the picnic basket didn't come), all at exactly
+  the asked canvas, size and foot row, 14 to 26 colours. Every hard rule passed as delivered but the firefly jar
+  post's outline, snapped 6% lighter. All in: Twilight Woods' firefly jar posts by its paths (glowing) and root
+  arches among the trees, the Wolf's Lair's woodpiles, Dozywick's sleeping sheep over fences and teddy bears,
+  Shiverdell's cauldrons by its houses (glowing, steaming green, `LandStage.smokeHoles`) and crow posts,
+  Marionette Rise's rocking horses and tin soldiers, Gumdrop Peaks' donuts and marshmallows.

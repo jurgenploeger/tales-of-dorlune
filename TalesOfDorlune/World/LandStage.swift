@@ -395,6 +395,8 @@ final class LandStage {
         "apothecary": CGPoint(x: 68.0 / 96, y: 12.0 / 96),
         "emerald_shop": CGPoint(x: 32.5 / 96, y: 17.0 / 96),
         "glass_lantern_shop": CGPoint(x: 59.0 / 96, y: 11.0 / 96),
+        // Shiverdell's cauldron, its brew steaming.
+        "bubbling_cauldron": CGPoint(x: 16.0 / 32, y: 9.0 / 32),
     ]
 
     /// A smoke hole's own colour where it isn't grey smoke: the teapot's white steam, the genie
@@ -402,6 +404,7 @@ final class LandStage {
     private static let smokeColours: [String: UIColor] = [
         "teapot_house": UIColor(white: 0.95, alpha: 1),
         "lamp_house": UIColor(red: 0.66, green: 0.52, blue: 0.8, alpha: 1),
+        "bubbling_cauldron": UIColor(red: 0.62, green: 0.85, blue: 0.55, alpha: 1),
     ]
 
     /// Smoke rising from a fire (a camp's or a lair's brazier, from the top of its picture) or a
