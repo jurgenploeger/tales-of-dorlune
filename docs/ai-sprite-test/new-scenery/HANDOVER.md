@@ -120,3 +120,9 @@ The torch, lanterns, firefly jar and fallen star get a `glow`.
   Shiverdell's cauldrons by its houses (glowing, steaming green, `LandStage.smokeHoles`) and crow posts,
   Marionette Rise's rocking horses and tin soldiers, Gumdrop Peaks' donuts and marshmallows.
 - **The picnic basket** (asked for again): at the asked size, 20 colours, every rule as delivered (soft 100%). In, by the Wolf's Lair's paths and trees.
+- **Batch C, water, desert and the steppe** (2026-11-22): all 10 at exactly the asked canvas, size and foot row,
+  15 to 24 colours, every hard rule passed as delivered (soft 82 to 100%). All in: Frog Swamp's frog statues and
+  sunken rowboats by the water, Lotus Land's stone lanterns (glowing) and bamboo clumps, the Genie Desert's rug
+  racks and spice sacks by its houses, the Hidden Steppe's scarf cairns and wagon wheels by its roads, Tidewater
+  Shrine's giant clams by the water and barnacled pillars. The bamboo stays still: rigged for the wind, its stalks
+  came apart at the row where the moving part met the still one.

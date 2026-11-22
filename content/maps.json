@@ -6734,6 +6734,28 @@
               0.8,
               1.2
             ]
+          },
+          {
+            "art": "frog_statue",
+            "count": 8,
+            "blocking": true,
+            "near": {
+              "water": 3
+            },
+            "size": [
+              0.9,
+              1.1
+            ],
+            "shadow": true
+          },
+          {
+            "art": "sunken_rowboat",
+            "count": 5,
+            "blocking": true,
+            "near": {
+              "water": 2
+            },
+            "shadow": true
           }
         ],
         "palette": {
@@ -9385,6 +9407,29 @@
               1.1
             ],
             "shadow": true
+          },
+          {
+            "art": "rug_rack",
+            "count": 5,
+            "blocking": true,
+            "near": {
+              "building": 5,
+              "path": 3
+            },
+            "shadow": true
+          },
+          {
+            "art": "spice_sacks",
+            "count": 8,
+            "blocking": true,
+            "near": {
+              "building": 5
+            },
+            "cluster": 2,
+            "size": [
+              0.9,
+              1.1
+            ]
           }
         ],
         "palette": {
@@ -15790,6 +15835,32 @@
               0.9,
               1.3
             ]
+          },
+          {
+            "art": "stone_lantern",
+            "count": 10,
+            "blocking": true,
+            "near": {
+              "path": 3,
+              "water": 3
+            },
+            "size": [
+              0.9,
+              1.1
+            ],
+            "glow": "#FFD58A",
+            "shadow": true
+          },
+          {
+            "art": "bamboo_clump",
+            "count": 24,
+            "blocking": true,
+            "cluster": 3,
+            "size": [
+              0.8,
+              1.2
+            ],
+            "shadow": true
           }
         ],
         "palette": {
@@ -18343,6 +18414,28 @@
               1.1
             ],
             "glow": "#7FE7FF"
+          },
+          {
+            "art": "scarf_cairn",
+            "count": 8,
+            "blocking": true,
+            "size": [
+              0.9,
+              1.1
+            ],
+            "shadow": true
+          },
+          {
+            "art": "wagon_wheel",
+            "count": 8,
+            "blocking": true,
+            "near": {
+              "path": 4
+            },
+            "size": [
+              0.9,
+              1.1
+            ]
           }
         ],
         "palette": {
@@ -20171,6 +20264,30 @@
             ],
             "glow": "#FFF3A0",
             "bob": true
+          },
+          {
+            "art": "giant_clam",
+            "count": 10,
+            "blocking": true,
+            "near": {
+              "water": 3,
+              "sea": 3
+            },
+            "cluster": 2,
+            "size": [
+              0.9,
+              1.1
+            ]
+          },
+          {
+            "art": "tide_pillar",
+            "count": 8,
+            "blocking": true,
+            "size": [
+              0.9,
+              1.1
+            ],
+            "shadow": true
           }
         ],
         "palette": {

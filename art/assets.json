@@ -10477,6 +10477,46 @@
       "kind": "prop"
     },
     {
+      "id": "frog_statue",
+      "kind": "prop"
+    },
+    {
+      "id": "sunken_rowboat",
+      "kind": "prop"
+    },
+    {
+      "id": "stone_lantern",
+      "kind": "prop"
+    },
+    {
+      "id": "bamboo_clump",
+      "kind": "prop"
+    },
+    {
+      "id": "rug_rack",
+      "kind": "prop"
+    },
+    {
+      "id": "spice_sacks",
+      "kind": "prop"
+    },
+    {
+      "id": "scarf_cairn",
+      "kind": "prop"
+    },
+    {
+      "id": "wagon_wheel",
+      "kind": "prop"
+    },
+    {
+      "id": "giant_clam",
+      "kind": "prop"
+    },
+    {
+      "id": "tide_pillar",
+      "kind": "prop"
+    },
+    {
       "id": "tile_crystal_rock",
       "kind": "tile",
       "request": {

@@ -740,6 +740,16 @@ PICKED = {
     "tin_soldier": "art-variants/tin_soldier/chatgpt_1.png",                     # Marionette Rise
     "donut_rock": "art-variants/donut_rock/chatgpt_1.png",                       # Gumdrop Peaks
     "marshmallow_stack": "art-variants/marshmallow_stack/chatgpt_1.png",         # Gumdrop Peaks
+    "frog_statue": "art-variants/frog_statue/chatgpt_1.png",                     # Frog Swamp
+    "sunken_rowboat": "art-variants/sunken_rowboat/chatgpt_1.png",               # Frog Swamp
+    "stone_lantern": "art-variants/stone_lantern/chatgpt_1.png",                 # Lotus Land
+    "bamboo_clump": "art-variants/bamboo_clump/chatgpt_1.png",                   # Lotus Land
+    "rug_rack": "art-variants/rug_rack/chatgpt_1.png",                           # Genie Desert
+    "spice_sacks": "art-variants/spice_sacks/chatgpt_1.png",                     # Genie Desert
+    "scarf_cairn": "art-variants/scarf_cairn/chatgpt_1.png",                     # Hidden Steppe
+    "wagon_wheel": "art-variants/wagon_wheel/chatgpt_1.png",                     # Hidden Steppe
+    "giant_clam": "art-variants/giant_clam/chatgpt_1.png",                       # Tidewater Shrine
+    "tide_pillar": "art-variants/tide_pillar/chatgpt_1.png",                     # Tidewater Shrine
 }
 
 
