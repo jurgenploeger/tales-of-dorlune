@@ -206,3 +206,116 @@ Chat 2, accessories:
   gauntlets are (`SETS`); every palette swap of one of these is ChatGPT's picture recoloured: by its item's
   `color` (the bunny-hop, marquis, moonbeam, silverfang and frostpeak boots) or, with no `color`, by its own
   `derive` rules (the piper's, stardust, emerald heart and firepeak rings). Still to come: the seven hearths ring.
+
+## Batch 3: hats and helms (10 drawings for 65 icons, asked for 2026-11-22)
+
+Every hat that goes with an armour is today one of six shapes in its item's `color` (`item_art.hat_piece`): a
+domed helm, a horned dragon helm, a wizard's hat with its tip bent over, a mail coif, a hood, a fur-lined hood.
+None has a detail of its own, so ChatGPT draws each shape once and the rest are its picture recoloured to their
+`color`, as the set gloves and boots are (`SETS` and the derive loop): one shape per family, guaranteed. The
+party hats and the masks the same, from the red hat and the green mask; the Santa hat and bunny ears are their
+own. Attach `style_reference_rd_4x.png` and `batch3/NN_<id>_8x.png` in order; the same prompt as batch 2, with:
+
+> Each one is drawn once and recoloured in code to many others, so keep its main material one colour family
+> (its shading in that hue), and its trim, horns or band in gold, apart from it.
+
+1. `copper_helm`: a domed helm with cheek guards, eye slits, a nose guard and a crest, in warm copper (#B8733A),
+   gold trim and rivets. Recoloured to the iron, golden, oxhide and goldleaf helms and the eight set helms.
+2. `dragon_helm`: the same helm in red dragon scale (#E93220) with two gold horns sweeping up and out.
+   Recoloured to the golden, azure, emerald, wavecrest and prismscale dragon helms.
+3. `copper_hat`: a wizard's hat, a wide brim, its tip bent over, a gold band and a small gold star, in warm copper
+   (#B8733A). Recoloured to the silk, mage, dawn, moonlight, briar rose, Liora's, starweave and goldleaf hats and
+   the eight set hats.
+4. `chain_coif`: a mail coif falling to the shoulders, its face opening in shadow, steel grey (#80929A).
+   Recoloured to the gilded coif and the puppeteer's cowl.
+5. `ranger_hood`: a soft peaked hood falling in folds to the shoulders, its opening in shadow, forest green
+   (#2D5425). Recoloured to the crimson ranger and howlmaster hoods.
+6. `copper_hide_hood`: the same hood in warm copper hide (#B8733A), its opening lined with cream fur.
+   Recoloured to the snow hoods and the eight set hide hoods.
+7. `red_party_hat`: a red paper crown (#D83030) for a New Year party. Recoloured to the other five.
+8. `green_halloween_mask`: a green ghoulish mask (#58B040), a wide toothy grin, purple eyes. Recoloured to the
+   blue and red.
+9. `santa_hat`: a red Santa hat (#D02828) with a white fur band and a white pom on its bent tip.
+10. `bunny_ears`: soft white bunny ears (#F4F0F0) on a band, pink inside.
+- **Hats and helms** (2026-11-22): all ten drawings (the bunny ears a little after), painted big and
+  snapped to 64 (14 to 39 colours); the copper helm came twice, the later in (`chatgpt_0.png` the first). The 55
+  others are recoloured from them (`item_art.HAT_FAMILIES`, `hat_family`): to each item's `color` by hue, as the
+  sets are, the darkest pixels (a hood's opening, a helm's eye slits) keeping their darkness and taking only the
+  new hue (`keep_dark`: on the pale snow hoods they had turned pale), the hide hood's cream fur left as drawn (its
+  copper saturated, the fur not, `min_s`), and the grey mail coif tinted by brightness (`tint_grey`: the hue
+  recolour skips grey). The trim stays gold on all, the eight silver-trimmed ones too.
+
+## Batch 4: necklaces (15 drawings, asked for 2026-11-22)
+
+The 13 necklaces drawn in code, the red Christmas scarf (the green one is it recoloured, as the hats are), and
+the seven hearths ring batch 2 missed. Six necklaces are palette swaps of these and are recoloured from ChatGPT's
+pictures by their `color` (the wisp-light and crystal crown pendants of the moonstone, the swallow feather of the
+shell, the crystal heart of the phoenix, the temple bell of the amber, the widow silk of the starlight). Attach
+`style_reference_rd_4x.png` and `batch4/NN_<id>_8x.png` in order; the batch 2 prompt, with the necklaces' family
+line: "the necklaces all on the same short loop of chain or cord, the pendant hanging in the middle, filling the
+tile; the ones other necklaces are recoloured from (the shell, amber, moonstone, phoenix, starlight) with their
+pendant in one colour family".
+
+1. `shell_pendant`: a pink seashell pendant on a leather cord (#F6B8C0).
+2. `amber_amulet`: a round amber amulet on a gold chain (#E8A020).
+3. `moonstone_pendant`: a pale blue moonstone drop on a silver chain (#A8C4F0).
+4. `phoenix_amulet`: a red phoenix stone with a little flame inside, on a gold chain (#D03A2A).
+5. `starlight_necklace`: a golden star that shines, on a golden chain (#E8B62C).
+6. `fallen_star_pendant`: a glowing pale star stone on a silver chain (#FFF0A0).
+7. `tidecaller_pendant`: a sea-green pendant shaped like a wave, on a cord (#3AD2B8).
+8. `owl_eye_amulet`: a round amber stone like an owl's eye, set in a ring of feathers (#FFE08A).
+9. `heartwood_locket`: a carved wooden heart locket on a gold chain (#A8642E).
+10. `prism_pendant`: a clear prism throwing a little rainbow, on a silver chain (#C0B8FF).
+11. `frostlight_pendant`: a pale blue drop of ice with a warm light inside (#B8E0FF).
+12. `emerald_glass_amulet`: a round green glass lens set in gold (#3AD06A).
+13. `goldleaf_pendant`: a golden oak leaf on a gold chain (#F0C030).
+14. `red_christmas_scarf`: a knitted scarf in red and white stripes, wound once, its fringed ends hanging (#D02828).
+15. `seven_hearths_ring`: a gold ring like the ruby ring, set with seven tiny gems of different colours.
+- **Necklaces, the scarf and the seven hearths ring** (2026-11-22): all 15, painted big and snapped to 64 (21 to
+  39 colours); the shell pendant came twice, the later in. The green scarf is the red one recoloured
+  (`HAT_FAMILIES`), the six necklaces that are palette swaps are their base's picture recoloured to their `color`,
+  only from the bail down (`from_row`: the moonstone's silver chain and the amber's gold one sat in the pendant's
+  hue window and turned with it), and a white target drains the colour out instead of aiming at a hue it hasn't
+  (the widow silk necklace had come out red).
+
+## Batch 5: whips (26 drawings, asked for 2026-11-22)
+
+The 26 weapons drawn in code are all whips (`whip_line`), today one hook shape in a lash and grip colour each,
+most of them barely apart. Each is drawn by ChatGPT on one shared shape, with details from its name and
+description so they read apart. The whips heroes hold are drawn separately (`HANGING`, `hanging_whip`) and stay.
+Attach `style_reference_rd_4x.png` and `batch5/NN_<id>_8x.png` in order; the batch 2 prompt, with the family
+line: "the whips all one shape: a short handle at the lower left, held diagonally, its lash looping up and round
+in one big curl and trailing down to a thin tip at the right, filling the tile; each with its own handle, lash
+and details, as listed".
+
+1. `tamer_whip`: a plain brown leather lash (#9A6232) on a light wooden handle; a beast tamer's first whip.
+2. `beast_whip`: a red leather lash (#B8302A) on a dark brown handle, a gold paw-shaped tassel at the pommel.
+3. `sheepskin_whip`: a short, soft cream sheepskin lash (#F0E6CC) on a wooden handle, fluffy at the grip.
+4. `handy_whip`: a cream sheepskin lash on a brown leather-wrapped handle, short and neat.
+5. `cowhide_whip`: a dark brown cowhide lash (#8A5A36) on a wooden handle, a little cracker at the tip.
+6. `strong_ox_whip`: a thick braided cowhide lash on a leather grip with steel studs.
+7. `whitewood_whip`: a cowhide lash on a pale, worn poplar handle (#E8CC9A), a cream cloth tip.
+8. `cactus_whip`: a green lash (#46B848) with little pale spines along it, on a pale handle.
+9. `teak_whip`: a tan deerskin lash (#C08A4A) on a rich teak handle (#C0702A).
+10. `golden_deer_whip`: a deerskin lash on a teak handle, tipped in gold like an antler.
+11. `red_cypress_whip`: a deerskin lash on a red cypress handle (#C0482A), a red tip.
+12. `deerhide_lash`: a long deerskin lash on a purple yew handle (#7A4A8A), gold studs, its lash longer than the rest.
+13. `blue_sky_whip`: a sky-blue lash (#3A86E8) on a pale handle, a blue gem in the pommel.
+14. `amber_whip`: a dark marten-brown lash (#6E4A30) on a rattan-wrapped handle, an amber stone in the pommel.
+15. `power_whip`: a marten-brown lash on a teak handle, gold studs, a red gem in the pommel.
+16. `hardened_whip`: a dark green crocodile-hide lash (#4E7A36), scaled, on a dark wood handle, steel studs, a diamond.
+17. `crocodile_whip`: a scaled crocodile-hide lash on a dark handle, its tip like a little jaw, an emerald in the pommel.
+18. `thorn_whip`: a green vine lash (#46B848) with red thorns, on a dark red bloodwood handle (#8E1F22), a red gem.
+19. `azure_dragon_whip`: a teal lash (#2CC0B5) with scales, on a bloodwood handle, a blue gem, a pale dragon-tail tip.
+20. `aurora_whip`: a pale icy-blue lash (#9AD8F0) shimmering into lilac at the tip, on a snow-white handle, a teal gem.
+21. `phantom_whip`: a dark violet shadow lash (#4A3A6A) fading at the tip, on a yew handle, a lilac gem.
+22. `storm_whip`: a navy lash (#2E4AA8) with yellow lightning zigzags, on a navy handle, gold gem, a yellow spark tip.
+23. `luna_whip`: a silver lash (#D0D6E4) on a steel handle, a pale moonlit tip, a white moonstone.
+24. `dragon_god_whip`: the Wyrmking's whip: a red dragon-scale lash (#D03A2A) on a bloodwood handle, gold studs,
+    an amber gem, a gold tip; the grandest.
+25. `starfall_whip`: a violet lash (#8A5AE8) on a night-blue handle, white studs, a glowing gold star at its tip.
+26. `goldleaf_whip`: a braided gold lash (#F0C030) on a dark oak handle, white studs, a green gem, a gold leaf
+    at its tip.
+- **The whips** (2026-11-22): all 26, painted big and snapped to 64 (26 to 39 colours), one shape, each with its
+  own handle, lash and details (thorns, scales, lightning, a paw tassel, a star, a leaf, a jaw at the crocodile's
+  tip). The whips heroes hold are still `hanging_whip`'s, unchanged.
