@@ -316,3 +316,6 @@ and details, as listed".
 25. `starfall_whip`: a violet lash (#8A5AE8) on a night-blue handle, white studs, a glowing gold star at its tip.
 26. `goldleaf_whip`: a braided gold lash (#F0C030) on a dark oak handle, white studs, a green gem, a gold leaf
     at its tip.
+- **The whips** (2026-11-22): all 26, painted big and snapped to 64 (26 to 39 colours), one shape, each with its
+  own handle, lash and details (thorns, scales, lightning, a paw tassel, a star, a leaf, a jaw at the crocodile's
+  tip). The whips heroes hold are still `hanging_whip`'s, unchanged.
