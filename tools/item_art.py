@@ -3692,7 +3692,7 @@ def recolour_set(img, base, target, below=40, above=10):
             d = ((h - h0 + 0.5) % 1 - 0.5) * 360
             if not -below <= d <= above or s < 0.12:
                 continue
-            nh = (h1 + (h - h0) * 0.6) % 1
+            nh = (h1 + d / 360 * 0.6) % 1          # by the hue's distance round the circle, not across 0
             ns = min(1, s ** (math.log(max(s1, 0.03)) / math.log(s0)))
             nv = min(1, v ** (math.log(max(v1, 0.05)) / math.log(v0)))
             out[y, x, :3] = colorsys.hsv_to_rgb(nh, ns, nv)
@@ -3738,6 +3738,15 @@ def main(argv):
                 recolour_set(_Image.open(ROOT / CHATGPT[base_id]), colours[base_id], colours[item_id]).save(
                     SPRITES / f"item_{item_id}.png")
                 recoloured.add(item_id)
+    # Recolours of a piece ChatGPT drew (art/assets.json `derive`, the bricklayer's gloves from the leather
+    # ones): its picture recoloured to the item's own `color`, as the sets are, not the old drawing swapped.
+    for asset in json.loads((ROOT / "art" / "assets.json").read_text())["assets"]:
+        base = (asset.get("derive") or {}).get("from", "")[len("item_"):]
+        item_id = asset["id"][len("item_"):]
+        if base in CHATGPT and item_id in ids and item_id not in CHATGPT and item_id not in lands and colours.get(item_id):
+            recolour_set(_Image.open(ROOT / CHATGPT[base]), colours[base], colours[item_id], above=25).save(
+                SPRITES / f"item_{item_id}.png")
+            recoloured.add(item_id)
     ids = [i for i in ids if i not in CHATGPT and i not in lands and i not in recoloured]
     # Each drawing is finished in the game's pixel style (docs/pixel-style.md): lit, ramped, textured
     # and outlined afresh by tools/pixel_kit.py, its design kept.

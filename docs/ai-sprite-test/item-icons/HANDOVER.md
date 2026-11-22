@@ -121,3 +121,9 @@ a conch shell), `mysterious_cave_cape` (#3A2E4F, #B9A6E0, an eye in the dark), `
   Briarmere, the Glimmerdeep, Starfall Isle and Sneezle Sands. Still to come: the orchard gloves, and the capes of
   Windswept Downs (redo), Crystal Mountain, Dozywick, Snow White Forest and Moonwhisper.
 - **The orchard gloves** (2026-11-22): in, which finishes the gloves batch 1 asked for. A second copper gauntlet came, a hair different; the first stays, as its eight recolours are checked.
+- **The gloves' recolours** (2026-11-22): six gloves are palette swaps of others (the bricklayer's of the leather,
+  the netcutter and shiverpeak of the falcon, the Craghulk and Sneezle ore of the dragonhide, the emerald crest of
+  the starforged); with their bases ChatGPT's, they're its pictures recoloured to their own `color` (`item_art`,
+  `recolour_set`), not the old drawings. `recolour_set` measured a hue's distance across 0 the long way (deep reds
+  went green); fixed, the sets unchanged. All the gloves are done but RD's five (bell-ringer's, forgehand,
+  pepperfire, crystal-silk and goldleaf), which stay.
