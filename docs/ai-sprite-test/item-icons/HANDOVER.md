@@ -66,3 +66,12 @@ and helms (65), the necklaces (15), the weapons drawn in code (26: whips, wands,
 and the materials (111) in four or five batches. About 270 drawings in all.
 
 ## Results
+- **Capes** (2026-11-22, three rounds): asked to keep each icon's shape, ChatGPT kept today's lumpy blob and
+  pasted a badge on (round 1, all nine under the soft bar); told to draw real capes, it did, but four drifted off
+  their item's `color` (the colour the cape is worn in) and each came out a shape of its own (round 2). Round 3:
+  one cape shape for the family (the collar, puffed shoulders, gold clasp, straight sides to a scalloped hem, the
+  badge in the middle), each in its item's colours, delivered at 64 or as big pictures snapped back to the grid
+  (`ai_sprite_eval.py --canvas 64`, about 20 screen pixels to one). Soft scores are low (42 to 92%: ChatGPT's
+  outline and inner band aren't the clean finish's), but by eye beside RD's Potion they're the step up; in, all
+  nine (`item_art.py CHATGPT`), and the 27 other land capes recoloured from Sunny Meadow's (`recolour_cape`: its
+  green cloth onto the land's `color`, its gold onto its `accent`). The gloves are still to come.

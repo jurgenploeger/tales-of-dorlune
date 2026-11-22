@@ -3584,6 +3584,61 @@ def finished(item_id):
     return restyle(drawn, clean=True, **options).render(outline="deep")
 
 
+# Redrawn by ChatGPT and copied, not drawn (docs/ai-sprite-test/item-icons; the user, 2026-11-22: "Can we now
+# update our old item icons?"): one cape shape for the whole family, each with its own colours and badge.
+CHATGPT = {
+    "sunny_meadow_cape": "art-variants/item_sunny_meadow_cape/chatgpt_1.png",
+    "monster_book_cape": "art-variants/item_monster_book_cape/chatgpt_1.png",
+    "card_collector_cape": "art-variants/item_card_collector_cape/chatgpt_1.png",
+    "quest_cape": "art-variants/item_quest_cape/chatgpt_1.png",
+    "bossbane_cape": "art-variants/item_bossbane_cape/chatgpt_1.png",
+    "wayfarer_cape": "art-variants/item_wayfarer_cape/chatgpt_1.png",
+    "storyleaf_cape": "art-variants/item_storyleaf_cape/chatgpt_1.png",
+    "beastfriend_cape": "art-variants/item_beastfriend_cape/chatgpt_1.png",
+    "legend_cape": "art-variants/item_legend_cape/chatgpt_1.png",
+}
+# Every land's cape is Sunny Meadow's, recoloured to the land's own (its item's `color` and `accent`).
+LAND_CAPE = "sunny_meadow_cape"
+
+
+def land_capes():
+    """The land capes, by id, with their colours: every cape woven in a land's colours."""
+    items = json.loads((ROOT / "content" / "items.json").read_text())["items"]
+    return {i["id"]: (i["color"], i["accent"]) for i in items
+            if i["type"] == "cape" and (i.get("description") or "").startswith("Woven in the colours")}
+
+
+def recolour_cape(img, base, accent, to_main, to_accent):
+    """Sunny Meadow's cape in another land's colours: its green cloth onto `to_main` and its gold trim and badge
+    onto `to_accent`, each pixel's hue kept as far off its colour as drawn (a little less), its saturation and
+    value carried so the base colour lands on the new one and white and black stay put (a power curve);
+    greys and whites (s < 0.12) kept."""
+    import colorsys
+    import numpy as np
+    from PIL import Image
+    a = np.asarray(img.convert("RGBA")).astype(float) / 255
+    out = a.copy()
+    refs = [(colorsys.rgb_to_hsv(*[c / 255 for c in hexc(b)[:3]]),
+             colorsys.rgb_to_hsv(*[c / 255 for c in hexc(t)[:3]])) for b, t in ((base, to_main), (accent, to_accent))]
+    for y in range(a.shape[0]):
+        for x in range(a.shape[1]):
+            if a[y, x, 3] == 0:
+                continue
+            h, s, v = colorsys.rgb_to_hsv(*a[y, x, :3])
+            deg = h * 360
+            if s < 0.12:
+                continue
+            k = 0 if 62 <= deg <= 175 else 1 if 18 <= deg < 62 else None
+            if k is None:
+                continue
+            (h0, s0, v0), (h1, s1, v1) = refs[k]
+            nh = (h1 + (h - h0) * 0.6) % 1
+            ns = min(1, s ** (math.log(max(s1, 0.03)) / math.log(s0))) if s > 0 else 0
+            nv = min(1, v ** (math.log(max(v1, 0.05)) / math.log(v0))) if v > 0 else 0
+            out[y, x, :3] = colorsys.hsv_to_rgb(nh, ns, nv)
+    return Image.fromarray((out * 255).round().astype(np.uint8), "RGBA")
+
+
 def main(argv):
     sheet_path = None
     if "--sheet" in argv:
@@ -3603,6 +3658,17 @@ def main(argv):
     # So are the icons redrawn in the clean look (tools/clean_icon_art.py, docs/pixel-style.md *Item icons*).
     from clean_icon_art import DRAWINGS as CLEAN
     ids = [i for i in ids if i not in CLEAN]
+    # So are ChatGPT's (`CHATGPT`), copied, and the land capes recoloured from its Sunny Meadow cape.
+    from PIL import Image as _Image
+    lands = land_capes()
+    base, accent = lands[LAND_CAPE]
+    for item_id in [i for i in ids if i in CHATGPT or i in lands]:
+        if item_id in CHATGPT:
+            (SPRITES / f"item_{item_id}.png").write_bytes((ROOT / CHATGPT[item_id]).read_bytes())
+        else:
+            recolour_cape(_Image.open(ROOT / CHATGPT[LAND_CAPE]), base, accent, *lands[item_id]).save(
+                SPRITES / f"item_{item_id}.png")
+    ids = [i for i in ids if i not in CHATGPT and i not in lands]
     # Each drawing is finished in the game's pixel style (docs/pixel-style.md): lit, ramped, textured
     # and outlined afresh by tools/pixel_kit.py, its design kept.
     import io

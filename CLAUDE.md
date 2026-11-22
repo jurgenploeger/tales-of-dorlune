@@ -152,6 +152,9 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   it's nearer you (facing you, walking right), behind it where it's farther (held sideways from the front it looked
   wrong, off to the side it looked stood behind); a whip's lash hanging down to the feet (`hanging_whip`; held up like a sword it
   read as a stick). Shrunk and turned offline, each pixel the colour covering most of it: in the game it was ragged.
+  Icons ChatGPT redrew are copied instead (`CHATGPT`, docs/ai-sprite-test/item-icons, from 2026-11-22: the capes,
+  one shape for the family), and every land's cape is Sunny Meadow's recoloured to its `color` and `accent`
+  (`recolour_cape`).
 - Dark Mode: the game follows the phone's look, or Settings → Appearance (`GameSettings.appearanceKey`, set on the
   window by `RootView.applyAppearance`). `Color.adaptive(light:dark:)` (`TalesOfDorlune/UI/Style.swift`) gives the
   HUD's light surfaces (frames, plates, buttons, portraits) a dimmer twin and the glass a deeper one;
