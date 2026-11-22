@@ -271,3 +271,9 @@ pendant in one colour family".
 13. `goldleaf_pendant`: a golden oak leaf on a gold chain (#F0C030).
 14. `red_christmas_scarf`: a knitted scarf in red and white stripes, wound once, its fringed ends hanging (#D02828).
 15. `seven_hearths_ring`: a gold ring like the ruby ring, set with seven tiny gems of different colours.
+- **Necklaces, the scarf and the seven hearths ring** (2026-11-22): all 15, painted big and snapped to 64 (21 to
+  39 colours); the shell pendant came twice, the later in. The green scarf is the red one recoloured
+  (`HAT_FAMILIES`), the six necklaces that are palette swaps are their base's picture recoloured to their `color`,
+  only from the bail down (`from_row`: the moonstone's silver chain and the amber's gold one sat in the pendant's
+  hue window and turned with it), and a white target drains the colour out instead of aiming at a hue it hasn't
+  (the widow silk necklace had come out red).

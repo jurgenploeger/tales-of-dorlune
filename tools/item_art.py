@@ -3657,6 +3657,22 @@ CHATGPT = {
     "dragon_helm": "art-variants/item_dragon_helm/chatgpt_1.png",
     "copper_helm": "art-variants/item_copper_helm/chatgpt_1.png",
     "bunny_ears": "art-variants/item_bunny_ears/chatgpt_1.png",
+    # Necklaces, the scarf and the seven hearths ring (batch 4).
+    "seven_hearths_ring": "art-variants/item_seven_hearths_ring/chatgpt_1.png",
+    "red_christmas_scarf": "art-variants/item_red_christmas_scarf/chatgpt_1.png",
+    "goldleaf_pendant": "art-variants/item_goldleaf_pendant/chatgpt_1.png",
+    "emerald_glass_amulet": "art-variants/item_emerald_glass_amulet/chatgpt_1.png",
+    "frostlight_pendant": "art-variants/item_frostlight_pendant/chatgpt_1.png",
+    "prism_pendant": "art-variants/item_prism_pendant/chatgpt_1.png",
+    "heartwood_locket": "art-variants/item_heartwood_locket/chatgpt_1.png",
+    "owl_eye_amulet": "art-variants/item_owl_eye_amulet/chatgpt_1.png",
+    "tidecaller_pendant": "art-variants/item_tidecaller_pendant/chatgpt_1.png",
+    "fallen_star_pendant": "art-variants/item_fallen_star_pendant/chatgpt_1.png",
+    "starlight_necklace": "art-variants/item_starlight_necklace/chatgpt_1.png",
+    "phoenix_amulet": "art-variants/item_phoenix_amulet/chatgpt_1.png",
+    "moonstone_pendant": "art-variants/item_moonstone_pendant/chatgpt_1.png",
+    "amber_amulet": "art-variants/item_amber_amulet/chatgpt_1.png",
+    "shell_pendant": "art-variants/item_shell_pendant/chatgpt_1.png",
     # Boots (batch 2); where it drew one twice, the later (chatgpt_0 the first).
     "ruby_ring": "art-variants/item_ruby_ring/chatgpt_1.png",
     "copper_boots": "art-variants/item_copper_boots/chatgpt_1.png",
@@ -3687,7 +3703,7 @@ SETS = {"copper_gauntlets": SET_COLOURS, "copper_boots": SET_COLOURS}
 # (batch 3) and the rest are its picture recoloured to their own `color`. The hide hood's cream fur stays (its
 # copper is saturated, the fur not: `min_s`); the grey coif is tinted (`tint_grey`).
 HAT_FAMILIES = {"red_party_hat": {}, "green_halloween_mask": {}, "copper_helm": {}, "dragon_helm": {},
-                "copper_hat": {}, "ranger_hood": {}, "copper_hide_hood": {"min_s": 0.4}, "chain_coif": {"tint": True}}
+                "copper_hat": {}, "ranger_hood": {}, "copper_hide_hood": {"min_s": 0.4}, "chain_coif": {"tint": True}, "red_christmas_scarf": {}}
 HEADGEAR_BASE = {"iron_plate": "copper_helm", "dragon_mail": "dragon_helm", "mage_robe": "copper_hat",
                  "chain_mail": "chain_coif", "ranger_cloak": "ranger_hood", "hide_hood": "copper_hide_hood",
                  "snow_cloak": "copper_hide_hood"}
@@ -3701,6 +3717,8 @@ def hat_family(item):
         base = "red_party_hat"
     elif item["id"].endswith("_halloween_mask"):
         base = "green_halloween_mask"
+    elif item["id"].endswith("_christmas_scarf"):
+        base = "red_christmas_scarf"
     else:
         return None
     return None if base == item["id"] else base
@@ -3746,7 +3764,7 @@ def recolour_cape(img, base, accent, to_main, to_accent):
     return Image.fromarray((out * 255).round().astype(np.uint8), "RGBA")
 
 
-def recolour_set(img, base, target, below=40, above=10, min_s=0.12, keep_dark=0.0):
+def recolour_set(img, base, target, below=40, above=10, min_s=0.12, keep_dark=0.0, from_row=0):
     """A set piece in another set's colour: every pixel of the base colour's hue family (from 40 degrees redder,
     its shadows, to 10 yellower, short of a gold band) onto `target`, as `recolour_cape` does."""
     import colorsys
@@ -3756,7 +3774,7 @@ def recolour_set(img, base, target, below=40, above=10, min_s=0.12, keep_dark=0.
     out = a.copy()
     h0, s0, v0 = colorsys.rgb_to_hsv(*[c / 255 for c in hexc(base)[:3]])
     h1, s1, v1 = colorsys.rgb_to_hsv(*[c / 255 for c in hexc(target)[:3]])
-    for y in range(a.shape[0]):
+    for y in range(from_row, a.shape[0]):
         for x in range(a.shape[1]):
             if a[y, x, 3] == 0:
                 continue
@@ -3769,6 +3787,8 @@ def recolour_set(img, base, target, below=40, above=10, min_s=0.12, keep_dark=0.
                 out[y, x, :3] = colorsys.hsv_to_rgb(nh, min(s, max(s1, 0.25)), v)
                 continue
             ns = min(1, s ** (math.log(max(s1, 0.03)) / math.log(s0)))
+            if s1 < 0.08:   # white or grey: no hue to aim at, so the colour drains out
+                ns = s * 0.15
             nv = min(1, v ** (math.log(max(v1, 0.05)) / math.log(v0)))
             out[y, x, :3] = colorsys.hsv_to_rgb(nh, ns, nv)
     return Image.fromarray((out * 255).round().astype(np.uint8), "RGBA")
@@ -3824,6 +3844,7 @@ def main(argv):
             recolour_cape(_Image.open(ROOT / CHATGPT[LAND_CAPE]), base, accent, *lands[item_id]).save(
                 SPRITES / f"item_{item_id}.png")
     colours = {i["id"]: i.get("color") for i in json.loads((ROOT / "content" / "items.json").read_text())["items"]}
+    types = {i["id"]: i["type"] for i in json.loads((ROOT / "content" / "items.json").read_text())["items"]}
     recoloured = set()
     for base_id, sets in SETS.items():
         suffix = base_id.split("_", 1)[1]
@@ -3840,7 +3861,9 @@ def main(argv):
         item_id = asset["id"][len("item_"):]
         if base in CHATGPT and item_id in ids and item_id not in CHATGPT and item_id not in lands:
             if colours.get(item_id) and colours.get(base):
-                recolour_set(_Image.open(ROOT / CHATGPT[base]), colours[base], colours[item_id], above=25).save(
+                # A necklace's chain stays as drawn: only the pendant, from the bail down (row 29 of 64), is recoloured.
+                recolour_set(_Image.open(ROOT / CHATGPT[base]), colours[base], colours[item_id], above=25,
+                             from_row=29 if types.get(item_id) == "necklace" else 0).save(
                     SPRITES / f"item_{item_id}.png")
             else:
                 # No `color` to aim at (rings and charms): the swap's own rules, on ChatGPT's picture.
