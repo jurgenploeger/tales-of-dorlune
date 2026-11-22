@@ -2083,7 +2083,15 @@ PICKED = {"thatched_cottage": ("art-variants/thatched_cottage/chatgpt_5.png", 1.
           "cupcake_house": ("art-variants/cupcake_house/chatgpt_1.png", 1.0),                   # Gumdrop Peaks
           "ice_cream_parlour": ("art-variants/ice_cream_parlour/chatgpt_1.png", 1.0),           # Gumdrop Peaks
           "toymaker_workshop": ("art-variants/toymaker_workshop/chatgpt_1.png", 1.0),           # Marionette Rise
-          "music_box_house": ("art-variants/music_box_house/chatgpt_1.png", 1.0)}               # Marionette Rise
+          "music_box_house": ("art-variants/music_box_house/chatgpt_1.png", 1.0),               # Marionette Rise
+          "pillow_cottage": ("art-variants/pillow_cottage/chatgpt_1.png", 1.0),                 # Dozywick
+          "nightcap_tower": ("art-variants/nightcap_tower/chatgpt_1.png", 1.0),                 # Dozywick
+          "toll_house": ("art-variants/toll_house/chatgpt_1.png", 1.0),                         # Emerald Road
+          "emerald_shop": ("art-variants/emerald_shop/chatgpt_1.png", 1.0),                     # Emerald Road
+          "flower_cup_house": ("art-variants/flower_cup_house/chatgpt_1.png", 1.0),             # Starfall Isle
+          "firefly_house": ("art-variants/firefly_house/chatgpt_1.png", 1.0),                   # Starfall Isle
+          "coral_house": ("art-variants/coral_house/chatgpt_1.png", 1.0),                       # Tidewater Shrine
+          "pearl_diver_hut": ("art-variants/pearl_diver_hut/chatgpt_1.png", 1.0)}               # Tidewater Shrine
 # Drawn smoke cut out of the teapot house, smokehouse and lamp house (`*_nosmoke.png`): the game puffs it
 # from where it rose (`LandStage.smokeHoles`, the user, 2026-11-22: "Any house that has something with smoke
 # needs to be animated"), as the yurt's.

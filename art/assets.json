@@ -2817,6 +2817,46 @@
       "kind": "building"
     },
     {
+      "id": "pillow_cottage",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "nightcap_tower",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "toll_house",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "emerald_shop",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "flower_cup_house",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "firefly_house",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "coral_house",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "pearl_diver_hut",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
       "id": "apothecary",
       "scale": 1.35,
       "kind": "building"
@@ -3569,6 +3609,38 @@
     },
     {
       "id": "windows_lookout_hut",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_pillow_cottage",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_nightcap_tower",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_toll_house",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_emerald_shop",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_flower_cup_house",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_firefly_house",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_coral_house",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_pearl_diver_hut",
       "kind": "prop"
     },
     {

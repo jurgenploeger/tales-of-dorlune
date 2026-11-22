@@ -71,9 +71,9 @@ POOLS = {
     "wolf_lair": ["straw_house", "stick_house", "brick_house", "crooked_house"],
     "candy_mountain": ["cupcake_house", "ice_cream_parlour", "candy_cottage", "mushroom_house_gold", "bakery"],
     "puppet_hill": ["toymaker_workshop", "music_box_house", "crooked_house", "witch_hut"],
-    "sleepy_town": ["sleepy_cottage", "sleepy_cottage_lilac", "mushroom_house_blue", "mushroom_house"],
-    "emerald_road": ["house_green", "forest_lodge"],
-    "water_temple": ["stone_hut"],
+    "sleepy_town": ["pillow_cottage", "nightcap_tower", "sleepy_cottage", "sleepy_cottage_lilac", "mushroom_house_blue", "mushroom_house"],
+    "emerald_road": ["toll_house", "emerald_shop", "house_green", "forest_lodge"],
+    "water_temple": ["coral_house", "pearl_diver_hut", "stone_hut"],
 }
 
 

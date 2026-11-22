@@ -260,3 +260,10 @@ user picks by eye; what doesn't win isn't used.
   Peaks' cupcake house and ice cream parlour, Marionette Rise's toymaker and music box house, each for one of the
   land's own, and in its hamlets' mix (`place_hamlets.POOLS`, rerun). The creaky mill's roof patches and wheel
   boxed out of its night lights.
+- **The big batch, last eight** (2026-11-22): all at the asked size, 31 to 39 colours. The pillow cottage,
+  nightcap tower and flower cup house pass every hard rule as drawn, the emerald shop, firefly house and coral
+  house once their outlines are snapped 30% darker; the toll house and pearl diver's hut miss `form_relief` by a
+  hair. All in: Dozywick's pillow cottage and nightcap tower, Emerald Road's toll house and emerald shop, Starfall
+  Isle's flower cup and firefly houses (for its rose and moon fairy tree houses), Tidewater Shrine's coral house,
+  and the pearl diver's hut in its hamlets. Each one's panes boxed for the night lights. The batch is done: 59 new
+  designs in all.

@@ -17577,7 +17577,7 @@
           "y": -5
         },
         {
-          "art": "sleepy_cottage",
+          "art": "pillow_cottage",
           "x": -15,
           "y": -13
         },
@@ -17587,7 +17587,7 @@
           "y": -13
         },
         {
-          "art": "sleepy_cottage_lilac",
+          "art": "nightcap_tower",
           "x": -19,
           "y": -21
         },
@@ -17609,7 +17609,7 @@
           "hamlet": true
         },
         {
-          "art": "sleepy_cottage",
+          "art": "pillow_cottage",
           "x": -29,
           "y": -1,
           "hamlet": true
@@ -20164,7 +20164,7 @@
           "y": -17
         },
         {
-          "art": "stone_hut",
+          "art": "coral_house",
           "x": -4,
           "y": 1
         },
@@ -20175,13 +20175,13 @@
           "hamlet": true
         },
         {
-          "art": "stone_hut",
+          "art": "coral_house",
           "x": 24,
           "y": 20,
           "hamlet": true
         },
         {
-          "art": "stone_hut",
+          "art": "pearl_diver_hut",
           "x": 19,
           "y": 28,
           "hamlet": true
@@ -21214,12 +21214,12 @@
           "y": -11
         },
         {
-          "art": "house_green",
+          "art": "toll_house",
           "x": 7,
           "y": -11
         },
         {
-          "art": "forest_lodge",
+          "art": "emerald_shop",
           "x": -8,
           "y": -19
         },
@@ -21238,19 +21238,19 @@
           ]
         },
         {
-          "art": "house_green",
+          "art": "toll_house",
           "x": -16,
           "y": -18,
           "hamlet": true
         },
         {
-          "art": "forest_lodge",
+          "art": "house_green",
           "x": -24,
           "y": -12,
           "hamlet": true
         },
         {
-          "art": "house_green",
+          "art": "emerald_shop",
           "x": -20,
           "y": -23,
           "hamlet": true
@@ -21975,7 +21975,7 @@
           "y": 9
         },
         {
-          "art": "fairy_tree_house_rose",
+          "art": "flower_cup_house",
           "x": -7,
           "y": 6
         },
@@ -21985,7 +21985,7 @@
           "y": 6
         },
         {
-          "art": "fairy_tree_house_moon",
+          "art": "firefly_house",
           "x": 4,
           "y": -28
         },
