@@ -244,3 +244,30 @@ own. Attach `style_reference_rd_4x.png` and `batch3/NN_<id>_8x.png` in order; th
   new hue (`keep_dark`: on the pale snow hoods they had turned pale), the hide hood's cream fur left as drawn (its
   copper saturated, the fur not, `min_s`), and the grey mail coif tinted by brightness (`tint_grey`: the hue
   recolour skips grey). The trim stays gold on all, the eight silver-trimmed ones too.
+
+## Batch 4: necklaces (15 drawings, asked for 2026-11-22)
+
+The 13 necklaces drawn in code, the red Christmas scarf (the green one is it recoloured, as the hats are), and
+the seven hearths ring batch 2 missed. Six necklaces are palette swaps of these and are recoloured from ChatGPT's
+pictures by their `color` (the wisp-light and crystal crown pendants of the moonstone, the swallow feather of the
+shell, the crystal heart of the phoenix, the temple bell of the amber, the widow silk of the starlight). Attach
+`style_reference_rd_4x.png` and `batch4/NN_<id>_8x.png` in order; the batch 2 prompt, with the necklaces' family
+line: "the necklaces all on the same short loop of chain or cord, the pendant hanging in the middle, filling the
+tile; the ones other necklaces are recoloured from (the shell, amber, moonstone, phoenix, starlight) with their
+pendant in one colour family".
+
+1. `shell_pendant`: a pink seashell pendant on a leather cord (#F6B8C0).
+2. `amber_amulet`: a round amber amulet on a gold chain (#E8A020).
+3. `moonstone_pendant`: a pale blue moonstone drop on a silver chain (#A8C4F0).
+4. `phoenix_amulet`: a red phoenix stone with a little flame inside, on a gold chain (#D03A2A).
+5. `starlight_necklace`: a golden star that shines, on a golden chain (#E8B62C).
+6. `fallen_star_pendant`: a glowing pale star stone on a silver chain (#FFF0A0).
+7. `tidecaller_pendant`: a sea-green pendant shaped like a wave, on a cord (#3AD2B8).
+8. `owl_eye_amulet`: a round amber stone like an owl's eye, set in a ring of feathers (#FFE08A).
+9. `heartwood_locket`: a carved wooden heart locket on a gold chain (#A8642E).
+10. `prism_pendant`: a clear prism throwing a little rainbow, on a silver chain (#C0B8FF).
+11. `frostlight_pendant`: a pale blue drop of ice with a warm light inside (#B8E0FF).
+12. `emerald_glass_amulet`: a round green glass lens set in gold (#3AD06A).
+13. `goldleaf_pendant`: a golden oak leaf on a gold chain (#F0C030).
+14. `red_christmas_scarf`: a knitted scarf in red and white stripes, wound once, its fringed ends hanging (#D02828).
+15. `seven_hearths_ring`: a gold ring like the ruby ring, set with seven tiny gems of different colours.
