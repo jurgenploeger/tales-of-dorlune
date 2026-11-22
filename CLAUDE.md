@@ -152,6 +152,10 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   it's nearer you (facing you, walking right), behind it where it's farther (held sideways from the front it looked
   wrong, off to the side it looked stood behind); a whip's lash hanging down to the feet (`hanging_whip`; held up like a sword it
   read as a stick). Shrunk and turned offline, each pixel the colour covering most of it: in the game it was ragged.
+  Icons ChatGPT redrew are copied instead (`CHATGPT`, docs/ai-sprite-test/item-icons, from 2026-11-22: the capes,
+  one shape for the family, each land's with its own badge; a land's cape ChatGPT hasn't drawn yet is Sunny Meadow's
+  recoloured to its `color` and `accent`, `recolour_cape`). ChatGPT paints them big with its image model (asked for
+  a 64-pixel PNG it drew with code: flat, 8 to 13 colours) and they're snapped to the grid (`ai_sprite_eval.py`).
 - Dark Mode: the game follows the phone's look, or Settings → Appearance (`GameSettings.appearanceKey`, set on the
   window by `RootView.applyAppearance`). `Color.adaptive(light:dark:)` (`TalesOfDorlune/UI/Style.swift`) gives the
   HUD's light surfaces (frames, plates, buttons, portraits) a dimmer twin and the glass a deeper one;
@@ -279,6 +283,12 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   (small patches only, so thatch and gold trim stay out; `SKIP` for what has none), laid over the building above the
   night's shade by `LandStage.addWindows` and faded in with the dark (`LampLight.follow`). Rerun it after adding or
   redrawing a building, and register any new `windows_<id>` in art/assets.json; `--sheet out.png` shows them at night.
+  `BOXES` are rows first (y0, y1, x0, x1). Windows the warm rule can't find (RD's dim or orange glass) are boxed in
+  `PAINT` and laid on a lamplight ramp; every light (lamps, torches, braziers, lanterns, crystals, glowing mushrooms:
+  `LIGHTS`) is cut the same way, and a recolour with no picture of its own gets its base's, recoloured (`derived`).
+  Each lit part shines a soft glow round it in its light's colour (`LandStage.addWindows`; the user, 2026-11-22:
+  "anything else that could have light in the evening/night should be lit up. There should also be a soft glow
+  around it"), and the forge's moving fire burns above the night's shade too (`addFire`).
 - `tools/fire_art.py`: a building's fire moving (Goldburg's forge, `blacksmith`): its flame's own pixels cut
   into four frames (`fire_<id>_0` to `_3`, the first as drawn), each column of the flame reaching a pixel
   higher or lower, a few pixels a step along its ramp, the glow round it pulsing; `LandStage.addFire` lays
@@ -308,6 +318,9 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   by ChatGPT is copied, not drawn (`PICKED`, kept in `art-variants/`: 29 of them since 2026-11-21, every building drawn in code (the five
   landmarks, the acorn cottage and gem workshop the user's pick over the scores); how: `docs/ai-sprite-test/`,
   `tools/ai_sprite_eval.py`). After eight blind picks all went to ChatGPT, the user dropped them (2026-11-21).
+  Each gets Retro Diffusion's grain over its broad flat patches (`tools/grain.py`, also on ChatGPT's gates: beside
+  RD's buildings they read smooth and plasticky, the user, 2026-11-22; RD's patches of one colour are about 3
+  pixels with 17% single specks, ChatGPT's were 6 and 6%, now 3.1 and 17%).
 - `tools/place_hamlets.py`: hamlets along the wild lands' roads (the user, 2026-11-22: "The world needs to feel alive
   and no empty boring areas"): each land filled to about 8 to 16 buildings by its size, in hamlets of up to five a few
   cells either side of its roads, each spot held to `world_layout.py`'s rules for what's set down by hand (on the land,

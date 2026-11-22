@@ -350,7 +350,7 @@ final class LandStage {
                               wind: placement.art)
         reflect(node, picture: drawn.texture, art: placement.art, cell: placement.cell)
         addFire(to: node, art: placement.art)
-        addWindows(to: node, art: placement.art)
+        addWindows(to: node, art: placement.art, colour: placement.prop?.glow.flatMap { UIColor(hex: $0) })
         if placement.art == "lighthouse" { addBeam(to: node) }
         if placement.art == "brazier" {
             addSmoke(to: node)
@@ -443,7 +443,12 @@ final class LandStage {
     /// Each window is a sprite of its own (`windowBoxes`), put out while someone stands in front of
     /// it (`coverPanes`): drawn above the shade, a pane would show over their head (the user,
     /// 2026-11-18: "the lit panes shouldn't be over the hero's head").
-    private func addWindows(to node: SKSpriteNode, art id: String) {
+    /// A light's own bright parts are cut the same way (a lamp's, a lantern's, a torch's or a
+    /// crystal's: `windows_<id>` too), and every one shines a soft glow round it, as real light does
+    /// (the user, 2026-11-22: "anything else that could have light in the evening/night should be lit
+    /// up. There should also be a soft glow around it"), in the light's own colour (`colour`, its
+    /// prop's `glow`) or a lamp's warm one.
+    private func addWindows(to node: SKSpriteNode, art id: String, colour: UIColor? = nil) {
         let name = "windows_\(id)"
         guard art.asset(name) != nil else { return }
         let texture = art.sprite(name).texture
@@ -463,6 +468,18 @@ final class LandStage {
             let pane = SKSpriteNode(texture: part, size: CGSize(width: box.width * sx, height: box.height * sy))
             pane.position = CGPoint(x: left + box.midX * sx, y: bottom + (height - box.midY) * sy)
             lit.addChild(pane)
+            // Its glow: soft light spilling round it, behind it, added to what's under it.
+            let reach = max(pane.size.width, pane.size.height)
+            let halo = SKSpriteNode(texture: SoftTextures.glow, size: CGSize(width: pane.size.width * 1.6 + reach * 1.4 + 14,
+                                                                             height: pane.size.height * 1.6 + reach * 1.4 + 14))
+            halo.color = colour ?? UIColor(red: 1, green: 0.78, blue: 0.45, alpha: 1)
+            halo.colorBlendFactor = 1
+            halo.blendMode = .add
+            halo.alpha = 0.42
+            halo.zPosition = -0.01
+            // Steady: a land can hold hundreds of lights (Twilight Woods' glowing mushrooms), each
+            // pulsing would cost the frame.
+            pane.addChild(halo)
             // Where it shows in the land's points, and how far down the screen its building stands.
             let middle = CGPoint(x: node.position.x + pane.position.x * node.xScale, y: node.position.y + pane.position.y)
             panes.append(Pane(node: pane, box: CGRect(x: middle.x - pane.size.width / 2, y: middle.y - pane.size.height / 2,
@@ -542,7 +559,30 @@ final class LandStage {
         flame.anchorPoint = node.anchorPoint
         flame.zPosition = 0.01
         node.addChild(flame)
-        flame.run(.sequence([.wait(forDuration: .random(in: 0...0.33)), .repeatForever(.animate(with: frames, timePerFrame: 0.11))]))
+        let start = TimeInterval.random(in: 0...0.33)
+        flame.run(.sequence([.wait(forDuration: start), .repeatForever(.animate(with: frames, timePerFrame: 0.11))]))
+        // By night it burns as bright as by day, and glows: the same flame again above the night's
+        // shade, as lit windows are (`addWindows`), put out while someone stands in front of it.
+        let lit = SKSpriteNode(color: .clear, size: .zero)
+        lit.zPosition = 43_100 - node.zPosition
+        node.addChild(lit)
+        LampLight.shared.follow(lit)
+        let bright = SKSpriteNode(texture: frames[0], size: node.size)
+        bright.anchorPoint = node.anchorPoint
+        lit.addChild(bright)
+        bright.run(.sequence([.wait(forDuration: start), .repeatForever(.animate(with: frames, timePerFrame: 0.11))]))
+        let halo = SKSpriteNode(texture: SoftTextures.glow, size: CGSize(width: node.size.width * 0.9, height: node.size.height * 0.7))
+        halo.position = CGPoint(x: (0.5 - node.anchorPoint.x) * node.size.width, y: (0.3 - node.anchorPoint.y) * node.size.height)
+        halo.color = UIColor(red: 1, green: 0.55, blue: 0.2, alpha: 1)
+        halo.colorBlendFactor = 1
+        halo.blendMode = .add
+        halo.alpha = 0.4
+        halo.zPosition = -0.01
+        bright.addChild(halo)
+        halo.run(.repeatForever(.sequence([.fadeAlpha(to: 0.3, duration: 0.5), .fadeAlpha(to: 0.45, duration: 0.4)])))
+        let frame = CGRect(x: node.position.x - node.anchorPoint.x * node.size.width, y: node.position.y - node.anchorPoint.y * node.size.height,
+                           width: node.size.width, height: node.size.height)
+        panes.append(Pane(node: bright, box: frame, foot: node.position.y))
     }
 
     /// The lighthouse's light turning at night (the user, 2026-11-22: "make everything feel more

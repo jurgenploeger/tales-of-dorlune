@@ -3612,6 +3612,186 @@
       "kind": "prop"
     },
     {
+      "id": "windows_amber_crystal",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_amethyst_spire",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_big_ice_cluster",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_brazier",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_bubbling_cauldron",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_crooked_house",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_crystal",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_crystal_geode",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_crystal_shard",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_crystal_spire",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_dwarf_cottage",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_fairy_ring",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_fallen_star",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_firefly_jar_post",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_fisher_shack",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_glow_moss_rock",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_glow_mushroom",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_guild_hall",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_house",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_house_green",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_house_purple",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_ice_cluster",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_inn",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_inn_red",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_inn_teal",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_item_shop_red",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_magic_lamp",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_mine_lantern_post",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_moon_flower",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_moon_lantern_post",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_pink_crystal",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_sleepy_cottage_lilac",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_small_crystal_spire",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_spooky_lantern",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_star_crystal",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_stone_hut",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_stone_lantern",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_street_lamp",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_tiki_torch",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_violet_crystal",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_wall_torch",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_wall_torch_2",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_wall_torch_3",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_wall_torch_4",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_wisp_lantern",
+      "kind": "prop"
+    },
+    {
       "id": "windows_pillow_cottage",
       "kind": "prop"
     },

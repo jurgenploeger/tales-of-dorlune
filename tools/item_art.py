@@ -3584,6 +3584,126 @@ def finished(item_id):
     return restyle(drawn, clean=True, **options).render(outline="deep")
 
 
+# Redrawn by ChatGPT and copied, not drawn (docs/ai-sprite-test/item-icons; the user, 2026-11-22: "Can we now
+# update our old item icons?"): one cape shape for the whole family, each with its own colours and badge.
+CHATGPT = {
+    "sunny_meadow_cape": "art-variants/item_sunny_meadow_cape/chatgpt_1.png",
+    "monster_book_cape": "art-variants/item_monster_book_cape/chatgpt_1.png",
+    "card_collector_cape": "art-variants/item_card_collector_cape/chatgpt_1.png",
+    "quest_cape": "art-variants/item_quest_cape/chatgpt_1.png",
+    "bossbane_cape": "art-variants/item_bossbane_cape/chatgpt_1.png",
+    "wayfarer_cape": "art-variants/item_wayfarer_cape/chatgpt_1.png",
+    "storyleaf_cape": "art-variants/item_storyleaf_cape/chatgpt_1.png",
+    "beastfriend_cape": "art-variants/item_beastfriend_cape/chatgpt_1.png",
+    "legend_cape": "art-variants/item_legend_cape/chatgpt_1.png",
+    # The lands' own capes, each its badge (2026-11-22: the recolours "aren't that nice").
+    "pineapple_shore_cape": "art-variants/item_pineapple_shore_cape/chatgpt_1.png",
+    "slime_cave_cape": "art-variants/item_slime_cave_cape/chatgpt_1.png",
+    "twilight_woods_cape": "art-variants/item_twilight_woods_cape/chatgpt_1.png",
+    "smiling_forest_cape": "art-variants/item_smiling_forest_cape/chatgpt_1.png",
+    "candy_mountain_cape": "art-variants/item_candy_mountain_cape/chatgpt_1.png",
+    "frog_swamp_cape": "art-variants/item_frog_swamp_cape/chatgpt_1.png",
+    "wolf_lair_cape": "art-variants/item_wolf_lair_cape/chatgpt_1.png",
+    "swan_lake_cape": "art-variants/item_swan_lake_cape/chatgpt_1.png",
+    "valley_of_fear_cape": "art-variants/item_valley_of_fear_cape/chatgpt_1.png",
+    "lotus_land_cape": "art-variants/item_lotus_land_cape/chatgpt_1.png",
+    "rat_cavern_cape": "art-variants/item_rat_cavern_cape/chatgpt_1.png",
+    "puppet_hill_cape": "art-variants/item_puppet_hill_cape/chatgpt_1.png",
+    "genie_desert_cape": "art-variants/item_genie_desert_cape/chatgpt_1.png",
+    "goldburg_lake_cape": "art-variants/item_goldburg_lake_cape/chatgpt_1.png",
+    "secret_plain_cape": "art-variants/item_secret_plain_cape/chatgpt_1.png",
+    # Gloves, painted big by ChatGPT's image model and snapped to the grid.
+    "leather_gloves": "art-variants/item_leather_gloves/chatgpt_1.png",
+    "prospectors_gloves": "art-variants/item_prospectors_gloves/chatgpt_1.png",
+    "starpetal_gauntlets": "art-variants/item_starpetal_gauntlets/chatgpt_1.png",
+    "starforged_gauntlets": "art-variants/item_starforged_gauntlets/chatgpt_1.png",
+    "dragonhide_gauntlets": "art-variants/item_dragonhide_gauntlets/chatgpt_1.png",
+    "falcon_gloves": "art-variants/item_falcon_gloves/chatgpt_1.png",
+    "iron_gauntlets": "art-variants/item_iron_gauntlets/chatgpt_1.png",
+    "copper_gauntlets": "art-variants/item_copper_gauntlets/chatgpt_1.png",
+    "orchard_gloves": "art-variants/item_orchard_gloves/chatgpt_1.png",
+    "emerald_road_cape": "art-variants/item_emerald_road_cape/chatgpt_1.png",
+    "mysterious_cave_cape": "art-variants/item_mysterious_cave_cape/chatgpt_1.png",
+    "water_temple_cape": "art-variants/item_water_temple_cape/chatgpt_1.png",
+    "rosen_lake_cape": "art-variants/item_rosen_lake_cape/chatgpt_1.png",
+    "glimmerdeep_cape": "art-variants/item_glimmerdeep_cape/chatgpt_1.png",
+    "starfall_isle_cape": "art-variants/item_starfall_isle_cape/chatgpt_1.png",
+    "hachoo_island_cape": "art-variants/item_hachoo_island_cape/chatgpt_1.png",
+    "northern_grassland_cape": "art-variants/item_northern_grassland_cape/chatgpt_1.png",
+    "crystal_mountain_cape": "art-variants/item_crystal_mountain_cape/chatgpt_1.png",
+    "sleepy_town_cape": "art-variants/item_sleepy_town_cape/chatgpt_1.png",
+    "snow_white_forest_cape": "art-variants/item_snow_white_forest_cape/chatgpt_1.png",
+    "moonglow_cape": "art-variants/item_moonglow_cape/chatgpt_1.png",
+}
+# An armour set's piece in its other colours: the copper one recoloured to each set's `color` (silver to topaz).
+SETS = {"copper_gauntlets": ["silver", "onyx", "sapphire", "jade", "aquamarine", "ruby", "amethyst", "topaz"]}
+# Every land's cape is Sunny Meadow's, recoloured to the land's own (its item's `color` and `accent`).
+LAND_CAPE = "sunny_meadow_cape"
+
+
+def land_capes():
+    """The land capes, by id, with their colours: every cape woven in a land's colours."""
+    items = json.loads((ROOT / "content" / "items.json").read_text())["items"]
+    return {i["id"]: (i["color"], i["accent"]) for i in items
+            if i["type"] == "cape" and (i.get("description") or "").startswith("Woven in the colours")}
+
+
+def recolour_cape(img, base, accent, to_main, to_accent):
+    """Sunny Meadow's cape in another land's colours: its green cloth onto `to_main` and its gold trim and badge
+    onto `to_accent`, each pixel's hue kept as far off its colour as drawn (a little less), its saturation and
+    value carried so the base colour lands on the new one and white and black stay put (a power curve);
+    greys and whites (s < 0.12) kept."""
+    import colorsys
+    import numpy as np
+    from PIL import Image
+    a = np.asarray(img.convert("RGBA")).astype(float) / 255
+    out = a.copy()
+    refs = [(colorsys.rgb_to_hsv(*[c / 255 for c in hexc(b)[:3]]),
+             colorsys.rgb_to_hsv(*[c / 255 for c in hexc(t)[:3]])) for b, t in ((base, to_main), (accent, to_accent))]
+    for y in range(a.shape[0]):
+        for x in range(a.shape[1]):
+            if a[y, x, 3] == 0:
+                continue
+            h, s, v = colorsys.rgb_to_hsv(*a[y, x, :3])
+            deg = h * 360
+            if s < 0.12:
+                continue
+            k = 0 if 62 <= deg <= 175 else 1 if 18 <= deg < 62 else None
+            if k is None:
+                continue
+            (h0, s0, v0), (h1, s1, v1) = refs[k]
+            nh = (h1 + (h - h0) * 0.6) % 1
+            ns = min(1, s ** (math.log(max(s1, 0.03)) / math.log(s0))) if s > 0 else 0
+            nv = min(1, v ** (math.log(max(v1, 0.05)) / math.log(v0))) if v > 0 else 0
+            out[y, x, :3] = colorsys.hsv_to_rgb(nh, ns, nv)
+    return Image.fromarray((out * 255).round().astype(np.uint8), "RGBA")
+
+
+def recolour_set(img, base, target, below=40, above=10):
+    """A set piece in another set's colour: every pixel of the base colour's hue family (from 40 degrees redder,
+    its shadows, to 10 yellower, short of a gold band) onto `target`, as `recolour_cape` does."""
+    import colorsys
+    import numpy as np
+    from PIL import Image
+    a = np.asarray(img.convert("RGBA")).astype(float) / 255
+    out = a.copy()
+    h0, s0, v0 = colorsys.rgb_to_hsv(*[c / 255 for c in hexc(base)[:3]])
+    h1, s1, v1 = colorsys.rgb_to_hsv(*[c / 255 for c in hexc(target)[:3]])
+    for y in range(a.shape[0]):
+        for x in range(a.shape[1]):
+            if a[y, x, 3] == 0:
+                continue
+            h, s, v = colorsys.rgb_to_hsv(*a[y, x, :3])
+            d = ((h - h0 + 0.5) % 1 - 0.5) * 360
+            if not -below <= d <= above or s < 0.12:
+                continue
+            nh = (h1 + d / 360 * 0.6) % 1          # by the hue's distance round the circle, not across 0
+            ns = min(1, s ** (math.log(max(s1, 0.03)) / math.log(s0)))
+            nv = min(1, v ** (math.log(max(v1, 0.05)) / math.log(v0)))
+            out[y, x, :3] = colorsys.hsv_to_rgb(nh, ns, nv)
+    return Image.fromarray((out * 255).round().astype(np.uint8), "RGBA")
+
+
 def main(argv):
     sheet_path = None
     if "--sheet" in argv:
@@ -3603,6 +3723,36 @@ def main(argv):
     # So are the icons redrawn in the clean look (tools/clean_icon_art.py, docs/pixel-style.md *Item icons*).
     from clean_icon_art import DRAWINGS as CLEAN
     ids = [i for i in ids if i not in CLEAN]
+    # So are ChatGPT's (`CHATGPT`), copied, and the land capes recoloured from its Sunny Meadow cape.
+    from PIL import Image as _Image
+    lands = land_capes()
+    base, accent = lands[LAND_CAPE]
+    for item_id in [i for i in ids if i in CHATGPT or i in lands]:
+        if item_id in CHATGPT:
+            (SPRITES / f"item_{item_id}.png").write_bytes((ROOT / CHATGPT[item_id]).read_bytes())
+        else:
+            recolour_cape(_Image.open(ROOT / CHATGPT[LAND_CAPE]), base, accent, *lands[item_id]).save(
+                SPRITES / f"item_{item_id}.png")
+    colours = {i["id"]: i.get("color") for i in json.loads((ROOT / "content" / "items.json").read_text())["items"]}
+    recoloured = set()
+    for base_id, sets in SETS.items():
+        suffix = base_id.split("_", 1)[1]
+        for name in sets:
+            item_id = f"{name}_{suffix}"
+            if item_id in ids:
+                recolour_set(_Image.open(ROOT / CHATGPT[base_id]), colours[base_id], colours[item_id]).save(
+                    SPRITES / f"item_{item_id}.png")
+                recoloured.add(item_id)
+    # Recolours of a piece ChatGPT drew (art/assets.json `derive`, the bricklayer's gloves from the leather
+    # ones): its picture recoloured to the item's own `color`, as the sets are, not the old drawing swapped.
+    for asset in json.loads((ROOT / "art" / "assets.json").read_text())["assets"]:
+        base = (asset.get("derive") or {}).get("from", "")[len("item_"):]
+        item_id = asset["id"][len("item_"):]
+        if base in CHATGPT and item_id in ids and item_id not in CHATGPT and item_id not in lands and colours.get(item_id):
+            recolour_set(_Image.open(ROOT / CHATGPT[base]), colours[base], colours[item_id], above=25).save(
+                SPRITES / f"item_{item_id}.png")
+            recoloured.add(item_id)
+    ids = [i for i in ids if i not in CHATGPT and i not in lands and i not in recoloured]
     # Each drawing is finished in the game's pixel style (docs/pixel-style.md): lit, ramped, textured
     # and outlined afresh by tools/pixel_kit.py, its design kept.
     import io
