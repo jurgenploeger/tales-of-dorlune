@@ -2060,7 +2060,11 @@ PICKED = {"thatched_cottage": ("art-variants/thatched_cottage/chatgpt_5.png", 1.
           "swan_boathouse": ("art-variants/swan_boathouse/chatgpt_1_fixed.png", 1.0),           # Swan Lake
           "lake_pavilion": ("art-variants/lake_pavilion/chatgpt_1.png", 1.0),                   # Swan Lake
           "dwarf_boathouse": ("art-variants/dwarf_boathouse/chatgpt_1_fixed.png", 1.0),         # Ingothold Lake
-          "smokehouse": ("art-variants/smokehouse/chatgpt_1.png", 1.0)}                         # Ingothold Lake
+          "smokehouse": ("art-variants/smokehouse/chatgpt_1.png", 1.0),                         # Ingothold Lake
+          "pineapple_hut": ("art-variants/pineapple_hut/chatgpt_1.png", 1.0),                   # Pineapple Shore
+          "juice_shack": ("art-variants/juice_shack/chatgpt_1.png", 1.0),                       # Pineapple Shore
+          "shell_house": ("art-variants/shell_house/chatgpt_1.png", 1.0),                       # Sneezle Sands
+          "lighthouse": ("art-variants/lighthouse/chatgpt_1.png", 1.0)}                         # Sneezle Sands
 
 
 def picked(item):

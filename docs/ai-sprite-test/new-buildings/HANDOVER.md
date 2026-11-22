@@ -225,3 +225,9 @@ user picks by eye; what doesn't win isn't used.
   0.015; the pavilion `flat` 0.154 (needs ≤ 0.1536). All in: Swan Lake's swan boathouse and lake pavilion for a
   green and the purple house, Ingothold Lake's smokehouse for the fisher shack and dwarf boathouse for the beach
   hut. Night windows only on the panes, as cut.
+- **Batch 8, beaches** (2026-11-22; asked for walls a few steps darker or more colourful than the pale sand): all
+  four at the asked size, 30 to 33 colours, each a hair off one hard rule: the juice shack and pineapple hut
+  `form_relief` (0.016, 0.015), the shell house's outline 0.542 (needs 0.5455; snapped, it passed but its soft
+  score fell from 93% to 71%, so kept as drawn), the lighthouse `flat` 0.167 (its broad stripes). All in as
+  drawn: Pineapple Shore's pineapple hut and juice shack for its two beach huts, Sneezle Sands' shell house for a
+  beach hut and lighthouse for the fisher shack. The pineapple hut's doorstep boxed out of its night lights.

@@ -2564,7 +2564,7 @@
       ],
       "buildings": [
         {
-          "art": "beach_hut",
+          "art": "pineapple_hut",
           "x": 51,
           "y": -31
         },
@@ -2579,7 +2579,7 @@
           "y": -14
         },
         {
-          "art": "beach_hut",
+          "art": "juice_shack",
           "x": 15,
           "y": -14
         }
@@ -18030,12 +18030,12 @@
       ],
       "buildings": [
         {
-          "art": "beach_hut",
+          "art": "shell_house",
           "x": 30,
           "y": 11
         },
         {
-          "art": "fisher_shack",
+          "art": "lighthouse",
           "x": 21,
           "y": -21
         },

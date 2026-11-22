@@ -2757,6 +2757,26 @@
       "kind": "building"
     },
     {
+      "id": "pineapple_hut",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "juice_shack",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "shell_house",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "lighthouse",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
       "id": "standing_stone",
       "kind": "prop"
     },
@@ -3416,6 +3436,22 @@
     },
     {
       "id": "windows_smokehouse",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_pineapple_hut",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_juice_shack",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_shell_house",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_lighthouse",
       "kind": "prop"
     },
     {
