@@ -371,7 +371,8 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   lychgate, Prismhaven's crystal keystone, Ingothold's gold and red cloth, Larkspur's bluebird); quests'
   gates across borders keep RD's `town_gate`. Each is laid out as `town_gate` is (`TownFence.widened` spans a
   wide road by its parts: pillars, the lintel at rows 2 to 11 repeated from x 14 to 25, what hangs in the
-  middle); the tool checks that. `--sheet out.png` shows each as drawn and widened.
+  middle); the tool checks that. `--sheet out.png` shows each as drawn and widened. All four are ChatGPT's redraws
+  since 2026-11-22, copied (`PICKED`, docs/ai-sprite-test/gates: the prompt that keeps the layout).
 - `tools/critter_art.py`: the critters (`ambience.critters`), the birds crossing the sky and the butterflies
   (`ambience.butterflies`, flapping open, half and closed), as PNGs
   (`art/sprites/critter_<name>.png`, loaded by `CritterArt.drawn`; one missing is drawn in Swift as before): the

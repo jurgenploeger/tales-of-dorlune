@@ -52,3 +52,10 @@ as drawn and widened over a road), the gate's own `<gate>_8x.png`, and `../new-b
 > x 14 to 25 of rows 2 to 11 repeated between them, the middle part centred), then the next.
 
 ## Results
+- **All four** (2026-11-22): every one exactly 70 × 51, filling its box, its lintel's stretch repeating cleanly
+  and nothing hanging into the road: `gate_art.fitted` passes as delivered, and widened over a 120-pixel road
+  each reads as one gate. Scored as buildings, all miss `straight_edges` (a lintel is a straight beam; ours did
+  too, 0.49 to 0.79); Prismhaven's, Ingothold's and Larkspur's had more colours than their few pixels hold
+  (`colour_density` 1.44 to 1.70), merged to the band's number (`limit_palette`, as `compose` does), and
+  Larkspur's is a hair flat (`form_relief` 0.016). In, all four (`gate_art.py PICKED`); their pillars are slimmer
+  than ours were.
