@@ -2817,6 +2817,51 @@
       "kind": "building"
     },
     {
+      "id": "apothecary",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "creaky_mill",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "straw_house",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "stick_house",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "brick_house",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "cupcake_house",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "ice_cream_parlour",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "toymaker_workshop",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "music_box_house",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
       "id": "standing_stone",
       "kind": "prop"
     },
@@ -3524,6 +3569,42 @@
     },
     {
       "id": "windows_lookout_hut",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_apothecary",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_creaky_mill",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_straw_house",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_stick_house",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_brick_house",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_cupcake_house",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_ice_cream_parlour",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_toymaker_workshop",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_music_box_house",
       "kind": "prop"
     },
     {

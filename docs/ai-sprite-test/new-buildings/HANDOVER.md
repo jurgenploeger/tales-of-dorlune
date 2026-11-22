@@ -252,3 +252,11 @@ user picks by eye; what doesn't win isn't used.
   outline too dark beside its inside (0.458), no lift landing in the rule's window, and flat (0.015).
 - **Lookout hut, second try:** its outline now right beside its inside; only `form_relief` 0.014 short. In,
   Crystal Mountain's for another stone hut.
+- **The big batch, first nine** (2026-11-22, 17 asked in one chat): all at the asked size, 34 to 38 colours, the
+  best of each as drawn or its outline snapped (the apothecary and ice cream parlour 6% lighter). The straw house,
+  cupcake house, ice cream parlour and music box house pass every hard rule; the apothecary, creaky mill, stick
+  house and toymaker miss `form_relief` by a hair; the brick house that and `straight_edges` (its brick rows). All
+  in: Shiverdell's apothecary and creaky mill, the Big Bad Wolf's Lair's straw, stick and brick houses, Gumdrop
+  Peaks' cupcake house and ice cream parlour, Marionette Rise's toymaker and music box house, each for one of the
+  land's own, and in its hamlets' mix (`place_hamlets.POOLS`, rerun). The creaky mill's roof patches and wheel
+  boxed out of its night lights.

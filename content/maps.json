@@ -7573,83 +7573,83 @@
           "y": -10
         },
         {
-          "art": "crooked_house",
+          "art": "apothecary",
           "x": -19,
           "y": -14
         },
         {
-          "art": "witch_hut",
+          "art": "creaky_mill",
           "x": -1,
           "y": -14
         },
         {
-          "art": "crooked_house",
+          "art": "creaky_mill",
           "x": 2,
           "y": 40,
           "hamlet": true
         },
         {
-          "art": "witch_hut",
+          "art": "apothecary",
           "x": 12,
           "y": 42,
           "hamlet": true
         },
         {
-          "art": "crooked_house",
+          "art": "witch_hut",
           "x": 1,
           "y": 46,
           "hamlet": true
         },
         {
-          "art": "witch_hut",
+          "art": "crooked_house",
           "x": 12,
           "y": 48,
           "hamlet": true
         },
         {
-          "art": "crooked_house",
+          "art": "creaky_mill",
           "x": 27,
           "y": 12,
           "hamlet": true
         },
         {
-          "art": "witch_hut",
+          "art": "apothecary",
           "x": 33,
           "y": 4,
           "hamlet": true
         },
         {
-          "art": "crooked_house",
+          "art": "witch_hut",
           "x": 38,
           "y": 16,
           "hamlet": true
         },
         {
-          "art": "witch_hut",
+          "art": "crooked_house",
           "x": -37,
           "y": 9,
           "hamlet": true
         },
         {
-          "art": "crooked_house",
+          "art": "creaky_mill",
           "x": -37,
           "y": 20,
           "hamlet": true
         },
         {
-          "art": "witch_hut",
+          "art": "apothecary",
           "x": -43,
           "y": 10,
           "hamlet": true
         },
         {
-          "art": "crooked_house",
+          "art": "witch_hut",
           "x": 8,
           "y": -16,
           "hamlet": true
         },
         {
-          "art": "witch_hut",
+          "art": "crooked_house",
           "x": 6,
           "y": -22,
           "hamlet": true
@@ -12894,12 +12894,12 @@
       ],
       "buildings": [
         {
-          "art": "bakery",
+          "art": "ice_cream_parlour",
           "x": 9,
           "y": -9
         },
         {
-          "art": "mushroom_house_gold",
+          "art": "cupcake_house",
           "x": -54,
           "y": -2
         },
@@ -12914,7 +12914,7 @@
           "y": -17
         },
         {
-          "art": "candy_cottage",
+          "art": "cupcake_house",
           "x": -18,
           "y": 22,
           "hamlet": true
@@ -12926,7 +12926,7 @@
           "hamlet": true
         },
         {
-          "art": "bakery",
+          "art": "ice_cream_parlour",
           "x": -20,
           "y": 28,
           "hamlet": true
@@ -12938,31 +12938,31 @@
           "hamlet": true
         },
         {
-          "art": "mushroom_house_gold",
+          "art": "bakery",
           "x": -6,
           "y": -24,
           "hamlet": true
         },
         {
-          "art": "bakery",
+          "art": "cupcake_house",
           "x": 5,
           "y": -28,
           "hamlet": true
         },
         {
-          "art": "candy_cottage",
+          "art": "mushroom_house_gold",
           "x": -36,
           "y": 5,
           "hamlet": true
         },
         {
-          "art": "mushroom_house_gold",
+          "art": "ice_cream_parlour",
           "x": -36,
           "y": 16,
           "hamlet": true
         },
         {
-          "art": "bakery",
+          "art": "candy_cottage",
           "x": -42,
           "y": 7,
           "hamlet": true
@@ -13588,17 +13588,17 @@
       ],
       "buildings": [
         {
-          "art": "witch_hut",
+          "art": "straw_house",
           "x": -6,
           "y": 9
         },
         {
-          "art": "crooked_house",
+          "art": "stick_house",
           "x": 26,
           "y": -20
         },
         {
-          "art": "witch_hut",
+          "art": "brick_house",
           "x": -22,
           "y": 1
         },
@@ -13608,13 +13608,13 @@
           "y": 1
         },
         {
-          "art": "crooked_house",
+          "art": "straw_house",
           "x": 28,
           "y": -3,
           "hamlet": true
         },
         {
-          "art": "witch_hut",
+          "art": "brick_house",
           "x": 34,
           "y": -14,
           "hamlet": true
@@ -16302,17 +16302,17 @@
           "y": 27
         },
         {
-          "art": "crooked_house",
+          "art": "toymaker_workshop",
           "x": -8,
           "y": 10
         },
         {
-          "art": "witch_hut",
+          "art": "music_box_house",
           "x": 10,
           "y": 10
         },
         {
-          "art": "crooked_house",
+          "art": "toymaker_workshop",
           "x": 10,
           "y": -17,
           "hamlet": true
@@ -16324,19 +16324,19 @@
           "hamlet": true
         },
         {
-          "art": "crooked_house",
+          "art": "music_box_house",
           "x": 12,
           "y": -23,
           "hamlet": true
         },
         {
-          "art": "witch_hut",
+          "art": "crooked_house",
           "x": 3,
           "y": -29,
           "hamlet": true
         },
         {
-          "art": "crooked_house",
+          "art": "toymaker_workshop",
           "x": -52,
           "y": 1,
           "hamlet": true
