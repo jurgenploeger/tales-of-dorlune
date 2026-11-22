@@ -131,3 +131,69 @@ a conch shell), `mysterious_cave_cape` (#3A2E4F, #B9A6E0, an eye in the dark), `
   Mountain, Dozywick, Snow White Forest and Moonwhisper, painted big and snapped to 64 (21 to 30 colours), each in
   its item's `color` and `accent`. In; every land's cape is now ChatGPT's own, none recoloured from Sunny Meadow's
   (`recolour_cape` stays for a land added later). A second orchard glove came, the same pixel for pixel as the first.
+
+## Batch 2: boots and accessories (32, asked for 2026-11-22)
+
+Two chats: boots (1 to 14), then accessories (15 to 32). Attach `style_reference_rd_4x.png`, then that chat's
+`batch2/NN_<id>_8x.png` in order. Painted big, as the capes and gloves that worked were (asked for a 64-pixel
+PNG, ChatGPT draws with code: flat, 8 to 13 colours); they're snapped to 64 here. Not in it: what's a palette
+swap of one of these (the bunny-hop and marquis boots of the leather, the moonbeam slippers of the speed boots,
+the silverfang and frostpeak of the cloudstep; the piper's ring of the power band; the stardust, emerald heart
+and firepeak rings of the ruby ring: each is recoloured from ChatGPT's base), the set boots silver to topaz
+(the copper pair recoloured, `SETS`), and the lucky clover (`clean_icon_art.py`).
+
+> Redraw these item icons from my game, one at a time. Each attached 8× picture is today's icon: keep what it
+> is (its shape, its colours, what's on it), but draw it far better, in the look of the attached style sheet
+> (Retro Diffusion's icons at 4×): chunky and rich, smooth broad shading lit from the top left, bright
+> highlights, deep, slightly coloured shadows, a one-pixel outline in a deep shade of each part's own colour
+> (never black), no dithering, no glow round it.
+>
+> Paint each with your image model, not with code: one big square picture (about 1024 pixels or more) of a
+> 64 × 64 pixel-art icon, every art pixel a crisp square block of one colour, the item centred and filling the
+> square (52 to 62 art pixels across its longer side), seen as the sheet's are, 25 to 45 colours, on a plain
+> flat background with nothing else (no shadow, sparkles off the item or text).
+>
+> Keep each family one shape, as a set: the boots all drawn as one pair seen the same way (side by side, toes
+> to the left, a little from above), the rings all one ring seen the same way with its stone or ornament on
+> top, the charms each hanging from the same small loop. Each in its own colours, as listed.
+>
+> [LIST]
+>
+> One at a time; I'll say "next".
+
+Chat 1, boots:
+1. `speed_boots`: blue winged speed boots (#3A86E8), little white wings at the ankles.
+2. `straw_sandals`: woven straw sandals (#DCC060).
+3. `leather_boots`: brown laced leather boots (#9A6232). Plain: other boots are recoloured from it.
+4. `traveler_boots`: green traveller boots with gold laces (#46B848), worn from the road.
+5. `cloudstep_boots`: white boots standing on a little cloud (#FFFFFF, pale blue shading).
+6. `glimmerwing_boots`: violet boots with little moth wings at the heels (#8A5AE8).
+7. `windstep_sandals`: light tan sandals laced with red kite string and a little feather (#C49058).
+8. `peppermint_boots`: red and white striped peppermint boots (#E0384A).
+9. `bogwalker_boots`: tall mossy green waders (#5E8A36).
+10. `ratcatcher_boots`: tall olive-brown boots covered in scales (#8A7438).
+11. `dozy_slippers`: fluffy lavender slippers with pompoms (#8A6AB8).
+12. `steppe_runner_boots`: soft tan hide boots with red woven bands (#C49058).
+13. `goldleaf_boots`: ivory boots with gold cuffs and a golden leaf at each heel (#ECE2C8).
+14. `copper_boots`: plate boots in warm copper (#B8733A), to match the copper gauntlets; recoloured to eight
+    other metals and gems, so one main colour.
+
+Chat 2, accessories:
+15. `ruby_ring`: a gold ring with a red ruby. Other rings are recoloured from it.
+16. `novice_ring`: a simple copper ring with a small blue stone.
+17. `star_charm`: a gold star charm on a small loop.
+18. `power_band`: a red wristband with steel studs. The piper's ring is recoloured from it.
+19. `golden_ball_charm`: a small shining golden ball with a band and a ruby, on a small loop.
+20. `dragon_tooth_charm`: a curved ivory dragon fang capped in gold with a ruby, on a small loop.
+21. `persimmon_charm`: a small orange persimmon with a green four-leaf cap, on a small loop.
+22. `gumdrop_star_charm`: a plump pink star-shaped gumdrop rolled in sugar, on a small loop.
+23. `stargazer_band`: a night-blue silver ring with a tiny gold star.
+24. `honeybee_charm`: a little golden honeycomb with a tiny bee, on a small loop.
+25. `red_hood_ribbon`: a bright red ribbon tied in a bow.
+26. `swan_feather_brooch`: a white swan feather with a silver pin.
+27. `lotus_dew_charm`: a small pink lotus bud with a dew drop at its heart, on a small loop.
+28. `genies_ring`: a gold ring with a blue gem swirling with smoke.
+29. `seven_hearths_ring`: a gold ring set with seven tiny gems of different colours.
+30. `moon_rabbit_charm`: a silver rabbit sitting in a crescent moon, on a small loop.
+31. `tidesong_ring`: a sea-green silver ring with a small wave on top.
+32. `goldleaf_ring`: a gold ring with a leaf curled over the top, still green at the tip.
