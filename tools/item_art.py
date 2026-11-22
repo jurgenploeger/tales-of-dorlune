@@ -3629,6 +3629,39 @@ CHATGPT = {
     "glimmerdeep_cape": "art-variants/item_glimmerdeep_cape/chatgpt_1.png",
     "starfall_isle_cape": "art-variants/item_starfall_isle_cape/chatgpt_1.png",
     "hachoo_island_cape": "art-variants/item_hachoo_island_cape/chatgpt_1.png",
+    # Accessories (batch 2), painted big and snapped to 64.
+    "goldleaf_ring": "art-variants/item_goldleaf_ring/chatgpt_1.png",
+    "tidesong_ring": "art-variants/item_tidesong_ring/chatgpt_1.png",
+    "moon_rabbit_charm": "art-variants/item_moon_rabbit_charm/chatgpt_1.png",
+    "genies_ring": "art-variants/item_genies_ring/chatgpt_1.png",
+    "lotus_dew_charm": "art-variants/item_lotus_dew_charm/chatgpt_1.png",
+    "swan_feather_brooch": "art-variants/item_swan_feather_brooch/chatgpt_1.png",
+    "red_hood_ribbon": "art-variants/item_red_hood_ribbon/chatgpt_1.png",
+    "honeybee_charm": "art-variants/item_honeybee_charm/chatgpt_1.png",
+    "stargazer_band": "art-variants/item_stargazer_band/chatgpt_1.png",
+    "gumdrop_star_charm": "art-variants/item_gumdrop_star_charm/chatgpt_1.png",
+    "persimmon_charm": "art-variants/item_persimmon_charm/chatgpt_1.png",
+    "dragon_tooth_charm": "art-variants/item_dragon_tooth_charm/chatgpt_1.png",
+    "golden_ball_charm": "art-variants/item_golden_ball_charm/chatgpt_1.png",
+    "power_band": "art-variants/item_power_band/chatgpt_1.png",
+    "star_charm": "art-variants/item_star_charm/chatgpt_1.png",
+    "novice_ring": "art-variants/item_novice_ring/chatgpt_1.png",
+    # Boots (batch 2); where it drew one twice, the later (chatgpt_0 the first).
+    "ruby_ring": "art-variants/item_ruby_ring/chatgpt_1.png",
+    "copper_boots": "art-variants/item_copper_boots/chatgpt_1.png",
+    "goldleaf_boots": "art-variants/item_goldleaf_boots/chatgpt_1.png",
+    "steppe_runner_boots": "art-variants/item_steppe_runner_boots/chatgpt_1.png",
+    "dozy_slippers": "art-variants/item_dozy_slippers/chatgpt_1.png",
+    "ratcatcher_boots": "art-variants/item_ratcatcher_boots/chatgpt_1.png",
+    "bogwalker_boots": "art-variants/item_bogwalker_boots/chatgpt_1.png",
+    "peppermint_boots": "art-variants/item_peppermint_boots/chatgpt_1.png",
+    "windstep_sandals": "art-variants/item_windstep_sandals/chatgpt_1.png",
+    "glimmerwing_boots": "art-variants/item_glimmerwing_boots/chatgpt_1.png",
+    "cloudstep_boots": "art-variants/item_cloudstep_boots/chatgpt_1.png",
+    "traveler_boots": "art-variants/item_traveler_boots/chatgpt_1.png",
+    "leather_boots": "art-variants/item_leather_boots/chatgpt_1.png",
+    "straw_sandals": "art-variants/item_straw_sandals/chatgpt_1.png",
+    "speed_boots": "art-variants/item_speed_boots/chatgpt_1.png",
     "northern_grassland_cape": "art-variants/item_northern_grassland_cape/chatgpt_1.png",
     "crystal_mountain_cape": "art-variants/item_crystal_mountain_cape/chatgpt_1.png",
     "sleepy_town_cape": "art-variants/item_sleepy_town_cape/chatgpt_1.png",
@@ -3636,7 +3669,8 @@ CHATGPT = {
     "moonglow_cape": "art-variants/item_moonglow_cape/chatgpt_1.png",
 }
 # An armour set's piece in its other colours: the copper one recoloured to each set's `color` (silver to topaz).
-SETS = {"copper_gauntlets": ["silver", "onyx", "sapphire", "jade", "aquamarine", "ruby", "amethyst", "topaz"]}
+SET_COLOURS = ["silver", "onyx", "sapphire", "jade", "aquamarine", "ruby", "amethyst", "topaz"]
+SETS = {"copper_gauntlets": SET_COLOURS, "copper_boots": SET_COLOURS}
 # Every land's cape is Sunny Meadow's, recoloured to the land's own (its item's `color` and `accent`).
 LAND_CAPE = "sunny_meadow_cape"
 
@@ -3748,9 +3782,18 @@ def main(argv):
     for asset in json.loads((ROOT / "art" / "assets.json").read_text())["assets"]:
         base = (asset.get("derive") or {}).get("from", "")[len("item_"):]
         item_id = asset["id"][len("item_"):]
-        if base in CHATGPT and item_id in ids and item_id not in CHATGPT and item_id not in lands and colours.get(item_id):
-            recolour_set(_Image.open(ROOT / CHATGPT[base]), colours[base], colours[item_id], above=25).save(
-                SPRITES / f"item_{item_id}.png")
+        if base in CHATGPT and item_id in ids and item_id not in CHATGPT and item_id not in lands:
+            if colours.get(item_id) and colours.get(base):
+                recolour_set(_Image.open(ROOT / CHATGPT[base]), colours[base], colours[item_id], above=25).save(
+                    SPRITES / f"item_{item_id}.png")
+            else:
+                # No `color` to aim at (rings and charms): the swap's own rules, on ChatGPT's picture.
+                import numpy as _np
+                from palette_preview import recolor as _recolor
+                px = _np.asarray(_Image.open(ROOT / CHATGPT[base]).convert("RGBA")).astype(float) / 255
+                swapped = _np.clip(_recolor(px, asset["derive"]["recolor"]), 0, 1)
+                _Image.fromarray((swapped * 255).round().astype(_np.uint8), "RGBA").save(
+                    SPRITES / f"item_{item_id}.png")
             recoloured.add(item_id)
     ids = [i for i in ids if i not in CHATGPT and i not in lands and i not in recoloured]
     # Each drawing is finished in the game's pixel style (docs/pixel-style.md): lit, ramped, textured
