@@ -206,3 +206,34 @@ Chat 2, accessories:
   gauntlets are (`SETS`); every palette swap of one of these is ChatGPT's picture recoloured: by its item's
   `color` (the bunny-hop, marquis, moonbeam, silverfang and frostpeak boots) or, with no `color`, by its own
   `derive` rules (the piper's, stardust, emerald heart and firepeak rings). Still to come: the seven hearths ring.
+
+## Batch 3: hats and helms (10 drawings for 65 icons, asked for 2026-11-22)
+
+Every hat that goes with an armour is today one of six shapes in its item's `color` (`item_art.hat_piece`): a
+domed helm, a horned dragon helm, a wizard's hat with its tip bent over, a mail coif, a hood, a fur-lined hood.
+None has a detail of its own, so ChatGPT draws each shape once and the rest are its picture recoloured to their
+`color`, as the set gloves and boots are (`SETS` and the derive loop): one shape per family, guaranteed. The
+party hats and the masks the same, from the red hat and the green mask; the Santa hat and bunny ears are their
+own. Attach `style_reference_rd_4x.png` and `batch3/NN_<id>_8x.png` in order; the same prompt as batch 2, with:
+
+> Each one is drawn once and recoloured in code to many others, so keep its main material one colour family
+> (its shading in that hue), and its trim, horns or band in gold, apart from it.
+
+1. `copper_helm`: a domed helm with cheek guards, eye slits, a nose guard and a crest, in warm copper (#B8733A),
+   gold trim and rivets. Recoloured to the iron, golden, oxhide and goldleaf helms and the eight set helms.
+2. `dragon_helm`: the same helm in red dragon scale (#E93220) with two gold horns sweeping up and out.
+   Recoloured to the golden, azure, emerald, wavecrest and prismscale dragon helms.
+3. `copper_hat`: a wizard's hat, a wide brim, its tip bent over, a gold band and a small gold star, in warm copper
+   (#B8733A). Recoloured to the silk, mage, dawn, moonlight, briar rose, Liora's, starweave and goldleaf hats and
+   the eight set hats.
+4. `chain_coif`: a mail coif falling to the shoulders, its face opening in shadow, steel grey (#80929A).
+   Recoloured to the gilded coif and the puppeteer's cowl.
+5. `ranger_hood`: a soft peaked hood falling in folds to the shoulders, its opening in shadow, forest green
+   (#2D5425). Recoloured to the crimson ranger and howlmaster hoods.
+6. `copper_hide_hood`: the same hood in warm copper hide (#B8733A), its opening lined with cream fur.
+   Recoloured to the snow hoods and the eight set hide hoods.
+7. `red_party_hat`: a red paper crown (#D83030) for a New Year party. Recoloured to the other five.
+8. `green_halloween_mask`: a green ghoulish mask (#58B040), a wide toothy grin, purple eyes. Recoloured to the
+   blue and red.
+9. `santa_hat`: a red Santa hat (#D02828) with a white fur band and a white pom on its bent tip.
+10. `bunny_ears`: soft white bunny ears (#F4F0F0) on a band, pink inside.
