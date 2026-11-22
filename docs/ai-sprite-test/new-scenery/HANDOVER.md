@@ -126,3 +126,10 @@ The torch, lanterns, firefly jar and fallen star get a `glow`.
   racks and spice sacks by its houses, the Hidden Steppe's scarf cairns and wagon wheels by its roads, Tidewater
   Shrine's giant clams by the water and barnacled pillars. The bamboo stays still: rigged for the wind, its stalks
   came apart at the row where the moving part met the still one.
+- **Batch D, snow, mountains and the last** (2026-11-22): all 12 at exactly the asked canvas, size and foot row,
+  14 to 28 colours. Ten pass every hard rule as delivered; the apple basket and the fallen star missed only
+  `outline_rel` and pass with their outlines snapped 12% and 6% lighter. All in: Snow White Forest's apple baskets
+  and miner's lantern posts (glowing), Briarmere's frozen rose bushes and sleds, Crystal Mountain's picks in rock
+  and ore sacks, Moonwhisper's moon rabbit statues and moon gates by its paths, Emerald Road's milestones and
+  merchant wagons by its roads, Starfall Isle's fallen stars (glowing) and telescopes by its houses. The list is
+  done: 46 props, two of its own for every wild land.

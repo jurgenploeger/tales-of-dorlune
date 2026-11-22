@@ -5981,6 +5981,33 @@
             ],
             "sway": true,
             "shadow": true
+          },
+          {
+            "art": "apple_basket",
+            "count": 8,
+            "blocking": true,
+            "near": {
+              "tree": 3,
+              "building": 5
+            },
+            "size": [
+              0.9,
+              1.1
+            ]
+          },
+          {
+            "art": "mine_lantern_post",
+            "count": 8,
+            "blocking": true,
+            "near": {
+              "path": 3
+            },
+            "size": [
+              0.9,
+              1.1
+            ],
+            "glow": "#FFD58A",
+            "shadow": true
           }
         ],
         "palette": {
@@ -10176,6 +10203,29 @@
               1.25
             ],
             "shadow": true
+          },
+          {
+            "art": "pick_in_rock",
+            "count": 8,
+            "blocking": true,
+            "size": [
+              0.9,
+              1.1
+            ],
+            "shadow": true
+          },
+          {
+            "art": "ore_sacks",
+            "count": 6,
+            "blocking": true,
+            "near": {
+              "building": 5,
+              "path": 3
+            },
+            "size": [
+              0.9,
+              1.1
+            ]
           }
         ],
         "palette": {
@@ -10798,6 +10848,28 @@
               0.8,
               1.1
             ]
+          },
+          {
+            "art": "moon_rabbit_statue",
+            "count": 8,
+            "blocking": true,
+            "near": {
+              "path": 3
+            },
+            "size": [
+              0.9,
+              1.1
+            ],
+            "shadow": true
+          },
+          {
+            "art": "moon_gate",
+            "count": 3,
+            "blocking": true,
+            "near": {
+              "path": 3
+            },
+            "shadow": true
           }
         ],
         "palette": {
@@ -19741,6 +19813,30 @@
               1.1
             ],
             "shadow": true
+          },
+          {
+            "art": "frozen_rose_bush",
+            "count": 14,
+            "blocking": true,
+            "cluster": 2,
+            "size": [
+              0.85,
+              1.15
+            ],
+            "shadow": true
+          },
+          {
+            "art": "sled",
+            "count": 6,
+            "blocking": true,
+            "near": {
+              "building": 5,
+              "path": 3
+            },
+            "size": [
+              0.9,
+              1.1
+            ]
           }
         ],
         "palette": {
@@ -21466,6 +21562,27 @@
             ],
             "sway": true,
             "shadow": true
+          },
+          {
+            "art": "emerald_milestone",
+            "count": 10,
+            "blocking": true,
+            "near": {
+              "path": 2
+            },
+            "size": [
+              0.9,
+              1.1
+            ]
+          },
+          {
+            "art": "merchant_cart",
+            "count": 4,
+            "blocking": true,
+            "near": {
+              "path": 3
+            },
+            "shadow": true
           }
         ],
         "palette": {
@@ -22208,6 +22325,29 @@
               0.8,
               1.2
             ]
+          },
+          {
+            "art": "fallen_star",
+            "count": 8,
+            "blocking": true,
+            "size": [
+              0.9,
+              1.1
+            ],
+            "glow": "#FFE58A"
+          },
+          {
+            "art": "telescope_stand",
+            "count": 5,
+            "blocking": true,
+            "near": {
+              "building": 6
+            },
+            "size": [
+              0.9,
+              1.1
+            ],
+            "shadow": true
           }
         ],
         "palette": {

@@ -750,6 +750,18 @@ PICKED = {
     "wagon_wheel": "art-variants/wagon_wheel/chatgpt_1.png",                     # Hidden Steppe
     "giant_clam": "art-variants/giant_clam/chatgpt_1.png",                       # Tidewater Shrine
     "tide_pillar": "art-variants/tide_pillar/chatgpt_1.png",                     # Tidewater Shrine
+    "apple_basket": "art-variants/apple_basket/chatgpt_1_fixed.png",             # Snow White Forest
+    "mine_lantern_post": "art-variants/mine_lantern_post/chatgpt_1.png",         # Snow White Forest
+    "frozen_rose_bush": "art-variants/frozen_rose_bush/chatgpt_1.png",           # Briarmere
+    "sled": "art-variants/sled/chatgpt_1.png",                                   # Briarmere
+    "pick_in_rock": "art-variants/pick_in_rock/chatgpt_1.png",                   # Crystal Mountain
+    "ore_sacks": "art-variants/ore_sacks/chatgpt_1.png",                         # Crystal Mountain
+    "moon_rabbit_statue": "art-variants/moon_rabbit_statue/chatgpt_1.png",       # Moonwhisper
+    "moon_gate": "art-variants/moon_gate/chatgpt_1.png",                         # Moonwhisper
+    "emerald_milestone": "art-variants/emerald_milestone/chatgpt_1.png",         # Emerald Road
+    "merchant_cart": "art-variants/merchant_cart/chatgpt_1.png",                 # Emerald Road
+    "fallen_star": "art-variants/fallen_star/chatgpt_1_fixed.png",               # Starfall Isle
+    "telescope_stand": "art-variants/telescope_stand/chatgpt_1.png",             # Starfall Isle
 }
 
 

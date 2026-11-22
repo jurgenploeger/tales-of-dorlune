@@ -10517,6 +10517,54 @@
       "kind": "prop"
     },
     {
+      "id": "apple_basket",
+      "kind": "prop"
+    },
+    {
+      "id": "mine_lantern_post",
+      "kind": "prop"
+    },
+    {
+      "id": "frozen_rose_bush",
+      "kind": "prop"
+    },
+    {
+      "id": "sled",
+      "kind": "prop"
+    },
+    {
+      "id": "pick_in_rock",
+      "kind": "prop"
+    },
+    {
+      "id": "ore_sacks",
+      "kind": "prop"
+    },
+    {
+      "id": "moon_rabbit_statue",
+      "kind": "prop"
+    },
+    {
+      "id": "moon_gate",
+      "kind": "prop"
+    },
+    {
+      "id": "emerald_milestone",
+      "kind": "prop"
+    },
+    {
+      "id": "merchant_cart",
+      "kind": "prop"
+    },
+    {
+      "id": "fallen_star",
+      "kind": "prop"
+    },
+    {
+      "id": "telescope_stand",
+      "kind": "prop"
+    },
+    {
       "id": "tile_crystal_rock",
       "kind": "tile",
       "request": {
