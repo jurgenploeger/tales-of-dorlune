@@ -120,3 +120,4 @@ a conch shell), `mysterious_cave_cape` (#3A2E4F, #B9A6E0, an eye in the dark), `
   yellower onto each set's `color`); and the capes of Emerald Road, the Whispering Hollow, Tidewater Shrine,
   Briarmere, the Glimmerdeep, Starfall Isle and Sneezle Sands. Still to come: the orchard gloves, and the capes of
   Windswept Downs (redo), Crystal Mountain, Dozywick, Snow White Forest and Moonwhisper.
+- **The orchard gloves** (2026-11-22): in, which finishes the gloves batch 1 asked for. A second copper gauntlet came, a hair different; the first stays, as its eight recolours are checked.

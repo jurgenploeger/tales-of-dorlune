@@ -3621,6 +3621,7 @@ CHATGPT = {
     "falcon_gloves": "art-variants/item_falcon_gloves/chatgpt_1.png",
     "iron_gauntlets": "art-variants/item_iron_gauntlets/chatgpt_1.png",
     "copper_gauntlets": "art-variants/item_copper_gauntlets/chatgpt_1.png",
+    "orchard_gloves": "art-variants/item_orchard_gloves/chatgpt_1.png",
     "emerald_road_cape": "art-variants/item_emerald_road_cape/chatgpt_1.png",
     "mysterious_cave_cape": "art-variants/item_mysterious_cave_cape/chatgpt_1.png",
     "water_temple_cape": "art-variants/item_water_temple_cape/chatgpt_1.png",
