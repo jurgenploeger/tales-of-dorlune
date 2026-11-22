@@ -2012,6 +2012,72 @@
           "art": "bakery",
           "x": -2,
           "y": 4
+        },
+        {
+          "art": "beekeeper_cottage",
+          "x": 13,
+          "y": -5,
+          "hamlet": true
+        },
+        {
+          "art": "house",
+          "x": 19,
+          "y": -3,
+          "hamlet": true
+        },
+        {
+          "art": "garden_cottage",
+          "x": 19,
+          "y": 7,
+          "hamlet": true
+        },
+        {
+          "art": "bakery",
+          "x": -37,
+          "y": -4,
+          "hamlet": true
+        },
+        {
+          "art": "house_green",
+          "x": -36,
+          "y": 6,
+          "hamlet": true
+        },
+        {
+          "art": "thatched_cottage",
+          "x": -44,
+          "y": -3,
+          "hamlet": true
+        },
+        {
+          "art": "beekeeper_cottage",
+          "x": -42,
+          "y": 7,
+          "hamlet": true
+        },
+        {
+          "art": "house",
+          "x": -9,
+          "y": -23,
+          "hamlet": true
+        },
+        {
+          "art": "garden_cottage",
+          "x": -19,
+          "y": -28,
+          "hamlet": true
+        },
+        {
+          "art": "bakery",
+          "x": -8,
+          "y": -29,
+          "hamlet": true
+        },
+        {
+          "art": "house_green",
+          "x": -16,
+          "y": -34,
+          "hamlet": true
         }
       ],
       "npcs": [
@@ -2582,6 +2648,24 @@
           "art": "juice_shack",
           "x": 15,
           "y": -14
+        },
+        {
+          "art": "juice_shack",
+          "x": 14,
+          "y": -6,
+          "hamlet": true
+        },
+        {
+          "art": "fisher_shack",
+          "x": 16,
+          "y": 4,
+          "hamlet": true
+        },
+        {
+          "art": "pineapple_hut",
+          "x": 10,
+          "y": 6,
+          "hamlet": true
         }
       ]
     },
@@ -3266,6 +3350,78 @@
           "art": "lantern_cottage",
           "x": 26,
           "y": -5
+        },
+        {
+          "art": "crooked_house",
+          "x": 32,
+          "y": 17,
+          "hamlet": true
+        },
+        {
+          "art": "mushroom_house_blue",
+          "x": 34,
+          "y": 8,
+          "hamlet": true
+        },
+        {
+          "art": "lantern_cottage",
+          "x": 38,
+          "y": 17,
+          "hamlet": true
+        },
+        {
+          "art": "owl_tower",
+          "x": 40,
+          "y": 6,
+          "hamlet": true
+        },
+        {
+          "art": "witch_hut",
+          "x": 44,
+          "y": 16,
+          "hamlet": true
+        },
+        {
+          "art": "crooked_house",
+          "x": -31,
+          "y": 8,
+          "hamlet": true
+        },
+        {
+          "art": "mushroom_house_blue",
+          "x": -35,
+          "y": 18,
+          "hamlet": true
+        },
+        {
+          "art": "lantern_cottage",
+          "x": -37,
+          "y": 7,
+          "hamlet": true
+        },
+        {
+          "art": "owl_tower",
+          "x": -41,
+          "y": 16,
+          "hamlet": true
+        },
+        {
+          "art": "witch_hut",
+          "x": -43,
+          "y": 6,
+          "hamlet": true
+        },
+        {
+          "art": "crooked_house",
+          "x": 4,
+          "y": 19,
+          "hamlet": true
+        },
+        {
+          "art": "mushroom_house_blue",
+          "x": 6,
+          "y": 10,
+          "hamlet": true
         }
       ]
     },
@@ -4051,6 +4207,72 @@
           "art": "stump_house",
           "x": -23,
           "y": -24
+        },
+        {
+          "art": "acorn_cottage",
+          "x": 48,
+          "y": -8,
+          "hamlet": true
+        },
+        {
+          "art": "mushroom_house",
+          "x": 52,
+          "y": -17,
+          "hamlet": true
+        },
+        {
+          "art": "forest_lodge",
+          "x": 54,
+          "y": -8,
+          "hamlet": true
+        },
+        {
+          "art": "woodcutter_cabin",
+          "x": 58,
+          "y": -19,
+          "hamlet": true
+        },
+        {
+          "art": "stump_house",
+          "x": 60,
+          "y": -9,
+          "hamlet": true
+        },
+        {
+          "art": "acorn_cottage",
+          "x": 7,
+          "y": -14,
+          "hamlet": true
+        },
+        {
+          "art": "mushroom_house",
+          "x": 13,
+          "y": -13,
+          "hamlet": true
+        },
+        {
+          "art": "forest_lodge",
+          "x": 17,
+          "y": -5,
+          "hamlet": true
+        },
+        {
+          "art": "woodcutter_cabin",
+          "x": -35,
+          "y": -10,
+          "hamlet": true
+        },
+        {
+          "art": "stump_house",
+          "x": -37,
+          "y": 0,
+          "hamlet": true
+        },
+        {
+          "art": "acorn_cottage",
+          "x": -41,
+          "y": -11,
+          "hamlet": true
         }
       ],
       "trails": [
@@ -6052,6 +6274,78 @@
           "art": "snow_cabin",
           "x": 17,
           "y": -13
+        },
+        {
+          "art": "carved_chalet",
+          "x": -8,
+          "y": -24,
+          "hamlet": true
+        },
+        {
+          "art": "dwarf_cottage",
+          "x": -13,
+          "y": -32,
+          "hamlet": true
+        },
+        {
+          "art": "snow_cabin",
+          "x": 0,
+          "y": -33,
+          "hamlet": true
+        },
+        {
+          "art": "apple_cellar",
+          "x": -21,
+          "y": 18,
+          "hamlet": true
+        },
+        {
+          "art": "carved_chalet",
+          "x": -11,
+          "y": 17,
+          "hamlet": true
+        },
+        {
+          "art": "dwarf_cottage",
+          "x": -18,
+          "y": 24,
+          "hamlet": true
+        },
+        {
+          "art": "snow_cabin",
+          "x": -9,
+          "y": 23,
+          "hamlet": true
+        },
+        {
+          "art": "apple_cellar",
+          "x": -17,
+          "y": 30,
+          "hamlet": true
+        },
+        {
+          "art": "carved_chalet",
+          "x": -38,
+          "y": -35,
+          "hamlet": true
+        },
+        {
+          "art": "dwarf_cottage",
+          "x": -47,
+          "y": -33,
+          "hamlet": true
+        },
+        {
+          "art": "snow_cabin",
+          "x": -43,
+          "y": -46,
+          "hamlet": true
+        },
+        {
+          "art": "apple_cellar",
+          "x": -9,
+          "y": 44,
+          "hamlet": true
         }
       ]
     },
@@ -6608,6 +6902,42 @@
           "art": "lily_cottage",
           "x": 0,
           "y": -29
+        },
+        {
+          "art": "swamp_stilt_hut",
+          "x": 20,
+          "y": 7,
+          "hamlet": true
+        },
+        {
+          "art": "lily_cottage",
+          "x": 30,
+          "y": 2,
+          "hamlet": true
+        },
+        {
+          "art": "frog_hut",
+          "x": 28,
+          "y": 16,
+          "hamlet": true
+        },
+        {
+          "art": "reed_boathouse",
+          "x": -29,
+          "y": 23,
+          "hamlet": true
+        },
+        {
+          "art": "swamp_stilt_hut",
+          "x": -23,
+          "y": 32,
+          "hamlet": true
+        },
+        {
+          "art": "lily_cottage",
+          "x": -34,
+          "y": 27,
+          "hamlet": true
         }
       ]
     },
@@ -7251,6 +7581,78 @@
           "art": "witch_hut",
           "x": -1,
           "y": -14
+        },
+        {
+          "art": "crooked_house",
+          "x": 2,
+          "y": 40,
+          "hamlet": true
+        },
+        {
+          "art": "witch_hut",
+          "x": 12,
+          "y": 42,
+          "hamlet": true
+        },
+        {
+          "art": "crooked_house",
+          "x": 1,
+          "y": 46,
+          "hamlet": true
+        },
+        {
+          "art": "witch_hut",
+          "x": 12,
+          "y": 48,
+          "hamlet": true
+        },
+        {
+          "art": "crooked_house",
+          "x": 27,
+          "y": 12,
+          "hamlet": true
+        },
+        {
+          "art": "witch_hut",
+          "x": 33,
+          "y": 4,
+          "hamlet": true
+        },
+        {
+          "art": "crooked_house",
+          "x": 38,
+          "y": 16,
+          "hamlet": true
+        },
+        {
+          "art": "witch_hut",
+          "x": -37,
+          "y": 9,
+          "hamlet": true
+        },
+        {
+          "art": "crooked_house",
+          "x": -37,
+          "y": 20,
+          "hamlet": true
+        },
+        {
+          "art": "witch_hut",
+          "x": -43,
+          "y": 10,
+          "hamlet": true
+        },
+        {
+          "art": "crooked_house",
+          "x": 8,
+          "y": -16,
+          "hamlet": true
+        },
+        {
+          "art": "witch_hut",
+          "x": 6,
+          "y": -22,
+          "hamlet": true
         }
       ]
     },
@@ -9235,6 +9637,78 @@
           "art": "dome_house",
           "x": 9,
           "y": 16
+        },
+        {
+          "art": "dome_house",
+          "x": -51,
+          "y": 0,
+          "hamlet": true
+        },
+        {
+          "art": "pavilion_tent",
+          "x": -55,
+          "y": 8,
+          "hamlet": true
+        },
+        {
+          "art": "well_house",
+          "x": -57,
+          "y": -1,
+          "hamlet": true
+        },
+        {
+          "art": "lamp_house",
+          "x": -63,
+          "y": -2,
+          "hamlet": true
+        },
+        {
+          "art": "adobe_house",
+          "x": -15,
+          "y": -12,
+          "hamlet": true
+        },
+        {
+          "art": "market_tent",
+          "x": -23,
+          "y": -17,
+          "hamlet": true
+        },
+        {
+          "art": "dome_house",
+          "x": -13,
+          "y": -18,
+          "hamlet": true
+        },
+        {
+          "art": "pavilion_tent",
+          "x": 6,
+          "y": 1,
+          "hamlet": true
+        },
+        {
+          "art": "well_house",
+          "x": 12,
+          "y": 0,
+          "hamlet": true
+        },
+        {
+          "art": "lamp_house",
+          "x": 16,
+          "y": 12,
+          "hamlet": true
+        },
+        {
+          "art": "adobe_house",
+          "x": -8,
+          "y": -43,
+          "hamlet": true
+        },
+        {
+          "art": "market_tent",
+          "x": -7,
+          "y": -49,
+          "hamlet": true
         }
       ]
     },
@@ -9793,6 +10267,66 @@
           "art": "stone_hut",
           "x": -5,
           "y": -5
+        },
+        {
+          "art": "stone_hut",
+          "x": 8,
+          "y": 23,
+          "hamlet": true
+        },
+        {
+          "art": "crystal_lodge",
+          "x": 18,
+          "y": 20,
+          "hamlet": true
+        },
+        {
+          "art": "lookout_hut",
+          "x": 21,
+          "y": 26,
+          "hamlet": true
+        },
+        {
+          "art": "stone_hut",
+          "x": 16,
+          "y": -3,
+          "hamlet": true
+        },
+        {
+          "art": "crystal_lodge",
+          "x": 13,
+          "y": -14,
+          "hamlet": true
+        },
+        {
+          "art": "lookout_hut",
+          "x": 21,
+          "y": -8,
+          "hamlet": true
+        },
+        {
+          "art": "stone_hut",
+          "x": 36,
+          "y": -17,
+          "hamlet": true
+        },
+        {
+          "art": "crystal_lodge",
+          "x": 33,
+          "y": -27,
+          "hamlet": true
+        },
+        {
+          "art": "lookout_hut",
+          "x": 42,
+          "y": -20,
+          "hamlet": true
+        },
+        {
+          "art": "stone_hut",
+          "x": 38,
+          "y": -31,
+          "hamlet": true
         }
       ]
     },
@@ -10431,6 +10965,60 @@
           "art": "star_dome",
           "x": 2,
           "y": -17
+        },
+        {
+          "art": "stone_hut",
+          "x": -2,
+          "y": 28,
+          "hamlet": true
+        },
+        {
+          "art": "snow_cabin",
+          "x": 7,
+          "y": 33,
+          "hamlet": true
+        },
+        {
+          "art": "moon_teahouse",
+          "x": -3,
+          "y": 34,
+          "hamlet": true
+        },
+        {
+          "art": "star_dome",
+          "x": 7,
+          "y": 39,
+          "hamlet": true
+        },
+        {
+          "art": "stone_hut",
+          "x": -4,
+          "y": 40,
+          "hamlet": true
+        },
+        {
+          "art": "snow_cabin",
+          "x": 25,
+          "y": -1,
+          "hamlet": true
+        },
+        {
+          "art": "moon_teahouse",
+          "x": 27,
+          "y": -12,
+          "hamlet": true
+        },
+        {
+          "art": "star_dome",
+          "x": 31,
+          "y": -2,
+          "hamlet": true
+        },
+        {
+          "art": "stone_hut",
+          "x": 33,
+          "y": -12,
+          "hamlet": true
         }
       ]
     },
@@ -11146,6 +11734,42 @@
           "art": "windmill",
           "x": -3,
           "y": -18
+        },
+        {
+          "art": "house",
+          "x": 11,
+          "y": -12,
+          "hamlet": true
+        },
+        {
+          "art": "chime_cottage",
+          "x": 3,
+          "y": -19,
+          "hamlet": true
+        },
+        {
+          "art": "house_purple",
+          "x": 16,
+          "y": -23,
+          "hamlet": true
+        },
+        {
+          "art": "thatched_cottage",
+          "x": -41,
+          "y": -2,
+          "hamlet": true
+        },
+        {
+          "art": "timber_house",
+          "x": -32,
+          "y": 1,
+          "hamlet": true
+        },
+        {
+          "art": "house",
+          "x": -42,
+          "y": 4,
+          "hamlet": true
         }
       ],
       "npcs": [
@@ -12288,6 +12912,60 @@
           "art": "item_shop_red",
           "x": 23,
           "y": -17
+        },
+        {
+          "art": "candy_cottage",
+          "x": -18,
+          "y": 22,
+          "hamlet": true
+        },
+        {
+          "art": "mushroom_house_gold",
+          "x": -10,
+          "y": 29,
+          "hamlet": true
+        },
+        {
+          "art": "bakery",
+          "x": -20,
+          "y": 28,
+          "hamlet": true
+        },
+        {
+          "art": "candy_cottage",
+          "x": -6,
+          "y": -18,
+          "hamlet": true
+        },
+        {
+          "art": "mushroom_house_gold",
+          "x": -6,
+          "y": -24,
+          "hamlet": true
+        },
+        {
+          "art": "bakery",
+          "x": 5,
+          "y": -28,
+          "hamlet": true
+        },
+        {
+          "art": "candy_cottage",
+          "x": -36,
+          "y": 5,
+          "hamlet": true
+        },
+        {
+          "art": "mushroom_house_gold",
+          "x": -36,
+          "y": 16,
+          "hamlet": true
+        },
+        {
+          "art": "bakery",
+          "x": -42,
+          "y": 7,
+          "hamlet": true
         }
       ]
     },
@@ -12928,6 +13606,24 @@
           "art": "crooked_house",
           "x": -4,
           "y": 1
+        },
+        {
+          "art": "crooked_house",
+          "x": 28,
+          "y": -3,
+          "hamlet": true
+        },
+        {
+          "art": "witch_hut",
+          "x": 34,
+          "y": -14,
+          "hamlet": true
+        },
+        {
+          "art": "crooked_house",
+          "x": 39,
+          "y": -7,
+          "hamlet": true
         }
       ]
     },
@@ -14470,6 +15166,72 @@
           "art": "house_green",
           "x": -5,
           "y": -6
+        },
+        {
+          "art": "garden_cottage",
+          "x": 3,
+          "y": -28,
+          "hamlet": true
+        },
+        {
+          "art": "house",
+          "x": -8,
+          "y": -30,
+          "hamlet": true
+        },
+        {
+          "art": "swan_boathouse",
+          "x": 1,
+          "y": -34,
+          "hamlet": true
+        },
+        {
+          "art": "house_green",
+          "x": -9,
+          "y": -36,
+          "hamlet": true
+        },
+        {
+          "art": "lake_pavilion",
+          "x": 2,
+          "y": -40,
+          "hamlet": true
+        },
+        {
+          "art": "garden_cottage",
+          "x": 28,
+          "y": 1,
+          "hamlet": true
+        },
+        {
+          "art": "house",
+          "x": 29,
+          "y": -10,
+          "hamlet": true
+        },
+        {
+          "art": "swan_boathouse",
+          "x": 34,
+          "y": 0,
+          "hamlet": true
+        },
+        {
+          "art": "house_green",
+          "x": 35,
+          "y": -10,
+          "hamlet": true
+        },
+        {
+          "art": "lake_pavilion",
+          "x": 40,
+          "y": -1,
+          "hamlet": true
+        },
+        {
+          "art": "garden_cottage",
+          "x": -4,
+          "y": 36,
+          "hamlet": true
         }
       ],
       "npcs": [
@@ -15030,6 +15792,42 @@
           "art": "swamp_stilt_hut",
           "x": -14,
           "y": 6
+        },
+        {
+          "art": "raft_teahouse",
+          "x": -34,
+          "y": -13,
+          "hamlet": true
+        },
+        {
+          "art": "lily_cottage",
+          "x": -39,
+          "y": -2,
+          "hamlet": true
+        },
+        {
+          "art": "swamp_stilt_hut",
+          "x": -40,
+          "y": -14,
+          "hamlet": true
+        },
+        {
+          "art": "lotus_pagoda",
+          "x": -45,
+          "y": -4,
+          "hamlet": true
+        },
+        {
+          "art": "raft_teahouse",
+          "x": -46,
+          "y": -15,
+          "hamlet": true
+        },
+        {
+          "art": "lily_cottage",
+          "x": -12,
+          "y": -15,
+          "hamlet": true
         }
       ]
     },
@@ -15512,6 +16310,36 @@
           "art": "witch_hut",
           "x": 10,
           "y": 10
+        },
+        {
+          "art": "crooked_house",
+          "x": 10,
+          "y": -17,
+          "hamlet": true
+        },
+        {
+          "art": "witch_hut",
+          "x": 1,
+          "y": -23,
+          "hamlet": true
+        },
+        {
+          "art": "crooked_house",
+          "x": 12,
+          "y": -23,
+          "hamlet": true
+        },
+        {
+          "art": "witch_hut",
+          "x": 3,
+          "y": -29,
+          "hamlet": true
+        },
+        {
+          "art": "crooked_house",
+          "x": -52,
+          "y": 1,
+          "hamlet": true
         }
       ],
       "npcs": [
@@ -16133,6 +16961,54 @@
           "art": "inn_red",
           "x": -5,
           "y": -4
+        },
+        {
+          "art": "dwarf_boathouse",
+          "x": -5,
+          "y": 28,
+          "hamlet": true
+        },
+        {
+          "art": "smokehouse",
+          "x": 5,
+          "y": 30,
+          "hamlet": true
+        },
+        {
+          "art": "fisher_shack",
+          "x": -6,
+          "y": 34,
+          "hamlet": true
+        },
+        {
+          "art": "beach_hut",
+          "x": 4,
+          "y": 36,
+          "hamlet": true
+        },
+        {
+          "art": "stone_hut",
+          "x": -5,
+          "y": 40,
+          "hamlet": true
+        },
+        {
+          "art": "dwarf_boathouse",
+          "x": 28,
+          "y": 4,
+          "hamlet": true
+        },
+        {
+          "art": "smokehouse",
+          "x": 30,
+          "y": -6,
+          "hamlet": true
+        },
+        {
+          "art": "fisher_shack",
+          "x": 34,
+          "y": 4,
+          "hamlet": true
         }
       ],
       "npcs": [
@@ -16719,6 +17595,24 @@
           "art": "mushroom_house",
           "x": -1,
           "y": -21
+        },
+        {
+          "art": "sleepy_cottage_lilac",
+          "x": -23,
+          "y": 1,
+          "hamlet": true
+        },
+        {
+          "art": "mushroom_house",
+          "x": -24,
+          "y": -10,
+          "hamlet": true
+        },
+        {
+          "art": "sleepy_cottage",
+          "x": -29,
+          "y": -1,
+          "hamlet": true
         }
       ],
       "npcs": [
@@ -17503,6 +18397,42 @@
           "art": "inn",
           "x": -14,
           "y": -10
+        },
+        {
+          "art": "desert_tent",
+          "x": 10,
+          "y": -35,
+          "hamlet": true
+        },
+        {
+          "art": "yurt",
+          "x": 1,
+          "y": -39,
+          "hamlet": true
+        },
+        {
+          "art": "flag_tower",
+          "x": 11,
+          "y": -41,
+          "hamlet": true
+        },
+        {
+          "art": "horse_stable",
+          "x": -42,
+          "y": 12,
+          "hamlet": true
+        },
+        {
+          "art": "desert_tent",
+          "x": -41,
+          "y": 22,
+          "hamlet": true
+        },
+        {
+          "art": "yurt",
+          "x": -48,
+          "y": 15,
+          "hamlet": true
         }
       ]
     },
@@ -18048,6 +18978,36 @@
           "art": "beach_hut",
           "x": 3,
           "y": -17
+        },
+        {
+          "art": "shell_house",
+          "x": 36,
+          "y": -1,
+          "hamlet": true
+        },
+        {
+          "art": "beach_hut",
+          "x": 37,
+          "y": -12,
+          "hamlet": true
+        },
+        {
+          "art": "juice_shack",
+          "x": 42,
+          "y": -3,
+          "hamlet": true
+        },
+        {
+          "art": "fisher_shack",
+          "x": 43,
+          "y": -13,
+          "hamlet": true
+        },
+        {
+          "art": "shell_house",
+          "x": 48,
+          "y": -4,
+          "hamlet": true
         }
       ]
     },
@@ -18590,6 +19550,24 @@
           "art": "briar_cottage",
           "x": 23,
           "y": -10
+        },
+        {
+          "art": "ice_fishing_hut",
+          "x": -37,
+          "y": -12,
+          "hamlet": true
+        },
+        {
+          "art": "carved_chalet",
+          "x": -43,
+          "y": -14,
+          "hamlet": true
+        },
+        {
+          "art": "briar_cottage",
+          "x": -42,
+          "y": -23,
+          "hamlet": true
         }
       ],
       "npcs": [
@@ -19189,6 +20167,24 @@
           "art": "stone_hut",
           "x": -4,
           "y": 1
+        },
+        {
+          "art": "stone_hut",
+          "x": 15,
+          "y": 23,
+          "hamlet": true
+        },
+        {
+          "art": "stone_hut",
+          "x": 24,
+          "y": 20,
+          "hamlet": true
+        },
+        {
+          "art": "stone_hut",
+          "x": 19,
+          "y": 28,
+          "hamlet": true
         }
       ]
     },
@@ -20240,6 +21236,30 @@
             5,
             3
           ]
+        },
+        {
+          "art": "house_green",
+          "x": -16,
+          "y": -18,
+          "hamlet": true
+        },
+        {
+          "art": "forest_lodge",
+          "x": -24,
+          "y": -12,
+          "hamlet": true
+        },
+        {
+          "art": "house_green",
+          "x": -20,
+          "y": -23,
+          "hamlet": true
+        },
+        {
+          "art": "forest_lodge",
+          "x": -28,
+          "y": -17,
+          "hamlet": true
         }
       ],
       "trails": [
