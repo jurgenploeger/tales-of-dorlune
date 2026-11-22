@@ -3629,6 +3629,11 @@ CHATGPT = {
     "glimmerdeep_cape": "art-variants/item_glimmerdeep_cape/chatgpt_1.png",
     "starfall_isle_cape": "art-variants/item_starfall_isle_cape/chatgpt_1.png",
     "hachoo_island_cape": "art-variants/item_hachoo_island_cape/chatgpt_1.png",
+    "northern_grassland_cape": "art-variants/item_northern_grassland_cape/chatgpt_1.png",
+    "crystal_mountain_cape": "art-variants/item_crystal_mountain_cape/chatgpt_1.png",
+    "sleepy_town_cape": "art-variants/item_sleepy_town_cape/chatgpt_1.png",
+    "snow_white_forest_cape": "art-variants/item_snow_white_forest_cape/chatgpt_1.png",
+    "moonglow_cape": "art-variants/item_moonglow_cape/chatgpt_1.png",
 }
 # An armour set's piece in its other colours: the copper one recoloured to each set's `color` (silver to topaz).
 SETS = {"copper_gauntlets": ["silver", "onyx", "sapphire", "jade", "aquamarine", "ruby", "amethyst", "topaz"]}

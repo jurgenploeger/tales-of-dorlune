@@ -127,3 +127,7 @@ a conch shell), `mysterious_cave_cape` (#3A2E4F, #B9A6E0, an eye in the dark), `
   `recolour_set`), not the old drawings. `recolour_set` measured a hue's distance across 0 the long way (deep reds
   went green); fixed, the sets unchanged. All the gloves are done but RD's five (bell-ringer's, forgehand,
   pepperfire, crystal-silk and goldleaf), which stay.
+- **The last five land capes** (2026-11-22): Windswept Downs (the kite redrawn, with the front trim), Crystal
+  Mountain, Dozywick, Snow White Forest and Moonwhisper, painted big and snapped to 64 (21 to 30 colours), each in
+  its item's `color` and `accent`. In; every land's cape is now ChatGPT's own, none recoloured from Sunny Meadow's
+  (`recolour_cape` stays for a land added later). A second orchard glove came, the same pixel for pixel as the first.
