@@ -9,6 +9,8 @@ Edit a drawing below and rerun:
     python3 tools/prop_art.py                   # all of them
     python3 tools/prop_art.py candy_cane        # just these
     python3 tools/prop_art.py --sheet out.png   # also a 6× contact sheet on the meadow's green
+
+New scenery ChatGPT drew for each land is copied from art-variants/ (`PICKED`), not drawn.
 """
 
 import math
@@ -710,17 +712,39 @@ DRAWINGS = {
 }
 
 
+# New scenery by ChatGPT, copied, not drawn (docs/ai-sprite-test/new-scenery; the user, 2026-11-22: props of each
+# land's own, where many lands shared one list): `_fixed` where its outline, too dark beside its inside, was
+# snapped to the sprite's own colours 6% lighter, else as delivered.
+PICKED = {
+    "flower_wheelbarrow": "art-variants/flower_wheelbarrow/chatgpt_1.png",       # Sunny Meadow
+    "beehive_boxes": "art-variants/beehive_boxes/chatgpt_1_fixed.png",           # Sunny Meadow
+    "stone_cairn": "art-variants/stone_cairn/chatgpt_1_fixed.png",               # Windswept Downs
+    "hay_cart": "art-variants/hay_cart/chatgpt_1.png",                           # Windswept Downs
+    "swan_topiary": "art-variants/swan_topiary/chatgpt_1_fixed.png",             # Swan Lake
+    "rowboat_ashore": "art-variants/rowboat_ashore/chatgpt_1.png",               # Swan Lake
+    "pineapple_cart": "art-variants/pineapple_cart/chatgpt_1.png",               # Pineapple Shore
+    "tiki_torch": "art-variants/tiki_torch/chatgpt_1.png",                       # Pineapple Shore
+    "fish_drying_rack": "art-variants/fish_drying_rack/chatgpt_1.png",           # Ingothold Lake
+    "lobster_pots": "art-variants/lobster_pots/chatgpt_1_fixed.png",             # Ingothold Lake
+    "giant_dandelion": "art-variants/giant_dandelion/chatgpt_1.png",             # Sneezle Sands
+    "pepper_shaker": "art-variants/pepper_shaker/chatgpt_1_fixed.png",           # Sneezle Sands
+}
+
+
 def main(argv):
     sheet_path = None
     if "--sheet" in argv:
         index = argv.index("--sheet")
         sheet_path = argv[index + 1]
         argv = argv[:index] + argv[index + 2:]
-    ids = argv or sorted(DRAWINGS)
+    ids = argv or [*sorted(DRAWINGS), *PICKED]
+    for prop in [i for i in ids if i in PICKED]:
+        (SPRITES / f"{prop}.png").write_bytes((ROOT / PICKED[prop]).read_bytes())
+    ids = [i for i in ids if i not in PICKED]
     drawn = {prop: DRAWINGS[prop]() for prop in ids}
     for prop, art in drawn.items():
         (SPRITES / f"{prop}.png").write_bytes(art.png())
-    print(f"wrote {len(ids)} prop sprites to art/sprites/")
+    print(f"wrote {len(ids)} prop sprites to art/sprites/ (and copied the picked ones)")
     if sheet_path:
         scale, pad = 6, 6
         width = sum(art.width * scale + pad for art in drawn.values()) + pad

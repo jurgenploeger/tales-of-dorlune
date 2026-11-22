@@ -1817,6 +1817,34 @@
               1.1
             ],
             "shadow": true
+          },
+          {
+            "art": "flower_wheelbarrow",
+            "count": 10,
+            "blocking": true,
+            "near": {
+              "building": 5,
+              "path": 3
+            },
+            "size": [
+              0.9,
+              1.1
+            ],
+            "shadow": true
+          },
+          {
+            "art": "beehive_boxes",
+            "count": 8,
+            "blocking": true,
+            "near": {
+              "building": 6
+            },
+            "cluster": 2,
+            "size": [
+              0.9,
+              1.1
+            ],
+            "shadow": true
           }
         ],
         "palette": {
@@ -2427,6 +2455,29 @@
               0.8,
               1.0
             ]
+          },
+          {
+            "art": "pineapple_cart",
+            "count": 5,
+            "blocking": true,
+            "near": {
+              "path": 3
+            },
+            "shadow": true
+          },
+          {
+            "art": "tiki_torch",
+            "count": 12,
+            "blocking": true,
+            "near": {
+              "path": 3,
+              "sea": 3
+            },
+            "size": [
+              0.9,
+              1.1
+            ],
+            "glow": "#FFB060"
           }
         ],
         "palette": {
@@ -11559,6 +11610,25 @@
               1.1
             ],
             "shadow": true
+          },
+          {
+            "art": "stone_cairn",
+            "count": 14,
+            "blocking": true,
+            "size": [
+              0.8,
+              1.2
+            ],
+            "shadow": true
+          },
+          {
+            "art": "hay_cart",
+            "count": 5,
+            "blocking": true,
+            "near": {
+              "path": 3
+            },
+            "shadow": true
           }
         ],
         "palette": {
@@ -14978,6 +15048,29 @@
               1.1
             ],
             "shadow": true
+          },
+          {
+            "art": "swan_topiary",
+            "count": 8,
+            "blocking": true,
+            "near": {
+              "building": 5,
+              "path": 3
+            },
+            "size": [
+              0.9,
+              1.1
+            ],
+            "shadow": true
+          },
+          {
+            "art": "rowboat_ashore",
+            "count": 6,
+            "blocking": true,
+            "near": {
+              "water": 2
+            },
+            "shadow": true
           }
         ],
         "palette": {
@@ -16800,6 +16893,30 @@
               1.1
             ],
             "shadow": true
+          },
+          {
+            "art": "fish_drying_rack",
+            "count": 6,
+            "blocking": true,
+            "near": {
+              "water": 3,
+              "sea": 3
+            },
+            "shadow": true
+          },
+          {
+            "art": "lobster_pots",
+            "count": 12,
+            "blocking": true,
+            "near": {
+              "water": 2,
+              "sea": 2
+            },
+            "cluster": 2,
+            "size": [
+              0.9,
+              1.1
+            ]
           }
         ],
         "palette": {
@@ -18743,6 +18860,27 @@
               0.8,
               1.0
             ]
+          },
+          {
+            "art": "giant_dandelion",
+            "count": 20,
+            "blocking": true,
+            "cluster": 3,
+            "size": [
+              0.8,
+              1.2
+            ],
+            "shadow": true
+          },
+          {
+            "art": "pepper_shaker",
+            "count": 6,
+            "blocking": true,
+            "size": [
+              0.9,
+              1.1
+            ],
+            "shadow": true
           }
         ],
         "palette": {

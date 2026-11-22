@@ -10381,6 +10381,54 @@
       "kind": "prop"
     },
     {
+      "id": "flower_wheelbarrow",
+      "kind": "prop"
+    },
+    {
+      "id": "beehive_boxes",
+      "kind": "prop"
+    },
+    {
+      "id": "stone_cairn",
+      "kind": "prop"
+    },
+    {
+      "id": "hay_cart",
+      "kind": "prop"
+    },
+    {
+      "id": "swan_topiary",
+      "kind": "prop"
+    },
+    {
+      "id": "rowboat_ashore",
+      "kind": "prop"
+    },
+    {
+      "id": "pineapple_cart",
+      "kind": "prop"
+    },
+    {
+      "id": "tiki_torch",
+      "kind": "prop"
+    },
+    {
+      "id": "fish_drying_rack",
+      "kind": "prop"
+    },
+    {
+      "id": "lobster_pots",
+      "kind": "prop"
+    },
+    {
+      "id": "giant_dandelion",
+      "kind": "prop"
+    },
+    {
+      "id": "pepper_shaker",
+      "kind": "prop"
+    },
+    {
       "id": "tile_crystal_rock",
       "kind": "tile",
       "request": {

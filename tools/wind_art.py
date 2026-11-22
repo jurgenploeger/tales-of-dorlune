@@ -104,6 +104,8 @@ RIGS = {
     "pine_sapling": dict(kind="pine"),
     "snow_sapling": dict(kind="pine", crown=24),
     "sapling": dict(kind="bush"),
+    # ChatGPT's (tools/prop_art.py PICKED)
+    "giant_dandelion": dict(kind="bush", foot=16),   # its seed puff moves, its stalk doesn't
 }
 
 

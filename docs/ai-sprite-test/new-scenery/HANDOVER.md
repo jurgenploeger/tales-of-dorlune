@@ -105,3 +105,11 @@ the carts and milestone by the path). The plants (bamboo, dandelion, rose bush) 
 The torch, lanterns, firefly jar and fallen star get a `glow`.
 
 ## Results
+- **Batch A, green lands and the coast** (2026-11-22): all 12 at exactly the asked canvas, size and foot row, 15
+  to 29 colours, alpha clean. Scored as scenery: seven pass every hard rule as delivered; the beehive boxes, stone
+  cairn, swan topiary, lobster pots and pepper shaker missed only `outline_rel` (their outline too dark beside
+  their inside) and pass once it's snapped 6% lighter (`chatgpt_1_fixed.png`). All in (`prop_art.py PICKED`), two
+  props more for each land: Sunny Meadow's wheelbarrow and beehive boxes by its houses and paths, Windswept Downs'
+  cairns and hay carts, Swan Lake's swan topiaries and rowboats by the water, Pineapple Shore's fruit carts and tiki
+  torches (glowing), Ingothold Lake's fish racks and lobster pots by the water, Sneezle Sands' giant dandelions
+  (their seed puffs move in the wind, `wind_art.py`) and pepper shakers.

@@ -214,7 +214,8 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   `cave_ladder`, the way down to a cave's deeper level, and `cave_rope`, the way back up, `depth` and NPC role
   `stairs` in maps.json; `lost_pile`, what you lost when you fell, lying where you fell (`LostPile`); `waystone`, NPC role `waystone`, a standing stone out in a wild land that a quest
   wakes, then a way to the other waystones you've woken, and only to them: `GameSession.waystoneDestinations`).
-  Rerun it after editing a drawing; `--sheet out.png` previews them.
+  Rerun it after editing a drawing; `--sheet out.png` previews them. New scenery ChatGPT drew for each land, two
+  props a land of its own (docs/ai-sprite-test/new-scenery, 2026-11-22), is copied from `art-variants/` (`PICKED`).
 - `tools/scenery_art.py`: trees and bushes drawn in code with `pixel_kit` (docs/pixel-style.md), one species
   each where every tree had been a recolour of RD's `tree` and every bush of its `berry_bush`: a cherry, a
   gnarled dark tree, an autumn oak, a maple, a birch, a frosted bare tree, a willow, a jacaranda, candy trees,
