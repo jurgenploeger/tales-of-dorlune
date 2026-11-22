@@ -55,6 +55,7 @@ BOXES = {"thatched_cottage": [(60, 96, 0, 96)],
          "raft_teahouse": [(63, 74, 28, 70)],
          "pineapple_hut": [(56, 70, 22, 33), (56, 70, 61, 72)],
          "well_house": [(48, 56, 35, 46), (60, 78, 22, 33)],
+         "lamp_house": [(70, 80, 25, 34), (70, 80, 54, 63)],
          "warrior_guild": [(112, 124, 50, 104)],
          "emerald_spire": [(100, 109, 80, 92), (124, 137, 74, 100), (148, 160, 50, 124)]}
 
@@ -76,7 +77,8 @@ def windows(name):
         inside[y0:y1, x0:x1] = True
     # Inside a box a pane may be a pure yellow too (no blue in it at all: the glass lantern shop's), as gold
     # trim can't sneak in there.
-    warm = (a > 200) & (r >= 225) & (g >= 175) & (b <= g - 35) & ((b >= 60) | inside) & (r - b >= 60)
+    # And a little more orange (green from 150): the genie lamp's panes, its colours merged.
+    warm = (a > 200) & (r >= 225) & ((g >= 175) | (inside & (g >= 150))) & (b <= g - 35) & ((b >= 60) | inside) & (r - b >= 60)
     if name in BOXES:
         warm &= inside
     labels, count = ndimage.label(warm, structure=np.ones((3, 3)))

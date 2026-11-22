@@ -2787,6 +2787,16 @@
       "kind": "building"
     },
     {
+      "id": "lamp_house",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "horse_stable",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
       "id": "standing_stone",
       "kind": "prop"
     },
@@ -3470,6 +3480,14 @@
     },
     {
       "id": "windows_flag_tower",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_lamp_house",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_horse_stable",
       "kind": "prop"
     },
     {

@@ -237,3 +237,11 @@ user picks by eye; what doesn't win isn't used.
   house's thatch highlights and doorstep boxed out of its night lights). Back to ChatGPT: the lamp house (drawn
   as a teapot, near our `teapot_house`, and flat, `form_relief` 0.013) and the horse stable (0.012, and its planks
   too straight, `straight_edges` 0.427).
+- **Lamp house and horse stable, second try:** the lamp now a genie lamp; a thin shape, its 31 colours too many
+  for its pixels (`colour_density`), merged to 18: every hard rule. The stable, a big picture snapped to 96: soft
+  100%, `form_relief` 0.013. Both in: the Genie Desert's lamp house for its pavilion tent, the Hidden Steppe's
+  stable for its second yurt. The lamp's merged panes came out orange, so inside a box `window_art` now takes a
+  pane a little more orange (green from 150), which also filled in the amber edges of eight boxed buildings' panes.
+- **Smoke moves** (the user, 2026-11-22: "Any house that has something with smoke needs to be animated"): the
+  teapot house's steam, the smokehouse's smoke and the lamp's purple wisp cut out of their pictures (`*_nosmoke`)
+  and puffed from where they rose (`LandStage.smokeHoles`, in their own colours, `smokeColours`), as the yurt's.

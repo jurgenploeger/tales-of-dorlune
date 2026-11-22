@@ -254,7 +254,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   Each kind of place is a landmark too (`WorldMap.landmark`: `at: "farm"`, `"ruin"`…, `which`): every land has a
   chest at one of its places (a potion or ether by its level, refilling as chests do) and someone living at another
   (maps.json `locals`). Theme `lush`: a richer ground tile in broad soft patches over the plain ground
-  (`WorldMap.layLush`, `GroundTiles.lushMask`; the grass lands' `tile_rich_grass`). A brazier smokes (`LandStage.addSmoke`), and so does a building's smoke hole (`LandStage.smokeHoles`: the yurt's, its drawn smoke cut out of ChatGPT's picture).
+  (`WorldMap.layLush`, `GroundTiles.lushMask`; the grass lands' `tile_rich_grass`). A brazier smokes (`LandStage.addSmoke`), and so does a building's smoke hole (`LandStage.smokeHoles`: the yurt's, the teapot house's spout, the smokehouse's stack, the genie lamp's spout; their drawn smoke cut out of ChatGPT's pictures, `*_nosmoke.png`; steam and the lamp's wisp in their own colours, `smokeColours`; the user, 2026-11-22: "Any house that has something with smoke needs to be animated").
 - Tall grass (the user's pick from `tools/grass_preview.py`, 2026-11-19, after SpriteCook's interactive tall grass article;
   visual only, green wild lands only): theme `tallGrass` (`patches`, `size`, `art`) lays soft rounds of cells
   (`WorldMap.layTallGrass`, kept from other scenery; debug `at=grass`), filled by `GrassField` with tufts about nine a

@@ -1995,7 +1995,7 @@ PICKED = {"thatched_cottage": ("art-variants/thatched_cottage/chatgpt_5.png", 1.
           "weapon_shop": ("art-variants/weapon_shop/chatgpt_2.png", 1.0),
           # Batch 4 (docs/ai-sprite-test/building/batch4), each passing as delivered.
           "tea_house": ("art-variants/tea_house/chatgpt_1.png", 1.0),
-          "teapot_house": ("art-variants/teapot_house/chatgpt_1.png", 1.0),
+          "teapot_house": ("art-variants/teapot_house/chatgpt_1_nosmoke.png", 1.0),
           # garden_cottage: ChatGPT sent only its big picture (chatgpt_2_big.png); chatgpt_2_fixed.png is it
           # snapped to 78 x 50 (tools/ai_sprite_eval.py, 32 colours) and each outline pixel moved to the
           # sprite's own colour nearest 20% lighter, so it passes outline_rel without new colours.
@@ -2060,13 +2060,20 @@ PICKED = {"thatched_cottage": ("art-variants/thatched_cottage/chatgpt_5.png", 1.
           "swan_boathouse": ("art-variants/swan_boathouse/chatgpt_1_fixed.png", 1.0),           # Swan Lake
           "lake_pavilion": ("art-variants/lake_pavilion/chatgpt_1.png", 1.0),                   # Swan Lake
           "dwarf_boathouse": ("art-variants/dwarf_boathouse/chatgpt_1_fixed.png", 1.0),         # Ingothold Lake
-          "smokehouse": ("art-variants/smokehouse/chatgpt_1.png", 1.0),                         # Ingothold Lake
+          "smokehouse": ("art-variants/smokehouse/chatgpt_1_nosmoke.png", 1.0),                         # Ingothold Lake
           "pineapple_hut": ("art-variants/pineapple_hut/chatgpt_1.png", 1.0),                   # Pineapple Shore
           "juice_shack": ("art-variants/juice_shack/chatgpt_1.png", 1.0),                       # Pineapple Shore
           "shell_house": ("art-variants/shell_house/chatgpt_1.png", 1.0),                       # Sneezle Sands
           "lighthouse": ("art-variants/lighthouse/chatgpt_1.png", 1.0),                         # Sneezle Sands
           "well_house": ("art-variants/well_house/chatgpt_1_fixed.png", 1.0),                   # Genie Desert
-          "flag_tower": ("art-variants/flag_tower/chatgpt_1.png", 1.0)}                         # Hidden Steppe
+          "flag_tower": ("art-variants/flag_tower/chatgpt_1.png", 1.0),                         # Hidden Steppe
+          # Its second try, its colours merged to 18 (a thin shape: 31 were too many for its pixels).
+          "lamp_house": ("art-variants/lamp_house/chatgpt_2_18colours_nosmoke.png", 1.0),       # Genie Desert
+          # Its second try, delivered as a big picture, snapped to 96 by ai_sprite_eval.py.
+          "horse_stable": ("art-variants/horse_stable/chatgpt_2.png", 1.0)}                     # Hidden Steppe
+# Drawn smoke cut out of the teapot house, smokehouse and lamp house (`*_nosmoke.png`): the game puffs it
+# from where it rose (`LandStage.smokeHoles`, the user, 2026-11-22: "Any house that has something with smoke
+# needs to be animated"), as the yurt's.
 
 
 def picked(item):

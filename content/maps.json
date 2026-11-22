@@ -9222,7 +9222,7 @@
           "y": 29
         },
         {
-          "art": "pavilion_tent",
+          "art": "lamp_house",
           "x": 49,
           "y": -32
         },
@@ -17495,7 +17495,7 @@
           "y": 26
         },
         {
-          "art": "yurt",
+          "art": "horse_stable",
           "x": -32,
           "y": -10
         },

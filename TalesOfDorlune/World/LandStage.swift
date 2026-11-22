@@ -354,7 +354,7 @@ final class LandStage {
         if placement.art == "brazier" {
             addSmoke(to: node)
         } else if let hole = Self.smokeHoles[placement.art] {
-            addSmoke(to: node, from: hole)
+            addSmoke(to: node, from: hole, colour: Self.smokeColours[placement.art])
         }
         // Lit by a lamp nearby at night (`LampLight`): not a light itself, nor what moves in the wind
         // (its picture changes, the light's copy wouldn't).
@@ -366,17 +366,28 @@ final class LandStage {
     }
 
     /// Where smoke rises from a building whose picture has a smoke hole or chimney, as a fraction of
-    /// its picture from the top left: the yurt's smoke hole at the tip of its cone (ChatGPT's
-    /// drawing, its drawn puffs cut out so the smoke moves; the user, 2026-11-21: "the smoke needs
-    /// to be animated").
+    /// its picture from the top left: the yurt's smoke hole at the tip of its cone, the teapot's
+    /// spout, the smokehouse's stack, the genie lamp's spout (ChatGPT's drawings, their drawn smoke
+    /// cut out so it moves; the user, 2026-11-21: "the smoke needs to be animated", 2026-11-22: "Any
+    /// house that has something with smoke needs to be animated").
     private static let smokeHoles: [String: CGPoint] = [
         "yurt": CGPoint(x: 47.0 / 96, y: 25.0 / 96),
+        "teapot_house": CGPoint(x: 80.0 / 96, y: 43.0 / 96),
+        "smokehouse": CGPoint(x: 68.0 / 96, y: 20.0 / 96),
+        "lamp_house": CGPoint(x: 84.5 / 96, y: 53.0 / 96),
+    ]
+
+    /// A smoke hole's own colour where it isn't grey smoke: the teapot's white steam, the genie
+    /// lamp's purple wisp, as drawn.
+    private static let smokeColours: [String: UIColor] = [
+        "teapot_house": UIColor(white: 0.95, alpha: 1),
+        "lamp_house": UIColor(red: 0.66, green: 0.52, blue: 0.8, alpha: 1),
     ]
 
     /// Smoke rising from a fire (a camp's or a lair's brazier, from the top of its picture) or a
     /// building's smoke hole (`hole`, `smokeHoles`): a soft grey puff every half second or so that
     /// drifts up, swells and fades; only while its chunk is in the scene.
-    private func addSmoke(to node: SKSpriteNode, from hole: CGPoint? = nil) {
+    private func addSmoke(to node: SKSpriteNode, from hole: CGPoint? = nil, colour: UIColor? = nil) {
         let top: CGPoint
         if let hole {
             top = CGPoint(x: (hole.x - node.anchorPoint.x) * node.size.width,
@@ -387,7 +398,7 @@ final class LandStage {
         let puff = SKAction.run { [weak node] in
             guard let node else { return }
             let smoke = SKSpriteNode(texture: SoftTextures.glow, size: CGSize(width: 12, height: 12))
-            smoke.color = UIColor(white: 0.55, alpha: 1)
+            smoke.color = colour ?? UIColor(white: 0.55, alpha: 1)
             smoke.colorBlendFactor = 1
             smoke.alpha = 0.5
             smoke.position = CGPoint(x: top.x + .random(in: -3...3), y: top.y)
