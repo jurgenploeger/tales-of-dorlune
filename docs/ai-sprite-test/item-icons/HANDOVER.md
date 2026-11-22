@@ -75,3 +75,32 @@ and the materials (111) in four or five batches. About 270 drawings in all.
   outline and inner band aren't the clean finish's), but by eye beside RD's Potion they're the step up; in, all
   nine (`item_art.py CHATGPT`), and the 27 other land capes recoloured from Sunny Meadow's (`recolour_cape`: its
   green cloth onto the land's `color`, its gold onto its `accent`). The gloves are still to come.
+
+## The land capes, drawn one by one (asked for 2026-11-22)
+
+The user: "For the lands we need an original image from chatgpt because these recolours aren't that nice."
+Attach `cape_family_4x.png` (the nine done, the shape to keep) and paste:
+
+> Draw the capes of my game's lands, one at a time, all on exactly the same cape shape as the attached family
+> (the collar, puffed shoulders with a highlight, the round clasp, straight sides falling to a scalloped hem, a
+> badge in the middle). Each in its two colours, the first the cloth, the second the trim, clasp and badge, and
+> with its own badge. Match the family's look and size exactly. Each at exactly 64 × 64, a 1× PNG, alpha 0 or 255
+> only, then the next.
+
+Chat 1: `northern_grassland_cape` (#9BBF6A, #F0F0E0, a windblown kite), `pineapple_shore_cape` (#F2B134, #3E9E5A,
+a pineapple), `slime_cave_cape` (#59C9A5, #F5D94E, a smiling slime), `twilight_woods_cape` (#5B3FA6, #C9B8FF, a
+crescent moon over a tree), `smiling_forest_cape` (#3F8F3A, #E8C468, a smiling acorn), `candy_mountain_cape`
+(#F28DB2, #FFFFFF, a swirl lollipop), `frog_swamp_cape` (#5E7F3A, #9ED36A, a frog on a lily pad),
+`wolf_lair_cape` (#5A5A66, #C0392B, a wolf's head), `swan_lake_cape` (#3FA7B5, #F7F7F7, a swan),
+`valley_of_fear_cape` (#3B3F5C, #9CC9FF, a little ghost), `lotus_land_cape` (#C86FA8, #7FD18B, a lotus flower),
+`rat_cavern_cape` (#6B5B4B, #C9A46B, a rat's head), `puppet_hill_cape` (#A0342F, #F2C14E, a puppet on strings),
+`genie_desert_cape` (#E0A84F, #3A6EC4, a genie lamp).
+
+Chat 2: `goldburg_lake_cape` (#D4AF37, #2E6DA4, crossed pickaxes over a wave), `crystal_mountain_cape` (#8FD3E8,
+#FFFFFF, a crystal), `sleepy_town_cape` (#7E6BC4, #F5E7A1, a sleeping moon in a nightcap),
+`snow_white_forest_cape` (#E8EEF7, #C0303C, a red apple), `moonglow_cape` (#2C3E7A, #F5E7A1, a full moon with a
+rabbit), `secret_plain_cape` (#B5893F, #5C3A1E, a galloping horse), `hachoo_island_cape` (#E2563C, #2B2B2B, a
+sneezing nose, a puff), `starfall_isle_cape` (#1F2A5C, #FFE680, a falling star), `glimmerdeep_cape` (#2A2160,
+#9FE8FF, a glowing geode), `rosen_lake_cape` (#B0223F, #3F7A3A, a rose), `water_temple_cape` (#1E6FA8, #7FE3E0,
+a conch shell), `mysterious_cave_cape` (#3A2E4F, #B9A6E0, an eye in the dark), `emerald_road_cape` (#1E9E5A,
+#F2D16B, an emerald).
