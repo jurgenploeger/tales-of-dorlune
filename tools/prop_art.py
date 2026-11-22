@@ -9,6 +9,8 @@ Edit a drawing below and rerun:
     python3 tools/prop_art.py                   # all of them
     python3 tools/prop_art.py candy_cane        # just these
     python3 tools/prop_art.py --sheet out.png   # also a 6× contact sheet on the meadow's green
+
+New scenery ChatGPT drew for each land is copied from art-variants/ (`PICKED`), not drawn.
 """
 
 import math
@@ -710,17 +712,73 @@ DRAWINGS = {
 }
 
 
+# New scenery by ChatGPT, copied, not drawn (docs/ai-sprite-test/new-scenery; the user, 2026-11-22: props of each
+# land's own, where many lands shared one list): `_fixed` where its outline, too dark beside its inside, was
+# snapped to the sprite's own colours 6% lighter, else as delivered.
+PICKED = {
+    "flower_wheelbarrow": "art-variants/flower_wheelbarrow/chatgpt_1.png",       # Sunny Meadow
+    "beehive_boxes": "art-variants/beehive_boxes/chatgpt_1_fixed.png",           # Sunny Meadow
+    "stone_cairn": "art-variants/stone_cairn/chatgpt_1_fixed.png",               # Windswept Downs
+    "hay_cart": "art-variants/hay_cart/chatgpt_1.png",                           # Windswept Downs
+    "swan_topiary": "art-variants/swan_topiary/chatgpt_1_fixed.png",             # Swan Lake
+    "rowboat_ashore": "art-variants/rowboat_ashore/chatgpt_1.png",               # Swan Lake
+    "pineapple_cart": "art-variants/pineapple_cart/chatgpt_1.png",               # Pineapple Shore
+    "tiki_torch": "art-variants/tiki_torch/chatgpt_1.png",                       # Pineapple Shore
+    "fish_drying_rack": "art-variants/fish_drying_rack/chatgpt_1.png",           # Ingothold Lake
+    "lobster_pots": "art-variants/lobster_pots/chatgpt_1_fixed.png",             # Ingothold Lake
+    "giant_dandelion": "art-variants/giant_dandelion/chatgpt_1.png",             # Sneezle Sands
+    "pepper_shaker": "art-variants/pepper_shaker/chatgpt_1_fixed.png",           # Sneezle Sands
+    "firefly_jar_post": "art-variants/firefly_jar_post/chatgpt_1_fixed.png",     # Twilight Woods
+    "twisted_root_arch": "art-variants/twisted_root_arch/chatgpt_1.png",         # Twilight Woods
+    "picnic_basket": "art-variants/picnic_basket/chatgpt_1.png",                 # Big Bad Wolf's Lair
+    "chopped_woodpile": "art-variants/chopped_woodpile/chatgpt_1.png",           # Big Bad Wolf's Lair
+    "sheep_fence": "art-variants/sheep_fence/chatgpt_1.png",                     # Dozywick
+    "teddy_bear": "art-variants/teddy_bear/chatgpt_1.png",                       # Dozywick
+    "bubbling_cauldron": "art-variants/bubbling_cauldron/chatgpt_1.png",         # Shiverdell
+    "crow_post": "art-variants/crow_post/chatgpt_1.png",                         # Shiverdell
+    "rocking_horse": "art-variants/rocking_horse/chatgpt_1.png",                 # Marionette Rise
+    "tin_soldier": "art-variants/tin_soldier/chatgpt_1.png",                     # Marionette Rise
+    "donut_rock": "art-variants/donut_rock/chatgpt_1.png",                       # Gumdrop Peaks
+    "marshmallow_stack": "art-variants/marshmallow_stack/chatgpt_1.png",         # Gumdrop Peaks
+    "frog_statue": "art-variants/frog_statue/chatgpt_1.png",                     # Frog Swamp
+    "sunken_rowboat": "art-variants/sunken_rowboat/chatgpt_1.png",               # Frog Swamp
+    "stone_lantern": "art-variants/stone_lantern/chatgpt_1.png",                 # Lotus Land
+    "bamboo_clump": "art-variants/bamboo_clump/chatgpt_1.png",                   # Lotus Land
+    "rug_rack": "art-variants/rug_rack/chatgpt_1.png",                           # Genie Desert
+    "spice_sacks": "art-variants/spice_sacks/chatgpt_1.png",                     # Genie Desert
+    "scarf_cairn": "art-variants/scarf_cairn/chatgpt_1.png",                     # Hidden Steppe
+    "wagon_wheel": "art-variants/wagon_wheel/chatgpt_1.png",                     # Hidden Steppe
+    "giant_clam": "art-variants/giant_clam/chatgpt_1.png",                       # Tidewater Shrine
+    "tide_pillar": "art-variants/tide_pillar/chatgpt_1.png",                     # Tidewater Shrine
+    "apple_basket": "art-variants/apple_basket/chatgpt_1_fixed.png",             # Snow White Forest
+    "mine_lantern_post": "art-variants/mine_lantern_post/chatgpt_1.png",         # Snow White Forest
+    "frozen_rose_bush": "art-variants/frozen_rose_bush/chatgpt_1.png",           # Briarmere
+    "sled": "art-variants/sled/chatgpt_1.png",                                   # Briarmere
+    "pick_in_rock": "art-variants/pick_in_rock/chatgpt_1.png",                   # Crystal Mountain
+    "ore_sacks": "art-variants/ore_sacks/chatgpt_1.png",                         # Crystal Mountain
+    "moon_rabbit_statue": "art-variants/moon_rabbit_statue/chatgpt_1.png",       # Moonwhisper
+    "moon_gate": "art-variants/moon_gate/chatgpt_1.png",                         # Moonwhisper
+    "emerald_milestone": "art-variants/emerald_milestone/chatgpt_1.png",         # Emerald Road
+    "merchant_cart": "art-variants/merchant_cart/chatgpt_1.png",                 # Emerald Road
+    "fallen_star": "art-variants/fallen_star/chatgpt_1_fixed.png",               # Starfall Isle
+    "telescope_stand": "art-variants/telescope_stand/chatgpt_1.png",             # Starfall Isle
+}
+
+
 def main(argv):
     sheet_path = None
     if "--sheet" in argv:
         index = argv.index("--sheet")
         sheet_path = argv[index + 1]
         argv = argv[:index] + argv[index + 2:]
-    ids = argv or sorted(DRAWINGS)
+    ids = argv or [*sorted(DRAWINGS), *PICKED]
+    for prop in [i for i in ids if i in PICKED]:
+        (SPRITES / f"{prop}.png").write_bytes((ROOT / PICKED[prop]).read_bytes())
+    ids = [i for i in ids if i not in PICKED]
     drawn = {prop: DRAWINGS[prop]() for prop in ids}
     for prop, art in drawn.items():
         (SPRITES / f"{prop}.png").write_bytes(art.png())
-    print(f"wrote {len(ids)} prop sprites to art/sprites/")
+    print(f"wrote {len(ids)} prop sprites to art/sprites/ (and copied the picked ones)")
     if sheet_path:
         scale, pad = 6, 6
         width = sum(art.width * scale + pad for art in drawn.values()) + pad

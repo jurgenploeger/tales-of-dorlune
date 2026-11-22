@@ -23,6 +23,9 @@ laid from the lintel's stretch at x 14 to 25 repeated. So the lintel is the same
 joints every 6 pixels), nothing between the pillars hangs below row 31, and the picture's box is all 70 ×
 51 (`TownFence.cropped` trims to it). `--sheet` shows each widened as the game does it. Scored against
 RD's buildings: `python3 tools/pixel_style.py check --kind building art/sprites/gate_<town>.png`.
+
+All four are ChatGPT's redraws now (`PICKED`, docs/ai-sprite-test/gates), copied rather than drawn; the drawings
+below stay as they were.
 """
 
 import math
@@ -317,6 +320,17 @@ def widened(img, width):
     return out
 
 
+# Redrawn by ChatGPT and copied, not drawn (docs/ai-sprite-test/gates, 2026-11-22), laid out as above and
+# checked by `fitted`: `_fixed` where its colours, too many for its pixels, were merged to the building band's
+# number (`limit_palette`, as `compose` does), else as delivered.
+PICKED = {
+    "gate_meadowbrook": "art-variants/gate_meadowbrook/chatgpt_1.png",
+    "gate_prismhaven": "art-variants/gate_prismhaven/chatgpt_1_fixed.png",
+    "gate_ingothold": "art-variants/gate_ingothold/chatgpt_1_fixed.png",
+    "gate_larkspur": "art-variants/gate_larkspur/chatgpt_1_fixed.png",
+}
+
+
 def main(argv):
     sheet = None
     if "--sheet" in argv:
@@ -325,7 +339,7 @@ def main(argv):
         argv = argv[:i] + argv[i + 2:]
     out = {}
     for name in argv or list(GATES):
-        img = fitted(compose(GATES[name]()))
+        img = fitted(Image.open(ROOT / PICKED[name]).convert("RGBA") if name in PICKED else compose(GATES[name]()))
         img.save(SPRITES / f"{name}.png")
         out[name] = img
     print(f"wrote {', '.join(out)} to art/sprites/")

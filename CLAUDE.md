@@ -214,7 +214,8 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   `cave_ladder`, the way down to a cave's deeper level, and `cave_rope`, the way back up, `depth` and NPC role
   `stairs` in maps.json; `lost_pile`, what you lost when you fell, lying where you fell (`LostPile`); `waystone`, NPC role `waystone`, a standing stone out in a wild land that a quest
   wakes, then a way to the other waystones you've woken, and only to them: `GameSession.waystoneDestinations`).
-  Rerun it after editing a drawing; `--sheet out.png` previews them.
+  Rerun it after editing a drawing; `--sheet out.png` previews them. New scenery ChatGPT drew for each land, two
+  props a land of its own (docs/ai-sprite-test/new-scenery, 2026-11-22), is copied from `art-variants/` (`PICKED`).
 - `tools/scenery_art.py`: trees and bushes drawn in code with `pixel_kit` (docs/pixel-style.md), one species
   each where every tree had been a recolour of RD's `tree` and every bush of its `berry_bush`: a cherry, a
   gnarled dark tree, an autumn oak, a maple, a birch, a frosted bare tree, a willow, a jacaranda, candy trees,
@@ -230,7 +231,12 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   (`ArtLibrary.windFrames`, `WindField` keeps the clock, `LandStage.addScenery`); a rigged sprite moves
   instead of swaying, caves keep the old sway (their depth of field swaps textures). Rerun it after
   redrawing a rigged sprite (`check_content.py` checks each rig fits); `--sheet` shows the clumps, `--gif`
-  a grove in the wind.
+  a grove in the wind. Buildings' hanging signs, lanterns and flags move in the same gusts (`tools/sway_art.py`,
+  its `PIECES`, the user, 2026-11-22: "make everything feel more alive"): a sign swings from its hook, row by
+  row, a flag ripples out from its pole; what a piece leaves is clear where it hangs in the air (the rig's
+  `clear`, `WindRig.clear`) and the crown's shade where the building stands beside it, its shadow on the wall.
+  `wind_art.py` writes them with the trees'; rerun it after editing a piece. Chimneys smoke
+  (`LandStage.smokeHoles`) and the lighthouse turns its beam at night (`LandStage.addBeam`).
 - Less boring lands (the user's pick from `tools/land_preview.py`, 2026-11-17; in every wild land since 2026-11-18,
   each with pieces of its own): theme `places` are places to find, a farm, a ruin, a camp, a graveyard or a rest
   (`MapDef.Site`), each a few cells off a road, a farm, rest or graveyard with a winding footpath to its edge (`hasFootpath`; straight to its middle, each was a stub ending in an empty square, the user, 2026-11-18), what it's there for in its middle: `WorldMap.layPlaces` finds flat open ground
@@ -365,7 +371,8 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   lychgate, Prismhaven's crystal keystone, Ingothold's gold and red cloth, Larkspur's bluebird); quests'
   gates across borders keep RD's `town_gate`. Each is laid out as `town_gate` is (`TownFence.widened` spans a
   wide road by its parts: pillars, the lintel at rows 2 to 11 repeated from x 14 to 25, what hangs in the
-  middle); the tool checks that. `--sheet out.png` shows each as drawn and widened.
+  middle); the tool checks that. `--sheet out.png` shows each as drawn and widened. All four are ChatGPT's redraws
+  since 2026-11-22, copied (`PICKED`, docs/ai-sprite-test/gates: the prompt that keeps the layout).
 - `tools/critter_art.py`: the critters (`ambience.critters`), the birds crossing the sky and the butterflies
   (`ambience.butterflies`, flapping open, half and closed), as PNGs
   (`art/sprites/critter_<name>.png`, loaded by `CritterArt.drawn`; one missing is drawn in Swift as before): the

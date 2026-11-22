@@ -105,3 +105,31 @@ the carts and milestone by the path). The plants (bamboo, dandelion, rose bush) 
 The torch, lanterns, firefly jar and fallen star get a `glow`.
 
 ## Results
+- **Batch A, green lands and the coast** (2026-11-22): all 12 at exactly the asked canvas, size and foot row, 15
+  to 29 colours, alpha clean. Scored as scenery: seven pass every hard rule as delivered; the beehive boxes, stone
+  cairn, swan topiary, lobster pots and pepper shaker missed only `outline_rel` (their outline too dark beside
+  their inside) and pass once it's snapped 6% lighter (`chatgpt_1_fixed.png`). All in (`prop_art.py PICKED`), two
+  props more for each land: Sunny Meadow's wheelbarrow and beehive boxes by its houses and paths, Windswept Downs'
+  cairns and hay carts, Swan Lake's swan topiaries and rowboats by the water, Pineapple Shore's fruit carts and tiki
+  torches (glowing), Ingothold Lake's fish racks and lobster pots by the water, Sneezle Sands' giant dandelions
+  (their seed puffs move in the wind, `wind_art.py`) and pepper shakers.
+- **Batch B, woods and dark lands** (2026-11-22): 11 of the 12 (the picnic basket didn't come), all at exactly
+  the asked canvas, size and foot row, 14 to 26 colours. Every hard rule passed as delivered but the firefly jar
+  post's outline, snapped 6% lighter. All in: Twilight Woods' firefly jar posts by its paths (glowing) and root
+  arches among the trees, the Wolf's Lair's woodpiles, Dozywick's sleeping sheep over fences and teddy bears,
+  Shiverdell's cauldrons by its houses (glowing, steaming green, `LandStage.smokeHoles`) and crow posts,
+  Marionette Rise's rocking horses and tin soldiers, Gumdrop Peaks' donuts and marshmallows.
+- **The picnic basket** (asked for again): at the asked size, 20 colours, every rule as delivered (soft 100%). In, by the Wolf's Lair's paths and trees.
+- **Batch C, water, desert and the steppe** (2026-11-22): all 10 at exactly the asked canvas, size and foot row,
+  15 to 24 colours, every hard rule passed as delivered (soft 82 to 100%). All in: Frog Swamp's frog statues and
+  sunken rowboats by the water, Lotus Land's stone lanterns (glowing) and bamboo clumps, the Genie Desert's rug
+  racks and spice sacks by its houses, the Hidden Steppe's scarf cairns and wagon wheels by its roads, Tidewater
+  Shrine's giant clams by the water and barnacled pillars. The bamboo stays still: rigged for the wind, its stalks
+  came apart at the row where the moving part met the still one.
+- **Batch D, snow, mountains and the last** (2026-11-22): all 12 at exactly the asked canvas, size and foot row,
+  14 to 28 colours. Ten pass every hard rule as delivered; the apple basket and the fallen star missed only
+  `outline_rel` and pass with their outlines snapped 12% and 6% lighter. All in: Snow White Forest's apple baskets
+  and miner's lantern posts (glowing), Briarmere's frozen rose bushes and sleds, Crystal Mountain's picks in rock
+  and ore sacks, Moonwhisper's moon rabbit statues and moon gates by its paths, Emerald Road's milestones and
+  merchant wagons by its roads, Starfall Isle's fallen stars (glowing) and telescopes by its houses. The list is
+  done: 46 props, two of its own for every wild land.
