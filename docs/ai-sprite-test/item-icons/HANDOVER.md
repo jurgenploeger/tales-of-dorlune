@@ -197,3 +197,12 @@ Chat 2, accessories:
 30. `moon_rabbit_charm`: a silver rabbit sitting in a crescent moon, on a small loop.
 31. `tidesong_ring`: a sea-green silver ring with a small wave on top.
 32. `goldleaf_ring`: a gold ring with a leaf curled over the top, still green at the tip.
+
+## Results, batch 2
+- **Boots and accessories** (2026-11-22): 31 of the 32, painted big on grey and snapped to 64 (17 to 39 colours).
+  The grey had to be cleared everywhere it showed first: the tool clears the background only from the corners,
+  and a ring's hole is enclosed. Where ChatGPT drew one twice (the traveller, leather and speed boots), the later
+  is in and the first kept as `chatgpt_0.png`. The copper boots are recoloured to the eight set colours as the
+  gauntlets are (`SETS`); every palette swap of one of these is ChatGPT's picture recoloured: by its item's
+  `color` (the bunny-hop, marquis, moonbeam, silverfang and frostpeak boots) or, with no `color`, by its own
+  `derive` rules (the piper's, stardust, emerald heart and firepeak rings). Still to come: the seven hearths ring.
