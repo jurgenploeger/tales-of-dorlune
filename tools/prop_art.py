@@ -730,6 +730,7 @@ PICKED = {
     "pepper_shaker": "art-variants/pepper_shaker/chatgpt_1_fixed.png",           # Sneezle Sands
     "firefly_jar_post": "art-variants/firefly_jar_post/chatgpt_1_fixed.png",     # Twilight Woods
     "twisted_root_arch": "art-variants/twisted_root_arch/chatgpt_1.png",         # Twilight Woods
+    "picnic_basket": "art-variants/picnic_basket/chatgpt_1.png",                 # Big Bad Wolf's Lair
     "chopped_woodpile": "art-variants/chopped_woodpile/chatgpt_1.png",           # Big Bad Wolf's Lair
     "sheep_fence": "art-variants/sheep_fence/chatgpt_1.png",                     # Dozywick
     "teddy_bear": "art-variants/teddy_bear/chatgpt_1.png",                       # Dozywick

@@ -119,3 +119,4 @@ The torch, lanterns, firefly jar and fallen star get a `glow`.
   arches among the trees, the Wolf's Lair's woodpiles, Dozywick's sleeping sheep over fences and teddy bears,
   Shiverdell's cauldrons by its houses (glowing, steaming green, `LandStage.smokeHoles`) and crow posts,
   Marionette Rise's rocking horses and tin soldiers, Gumdrop Peaks' donuts and marshmallows.
+- **The picnic basket** (asked for again): at the asked size, 20 colours, every rule as delivered (soft 100%). In, by the Wolf's Lair's paths and trees.

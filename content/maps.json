@@ -13446,6 +13446,19 @@
             }
           },
           {
+            "art": "picnic_basket",
+            "count": 8,
+            "blocking": true,
+            "near": {
+              "path": 3,
+              "tree": 3
+            },
+            "size": [
+              0.9,
+              1.1
+            ]
+          },
+          {
             "art": "chopped_woodpile",
             "count": 8,
             "blocking": true,
