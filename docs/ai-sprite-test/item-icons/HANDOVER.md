@@ -277,3 +277,42 @@ pendant in one colour family".
   only from the bail down (`from_row`: the moonstone's silver chain and the amber's gold one sat in the pendant's
   hue window and turned with it), and a white target drains the colour out instead of aiming at a hue it hasn't
   (the widow silk necklace had come out red).
+
+## Batch 5: whips (26 drawings, asked for 2026-11-22)
+
+The 26 weapons drawn in code are all whips (`whip_line`), today one hook shape in a lash and grip colour each,
+most of them barely apart. Each is drawn by ChatGPT on one shared shape, with details from its name and
+description so they read apart. The whips heroes hold are drawn separately (`HANGING`, `hanging_whip`) and stay.
+Attach `style_reference_rd_4x.png` and `batch5/NN_<id>_8x.png` in order; the batch 2 prompt, with the family
+line: "the whips all one shape: a short handle at the lower left, held diagonally, its lash looping up and round
+in one big curl and trailing down to a thin tip at the right, filling the tile; each with its own handle, lash
+and details, as listed".
+
+1. `tamer_whip`: a plain brown leather lash (#9A6232) on a light wooden handle; a beast tamer's first whip.
+2. `beast_whip`: a red leather lash (#B8302A) on a dark brown handle, a gold paw-shaped tassel at the pommel.
+3. `sheepskin_whip`: a short, soft cream sheepskin lash (#F0E6CC) on a wooden handle, fluffy at the grip.
+4. `handy_whip`: a cream sheepskin lash on a brown leather-wrapped handle, short and neat.
+5. `cowhide_whip`: a dark brown cowhide lash (#8A5A36) on a wooden handle, a little cracker at the tip.
+6. `strong_ox_whip`: a thick braided cowhide lash on a leather grip with steel studs.
+7. `whitewood_whip`: a cowhide lash on a pale, worn poplar handle (#E8CC9A), a cream cloth tip.
+8. `cactus_whip`: a green lash (#46B848) with little pale spines along it, on a pale handle.
+9. `teak_whip`: a tan deerskin lash (#C08A4A) on a rich teak handle (#C0702A).
+10. `golden_deer_whip`: a deerskin lash on a teak handle, tipped in gold like an antler.
+11. `red_cypress_whip`: a deerskin lash on a red cypress handle (#C0482A), a red tip.
+12. `deerhide_lash`: a long deerskin lash on a purple yew handle (#7A4A8A), gold studs, its lash longer than the rest.
+13. `blue_sky_whip`: a sky-blue lash (#3A86E8) on a pale handle, a blue gem in the pommel.
+14. `amber_whip`: a dark marten-brown lash (#6E4A30) on a rattan-wrapped handle, an amber stone in the pommel.
+15. `power_whip`: a marten-brown lash on a teak handle, gold studs, a red gem in the pommel.
+16. `hardened_whip`: a dark green crocodile-hide lash (#4E7A36), scaled, on a dark wood handle, steel studs, a diamond.
+17. `crocodile_whip`: a scaled crocodile-hide lash on a dark handle, its tip like a little jaw, an emerald in the pommel.
+18. `thorn_whip`: a green vine lash (#46B848) with red thorns, on a dark red bloodwood handle (#8E1F22), a red gem.
+19. `azure_dragon_whip`: a teal lash (#2CC0B5) with scales, on a bloodwood handle, a blue gem, a pale dragon-tail tip.
+20. `aurora_whip`: a pale icy-blue lash (#9AD8F0) shimmering into lilac at the tip, on a snow-white handle, a teal gem.
+21. `phantom_whip`: a dark violet shadow lash (#4A3A6A) fading at the tip, on a yew handle, a lilac gem.
+22. `storm_whip`: a navy lash (#2E4AA8) with yellow lightning zigzags, on a navy handle, gold gem, a yellow spark tip.
+23. `luna_whip`: a silver lash (#D0D6E4) on a steel handle, a pale moonlit tip, a white moonstone.
+24. `dragon_god_whip`: the Wyrmking's whip: a red dragon-scale lash (#D03A2A) on a bloodwood handle, gold studs,
+    an amber gem, a gold tip; the grandest.
+25. `starfall_whip`: a violet lash (#8A5AE8) on a night-blue handle, white studs, a glowing gold star at its tip.
+26. `goldleaf_whip`: a braided gold lash (#F0C030) on a dark oak handle, white studs, a green gem, a gold leaf
+    at its tip.
