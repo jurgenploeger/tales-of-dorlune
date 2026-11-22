@@ -382,10 +382,13 @@ def unpack(r):
     return labels
 
 
-def frame(px, labels, row):
-    """One frame: what stays, the crown's shade where clumps can part, then each clump moved."""
+def frame(px, labels, row, clear=()):
+    """One frame: what stays, the crown's shade where clumps can part (nothing where a `clear` clump
+    hangs in the air: a building's sign, `tools/sway_art.py`), then each clump moved."""
     out = np.where((labels == 0)[..., None], px, 0)
     crown = labels > 0
+    for k in clear:
+        crown &= labels != k + 1
     shade = px.copy()
     for c in range(3):
         shade[..., c] = (px[..., c] * INSIDE[c]).astype(np.int32)
@@ -449,6 +452,11 @@ def write():
     for art_id in sorted(RIGS):
         rigs[art_id] = rig(art_id)
         print(f"{art_id:18s} {len(rigs[art_id]['clumps']):3d} clumps")
+    # Buildings' signs, lanterns and flags (tools/sway_art.py).
+    import sway_art
+    for art_id, r in sway_art.rigs().items():
+        rigs[art_id] = r
+        print(f"{art_id:18s} {len(r['clumps']):3d} pieces")
     data = {
         "_about": "Written by tools/wind_art.py: each sprite's leaf clumps (runs of y, x, length, back to front) "
                   "and each frame's whole-pixel move (dx, dy, y down) for each, a calm loop then a gust. "
@@ -485,9 +493,12 @@ def check():
         if (labels > 0).sum() and not (px[..., 3][labels > 0] > 0).all():
             bad.append(f"art/wind.json: {art_id}'s clumps cover clear pixels (its sprite changed): rerun tools/wind_art.py")
         frames = r["frames"]
+        if any(not 0 <= k < len(r["clumps"]) for k in r.get("clear", [])):
+            bad.append(f"art/wind.json: {art_id} clears a clump it hasn't")
         if len(frames) != data["loop"] + data["gust"] or any(len(f) != 2 * len(r["clumps"]) for f in frames):
             bad.append(f"art/wind.json: {art_id} needs {data['loop'] + data['gust']} frames of a move for each clump")
-    for art_id in RIGS:
+    import sway_art
+    for art_id in [*RIGS, *sway_art.PIECES]:
         if art_id not in data["rigs"]:
             bad.append(f"art/wind.json: no rig for {art_id}: rerun tools/wind_art.py")
     return bad

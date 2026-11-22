@@ -230,7 +230,12 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   (`ArtLibrary.windFrames`, `WindField` keeps the clock, `LandStage.addScenery`); a rigged sprite moves
   instead of swaying, caves keep the old sway (their depth of field swaps textures). Rerun it after
   redrawing a rigged sprite (`check_content.py` checks each rig fits); `--sheet` shows the clumps, `--gif`
-  a grove in the wind.
+  a grove in the wind. Buildings' hanging signs, lanterns and flags move in the same gusts (`tools/sway_art.py`,
+  its `PIECES`, the user, 2026-11-22: "make everything feel more alive"): a sign swings from its hook, row by
+  row, a flag ripples out from its pole; what a piece leaves is clear where it hangs in the air (the rig's
+  `clear`, `WindRig.clear`) and the crown's shade where the building stands beside it, its shadow on the wall.
+  `wind_art.py` writes them with the trees'; rerun it after editing a piece. Chimneys smoke
+  (`LandStage.smokeHoles`) and the lighthouse turns its beam at night (`LandStage.addBeam`).
 - Less boring lands (the user's pick from `tools/land_preview.py`, 2026-11-17; in every wild land since 2026-11-18,
   each with pieces of its own): theme `places` are places to find, a farm, a ruin, a camp, a graveyard or a rest
   (`MapDef.Site`), each a few cells off a road, a farm, rest or graveyard with a winding footpath to its edge (`hasFootpath`; straight to its middle, each was a stub ending in an empty square, the user, 2026-11-18), what it's there for in its middle: `WorldMap.layPlaces` finds flat open ground

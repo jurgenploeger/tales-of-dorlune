@@ -351,6 +351,7 @@ final class LandStage {
         reflect(node, picture: drawn.texture, art: placement.art, cell: placement.cell)
         addFire(to: node, art: placement.art)
         addWindows(to: node, art: placement.art)
+        if placement.art == "lighthouse" { addBeam(to: node) }
         if placement.art == "brazier" {
             addSmoke(to: node)
         } else if let hole = Self.smokeHoles[placement.art] {
@@ -369,12 +370,31 @@ final class LandStage {
     /// its picture from the top left: the yurt's smoke hole at the tip of its cone, the teapot's
     /// spout, the smokehouse's stack, the genie lamp's spout (ChatGPT's drawings, their drawn smoke
     /// cut out so it moves; the user, 2026-11-21: "the smoke needs to be animated", 2026-11-22: "Any
-    /// house that has something with smoke needs to be animated").
+    /// house that has something with smoke needs to be animated"), and the top of every chimney.
     private static let smokeHoles: [String: CGPoint] = [
         "yurt": CGPoint(x: 47.0 / 96, y: 25.0 / 96),
         "teapot_house": CGPoint(x: 80.0 / 96, y: 43.0 / 96),
         "smokehouse": CGPoint(x: 68.0 / 96, y: 20.0 / 96),
         "lamp_house": CGPoint(x: 84.5 / 96, y: 53.0 / 96),
+        // Chimneys with nothing coming out (the user, 2026-11-22: "make everything feel more alive").
+        "inn": CGPoint(x: 61.5 / 96, y: 9.0 / 96),
+        "inn_red": CGPoint(x: 61.5 / 96, y: 9.0 / 96),
+        "inn_teal": CGPoint(x: 61.5 / 96, y: 9.0 / 96),
+        "thatched_cottage": CGPoint(x: 61.0 / 96, y: 27.0 / 96),
+        "painter_studio": CGPoint(x: 67.0 / 96, y: 19.0 / 96),
+        "woodcutter_cabin": CGPoint(x: 68.0 / 96, y: 18.0 / 96),
+        "stump_house": CGPoint(x: 70.0 / 96, y: 16.0 / 96),
+        "ice_fishing_hut": CGPoint(x: 63.5 / 96, y: 21.0 / 96),
+        "brick_house": CGPoint(x: 66.0 / 96, y: 16.0 / 96),
+        "toymaker_workshop": CGPoint(x: 69.0 / 96, y: 22.0 / 96),
+        "stone_townhouse": CGPoint(x: 72.5 / 96, y: 15.0 / 96),
+        "coral_house": CGPoint(x: 34.5 / 96, y: 19.0 / 96),
+        "snow_cabin": CGPoint(x: 25.5 / 96, y: 19.0 / 96),
+        "post_office": CGPoint(x: 27.5 / 96, y: 22.0 / 96),
+        "timber_house": CGPoint(x: 73.5 / 96, y: 19.0 / 96),
+        "apothecary": CGPoint(x: 68.0 / 96, y: 12.0 / 96),
+        "emerald_shop": CGPoint(x: 32.5 / 96, y: 17.0 / 96),
+        "glass_lantern_shop": CGPoint(x: 59.0 / 96, y: 11.0 / 96),
     ]
 
     /// A smoke hole's own colour where it isn't grey smoke: the teapot's white steam, the genie
@@ -520,6 +540,48 @@ final class LandStage {
         flame.zPosition = 0.01
         node.addChild(flame)
         flame.run(.sequence([.wait(forDuration: .random(in: 0...0.33)), .repeatForever(.animate(with: frames, timePerFrame: 0.11))]))
+    }
+
+    /// The lighthouse's light turning at night (the user, 2026-11-22: "make everything feel more
+    /// alive"): a glow in its lamp room and a long soft beam swinging round from it, out to the
+    /// right, gone as it turns toward you or away, out to the left and back, a turn every six
+    /// seconds; above the night's shade and faded in with the dark, as lit windows are.
+    private func addBeam(to node: SKSpriteNode) {
+        // The lamp room's middle, in the picture's pixels from its top left (96 across).
+        let lamp = CGPoint(x: 49.0 / 96, y: 33.5 / 96)
+        let light = SKSpriteNode(color: .clear, size: .zero)
+        light.position = CGPoint(x: (lamp.x - node.anchorPoint.x) * node.size.width,
+                                 y: (1 - lamp.y - node.anchorPoint.y) * node.size.height)
+        light.zPosition = 43_100 - node.zPosition
+        node.addChild(light)
+        LampLight.shared.follow(light)
+        let warm = UIColor(red: 1, green: 0.93, blue: 0.72, alpha: 1)
+        let halo = SKSpriteNode(texture: SoftTextures.glow, size: CGSize(width: 56, height: 30))
+        halo.color = warm
+        halo.colorBlendFactor = 1
+        halo.blendMode = .add
+        halo.alpha = 0.7
+        light.addChild(halo)
+        // A soft glow stretched long, brightest a little out from the lamp.
+        let beam = SKSpriteNode(texture: SoftTextures.glow, size: CGSize(width: 320, height: 26))
+        beam.anchorPoint = CGPoint(x: 0.18, y: 0.5)
+        beam.color = warm
+        beam.colorBlendFactor = 1
+        beam.blendMode = .add
+        light.addChild(beam)
+        let turn: TimeInterval = 6
+        let start = Double.random(in: 0..<1)
+        beam.run(.repeatForever(.customAction(withDuration: turn) { beam, elapsed in
+            let angle = 2 * Double.pi * (start + Double(elapsed) / turn)
+            // Seen from the side: as long as it reaches out across the screen, brighter swinging
+            // toward you than away.
+            beam.xScale = CGFloat(cos(angle))
+            beam.alpha = CGFloat(0.32 + 0.16 * sin(angle))
+        }))
+        halo.run(.repeatForever(.customAction(withDuration: turn) { halo, elapsed in
+            let angle = 2 * Double.pi * (start + Double(elapsed) / turn)
+            halo.alpha = CGFloat(0.55 + 0.35 * max(0, sin(angle)))
+        }))
     }
 
     /// What's a light itself, wherever the plan set it down: the street lamp, and every art some land's

@@ -3,10 +3,14 @@ import SpriteKit
 /// How a tree or bush moves in the wind (art/wind.json, written by tools/wind_art.py): its leaf
 /// clumps, as runs of pixels (y, x, length, back to front), and each frame's whole-pixel move for
 /// each (dx, dy, y down), a calm loop and then a gust. Everything else of the sprite stays put.
+/// A building's hanging signs, lanterns and flags move the same way (tools/sway_art.py).
 nonisolated struct WindRig: Decodable, Sendable {
     let size: [Int]
     let clumps: [[Int]]
     let frames: [[Int]]
+    /// The clumps with nothing behind them (a sign hanging in the air): where they were is left
+    /// clear as they move, not the crown's shade.
+    let clear: [Int]?
 }
 
 /// art/wind.json: every rig, and the timing the game shares out among them (`WindField`).
@@ -46,6 +50,8 @@ nonisolated struct WindBook: Decodable, Sendable {
         guard rig.size == [width, height], count == loop + gust, inside.count == 3,
               let source = PixelImage.pixels(of: image, width: width, height: height) else { return nil }
         var label = [Int](repeating: 0, count: width * height)
+        var clearUnder = [Bool](repeating: false, count: rig.clumps.count + 1)
+        for k in rig.clear ?? [] where k >= 0 && k < rig.clumps.count { clearUnder[k + 1] = true }
         for (k, runs) in rig.clumps.enumerated() {
             for start in stride(from: 0, to: runs.count - 2, by: 3) {
                 let y = runs[start], x = runs[start + 1], length = runs[start + 2]
@@ -62,8 +68,11 @@ nonisolated struct WindBook: Decodable, Sendable {
             for y in 0..<height {
                 for x in 0..<width {
                     let from = (y * width + x) * 4, to = (y * rowWidth + left + x) * 4
-                    if label[y * width + x] == 0 {
+                    let k = label[y * width + x]
+                    if k == 0 {
                         for c in 0..<4 { out[to + c] = source[from + c] }
+                    } else if clearUnder[k] {
+                        continue
                     } else {
                         for c in 0..<3 { out[to + c] = UInt8(Double(source[from + c]) * inside[c]) }
                         out[to + 3] = source[from + 3]
