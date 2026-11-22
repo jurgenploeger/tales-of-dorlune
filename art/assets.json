@@ -2812,6 +2812,11 @@
       "kind": "building"
     },
     {
+      "id": "lookout_hut",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
       "id": "standing_stone",
       "kind": "prop"
     },
@@ -3515,6 +3520,10 @@
     },
     {
       "id": "windows_star_dome",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_lookout_hut",
       "kind": "prop"
     },
     {

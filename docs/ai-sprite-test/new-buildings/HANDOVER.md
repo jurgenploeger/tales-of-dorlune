@@ -250,3 +250,5 @@ user picks by eye; what doesn't win isn't used.
   the moon teahouse `straight_edges` (0.476, boxy): those three in, Crystal Mountain's lodge for a stone hut,
   Moonwhisper's teahouse for its snow cabin and star dome for its stone hut. The lookout hut back to ChatGPT: its
   outline too dark beside its inside (0.458), no lift landing in the rule's window, and flat (0.015).
+- **Lookout hut, second try:** its outline now right beside its inside; only `form_relief` 0.014 short. In,
+  Crystal Mountain's for another stone hut.
