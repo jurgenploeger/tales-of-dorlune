@@ -2064,7 +2064,9 @@ PICKED = {"thatched_cottage": ("art-variants/thatched_cottage/chatgpt_5.png", 1.
           "pineapple_hut": ("art-variants/pineapple_hut/chatgpt_1.png", 1.0),                   # Pineapple Shore
           "juice_shack": ("art-variants/juice_shack/chatgpt_1.png", 1.0),                       # Pineapple Shore
           "shell_house": ("art-variants/shell_house/chatgpt_1.png", 1.0),                       # Sneezle Sands
-          "lighthouse": ("art-variants/lighthouse/chatgpt_1.png", 1.0)}                         # Sneezle Sands
+          "lighthouse": ("art-variants/lighthouse/chatgpt_1.png", 1.0),                         # Sneezle Sands
+          "well_house": ("art-variants/well_house/chatgpt_1_fixed.png", 1.0),                   # Genie Desert
+          "flag_tower": ("art-variants/flag_tower/chatgpt_1.png", 1.0)}                         # Hidden Steppe
 
 
 def picked(item):

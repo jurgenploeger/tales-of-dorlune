@@ -231,3 +231,9 @@ user picks by eye; what doesn't win isn't used.
   score fell from 93% to 71%, so kept as drawn), the lighthouse `flat` 0.167 (its broad stripes). All in as
   drawn: Pineapple Shore's pineapple hut and juice shack for its two beach huts, Sneezle Sands' shell house for a
   beach hut and lighthouse for the fisher shack. The pineapple hut's doorstep boxed out of its night lights.
+- **Batch 9, desert and steppe** (2026-11-22): all four at the asked size, 32 to 37 colours. The flag tower passes
+  every hard rule as delivered, the well house once its outline is snapped 6% lighter: in, the well house in the
+  Genie Desert for its washed-out `adobe_house`, the flag tower in the Hidden Steppe for its desert tent (the well
+  house's thatch highlights and doorstep boxed out of its night lights). Back to ChatGPT: the lamp house (drawn
+  as a teapot, near our `teapot_house`, and flat, `form_relief` 0.013) and the horse stable (0.012, and its planks
+  too straight, `straight_edges` 0.427).

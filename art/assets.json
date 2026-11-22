@@ -2777,6 +2777,16 @@
       "kind": "building"
     },
     {
+      "id": "well_house",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "flag_tower",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
       "id": "standing_stone",
       "kind": "prop"
     },
@@ -3452,6 +3462,14 @@
     },
     {
       "id": "windows_lighthouse",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_well_house",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_flag_tower",
       "kind": "prop"
     },
     {

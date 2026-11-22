@@ -9227,7 +9227,7 @@
           "y": -32
         },
         {
-          "art": "adobe_house",
+          "art": "well_house",
           "x": -9,
           "y": 16
         },
@@ -17490,7 +17490,7 @@
           "y": -16
         },
         {
-          "art": "desert_tent",
+          "art": "flag_tower",
           "x": -30,
           "y": 26
         },
