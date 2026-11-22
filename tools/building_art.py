@@ -2098,14 +2098,16 @@ PICKED = {"thatched_cottage": ("art-variants/thatched_cottage/chatgpt_5.png", 1.
 
 
 def picked(item):
-    """A picked building, as drawn, its outline's light scaled by its factor."""
+    """A picked building, as drawn, its outline's light scaled by its factor, with Retro Diffusion's grain over its
+    broad flat patches (`tools/grain.py`: beside RD's buildings ChatGPT's read smooth and plasticky)."""
     from scipy import ndimage
+    from grain import grain
     path, lift = PICKED[item]
     a = np.asarray(Image.open(ROOT / path).convert("RGBA")).astype(float)
     solid = a[..., 3] > 0
     edge = solid & ~ndimage.binary_erosion(solid)
     a[edge, :3] = np.clip(a[edge, :3] * lift, 0, 255)
-    return Image.fromarray(a.round().astype(np.uint8), "RGBA")
+    return grain(Image.fromarray(a.round().astype(np.uint8), "RGBA"))
 
 
 def main(argv):

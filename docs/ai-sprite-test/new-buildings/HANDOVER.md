@@ -267,3 +267,17 @@ user picks by eye; what doesn't win isn't used.
   Isle's flower cup and firefly houses (for its rose and moon fairy tree houses), Tidewater Shrine's coral house,
   and the pearl diver's hut in its hamlets. Each one's panes boxed for the night lights. The batch is done: 59 new
   designs in all.
+
+## Grain (2026-11-22)
+
+The user, seeing them in Ingothold: "When I see our new buildings created by chatgpt next to the retro diffusion,
+it still looks different and not the same quality. When I let chatgpt create them, the 8x version was very good
+though." Measured on 30 of ChatGPT's and 14 of RD's (`pixel_style.py`): the same size (about 74 × 72 against
+71 × 72) and colour count, but ChatGPT paints broad even patches (`cluster_size` 5.3 against RD's 3.0, single
+specks `orphans` 7% against 17%), which at 8× reads polished and beside RD's grain at game size reads flat.
+`tools/grain.py` scatters each colour's own neighbouring shades through its patches of six pixels and more
+(outline and lit panes kept), on every picked building (`building_art.picked`) and gate (`gate_art.ingrained`, its
+lintel's grain repeating so it still widens): patches 6.0 to 3.1, specks 6% to 17%; no hard rule lost but a
+rounding hair on `form_relief` (0.016) on four. The props already had RD's grain (3.2 against 3.4) and are left.
+Re-cutting the windows found the last batch's boxes written x first (`window_art.BOXES` are rows first); fixed,
+their panes light whole.

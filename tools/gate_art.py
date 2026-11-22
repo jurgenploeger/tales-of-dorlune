@@ -331,6 +331,16 @@ PICKED = {
 }
 
 
+def ingrained(name):
+    """ChatGPT's gate with Retro Diffusion's grain (`tools/grain.py`), the lintel's repeating every 12 pixels so
+    its stretch from x 14 to 25 still tiles."""
+    from grain import grain
+    img = grain(Image.open(ROOT / PICKED[name]).convert("RGBA"), period=(range(*BEAM), STONES[1] - STONES[0]))
+    a = np.array(img)
+    a[BEAM[0]:BEAM[1], STONES[1]] = a[BEAM[0]:BEAM[1], STONES[0]]
+    return Image.fromarray(a, "RGBA")
+
+
 def main(argv):
     sheet = None
     if "--sheet" in argv:
@@ -339,7 +349,7 @@ def main(argv):
         argv = argv[:i] + argv[i + 2:]
     out = {}
     for name in argv or list(GATES):
-        img = fitted(Image.open(ROOT / PICKED[name]).convert("RGBA") if name in PICKED else compose(GATES[name]()))
+        img = fitted(ingrained(name) if name in PICKED else compose(GATES[name]()))
         img.save(SPRITES / f"{name}.png")
         out[name] = img
     print(f"wrote {', '.join(out)} to art/sprites/")

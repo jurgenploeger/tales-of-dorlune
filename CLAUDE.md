@@ -311,6 +311,9 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   by ChatGPT is copied, not drawn (`PICKED`, kept in `art-variants/`: 29 of them since 2026-11-21, every building drawn in code (the five
   landmarks, the acorn cottage and gem workshop the user's pick over the scores); how: `docs/ai-sprite-test/`,
   `tools/ai_sprite_eval.py`). After eight blind picks all went to ChatGPT, the user dropped them (2026-11-21).
+  Each gets Retro Diffusion's grain over its broad flat patches (`tools/grain.py`, also on ChatGPT's gates: beside
+  RD's buildings they read smooth and plasticky, the user, 2026-11-22; RD's patches of one colour are about 3
+  pixels with 17% single specks, ChatGPT's were 6 and 6%, now 3.1 and 17%).
 - `tools/place_hamlets.py`: hamlets along the wild lands' roads (the user, 2026-11-22: "The world needs to feel alive
   and no empty boring areas"): each land filled to about 8 to 16 buildings by its size, in hamlets of up to five a few
   cells either side of its roads, each spot held to `world_layout.py`'s rules for what's set down by hand (on the land,
