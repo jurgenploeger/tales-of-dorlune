@@ -3596,6 +3596,24 @@ CHATGPT = {
     "storyleaf_cape": "art-variants/item_storyleaf_cape/chatgpt_1.png",
     "beastfriend_cape": "art-variants/item_beastfriend_cape/chatgpt_1.png",
     "legend_cape": "art-variants/item_legend_cape/chatgpt_1.png",
+    # The lands' own capes, each its badge (2026-11-22: the recolours "aren't that nice").
+    "pineapple_shore_cape": "art-variants/item_pineapple_shore_cape/chatgpt_1.png",
+    "slime_cave_cape": "art-variants/item_slime_cave_cape/chatgpt_1.png",
+    "twilight_woods_cape": "art-variants/item_twilight_woods_cape/chatgpt_1.png",
+    "smiling_forest_cape": "art-variants/item_smiling_forest_cape/chatgpt_1.png",
+    "candy_mountain_cape": "art-variants/item_candy_mountain_cape/chatgpt_1.png",
+    "frog_swamp_cape": "art-variants/item_frog_swamp_cape/chatgpt_1.png",
+    "wolf_lair_cape": "art-variants/item_wolf_lair_cape/chatgpt_1.png",
+    "swan_lake_cape": "art-variants/item_swan_lake_cape/chatgpt_1.png",
+    "valley_of_fear_cape": "art-variants/item_valley_of_fear_cape/chatgpt_1.png",
+    "lotus_land_cape": "art-variants/item_lotus_land_cape/chatgpt_1.png",
+    "rat_cavern_cape": "art-variants/item_rat_cavern_cape/chatgpt_1.png",
+    "puppet_hill_cape": "art-variants/item_puppet_hill_cape/chatgpt_1.png",
+    "genie_desert_cape": "art-variants/item_genie_desert_cape/chatgpt_1.png",
+    "goldburg_lake_cape": "art-variants/item_goldburg_lake_cape/chatgpt_1.png",
+    "secret_plain_cape": "art-variants/item_secret_plain_cape/chatgpt_1.png",
+    # Gloves, painted big by ChatGPT's image model and snapped to the grid.
+    "leather_gloves": "art-variants/item_leather_gloves/chatgpt_1.png",
 }
 # Every land's cape is Sunny Meadow's, recoloured to the land's own (its item's `color` and `accent`).
 LAND_CAPE = "sunny_meadow_cape"

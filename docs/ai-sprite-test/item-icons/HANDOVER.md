@@ -104,3 +104,12 @@ sneezing nose, a puff), `starfall_isle_cape` (#1F2A5C, #FFE680, a falling star),
 #9FE8FF, a glowing geode), `rosen_lake_cape` (#B0223F, #3F7A3A, a rose), `water_temple_cape` (#1E6FA8, #7FE3E0,
 a conch shell), `mysterious_cave_cape` (#3A2E4F, #B9A6E0, an eye in the dark), `emerald_road_cape` (#1E9E5A,
 #F2D16B, an emerald).
+- **Land capes, first 15, and the leather gloves** (2026-11-22): asked for a 64-pixel PNG, ChatGPT drew two with code
+  (8 and 13 colours, flat); asked to paint big with its image model instead, every one came back a 1254-pixel picture
+  on a clean grid, snapped to 64 (`ai_sprite_eval.py --canvas 64`, 18 to 35 colours) and all one family, each land's
+  badge on the cape shape of the nine. In: Pineapple Shore, the Gooey Grotto, Twilight Woods, Smiling Forest, Gumdrop
+  Peaks, Frog Swamp, the Wolf's Lair, Swan Lake, Shiverdell, Lotus Land, Rat Cavern, Marionette Rise, Genie Desert,
+  Ingothold Lake and the Hidden Steppe, and the leather gloves. Still recoloured from Sunny Meadow's till drawn:
+  Windswept Downs (its kite cape to be redrawn with the front trim), Crystal Mountain, Dozywick, Snow White Forest,
+  Moonwhisper, Sneezle Sands, Starfall Isle, the Glimmerdeep, Briarmere, Tidewater Shrine, the Whispering Hollow and
+  Emerald Road.
