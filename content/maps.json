@@ -9780,7 +9780,7 @@
           "y": 0
         },
         {
-          "art": "stone_hut",
+          "art": "crystal_lodge",
           "x": -8,
           "y": 3
         },
@@ -10423,12 +10423,12 @@
           "y": -34
         },
         {
-          "art": "snow_cabin",
+          "art": "moon_teahouse",
           "x": -16,
           "y": -17
         },
         {
-          "art": "stone_hut",
+          "art": "star_dome",
           "x": 2,
           "y": -17
         }

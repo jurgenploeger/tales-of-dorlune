@@ -245,3 +245,8 @@ user picks by eye; what doesn't win isn't used.
 - **Smoke moves** (the user, 2026-11-22: "Any house that has something with smoke needs to be animated"): the
   teapot house's steam, the smokehouse's smoke and the lamp's purple wisp cut out of their pictures (`*_nosmoke`)
   and puffed from where they rose (`LandStage.smokeHoles`, in their own colours, `smokeColours`), as the yurt's.
+- **Batch 10, mountains** (2026-11-22; asked for no drawn smoke, the game puffs it): all four at the asked size,
+  31 to 39 colours. The crystal lodge passes every hard rule; the star dome misses `form_relief` by a hair (0.014),
+  the moon teahouse `straight_edges` (0.476, boxy): those three in, Crystal Mountain's lodge for a stone hut,
+  Moonwhisper's teahouse for its snow cabin and star dome for its stone hut. The lookout hut back to ChatGPT: its
+  outline too dark beside its inside (0.458), no lift landing in the rule's window, and flat (0.015).

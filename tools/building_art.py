@@ -2070,7 +2070,10 @@ PICKED = {"thatched_cottage": ("art-variants/thatched_cottage/chatgpt_5.png", 1.
           # Its second try, its colours merged to 18 (a thin shape: 31 were too many for its pixels).
           "lamp_house": ("art-variants/lamp_house/chatgpt_2_18colours_nosmoke.png", 1.0),       # Genie Desert
           # Its second try, delivered as a big picture, snapped to 96 by ai_sprite_eval.py.
-          "horse_stable": ("art-variants/horse_stable/chatgpt_2.png", 1.0)}                     # Hidden Steppe
+          "horse_stable": ("art-variants/horse_stable/chatgpt_2.png", 1.0),                     # Hidden Steppe
+          "crystal_lodge": ("art-variants/crystal_lodge/chatgpt_1.png", 1.0),                   # Crystal Mountain
+          "moon_teahouse": ("art-variants/moon_teahouse/chatgpt_1.png", 1.0),                   # Moonwhisper
+          "star_dome": ("art-variants/star_dome/chatgpt_1.png", 1.0)}                           # Moonwhisper
 # Drawn smoke cut out of the teapot house, smokehouse and lamp house (`*_nosmoke.png`): the game puffs it
 # from where it rose (`LandStage.smokeHoles`, the user, 2026-11-22: "Any house that has something with smoke
 # needs to be animated"), as the yurt's.

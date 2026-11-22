@@ -2797,6 +2797,21 @@
       "kind": "building"
     },
     {
+      "id": "crystal_lodge",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "moon_teahouse",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "star_dome",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
       "id": "standing_stone",
       "kind": "prop"
     },
@@ -3488,6 +3503,18 @@
     },
     {
       "id": "windows_horse_stable",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_crystal_lodge",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_moon_teahouse",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_star_dome",
       "kind": "prop"
     },
     {
