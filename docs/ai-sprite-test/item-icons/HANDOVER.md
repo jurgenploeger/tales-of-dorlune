@@ -237,7 +237,7 @@ own. Attach `style_reference_rd_4x.png` and `batch3/NN_<id>_8x.png` in order; th
    blue and red.
 9. `santa_hat`: a red Santa hat (#D02828) with a white fur band and a white pom on its bent tip.
 10. `bunny_ears`: soft white bunny ears (#F4F0F0) on a band, pink inside.
-- **Hats and helms** (2026-11-22): nine of the ten drawings (the bunny ears still to come), painted big and
+- **Hats and helms** (2026-11-22): all ten drawings (the bunny ears a little after), painted big and
   snapped to 64 (14 to 39 colours); the copper helm came twice, the later in (`chatgpt_0.png` the first). The 55
   others are recoloured from them (`item_art.HAT_FAMILIES`, `hat_family`): to each item's `color` by hue, as the
   sets are, the darkest pixels (a hood's opening, a helm's eye slits) keeping their darkness and taking only the

@@ -3656,6 +3656,7 @@ CHATGPT = {
     "copper_hat": "art-variants/item_copper_hat/chatgpt_1.png",
     "dragon_helm": "art-variants/item_dragon_helm/chatgpt_1.png",
     "copper_helm": "art-variants/item_copper_helm/chatgpt_1.png",
+    "bunny_ears": "art-variants/item_bunny_ears/chatgpt_1.png",
     # Boots (batch 2); where it drew one twice, the later (chatgpt_0 the first).
     "ruby_ring": "art-variants/item_ruby_ring/chatgpt_1.png",
     "copper_boots": "art-variants/item_copper_boots/chatgpt_1.png",
