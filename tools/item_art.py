@@ -3646,6 +3646,16 @@ CHATGPT = {
     "power_band": "art-variants/item_power_band/chatgpt_1.png",
     "star_charm": "art-variants/item_star_charm/chatgpt_1.png",
     "novice_ring": "art-variants/item_novice_ring/chatgpt_1.png",
+    # Hats (batch 3): each shape once, the rest recoloured (`HAT_FAMILIES`).
+    "santa_hat": "art-variants/item_santa_hat/chatgpt_1.png",
+    "green_halloween_mask": "art-variants/item_green_halloween_mask/chatgpt_1.png",
+    "red_party_hat": "art-variants/item_red_party_hat/chatgpt_1.png",
+    "copper_hide_hood": "art-variants/item_copper_hide_hood/chatgpt_1.png",
+    "ranger_hood": "art-variants/item_ranger_hood/chatgpt_1.png",
+    "chain_coif": "art-variants/item_chain_coif/chatgpt_1.png",
+    "copper_hat": "art-variants/item_copper_hat/chatgpt_1.png",
+    "dragon_helm": "art-variants/item_dragon_helm/chatgpt_1.png",
+    "copper_helm": "art-variants/item_copper_helm/chatgpt_1.png",
     # Boots (batch 2); where it drew one twice, the later (chatgpt_0 the first).
     "ruby_ring": "art-variants/item_ruby_ring/chatgpt_1.png",
     "copper_boots": "art-variants/item_copper_boots/chatgpt_1.png",
@@ -3671,6 +3681,28 @@ CHATGPT = {
 # An armour set's piece in its other colours: the copper one recoloured to each set's `color` (silver to topaz).
 SET_COLOURS = ["silver", "onyx", "sapphire", "jade", "aquamarine", "ruby", "amethyst", "topaz"]
 SETS = {"copper_gauntlets": SET_COLOURS, "copper_boots": SET_COLOURS}
+
+# Hats that are one shape in many colours (`hat_piece`, the party hats, the masks): ChatGPT drew each shape once
+# (batch 3) and the rest are its picture recoloured to their own `color`. The hide hood's cream fur stays (its
+# copper is saturated, the fur not: `min_s`); the grey coif is tinted (`tint_grey`).
+HAT_FAMILIES = {"red_party_hat": {}, "green_halloween_mask": {}, "copper_helm": {}, "dragon_helm": {},
+                "copper_hat": {}, "ranger_hood": {}, "copper_hide_hood": {"min_s": 0.4}, "chain_coif": {"tint": True}}
+HEADGEAR_BASE = {"iron_plate": "copper_helm", "dragon_mail": "dragon_helm", "mage_robe": "copper_hat",
+                 "chain_mail": "chain_coif", "ranger_cloak": "ranger_hood", "hide_hood": "copper_hide_hood",
+                 "snow_cloak": "copper_hide_hood"}
+
+
+def hat_family(item):
+    """The drawing an item's icon is recoloured from, or None."""
+    if item.get("headgear"):
+        base = HEADGEAR_BASE[item["headgear"]]
+    elif item["id"].endswith("_party_hat"):
+        base = "red_party_hat"
+    elif item["id"].endswith("_halloween_mask"):
+        base = "green_halloween_mask"
+    else:
+        return None
+    return None if base == item["id"] else base
 # Every land's cape is Sunny Meadow's, recoloured to the land's own (its item's `color` and `accent`).
 LAND_CAPE = "sunny_meadow_cape"
 
@@ -3713,7 +3745,7 @@ def recolour_cape(img, base, accent, to_main, to_accent):
     return Image.fromarray((out * 255).round().astype(np.uint8), "RGBA")
 
 
-def recolour_set(img, base, target, below=40, above=10):
+def recolour_set(img, base, target, below=40, above=10, min_s=0.12, keep_dark=0.0):
     """A set piece in another set's colour: every pixel of the base colour's hue family (from 40 degrees redder,
     its shadows, to 10 yellower, short of a gold band) onto `target`, as `recolour_cape` does."""
     import colorsys
@@ -3729,14 +3761,37 @@ def recolour_set(img, base, target, below=40, above=10):
                 continue
             h, s, v = colorsys.rgb_to_hsv(*a[y, x, :3])
             d = ((h - h0 + 0.5) % 1 - 0.5) * 360
-            if not -below <= d <= above or s < 0.12:
+            if not -below <= d <= above or s < min_s:
                 continue
             nh = (h1 + d / 360 * 0.6) % 1          # by the hue's distance round the circle, not across 0
+            if v < keep_dark:   # an opening or eye slit in shadow stays in shadow, only its hue turned
+                out[y, x, :3] = colorsys.hsv_to_rgb(nh, min(s, max(s1, 0.25)), v)
+                continue
             ns = min(1, s ** (math.log(max(s1, 0.03)) / math.log(s0)))
             nv = min(1, v ** (math.log(max(v1, 0.05)) / math.log(v0)))
             out[y, x, :3] = colorsys.hsv_to_rgb(nh, ns, nv)
     return Image.fromarray((out * 255).round().astype(np.uint8), "RGBA")
 
+
+def tint_grey(img, target, min_v=0.0):
+    """A grey piece in another colour (the mail coif, whose steel has no hue to move): every pixel of low
+    saturation laid on `target`'s hue, its saturation the target's, its brightness its own, scaled so the
+    piece's middle grey lands on the target's."""
+    import colorsys
+    import numpy as np
+    from PIL import Image
+    a = np.asarray(img.convert("RGBA")).astype(float) / 255
+    out = a.copy()
+    h1, s1, v1 = colorsys.rgb_to_hsv(*[c / 255 for c in hexc(target)[:3]])
+    solid = a[..., 3] > 0
+    mid = float(np.median(a[solid][:, :3].max(-1)))
+    for y, x in zip(*np.nonzero(solid)):
+        h, s, v = colorsys.rgb_to_hsv(*a[y, x, :3])
+        if s > 0.35 or v < min_v:
+            continue
+        nv = min(1, v ** (math.log(max(v1, 0.05)) / math.log(max(mid, 0.05))))
+        out[y, x, :3] = colorsys.hsv_to_rgb(h1, min(1, s1 * (0.55 + 0.6 * v)), nv)
+    return Image.fromarray((out * 255).round().astype(np.uint8), "RGBA")
 
 def main(argv):
     sheet_path = None
@@ -3795,6 +3850,17 @@ def main(argv):
                 _Image.fromarray((swapped * 255).round().astype(_np.uint8), "RGBA").save(
                     SPRITES / f"item_{item_id}.png")
             recoloured.add(item_id)
+    for item in json.loads((ROOT / "content" / "items.json").read_text())["items"]:
+        base = hat_family(item)
+        if base in CHATGPT and item["id"] in ids and item["id"] not in CHATGPT:
+            picture = _Image.open(ROOT / CHATGPT[base])
+            how = HAT_FAMILIES[base]
+            if how.get("tint"):
+                picture = tint_grey(picture, item["color"])
+            else:
+                picture = recolour_set(picture, colours[base], item["color"], min_s=how.get("min_s", 0.12), keep_dark=0.36)
+            picture.save(SPRITES / f"item_{item['id']}.png")
+            recoloured.add(item["id"])
     ids = [i for i in ids if i not in CHATGPT and i not in lands and i not in recoloured]
     # Each drawing is finished in the game's pixel style (docs/pixel-style.md): lit, ramped, textured
     # and outlined afresh by tools/pixel_kit.py, its design kept.
