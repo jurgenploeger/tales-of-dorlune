@@ -67,8 +67,120 @@ BOXES = {"thatched_cottage": [(60, 96, 0, 96)],
          "firefly_house": [(70, 78, 29, 35), (70, 78, 61, 67)],
          "coral_house": [(66, 74, 27, 33), (67, 75, 63, 69)],
          "pearl_diver_hut": [(57, 64, 28, 35), (57, 64, 61, 68)],
+         "sleepy_cottage": [(54, 63, 38, 47)],          # the round window in its door, not the moon on its roof
+         "toymaker_workshop": [(63, 80, 30, 44), (64, 76, 69, 77)],   # its windows, not the clock's face
          "warrior_guild": [(112, 124, 50, 104)],
          "emerald_spire": [(100, 109, 80, 92), (124, 137, 74, 100), (148, 160, 50, 124)]}
+
+
+# Windows the warm rule can't find (Retro Diffusion drew their glass dim, orange or dark, and a few of ChatGPT's
+# panes carry mullions that split them): every pixel in each box is lit, laid on a lamplight ramp by how light it
+# is in the box (`paint`), so the frames and mullions stay darker. Rows y0 to y1, columns x0 to x1.
+PAINT = {"house": [(44, 55, 29, 35), (44, 55, 61, 67)],
+         "inn": [(41, 50, 64, 70), (52, 64, 46, 53), (56, 65, 59, 71)],
+         "dwarf_cottage": [(32, 40, 45, 51), (45, 52, 33, 38), (45, 52, 58, 63), (59, 66, 25, 30), (59, 66, 64, 69)],
+         "crooked_house": [(40, 50, 32, 40), (36, 42, 62, 66)],
+         "fisher_shack": [(41, 62, 18, 22)],
+         "stone_hut": [(62, 69, 61, 66)],
+         "sandstone_house": [(44, 56, 27, 36), (66, 78, 27, 36)],
+         "spice_shop": [(64, 76, 25, 35)]}
+DEEP, PALE = np.array([205, 105, 40]), np.array([255, 238, 160])
+
+# Lights (the user, 2026-11-22: "fires, lanterns, street lights and anything else that could have light in the
+# evening/night should be lit up"): what glows of each, cut as a window is and laid above the night's shade with a
+# soft glow round it (`LandStage.addWindows`). A lit pixel is bright (value from `v`) and coloured (saturation from
+# `s`), or a white-hot core beside one; `boxes` keeps it to the light (a torch's flame, not its pole).
+LIGHTS = {"street_lamp": {}, "brazier": {}, "wall_torch": {}, "wall_torch_2": {}, "wall_torch_3": {}, "wall_torch_4": {},
+          "tiki_torch": {"boxes": [(0, 13, 8, 24)]}, "moon_lantern_post": {}, "spooky_lantern": {}, "wisp_lantern": {},
+          "stone_lantern": {}, "mine_lantern_post": {"boxes": [(25, 36, 18, 28)]},
+          "firefly_jar_post": {"boxes": [(20, 36, 16, 28)]}, "magic_lamp": {"boxes": [(0, 13, 0, 32)]},
+          "bubbling_cauldron": {}, "fallen_star": {}, "crystal": {}, "star_crystal": {}, "crystal_spire": {},
+          "amethyst_spire": {}, "crystal_geode": {}, "glow_moss_rock": {}, "moon_flower": {"s": 0.1}, "fairy_ring": {}}
+
+
+def light(name, v=0.72, s=0.25, boxes=None):
+    """A light's glowing pixels (`LIGHTS`), as drawn."""
+    path = SPR / f"{name}.png"
+    if not path.exists():
+        return None
+    im = np.asarray(Image.open(path).convert("RGBA")).astype(float)
+    rgb = im[..., :3] / 255
+    top, low = rgb.max(-1), rgb.min(-1)
+    sat = np.where(top > 0, (top - low) / np.maximum(top, 1e-6), 0)
+    solid = im[..., 3] > 0
+    lit = solid & (top >= v) & (sat >= s)
+    lit |= solid & (top >= 0.93) & ndimage.binary_dilation(lit, iterations=2)
+    if boxes:
+        inside = np.zeros(lit.shape, bool)
+        for y0, y1, x0, x1 in boxes:
+            inside[y0:y1, x0:x1] = True
+        lit &= inside
+    labels, count = ndimage.label(lit, structure=np.ones((3, 3)))
+    keep = np.zeros(lit.shape, bool)
+    for index in range(1, count + 1):
+        if (labels == index).sum() >= 2:
+            keep |= labels == index
+    if keep.sum() < 4:
+        return None
+    out = np.zeros(im.shape, np.uint8)
+    out[keep] = im[keep].astype(np.uint8)
+    return Image.fromarray(out, "RGBA")
+
+
+def paint(name):
+    """`PAINT`'s windows: every pixel in each box on a lamplight ramp by its lightness there."""
+    im = np.asarray(Image.open(SPR / f"{name}.png").convert("RGBA")).astype(float)
+    out = np.zeros(im.shape, np.uint8)
+    luma = im[..., :3] @ np.array([0.299, 0.587, 0.114])
+    for y0, y1, x0, x1 in PAINT[name]:
+        box = (slice(y0, y1), slice(x0, x1))
+        solid = im[box][..., 3] > 0
+        if not solid.any():
+            continue
+        lo, hi = luma[box][solid].min(), luma[box][solid].max()
+        t = np.clip((luma[box] - lo) / max(hi - lo, 1), 0, 1) ** 0.8
+        colour = DEEP + (PALE - DEEP) * t[..., None]
+        out[box][..., :3] = np.where(solid[..., None], colour, out[box][..., :3]).astype(np.uint8)
+        out[box][..., 3] = np.where(solid, 255, out[box][..., 3])
+    return Image.fromarray(out, "RGBA")
+
+
+def derived():
+    """Recolours with no picture of their own (`house_green`, `pink_crystal`): their base's windows or light,
+    recoloured by the same rules, as the game recolours the sprite."""
+    assets = json.load(open(ROOT / "art" / "assets.json"))["assets"]
+    lit = set(buildings()) | set(LIGHTS)
+    out = {}
+    for a in assets:
+        d = a.get("derive")
+        if not d or d.get("layers") or (SPR / f"{a['id']}.png").exists() or a.get("kind") not in ("building", "prop"):
+            continue
+        base = d["from"]
+        made = cut(base) if base in lit else None
+        if a["id"] in LIGHTS_DERIVED or a.get("kind") == "building":
+            made = made or (light(base, **{k: v for k, v in LIGHTS.get(base, {}).items() if k == "s"}) if a["id"] in LIGHTS_DERIVED else None)
+        if made is None:
+            continue
+        from palette_preview import recolor
+        flat = np.asarray(made).astype(float) / 255
+        out[a["id"]] = Image.fromarray((np.clip(recolor(flat, d["recolor"]), 0, 1) * 255).round().astype(np.uint8), "RGBA")
+    return out
+
+
+# Recolours that are lights, though their bases aren't (a glowing mushroom from a plain one): their base's bright
+# pixels cut as a light's would be, then recoloured.
+LIGHTS_DERIVED = {"glow_mushroom", "pink_crystal", "violet_crystal", "amber_crystal", "crystal_shard", "pink_shard",
+                  "ice_cluster", "big_ice_cluster"}
+
+
+def cut(name):
+    """Whatever of `name` lights up at night: its painted windows, its light, or its warm panes."""
+    if name in PAINT:
+        return paint(name)
+    if name in LIGHTS:
+        spec = LIGHTS[name]
+        return light(name, s=spec.get("s", 0.25), boxes=spec.get("boxes"))
+    return windows(name)
 
 
 def buildings():
@@ -109,7 +221,8 @@ def windows(name):
 
 
 def main(argv):
-    made = {name: img for name in buildings() if (img := windows(name)) is not None}
+    made = {name: img for name in [*buildings(), *LIGHTS] if (img := cut(name)) is not None}
+    made.update(derived())
     if argv[:1] == ["--sheet"]:
         tiles = []
         for name, img in made.items():

@@ -282,6 +282,12 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   (small patches only, so thatch and gold trim stay out; `SKIP` for what has none), laid over the building above the
   night's shade by `LandStage.addWindows` and faded in with the dark (`LampLight.follow`). Rerun it after adding or
   redrawing a building, and register any new `windows_<id>` in art/assets.json; `--sheet out.png` shows them at night.
+  `BOXES` are rows first (y0, y1, x0, x1). Windows the warm rule can't find (RD's dim or orange glass) are boxed in
+  `PAINT` and laid on a lamplight ramp; every light (lamps, torches, braziers, lanterns, crystals, glowing mushrooms:
+  `LIGHTS`) is cut the same way, and a recolour with no picture of its own gets its base's, recoloured (`derived`).
+  Each lit part shines a soft glow round it in its light's colour (`LandStage.addWindows`; the user, 2026-11-22:
+  "anything else that could have light in the evening/night should be lit up. There should also be a soft glow
+  around it"), and the forge's moving fire burns above the night's shade too (`addFire`).
 - `tools/fire_art.py`: a building's fire moving (Goldburg's forge, `blacksmith`): its flame's own pixels cut
   into four frames (`fire_<id>_0` to `_3`, the first as drawn), each column of the flame reaching a pixel
   higher or lower, a few pixels a step along its ramp, the glow round it pulsing; `LandStage.addFire` lays
