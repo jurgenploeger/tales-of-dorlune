@@ -225,3 +225,45 @@ user picks by eye; what doesn't win isn't used.
   0.015; the pavilion `flat` 0.154 (needs ≤ 0.1536). All in: Swan Lake's swan boathouse and lake pavilion for a
   green and the purple house, Ingothold Lake's smokehouse for the fisher shack and dwarf boathouse for the beach
   hut. Night windows only on the panes, as cut.
+- **Batch 8, beaches** (2026-11-22; asked for walls a few steps darker or more colourful than the pale sand): all
+  four at the asked size, 30 to 33 colours, each a hair off one hard rule: the juice shack and pineapple hut
+  `form_relief` (0.016, 0.015), the shell house's outline 0.542 (needs 0.5455; snapped, it passed but its soft
+  score fell from 93% to 71%, so kept as drawn), the lighthouse `flat` 0.167 (its broad stripes). All in as
+  drawn: Pineapple Shore's pineapple hut and juice shack for its two beach huts, Sneezle Sands' shell house for a
+  beach hut and lighthouse for the fisher shack. The pineapple hut's doorstep boxed out of its night lights.
+- **Batch 9, desert and steppe** (2026-11-22): all four at the asked size, 32 to 37 colours. The flag tower passes
+  every hard rule as delivered, the well house once its outline is snapped 6% lighter: in, the well house in the
+  Genie Desert for its washed-out `adobe_house`, the flag tower in the Hidden Steppe for its desert tent (the well
+  house's thatch highlights and doorstep boxed out of its night lights). Back to ChatGPT: the lamp house (drawn
+  as a teapot, near our `teapot_house`, and flat, `form_relief` 0.013) and the horse stable (0.012, and its planks
+  too straight, `straight_edges` 0.427).
+- **Lamp house and horse stable, second try:** the lamp now a genie lamp; a thin shape, its 31 colours too many
+  for its pixels (`colour_density`), merged to 18: every hard rule. The stable, a big picture snapped to 96: soft
+  100%, `form_relief` 0.013. Both in: the Genie Desert's lamp house for its pavilion tent, the Hidden Steppe's
+  stable for its second yurt. The lamp's merged panes came out orange, so inside a box `window_art` now takes a
+  pane a little more orange (green from 150), which also filled in the amber edges of eight boxed buildings' panes.
+- **Smoke moves** (the user, 2026-11-22: "Any house that has something with smoke needs to be animated"): the
+  teapot house's steam, the smokehouse's smoke and the lamp's purple wisp cut out of their pictures (`*_nosmoke`)
+  and puffed from where they rose (`LandStage.smokeHoles`, in their own colours, `smokeColours`), as the yurt's.
+- **Batch 10, mountains** (2026-11-22; asked for no drawn smoke, the game puffs it): all four at the asked size,
+  31 to 39 colours. The crystal lodge passes every hard rule; the star dome misses `form_relief` by a hair (0.014),
+  the moon teahouse `straight_edges` (0.476, boxy): those three in, Crystal Mountain's lodge for a stone hut,
+  Moonwhisper's teahouse for its snow cabin and star dome for its stone hut. The lookout hut back to ChatGPT: its
+  outline too dark beside its inside (0.458), no lift landing in the rule's window, and flat (0.015).
+- **Lookout hut, second try:** its outline now right beside its inside; only `form_relief` 0.014 short. In,
+  Crystal Mountain's for another stone hut.
+- **The big batch, first nine** (2026-11-22, 17 asked in one chat): all at the asked size, 34 to 38 colours, the
+  best of each as drawn or its outline snapped (the apothecary and ice cream parlour 6% lighter). The straw house,
+  cupcake house, ice cream parlour and music box house pass every hard rule; the apothecary, creaky mill, stick
+  house and toymaker miss `form_relief` by a hair; the brick house that and `straight_edges` (its brick rows). All
+  in: Shiverdell's apothecary and creaky mill, the Big Bad Wolf's Lair's straw, stick and brick houses, Gumdrop
+  Peaks' cupcake house and ice cream parlour, Marionette Rise's toymaker and music box house, each for one of the
+  land's own, and in its hamlets' mix (`place_hamlets.POOLS`, rerun). The creaky mill's roof patches and wheel
+  boxed out of its night lights.
+- **The big batch, last eight** (2026-11-22): all at the asked size, 31 to 39 colours. The pillow cottage,
+  nightcap tower and flower cup house pass every hard rule as drawn, the emerald shop, firefly house and coral
+  house once their outlines are snapped 30% darker; the toll house and pearl diver's hut miss `form_relief` by a
+  hair. All in: Dozywick's pillow cottage and nightcap tower, Emerald Road's toll house and emerald shop, Starfall
+  Isle's flower cup and firefly houses (for its rose and moon fairy tree houses), Tidewater Shrine's coral house,
+  and the pearl diver's hut in its hamlets. Each one's panes boxed for the night lights. The batch is done: 59 new
+  designs in all.

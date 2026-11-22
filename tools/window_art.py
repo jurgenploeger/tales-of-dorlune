@@ -53,6 +53,19 @@ BOXES = {"thatched_cottage": [(60, 96, 0, 96)],
          "reed_boathouse": [(58, 72, 26, 38), (58, 72, 55, 67)],
          "frog_hut": [(28, 43, 20, 76)],
          "raft_teahouse": [(63, 74, 28, 70)],
+         "pineapple_hut": [(56, 70, 22, 33), (56, 70, 61, 72)],
+         "well_house": [(48, 56, 35, 46), (60, 78, 22, 33)],
+         "lamp_house": [(70, 80, 25, 34), (70, 80, 54, 63)],
+         "lookout_hut": [(54, 63, 28, 38), (54, 63, 56, 65)],
+         "creaky_mill": [(44, 54, 50, 59), (70, 80, 37, 46), (70, 80, 61, 70)],
+         "pillow_cottage": [(27, 37, 71, 80), (58, 68, 71, 80)],
+         "nightcap_tower": [(31, 37, 47, 55), (47, 53, 61, 69)],
+         "toll_house": [(23, 29, 63, 72), (52, 58, 63, 72)],
+         "emerald_shop": [(43, 52, 46, 55), (25, 37, 61, 70)],
+         "flower_cup_house": [(30, 34, 66, 75), (60, 64, 67, 75)],
+         "firefly_house": [(29, 35, 70, 78), (61, 67, 70, 78)],
+         "coral_house": [(27, 33, 66, 74), (63, 69, 67, 75)],
+         "pearl_diver_hut": [(28, 35, 57, 64), (61, 68, 57, 64)],
          "warrior_guild": [(112, 124, 50, 104)],
          "emerald_spire": [(100, 109, 80, 92), (124, 137, 74, 100), (148, 160, 50, 124)]}
 
@@ -74,7 +87,8 @@ def windows(name):
         inside[y0:y1, x0:x1] = True
     # Inside a box a pane may be a pure yellow too (no blue in it at all: the glass lantern shop's), as gold
     # trim can't sneak in there.
-    warm = (a > 200) & (r >= 225) & (g >= 175) & (b <= g - 35) & ((b >= 60) | inside) & (r - b >= 60)
+    # And a little more orange (green from 150): the genie lamp's panes, its colours merged.
+    warm = (a > 200) & (r >= 225) & ((g >= 175) | (inside & (g >= 150))) & (b <= g - 35) & ((b >= 60) | inside) & (r - b >= 60)
     if name in BOXES:
         warm &= inside
     labels, count = ndimage.label(warm, structure=np.ones((3, 3)))

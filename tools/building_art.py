@@ -1995,7 +1995,7 @@ PICKED = {"thatched_cottage": ("art-variants/thatched_cottage/chatgpt_5.png", 1.
           "weapon_shop": ("art-variants/weapon_shop/chatgpt_2.png", 1.0),
           # Batch 4 (docs/ai-sprite-test/building/batch4), each passing as delivered.
           "tea_house": ("art-variants/tea_house/chatgpt_1.png", 1.0),
-          "teapot_house": ("art-variants/teapot_house/chatgpt_1.png", 1.0),
+          "teapot_house": ("art-variants/teapot_house/chatgpt_1_nosmoke.png", 1.0),
           # garden_cottage: ChatGPT sent only its big picture (chatgpt_2_big.png); chatgpt_2_fixed.png is it
           # snapped to 78 x 50 (tools/ai_sprite_eval.py, 32 colours) and each outline pixel moved to the
           # sprite's own colour nearest 20% lighter, so it passes outline_rel without new colours.
@@ -2060,7 +2060,41 @@ PICKED = {"thatched_cottage": ("art-variants/thatched_cottage/chatgpt_5.png", 1.
           "swan_boathouse": ("art-variants/swan_boathouse/chatgpt_1_fixed.png", 1.0),           # Swan Lake
           "lake_pavilion": ("art-variants/lake_pavilion/chatgpt_1.png", 1.0),                   # Swan Lake
           "dwarf_boathouse": ("art-variants/dwarf_boathouse/chatgpt_1_fixed.png", 1.0),         # Ingothold Lake
-          "smokehouse": ("art-variants/smokehouse/chatgpt_1.png", 1.0)}                         # Ingothold Lake
+          "smokehouse": ("art-variants/smokehouse/chatgpt_1_nosmoke.png", 1.0),                 # Ingothold Lake
+          "pineapple_hut": ("art-variants/pineapple_hut/chatgpt_1.png", 1.0),                   # Pineapple Shore
+          "juice_shack": ("art-variants/juice_shack/chatgpt_1.png", 1.0),                       # Pineapple Shore
+          "shell_house": ("art-variants/shell_house/chatgpt_1.png", 1.0),                       # Sneezle Sands
+          "lighthouse": ("art-variants/lighthouse/chatgpt_1.png", 1.0),                         # Sneezle Sands
+          "well_house": ("art-variants/well_house/chatgpt_1_fixed.png", 1.0),                   # Genie Desert
+          "flag_tower": ("art-variants/flag_tower/chatgpt_1.png", 1.0),                         # Hidden Steppe
+          # Its second try, its colours merged to 18 (a thin shape: 31 were too many for its pixels).
+          "lamp_house": ("art-variants/lamp_house/chatgpt_2_18colours_nosmoke.png", 1.0),       # Genie Desert
+          # Its second try, delivered as a big picture, snapped to 96 by ai_sprite_eval.py.
+          "horse_stable": ("art-variants/horse_stable/chatgpt_2.png", 1.0),                     # Hidden Steppe
+          "crystal_lodge": ("art-variants/crystal_lodge/chatgpt_1.png", 1.0),                   # Crystal Mountain
+          "moon_teahouse": ("art-variants/moon_teahouse/chatgpt_1.png", 1.0),                   # Moonwhisper
+          "star_dome": ("art-variants/star_dome/chatgpt_1.png", 1.0),                           # Moonwhisper
+          "lookout_hut": ("art-variants/lookout_hut/chatgpt_2.png", 1.0),                       # Crystal Mountain
+          "apothecary": ("art-variants/apothecary/chatgpt_1.png", 1.0),                         # Shiverdell
+          "creaky_mill": ("art-variants/creaky_mill/chatgpt_1.png", 1.0),                       # Shiverdell
+          "straw_house": ("art-variants/straw_house/chatgpt_1.png", 1.0),                       # Big Bad Wolf's Lair
+          "stick_house": ("art-variants/stick_house/chatgpt_1.png", 1.0),                       # Big Bad Wolf's Lair
+          "brick_house": ("art-variants/brick_house/chatgpt_1.png", 1.0),                       # Big Bad Wolf's Lair
+          "cupcake_house": ("art-variants/cupcake_house/chatgpt_1.png", 1.0),                   # Gumdrop Peaks
+          "ice_cream_parlour": ("art-variants/ice_cream_parlour/chatgpt_1.png", 1.0),           # Gumdrop Peaks
+          "toymaker_workshop": ("art-variants/toymaker_workshop/chatgpt_1.png", 1.0),           # Marionette Rise
+          "music_box_house": ("art-variants/music_box_house/chatgpt_1.png", 1.0),               # Marionette Rise
+          "pillow_cottage": ("art-variants/pillow_cottage/chatgpt_1.png", 1.0),                 # Dozywick
+          "nightcap_tower": ("art-variants/nightcap_tower/chatgpt_1.png", 1.0),                 # Dozywick
+          "toll_house": ("art-variants/toll_house/chatgpt_1.png", 1.0),                         # Emerald Road
+          "emerald_shop": ("art-variants/emerald_shop/chatgpt_1.png", 1.0),                     # Emerald Road
+          "flower_cup_house": ("art-variants/flower_cup_house/chatgpt_1.png", 1.0),             # Starfall Isle
+          "firefly_house": ("art-variants/firefly_house/chatgpt_1.png", 1.0),                   # Starfall Isle
+          "coral_house": ("art-variants/coral_house/chatgpt_1.png", 1.0),                       # Tidewater Shrine
+          "pearl_diver_hut": ("art-variants/pearl_diver_hut/chatgpt_1.png", 1.0)}               # Tidewater Shrine
+# Drawn smoke cut out of the teapot house, smokehouse and lamp house (`*_nosmoke.png`): the game puffs it
+# from where it rose (`LandStage.smokeHoles`, the user, 2026-11-22: "Any house that has something with smoke
+# needs to be animated"), as the yurt's.
 
 
 def picked(item):

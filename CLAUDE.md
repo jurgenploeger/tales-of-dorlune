@@ -254,7 +254,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   Each kind of place is a landmark too (`WorldMap.landmark`: `at: "farm"`, `"ruin"`…, `which`): every land has a
   chest at one of its places (a potion or ether by its level, refilling as chests do) and someone living at another
   (maps.json `locals`). Theme `lush`: a richer ground tile in broad soft patches over the plain ground
-  (`WorldMap.layLush`, `GroundTiles.lushMask`; the grass lands' `tile_rich_grass`). A brazier smokes (`LandStage.addSmoke`), and so does a building's smoke hole (`LandStage.smokeHoles`: the yurt's, its drawn smoke cut out of ChatGPT's picture).
+  (`WorldMap.layLush`, `GroundTiles.lushMask`; the grass lands' `tile_rich_grass`). A brazier smokes (`LandStage.addSmoke`), and so does a building's smoke hole (`LandStage.smokeHoles`: the yurt's, the teapot house's spout, the smokehouse's stack, the genie lamp's spout; their drawn smoke cut out of ChatGPT's pictures, `*_nosmoke.png`; steam and the lamp's wisp in their own colours, `smokeColours`; the user, 2026-11-22: "Any house that has something with smoke needs to be animated").
 - Tall grass (the user's pick from `tools/grass_preview.py`, 2026-11-19, after SpriteCook's interactive tall grass article;
   visual only, green wild lands only): theme `tallGrass` (`patches`, `size`, `art`) lays soft rounds of cells
   (`WorldMap.layTallGrass`, kept from other scenery; debug `at=grass`), filled by `GrassField` with tufts about nine a
@@ -302,6 +302,12 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   by ChatGPT is copied, not drawn (`PICKED`, kept in `art-variants/`: 29 of them since 2026-11-21, every building drawn in code (the five
   landmarks, the acorn cottage and gem workshop the user's pick over the scores); how: `docs/ai-sprite-test/`,
   `tools/ai_sprite_eval.py`). After eight blind picks all went to ChatGPT, the user dropped them (2026-11-21).
+- `tools/place_hamlets.py`: hamlets along the wild lands' roads (the user, 2026-11-22: "The world needs to feel alive
+  and no empty boring areas"): each land filled to about 8 to 16 buildings by its size, in hamlets of up to five a few
+  cells either side of its roads, each spot held to `world_layout.py`'s rules for what's set down by hand (on the land,
+  clear of rivers, apart from what's there), the land's own mix of buildings in each (`POOLS`, no one-offs: `UNIQUE`).
+  What it adds carries `"hamlet": true` and a rerun redoes them: rerun it after adding a land's buildings to its pool,
+  then `world_layout.py --check` and `check_content.py`.
 - `tools/crystal_art.py`: the Glimmerdeep's crystal scenery from the caves' own rock (its walls, floor, spires and
   geodes): each pixel's brightness laid on a ramp of crystal colours, as a `derive` can't tint the grey tiles.
   Rerun it after editing a ramp; `--sheet out.png` previews them.

@@ -2757,6 +2757,151 @@
       "kind": "building"
     },
     {
+      "id": "pineapple_hut",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "juice_shack",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "shell_house",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "lighthouse",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "well_house",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "flag_tower",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "lamp_house",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "horse_stable",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "crystal_lodge",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "moon_teahouse",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "star_dome",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "lookout_hut",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "pillow_cottage",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "nightcap_tower",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "toll_house",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "emerald_shop",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "flower_cup_house",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "firefly_house",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "coral_house",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "pearl_diver_hut",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "apothecary",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "creaky_mill",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "straw_house",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "stick_house",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "brick_house",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "cupcake_house",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "ice_cream_parlour",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "toymaker_workshop",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
+      "id": "music_box_house",
+      "scale": 1.35,
+      "kind": "building"
+    },
+    {
       "id": "standing_stone",
       "kind": "prop"
     },
@@ -3416,6 +3561,122 @@
     },
     {
       "id": "windows_smokehouse",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_pineapple_hut",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_juice_shack",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_shell_house",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_lighthouse",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_well_house",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_flag_tower",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_lamp_house",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_horse_stable",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_crystal_lodge",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_moon_teahouse",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_star_dome",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_lookout_hut",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_pillow_cottage",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_nightcap_tower",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_toll_house",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_emerald_shop",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_flower_cup_house",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_firefly_house",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_coral_house",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_pearl_diver_hut",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_apothecary",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_creaky_mill",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_straw_house",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_stick_house",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_brick_house",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_cupcake_house",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_ice_cream_parlour",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_toymaker_workshop",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_music_box_house",
       "kind": "prop"
     },
     {
