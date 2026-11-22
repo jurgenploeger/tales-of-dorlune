@@ -113,3 +113,10 @@ a conch shell), `mysterious_cave_cape` (#3A2E4F, #B9A6E0, an eye in the dark), `
   Windswept Downs (its kite cape to be redrawn with the front trim), Crystal Mountain, Dozywick, Snow White Forest,
   Moonwhisper, Sneezle Sands, Starfall Isle, the Glimmerdeep, Briarmere, Tidewater Shrine, the Whispering Hollow and
   Emerald Road.
+- **The gloves and seven more capes** (2026-11-22): painted big, snapped to 64 (34 to 38 colours for the gloves),
+  every one in its item's `color` (the colour it's worn in). In: the prospector's, starpetal, starforged,
+  dragonhide, falcon and iron gloves, and the copper gauntlet, whose eight set colours (silver to topaz) are it
+  recoloured (`item_art.SETS`, `recolour_set`: its hue family from 40 degrees redder, the copper's shadows, to 10
+  yellower onto each set's `color`); and the capes of Emerald Road, the Whispering Hollow, Tidewater Shrine,
+  Briarmere, the Glimmerdeep, Starfall Isle and Sneezle Sands. Still to come: the orchard gloves, and the capes of
+  Windswept Downs (redo), Crystal Mountain, Dozywick, Snow White Forest and Moonwhisper.

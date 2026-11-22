@@ -3614,7 +3614,23 @@ CHATGPT = {
     "secret_plain_cape": "art-variants/item_secret_plain_cape/chatgpt_1.png",
     # Gloves, painted big by ChatGPT's image model and snapped to the grid.
     "leather_gloves": "art-variants/item_leather_gloves/chatgpt_1.png",
+    "prospectors_gloves": "art-variants/item_prospectors_gloves/chatgpt_1.png",
+    "starpetal_gauntlets": "art-variants/item_starpetal_gauntlets/chatgpt_1.png",
+    "starforged_gauntlets": "art-variants/item_starforged_gauntlets/chatgpt_1.png",
+    "dragonhide_gauntlets": "art-variants/item_dragonhide_gauntlets/chatgpt_1.png",
+    "falcon_gloves": "art-variants/item_falcon_gloves/chatgpt_1.png",
+    "iron_gauntlets": "art-variants/item_iron_gauntlets/chatgpt_1.png",
+    "copper_gauntlets": "art-variants/item_copper_gauntlets/chatgpt_1.png",
+    "emerald_road_cape": "art-variants/item_emerald_road_cape/chatgpt_1.png",
+    "mysterious_cave_cape": "art-variants/item_mysterious_cave_cape/chatgpt_1.png",
+    "water_temple_cape": "art-variants/item_water_temple_cape/chatgpt_1.png",
+    "rosen_lake_cape": "art-variants/item_rosen_lake_cape/chatgpt_1.png",
+    "glimmerdeep_cape": "art-variants/item_glimmerdeep_cape/chatgpt_1.png",
+    "starfall_isle_cape": "art-variants/item_starfall_isle_cape/chatgpt_1.png",
+    "hachoo_island_cape": "art-variants/item_hachoo_island_cape/chatgpt_1.png",
 }
+# An armour set's piece in its other colours: the copper one recoloured to each set's `color` (silver to topaz).
+SETS = {"copper_gauntlets": ["silver", "onyx", "sapphire", "jade", "aquamarine", "ruby", "amethyst", "topaz"]}
 # Every land's cape is Sunny Meadow's, recoloured to the land's own (its item's `color` and `accent`).
 LAND_CAPE = "sunny_meadow_cape"
 
@@ -3657,6 +3673,31 @@ def recolour_cape(img, base, accent, to_main, to_accent):
     return Image.fromarray((out * 255).round().astype(np.uint8), "RGBA")
 
 
+def recolour_set(img, base, target, below=40, above=10):
+    """A set piece in another set's colour: every pixel of the base colour's hue family (from 40 degrees redder,
+    its shadows, to 10 yellower, short of a gold band) onto `target`, as `recolour_cape` does."""
+    import colorsys
+    import numpy as np
+    from PIL import Image
+    a = np.asarray(img.convert("RGBA")).astype(float) / 255
+    out = a.copy()
+    h0, s0, v0 = colorsys.rgb_to_hsv(*[c / 255 for c in hexc(base)[:3]])
+    h1, s1, v1 = colorsys.rgb_to_hsv(*[c / 255 for c in hexc(target)[:3]])
+    for y in range(a.shape[0]):
+        for x in range(a.shape[1]):
+            if a[y, x, 3] == 0:
+                continue
+            h, s, v = colorsys.rgb_to_hsv(*a[y, x, :3])
+            d = ((h - h0 + 0.5) % 1 - 0.5) * 360
+            if not -below <= d <= above or s < 0.12:
+                continue
+            nh = (h1 + (h - h0) * 0.6) % 1
+            ns = min(1, s ** (math.log(max(s1, 0.03)) / math.log(s0)))
+            nv = min(1, v ** (math.log(max(v1, 0.05)) / math.log(v0)))
+            out[y, x, :3] = colorsys.hsv_to_rgb(nh, ns, nv)
+    return Image.fromarray((out * 255).round().astype(np.uint8), "RGBA")
+
+
 def main(argv):
     sheet_path = None
     if "--sheet" in argv:
@@ -3686,7 +3727,17 @@ def main(argv):
         else:
             recolour_cape(_Image.open(ROOT / CHATGPT[LAND_CAPE]), base, accent, *lands[item_id]).save(
                 SPRITES / f"item_{item_id}.png")
-    ids = [i for i in ids if i not in CHATGPT and i not in lands]
+    colours = {i["id"]: i.get("color") for i in json.loads((ROOT / "content" / "items.json").read_text())["items"]}
+    recoloured = set()
+    for base_id, sets in SETS.items():
+        suffix = base_id.split("_", 1)[1]
+        for name in sets:
+            item_id = f"{name}_{suffix}"
+            if item_id in ids:
+                recolour_set(_Image.open(ROOT / CHATGPT[base_id]), colours[base_id], colours[item_id]).save(
+                    SPRITES / f"item_{item_id}.png")
+                recoloured.add(item_id)
+    ids = [i for i in ids if i not in CHATGPT and i not in lands and i not in recoloured]
     # Each drawing is finished in the game's pixel style (docs/pixel-style.md): lit, ramped, textured
     # and outlined afresh by tools/pixel_kit.py, its design kept.
     import io
