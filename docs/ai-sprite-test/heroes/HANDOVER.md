@@ -189,6 +189,8 @@ Pilot **Human Male** end to end before the other eight. Don't start a second bod
    Its brows then read as a bow (the user): arches 4 pixels wide. Three variants were drawn in code (flat,
    a soft slope, a short dash); the user picked flat, 3 pixels on row 23, columns 28 to 30 and 34 to 36
    (`tries/master_brows_a.png`, the target for ChatGPT's change).
+9. **Try 9, the master with flat brows** (`hero64_human_male_master.png` since 2026-11-23): ChatGPT's change, sampled
+   with code, matches the target pixel for pixel; symmetric, 46 px, 20 colours.
 
 ## What has gone wrong before (read before prompting)
 - ChatGPT failed the monster test (`../HANDOVER.md`): drew bigger than asked (44 to 48 px for 35), and the
