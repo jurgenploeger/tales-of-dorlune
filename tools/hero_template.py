@@ -127,6 +127,9 @@ def sheet(body, anim, old):
                 im.alpha_composite(faded(old[(direction, 0)]), (c * FRAME, r * FRAME))
             if anim == "idle" and c == 0 and approved(body, direction):
                 im.alpha_composite(approved(body, direction), (c * FRAME, r * FRAME))
+    done = os.path.join(ROOT, "docs", "ai-sprite-test", "heroes", f"hero64_{body}_{anim}.png")
+    if os.path.exists(done):                 # an assembled sheet (tools/hero_idle.py): shown over the guides
+        im.alpha_composite(Image.open(done).convert("RGBA"))
     return im
 
 

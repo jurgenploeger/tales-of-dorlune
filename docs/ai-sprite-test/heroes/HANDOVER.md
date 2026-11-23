@@ -204,6 +204,11 @@ Pilot **Human Male** end to end before the other eight. Don't start a second bod
     silhouette pixel for pixel, its 20 colours. The standing turnaround is complete: all eight directions,
     five drawn and three mirrored (`hero64_human_male_turnaround.png`). Each view took one try once the master
     and the earlier views were attached and ChatGPT made the 1× from its painting with code.
+14. **Idle** (`hero64_human_male_idle.png`, `.gif`): ChatGPT drew the down row (`hero64_human_male_idle_down.png`:
+    frames 1 and 4 the master exactly, 2 and 3 the upper body and the hands a pixel lower, symmetric). The other
+    seven rows are made in code the same way (`tools/hero_idle.py`: above the waistband and the arms down to
+    the hands' tips a pixel lower, the shorts, legs and feet still); on the down row the code and ChatGPT's
+    drawing differ in 6 pixels. Every frame's feet stay on row 60.
 
 ## What has gone wrong before (read before prompting)
 - ChatGPT failed the monster test (`../HANDOVER.md`): drew bigger than asked (44 to 48 px for 35), and the
