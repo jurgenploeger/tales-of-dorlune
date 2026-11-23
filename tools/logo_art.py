@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""The logo (Logo.png): TALES OF over DORLUNE, in the style of the logo the user pointed to (Neopets' "Tales
+"""The logo (Logo.png): since 2026-11-23 the user's own drawing (`PICKED`, art-variants/logo/picked.png),
+copied as it is: its faint halo (alpha under `HAZE`) cleared, its near-opaque pixels made opaque, cropped to
+the lettering with `PAD` round it and scaled to `WIDTH`. `--drawn` writes the logo drawn in code instead,
+the one before it, described below.
+
+The drawn logo: TALES OF over DORLUNE, in the style of the logo the user pointed to (Neopets' "Tales
 of Dacardia"): chunky capitals in Luckiest Guy (tools/fonts/, Apache 2.0), set tight so their outlines run
 into one, each letter tipped a few degrees one way or the other and lifted or dropped a little, so the word
 bounces; TALES OF a little over half the world's name's size, a small gap above it. All gold, each line in
@@ -11,7 +16,8 @@ use the same face and gold, tools/store_slides.py).
 Drawn `SS` times as big, the outline measured from the letters' true edges (round), then shrunk, so the
 edges are smooth. The tilts and lifts come from a fixed seed, so every run draws the same logo.
 
-    python3 tools/logo_art.py                    # writes Logo.png
+    python3 tools/logo_art.py                    # writes Logo.png from the picked drawing
+    python3 tools/logo_art.py --drawn            # writes the logo drawn in code
     python3 tools/logo_art.py --preview out.png  # on the sky, on midnight, and small
 
 Needs pillow, numpy and scipy.
@@ -22,11 +28,17 @@ from pathlib import Path
 
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
-from scipy.ndimage import distance_transform_edt
+from scipy.ndimage import distance_transform_edt, label
 
 ROOT = Path(__file__).resolve().parent.parent
 LOGO = ROOT / "TalesOfDorlune/Resources/Assets.xcassets/Logo.imageset/Logo.png"
 FONT = ROOT / "tools/fonts/LuckiestGuy-Regular.ttf"
+# The user's logo (2026-11-23), and how it's finished: alpha under HAZE cleared (its soft halo), at or over
+# SOLID made whole, PAD pixels of the picture's own scale kept round the lettering, then WIDTH pixels wide.
+PICKED = ROOT / "art-variants/logo/picked.png"
+HAZE, SOLID, PAD, WIDTH = 16, 240, 8, 1904
+# Its outline's ink, measured.
+INK_PICKED = (59, 29, 57)
 
 # The lines, top to bottom: the words and their size as a share of the world's name's (`PX`, in Logo.png's
 # pixels). Then, as shares of `PX`: the space between letters (less than none: they touch), how far each
@@ -153,6 +165,27 @@ def logo() -> Image.Image:
     return image.resize((round(image.width / SS), round(image.height / SS)), Image.LANCZOS)
 
 
+def picked() -> Image.Image:
+    """The user's logo, its halo cleared, cropped and scaled to `WIDTH`."""
+    art = np.array(Image.open(PICKED).convert("RGBA"))
+    alpha = art[..., 3]
+    alpha[alpha < HAZE] = 0
+    alpha[alpha >= SOLID] = 255
+    # The background's removal left a few small holes in the letters (TALES OF's E and O, DORLUNE's R, by
+    # the N) half see-through: on the sky they showed grey. A hole with no clear pixel in it is ink.
+    holes, count = label(alpha < SOLID)
+    edge = set(np.unique(np.concatenate([holes[0], holes[-1], holes[:, 0], holes[:, -1]])))
+    clear = set(np.unique(holes[alpha == 0]))
+    for index in range(1, count + 1):
+        if index not in edge and index not in clear:
+            art[holes == index] = (*INK_PICKED, 255)
+    art[alpha == 0] = 0
+    image = Image.fromarray(art, "RGBA")
+    left, top, right, bottom = image.getbbox()
+    image = image.crop((left - PAD, top - PAD, right + PAD, bottom + PAD))
+    return image.resize((WIDTH, round(image.height * WIDTH / image.width)), Image.LANCZOS)
+
+
 def gradient(size: tuple[int, int], stops: list) -> Image.Image:
     width, height = size
     t = np.linspace(0, 1, height) * (len(stops) - 1)
@@ -165,10 +198,11 @@ def gradient(size: tuple[int, int], stops: list) -> Image.Image:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("--drawn", action="store_true", help="write the logo drawn in code, not the picked one")
     parser.add_argument("--preview", type=Path, help="write the logo on the sky, on midnight and small here")
     args = parser.parse_args()
 
-    art = logo()
+    art = logo() if args.drawn else picked()
     art.save(LOGO, optimize=True)
     print(f"wrote {LOGO.relative_to(ROOT)}  {art.width}×{art.height}")
 

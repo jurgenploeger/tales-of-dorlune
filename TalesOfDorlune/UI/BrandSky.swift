@@ -54,7 +54,7 @@ struct RaysAnchor: PreferenceKey {
 extension Brand {
     /// Where the sky's light sits in the logo image (the middle of DORLUNE, under the smaller TALES OF),
     /// as a share of its size.
-    static let raysInLogo = UnitPoint(x: 0.5, y: 0.67)
+    static let raysInLogo = UnitPoint(x: 0.5, y: 0.7)
 }
 
 extension View {
