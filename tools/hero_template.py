@@ -123,9 +123,18 @@ def sheet(body, anim, old):
             im.alpha_composite(g, (c * FRAME, r * FRAME))
             if old and anim == "walk" and c < 4 and (direction, c) in old:
                 im.alpha_composite(faded(old[(direction, c)]), (c * FRAME, r * FRAME))
-            if old and anim == "idle" and c == 0 and (direction, 0) in old:
+            if old and anim == "idle" and c == 0 and (direction, 0) in old and not approved(body, direction):
                 im.alpha_composite(faded(old[(direction, 0)]), (c * FRAME, r * FRAME))
+            if anim == "idle" and c == 0 and approved(body, direction):
+                im.alpha_composite(approved(body, direction), (c * FRAME, r * FRAME))
     return im
+
+
+def approved(body, direction):
+    """An approved view, unfaded: docs/ai-sprite-test/heroes/hero64_<body>_master.png (down) or _<direction>.png."""
+    name = f"hero64_{body}_master.png" if direction == "down" else f"hero64_{body}_{direction}.png"
+    path = os.path.join(ROOT, "docs", "ai-sprite-test", "heroes", name)
+    return Image.open(path).convert("RGBA") if os.path.exists(path) else None
 
 
 def labelled(im, k, title, columns, rows):
@@ -348,7 +357,8 @@ def board():
         pieces.append((name + "\n+ armour", trimmed(mannequin(b, True))))
     tries = [("ChatGPT 1", "try1_human_male.png", None), ("ChatGPT 2", "try2_human_male_big.png", "big"),
              ("ChatGPT 3", "try3_human_male.png", None), ("ChatGPT 4", "try4_human_male.png", None), ("ChatGPT 5", "try5_human_male.png", None),
-             ("ChatGPT 6 (semi-chibi)", "try6_human_male.png", None), ("ChatGPT 6 big, snapped", "try6_human_male_snapped.png", None)]
+             ("ChatGPT 6 (semi-chibi)", "try6_human_male.png", None), ("ChatGPT 6 big, snapped", "try6_human_male_snapped.png", None),
+             ("Master (try 8)", "try8_human_male.png", None)]
     for label, f, kind in tries:
         p = os.path.join(TRIES, f)
         if os.path.exists(p):

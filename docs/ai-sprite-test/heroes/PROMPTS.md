@@ -139,6 +139,10 @@ Follow-up if it comes back too tall or too short: "Measure it: it's {measured} p
 
 ## 3. Turnaround (second message)
 
+How every view is made since the master (try 8): ChatGPT paints it, then makes the 1× from its own painting
+with code ("sample, don't redraw", §2), and we check it: height, feet row and colours against the master;
+`tools/hero_symmetry.py check` for the up view. A fix is asked for with a corrected file attached as the target.
+
 Attach the approved master.
 
 > Same character, same standing pose, as four more 64 × 64 frames, one at a time:

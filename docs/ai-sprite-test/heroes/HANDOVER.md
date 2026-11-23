@@ -180,6 +180,12 @@ Pilot **Human Male** end to end before the other eight. Don't start a second bod
    (`hero_symmetry.py check`): a brow 2 pixels on one side and 3 on the other, the eyes drawn differently, the
    mouth a pixel off the middle, a stray line down the left shin, the right foot's outline broken, a gap at the
    right hand. `fix` evens it (`try7_human_male_sym.png`); the smile comes out a flat line.
+8. **Try 8, the master** (approved by the user, 2026-11-23: "Now this looks great"; `hero64_human_male_master.png`):
+   ChatGPT sampled its own painting with code again, our evened copy attached as the target, and drew the smile
+   back. 46 × 21, feet on row 60, columns 22 to 42, 20 colours, alpha clean, the 8× exact, and
+   `hero_symmetry.py check` finds no difference. What worked, for every view after it: ChatGPT paints, makes
+   the 1× from its painting with code ("sample, don't redraw"), we check it, and its fixes are asked for with a
+   corrected file attached as the target.
 
 ## What has gone wrong before (read before prompting)
 - ChatGPT failed the monster test (`../HANDOVER.md`): drew bigger than asked (44 to 48 px for 35), and the
