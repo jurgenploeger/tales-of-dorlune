@@ -120,6 +120,18 @@ was about 70 pixels tall), keep it as the design and ask: "I like this design. R
 the 64 × 64 grid at {height} pixels tall, feet on row 60, pixel by pixel at that size; don't shrink the
 picture. Keep the build numbers from my first message."
 
+To have ChatGPT make the 1× from its own big picture (the user's wish, 2026-11-23; try 6's big painting snapped
+is the target), attach the big picture and our snap (`tries/try6_human_male_snapped.png`) and ask:
+
+> Make the 1× PNG from your big picture with code, not by redrawing. In Python: find your picture's pixel grid
+> (its blocks are 14 to 18 pixels and not all the same size, so find each column and row edge where the colour
+> changes, don't assume one block size), take each block's middle colour, and put the result on a 64 × 64
+> transparent canvas, the lowest pixel on row 60, centred on column 32. Then merge near colours down to 20 to 40.
+> The attached small file is what it should come out as. After that, fix only these by hand: {flaws, e.g. the
+> dark smudge at the right ear (the ear should match the left one, mirrored) and the missing outline down the
+> right arm (a 1-pixel deep brown outline like the left arm's)}. Change nothing else. Deliver the 1× PNG and its
+> exact 8× preview, and report the check numbers.
+
 Follow-up if it comes back too tall or too short: "Measure it: it's {measured} pixels tall. Redraw it
 {height} pixels tall on the same 64 × 64 canvas, feet still on row 60. Don't shrink the picture, redraw it."
 
