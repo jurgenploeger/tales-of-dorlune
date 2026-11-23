@@ -3,17 +3,20 @@
 Copy-paste prompts for ChatGPT (image generation). Read [`HANDOVER.md`](HANDOVER.md) first. Fill in the
 `{placeholders}` from the body table below. One body per chat; one direction row per message.
 
-| Body id | Race | Gender | Height | Head | Build |
-|---|---|---|---|---|---|
-| human_male | Human | Male | 46 | 18 | slim, straight shoulders |
-| human_female | Human | Female | 44 | 18 | slim, narrower shoulders, slightly wider hips |
-| human_other | Human | Other | 45 | 18 | slim, androgynous, between the two |
-| elf_male | Elf | Male | 47 | 18 | slender, long pointed ears |
-| elf_female | Elf | Female | 45 | 18 | slender, long pointed ears |
-| elf_other | Elf | Other | 46 | 18 | slender, androgynous, long pointed ears |
-| dwarf_male | Dwarf | Male | 38 | 17 | short, stocky, broad shoulders, thick arms and legs |
-| dwarf_female | Dwarf | Female | 36 | 16 | short, sturdy, broad, strong arms |
-| dwarf_other | Dwarf | Other | 37 | 17 | short, stocky, androgynous |
+The LPC paper-doll standard's 64 × 64 frame and body size (about 48 px), in a sturdy chibi build. Legs are
+measured from the shorts' hem to the soles; the guide's orange line is the hem, the violet ticks the chest's width.
+
+| Body id | Race | Gender | Height | Head | Chest | Arms, legs | Legs | Feet | Build |
+|---|---|---|---|---|---|---|---|---|---|
+| human_male | Human | Male | 48 | 20 | 16 | 6 | 10 | 6 | sturdy, straight shoulders |
+| human_female | Human | Female | 46 | 20 | 15 | 5 | 10 | 6 | sturdy, a little narrower shoulders, a little wider hips |
+| human_other | Human | Other | 47 | 20 | 15 | 6 | 10 | 6 | sturdy, androgynous, between the two |
+| elf_male | Elf | Male | 48 | 20 | 15 | 5 | 11 | 5 | a touch slimmer, long pointed ears |
+| elf_female | Elf | Female | 46 | 20 | 14 | 5 | 11 | 5 | a touch slimmer, long pointed ears |
+| elf_other | Elf | Other | 47 | 20 | 14 | 5 | 11 | 5 | a touch slimmer, androgynous, long pointed ears |
+| dwarf_male | Dwarf | Male | 40 | 19 | 18 | 7 | 7 | 7 | short and broad, thick arms and legs |
+| dwarf_female | Dwarf | Female | 38 | 18 | 17 | 6 | 7 | 7 | short and broad, strong arms |
+| dwarf_other | Dwarf | Other | 39 | 19 | 17 | 7 | 7 | 7 | short and broad, androgynous |
 
 All bodies: bald (hair is its own layer), no beard, no eyebrows drawn thicker than one pixel, plain
 fitted underwear in warm grey: shorts on every body, a simple band top on Female and Other.
@@ -76,17 +79,29 @@ Attach: `templates/guide_{body}_8x.png`, `templates/compare_48_64.png`, `docs/ai
 >
 > - One 64 × 64 frame, standing, **facing down (toward the viewer)**, arms relaxed a little away from the
 >   body, feet slightly apart, weight even. Feet on row 60, centred on column 32.
-> - **{height} pixels tall**, the head about {head} pixels. Build: {build}.
+> - **{height} pixels tall**, the head about {head} pixels. A sturdy cute chibi, a young adventurer, not a
+>   baby and not a stick figure: chest and shoulders {chest} pixels wide, arms and legs {limbs} pixels thick,
+>   legs {legs} pixels from the shorts' hem to the soles, feet {feet} pixels wide. Build: {build}.
+> - Neck about 6 to 8 pixels wide, so a collar or necklace fits.
+> - Arms relaxed, hanging with a 1 to 2 pixel gap from the body, open hands (not fists).
 > - A smooth, doll-like body: no anatomy detail, no nipples, no navel line, no muscles drawn. Bald (hair is
 >   added later), no beard. {Elf: long pointed ears reaching out past the head's sides.} {Dwarf: clearly
 >   shorter and broader than a human, a round sturdy body; not human height.}
 > - Plain fitted underwear in warm grey: snug shorts{Female/Other: and a simple band top}. One flat colour
 >   family with its own shading, no trim, no pattern.
 > - Bare hands and bare feet, drawn clearly (2 × 3 pixels or more each), so gloves and boots can go on.
-> - A friendly face: big eyes with a white catchlight, a small mouth, light rosy cheeks.
+> - A friendly face: eyes about 3 wide and 4 tall, set just below the middle of the head (a dark lash line
+>   on top, a brown iris, one white catchlight pixel), thin 1-pixel brows, a small neutral smile, light rosy
+>   cheeks. Human ears small, sticking out at most 1 pixel.
+> - The shorts outlined in their own deep grey-brown, not the skin's outline colour.
 > - Skin: a warm light peach ramp (it is recoloured in the game for every skin tone).
 >
 > Save as `hero64_{body}_master.png` and `hero64_{body}_master_8x.png`.
+
+If it sends a big painted picture instead (about 1254 pixels, each "pixel" a 12 to 13 pixel block: try 2
+was about 70 pixels tall), keep it as the design and ask: "I like this design. Redraw this exact character on
+the 64 × 64 grid at {height} pixels tall, feet on row 60, pixel by pixel at that size; don't shrink the
+picture. Keep the build numbers from my first message."
 
 Follow-up if it comes back too tall or too short: "Measure it: it's {measured} pixels tall. Redraw it
 {height} pixels tall on the same 64 × 64 canvas, feet still on row 60. Don't shrink the picture, redraw it."
@@ -215,5 +230,5 @@ Attach `templates/weapon_wheel_8x.png` and the weapon's icon at 8×.
 > never rotate a picture (rotating blurs and jags it). One-pixel tinted outline. Save as
 > `held64_{weapon}_0.png`, `_45.png`, `_90.png`, each with an `_8x` preview.
 
-Lengths, as a share of a 46-pixel hero: dagger 14, sword 24, greatsword 32, staff 40, spear 44, bow 28 tall,
-wand 12, axe 22, hammer 22, whip 18 coiled (hanging to the feet when held).
+Lengths, for a 48-pixel hero: dagger 14, sword 25, greatsword 33, staff 42, spear 46, bow 29 tall,
+wand 12, axe 23, hammer 23, whip 19 coiled (hanging to the feet when held).

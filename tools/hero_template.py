@@ -28,17 +28,19 @@ DIRECTIONS = ["up", "right", "down", "left"]   # the engine's row order (art/ass
 ANIMS = {"idle": 4, "walk": 6, "run": 6, "attack": 6}
 OLD_FRAME = 48
 
-# body id: (race, gender, height in pixels, head height, today's body sheet)
+# The LPC paper-doll standard's frame (64 x 64, feet near the bottom, body about 48 tall), in a sturdy chibi
+# build: the user's pick, 2026-11-23, after the size board (tries 1 to 3 in docs/ai-sprite-test/heroes/tries).
+# body id: (race, gender, height, head, chest width, limb width, legs from shorts to soles, foot width, sheet today)
 SPEC = {
-    "human_male":   ("Human", "Male",   46, 18, "body_human"),
-    "human_female": ("Human", "Female", 44, 18, "body_human_female"),
-    "human_other":  ("Human", "Other",  45, 18, "body_human_other"),
-    "elf_male":     ("Elf",   "Male",   47, 18, "body_elf_male"),
-    "elf_female":   ("Elf",   "Female", 45, 18, "body_elf"),
-    "elf_other":    ("Elf",   "Other",  46, 18, "body_elf_other"),
-    "dwarf_male":   ("Dwarf", "Male",   38, 17, "body_dwarf"),
-    "dwarf_female": ("Dwarf", "Female", 36, 16, "body_dwarf_female"),
-    "dwarf_other":  ("Dwarf", "Other",  37, 17, "body_dwarf_other"),
+    "human_male":   ("Human", "Male",   48, 20, 16, 6, 10, 6, "body_human"),
+    "human_female": ("Human", "Female", 46, 20, 15, 5, 10, 6, "body_human_female"),
+    "human_other":  ("Human", "Other",  47, 20, 15, 6, 10, 6, "body_human_other"),
+    "elf_male":     ("Elf",   "Male",   48, 20, 15, 5, 11, 5, "body_elf_male"),
+    "elf_female":   ("Elf",   "Female", 46, 20, 14, 5, 11, 5, "body_elf"),
+    "elf_other":    ("Elf",   "Other",  47, 20, 14, 5, 11, 5, "body_elf_other"),
+    "dwarf_male":   ("Dwarf", "Male",   40, 19, 18, 7, 7, 7, "body_dwarf"),
+    "dwarf_female": ("Dwarf", "Female", 38, 18, 17, 6, 7, 7, "body_dwarf_female"),
+    "dwarf_other":  ("Dwarf", "Other",  39, 19, 17, 7, 7, 7, "body_dwarf_other"),
 }
 
 GRID = (200, 200, 205, 255)
@@ -46,6 +48,8 @@ FEET_C = (40, 170, 80, 255)
 TOP_C = (60, 110, 230, 255)
 CHIN_C = (40, 190, 210, 255)
 MID_C = (225, 225, 230, 255)
+LEGS_C = (235, 140, 40, 255)
+CHEST_C = (200, 90, 200, 255)
 
 
 def font(size):
@@ -54,10 +58,16 @@ def font(size):
 
 def guide(body):
     """One 64 x 64 frame of guide lines for a body (transparent elsewhere)."""
-    _, _, height, head, _ = SPEC[body]
+    _, _, height, head, chest, _, legs, _, _ = SPEC[body]
     im = Image.new("RGBA", (FRAME, FRAME), (0, 0, 0, 0))
     d = ImageDraw.Draw(im)
     top = FEET - height + 1
+    leg_top = FEET - legs                   # the shorts' hem
+    for x in range(0, FRAME, 3):
+        d.point((x, leg_top), LEGS_C)
+    cy = top + head + 4                     # chest width ticks, a little under the chin
+    for x in (FRAME // 2 - chest // 2, FRAME // 2 - chest // 2 + chest - 1):
+        d.line([(x, cy - 1), (x, cy + 1)], CHEST_C)
     for y in range(0, FRAME, 2):
         d.point((FRAME // 2, y), MID_C)
     for x in range(0, FRAME, 2):
@@ -74,7 +84,7 @@ def up(im, k):
 
 def old_frames(body):
     """Today's 48-pixel frames of a body, each set in a 64 frame on the new feet row, or None."""
-    path = os.path.join(SPRITES, SPEC[body][4] + ".png")
+    path = os.path.join(SPRITES, SPEC[body][-1] + ".png")
     if not os.path.exists(path):
         return None
     a = Image.open(path).convert("RGBA")
@@ -157,7 +167,7 @@ def compare(old_bodies):
             box.alpha_composite(f)
             out.alpha_composite(up(box, k), (x + (FRAME - OLD_FRAME) * k // 2, 40))
         out.alpha_composite(up(guide(body), k), (x, 50 + FRAME * k))
-        race, gender, h, _, _ = SPEC[body]
+        race, gender, h = SPEC[body][:3]
         d.text((x, 60 + FRAME * k * 2), f"{race} {gender}: {h} px", fill=(30, 30, 40), font=font(18))
     return out
 
@@ -186,12 +196,8 @@ def weapon_wheel():
 
 TRIES = os.path.join(ROOT, "docs", "ai-sprite-test", "heroes", "tries")
 # name: (height, head, torso width, limb width, leg length, foot width)
-BUILDS = {
-    "46 slim":   (46, 18, 13, 4, 14, 5),
-    "46 stocky": (46, 18, 17, 6, 10, 7),
-    "56 stocky": (56, 21, 20, 7, 12, 8),
-    "70 stocky": (70, 26, 25, 9, 15, 10),
-}
+BUILDS = {b: (v[2], v[3], v[4], v[5], v[6], v[7]) for b, v in SPEC.items()
+          if b in ("human_male", "elf_female", "dwarf_male")}
 SKIN = [(236, 204, 176), (214, 178, 150), (178, 140, 118), (96, 66, 60)]      # light, mid, shade, outline
 SHORTS = [(150, 144, 140), (122, 116, 114), (96, 90, 90), (58, 52, 56)]
 STEEL = [(176, 196, 222), (130, 154, 190), (92, 112, 150), (40, 48, 78)]
@@ -331,8 +337,9 @@ def board():
     hero = old_frames("human_male")[("down", 0)]
     pieces.append(("hero today", trimmed(hero)))
     for b in BUILDS:
-        pieces.append((b, trimmed(mannequin(b))))
-        pieces.append((b + "\n+ armour", trimmed(mannequin(b, True))))
+        name = " ".join(SPEC[b][:2])
+        pieces.append((name, trimmed(mannequin(b))))
+        pieces.append((name + "\n+ armour", trimmed(mannequin(b, True))))
     tries = [("ChatGPT 1", "try1_human_male.png", None), ("ChatGPT 2", "try2_human_male_big.png", "big"),
              ("ChatGPT 3", "try3_human_male.png", None)]
     for label, f, kind in tries:

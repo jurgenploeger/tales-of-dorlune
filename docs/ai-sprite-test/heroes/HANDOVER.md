@@ -17,7 +17,7 @@ Prompts: [`PROMPTS.md`](PROMPTS.md). Templates to attach: [`templates/`](templat
   walk sped up (`Walker.swift`); in battle the hero stands in walk frame 1 at 2× and only the weapon node
   swings (`BattleScene.swift`, `swing`/`thrust`).
 
-## Size decision: 64 × 64 frames, body about 46 px tall
+## Size decision: the LPC standard, 64 × 64 frames, body about 48 px, a sturdy chibi
 What others use (sources below):
 
 | Game or system | Character frame | Equipment as layers? |
@@ -37,19 +37,25 @@ What others use (sources below):
 - 64 × 64 (LPC's size) leaves 10 to 14 px above the head for hats and helmets and about 8 px a side for
   capes and held weapons.
 
-Chosen (the user, 2026-11-23):
-- Frame 64 × 64. The lowest foot pixel on **row 60**, the body centred on **x 32**.
-- **One art pixel stays one point.** The hero gets about 40% taller on screen next to the world, and the
-  camera zoom is rebalanced when the engine moves to 64.
-- Heights, head about 2.5 heads:
+Chosen (the user, 2026-11-23, after three ChatGPT tries and the size board,
+`templates/size_board_3x.png`):
+- **The open paper-doll standard's frame (LPC): 64 × 64**, the body about 48 px tall. The lowest foot pixel on
+  **row 60**, the body centred on **x 32**.
+- **One art pixel stays one point.** The hero gets about 50% taller on screen than today (48 against 31) and
+  is about as tall as the town gate (51) and a little under a tree (56). The rest of the game (buildings,
+  trees, props, tiles, monsters) is to be brought to the same scale later (the user: "eventually we will
+  update everything else in the game as well"); the hero comes first.
+- **A sturdy chibi, not a slim one.** Room for armour comes from width, not height: try 3 at 46 px with
+  4-pixel limbs and 14-pixel legs read as a stick figure. Armour also widens the silhouette (pauldrons,
+  helmets, chunky boots) instead of being painted on skin.
 
-| Body | Height | Head |
-|---|---|---|
-| Human Male / Female / Other | 46 / 44 / 45 px | 18 px |
-| Elf Male / Female / Other | 47 / 45 / 46 px (ears extra) | 18 px |
-| Dwarf Male / Female / Other | 38 / 36 / 37 px, broader | 17 / 16 / 17 px |
+| Body | Height | Head | Chest | Arms, legs | Legs | Feet |
+|---|---|---|---|---|---|---|
+| Human Male / Female / Other | 48 / 46 / 47 | 20 | 16 / 15 / 15 | 6 / 5 / 6 | 10 | 6 |
+| Elf Male / Female / Other (ears extra) | 48 / 46 / 47 | 20 | 15 / 14 / 14 | 5 | 11 | 5 |
+| Dwarf Male / Female / Other | 40 / 38 / 39 | 19 / 18 / 19 | 18 / 17 / 17 | 7 / 6 / 7 | 7 | 7 |
 
-`tools/hero_template.py` `SPEC` holds these; the guides draw them (blue: head top, cyan: chin, green: feet).
+Legs are from the shorts' hem to the soles. `tools/hero_template.py` `SPEC` holds these; the guides draw them (blue: head top, cyan: chin, violet ticks: the chest's width, orange: the shorts' hem, green: feet).
 
 ## The sheets
 One PNG per body per animation. Columns are frames, rows are directions in the engine's order:
@@ -132,6 +138,16 @@ Pilot **Human Male** end to end before the other eight. Don't start a second bod
   colour (warm grey). No anatomy detail.
 - Dwarves clearly shorter and broader than humans (the RD lesson: "big head" pulled them to human height).
 - Elves: the ears are what sets them apart; same body as the human otherwise.
+
+## The pilot so far (Human Male, 2026-11-23, `tries/`)
+1. **Try 1** (64 × 64, 45 px, every check passed): read as a toddler or a little monk. Small low eyes under
+   heavy brows, big ears, a thin neck, a long trunk on stubby legs, fists at the hips, flat shading, the
+   shorts outlined in the skin's brown.
+2. **Try 2** (a 1254-pixel painting, about 70 px tall, about 30,000 colours, not on a grid): the design the
+   user liked: bigger eyes with a catchlight, small ears, a neck, open hands, the shorts outlined in grey.
+   Its richness was partly its size; never shrink it, redraw it.
+3. **Try 3** (64 × 64, 46 px): followed "legs about 15 px" and came out spindly: 4-pixel limbs, legs too long.
+   Hence the sturdy build above.
 
 ## What has gone wrong before (read before prompting)
 - ChatGPT failed the monster test (`../HANDOVER.md`): drew bigger than asked (44 to 48 px for 35), and the
