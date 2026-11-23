@@ -208,7 +208,9 @@ Pilot **Human Male** end to end before the other eight. Don't start a second bod
     and 4 the master exactly, 2 and 3 the upper body and the hands a pixel lower, symmetric). The other rows
     were first made in code by shifting the approved views (`tools/hero_idle.py` `breathe`), but that left
     chopped pixels where moved and still columns met (the user): every row is drawn by ChatGPT instead, the
-    tool only assembles them (a left row its right twin mirrored).
+    tool only assembles them (a left row its right twin mirrored). Done 2026-11-23: down, down-right, right, up-right
+    and up drawn (each frames 1 and 4 the approved view exactly, 2 and 3 a pixel lower above the legs, feet on
+    row 60, the master's colours; up symmetric), the left three mirrored (`hero64_human_male_idle.gif`).
 
 ## What has gone wrong before (read before prompting)
 - ChatGPT failed the monster test (`../HANDOVER.md`): drew bigger than asked (44 to 48 px for 35), and the
