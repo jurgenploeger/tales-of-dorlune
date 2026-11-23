@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
-"""The idle sheet for an approved hero body: 4 frames a direction, a slow breath (docs/ai-sprite-test/heroes).
+"""An approved hero body's animation sheet from the rows ChatGPT drew (docs/ai-sprite-test/heroes).
 
-Assembles the rows ChatGPT drew (hero64_<body>_idle_<direction>.png, 256 x 64), a left row its right twin
-mirrored, into hero64_<body>_idle.png (256 x 512, rows clockwise from up) and its 4x. A direction with no row
-of its own stays empty: the breath made in code (`breathe`, everything above the waistband and the arms a pixel
-lower) left chopped pixels where moved and still columns met (the user, 2026-11-23), so every row is drawn.
+Assembles hero64_<body>_<anim>_<direction>.png (a row: idle 4 frames, walk, run and attack 6, each 64 x 64), a
+left row its right twin mirrored frame by frame, into hero64_<body>_<anim>.png (rows clockwise from up) and its
+4x. A direction with no row of its own stays empty: the idle's breath made in code (`breathe`, everything above
+the waistband and the arms a pixel lower) left chopped pixels where moved and still columns met (the user,
+2026-11-23), so every row is drawn.
 
-  hero_idle.py human_male
+  hero_idle.py human_male              the idle sheet
+  hero_idle.py human_male walk --gif   the walk sheet, and hero64_<body>_walk.gif: the rows there are, at 4x
 """
 import os
 import sys
@@ -66,32 +68,57 @@ def breathe(view):
     return Image.fromarray(out)
 
 
-def sheet(body):
-    im = Image.new("RGBA", (t.FRAME * 4, t.FRAME * len(t.DIRECTIONS)), (0, 0, 0, 0))
-    for r, d in enumerate(t.DIRECTIONS):
-        drawn = os.path.join(HEROES, f"hero64_{body}_idle_{d}.png")
+GIF_MS = {"idle": 300, "walk": 150, "run": 100, "attack": 110}
+
+
+def rows(body, anim):
+    """Each direction's row as drawn, or mirrored from its right twin; None where there's neither."""
+    n = t.ANIMS[anim]
+    out = {}
+    for d in t.DIRECTIONS:
+        drawn = os.path.join(HEROES, f"hero64_{body}_{anim}_{d}.png")
         if os.path.exists(drawn):
-            im.alpha_composite(Image.open(drawn).convert("RGBA"), (0, r * t.FRAME))
+            out[d] = Image.open(drawn).convert("RGBA")
             continue
-        if d.endswith("left"):
-            twin = os.path.join(HEROES, f"hero64_{body}_idle_{d[:-4]}right.png")
-            if os.path.exists(twin):
-                row = Image.open(twin).convert("RGBA")
-                for c in range(4):    # each frame mirrored in place, so the frames keep their order
-                    f = row.crop((c * t.FRAME, 0, (c + 1) * t.FRAME, t.FRAME)).transpose(Image.FLIP_LEFT_RIGHT)
-                    im.paste(f, (c * t.FRAME, r * t.FRAME))
+        twin = os.path.join(HEROES, f"hero64_{body}_{anim}_{d[:-4]}right.png") if d.endswith("left") else None
+        if twin and os.path.exists(twin):
+            row, im = Image.open(twin).convert("RGBA"), Image.new("RGBA", (t.FRAME * n, t.FRAME), (0, 0, 0, 0))
+            for c in range(n):    # each frame mirrored in place, so the frames keep their order
+                im.paste(row.crop((c * t.FRAME, 0, (c + 1) * t.FRAME, t.FRAME)).transpose(Image.FLIP_LEFT_RIGHT),
+                         (c * t.FRAME, 0))
+            out[d] = im
+    return out
+
+
+def gif(body, anim, path):
+    """Every row there is, side by side in the sheet's order, playing at 4x on white."""
+    got = [r for d, r in rows(body, anim).items()]
+    n, f = t.ANIMS[anim], t.FRAME
+    frames = []
+    for c in range(n):
+        im = Image.new("RGBA", (f * len(got), f), (255, 255, 255, 255))
+        for i, r in enumerate(got):
+            im.alpha_composite(r.crop((c * f, 0, (c + 1) * f, f)), (i * f, 0))
+        frames.append(im.convert("RGB").resize((im.width * 4, im.height * 4), Image.NEAREST))
+    frames[0].save(path, save_all=True, append_images=frames[1:], duration=GIF_MS[anim], loop=0)
+
+
+def sheet(body, anim="idle"):
+    im = Image.new("RGBA", (t.FRAME * t.ANIMS[anim], t.FRAME * len(t.DIRECTIONS)), (0, 0, 0, 0))
+    got = rows(body, anim)
+    for r, d in enumerate(t.DIRECTIONS):
+        if d in got:
+            im.alpha_composite(got[d], (0, r * t.FRAME))
     return im
 
 
 if __name__ == "__main__":
-    body = sys.argv[1] if len(sys.argv) > 1 else "human_male"
-    s = sheet(body)
-    s.save(os.path.join(HEROES, f"hero64_{body}_idle.png"))
-    s.resize((s.width * 4, s.height * 4), Image.NEAREST).save(os.path.join(HEROES, f"hero64_{body}_idle_4x.png"))
-    # how close the shift comes to what ChatGPT drew, where it drew a row
-    drawn = os.path.join(HEROES, f"hero64_{body}_idle_down.png")
-    if os.path.exists(drawn):
-        mine = np.array(breathe(t.approved(body, "down"))).astype(int)
-        theirs = np.array(Image.open(drawn).convert("RGBA")).astype(int)[:, 64:128]
-        print("down, frame 2: the shift and ChatGPT's drawing differ in", int((np.abs(mine - theirs).sum(2) > 0).sum()), "pixels")
-    print("wrote", f"hero64_{body}_idle.png")
+    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    body = args[0] if args else "human_male"
+    anim = args[1] if len(args) > 1 else "idle"
+    s = sheet(body, anim)
+    s.save(os.path.join(HEROES, f"hero64_{body}_{anim}.png"))
+    s.resize((s.width * 4, s.height * 4), Image.NEAREST).save(os.path.join(HEROES, f"hero64_{body}_{anim}_4x.png"))
+    if "--gif" in sys.argv:
+        gif(body, anim, os.path.join(HEROES, f"hero64_{body}_{anim}.gif"))
+    print("wrote", f"hero64_{body}_{anim}.png", "rows:", ", ".join(rows(body, anim)))

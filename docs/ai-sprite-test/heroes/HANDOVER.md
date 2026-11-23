@@ -211,6 +211,14 @@ Pilot **Human Male** end to end before the other eight. Don't start a second bod
     tool only assembles them (a left row its right twin mirrored). Done 2026-11-23: down, down-right, right, up-right
     and up drawn (each frames 1 and 4 the approved view exactly, 2 and 3 a pixel lower above the legs, feet on
     row 60, the master's colours; up symmetric), the left three mirrored (`hero64_human_male_idle.gif`).
+15. **Walk down** (`hero64_human_male_walk_down.png`, third try). Try 1 was paintings only, with mitts for
+    hands, elbows bent and the knee lifted like a march. Try 2 (`tries/walk_down_try2.png`) had straight arms
+    and clean hands, but the legs merged (4 px each, no gap), the lifted leg stopped in a flat bar with no
+    foot, and it held only two poses. Try 3 passed: the master's own legs (frames 1 and 4 are the master from
+    row 50 down), the foot up 2 then 1 px with its whole shape, a 1 px bob, the opposite hand 1 px lower, the
+    head the master's in every frame, the master's colours. What made it work: naming the cycle frame by frame
+    and saying "the master's own legs". `tools/hero_idle.py human_male walk --gif` assembles the sheet and
+    `hero64_human_male_walk.gif`.
 
 ## What has gone wrong before (read before prompting)
 - ChatGPT failed the monster test (`../HANDOVER.md`): drew bigger than asked (44 to 48 px for 35), and the

@@ -180,11 +180,27 @@ Then the animation's own lines:
 > arms settling; frame 3 like frame 2; frame 4 back up, as frame 1. Nothing else moves; the feet stay put.
 
 **walk (6 frames)**
-> A relaxed walk cycle, loops from frame 6 back to 1: 1 contact (left foot forward, heel down), 2 down (body
-> 1 pixel lower, weight on the left foot), 3 passing (right leg passes the left, body 1 pixel higher), 4
-> contact (right foot forward), 5 down, 6 passing. The arms swing opposite the legs. {right: the near leg and
-> arm one shade lighter than the far ones; the far ones never hidden completely.} {down/up: the legs move
-> up and down in the view, not sideways; the arms swing slightly out.}
+> A relaxed walk, looping from frame 6 back to 1. Use the approved view's own legs, feet, arms and hands in
+> every frame (the same widths, gaps and outlines), only moved: no mitts or fists, no merged legs, never a leg
+> cut off by a flat bar. The arms hang nearly straight, 1 pixel clear of the body, and swing only 1 to 2 pixels.
+> The head is the approved view's in every frame, only ever moved, never redrawn.
+>
+> {down/up, the cycle that passed for walk down (2026-11-23):}
+> - frame 1: both feet down, exactly the approved view's legs
+> - frame 2: the right foot up 2 px with its whole foot shape; everything above the shorts up 1 px
+> - frame 3: the right foot up 1 px; the body back down
+> - frame 4: both feet down, exactly the approved view's legs
+> - frame 5: the left foot up 2 px; everything above the shorts up 1 px
+> - frame 6: the left foot up 1 px; the body back down
+> - the hand on the side opposite the lifted foot 1 px lower
+>
+> {right, down-right, up-right: the legs step forward and back instead of up:}
+> - frame 1: contact, the near foot 3 px forward and the far foot 3 px back, both on row 60
+> - frame 2: down, the stride 2 px each way, the body above the shorts 1 px lower
+> - frame 3: passing, the far foot lifted 2 px beside the near leg, the body back up
+> - frames 4 to 6: the same with the legs swapped
+> - the near leg and arm one shade lighter than the far ones; the far ones never hidden completely
+> - the arm swings opposite its leg, 1 to 2 px
 
 **run (6 frames)**
 > A run cycle, loops: the body leaning forward a little, longer strides than the walk, arms bent and
