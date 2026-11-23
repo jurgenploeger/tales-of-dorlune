@@ -1,7 +1,7 @@
 # Hero sprites v2: 64-pixel bodies drawn by ChatGPT
 
 Goal: redraw the nine hero bodies (Human, Elf, Dwarf × Male, Female, Other) at a size where armour, gloves,
-boots, necklaces, belts, hair and held weapons read, with idle, walk, run and attack in all four directions.
+boots, necklaces, belts, hair and held weapons read, with idle, walk, run and attack in eight directions.
 First as a blank canvas: a smooth doll body in plain underwear, nothing else. Everything a hero wears or
 holds is a layer drawn over it later.
 
@@ -58,20 +58,24 @@ Chosen (the user, 2026-11-23, after three ChatGPT tries and the size board,
 Legs are from the shorts' hem to the soles. `tools/hero_template.py` `SPEC` holds these; the guides draw them (blue: head top, cyan: chin, violet ticks: the chest's width, orange: the shorts' hem, green: feet).
 
 ## The sheets
-One PNG per body per animation. Columns are frames, rows are directions in the engine's order:
-**up, right, down, left**.
+One PNG per body per animation. Columns are frames, rows are **eight directions, clockwise from up**: up,
+up-right, right, down-right, down, down-left, left, up-left (the user, 2026-11-23). The world is isometric, so
+walking along a row of cells moves diagonally on screen: the diagonals are the views seen most.
 
 | Animation | Frames | Sheet | Notes |
 |---|---|---|---|
-| idle | 4 | 256 × 256 | a breath: chest and head down a pixel and back, arms settle; blinks stay in code |
-| walk | 6 | 384 × 256 | contact, down, pass, contact, down, pass; feet on row 60 at contact |
-| run | 6 | 384 × 256 | leaning forward, longer stride, one airborne frame a pixel or two up |
-| attack | 6 | 384 × 256 | ready, wind-up, strike, follow-through, recover, ready; empty hand closed as a grip |
+| idle | 4 | 256 × 512 | a breath: chest and head down a pixel and back, arms settle; blinks stay in code |
+| walk | 6 | 384 × 512 | contact, down, pass, contact, down, pass; feet on row 60 at contact |
+| run | 6 | 384 × 512 | leaning forward, longer stride, one airborne frame a pixel or two up |
+| attack | 6 | 384 × 512 | ready, wind-up, strike, follow-through, recover, ready; empty hand closed as a grip |
 
 File names: `hero64_<race>_<gender>_<anim>.png`, for example `hero64_human_male_walk.png`.
 
-- ChatGPT draws **down, up and right**. **Left is the right row mirrored** for the base body and hair. Only
-  layers that differ per side (a weapon hand, a one-shouldered cape) get a left row of their own.
+- ChatGPT draws **five views: down, down-right, right, up-right, up**. **Down-left, left and up-left are
+  their mirrors** for the base body and hair. Only layers that differ per side (a weapon hand, a
+  one-shouldered cape) get left rows of their own.
+- Down-right is a three-quarter front view (both eyes, the far one a pixel narrower, the nose toward the
+  right); up-right a three-quarter back view (the back of the head, the near ear and cheek edge, no eyes).
 - The attack is drawn empty-handed: the weapon is a layer of its own (below), so one attack works for every
   weapon. The swing arm ends in a closed fist at the grip.
 
@@ -95,7 +99,7 @@ Each weapon is **one sheet of 8 angles** on a 128 × 128 canvas per angle, the g
 (64, 64), 0° pointing straight up and turning clockwise (`templates/weapon_wheel_8x.png`). Code places it
 on each frame's grip mark at that frame's angle, in front of the body or behind it by direction (the rule
 `GearArt.posed` keeps today). This avoids asking ChatGPT for every weapon in every frame (9 bodies × 22
-frames × 4 directions). Draw the 0°, 45° and 90° views; 135° to 315° are those turned in whole quarter
+frames × 8 directions). Draw the 0°, 45° and 90° views; 135° to 315° are those turned in whole quarter
 turns or mirrored where the weapon is symmetric, and drawn by hand where it isn't (a bow, a curved blade).
 
 ## The workflow
@@ -107,10 +111,10 @@ Pilot **Human Male** end to end before the other eight. Don't start a second bod
 2. **Master frame:** prompt § Master base body for the body. Down-facing, standing, frame 1. Iterate until it
    passes the checks below and you like it. This frame is the character from now on: attach it to every
    later prompt in this body's chat.
-3. **Turnaround:** the same pose facing up and facing right (§ Turnaround). Check they match the master in
+3. **Turnaround:** the same pose facing down-right, right, up-right and up (§ Turnaround). Check they match the master in
    height, proportions, underwear and colours before any animation.
 4. **Animations, one direction row per prompt:** § Animation row, with `templates/row_<body>_<anim>_8x.png`
-   attached. Order: idle, walk, run, attack; down first, then up, then right.
+   attached. Order: idle, walk, run, attack; each in down, down-right, right, up-right, up.
 5. **Snap and check** every PNG that comes back, even when ChatGPT says it checked:
    `python3 tools/ai_sprite_eval.py <frame.png> --canvas 64 --height <body height> --colours 32 --kind creature --out <out>`
    (frames are snapped one at a time and centred, not yet on row 60; a sheet mode that cuts a row into
@@ -167,6 +171,10 @@ Pilot **Human Male** end to end before the other eight. Don't start a second bod
   and `BattleScene.swift`; play idle, run and attack frames in `Walker` and `BattleActor`.
 - Tools: `F = 48` in `hero_layers.py`, `wear_art.py`, `armour_fit.py`, `worn_marks.py`.
 - `art/eyes.json` boxes, `docs/sprite-acceptance.md`'s 48-pixel rules, the camera zoom.
+- Eight directions: `Direction` (`TalesOfDorlune/World/Geometry.swift`, today down, left, right, up) grows
+  the four diagonals; `init(_ vector:)` picks the nearest of eight, keeping today's stickiness near each
+  boundary so a sprite doesn't flicker; `SheetLayout` reads eight rows; `GearArt`'s front and side poses and
+  `Walker`'s side checks (`isHorizontal`) learn the diagonals; battle's side-on `profile` uses right and left.
 
 ## Sources
 - LPC: https://github.com/LiberatedPixelCup/Universal-LPC-Spritesheet-Character-Generator ,

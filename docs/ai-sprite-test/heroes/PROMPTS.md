@@ -62,8 +62,14 @@ fitted underwear in warm grey: shorts on every body, a simple band top on Female
 > **The same character in every frame.** When I attach the approved master frame, copy it exactly: the
 > same head, face, proportions, skin colours and underwear. Only the pose changes.
 >
-> **Directions.** "down" faces the viewer; "up" faces away (back of the head, no face); "right" is a side
-> view facing right (one eye, one ear, the near arm in front of the body).
+> **Directions** (eight; you draw five, the other three are mirrored in code):
+> - "down" faces the viewer.
+> - "down-right" is a three-quarter front view turned to the viewer's right: both eyes, the far one a pixel
+>   narrower, the nose a 1-pixel bump toward the right, the near (left) shoulder a little forward.
+> - "right" is a side view facing right: one eye, one ear, the near arm in front of the body.
+> - "up-right" is a three-quarter back view turned right: the back of the head, the near ear and the edge
+>   of the cheek, no eyes.
+> - "up" faces away: the back of the head, no face.
 >
 > **Several in one chat:** one image at a time, named as I ask. If unsure, ask one short question; say
 > plainly what you didn't manage.
@@ -112,18 +118,26 @@ Follow-up if it comes back too tall or too short: "Measure it: it's {measured} p
 
 Attach the approved master.
 
-> Same character, same standing pose, as two more 64 × 64 frames: **facing up** (seen from behind: the back
-> of the bald head, no face, the ears still showing if an elf) and **facing right** (side view: one eye, the
-> nose a 1-pixel bump, the near arm in front of the body, the far arm a step darker behind it). Exactly the
-> same height, head size, skin colours and underwear as the master; feet on row 60.
+> Same character, same standing pose, as four more 64 × 64 frames, one at a time:
+> 1. **down-right** (three-quarter front, turned to the viewer's right: both eyes, the far one a pixel
+>    narrower, the nose a 1-pixel bump toward the right, the near shoulder a little forward);
+> 2. **right** (side view: one eye, the nose a 1-pixel bump, the near arm in front of the body, the far arm
+>    a step darker behind it);
+> 3. **up-right** (three-quarter back, turned right: the back of the bald head, the near ear and cheek edge,
+>    no eyes);
+> 4. **up** (seen from behind: the back of the bald head, no face, the ears still showing if an elf).
 >
-> Save as `hero64_{body}_up.png` and `hero64_{body}_right.png`, each with an `_8x` preview.
+> Exactly the same height, head size, skin colours and underwear as the master; feet on row 60. Save as
+> `hero64_{body}_{direction}.png` (`down-right`, `right`, `up-right`, `up`), each with an `_8x` preview.
+
+The left-facing views (down-left, left, up-left) are these mirrored in code: don't ask for them.
 
 ---
 
 ## 4. Animation rows (one direction per message)
 
 Attach the master, the turnaround frame for that direction, and `templates/row_{body}_{anim}_8x.png`.
+Five messages per animation, one per drawn direction: down, down-right, right, up-right, up.
 
 Common opening for every row:
 
@@ -182,7 +196,7 @@ Then the animation's own lines:
 
 Attach the base sheet row (or master) and today's hairstyle for reference (`art/sprites/hair_<style>_<race>.png`).
 
-> Draw only the **{style}** hairstyle for this character, facing **{direction}**, for every frame of the
+> Draw only the **{style}** hairstyle for this character, facing **{direction}** (one of down, down-right, right, up-right, up), for every frame of the
 > attached row ({n} frames, a {64·n} × 64 PNG). Nothing but the hair: the rest transparent, so it sits
 > exactly over the body. The hair in **one warm brown ramp** (from a deep red-brown outline to a pale ginger
 > highlight, 6 or more shades): the game recolours it to every hair colour. It hugs the bald head from the
@@ -195,7 +209,7 @@ Attach the base sheet row (or master) and today's hairstyle for reference (`art/
 
 Attach the base row and, for armour, a picture of the item (its icon at 8×).
 
-> Draw only the **{item}** worn by this character, facing **{direction}**, for every frame of the attached
+> Draw only the **{item}** worn by this character, facing **{direction}** (one of down, down-right, right, up-right, up; for an item that differs by side, also down-left, left and up-left), for every frame of the attached
 > row ({n} frames, a {64·n} × 64 PNG). Nothing but the item, the rest transparent, so it sits exactly over
 > the body in every frame and moves with it. {item description, colours by name}. Its main material in
 > {main colour} with 5 or more hue-shifted shades; its trim in {trim colour}, a colour nothing else in it

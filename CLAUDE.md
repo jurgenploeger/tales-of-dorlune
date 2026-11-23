@@ -122,7 +122,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   code or Retro Diffusion, the steps for each, and the gate every new sprite passes: `scripts/sprite_check.py check
   <ids> --new` and `review` beside its neighbours; Retro Diffusion's styles, prices and prompts in its `references/`).
 - `docs/ai-sprite-test/heroes/`: hero art v2, the nine bodies redrawn by ChatGPT at 64 × 64, the LPC paper-doll standard (a sturdy chibi body about 48 px, feet on
-  row 60; idle, walk, run and attack in four directions; a doll in plain underwear, everything worn a layer; weapons
+  row 60; idle, walk, run and attack in eight directions (five drawn, three mirrored); a doll in plain underwear, everything worn a layer; weapons
   as 8 angles placed on grip marks): `HANDOVER.md` (research, spec, workflow, acceptance), `PROMPTS.md`, templates from
   `tools/hero_template.py`. The game still reads 48-pixel frames: moving it to 64 waits for the pilot (Human Male).
 - `art/eyes.json`: where every sprite's eyes are, so it blinks (`EyeBlink`, `TalesOfDorlune/Art/IdlePoses.swift`):

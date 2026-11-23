@@ -6,7 +6,7 @@ run, attack) it writes, into docs/ai-sprite-test/heroes/templates/:
 
   guide_<body>.png / _8x.png        one 64 x 64 frame: feet row, head top, chin, centre line
   row_<body>_<anim>_8x.png          one direction row of that animation's frames at 8x, to attach
-  sheet_<body>_<anim>.png / _4x.png the whole sheet (rows up, right, down, left), today's 48-pixel
+  sheet_<body>_<anim>.png / _4x.png the whole sheet (8 rows, clockwise from up), today's 48-pixel
                                     walk frames faded in as a pose reference where they exist
   compare_48_64.png                 today's bodies beside the new guide, to scale
   weapon_wheel.png / _8x.png        the 128 x 128 weapon canvas: grip at the middle, 8 angles
@@ -24,7 +24,11 @@ FONT = os.path.join(ROOT, "tools", "fonts", "OpenSans-SemiCondensedExtraBold.ttf
 
 FRAME = 64
 FEET = 60            # the row the lowest foot pixel stands on
-DIRECTIONS = ["up", "right", "down", "left"]   # the engine's row order (art/assets.json player_walk)
+OLD_DIRECTIONS = ["up", "right", "down", "left"]   # today's 48-pixel sheets' rows (art/assets.json player_walk)
+# Eight directions, clockwise from up (the user, 2026-11-23). ChatGPT draws up to down along the right side;
+# down-left, left and up-left are the right side mirrored for the body and hair.
+DIRECTIONS = ["up", "up-right", "right", "down-right", "down", "down-left", "left", "up-left"]
+DRAWN = ["up", "up-right", "right", "down-right", "down"]
 ANIMS = {"idle": 4, "walk": 6, "run": 6, "attack": 6}
 OLD_FRAME = 48
 
@@ -89,7 +93,7 @@ def old_frames(body):
         return None
     a = Image.open(path).convert("RGBA")
     frames = {}
-    for r, direction in enumerate(DIRECTIONS):
+    for r, direction in enumerate(OLD_DIRECTIONS):
         for c in range(4):
             f = a.crop((c * OLD_FRAME, r * OLD_FRAME, (c + 1) * OLD_FRAME, (r + 1) * OLD_FRAME))
             alpha = np.array(f)[:, :, 3]
@@ -110,7 +114,7 @@ def faded(im, alpha=0.35):
 
 def sheet(body, anim, old):
     n = ANIMS[anim]
-    im = Image.new("RGBA", (FRAME * n, FRAME * 4), (0, 0, 0, 0))
+    im = Image.new("RGBA", (FRAME * n, FRAME * len(DIRECTIONS)), (0, 0, 0, 0))
     g = guide(body)
     for r, direction in enumerate(DIRECTIONS):
         for c in range(n):
@@ -125,7 +129,7 @@ def sheet(body, anim, old):
 def labelled(im, k, title, columns, rows):
     """An enlarged sheet on white with frame numbers above and direction names beside it."""
     big = up(im, k)
-    pad_l, pad_t = 90, 58
+    pad_l, pad_t = 170, 58
     out = Image.new("RGBA", (big.width + pad_l + 12, big.height + pad_t + 12), (255, 255, 255, 255))
     out.alpha_composite(big, (pad_l, pad_t))
     d = ImageDraw.Draw(out)
@@ -135,7 +139,7 @@ def labelled(im, k, title, columns, rows):
         d.text((pad_l + c * cw + 6, 34), str(c + 1), fill=(90, 90, 100), font=font(16))
     rh = big.height // rows
     for r in range(rows):
-        name = DIRECTIONS[r] if rows == 4 else ""
+        name = DIRECTIONS[r] + ("" if DIRECTIONS[r] in DRAWN else " (mirror)") if rows == len(DIRECTIONS) else ""
         d.text((8, pad_t + r * rh + rh // 2 - 10), name, fill=(90, 90, 100), font=font(16))
     return out
 
@@ -398,8 +402,8 @@ def main():
             s = sheet(body, anim, olds[body])
             s.save(os.path.join(OUT, f"sheet_{body}_{anim}.png"))
             race, gender = SPEC[body][:2]
-            labelled(s, 4, f"{race} {gender}: {anim}, {n} frames x 4 directions, 64 x 64",
-                     n, 4).save(os.path.join(OUT, f"sheet_{body}_{anim}_4x.png"))
+            labelled(s, 4, f"{race} {gender}: {anim}, {n} frames x 8 directions, 64 x 64",
+                     n, len(DIRECTIONS)).save(os.path.join(OUT, f"sheet_{body}_{anim}_4x.png"))
     compare(olds).save(os.path.join(OUT, "compare_48_64.png"))
     w, wb = weapon_wheel()
     w.save(os.path.join(OUT, "weapon_wheel.png"))
