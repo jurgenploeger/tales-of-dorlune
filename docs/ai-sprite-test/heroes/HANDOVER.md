@@ -17,7 +17,7 @@ Prompts: [`PROMPTS.md`](PROMPTS.md). Templates to attach: [`templates/`](templat
   walk sped up (`Walker.swift`); in battle the hero stands in walk frame 1 at 2× and only the weapon node
   swings (`BattleScene.swift`, `swing`/`thrust`).
 
-## Size decision: the LPC standard, 64 × 64 frames, body about 48 px, a sturdy chibi
+## Size decision: the LPC standard, 64 × 64 frames, body about 48 px, semi-chibi
 What others use (sources below):
 
 | Game or system | Character frame | Equipment as layers? |
@@ -45,15 +45,19 @@ Chosen (the user, 2026-11-23, after three ChatGPT tries and the size board,
   is about as tall as the town gate (51) and a little under a tree (56). The rest of the game (buildings,
   trees, props, tiles, monsters) is to be brought to the same scale later (the user: "eventually we will
   update everything else in the game as well"); the hero comes first.
-- **A sturdy chibi, not a slim one.** Room for armour comes from width, not height: try 3 at 46 px with
-  4-pixel limbs and 14-pixel legs read as a stick figure. Armour also widens the silhouette (pauldrons,
-  helmets, chunky boots) instead of being painted on skin.
+- **Semi-chibi, about three heads tall** (the user, 2026-11-23: not "a chibi style where the head is huge").
+  The head about a third of the height (16 of 48), the shoulders, arms included, about as wide as the head and
+  never wider (try 5's 32-pixel shoulders under a 24-pixel head read as a bodybuilder; in chibi and semi-chibi
+  sprites the head is the widest part). Limbs 4 to 6 thick (4, try 3's, read spindly only with a 46-pixel
+  height and long legs on a narrow body). Armour widens the silhouette (pauldrons, helmets, chunky boots)
+  instead of the base body being broad. Fairyland Online itself was 2D isometric with Humans, Dwarves and
+  Elves; its proportions aren't recorded anywhere we could read (`docs/fairyland-online.md`).
 
 | Body | Height | Head | Chest | Arms, legs | Legs | Feet |
 |---|---|---|---|---|---|---|
-| Human Male / Female / Other | 48 / 46 / 47 | 20 | 16 / 15 / 15 | 6 / 5 / 6 | 10 | 6 |
-| Elf Male / Female / Other (ears extra) | 48 / 46 / 47 | 20 | 15 / 14 / 14 | 5 | 11 | 5 |
-| Dwarf Male / Female / Other | 40 / 38 / 39 | 19 / 18 / 19 | 18 / 17 / 17 | 7 / 6 / 7 | 7 | 7 |
+| Human Male / Female / Other | 48 / 46 / 47 | 16 | 14 / 13 / 13 | 5 / 4 / 5 | 15 / 14 / 15 | 6 / 5 / 6 |
+| Elf Male / Female / Other (ears extra) | 48 / 46 / 47 | 16 | 13 / 12 / 12 | 4 | 16 / 15 / 15 | 5 |
+| Dwarf Male / Female / Other | 40 / 38 / 39 | 15 / 14 / 15 | 16 / 15 / 15 | 6 / 5 / 6 | 9 | 7 |
 
 Legs are from the shorts' hem to the soles. `tools/hero_template.py` `SPEC` holds these; the guides draw them (blue: head top, cyan: chin, violet ticks: the chest's width, orange: the shorts' hem, green: feet).
 
@@ -134,7 +138,7 @@ Pilot **Human Male** end to end before the other eight. Don't start a second bod
 - 20 to 40 colours per sheet; skin in 5 or more hue-shifted shades.
 - Lit from the top left. A 1-px outline in a deep shade of what it borders, never black (outline median
   light ≤ 0.25, at least 20% of pixels darker than 0.2, median saturation ≥ 0.45: `docs/pixel-style.md`).
-- Chibi: head about 2/5 of the height, big eyes with a white catchlight. Two eyes from the front, one from
+- Semi-chibi: head about a third of the height, shoulders no wider than the head, big eyes with a white catchlight. Two eyes from the front, one from
   the side, none from behind.
 - The same character in every frame: height within 1 px, head within 1 to 2 px, underwear the same shape
   and colour, skin the same ramp. Side and back views match the front.
@@ -159,7 +163,8 @@ Pilot **Human Male** end to end before the other eight. Don't start a second bod
 5. **Try 5** (the fix of try 4): feet (the leg a pixel narrower at the ankle, rows 57 and 58, a 7-pixel foot
    turned out on rows 59 and 60) and the arms hanging straight with a 2-pixel gap; every other number as
    try 4. With a 16-pixel chest, 2-pixel gaps and 6-pixel arms the shoulders are 32 wide, so he reads broad,
-   which leaves room for pauldrons. The candidate master (`tries/try5_human_male.png`), pending the user's OK.
+   which leaves room for pauldrons. Not taken: the user found the shoulders too wide and the head too big
+   for what they want, and picked semi-chibi (three heads) instead. Its feet, face and shorts carry over.
 
 ## What has gone wrong before (read before prompting)
 - ChatGPT failed the monster test (`../HANDOVER.md`): drew bigger than asked (44 to 48 px for 35), and the

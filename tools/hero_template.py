@@ -32,19 +32,20 @@ DRAWN = ["up", "up-right", "right", "down-right", "down"]
 ANIMS = {"idle": 4, "walk": 6, "run": 6, "attack": 6}
 OLD_FRAME = 48
 
-# The LPC paper-doll standard's frame (64 x 64, feet near the bottom, body about 48 tall), in a sturdy chibi
-# build: the user's pick, 2026-11-23, after the size board (tries 1 to 3 in docs/ai-sprite-test/heroes/tries).
+# The LPC paper-doll standard's frame (64 x 64, feet near the bottom, body about 48 tall), semi-chibi: about
+# three heads tall, the shoulders about as wide as the head (the user's pick, 2026-11-23, after ChatGPT's tries 1
+# to 5 in docs/ai-sprite-test/heroes/tries: a 2.4-head chibi read as a toddler, broad shoulders as a bodybuilder).
 # body id: (race, gender, height, head, chest width, limb width, legs from shorts to soles, foot width, sheet today)
 SPEC = {
-    "human_male":   ("Human", "Male",   48, 20, 16, 6, 10, 6, "body_human"),
-    "human_female": ("Human", "Female", 46, 20, 15, 5, 10, 6, "body_human_female"),
-    "human_other":  ("Human", "Other",  47, 20, 15, 6, 10, 6, "body_human_other"),
-    "elf_male":     ("Elf",   "Male",   48, 20, 15, 5, 11, 5, "body_elf_male"),
-    "elf_female":   ("Elf",   "Female", 46, 20, 14, 5, 11, 5, "body_elf"),
-    "elf_other":    ("Elf",   "Other",  47, 20, 14, 5, 11, 5, "body_elf_other"),
-    "dwarf_male":   ("Dwarf", "Male",   40, 19, 18, 7, 7, 7, "body_dwarf"),
-    "dwarf_female": ("Dwarf", "Female", 38, 18, 17, 6, 7, 7, "body_dwarf_female"),
-    "dwarf_other":  ("Dwarf", "Other",  39, 19, 17, 7, 7, 7, "body_dwarf_other"),
+    "human_male":   ("Human", "Male",   48, 16, 14, 5, 15, 6, "body_human"),
+    "human_female": ("Human", "Female", 46, 16, 13, 4, 14, 5, "body_human_female"),
+    "human_other":  ("Human", "Other",  47, 16, 13, 5, 15, 6, "body_human_other"),
+    "elf_male":     ("Elf",   "Male",   48, 16, 13, 4, 16, 5, "body_elf_male"),
+    "elf_female":   ("Elf",   "Female", 46, 16, 12, 4, 15, 5, "body_elf"),
+    "elf_other":    ("Elf",   "Other",  47, 16, 12, 4, 15, 5, "body_elf_other"),
+    "dwarf_male":   ("Dwarf", "Male",   40, 15, 16, 6, 9, 7, "body_dwarf"),
+    "dwarf_female": ("Dwarf", "Female", 38, 14, 15, 5, 9, 7, "body_dwarf_female"),
+    "dwarf_other":  ("Dwarf", "Other",  39, 15, 15, 6, 9, 7, "body_dwarf_other"),
 }
 
 GRID = (200, 200, 205, 255)

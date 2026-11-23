@@ -3,20 +3,21 @@
 Copy-paste prompts for ChatGPT (image generation). Read [`HANDOVER.md`](HANDOVER.md) first. Fill in the
 `{placeholders}` from the body table below. One body per chat; one direction row per message.
 
-The LPC paper-doll standard's 64 × 64 frame and body size (about 48 px), in a sturdy chibi build. Legs are
-measured from the shorts' hem to the soles; the guide's orange line is the hem, the violet ticks the chest's width.
+The LPC paper-doll standard's 64 × 64 frame and body size (about 48 px), **semi-chibi**: about three heads tall,
+cute but a youthful adventurer, the shoulders (arms included) about as wide as the head. Legs are measured from
+the shorts' hem to the soles; the guide's orange line is the hem, the violet ticks the chest's width.
 
 | Body id | Race | Gender | Height | Head | Chest | Arms, legs | Legs | Feet | Build |
 |---|---|---|---|---|---|---|---|---|---|
-| human_male | Human | Male | 48 | 20 | 16 | 6 | 10 | 6 | sturdy, straight shoulders |
-| human_female | Human | Female | 46 | 20 | 15 | 5 | 10 | 6 | sturdy, a little narrower shoulders, a little wider hips |
-| human_other | Human | Other | 47 | 20 | 15 | 6 | 10 | 6 | sturdy, androgynous, between the two |
-| elf_male | Elf | Male | 48 | 20 | 15 | 5 | 11 | 5 | a touch slimmer, long pointed ears |
-| elf_female | Elf | Female | 46 | 20 | 14 | 5 | 11 | 5 | a touch slimmer, long pointed ears |
-| elf_other | Elf | Other | 47 | 20 | 14 | 5 | 11 | 5 | a touch slimmer, androgynous, long pointed ears |
-| dwarf_male | Dwarf | Male | 40 | 19 | 18 | 7 | 7 | 7 | short and broad, thick arms and legs |
-| dwarf_female | Dwarf | Female | 38 | 18 | 17 | 6 | 7 | 7 | short and broad, strong arms |
-| dwarf_other | Dwarf | Other | 39 | 19 | 17 | 7 | 7 | 7 | short and broad, androgynous |
+| human_male | Human | Male | 48 | 16 | 14 | 5 | 15 | 6 | straight, slightly sloped shoulders |
+| human_female | Human | Female | 46 | 16 | 13 | 4 | 14 | 5 | narrower shoulders, a little wider hips |
+| human_other | Human | Other | 47 | 16 | 13 | 5 | 15 | 6 | androgynous, between the two |
+| elf_male | Elf | Male | 48 | 16 | 13 | 4 | 16 | 5 | slender, long legs, long pointed ears |
+| elf_female | Elf | Female | 46 | 16 | 12 | 4 | 15 | 5 | slender, long pointed ears |
+| elf_other | Elf | Other | 47 | 16 | 12 | 4 | 15 | 5 | slender, androgynous, long pointed ears |
+| dwarf_male | Dwarf | Male | 40 | 15 | 16 | 6 | 9 | 7 | short and broad, thick arms and legs |
+| dwarf_female | Dwarf | Female | 38 | 14 | 15 | 5 | 9 | 7 | short and broad, strong arms |
+| dwarf_other | Dwarf | Other | 39 | 15 | 15 | 6 | 9 | 7 | short and broad, androgynous |
 
 All bodies: bald (hair is its own layer), no beard, no eyebrows drawn thicker than one pixel, plain
 fitted underwear in warm grey: shorts on every body, a simple band top on Female and Other.
@@ -27,11 +28,11 @@ fitted underwear in warm grey: shorts on every body, a simple band top on Female
 
 > You draw pixel-art hero sprites for Tales of Dorlune, a cute fairytale pixel-art RPG for iPhone (a
 > tribute to Fairyland Online). The reference sheets in this project's files are the look to match: round,
-> soft, cute and chibi, rich hue-shifted shading.
+> soft and cute, rich hue-shifted shading. Heroes are semi-chibi: about three heads tall, not toddlers.
 >
 > **Grid.** Every hero frame is a **64 × 64 pixel** canvas. The lowest foot pixel stands on **row 60**
 > (counting from 0 at the top). The body is centred on **column 32**. I'll give each body's height in
-> pixels; the head is about 2/5 of it. The attached guide (shown at 8×) marks the head top (blue), the chin
+> pixels; the head is about a third of it. The attached guide (shown at 8×) marks the head top (blue), the chin
 > (cyan) and the feet row (green); the guide lines are never part of the drawing.
 >
 > **Always deliver two files, every time.**
@@ -55,7 +56,7 @@ fitted underwear in warm grey: shorts on every body, a simple band top on Female
 > - A one-pixel outline all round, tinted: a deep shade of each colour it borders (deep warm brown round
 >   skin, deep grey-brown round the underwear), about half as bright as the pixel inside it. Never pure
 >   black, never one dark line round everything.
-> - Chibi: big head, big eyes with a white catchlight, small rounded body, short limbs, hands as small
+> - Semi-chibi: a head about a third of the height, big eyes with a white catchlight, a youthful body, hands as small
 >   rounded mitts with a 1-pixel thumb.
 > - Nothing else in the picture: no ground, no shadow under the feet, no text, no border, no grid lines.
 >
@@ -85,18 +86,20 @@ Attach: `templates/guide_{body}_8x.png`, `templates/compare_48_64.png`, `docs/ai
 >
 > - One 64 × 64 frame, standing, **facing down (toward the viewer)**, arms relaxed a little away from the
 >   body, feet slightly apart, weight even. Feet on row 60, centred on column 32.
-> - **{height} pixels tall**, the head about {head} pixels. A sturdy cute chibi, a young adventurer, not a
->   baby and not a stick figure: chest and shoulders {chest} pixels wide, arms and legs {limbs} pixels thick,
->   legs {legs} pixels from the shorts' hem to the soles, feet {feet} pixels wide. Build: {build}.
+> - **{height} pixels tall**, the head about {head} pixels. Semi-chibi, about three heads tall: a cute young
+>   adventurer, not a baby, not a bodybuilder and not a stick figure. Chest {chest} pixels wide, arms and legs
+>   {limbs} pixels thick, legs {legs} pixels from the shorts' hem to the soles, feet {feet} pixels wide and
+>   turned slightly out, the ankle a pixel narrower. Build: {build}.
 > - Neck about 6 to 8 pixels wide, so a collar or necklace fits.
-> - Arms relaxed, hanging with a 1 to 2 pixel gap from the body, open hands (not fists).
+> - Shoulders, arms included, about as wide as the head (never wider), slightly sloped. Arms hang close: touching
+>   the chest at the shoulders, a 1-pixel gap only from the elbow down; open relaxed hands, not fists.
 > - A smooth, doll-like body: no anatomy detail, no nipples, no navel line, no muscles drawn. Bald (hair is
 >   added later), no beard. {Elf: long pointed ears reaching out past the head's sides.} {Dwarf: clearly
 >   shorter and broader than a human, a round sturdy body; not human height.}
 > - Plain fitted underwear in warm grey: snug shorts{Female/Other: and a simple band top}. One flat colour
 >   family with its own shading, no trim, no pattern.
 > - Bare hands and bare feet, drawn clearly (2 × 3 pixels or more each), so gloves and boots can go on.
-> - A friendly face: eyes about 3 wide and 4 tall, set just below the middle of the head (a dark lash line
+> - A friendly face: eyes about 2 to 3 wide and 3 to 4 tall, set just below the middle of the head (a dark lash line
 >   on top, a brown iris, one white catchlight pixel), thin 1-pixel brows, a small neutral smile, light rosy
 >   cheeks. Human ears small, sticking out at most 1 pixel.
 > - The shorts outlined in their own deep grey-brown, not the skin's outline colour.
