@@ -182,7 +182,204 @@ def weapon_wheel():
     return im, big
 
 
+# --- the size board: how big a hero can be beside the world, and how much room armour gets ---------------
+
+TRIES = os.path.join(ROOT, "docs", "ai-sprite-test", "heroes", "tries")
+# name: (height, head, torso width, limb width, leg length, foot width)
+BUILDS = {
+    "46 slim":   (46, 18, 13, 4, 14, 5),
+    "46 stocky": (46, 18, 17, 6, 10, 7),
+    "56 stocky": (56, 21, 20, 7, 12, 8),
+    "70 stocky": (70, 26, 25, 9, 15, 10),
+}
+SKIN = [(236, 204, 176), (214, 178, 150), (178, 140, 118), (96, 66, 60)]      # light, mid, shade, outline
+SHORTS = [(150, 144, 140), (122, 116, 114), (96, 90, 90), (58, 52, 56)]
+STEEL = [(176, 196, 222), (130, 154, 190), (92, 112, 150), (40, 48, 78)]
+LEATHER = [(176, 120, 76), (140, 90, 56), (106, 64, 42), (58, 34, 26)]
+GOLD = [(255, 220, 110), (230, 170, 50), (180, 120, 30), (96, 60, 20)]
+
+
+def mannequin(build, armour=False):
+    """A plain front-facing figure drawn in code: grey-free skin doll, feet on the canvas's last row."""
+    H, head, tw, lw, legs, fw = BUILDS[build]
+    W = max(tw + 2 * lw + 12, head + 12)
+    parts = np.zeros((H + 8, W), np.int8)      # 0 clear, 1 skin, 2 shorts, 3 steel, 4 leather, 5 gold
+    cx = W // 2
+    top = 8                                     # headroom for a helmet
+    def box(x0, y0, x1, y1, v):
+        parts[max(y0, 0):y1, max(x0, 0):x1] = v
+    def ellipse(x0, y0, x1, y1, v):
+        yy, xx = np.mgrid[0:parts.shape[0], 0:W]
+        a, b = (x1 - x0) / 2, (y1 - y0) / 2
+        m = ((xx + .5 - (x0 + a)) / a) ** 2 + ((yy + .5 - (y0 + b)) / b) ** 2 <= 1
+        parts[m] = v
+    hw = round(head * 1.08)
+    neck = 2
+    torso = H - head - neck - legs
+    y_neck, y_torso = top + head, top + head + neck
+    y_legs = y_torso + torso
+    # legs and feet
+    gap = 1 if lw < 6 else 2
+    lx = cx - gap // 2 - lw if gap % 2 == 0 else cx - lw
+    rx = cx + (gap - gap // 2)
+    box(lx, y_legs, lx + lw, top + H, 1)
+    box(rx, y_legs, rx + lw, top + H, 1)
+    box(lx + lw - fw, top + H - 2, lx + lw, top + H, 1)
+    box(rx, top + H - 2, rx + fw, top + H, 1)
+    # torso, neck, arms
+    box(cx - tw // 2, y_torso, cx - tw // 2 + tw, y_legs, 1)
+    box(cx - max(3, tw // 4), y_neck, cx + max(3, tw // 4), y_torso + 1, 1)
+    arm = torso + lw // 2 + 1
+    box(cx - tw // 2 - 1 - lw, y_torso + 1, cx - tw // 2 - 1, y_torso + 1 + arm, 1)
+    box(cx + tw - tw // 2 + 1, y_torso + 1, cx + tw - tw // 2 + 1 + lw, y_torso + 1 + arm, 1)
+    # shorts: lower third of the torso and the top of the legs
+    sy = y_legs - max(3, torso // 3)
+    box(cx - tw // 2, sy, cx - tw // 2 + tw, y_legs + max(2, legs // 4), 2)
+    parts[y_legs:y_legs + max(2, legs // 4), cx - gap // 2:cx + (gap - gap // 2)] = 0
+    ellipse(cx - hw / 2, top, cx + hw / 2, top + head, 1)
+    if armour:
+        box(cx - tw // 2, y_torso, cx - tw // 2 + tw, sy + 1, 3)                       # chest plate
+        box(cx - tw // 2, sy, cx - tw // 2 + tw, sy + 2, 4)                            # belt
+        parts[sy:sy + 2, cx - 1:cx + 1] = 5                                            # buckle
+        pw = lw + 4
+        ellipse(cx - tw / 2 - pw + 1, y_torso - 1, cx - tw / 2 + 3, y_torso + lw + 2, 3)  # pauldrons
+        ellipse(cx + tw / 2 - 3, y_torso - 1, cx + tw / 2 + pw - 1, y_torso + lw + 2, 3)
+        for x0 in (cx - tw // 2 - 1 - lw, cx + tw - tw // 2 + 1):                      # gloves
+            box(x0, y_torso + 1 + arm - lw - 1, x0 + lw, y_torso + 1 + arm, 4)
+        bh = max(4, legs // 2)                                                         # boots
+        box(lx - 1, top + H - bh, lx + lw + 1, top + H, 4)
+        box(rx - 1, top + H - bh, rx + lw + 1, top + H, 4)
+        box(lx + lw - fw - 1, top + H - 3, lx + lw, top + H, 4)
+        box(rx, top + H - 3, rx + fw + 1, top + H, 4)
+        ellipse(cx - hw / 2 - 2, top - 3, cx + hw / 2 + 2, top + head * 0.75, 3)       # helmet
+        box(cx - hw // 2 - 2, top + round(head * .42), cx + hw // 2 + 3, top + round(head * .42) + 2, 3)
+        parts[top + round(head * .42) + 2:top + round(head * .75) + 1, cx - hw // 2 + 2:cx + hw // 2 - 1] = \
+            np.where(parts[top + round(head * .42) + 2:top + round(head * .75) + 1, cx - hw // 2 + 2:cx + hw // 2 - 1] == 3,
+                     1, parts[top + round(head * .42) + 2:top + round(head * .75) + 1, cx - hw // 2 + 2:cx + hw // 2 - 1])
+        parts[y_torso + 2:y_torso + 5, cx - 1:cx + 1] = 5                              # pendant
+    ramps = {1: SKIN, 2: SHORTS, 3: STEEL, 4: LEATHER, 5: GOLD}
+    out = np.zeros(parts.shape + (4,), np.uint8)
+    h_, w_ = parts.shape
+    for y in range(h_):
+        for x in range(w_):
+            v = parts[y, x]
+            if not v:
+                continue
+            r = ramps[v]
+            near = [parts[y + dy, x + dx] if 0 <= y + dy < h_ and 0 <= x + dx < w_ else 0
+                    for dy, dx in ((-1, 0), (1, 0), (0, -1), (0, 1))]
+            if 0 in near:
+                c = r[3]                                   # outline, a deep shade of its own part
+            elif any(n != v and n < v for n in near) or any(n != v for n in near):
+                c = r[2]                                   # an inner line where parts meet
+            else:
+                # lit from the top left: lighter in the left third, shade in the right third
+                xs = np.nonzero(parts[y] == v)[0]
+                t = (x - xs.min()) / max(1, xs.max() - xs.min())
+                c = r[0] if t < .34 else r[1] if t < .72 else r[2]
+            out[y, x] = c + (255,)
+    # eyes
+    if True:
+        ey = top + round(head * .55)
+        for ex in (cx - round(hw * .22) - 1, cx + round(hw * .22) - 1):
+            ew = 2 if head < 22 else 3
+            if parts[ey, ex] == 1:
+                out[ey:ey + ew + 1, ex:ex + ew] = (60, 40, 50, 255)
+                out[ey, ex] = (255, 255, 255, 255)
+    return Image.fromarray(out)
+
+
+def trimmed(im):
+    a = np.array(im.convert("RGBA"))
+    ys, xs = np.nonzero(a[:, :, 3])
+    return im.crop((xs.min(), ys.min(), xs.max() + 1, ys.max() + 1))
+
+
+def chatgpt_big(path, cell=12.8):
+    """ChatGPT's painted 'pixel art': each cell's middle colour, so it shows at the size it was drawn."""
+    im = Image.open(path).convert("RGBA")
+    a = np.array(im).astype(int)
+    bg = a[4, 4, :3]
+    n = round(im.width / cell)
+    out = np.zeros((n, n, 4), np.uint8)
+    for j in range(n):
+        for i in range(n):
+            p = a[min(im.height - 1, int((j + .5) * cell)), min(im.width - 1, int((i + .5) * cell))]
+            if np.abs(p[:3] - bg).sum() > 40 and p[3] > 128:
+                out[j, i] = p[:3].tolist() + [255]
+    return Image.fromarray(out)
+
+
+def asset_scale(name):
+    import json
+    assets = json.load(open(os.path.join(ROOT, "art", "assets.json")))["assets"]
+    entry = next((a for a in assets if a.get("id") == name), {})
+    return entry.get("scale", 1)
+
+
+def world_piece(name):
+    im = trimmed(Image.open(os.path.join(SPRITES, name + ".png")).convert("RGBA"))
+    s = asset_scale(name)
+    if s != 1:
+        im = im.resize((round(im.width * s), round(im.height * s)), Image.NEAREST)
+    return im
+
+
+def board():
+    """Everything side by side at game size (1 art pixel = 1 point), feet on one line, on grass."""
+    pieces = []
+    hero = old_frames("human_male")[("down", 0)]
+    pieces.append(("hero today", trimmed(hero)))
+    for b in BUILDS:
+        pieces.append((b, trimmed(mannequin(b))))
+        pieces.append((b + "\n+ armour", trimmed(mannequin(b, True))))
+    tries = [("ChatGPT 1", "try1_human_male.png", None), ("ChatGPT 2", "try2_human_male_big.png", "big"),
+             ("ChatGPT 3", "try3_human_male.png", None)]
+    for label, f, kind in tries:
+        p = os.path.join(TRIES, f)
+        if os.path.exists(p):
+            pieces.append((label, trimmed(chatgpt_big(p) if kind else Image.open(p).convert("RGBA"))))
+    for name, label in (("monster_jelly", "jelly"), ("town_gate", "town gate"), ("tree", "tree"),
+                        ("house", "house"), ("inn", "inn")):
+        pieces.append((label, world_piece(name)))
+    gap = 10
+    width = sum(p.width for _, p in pieces) + gap * (len(pieces) + 1)
+    tall = max(p.height for _, p in pieces)
+    ground = 14
+    im = Image.new("RGBA", (width, tall + 24 + ground), (0, 0, 0, 0))
+    grass = Image.open(os.path.join(SPRITES, "tile_grass.png")).convert("RGBA")
+    for x in range(0, im.width, grass.width):
+        for y in range(0, im.height, grass.height):
+            im.alpha_composite(grass, (x, y))
+    base = 24 + tall
+    x = gap
+    spots = []
+    for label, p in pieces:
+        im.alpha_composite(p, (x, base - p.height))
+        spots.append((label, x, p.width, p.height))
+        x += p.width + gap
+    k = 3
+    big = im.resize((im.width * k, im.height * k), Image.NEAREST)
+    pad = 64
+    out = Image.new("RGBA", (big.width, big.height + pad), (255, 255, 255, 255))
+    out.alpha_composite(big)
+    d = ImageDraw.Draw(out)
+    for label, x0, w, h in spots:
+        txt = label + f"\n{h} pt"
+        d.multiline_text((x0 * k, big.height + 6), txt, fill=(30, 30, 40), font=font(15), spacing=2)
+    d.line([(0, base * k), (big.width, base * k)], fill=(255, 255, 255, 90), width=1)
+    return im, out
+
+
 def main():
+    import sys
+    if "--board" in sys.argv:
+        os.makedirs(OUT, exist_ok=True)
+        im, big = board()
+        im.save(os.path.join(OUT, "size_board.png"))
+        big.save(os.path.join(OUT, "size_board_3x.png"))
+        print("wrote size_board.png and size_board_3x.png")
+        return
     os.makedirs(OUT, exist_ok=True)
     olds = {b: old_frames(b) for b in SPEC}
     for body in SPEC:
