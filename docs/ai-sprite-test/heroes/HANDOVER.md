@@ -186,6 +186,9 @@ Pilot **Human Male** end to end before the other eight. Don't start a second bod
    `hero_symmetry.py check` finds no difference. What worked, for every view after it: ChatGPT paints, makes
    the 1× from its painting with code ("sample, don't redraw"), we check it, and its fixes are asked for with a
    corrected file attached as the target.
+   Its brows then read as a bow (the user): arches 4 pixels wide. Three variants were drawn in code (flat,
+   a soft slope, a short dash); the user picked flat, 3 pixels on row 23, columns 28 to 30 and 34 to 36
+   (`tries/master_brows_a.png`, the target for ChatGPT's change).
 
 ## What has gone wrong before (read before prompting)
 - ChatGPT failed the monster test (`../HANDOVER.md`): drew bigger than asked (44 to 48 px for 35), and the
