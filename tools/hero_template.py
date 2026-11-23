@@ -32,20 +32,21 @@ DRAWN = ["up", "up-right", "right", "down-right", "down"]
 ANIMS = {"idle": 4, "walk": 6, "run": 6, "attack": 6}
 OLD_FRAME = 48
 
-# The LPC paper-doll standard's frame (64 x 64, feet near the bottom, body about 48 tall), semi-chibi: about
-# three heads tall, the shoulders about as wide as the head (the user's pick, 2026-11-23, after ChatGPT's tries 1
-# to 5 in docs/ai-sprite-test/heroes/tries: a 2.4-head chibi read as a toddler, broad shoulders as a bodybuilder).
+# The LPC paper-doll standard's frame (64 x 64, feet near the bottom), chibi: about 2.4 heads tall, the shoulders
+# (arms included) about as wide as the head. Measured from the design the user liked (ChatGPT's big painting of
+# try 6, snapped: docs/ai-sprite-test/heroes/tries/try6_human_male_snapped.png); semi-chibi (three heads) was
+# tried and rejected the same day, 2026-11-23 ("this looks horrible, I think I prefer the chibi style again").
 # body id: (race, gender, height, head, chest width, limb width, legs from shorts to soles, foot width, sheet today)
 SPEC = {
-    "human_male":   ("Human", "Male",   48, 16, 14, 5, 15, 6, "body_human"),
-    "human_female": ("Human", "Female", 46, 16, 13, 4, 14, 5, "body_human_female"),
-    "human_other":  ("Human", "Other",  47, 16, 13, 5, 15, 6, "body_human_other"),
-    "elf_male":     ("Elf",   "Male",   48, 16, 13, 4, 16, 5, "body_elf_male"),
-    "elf_female":   ("Elf",   "Female", 46, 16, 12, 4, 15, 5, "body_elf"),
-    "elf_other":    ("Elf",   "Other",  47, 16, 12, 4, 15, 5, "body_elf_other"),
-    "dwarf_male":   ("Dwarf", "Male",   40, 15, 16, 6, 9, 7, "body_dwarf"),
-    "dwarf_female": ("Dwarf", "Female", 38, 14, 15, 5, 9, 7, "body_dwarf_female"),
-    "dwarf_other":  ("Dwarf", "Other",  39, 15, 15, 6, 9, 7, "body_dwarf_other"),
+    "human_male":   ("Human", "Male",   46, 19, 12, 4, 11, 6, "body_human"),
+    "human_female": ("Human", "Female", 44, 19, 11, 4, 10, 5, "body_human_female"),
+    "human_other":  ("Human", "Other",  45, 19, 12, 4, 11, 6, "body_human_other"),
+    "elf_male":     ("Elf",   "Male",   46, 19, 11, 4, 12, 5, "body_elf_male"),
+    "elf_female":   ("Elf",   "Female", 44, 19, 10, 4, 11, 5, "body_elf"),
+    "elf_other":    ("Elf",   "Other",  45, 19, 11, 4, 11, 5, "body_elf_other"),
+    "dwarf_male":   ("Dwarf", "Male",   38, 17, 14, 5, 7, 7, "body_dwarf"),
+    "dwarf_female": ("Dwarf", "Female", 36, 16, 13, 5, 7, 7, "body_dwarf_female"),
+    "dwarf_other":  ("Dwarf", "Other",  37, 17, 13, 5, 7, 7, "body_dwarf_other"),
 }
 
 GRID = (200, 200, 205, 255)
@@ -346,7 +347,8 @@ def board():
         pieces.append((name, trimmed(mannequin(b))))
         pieces.append((name + "\n+ armour", trimmed(mannequin(b, True))))
     tries = [("ChatGPT 1", "try1_human_male.png", None), ("ChatGPT 2", "try2_human_male_big.png", "big"),
-             ("ChatGPT 3", "try3_human_male.png", None), ("ChatGPT 4", "try4_human_male.png", None), ("ChatGPT 5", "try5_human_male.png", None)]
+             ("ChatGPT 3", "try3_human_male.png", None), ("ChatGPT 4", "try4_human_male.png", None), ("ChatGPT 5", "try5_human_male.png", None),
+             ("ChatGPT 6 (semi-chibi)", "try6_human_male.png", None), ("ChatGPT 6 big, snapped", "try6_human_male_snapped.png", None)]
     for label, f, kind in tries:
         p = os.path.join(TRIES, f)
         if os.path.exists(p):

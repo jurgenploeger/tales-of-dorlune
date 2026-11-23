@@ -83,6 +83,42 @@ def to_grid(a, height):
     return out
 
 
+def to_grid_edges(a, lo=12, hi=22):
+    """Cut to the sprite and follow the picture's own pixel edges: ChatGPT's big "pixel art" sits on a grid
+    that isn't even (cells of 14 to 18 pixels in one picture), so a fixed cell size drifts across it and
+    jags the outline. Each next cut is the strongest colour change lo to hi pixels after the last, along rows
+    and along columns; each cell is the majority colour of its middle."""
+    ys, xs = np.nonzero(a[..., 3])
+    a = a[max(0, ys.min() - 2):ys.max() + 3, max(0, xs.min() - 2):xs.max() + 3]
+    rgb = a[..., :3].astype(int)
+
+    def cuts(axis):
+        d = np.abs(np.diff(rgb, axis=axis)).sum(2).sum(1 - axis).astype(float)
+        out = [0]
+        while out[-1] + lo < len(d):
+            seg = d[out[-1] + lo:out[-1] + hi]
+            step = lo + int(seg.argmax()) if seg.max() >= d.mean() * 0.6 else (lo + hi) // 2 - 1
+            out.append(out[-1] + step + 1)
+        out.append(len(d) + 1)
+        return out
+
+    cy, cx = cuts(0), cuts(1)
+    g = np.zeros((len(cy) - 1, len(cx) - 1, 4), np.uint8)
+    for j in range(len(cy) - 1):
+        for i in range(len(cx) - 1):
+            y0, y1, x0, x1 = cy[j], cy[j + 1], cx[i], cx[i + 1]
+            my, mx = max(1, (y1 - y0) // 4), max(1, (x1 - x0) // 4)
+            block = a[y0 + my:max(y1 - my, y0 + my + 1), x0 + mx:max(x1 - mx, x0 + mx + 1)].reshape(-1, 4)
+            if len(block) == 0 or (block[:, 3] > 0).mean() < 0.5:
+                continue
+            c = block[block[:, 3] > 0][:, :3]
+            vals, inv, counts = np.unique(c // 12, axis=0, return_inverse=True, return_counts=True)
+            g[j, i, :3] = c[inv.ravel() == counts.argmax()].mean(0).astype(np.uint8)
+            g[j, i, 3] = 255
+    ys, xs = np.nonzero(g[..., 3])
+    return g[ys.min():ys.max() + 1, xs.min():xs.max() + 1]
+
+
 def merge_near(a, distance=18):
     """Colours a few steps apart (the model's noise and blur) become one, the commonest of them."""
     solid = a[..., 3] > 0
@@ -112,14 +148,16 @@ def reduce_colours(a, n):
     return out
 
 
-def place(a, canvas, ref):
-    """On the canvas where RD's own sprite stands: its feet on the same row, centred."""
+def place(a, canvas, ref, foot=None):
+    """On the canvas where RD's own sprite stands: its feet on the same row, centred (or on row `foot`)."""
     out = np.zeros((canvas, canvas, 4), np.uint8)
     h, w = a.shape[:2]
     bottom = canvas - 4
     if ref is not None:
         ys = np.nonzero(ref[..., 3])[0]
         bottom = ys.max() + 1
+    if foot is not None:
+        bottom = foot + 1
     top = max(0, bottom - h)
     left = max(0, (canvas - w) // 2)
     a = a[: canvas - top, : canvas - left]
@@ -181,6 +219,8 @@ def main():
     p.add_argument("--canvas", type=int, help="the PNG's size (default: the compared sprite's, else 40)")
     p.add_argument("--height", type=int, help="art pixels tall (default: the RD sprite's height)")
     p.add_argument("--colours", type=int, default=28)
+    p.add_argument("--edges", action="store_true", help="follow the picture's own pixel edges (an uneven fake grid) instead of --height")
+    p.add_argument("--foot", type=int, help="the row the lowest pixel stands on (a hero's 60 on its 64 canvas)")
     p.add_argument("--tolerance", type=int, default=60)
     args = p.parse_args()
 
@@ -194,9 +234,10 @@ def main():
         height = (np.ptp(np.nonzero(ref[..., 3])[0]) + 1) if ref is not None else args.canvas - 6
 
     a = clear_background(Image.open(args.image), args.tolerance)
-    a = to_grid(a, height)
+    a = to_grid_edges(a) if args.edges else to_grid(a, height)
+    height = a.shape[0]
     a = reduce_colours(a, args.colours)
-    a = place(a, args.canvas, ref)
+    a = place(a, args.canvas, ref, args.foot)
     os.makedirs(os.path.dirname(os.path.abspath(args.out)), exist_ok=True)
     Image.fromarray(a).save(args.out + ".png")
     sheet(a, ref, args.out + "_sheet.png")
