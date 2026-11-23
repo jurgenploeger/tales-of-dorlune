@@ -191,6 +191,9 @@ Pilot **Human Male** end to end before the other eight. Don't start a second bod
    (`tries/master_brows_a.png`, the target for ChatGPT's change).
 9. **Try 9, the master with flat brows** (`hero64_human_male_master.png` since 2026-11-23): ChatGPT's change, sampled
    with code, matches the target pixel for pixel; symmetric, 46 px, 20 colours.
+10. **Down-right** (`hero64_human_male_down-right.png`, approved by the user): the first turnaround view, first try.
+    46 px, feet on row 60, the master's box (columns 22 to 42), only the master's 20 colours. Down-left is it
+    mirrored (`hero_template.py` `approved()` mirrors any left view with no file of its own).
 
 ## What has gone wrong before (read before prompting)
 - ChatGPT failed the monster test (`../HANDOVER.md`): drew bigger than asked (44 to 48 px for 35), and the

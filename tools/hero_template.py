@@ -134,7 +134,12 @@ def approved(body, direction):
     """An approved view, unfaded: docs/ai-sprite-test/heroes/hero64_<body>_master.png (down) or _<direction>.png."""
     name = f"hero64_{body}_master.png" if direction == "down" else f"hero64_{body}_{direction}.png"
     path = os.path.join(ROOT, "docs", "ai-sprite-test", "heroes", name)
-    return Image.open(path).convert("RGBA") if os.path.exists(path) else None
+    if os.path.exists(path):
+        return Image.open(path).convert("RGBA")
+    if direction.endswith("left"):          # a left view with no file of its own: its right twin, mirrored
+        twin = approved(body, direction[:-4] + "right")
+        return twin.transpose(Image.FLIP_LEFT_RIGHT) if twin else None
+    return None
 
 
 def labelled(im, k, title, columns, rows):
