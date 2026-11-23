@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 """The idle sheet for an approved hero body: 4 frames a direction, a slow breath (docs/ai-sprite-test/heroes).
 
-Frame 1 and 4 are the approved standing view; frames 2 and 3 have everything above the shorts' waistband a
-pixel lower (head, chest, arms and hands settle), the legs and feet still. That is what ChatGPT drew for the
-Human Male facing down (hero64_human_male_idle_down.png: rows 15 to 45 down a pixel), and a row ChatGPT drew
-wins over the shift. Writes hero64_<body>_idle.png (256 x 512, rows clockwise from up, as the sheets are) and
-its 4x.
+Assembles the rows ChatGPT drew (hero64_<body>_idle_<direction>.png, 256 x 64), a left row its right twin
+mirrored, into hero64_<body>_idle.png (256 x 512, rows clockwise from up) and its 4x. A direction with no row
+of its own stays empty: the breath made in code (`breathe`, everything above the waistband and the arms a pixel
+lower) left chopped pixels where moved and still columns met (the user, 2026-11-23), so every row is drawn.
 
   hero_idle.py human_male
 """
@@ -74,12 +73,13 @@ def sheet(body):
         if os.path.exists(drawn):
             im.alpha_composite(Image.open(drawn).convert("RGBA"), (0, r * t.FRAME))
             continue
-        view = t.approved(body, d)
-        if view is None:
-            continue
-        low = breathe(view)
-        for c, f in enumerate((view, low, low, view)):
-            im.alpha_composite(f, (c * t.FRAME, r * t.FRAME))
+        if d.endswith("left"):
+            twin = os.path.join(HEROES, f"hero64_{body}_idle_{d[:-4]}right.png")
+            if os.path.exists(twin):
+                row = Image.open(twin).convert("RGBA")
+                for c in range(4):    # each frame mirrored in place, so the frames keep their order
+                    f = row.crop((c * t.FRAME, 0, (c + 1) * t.FRAME, t.FRAME)).transpose(Image.FLIP_LEFT_RIGHT)
+                    im.paste(f, (c * t.FRAME, r * t.FRAME))
     return im
 
 
