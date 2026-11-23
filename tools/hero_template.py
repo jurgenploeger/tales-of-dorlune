@@ -345,7 +345,7 @@ def board():
         pieces.append((name, trimmed(mannequin(b))))
         pieces.append((name + "\n+ armour", trimmed(mannequin(b, True))))
     tries = [("ChatGPT 1", "try1_human_male.png", None), ("ChatGPT 2", "try2_human_male_big.png", "big"),
-             ("ChatGPT 3", "try3_human_male.png", None), ("ChatGPT 4", "try4_human_male.png", None)]
+             ("ChatGPT 3", "try3_human_male.png", None), ("ChatGPT 4", "try4_human_male.png", None), ("ChatGPT 5", "try5_human_male.png", None)]
     for label, f, kind in tries:
         p = os.path.join(TRIES, f)
         if os.path.exists(p):

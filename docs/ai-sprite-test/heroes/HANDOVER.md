@@ -156,6 +156,10 @@ Pilot **Human Male** end to end before the other eight. Don't start a second bod
    legs 10, feet on row 60, 32 colours, alpha clean, the 8× exact). Two things left: no feet (the legs end as
    flat 6-pixel columns) and the arms flexed outward with fists, a bodybuilder pose that every frame after it
    would copy.
+5. **Try 5** (the fix of try 4): feet (the leg a pixel narrower at the ankle, rows 57 and 58, a 7-pixel foot
+   turned out on rows 59 and 60) and the arms hanging straight with a 2-pixel gap; every other number as
+   try 4. With a 16-pixel chest, 2-pixel gaps and 6-pixel arms the shoulders are 32 wide, so he reads broad,
+   which leaves room for pauldrons. The candidate master (`tries/try5_human_male.png`), pending the user's OK.
 
 ## What has gone wrong before (read before prompting)
 - ChatGPT failed the monster test (`../HANDOVER.md`): drew bigger than asked (44 to 48 px for 35), and the
