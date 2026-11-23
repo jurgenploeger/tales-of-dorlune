@@ -219,6 +219,20 @@ Pilot **Human Male** end to end before the other eight. Don't start a second bod
     head the master's in every frame, the master's colours. What made it work: naming the cycle frame by frame
     and saying "the master's own legs". `tools/hero_idle.py human_male walk --gif` assembles the sheet and
     `hero64_human_male_walk.gif`.
+16. **Walk down-right** (`hero64_human_male_walk_down-right.png`, after tries 1 to 9 in `tries/`). ChatGPT kept
+    breaking the pieces it moved: legs crossed above the knee, feet cut off as flat bars, shoulders done by widening
+    the chest, a gap closed by fattening the belly, hands flared sideways. What worked: a target built in code from
+    the approved standing view, moving whole pieces (`tries/walk_down-right_target.png`), shown to the user as a GIF
+    until approved, then handed to ChatGPT, which matched it pixel for pixel. The motion the user approved:
+    - legs: the thighs never move; each foot lifts whole, 2 px then 1 px, stepping 1 px forward (right) only at the top
+      of the lift, the near leg drawn in front where they overlap;
+    - arms: the swing is seen in depth, so it shows vertically. The near hand swinging back rises (2 px, then 1);
+      the far hand swinging forward drops 1 px and crosses 1 px in front of the hip. Hands never move sideways
+      past the standing view's outline (the user: "flaying outwards"), and the body stays its own width (filling a
+      gap with the body made "his belly fat");
+    - shoulders move at most 1 px with the arms; the head bobs 1 px on frames 2 and 5.
+    Lesson: for any view where limbs overlap, build the target in code from the approved still and let ChatGPT
+    match it; describing the motion in words took nine tries and never got there.
 
 ## What has gone wrong before (read before prompting)
 - ChatGPT failed the monster test (`../HANDOVER.md`): drew bigger than asked (44 to 48 px for 35), and the

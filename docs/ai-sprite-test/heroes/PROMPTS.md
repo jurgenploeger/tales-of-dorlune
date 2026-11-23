@@ -194,7 +194,13 @@ Then the animation's own lines:
 > - frame 6: the left foot up 1 px; the body back down
 > - the hand on the side opposite the lifted foot 1 px lower
 >
-> {right, down-right, up-right: the legs step forward and back instead of up:}
+> {right, down-right, up-right: don't describe the motion in words. Build the six frames in code from the approved
+> standing view (moving whole pieces, as `tries/walk_down-right_target.png` was made), get the user's OK on a GIF,
+> then attach it and ask ChatGPT to "make the final row from this target, keep every pixel's position, clean up only
+> doubled outlines". The down-right walk took nine word-only tries and never landed; the target landed first time.
+> The motion that passed for down-right: the feet lift as in the down walk, stepping 1 px forward only at the top;
+> the hand swinging back rises 2 then 1 px, the hand swinging forward drops 1 px and crosses the hip; nothing moves
+> sideways past the standing outline; the body keeps its width. The older wording, kept for reference:}
 > - frame 1: contact, the near foot 3 px forward and the far foot 3 px back, both on row 60
 > - frame 2: down, the stride 2 px each way, the body above the shorts 1 px lower
 > - frame 3: passing, the far foot lifted 2 px beside the near leg, the body back up
