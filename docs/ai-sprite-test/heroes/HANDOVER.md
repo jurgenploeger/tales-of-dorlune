@@ -197,6 +197,9 @@ Pilot **Human Male** end to end before the other eight. Don't start a second bod
 11. **Right** (`hero64_human_male_right.png`, approved by the user, first try): 46 px, feet on row 60, columns
     23 to 41, the master's 20 colours. The near arm hangs at the back edge of the torso, so from the side the
     body reads slim (about 9 px); kept as drawn. Left is it mirrored.
+12. **Up-right** (`hero64_human_male_up-right.png`, approved by the user, first try): 46 px, feet on row 60,
+    columns 23 to 41, the master's 20 colours; the ear's inside and a blush pixel show at the face's edge, no
+    eye. Up-left is it mirrored.
 
 ## What has gone wrong before (read before prompting)
 - ChatGPT failed the monster test (`../HANDOVER.md`): drew bigger than asked (44 to 48 px for 35), and the
