@@ -152,6 +152,10 @@ Pilot **Human Male** end to end before the other eight. Don't start a second bod
    Its richness was partly its size; never shrink it, redraw it.
 3. **Try 3** (64 × 64, 46 px): followed "legs about 15 px" and came out spindly: 4-pixel limbs, legs too long.
    Hence the sturdy build above.
+4. **Try 4** (64 × 64, 48 px, the sturdy build): every number on spec (head 20, neck 8, chest 16, limbs 6,
+   legs 10, feet on row 60, 32 colours, alpha clean, the 8× exact). Two things left: no feet (the legs end as
+   flat 6-pixel columns) and the arms flexed outward with fists, a bodybuilder pose that every frame after it
+   would copy.
 
 ## What has gone wrong before (read before prompting)
 - ChatGPT failed the monster test (`../HANDOVER.md`): drew bigger than asked (44 to 48 px for 35), and the
