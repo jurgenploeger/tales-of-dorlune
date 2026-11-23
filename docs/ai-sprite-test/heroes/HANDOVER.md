@@ -200,6 +200,10 @@ Pilot **Human Male** end to end before the other eight. Don't start a second bod
 12. **Up-right** (`hero64_human_male_up-right.png`, approved by the user, first try): 46 px, feet on row 60,
     columns 23 to 41, the master's 20 colours; the ear's inside and a blush pixel show at the face's edge, no
     eye. Up-left is it mirrored.
+13. **Up** (`hero64_human_male_up.png`, first try): symmetric (`hero_symmetry.py check` 0), the master's own
+    silhouette pixel for pixel, its 20 colours. The standing turnaround is complete: all eight directions,
+    five drawn and three mirrored (`hero64_human_male_turnaround.png`). Each view took one try once the master
+    and the earlier views were attached and ChatGPT made the 1× from its painting with code.
 
 ## What has gone wrong before (read before prompting)
 - ChatGPT failed the monster test (`../HANDOVER.md`): drew bigger than asked (44 to 48 px for 35), and the
