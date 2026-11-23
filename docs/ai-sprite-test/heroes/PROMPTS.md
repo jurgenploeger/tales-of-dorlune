@@ -211,6 +211,11 @@ Then the animation's own lines:
   hard square, alpha only 0 or 255."
 - Limbs: "In frame {k} the arms and legs swing the same side; the arm opposite the forward leg swings
   forward."
+- Uneven (front and back views; list what `tools/hero_symmetry.py check` reports): "Make the face and body exactly
+  symmetric across column {middle}: {the right brow 2 pixels like the left, the right eye the same drawing as the
+  left mirrored, the mouth centred on column {middle}, the right foot's outline unbroken like the left's, no stray
+  line down the left shin}. Keep the shading lit from the top left (the right side a step darker). The attached
+  file is the target."
 - Missing 1×: "Send the 1× PNG file too, exactly {w} × {h}, transparent."
 
 ---

@@ -142,6 +142,9 @@ Pilot **Human Male** end to end before the other eight. Don't start a second bod
   the side, none from behind.
 - The same character in every frame: height within 1 px, head within 1 to 2 px, underwear the same shape
   and colour, skin the same ramp. Side and back views match the front.
+- Front and back views even: `python3 tools/hero_symmetry.py check <png>` finds no pixel whose mirror across the
+  middle column differs in shape or in its dark lines (outline, brows, eyes, mouth); only the shading may differ.
+  `fix` evens one out (the left side kept, `--side right` the other) as a target to show ChatGPT, or to use.
 - Underwear plain and fitted: shorts on every body, a simple band top on Female and Other, one flat neutral
   colour (warm grey). No anatomy detail.
 - Dwarves clearly shorter and broader than humans (the RD lesson: "big head" pulled them to human height).
@@ -172,6 +175,11 @@ Pilot **Human Male** end to end before the other eight. Don't start a second bod
    (`try6_human_male_snapped.png`). The snap is the candidate master. Two flaws from where the grid slipped:
    a dark smudge at its right ear and the outline missing down its right arm; fix those pixels, or have
    ChatGPT sample its own picture (below).
+7. **Try 7**: ChatGPT sampled its own painting with code (`tries/try7_human_male.png`): on spec (46 px, feet on
+   row 60, centred on column 32, 21 colours), but uneven, the user saw: 21 pixels differ from their mirror
+   (`hero_symmetry.py check`): a brow 2 pixels on one side and 3 on the other, the eyes drawn differently, the
+   mouth a pixel off the middle, a stray line down the left shin, the right foot's outline broken, a gap at the
+   right hand. `fix` evens it (`try7_human_male_sym.png`); the smile comes out a flat line.
 
 ## What has gone wrong before (read before prompting)
 - ChatGPT failed the monster test (`../HANDOVER.md`): drew bigger than asked (44 to 48 px for 35), and the
