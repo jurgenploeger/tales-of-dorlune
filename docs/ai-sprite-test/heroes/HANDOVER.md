@@ -260,6 +260,12 @@ Pilot **Human Male** end to end before the other eight. Don't start a second bod
     view at the first ask (only the up view and the reference strip attached); the user picked the second,
     snapped at 6.97 and thinned. Its head bobs 3 px over a step (the other walks 1 to 2), kept as painted. The
     walk is complete in all 8 directions.
+22. **Attack down, 6 frames** (2026-11-24). Five paintings (`tries/attack6_down_try1{a..e}_painting.png`), the
+    same motion in each (ready, the fist raised by the head, a lean in with the fist across the chest, low by
+    the far hip, recover, ready); snapped with `hero_snap_walk.py --grid 3x2`. The second was drawn small and
+    the fifth on a smoky backdrop; the first lifts a foot on the strike and the fourth snapped with a dark block
+    between the legs. The user picked the third, snapped at 7.68 and thinned. The strike is a short chop; the
+    sword, placed on the grip, will carry the arc.
 
 ## What has gone wrong before (read before prompting)
 - ChatGPT failed the monster test (`../HANDOVER.md`): drew bigger than asked (44 to 48 px for 35), and the

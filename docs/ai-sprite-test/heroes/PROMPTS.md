@@ -218,6 +218,13 @@ wording that made them, are kept in `tries/` (`walk6_*_approved.png`).
 > down, body leaning in, front foot stepping forward), 4 follow-through (fist low and across), 5 recover
 > (straightening), 6 ready stance as frame 1. The feet stay on row 60. Keep the fist one clear 3 × 3 block
 > in every frame.
+>
+> Use 6 frames in a 3 × 2 grid on a transparent background, the same figure size as the walk painting
+> attached. Send only the painting. Don't make a small 1× version; I'll do that myself.
+
+Then snap it as a walk is snapped, with `--grid 3x2` (a 384 × 64 row): `python3 tools/hero_snap_walk.py <out>
+7.6 <painting.png> --grid 3x2`, and thin it. Asked for attack down, ChatGPT sent five paintings at once:
+check each is drawn at the walk's size and on a clear background before snapping.
 
 ---
 
