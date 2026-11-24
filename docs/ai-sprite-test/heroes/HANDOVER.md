@@ -284,6 +284,12 @@ One doll, end to end (it was the Human Male pilot until 2026-11-24).
     only pulls it to the ear, a punch more than a swing, fine from behind. The second's ready frames sit a
     pixel apart (a jump as it loops); the user picked the first, snapped at 8.43 with `--grid 3x2` and thinned.
     Attack up-left is its mirror.
+27. **Attack up, 6 frames** (2026-11-24): the attack is complete in all 8 directions. Three paintings
+    (`tries/attack6_up_try1{a,b,c}_painting.png`; the third on a black blotchy backdrop). Snapped, both filled
+    the gap between the legs with outline; `tools/hero_leg_gap.py` reopens it (#.# as in the standing view).
+    The first had grey stripes down a leg and on the back, the second a thin arm 6 px above the head in the
+    wind-up ("the arm moves too far up", the user). Kept: the second, with the first's wind-up (frame 2), its
+    grey stripe painted skin and its legs, which touched, swapped for frame 1's standing legs with the gap.
 
 ## What has gone wrong before (read before prompting)
 - ChatGPT failed the monster test (`../HANDOVER.md`): drew bigger than asked (44 to 48 px for 35), and the
