@@ -595,7 +595,7 @@ final class Walker: SKNode {
 
     /// Where a foot of its has just come down, in its parent's points, or nil. A walk sheet's
     /// strides are frames 0 and 2 (one foot forward), its feet together 1 and 3: a foot comes down
-    /// as a stride frame starts (`SnowTrail`, tools/snow_trail_preview.py). Only a four-frame walk
+    /// as a stride frame starts (`Footprints`, tools/snow_trail_preview.py). Only a four-frame walk
     /// sheet: a hopping monster leaves none.
     func footfall() -> CGPoint? {
         let frames = cycle.frames(facing)
@@ -607,8 +607,8 @@ final class Walker: SKNode {
         lastStride = shown
         strides += 1
         let side: CGFloat = strides % 2 == 0 ? 1 : -1
-        let offset = facing.isHorizontal ? CGVector(dx: 0, dy: SnowTrail.apart.along * side)
-            : CGVector(dx: SnowTrail.apart.across * side, dy: 0)
+        let offset = facing.isHorizontal ? CGVector(dx: 0, dy: Footprints.apart.along * side)
+            : CGVector(dx: Footprints.apart.across * side, dy: 0)
         return CGPoint(x: position.x + offset.dx, y: position.y + lift + feet + offset.dy)
     }
 

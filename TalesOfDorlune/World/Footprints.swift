@@ -1,33 +1,42 @@
 import SpriteKit
 
-/// Footprints in the snow (the user's pick, look C from `tools/snow_trail_preview.py`, 2026-11-24,
-/// after SpriteCook's trail render texture article): where anyone with a walk sheet puts a foot down
-/// on a snow land's own plain ground (`Walker.footfall`), a print is pressed in, a dent lit from the
-/// top left in three depths: tinted toward the land's palette shadow, its top edge darker (the wall
-/// facing away from the light), its left edge a little darker, a bright lip of snow along its bottom.
-/// As it ages the snow fills it back in, the print shrinking, gone in about six seconds.
+/// Footprints in the snow and the sand (the user's picks from `tools/snow_trail_preview.py`,
+/// 2026-11-24: look C, and in the sand the same, its lip warm; after SpriteCook's trail render texture
+/// article): where anyone with a walk sheet puts a foot down on a snow or sand land's own plain ground
+/// (`Walker.footfall`), a print is pressed in, a dent lit from the top left in three depths: tinted
+/// toward the land's palette shadow (in the sand mostly toward a warm brown: a beach's blue shadow on
+/// its own turned them grey-green), its top edge darker (the wall facing away from the light), its
+/// left edge a little darker, a bright lip along its bottom (the snow's white, the sand's highlight).
+/// As it ages the ground fills it back in, the print shrinking, gone in about six seconds.
 ///
 /// The article keeps one map of bytes round the walker, stamps a soft dot into it per footfall, keeps
 /// the brighter of the two, and fades it all a whole level a frame. Every pixel of that map is the
 /// brightest stamp over it less the fade since that stamp went down, so each print here is its own
 /// sprite showing its stamp less its own age's fade (`frames`): the same picture wherever prints don't
 /// overlap (they fall a stride apart), and nothing is worked out per pixel each frame.
-final class SnowTrail {
-    /// The ground tiles that take prints: a land's theme `ground`.
-    static let grounds: Set<String> = ["tile_snow"]
+final class Footprints {
+    /// What takes prints, by a land's theme `ground`.
+    enum Material {
+        case snow, sand
+    }
+    static let grounds: [String: Material] = ["tile_snow": .snow, "tile_sand": .sand, "tile_desert": .sand]
     /// The stamp where a foot comes down: `min(1, peak * exp(-(dx/sx)² - (dy/sy)²))`, in points (a
     /// walker's art pixel is a point), flat white in its middle.
     static let peak = 1.3, spread = (x: 3.0, y: 1.8)
     /// The depths: a pixel is a level deeper over each cutoff (half a level off what a byte holds,
     /// as the article says, so no pixel flips back and forth).
     static let cutoffs = [70, 140, 210]
-    /// How strongly each depth leans toward the shadow colour; the wall's and the left edge's
-    /// darkening; the lip's colour and how much of it shows. As the preview has them.
+    /// How strongly each depth leans toward the shade colour, and the wall's and the left edge's
+    /// darkening. As the preview has them.
     static let tints: [CGFloat] = [0.18, 0.32, 0.46]
     static let wall: CGFloat = 0.82, side: CGFloat = 0.92
-    static let lip = (r: CGFloat(0.97), g: CGFloat(0.98), b: CGFloat(1.0), alpha: CGFloat(0.65))
-    /// The snow's own brightness the tint is laid at, so the dent reads as shade, not paint.
-    static let snowLight: CGFloat = 0.9
+    /// The snow's lip; the sand's is its palette's highlight half mixed with white (`sandLip`).
+    static let snowLip = (r: CGFloat(0.97), g: CGFloat(0.98), b: CGFloat(1.0))
+    static let sandLip: CGFloat = 0.55, lipAlpha: CGFloat = 0.65
+    /// The warm brown the sand's dents lean toward, and how much of it beside the palette's shadow.
+    static let sandShade = "#5A3018", sandShadeShare: CGFloat = 0.6
+    /// The ground's own brightness the tint is laid at, so the dent reads as shade, not paint.
+    static let light: [Material: CGFloat] = [.snow: 0.9, .sand: 0.7]
     /// Whole levels it fades a second (the preview's one a frame at 30 frames a second).
     static let fade = 30.0
     /// How far either side of the way you walk the feet fall, in points: across, and up or down
@@ -52,20 +61,35 @@ final class SnowTrail {
 
     let node = SKNode()
     private var prints: [Print] = []
-    /// Its looks, by the shadow colour they lean toward.
+    /// Its looks, by what takes them and the palette colours they're drawn in.
     private static var looks: [String: Look] = [:]
 
     init() {
         node.zPosition = Self.depth
     }
 
-    /// The look of a land's prints, made the first time it's wanted.
-    static func look(for def: MapDef) -> Look {
-        let hex = def.theme.palette?.shadow ?? "#3050E0"
-        if let known = looks[hex] { return known }
-        let shadow = UIColor(hex: hex) ?? UIColor(red: 0.19, green: 0.31, blue: 0.88, alpha: 1)
-        let look = Look(frames: frames(shadow: shadow))
-        looks[hex] = look
+    /// The look of a land's prints, made the first time it's wanted; nil if its ground takes none.
+    static func look(for def: MapDef) -> Look? {
+        guard let material = grounds[def.theme.ground] else { return nil }
+        let shadowHex = def.theme.palette?.shadow ?? "#3050E0", highlightHex = def.theme.palette?.highlight ?? "#FFFFFF"
+        let key = "\(material)|\(shadowHex)|\(highlightHex)"
+        if let known = looks[key] { return known }
+        func rgb(_ hex: String, _ fallback: (CGFloat, CGFloat, CGFloat)) -> (r: CGFloat, g: CGFloat, b: CGFloat) {
+            var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
+            guard let color = UIColor(hex: hex), color.getRed(&r, green: &g, blue: &b, alpha: &a) else { return (fallback.0, fallback.1, fallback.2) }
+            return (r, g, b)
+        }
+        let shadow = rgb(shadowHex, (0.19, 0.31, 0.88))
+        var shade = shadow, lip = snowLip
+        if material == .sand {
+            let brown = rgb(sandShade, (0.35, 0.19, 0.09)), k = sandShadeShare
+            shade = (shadow.r * (1 - k) + brown.r * k, shadow.g * (1 - k) + brown.g * k, shadow.b * (1 - k) + brown.b * k)
+            let high = rgb(highlightHex, (1, 1, 1))
+            lip = (sandLip + (1 - sandLip) * high.r, sandLip + (1 - sandLip) * high.g, sandLip + (1 - sandLip) * high.b)
+        }
+        let bright = light[material] ?? 0.9
+        let look = Look(frames: frames(shade: (shade.r * bright, shade.g * bright, shade.b * bright), lip: lip))
+        looks[key] = look
         return look
     }
 
@@ -123,17 +147,14 @@ final class SnowTrail {
 
     /// A picture for each whole level of fade till the stamp's middle is under the first cutoff,
     /// pictures that come out the same shared.
-    private static func frames(shadow: UIColor) -> [SKTexture] {
+    private static func frames(shade: (r: CGFloat, g: CGFloat, b: CGFloat), lip: (r: CGFloat, g: CGFloat, b: CGFloat)) -> [SKTexture] {
         let (levels, width, height) = stamp()
-        var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
-        shadow.getRed(&r, green: &g, blue: &b, alpha: &a)
-        let shade = (r: r * snowLight, g: g * snowLight, b: b * snowLight)
         // A pixel's colour, premultiplied: tinted `tint` toward the shadow, then darkened by `dark`.
         func dent(_ tint: CGFloat, _ dark: CGFloat) -> [UInt8] {
             let alpha = 1 - (1 - tint) * dark
             return [shade.r * tint * dark, shade.g * tint * dark, shade.b * tint * dark, alpha].map { UInt8(min(255, max(0, ($0 * 255).rounded()))) }
         }
-        let rim: [UInt8] = [lip.r * lip.alpha, lip.g * lip.alpha, lip.b * lip.alpha, lip.alpha].map { UInt8(($0 * 255).rounded()) }
+        let rim: [UInt8] = [lip.r * lipAlpha, lip.g * lipAlpha, lip.b * lipAlpha, lipAlpha].map { UInt8(($0 * 255).rounded()) }
         let most = levels.max() ?? 0
         var out: [SKTexture] = []
         var last: (bytes: [UInt8], texture: SKTexture)?

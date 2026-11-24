@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Footprints in the snow, after SpriteCook's trail render texture article
+"""Footprints in the snow (and the sand, --sand), after SpriteCook's trail render texture article
 (spritecook.ai/blog/2d-trail-render-texture-snow-grass-water): one small map of bytes, one per
 pixel, black where nothing has happened; every walker stamps it (a faint dab under the body each
 frame, a strong print where a foot comes down), it fades a whole number of levels each frame, and
@@ -12,6 +12,7 @@ To pick a look before any Swift (as grass_preview.py, pond_preview.py did):
   python3 tools/snow_trail_preview.py --gif out.gif        three looks side by side, the hero walking
   python3 tools/snow_trail_preview.py -o out.png           a still of each, near the end of the walk
   python3 tools/snow_trail_preview.py --map rosen_lake ... another snow land
+  python3 tools/snow_trail_preview.py --sand -o out.png  the sand looks in four sand lands (S2 picked)
 
 The walk sheet's strides are frames 0 and 2 (one foot forward), its feet together 1 and 3; a foot
 comes down as a stride frame starts, the prints left and right of the line by turns. A cobbled path
@@ -26,12 +27,19 @@ import palette_preview as pp
 FPS = 30                       # the article's rate; the fade is levels a frame at this rate
 SPEED = 40.0                   # pixels a second, as grass_preview walks
 
-# Three looks: (name, fade levels a frame at 30 fps, cutoffs, lip, how strong the dent's tint).
+# Three looks for snow: (name, fade levels a frame at 30 fps, cutoffs, lip, how strong the dent's tint).
+# The user picked C (2026-11-24): SnowTrail.swift has it.
 LOOKS = [
-    dict(name='A: article', fade=3, cuts=(90.5, 166.5), lip=True, wall=True, tint=(0.22, 0.40)),
-    dict(name='B: soft, slow', fade=1, cuts=(110.5,), lip=False, wall=False, tint=(0.26,)),
-    dict(name='C: deep, slow', fade=1, cuts=(70.5, 140.5, 210.5), lip=True, wall=True, tint=(0.18, 0.32, 0.46)),
+    dict(name='A: article', fade=3, cuts=(90.5, 166.5), lip='snow', wall=True, tint=(0.16, 0.30)),
+    dict(name='B: soft, slow', fade=1, cuts=(110.5,), lip=None, wall=False, tint=(0.20,)),
+    dict(name='C: deep, slow', fade=1, cuts=(70.5, 140.5, 210.5), lip='snow', wall=True, tint=(0.18, 0.32, 0.46)),
 ]
+# And for sand (--sand; S2 picked, 2026-11-24, Footprints.swift): its lip the palette's highlight half mixed with white, not the snow's white.
+SAND_LOOKS = [
+    dict(name='S1: sand, shallow', fade=1, cuts=(90.5, 170.5), lip='highlight', lip_alpha=0.5, wall=True, tint=(0.14, 0.26)),
+    dict(name='S2: sand, as snow C', fade=1, cuts=(70.5, 140.5, 210.5), lip='highlight', wall=True, tint=(0.18, 0.32, 0.46)),
+]
+SAND_LANDS = ['pineapple_shore', 'goldburg_lake', 'genie_desert', 'secret_plain']
 
 DAB = dict(peak=0.30, sx=4.0, sy=2.0)          # under the body, every frame (for the grass; never dents)
 BOOT = dict(peak=1.3, sx=3.0, sy=1.8)          # where a foot comes down: flat white at its middle
@@ -77,13 +85,19 @@ def scene(mid, W, H, N=12):
 
 
 def colours(mid, ground):
-    """The dent's tint and the lip, from the land: its palette's shadow colour (CanopyShade.lean
-    takes the same) and the snow's own brightest."""
+    """The dent's tint and the lips, from the land: its palette's shadow colour (CanopyShade.lean
+    takes the same); the snow's own brightest, and its highlight half mixed with white (sand)."""
     p = pp.maps[mid]['theme'].get('palette') or {}
     shadow = pp.hexrgb(p.get('shadow', '#3050E0')) * 255
-    lip = np.percentile(ground.reshape(-1, 3), 98, axis=0)
-    lip = np.minimum(255, lip * 1.04 + 4)
-    return shadow, lip
+    snow = np.percentile(ground.reshape(-1, 3), 98, axis=0)
+    snow = np.minimum(255, snow * 1.04 + 4)
+    warm = 255 * (0.55 + 0.45 * pp.hexrgb(p.get('highlight', '#FFFFFF')))
+    return shadow, {'snow': snow, 'highlight': warm}
+
+
+SAND_SHADE = '#5A3018'      # a warm brown the sand's dents lean toward, with the palette's shadow
+SAND_SHADE_SHARE = 0.6      # how much of it: on its own a blue shadow turned the sand's dents grey-green
+
 
 
 def dents(ground, snow, canvas, look, shadow, lip):
@@ -111,7 +125,8 @@ def dents(ground, snow, canvas, look, shadow, lip):
     if look['lip']:
         above = np.zeros_like(level); above[1:] = level[:-1]
         rim = (level == 0) & (above > 0) & snow
-        img[rim] = img[rim] * 0.35 + lip * 0.65
+        a = look.get('lip_alpha', 0.65)
+        img[rim] = img[rim] * (1 - a) + lip[look['lip']] * a
     return img
 
 
@@ -159,20 +174,21 @@ def walk(mid, W=220, H=150):
         yield x, y, dirn, 1, None
 
 
-def render(mid, zoom=3):
+def render(mid, looks=LOOKS):
     W, H = 220, 150
     ground, snow = scene(mid, W, H)
     shadow, lip = colours(mid, ground)
     heroes = hero_frames()
-    canvases = [np.zeros((H, W), np.uint8) for _ in LOOKS]
+    canvases = [np.zeros((H, W), np.uint8) for _ in looks]
     frames = []
     for x, y, dirn, fr, fall in walk(mid, W, H):
         panels = []
-        for look, canvas in zip(LOOKS, canvases):
+        for look, canvas in zip(looks, canvases):
+            tint_to = shadow if look['lip'] != 'highlight' else shadow * (1 - SAND_SHADE_SHARE) + pp.hexrgb(SAND_SHADE) * 255 * SAND_SHADE_SHARE
             canvas[:] = np.maximum(0, canvas.astype(int) - look['fade']).astype(np.uint8)
             stamp(canvas, x, y - 1, **DAB)
             if fall: stamp(canvas, fall[0], fall[1], **BOOT)
-            img = dents(ground, snow, canvas, look, shadow, lip)
+            img = dents(ground, snow, canvas, look, tint_to, lip)
             sprite = heroes[dirn][fr]
             paste(img, sprite, int(round(x)) - 24, int(round(y)) - FEET_ROW)
             panels.append(np.clip(img, 0, 255).astype(np.uint8))
@@ -189,12 +205,12 @@ def label(panel, text, zoom):
     return np.asarray(im)
 
 
-def join(panels, zoom):
+def join(panels, zoom, names=None):
     gap = np.full((panels[0].shape[0] * zoom, 6, 3), 30, np.uint8)
     out = []
-    for i, (p, look) in enumerate(zip(panels, LOOKS)):
+    for i, (p, name) in enumerate(zip(panels, names or [l['name'] for l in LOOKS])):
         if i: out.append(gap)
-        out.append(label(p, look['name'], zoom))
+        out.append(label(p, name, zoom))
     return Image.fromarray(np.concatenate(out, 1))
 
 
@@ -204,7 +220,16 @@ if __name__ == '__main__':
     ap.add_argument('-o', '--out', default='snow-trail-preview.png')
     ap.add_argument('--gif')
     ap.add_argument('--zoom', type=int, default=3)
+    ap.add_argument('--sand', action='store_true', help='the sand looks, a row a sand land (a still only)')
     args = ap.parse_args()
+    if args.sand:
+        rows = []
+        for mid in SAND_LANDS:
+            frames = render(mid, SAND_LOOKS)
+            k = len(frames) - FPS * 4 - 1
+            rows.append(np.asarray(join(frames[k], args.zoom, [f"{l['name']} | {mid}" for l in SAND_LOOKS])))
+        Image.fromarray(np.concatenate(rows, 0)).save(args.out)
+        raise SystemExit
     frames = render(args.map)
     if args.gif:
         # Every third frame at twice the size, on one palette, so the GIF stays a few megabytes.
