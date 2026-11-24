@@ -1095,7 +1095,6 @@ flowers_meadow | newgame,map=sunny_meadow,landscape,weather=clear,hour=12 | 8
 # Footprints in the snow and the sand (Footprints, look C and S2 from tools/snow_trail_preview.py): the hero
 # walking a loop on snow, a desert and a beach, close up, the prints behind him filling back in.
 snow_trail      | newgame,level=163,map=snow_white_forest,at=5_5,zoom=1.8,walk=1_0,weather=clear,hour=12 | 10
-snow_trail_b    | newgame,level=163,map=snow_white_forest,at=-6_4,zoom=1.8,walk=0_1,weather=clear,hour=12 | 10
 snow_trail_rosen | newgame,level=163,map=rosen_lake,at=4_-5,zoom=1.8,walk=1_0,weather=clear,hour=12 | 10
 sand_trail_desert | newgame,level=163,map=genie_desert,at=5_5,zoom=1.8,walk=1_0,weather=clear,hour=12 | 10
 sand_trail_beach | newgame,level=163,map=pineapple_shore,at=-5_5,zoom=1.8,walk=1_0,weather=clear,hour=12 | 10

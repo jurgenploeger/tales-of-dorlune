@@ -285,7 +285,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   alone turned them grey-green; a darker wall along its top, a bright lip along its bottom, the sand's its
   `highlight` half white), filling back in over about six seconds. The article's map of bytes is the brightest stamp
   less the fade since it, so each print is its own sprite showing its stamp less its age's fade
-  (`Footprints.frames`). Keep the tool and the Swift in step; debug scenes `snow_trail*`, `sand_trail*`.
+  (`Footprints.frames`). Keep the tool and the Swift in step; debug scenes `snow_trail`, `snow_trail_rosen` (the one that shows them), `sand_trail*`.
 - Town roads (the user's pick from `tools/road_preview.py`, 2026-11-17): in a town's square (`GroundTiles.inTown`,
   `WorldMap.townSquare`) every road cell is drawn by `ArtLibrary.townRoad` (`GroundLayer.cobbled`): cobbles about half a
   cell across down its middle in the colour of the land's `tile_town` (graded), their edge ragged stone by stone, sand
