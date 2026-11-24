@@ -330,6 +330,9 @@ One doll, end to end (it was the Human Male pilot until 2026-11-24).
 36. **Elf attack down** (2026-11-24): one painting (`tries/elf_attack_down_try1_painting.png`), both ears as drawn,
     the raised fist in front of the left ear (`hero64_doll_ears_attack_down.png`). The lifting is
     `tools/hero_ears_row.py` now.
+37. **Elf attack down-right** (2026-11-24): two paintings of one drawing (`tries/elf_attack_down-right_try1{a,b}_painting.png`;
+    the first with a dark glow round each figure); the second, clean, lined up with no shift
+    (`hero64_doll_ears_attack_down-right.png`; down-left mirrored). In frame 2 the raised arm covers the near ear.
 
 ## What has gone wrong before (read before prompting)
 - ChatGPT failed the monster test (`../HANDOVER.md`): drew bigger than asked (44 to 48 px for 35), and the
