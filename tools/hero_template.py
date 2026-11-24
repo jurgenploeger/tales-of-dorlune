@@ -41,7 +41,8 @@ OLD_FRAME = 48
 # One doll for every hero since 2026-11-24 (the user: "one doll, so no gender"; the player's look comes from hair,
 # an Elf from an ears layer; no dwarves for now). Before, nine bodies: Human, Elf and Dwarf x Male, Female, Other.
 SPEC = {
-    "doll": ("Doll", "(Human and Elf)", 46, 19, 12, 4, 11, 6, "body_human"),
+    "doll": ("Human", "(the doll)", 46, 19, 12, 4, 11, 6, "body_human"),
+    "elf": ("Elf", "(the doll with ears, tools/hero_ears.py)", 46, 19, 12, 4, 11, 6, "body_human"),
 }
 
 GRID = (200, 200, 205, 255)
