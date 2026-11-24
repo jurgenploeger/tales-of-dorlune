@@ -266,6 +266,11 @@ Pilot **Human Male** end to end before the other eight. Don't start a second bod
     the fifth on a smoky backdrop; the first lifts a foot on the strike and the fourth snapped with a dark block
     between the legs. The user picked the third, snapped at 7.68 and thinned. The strike is a short chop; the
     sword, placed on the grip, will carry the arc.
+23. **Attack down-right, 6 frames** (2026-11-24). Asked with attack down's painting attached, ChatGPT sent that
+    painting back; in a new chat with only the down-right view attached and the six beats in words, it sent two
+    (`tries/attack6_down-right_try1{a,b}_painting.png`). The second swapped hands mid-swing (the near fist up
+    and punching, the far one winding up); the user picked the first, the far (right) fist all through, the
+    same swing as attack down. Snapped at 7.78 with `--grid 3x2` and thinned. Attack down-left is its mirror.
 
 ## What has gone wrong before (read before prompting)
 - ChatGPT failed the monster test (`../HANDOVER.md`): drew bigger than asked (44 to 48 px for 35), and the
