@@ -337,6 +337,12 @@ One doll, end to end (it was the Human Male pilot until 2026-11-24).
     the second picked; frames 3, 5 and 6 lined up a pixel down (`hero64_doll_ears_attack_right.png`; left mirrored).
     The head's edges for the lift come from the standing view (`hero_ears.fit`): in frame 2 the raised arm was taken
     for the back of the head and the human ear stayed. Every drawn direction but up and up-right now has ears.
+39. **Elf ears up-right** (2026-11-24): seen from behind, the ears point back toward the viewer. The first try put
+    the big ear on the left (my prompt had the sides swapped), the second stuck it straight out sideways with its
+    inside showing (`tries/elf_up-right_try1{a,b,c}_painting.png`); the third, told both, rose up and a little out
+    with its back to us. Of its six (`try2{a..f}`), the user picked 4 (`d`), whose outline stayed closed when
+    snapped (1's lost a pixel of it), one pixel over (`hero64_doll_ears_up-right.png`; up-left mirrored). Idle
+    wears it; the walk and attack rows facing up-right still need ears painted on them.
 
 ## What has gone wrong before (read before prompting)
 - ChatGPT failed the monster test (`../HANDOVER.md`): drew bigger than asked (44 to 48 px for 35), and the
