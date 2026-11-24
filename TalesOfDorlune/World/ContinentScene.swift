@@ -75,6 +75,8 @@ final class ContinentScene: SKScene {
         }
     }
     private var lands: [String: Land] = [:]
+    /// Footprints in the snow (`SnowTrail`), pressed in wherever anyone walks a snow land's own ground.
+    private let snowTrail = SnowTrail()
     /// The lands with a chunk drawn round you: the ones whose people and animals go about and that
     /// show (`update`). The rest wait, hidden, till you come near them again (`lookAround`).
     private var nearLands: Set<String> = []
@@ -285,6 +287,7 @@ final class ContinentScene: SKScene {
             layer.addChild(bank)
         }
         addChild(layer)
+        layer.addChild(snowTrail.node)
         player.tagMode = .whenStill
         player.fidgets = true
         player.position = point
@@ -555,6 +558,20 @@ final class ContinentScene: SKScene {
         return land.map.height(at: CGPoint(x: point.x - land.shift.dx, y: point.y - land.shift.dy))
     }
 
+    /// How the snow at `point` (in the continent's points) takes a print (`SnowTrail`), or nil where it
+    /// takes none: only a snow land's own plain ground, on the flat (not a path, a patch, a hill, the
+    /// shore or anything in the way).
+    private func snowLook(at point: CGPoint) -> SnowTrail.Look? {
+        let cell = Self.cell(at: point)
+        guard let owner = store.land(at: cell), let land = lands[owner.id],
+              SnowTrail.grounds.contains(land.def.theme.ground) else { return nil }
+        let local = GridPoint(col: cell.col - land.place.origin.col, row: cell.row - land.place.origin.row)
+        guard local.row >= 0, local.row < land.map.ground.count, local.col >= 0, local.col < land.map.ground[local.row].count,
+              land.map.ground[local.row][local.col] == .ground, land.map.isWalkable(local),
+              land.map.height(at: CGPoint(x: point.x - land.shift.dx, y: point.y - land.shift.dy)) == 0 else { return nil }
+        return SnowTrail.look(for: land.def)
+    }
+
     /// How deep someone standing at `point` sorts: `-y`, or behind a terrace's top where they're on
     /// the ground just behind it (`WorldMap.depthBehindTerrace`), in the land's own depth less its shift.
     func depth(at point: CGPoint) -> CGFloat {
@@ -653,6 +670,7 @@ final class ContinentScene: SKScene {
         #if DEBUG
         wadeForDebug = wading.map { cut in "\(Int(cut.max() ?? 0))/\(cut.filter { $0 > 0 }.count)" } ?? "-"
         #endif
+        snowTrail.update(dt: dt, footfalls: Walker.footfalls(in: layer)) { self.snowLook(at: $0) }
         updateAir(dt)
         if currentTime - lookedAround > 0.25 {
             lookedAround = currentTime
