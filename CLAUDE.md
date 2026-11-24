@@ -167,6 +167,10 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   blue overhead to a pale haze in dithered bands (`day_sky`), and scaled by a whole number; dark is the scene at dusk under the night `TalesOfDorluneSky` draws, lit by its gold, fireflies, sparkles
   and stars (`light_up`), in hard steps; tinted (iOS's Tinted and Clear looks) the hero bright, cut on his
   outline, on a dim backdrop (`tint`), as the system's own icons are a light figure on a dark field. `--preview` shows Home Screen sizes.
+- `tools/picked_icon_art.py`: the app icon's dark look and all three festive icons (light and dark) since
+  2026-11-24 are the user's picked drawings (`art-variants/app_icon_picked/`), snapped to their 96-cell grid and
+  scaled by 11 to 1024; tinted from them (the hero is the cells all seven agree on). `app_icon_art.py` and
+  `season_icon_art.py` leave those files alone while a picked drawing is there.
 - `tools/season_icon_art.py`: the festive seasons' app icons (AppIcon-Halloween, -Christmas, -Easter), from the
   app icon's drawing cropped a little looser (`BOX`) so a hat fits: the hero as drawn (`HERO`), RD's scenery
   recoloured class by class, each colour onto the same rank of a hue-shifted seasonal ramp (its clusters kept),

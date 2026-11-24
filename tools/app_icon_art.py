@@ -13,6 +13,9 @@ a glint on the sword (`light_up`). Tinted: greys iOS colours with the tint chose
 the hero bright, cut on his own outline (season_icon_art.hero_mask), on the dark icon's scene pushed dim (`tint`).
 Every grade is worked out on the drawing's own pixels before scaling, so the pixels stay crisp.
 
+Since 2026-11-24 the dark icon (and so the tinted one) is the user's picked drawing instead,
+written by tools/picked_icon_art.py; this leaves both alone while art-variants/app_icon_picked/dark.png is there.
+
 Rerun after changing the source or the crop; `--preview out.png` shows all three at Home Screen
 sizes, beside the looser crop (`ALT_CROP`). Needs pillow + numpy.
 """
@@ -220,9 +223,13 @@ def main() -> None:
     day = day_sky(rgb, CROP)
     light, dark, tinted = scaled(day, SCALE), scaled(night, SCALE), scaled(tint(night, hero, day), SCALE)
     light.save(LIGHT, optimize=True)
-    dark.save(DARK, optimize=True)
-    tinted.save(TINTED, optimize=True)
-    print(f"wrote {LIGHT.relative_to(ROOT)}, {DARK.relative_to(ROOT)} and {TINTED.relative_to(ROOT)}")
+    if (ROOT / "art-variants/app_icon_picked/dark.png").exists():
+        # The user's picked night drawing wins (tools/picked_icon_art.py writes dark and tinted).
+        print(f"wrote {LIGHT.relative_to(ROOT)}; dark and tinted are tools/picked_icon_art.py's")
+    else:
+        dark.save(DARK, optimize=True)
+        tinted.save(TINTED, optimize=True)
+        print(f"wrote {LIGHT.relative_to(ROOT)}, {DARK.relative_to(ROOT)} and {TINTED.relative_to(ROOT)}")
 
     if args.preview:
         alt = scaled(crop(ALT_CROP), ALT_SCALE)
