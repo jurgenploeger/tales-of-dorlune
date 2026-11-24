@@ -39,6 +39,11 @@ Iconaut's (MIT), as in the game: `python3 website/tools/icons.py` vendors them i
 
 Project settings → Build and Deployment → Root Directory: `website`. Astro is detected by itself.
 
+Vercel builds only when something under `website/` changed (`vercel.json` `ignoreCommand`: the diff since
+the last deployed commit, `VERCEL_GIT_PREVIOUS_SHA`, else the commit before), so an app-only push doesn't
+redeploy the site (the user, 2026-11-24). The app's TestFlight build likewise ignores `website/`
+(`.github/workflows/testflight.yml` `paths`).
+
 ## Still to fill in (`src/lib/site.ts`)
 
 - `appStoreUrl` and `appStoreId`: until then the buttons say "Coming soon to the App Store".
