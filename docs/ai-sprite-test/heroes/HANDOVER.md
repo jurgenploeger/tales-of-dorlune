@@ -1,9 +1,15 @@
 # Hero sprites v2: 64-pixel bodies drawn by ChatGPT
 
-Goal: redraw the nine hero bodies (Human, Elf, Dwarf × Male, Female, Other) at a size where armour, gloves,
-boots, necklaces, belts, hair and held weapons read, with idle, walk and attack in eight directions (running is the walk played faster).
-First as a blank canvas: a smooth doll body in plain underwear, nothing else. Everything a hero wears or
-holds is a layer drawn over it later.
+Goal: one hero **doll** at a size where armour, gloves, boots, necklaces, belts, hair and held weapons read,
+with idle, walk and attack in eight directions (running is the walk played faster). A blank canvas: a smooth,
+gender-neutral body in plain shorts, nothing else. Everything a hero wears or holds is a layer drawn over it.
+
+**One doll, no genders, Human and Elf** (the user, 2026-11-24: "For now we're just going to use sprites for one
+doll, so no gender. Eventually we're going to introduce different haircuts, and that way the player can decide
+themselves what the hero looks like"). The player's look comes from the layers: hair, from short to long, and
+for an Elf an **ears layer** fitted to the head like a hat. No dwarves for now. The plan till then was nine
+bodies (Human, Elf, Dwarf × Male, Female, Other); the art made so far, drawn as Human Male (`tries/`), is the
+doll: bald, flat-chested, in plain shorts.
 
 Prompts: [`PROMPTS.md`](PROMPTS.md). Templates to attach: [`templates/`](templates/), made by
 `python3 tools/hero_template.py`. The overview of every sheet: the artifact "Hero Sprite Sheets", https://claude.ai/artifact/AbY18V5Yeojpt8RALckopY .
@@ -55,9 +61,7 @@ Chosen (the user, 2026-11-23, after three ChatGPT tries and the size board,
 
 | Body | Height | Head | Chest | Arms, legs | Legs | Feet |
 |---|---|---|---|---|---|---|
-| Human Male / Female / Other | 46 / 44 / 45 | 19 | 12 / 11 / 12 | 4 | 11 / 10 / 11 | 6 / 5 / 6 |
-| Elf Male / Female / Other (ears extra) | 46 / 44 / 45 | 19 | 11 / 10 / 11 | 4 | 12 / 11 / 11 | 5 |
-| Dwarf Male / Female / Other | 38 / 36 / 37 | 17 / 16 / 17 | 14 / 13 / 13 | 5 | 7 | 7 |
+| The doll (Human; an Elf with the ears layer) | 46 | 19 | 12 | 4 | 11 | 6 |
 
 Legs are from the shorts' hem to the soles. `tools/hero_template.py` `SPEC` holds these; the guides draw them (blue: head top, cyan: chin, violet ticks: the chest's width, orange: the shorts' hem, green: feet).
 
@@ -72,7 +76,7 @@ walking along a row of cells moves diagonally on screen: the diagonals are the v
 | walk | 8 | 512 × 512 | after the user's reference video: contact, lift, pass, reach, twice; 83 ms a frame; the planted foot on row 60 |
 | attack | 6 | 384 × 512 | ready, wind-up, strike, follow-through, recover, ready; empty hand closed as a grip |
 
-File names: `hero64_<race>_<gender>_<anim>.png`, for example `hero64_human_male_walk.png`.
+File names: `hero64_doll_<anim>.png` (one row a direction: `hero64_doll_<anim>_<direction>.png`), for example `hero64_doll_walk.png`.
 
 - ChatGPT draws **five views: down, down-right, right, up-right, up**. **Down-left, left and up-left are
   their mirrors** for the base body and hair. Only layers that differ per side (a weapon hand, a
@@ -101,12 +105,11 @@ hat, cape-front, weapon.
 Each weapon is **one sheet of 8 angles** on a 128 × 128 canvas per angle, the grip on the middle pixel
 (64, 64), 0° pointing straight up and turning clockwise (`templates/weapon_wheel_8x.png`). Code places it
 on each frame's grip mark at that frame's angle, in front of the body or behind it by direction (the rule
-`GearArt.posed` keeps today). This avoids asking ChatGPT for every weapon in every frame (9 bodies × 22
-frames × 8 directions). Draw the 0°, 45° and 90° views; 135° to 315° are those turned in whole quarter
+`GearArt.posed` keeps today). This avoids asking ChatGPT for every weapon in every frame (22 frames × 8 directions). Draw the 0°, 45° and 90° views; 135° to 315° are those turned in whole quarter
 turns or mirrored where the weapon is symmetric, and drawn by hand where it isn't (a bow, a curved blade).
 
 ## The workflow
-Pilot **Human Male** end to end before the other eight. Don't start a second body until the pilot passes.
+One doll, end to end (it was the Human Male pilot until 2026-11-24).
 
 1. **Set up a ChatGPT project** with `PROMPTS.md` § Project instructions as its instructions and these files:
    `docs/ai-sprite-test/style-reference.png`, `templates/compare_48_64.png`, the body's guide
@@ -125,10 +128,10 @@ Pilot **Human Male** end to end before the other eight. Don't start a second bod
    fixes at a time, quoting the failing rule.
 6. **Assemble** the rows into `hero64_<body>_<anim>.png` (mirror right into left) and look at it at 1× and
    4× beside today's body on grass and on the dark battle field.
-7. **Then the other eight bodies**, each in its own chat, each starting from its own master frame. Attach the
-   approved Human Male master as the style reference so all nine look like one family.
-8. **Then layers:** hair (each of the nine styles in `appearance.json`), then one armour set, gloves,
-   boots, necklace, belt, cape, hat; then weapons.
+7. **Then layers:** the elf's ears (8 directions, five drawn, fitted to the head frame by frame as a hat
+   is), hair (`appearance.json`'s styles redrawn for the doll, from cropped to long, so a player makes the
+   hero read male, female or neither), then one armour set, gloves, boots, necklace, belt, cape, hat; then
+   weapons.
 
 ## Acceptance (every frame)
 - Canvas 64 × 64 per frame; feet on row 60 at contact frames; height within 1 px of the table; centred on
@@ -144,10 +147,8 @@ Pilot **Human Male** end to end before the other eight. Don't start a second bod
 - Front and back views even: `python3 tools/hero_symmetry.py check <png>` finds no pixel whose mirror across the
   middle column differs in shape or in its dark lines (outline, brows, eyes, mouth); only the shading may differ.
   `fix` evens one out (the left side kept, `--side right` the other) as a target to show ChatGPT, or to use.
-- Underwear plain and fitted: shorts on every body, a simple band top on Female and Other, one flat neutral
-  colour (warm grey). No anatomy detail.
-- Dwarves clearly shorter and broader than humans (the RD lesson: "big head" pulled them to human height).
-- Elves: the ears are what sets them apart; same body as the human otherwise.
+- Underwear plain and fitted: shorts, one flat neutral colour (warm grey). No anatomy detail, no top.
+- Elves: the ears layer is what sets them apart; the same doll otherwise.
 
 ## The pilot so far (Human Male, 2026-11-23, `tries/`)
 1. **Try 1** (64 × 64, 45 px, every check passed): read as a toddler or a little monk. Small low eyes under
@@ -179,7 +180,7 @@ Pilot **Human Male** end to end before the other eight. Don't start a second bod
    (`hero_symmetry.py check`): a brow 2 pixels on one side and 3 on the other, the eyes drawn differently, the
    mouth a pixel off the middle, a stray line down the left shin, the right foot's outline broken, a gap at the
    right hand. `fix` evens it (`try7_human_male_sym.png`); the smile comes out a flat line.
-8. **Try 8, the master** (approved by the user, 2026-11-23: "Now this looks great"; `hero64_human_male_master.png`):
+8. **Try 8, the master** (approved by the user, 2026-11-23: "Now this looks great"; `hero64_doll_master.png`):
    ChatGPT sampled its own painting with code again, our evened copy attached as the target, and drew the smile
    back. 46 × 21, feet on row 60, columns 22 to 42, 20 colours, alpha clean, the 8× exact, and
    `hero_symmetry.py check` finds no difference. What worked, for every view after it: ChatGPT paints, makes
@@ -188,37 +189,37 @@ Pilot **Human Male** end to end before the other eight. Don't start a second bod
    Its brows then read as a bow (the user): arches 4 pixels wide. Three variants were drawn in code (flat,
    a soft slope, a short dash); the user picked flat, 3 pixels on row 23, columns 28 to 30 and 34 to 36
    (`tries/master_brows_a.png`, the target for ChatGPT's change).
-9. **Try 9, the master with flat brows** (`hero64_human_male_master.png` since 2026-11-23): ChatGPT's change, sampled
+9. **Try 9, the master with flat brows** (`hero64_doll_master.png` since 2026-11-23): ChatGPT's change, sampled
    with code, matches the target pixel for pixel; symmetric, 46 px, 20 colours.
-10. **Down-right** (`hero64_human_male_down-right.png`, approved by the user): the first turnaround view, first try.
+10. **Down-right** (`hero64_doll_down-right.png`, approved by the user): the first turnaround view, first try.
     46 px, feet on row 60, the master's box (columns 22 to 42), only the master's 20 colours. Down-left is it
     mirrored (`hero_template.py` `approved()` mirrors any left view with no file of its own).
-11. **Right** (`hero64_human_male_right.png`, approved by the user, first try): 46 px, feet on row 60, columns
+11. **Right** (`hero64_doll_right.png`, approved by the user, first try): 46 px, feet on row 60, columns
     23 to 41, the master's 20 colours. The near arm hangs at the back edge of the torso, so from the side the
     body reads slim (about 9 px); kept as drawn. Left is it mirrored.
-12. **Up-right** (`hero64_human_male_up-right.png`, approved by the user, first try): 46 px, feet on row 60,
+12. **Up-right** (`hero64_doll_up-right.png`, approved by the user, first try): 46 px, feet on row 60,
     columns 23 to 41, the master's 20 colours; the ear's inside and a blush pixel show at the face's edge, no
     eye. Up-left is it mirrored.
-13. **Up** (`hero64_human_male_up.png`, first try): symmetric (`hero_symmetry.py check` 0), the master's own
+13. **Up** (`hero64_doll_up.png`, first try): symmetric (`hero_symmetry.py check` 0), the master's own
     silhouette pixel for pixel, its 20 colours. The standing turnaround is complete: all eight directions,
-    five drawn and three mirrored (`hero64_human_male_turnaround.png`). Each view took one try once the master
+    five drawn and three mirrored (`hero64_doll_turnaround.png`). Each view took one try once the master
     and the earlier views were attached and ChatGPT made the 1× from its painting with code.
-14. **Idle** (`hero64_human_male_idle.png`): ChatGPT drew the down row (`hero64_human_male_idle_down.png`: frames 1
+14. **Idle** (`hero64_doll_idle.png`): ChatGPT drew the down row (`hero64_doll_idle_down.png`: frames 1
     and 4 the master exactly, 2 and 3 the upper body and the hands a pixel lower, symmetric). The other rows
     were first made in code by shifting the approved views (`tools/hero_idle.py` `breathe`), but that left
     chopped pixels where moved and still columns met (the user): every row is drawn by ChatGPT instead, the
     tool only assembles them (a left row its right twin mirrored). Done 2026-11-23: down, down-right, right, up-right
     and up drawn (each frames 1 and 4 the approved view exactly, 2 and 3 a pixel lower above the legs, feet on
-    row 60, the master's colours; up symmetric), the left three mirrored (`hero64_human_male_idle.gif`).
-15. **Walk down** (`hero64_human_male_walk_down.png`, third try). Try 1 was paintings only, with mitts for
+    row 60, the master's colours; up symmetric), the left three mirrored (`hero64_doll_idle.gif`).
+15. **Walk down** (`hero64_doll_walk_down.png`, third try). Try 1 was paintings only, with mitts for
     hands, elbows bent and the knee lifted like a march. Try 2 (`tries/walk_down_try2.png`) had straight arms
     and clean hands, but the legs merged (4 px each, no gap), the lifted leg stopped in a flat bar with no
     foot, and it held only two poses. Try 3 passed: the master's own legs (frames 1 and 4 are the master from
     row 50 down), the foot up 2 then 1 px with its whole shape, a 1 px bob, the opposite hand 1 px lower, the
     head the master's in every frame, the master's colours. What made it work: naming the cycle frame by frame
-    and saying "the master's own legs". `tools/hero_idle.py human_male walk --gif` assembles the sheet and
-    `hero64_human_male_walk.gif`.
-16. **Walk down-right** (`hero64_human_male_walk_down-right.png`, after tries 1 to 9 in `tries/`). ChatGPT kept
+    and saying "the master's own legs". `tools/hero_idle.py doll walk --gif` assembles the sheet and
+    `hero64_doll_walk.gif`.
+16. **Walk down-right** (`hero64_doll_walk_down-right.png`, after tries 1 to 9 in `tries/`). ChatGPT kept
     breaking the pieces it moved: legs crossed above the knee, feet cut off as flat bars, shoulders done by widening
     the chest, a gap closed by fattening the belly, hands flared sideways. What worked: a target built in code from
     the approved standing view, moving whole pieces (`tries/walk_down-right_target.png`), shown to the user as a GIF
@@ -238,7 +239,7 @@ Pilot **Human Male** end to end before the other eight. Don't start a second bod
     wider" lines pulled it back to the standing pose. We snapped the painting ourselves (`tools/hero_snap_walk.py`:
     the painting's ~6.9 px cells, each cell's middle colour mapped to the approved view's palette, each frame's
     planted foot on row 60) and the stride survived. A second painting with the arms swinging more was made; the
-    user preferred the first (`tries/walk8_down-right_try1_*`), now `hero64_human_male_walk_down-right.png`. The
+    user preferred the first (`tries/walk8_down-right_try1_*`), now `hero64_doll_walk_down-right.png`. The
     6-frame walk down and down-right went to `tries/walk6_*_approved.png`; walk down is to be redone the new way.
 18. **Walk down, 8 frames, and 1 px outlines** (2026-11-24). ChatGPT sent three walk-down paintings
     (`tries/walk8_down_try1{a,b,c}_painting.png`); the user picked the second (the master's height, the most even
@@ -271,6 +272,13 @@ Pilot **Human Male** end to end before the other eight. Don't start a second bod
     (`tries/attack6_down-right_try1{a,b}_painting.png`). The second swapped hands mid-swing (the near fist up
     and punching, the far one winding up); the user picked the first, the far (right) fist all through, the
     same swing as attack down. Snapped at 7.78 with `--grid 3x2` and thinned. Attack down-left is its mirror.
+24. **Attack right, 6 frames** (2026-11-24). Three paintings (`tries/attack6_right_try1{a,b,c}_painting.png`; the
+    first and third near copies). The first raised a thin straight arm above the head (it read as waving) and
+    lost the outline under the feet in frames 4 to 6; the user picked the second, the arm cocked back beside
+    the head, snapped at 8.43 with `--grid 3x2` and thinned. Attack left is its mirror.
+25. **One doll** (the user, 2026-11-24): no genders, Human and Elf only (an Elf is the doll with an ears layer),
+    no dwarves for now. Every `hero64_human_male_*` became `hero64_doll_*`; `hero_template.py`'s `SPEC` is the
+    one doll, and the other eight bodies' templates are gone.
 
 ## What has gone wrong before (read before prompting)
 - ChatGPT failed the monster test (`../HANDOVER.md`): drew bigger than asked (44 to 48 px for 35), and the
@@ -286,6 +294,10 @@ Pilot **Human Male** end to end before the other eight. Don't start a second bod
 - Never shrink a big picture to the grid: faces turn to mush. Draw on the grid.
 
 ## After the pilot: moving the game to 64 (not started)
+- One doll: `classes.json`'s races and their `sheets` (three bodies a race, `hero_layers.py`, `armour_fit.py`'s
+  `fitted` bodies) become the doll plus layers; an Elf the doll with its ears layer. **Dwarves**: players'
+  saves hold Dwarf heroes, so they need a decision before the game moves to v2 (shown as Humans, or kept on
+  today's 48-pixel dwarf sheets); not decided.
 - Swift: the `?? 48` defaults in `ArtLibrary.swift` and `GearOverlay.swift`, the `/ 48` in `GearArt.swift`
   and `BattleScene.swift`; play idle and attack frames in `Walker` and `BattleActor`, and run by playing the walk faster (no run sheet, the user, 2026-11-24).
 - Tools: `F = 48` in `hero_layers.py`, `wear_art.py`, `armour_fit.py`, `worn_marks.py`.

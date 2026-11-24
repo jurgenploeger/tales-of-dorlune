@@ -121,10 +121,10 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
 - Making any sprite: the skill `.claude/skills/sprite-creation` (which of the four routes, a palette swap, layers,
   code or Retro Diffusion, the steps for each, and the gate every new sprite passes: `scripts/sprite_check.py check
   <ids> --new` and `review` beside its neighbours; Retro Diffusion's styles, prices and prompts in its `references/`).
-- `docs/ai-sprite-test/heroes/`: hero art v2, the nine bodies redrawn by ChatGPT at 64 × 64, the LPC paper-doll standard (a chibi body about 46 px, 2.4 heads tall, shoulders no wider than the head, feet on
+- `docs/ai-sprite-test/heroes/`: hero art v2, one gender-neutral doll (Human; an Elf is the doll with an ears layer; no dwarves for now; the player's look from hair, the user, 2026-11-24) drawn by ChatGPT at 64 × 64, the LPC paper-doll standard (a chibi body about 46 px, 2.4 heads tall, shoulders no wider than the head, feet on
   row 60; idle, walk (8 frames, played faster to run) and attack in eight directions (five drawn, three mirrored); a doll in plain underwear, everything worn a layer; weapons
   as 8 angles placed on grip marks): `HANDOVER.md` (research, spec, workflow, acceptance), `PROMPTS.md`, templates from
-  `tools/hero_template.py`. The game still reads 48-pixel frames: moving it to 64 waits for the pilot (Human Male).
+  `tools/hero_template.py`. The game still reads 48-pixel frames: moving it to 64 waits for the doll's art (`hero64_doll_*`).
 - `art/eyes.json`: where every sprite's eyes are, so it blinks (`EyeBlink`, `TalesOfDorlune/Art/IdlePoses.swift`):
   a single picture's (a lash drawn across each shut eye), a walk sheet's in each direction's standing pose (shut
   under its own lid); a body layer's stand for its head layer, a copy shuts its base's. The eyes are shut on the

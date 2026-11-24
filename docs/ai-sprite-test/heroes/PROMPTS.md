@@ -8,20 +8,14 @@ shoulders, arms included, about as wide as the head and never wider. Measured fr
 (try 6's big painting, snapped: `tries/try6_human_male_snapped.png`). Legs are measured from the shorts' hem to the
 soles; the guide's orange line is the hem, the violet ticks the chest's width.
 
-| Body id | Race | Gender | Height | Head | Chest | Arms, legs | Legs | Feet | Build |
-|---|---|---|---|---|---|---|---|---|---|
-| human_male | Human | Male | 46 | 19 | 12 | 4 | 11 | 6 | straight, slightly sloped shoulders |
-| human_female | Human | Female | 44 | 19 | 11 | 4 | 10 | 5 | narrower shoulders, a little wider hips |
-| human_other | Human | Other | 45 | 19 | 12 | 4 | 11 | 6 | androgynous, between the two |
-| elf_male | Elf | Male | 46 | 19 | 11 | 4 | 12 | 5 | slender, a little longer legs, long pointed ears |
-| elf_female | Elf | Female | 44 | 19 | 10 | 4 | 11 | 5 | slender, long pointed ears |
-| elf_other | Elf | Other | 45 | 19 | 11 | 4 | 11 | 5 | slender, androgynous, long pointed ears |
-| dwarf_male | Dwarf | Male | 38 | 17 | 14 | 5 | 7 | 7 | short and broad, thick arms and legs |
-| dwarf_female | Dwarf | Female | 36 | 16 | 13 | 5 | 7 | 7 | short and broad, strong arms |
-| dwarf_other | Dwarf | Other | 37 | 17 | 13 | 5 | 7 | 7 | short and broad, androgynous |
+| Body id | Height | Head | Chest | Arms, legs | Legs | Feet | Build |
+|---|---|---|---|---|---|---|---|
+| doll | 46 | 19 | 12 | 4 | 11 | 6 | straight, slightly sloped shoulders; neutral, neither male nor female |
 
-All bodies: bald (hair is its own layer), no beard, no eyebrows drawn thicker than one pixel, plain
-fitted underwear in warm grey: shorts on every body, a simple band top on Female and Other.
+**One doll** since 2026-11-24 (the user: no genders; the player's look comes from hair; Human and Elf only, an
+Elf the doll with an ears layer, § 6b; no dwarves for now). Bald, no beard, brows one pixel thick, plain fitted
+shorts in warm grey, no top. It's drawn and approved (`hero64_doll_master.png`, its turnaround, idle and walk);
+§ 2 is kept for the record and for redraws.
 
 ---
 
@@ -266,6 +260,22 @@ Attach the base sheet row (or master) and today's hairstyle for reference (`art/
 > highlight, 6 or more shades): the game recolours it to every hair colour. It hugs the bald head from the
 > master, moves with the head (1 pixel down when the head is), and long hair sways a pixel with the walk.
 > From behind ("up") the hair covers the back of the head. Keep the ears showing if an elf.
+
+---
+
+## 6b. Elf ears layer
+
+Attach the doll's standing view for that direction (`hero64_doll_<direction>.png` and its 8×), nothing else.
+
+> Draw only a pair of **elf ears** for this character, facing **{direction}**, on the attached 64 × 64 view: long,
+> pointed ears that reach out and slightly up past the sides of the head, about 6 to 8 pixels long, in the
+> skin's own colours with its 1-pixel dark outline, where the doll's small ears are now. From the front both
+> show; from the side the near one, the far one's tip past the back of the head; from behind both, from the
+> back. Nothing else: everything but the ears transparent, a 64 × 64 PNG that sits exactly over the view.
+> Send the 1× and its exact 8× preview.
+
+The ears move with the head: code fits them to each frame (by the head's top row and its middle), as a hat
+is fitted, so they're drawn once a direction, not once a frame.
 
 ---
 

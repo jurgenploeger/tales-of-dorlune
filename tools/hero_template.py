@@ -37,17 +37,11 @@ OLD_FRAME = 48
 # (arms included) about as wide as the head. Measured from the design the user liked (ChatGPT's big painting of
 # try 6, snapped: docs/ai-sprite-test/heroes/tries/try6_human_male_snapped.png); semi-chibi (three heads) was
 # tried and rejected the same day, 2026-11-23 ("this looks horrible, I think I prefer the chibi style again").
-# body id: (race, gender, height, head, chest width, limb width, legs from shorts to soles, foot width, sheet today)
+# body id: (name, races, height, head, chest width, limb width, legs from shorts to soles, foot width, sheet today)
+# One doll for every hero since 2026-11-24 (the user: "one doll, so no gender"; the player's look comes from hair,
+# an Elf from an ears layer; no dwarves for now). Before, nine bodies: Human, Elf and Dwarf x Male, Female, Other.
 SPEC = {
-    "human_male":   ("Human", "Male",   46, 19, 12, 4, 11, 6, "body_human"),
-    "human_female": ("Human", "Female", 44, 19, 11, 4, 10, 5, "body_human_female"),
-    "human_other":  ("Human", "Other",  45, 19, 12, 4, 11, 6, "body_human_other"),
-    "elf_male":     ("Elf",   "Male",   46, 19, 11, 4, 12, 5, "body_elf_male"),
-    "elf_female":   ("Elf",   "Female", 44, 19, 10, 4, 11, 5, "body_elf"),
-    "elf_other":    ("Elf",   "Other",  45, 19, 11, 4, 11, 5, "body_elf_other"),
-    "dwarf_male":   ("Dwarf", "Male",   38, 17, 14, 5, 7, 7, "body_dwarf"),
-    "dwarf_female": ("Dwarf", "Female", 36, 16, 13, 5, 7, 7, "body_dwarf_female"),
-    "dwarf_other":  ("Dwarf", "Other",  37, 17, 13, 5, 7, 7, "body_dwarf_other"),
+    "doll": ("Doll", "(Human and Elf)", 46, 19, 12, 4, 11, 6, "body_human"),
 }
 
 GRID = (200, 200, 205, 255)
@@ -220,8 +214,7 @@ def weapon_wheel():
 
 TRIES = os.path.join(ROOT, "docs", "ai-sprite-test", "heroes", "tries")
 # name: (height, head, torso width, limb width, leg length, foot width)
-BUILDS = {b: (v[2], v[3], v[4], v[5], v[6], v[7]) for b, v in SPEC.items()
-          if b in ("human_male", "elf_female", "dwarf_male")}
+BUILDS = {b: (v[2], v[3], v[4], v[5], v[6], v[7]) for b, v in SPEC.items()}
 SKIN = [(236, 204, 176), (214, 178, 150), (178, 140, 118), (96, 66, 60)]      # light, mid, shade, outline
 SHORTS = [(150, 144, 140), (122, 116, 114), (96, 90, 90), (58, 52, 56)]
 STEEL = [(176, 196, 222), (130, 154, 190), (92, 112, 150), (40, 48, 78)]
@@ -358,7 +351,7 @@ def world_piece(name):
 def board():
     """Everything side by side at game size (1 art pixel = 1 point), feet on one line, on grass."""
     pieces = []
-    hero = old_frames("human_male")[("down", 0)]
+    hero = old_frames("doll")[("down", 0)]
     pieces.append(("hero today", trimmed(hero)))
     for b in BUILDS:
         name = " ".join(SPEC[b][:2])

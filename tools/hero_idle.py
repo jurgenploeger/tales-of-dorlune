@@ -7,8 +7,8 @@ left row its right twin mirrored frame by frame, into hero64_<body>_<anim>.png (
 the waistband and the arms a pixel lower) left chopped pixels where moved and still columns met (the user,
 2026-11-23), so every row is drawn.
 
-  hero_idle.py human_male              the idle sheet
-  hero_idle.py human_male walk --gif   the walk sheet, and hero64_<body>_walk.gif: the rows there are, at 4x
+  hero_idle.py doll              the idle sheet
+  hero_idle.py doll walk --gif   the walk sheet, and hero64_<body>_walk.gif: the rows there are, at 4x
 """
 import os
 import sys
@@ -114,7 +114,7 @@ def sheet(body, anim="idle"):
 
 if __name__ == "__main__":
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
-    body = args[0] if args else "human_male"
+    body = args[0] if args else "doll"
     anim = args[1] if len(args) > 1 else "idle"
     s = sheet(body, anim)
     s.save(os.path.join(HEROES, f"hero64_{body}_{anim}.png"))

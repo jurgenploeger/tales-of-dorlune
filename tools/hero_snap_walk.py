@@ -22,7 +22,7 @@ from PIL import Image
 P = float(sys.argv[2]) if len(sys.argv) > 2 else 6.9
 a = np.array(Image.open(sys.argv[3] if len(sys.argv) > 3 else "painting.png").convert("RGBA")).astype(float)
 H, W = a.shape[:2]
-dr = np.array(Image.open("/home/user/tales-of-dorlune/docs/ai-sprite-test/heroes/hero64_human_male_down-right.png").convert("RGBA")).astype(int)
+dr = np.array(Image.open("/home/user/tales-of-dorlune/docs/ai-sprite-test/heroes/hero64_doll_down-right.png").convert("RGBA")).astype(int)
 pal = np.array(sorted({tuple(c) for c in dr[dr[..., 3] > 0][:, :3]}))
 
 def var(c, ox, oy):
