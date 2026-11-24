@@ -201,7 +201,7 @@ the standing pose and killed the stride. Attach the reference strip and the appr
 > Send only the painting. Don't make a small 1× version; I'll do that myself.
 
 Then: `python3 tools/hero_snap_walk.py <out> 6.9 <painting.png>` (the pixel size is the figure's height over 46),
-look at the GIF, and save it as `hero64_{body}_walk_{direction}.png`. The 6-frame rows that came before, with the
+`python3 tools/hero_outline_thin.py <out>.png <thin>.png` (ChatGPT paints the outline ~1.5 px wide), look at the GIF, and save it as `hero64_{body}_walk_{direction}.png`. The 6-frame rows that came before, with the
 wording that made them, are kept in `tries/` (`walk6_*_approved.png`).
 
 **run (6 frames)**

@@ -241,6 +241,13 @@ Pilot **Human Male** end to end before the other eight. Don't start a second bod
     planted foot on row 60) and the stride survived. A second painting with the arms swinging more was made; the
     user preferred the first (`tries/walk8_down-right_try1_*`), now `hero64_human_male_walk_down-right.png`. The
     6-frame walk down and down-right went to `tries/walk6_*_approved.png`; walk down is to be redone the new way.
+18. **Walk down, 8 frames, and 1 px outlines** (2026-11-24). ChatGPT sent three walk-down paintings
+    (`tries/walk8_down_try1{a,b,c}_painting.png`); the user picked the second (the master's height, the most even
+    face). Snapped, the outline came out 2 px thick: ChatGPT paints it about 1.5 of our pixels wide. Two fixes:
+    the snap takes each cell's most common colour and goes dark only where most of the cell is outline
+    (`tools/hero_snap_walk.py`), then `tools/hero_outline_thin.py` turns a second dark pixel inside the outer
+    outline into the colour beside it, leaving thin parts (ears, hands) alone. The down-right walk was thinned
+    the same way. Every walk row: snap, then thin.
 
 ## What has gone wrong before (read before prompting)
 - ChatGPT failed the monster test (`../HANDOVER.md`): drew bigger than asked (44 to 48 px for 35), and the
