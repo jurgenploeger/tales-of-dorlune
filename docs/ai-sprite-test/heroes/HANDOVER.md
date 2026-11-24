@@ -322,6 +322,9 @@ One doll, end to end (it was the Human Male pilot until 2026-11-24).
     (`tries/elf_walk_right_try1{a,b}_painting.png`); the first lined up with the approved walk in every frame with
     no shift, so its ears are lifted frame by frame as drawn (`hero64_doll_ears_walk_right.png`; left mirrored).
     Its ear is bigger than the standing one (8 to 9 px past the head against 5), kept as drawn.
+34. **Elf walk down-right** (2026-11-24): one painting (`tries/elf_walk_down-right_try1_painting.png`), lined up
+    with the approved walk (a few frames a pixel higher, matched by the head); the near ear behind the head and
+    the far tip past the face lifted as drawn (`hero64_doll_ears_walk_down-right.png`; down-left mirrored).
 
 ## What has gone wrong before (read before prompting)
 - ChatGPT failed the monster test (`../HANDOVER.md`): drew bigger than asked (44 to 48 px for 35), and the
