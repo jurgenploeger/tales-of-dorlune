@@ -298,6 +298,12 @@ One doll, end to end (it was the Human Male pilot until 2026-11-24).
     `hero64_elf_down.png` the doll wearing it). Drawing an ear by hand instead pointed up like a horn. The
     user picked the first painting's (A), the shorter. In-game demos (`demo/`, `tools/hero_demo.py`) at 1×,
     the user's ask.
+29. **Elf ears, facing down-right** (2026-11-24): three paintings (`tries/ears_down-right_try1{a,b,c}_painting.png`),
+    the near ear out behind the head, the far one's tip past the face. The user picked the first's near ear (as
+    long as the down ears; the big painting's, the cleanest, was half as long), its outline closed where it
+    faced clear air. Its face had snapped a pixel wider, which moved the right eye: only the ears are kept, the
+    approved face untouched, and the far tip drawn small (a pixel of skin in an outline). `hero_ears.py` lays them
+    on the down-right frames and, mirrored, the down-left.
 
 ## What has gone wrong before (read before prompting)
 - ChatGPT failed the monster test (`../HANDOVER.md`): drew bigger than asked (44 to 48 px for 35), and the
