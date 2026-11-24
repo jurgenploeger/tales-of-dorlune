@@ -318,6 +318,10 @@ One doll, end to end (it was the Human Male pilot until 2026-11-24).
     the ears on each walk and attack row (`hero64_doll_ears_<anim>_<direction>.png`, frame by frame, which
     `hero_ears.py` lays on as they are); till then those rows are the plain doll. Hair and hats will meet the same
     heads.
+33. **Elf walk right** (2026-11-24): ChatGPT repainted the picked walk-right painting with the ear added
+    (`tries/elf_walk_right_try1{a,b}_painting.png`); the first lined up with the approved walk in every frame with
+    no shift, so its ears are lifted frame by frame as drawn (`hero64_doll_ears_walk_right.png`; left mirrored).
+    Its ear is bigger than the standing one (8 to 9 px past the head against 5), kept as drawn.
 
 ## What has gone wrong before (read before prompting)
 - ChatGPT failed the monster test (`../HANDOVER.md`): drew bigger than asked (44 to 48 px for 35), and the
