@@ -279,6 +279,11 @@ One doll, end to end (it was the Human Male pilot until 2026-11-24).
 25. **One doll** (the user, 2026-11-24): no genders, Human and Elf only (an Elf is the doll with an ears layer),
     no dwarves for now. Every `hero64_human_male_*` became `hero64_doll_*`; `hero_template.py`'s `SPEC` is the
     one doll, and the other eight bodies' templates are gone.
+26. **Attack up-right, 6 frames** (2026-11-24). Two near-identical paintings
+    (`tries/attack6_up-right_try1{a,b}_painting.png`), the right fist (on our right) all through; the wind-up
+    only pulls it to the ear, a punch more than a swing, fine from behind. The second's ready frames sit a
+    pixel apart (a jump as it loops); the user picked the first, snapped at 8.43 with `--grid 3x2` and thinned.
+    Attack up-left is its mirror.
 
 ## What has gone wrong before (read before prompting)
 - ChatGPT failed the monster test (`../HANDOVER.md`): drew bigger than asked (44 to 48 px for 35), and the
