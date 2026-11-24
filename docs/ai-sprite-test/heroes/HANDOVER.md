@@ -343,6 +343,12 @@ One doll, end to end (it was the Human Male pilot until 2026-11-24).
     with its back to us. Of its six (`try2{a..f}`), the user picked 4 (`d`), whose outline stayed closed when
     snapped (1's lost a pixel of it), one pixel over (`hero64_doll_ears_up-right.png`; up-left mirrored). Idle
     wears it; the walk and attack rows facing up-right still need ears painted on them.
+40. **Elf ears up** (2026-11-24): with the from-behind wording, all seven paintings were right
+    (`tries/elf_up_try1{a..g}_painting.png`). Snapped, painting 1's ears came out straight 2-pixel strips with flat
+    tops (square tabs); the user picked 7, the tallest and most pointed, as drawn, though the snap lost part of each
+    ear's outer outline (rows 20 to 23) and its tips sit 2 rows above the up-right ear's
+    (`hero64_doll_ears_up.png`). Idle now has ears in every direction; walk and attack still need their up-right
+    and up rows painted.
 
 ## What has gone wrong before (read before prompting)
 - ChatGPT failed the monster test (`../HANDOVER.md`): drew bigger than asked (44 to 48 px for 35), and the
