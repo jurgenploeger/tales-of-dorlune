@@ -277,6 +277,12 @@ Attach the doll's standing view for that direction (`hero64_doll_<direction>.png
 The ears move with the head: code fits them to each frame (by the head's top row and its middle), as a hat
 is fitted, so they're drawn once a direction, not once a frame.
 
+From behind (up-right, up) the ears point back **toward the viewer**: foreshortened, rising up and only a little
+past the sides of the head, and we see their backs (plain skin, no inner hollow). Say so outright, and which side
+the near ear is on (up-right: our right, where the small ear is). Asked for "pointing back" without that, ChatGPT
+put the big ear on the wrong side, then stuck it straight out sideways with its inside showing
+(`tries/elf_up-right_try1{a,b,c}_painting.png`).
+
 ---
 
 ## 7. Wearable layer (armour, gloves, boots, necklace, belt, cape, hat)
