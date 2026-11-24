@@ -57,8 +57,10 @@ def fit(frame, ref):
 
 
 def wear(frame, ear, shift, ref):
-    """The ears moved with the head, only over clear pixels or the head as it stands: an arm raised past the
-    head stays in front of them."""
+    """The ears moved with the head, over clear pixels and over the head wherever the standing view has it (the
+    frames' heads are shaded a little differently, and their small human ear sits a pixel apart: covering only
+    pixels that matched the standing view left that ear showing, the user, 2026-11-24); an arm raised past the
+    head, where the standing view is clear, stays in front of them."""
     dy, dx = shift
     moved = np.zeros_like(ear)
     ys, xs = np.nonzero(ear[..., 3])
@@ -66,19 +68,41 @@ def wear(frame, ear, shift, ref):
         Y, X = y + dy, x + dx
         if 0 <= Y < 64 and 0 <= X < 64:
             here = frame[Y, X]
-            if here[3] == 0 or (ref[y, x, 3] and (here[:3] == ref[y, x, :3]).all()):
+            if here[3] == 0 or ref[y, x, 3]:
                 moved[Y, X] = ear[y, x]
     im = Image.fromarray(frame.copy())
     im.alpha_composite(Image.fromarray(moved))
     return np.asarray(im)
 
 
+def row_ears(anim, d):
+    """A row's own ears, frame by frame (hero64_doll_ears_<anim>_<direction>.png, lifted from ChatGPT's elf
+    painting of that row), a left row its right twin's mirrored frame by frame; None if not drawn."""
+    if d.endswith("left"):
+        r = row_ears(anim, d[:-4] + "right")
+        if r is None:
+            return None
+        n = t.ANIMS[anim]
+        return np.concatenate([r[:, c * 64:(c + 1) * 64][:, ::-1] for c in range(n)], 1)
+    p = os.path.join(HEROES, f"hero64_doll_ears_{anim}_{d}.png")
+    return np.asarray(Image.open(p).convert("RGBA")) if os.path.exists(p) else None
+
+
 def elf(anim):
+    """Idle's heads are the standing views', so the standing ears fit them; walk and attack were painted apart,
+    their heads 30 to 70% like the standing views', so they take ears ChatGPT painted on each row (the user,
+    2026-11-24) and stay the plain doll till then."""
     n = t.ANIMS[anim]
     doll = np.asarray(Image.open(os.path.join(HEROES, f"hero64_doll_{anim}.png")).convert("RGBA"))
     out = doll.copy()
     for r, d in enumerate(t.DIRECTIONS):
-        v = view(d)
+        own = row_ears(anim, d)
+        if own is not None:
+            band = Image.fromarray(doll[r * 64:(r + 1) * 64].copy())
+            band.alpha_composite(Image.fromarray(own[:, :band.width]))
+            out[r * 64:(r + 1) * 64] = np.asarray(band)
+            continue
+        v = view(d) if anim == "idle" else None
         if v is None:
             continue
         ref, ear = v

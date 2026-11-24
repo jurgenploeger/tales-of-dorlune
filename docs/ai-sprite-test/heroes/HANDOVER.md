@@ -312,6 +312,12 @@ One doll, end to end (it was the Human Male pilot until 2026-11-24).
     picked the first: its snapped head matched the approved right view pixel for pixel, so its ear (a long leaf
     pointing back and a little up, the small round ear painted over in skin) is placed exactly as drawn. Left is
     its mirror.
+32. **The ears off the walk and attack rows** (2026-11-24): fitted from the standing views, they broke there (the
+    user: "it still shows part of the human ear"). Those rows were painted apart from the standing views: only
+    30 to 70% of their head pixels match after the best shift (idle's 100%). The user chose to have ChatGPT paint
+    the ears on each walk and attack row (`hero64_doll_ears_<anim>_<direction>.png`, frame by frame, which
+    `hero_ears.py` lays on as they are); till then those rows are the plain doll. Hair and hats will meet the same
+    heads.
 
 ## What has gone wrong before (read before prompting)
 - ChatGPT failed the monster test (`../HANDOVER.md`): drew bigger than asked (44 to 48 px for 35), and the
