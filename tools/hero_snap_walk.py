@@ -41,8 +41,15 @@ def snap(c):
             core = core[core[:, 3] > 200]
             if not len(core):
                 core = blk.reshape(-1, 4)[blk.reshape(-1, 4)[:, 3] > 128]
-            col = np.median(core[:, :3], 0)
-            out[j, i, :3] = pal[np.argmin(((pal - col) ** 2).sum(1))]
+            # each painted pixel to its nearest palette colour, then the cell takes the most common one, an
+            # outline colour only where most of the cell is outline: a median let a cell straddling the
+            # painting's soft outline go dark, and the outline came out two pixels thick (the user, 2026-11-24)
+            idx = np.argmin(((core[:, None, :3] - pal[None]) ** 2).sum(2), 1)
+            counts = np.bincount(idx, minlength=len(pal))
+            darkpal = pal.max(1) < 0.35 * 255
+            if counts[darkpal].sum() * 2 <= counts.sum():
+                counts[darkpal] = 0
+            out[j, i, :3] = pal[np.argmax(counts)]
             out[j, i, 3] = 255
     return out, oy
 
