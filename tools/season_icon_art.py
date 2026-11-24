@@ -31,6 +31,9 @@ night sky, moonlight on the hero, and its lights: the moon's halo and the pumpki
 the snowy trees, fireflies in the spring meadow) and in its greys for Tinted. Written as
 AppIcon-<Season>.appiconset, light, dark and tinted, as AppIcon is.
 
+Since 2026-11-24 every season's icon is the user's picked drawing (art-variants/app_icon_picked/), written by
+tools/picked_icon_art.py; this writes a season's set only when no picked drawing of it is there.
+
     python3 tools/season_icon_art.py                    # writes the three icon sets
     python3 tools/season_icon_art.py --preview out.png  # all three by day and at night, beside the icon
 
@@ -676,6 +679,9 @@ def main() -> None:
     made = {}
     for season in SEASONS:
         made[season] = icon(season)
+        if (ROOT / f"art-variants/app_icon_picked/{season.lower()}.png").exists():
+            print(f"{season}: the user's picked drawing wins (tools/picked_icon_art.py); not written")
+            continue
         print(f"wrote {write(season, made[season]).relative_to(ROOT)}")
     if args.preview:
         sizes = [300, 120, 60]
