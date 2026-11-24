@@ -204,10 +204,7 @@ Then: `python3 tools/hero_snap_walk.py <out> 6.9 <painting.png>` (the pixel size
 `python3 tools/hero_outline_thin.py <out>.png <thin>.png` (ChatGPT paints the outline ~1.5 px wide), look at the GIF, and save it as `hero64_{body}_walk_{direction}.png`. The 6-frame rows that came before, with the
 wording that made them, are kept in `tries/` (`walk6_*_approved.png`).
 
-**run (6 frames)**
-> A run cycle, loops: the body leaning forward a little, longer strides than the walk, arms bent and
-> pumping. 1 contact, 2 push off, 3 airborne (both feet off the ground, body 2 pixels higher), 4 contact on
-> the other foot, 5 push off, 6 airborne. Feet on row 60 at contact.
+**run**: none. Running is the walk played faster (the user, 2026-11-24).
 
 **attack (6 frames)**
 > An empty-handed sword attack (the weapon is drawn separately and placed in the hand later), the right

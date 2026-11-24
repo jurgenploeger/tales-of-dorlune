@@ -1,7 +1,7 @@
 # Hero sprites v2: 64-pixel bodies drawn by ChatGPT
 
 Goal: redraw the nine hero bodies (Human, Elf, Dwarf × Male, Female, Other) at a size where armour, gloves,
-boots, necklaces, belts, hair and held weapons read, with idle, walk, run and attack in eight directions.
+boots, necklaces, belts, hair and held weapons read, with idle, walk and attack in eight directions (running is the walk played faster).
 First as a blank canvas: a smooth doll body in plain underwear, nothing else. Everything a hero wears or
 holds is a layer drawn over it later.
 
@@ -70,7 +70,6 @@ walking along a row of cells moves diagonally on screen: the diagonals are the v
 |---|---|---|---|
 | idle | 4 | 256 × 512 | a breath: chest and head down a pixel and back, arms settle; blinks stay in code |
 | walk | 8 | 512 × 512 | after the user's reference video: contact, lift, pass, reach, twice; 83 ms a frame; the planted foot on row 60 |
-| run | 6 | 384 × 512 | leaning forward, longer stride, one airborne frame a pixel or two up |
 | attack | 6 | 384 × 512 | ready, wind-up, strike, follow-through, recover, ready; empty hand closed as a grip |
 
 File names: `hero64_<race>_<gender>_<anim>.png`, for example `hero64_human_male_walk.png`.
@@ -118,7 +117,7 @@ Pilot **Human Male** end to end before the other eight. Don't start a second bod
 3. **Turnaround:** the same pose facing down-right, right, up-right and up (§ Turnaround). Check they match the master in
    height, proportions, underwear and colours before any animation.
 4. **Animations, one direction row per prompt:** § Animation row, with `templates/row_<body>_<anim>_8x.png`
-   attached. Order: idle, walk, run, attack; each in down, down-right, right, up-right, up.
+   attached. Order: idle, walk, attack; each in down, down-right, right, up-right, up.
 5. **Snap and check** every PNG that comes back, even when ChatGPT says it checked:
    `python3 tools/ai_sprite_eval.py <frame.png> --canvas 64 --height <body height> --colours 32 --kind creature --out <out>`
    (frames are snapped one at a time and centred, not yet on row 60; a sheet mode that cuts a row into
@@ -264,7 +263,7 @@ Pilot **Human Male** end to end before the other eight. Don't start a second bod
 
 ## After the pilot: moving the game to 64 (not started)
 - Swift: the `?? 48` defaults in `ArtLibrary.swift` and `GearOverlay.swift`, the `/ 48` in `GearArt.swift`
-  and `BattleScene.swift`; play idle, run and attack frames in `Walker` and `BattleActor`.
+  and `BattleScene.swift`; play idle and attack frames in `Walker` and `BattleActor`, and run by playing the walk faster (no run sheet, the user, 2026-11-24).
 - Tools: `F = 48` in `hero_layers.py`, `wear_art.py`, `armour_fit.py`, `worn_marks.py`.
 - `art/eyes.json` boxes, `docs/sprite-acceptance.md`'s 48-pixel rules, the camera zoom.
 - Eight directions: `Direction` (`TalesOfDorlune/World/Geometry.swift`, today down, left, right, up) grows

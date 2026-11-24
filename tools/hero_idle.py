@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """An approved hero body's animation sheet from the rows ChatGPT drew (docs/ai-sprite-test/heroes).
 
-Assembles hero64_<body>_<anim>_<direction>.png (a row: idle 4 frames, walk, run and attack 6, each 64 x 64), a
+Assembles hero64_<body>_<anim>_<direction>.png (a row: idle 4 frames, walk 8, attack 6, each 64 x 64), a
 left row its right twin mirrored frame by frame, into hero64_<body>_<anim>.png (rows clockwise from up) and its
 4x. A direction with no row of its own stays empty: the idle's breath made in code (`breathe`, everything above
 the waistband and the arms a pixel lower) left chopped pixels where moved and still columns met (the user,
@@ -68,7 +68,7 @@ def breathe(view):
     return Image.fromarray(out)
 
 
-GIF_MS = {"idle": 300, "walk": 83, "run": 100, "attack": 110}
+GIF_MS = {"idle": 300, "walk": 83, "attack": 110}
 
 
 def rows(body, anim):

@@ -2,7 +2,7 @@
 """Templates for the 64-pixel hero sheets ChatGPT draws (docs/ai-sprite-test/heroes/HANDOVER.md).
 
 For each of the nine bodies (Human, Elf, Dwarf x Male, Female, Other) and each animation (idle, walk,
-run, attack) it writes, into docs/ai-sprite-test/heroes/templates/:
+attack) it writes, into docs/ai-sprite-test/heroes/templates/:
 
   guide_<body>.png / _8x.png        one 64 x 64 frame: feet row, head top, chin, centre line
   row_<body>_<anim>_8x.png          one direction row of that animation's frames at 8x, to attach
@@ -29,7 +29,8 @@ OLD_DIRECTIONS = ["up", "right", "down", "left"]   # today's 48-pixel sheets' ro
 # down-left, left and up-left are the right side mirrored for the body and hair.
 DIRECTIONS = ["up", "up-right", "right", "down-right", "down", "down-left", "left", "up-left"]
 DRAWN = ["up", "up-right", "right", "down-right", "down"]
-ANIMS = {"idle": 4, "walk": 8, "run": 6, "attack": 6}   # walk: 8 poses at 83 ms, after the user's reference video (2026-11-24)
+ANIMS = {"idle": 4, "walk": 8, "attack": 6}   # walk: 8 poses at 83 ms, after the user's reference video; no run:
+# running is the walk played faster (the user, 2026-11-24)
 OLD_FRAME = 48
 
 # The LPC paper-doll standard's frame (64 x 64, feet near the bottom), chibi: about 2.4 heads tall, the shoulders
