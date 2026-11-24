@@ -247,6 +247,9 @@ Pilot **Human Male** end to end before the other eight. Don't start a second bod
     (`tools/hero_snap_walk.py`), then `tools/hero_outline_thin.py` turns a second dark pixel inside the outer
     outline into the colour beside it, leaving thin parts (ears, hands) alone. The down-right walk was thinned
     the same way. Every walk row: snap, then thin.
+19. **Walk right, 8 frames** (2026-11-24). Two paintings (`tries/walk8_right_try1{a,b}_painting.png`), snapped at
+    7.0 and thinned; the user picked the first (the same motion as the second, without its stray dark marks).
+    Walk left is its mirror.
 
 ## What has gone wrong before (read before prompting)
 - ChatGPT failed the monster test (`../HANDOVER.md`): drew bigger than asked (44 to 48 px for 35), and the
