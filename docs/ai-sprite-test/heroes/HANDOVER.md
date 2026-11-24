@@ -290,6 +290,14 @@ One doll, end to end (it was the Human Male pilot until 2026-11-24).
     The first had grey stripes down a leg and on the back, the second a thin arm 6 px above the head in the
     wind-up ("the arm moves too far up", the user). Kept: the second, with the first's wind-up (frame 2), its
     grey stripe painted skin and its legs, which touched, swapped for frame 1's standing legs with the gap.
+28. **Elf ears, facing down** (2026-11-24). Asked for the doll as an elf (whole figure, so it draws the ears
+    in place), ChatGPT sent three paintings of one design (`tries/ears_down_try1{a,b,c}_painting.png`):
+    leaf-shaped ears level with the eyes, pointing out and a little up, an inner shade. Snapped, the heads came
+    a pixel narrower than the approved one, so only the ears are kept: the snap's left ear, lifted onto the
+    approved head where it differs from it, mirrored for the right (`hero64_doll_ears_down.png`, a layer;
+    `hero64_elf_down.png` the doll wearing it). Drawing an ear by hand instead pointed up like a horn. The
+    user picked the first painting's (A), the shorter. In-game demos (`demo/`, `tools/hero_demo.py`) at 1×,
+    the user's ask.
 
 ## What has gone wrong before (read before prompting)
 - ChatGPT failed the monster test (`../HANDOVER.md`): drew bigger than asked (44 to 48 px for 35), and the
