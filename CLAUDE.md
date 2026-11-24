@@ -132,7 +132,8 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   acceptance criteria and what went wrong before: the skill `.claude/skills/sprite-idle-animation` (its
   `scripts/eyes.py dump | zoom | fills | check` previews and checks every body, hairstyle, helmet and armour).
 - `website/`: talesofdorlune.com (Astro, hosted on Vercel with Root Directory `website`): a landing page and a guide
-  generated from `content/*.json`. `python3 website/tools/export.py` (pillow + numpy) rewrites its data, sprites and
+  generated from `content/*.json`. Vercel deploys only pushes that change `website/` (`website/vercel.json` `ignoreCommand`), and
+  TestFlight only pushes that change the app (`testflight.yml` `paths`): keep app and site updates apart. `python3 website/tools/export.py` (pillow + numpy) rewrites its data, sprites and
   world map; rerun it and commit after content or art changes. `website/README.md` has the rest; its look and words
   follow the Figma brand guidelines.
 - `TalesOfDorlune/`: Swift code (World = maps and walking, Battle = combat, UI = SwiftUI HUD and menus).
