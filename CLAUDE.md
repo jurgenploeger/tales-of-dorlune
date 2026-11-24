@@ -276,6 +276,16 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   in a grass tile's plain colours for the land's palette to grade; bladed, not rounded puffs: the user, 2026-11-19).
   The land's people bend it too, and anyone in it has their legs cut along the grass's top in front of them
   (`GrassField.cover`, `Walker.wade`: the sprite in an `SKCropNode`, a column a point wide each).
+- Footprints in the snow and the sand (the user's picks from `tools/snow_trail_preview.py`, 2026-11-24: look C, and
+  `--sand` S2, after SpriteCook's trail render texture article; visual only): where anyone with a four-frame walk
+  sheet puts a foot down (`Walker.footfall`: as a stride frame, 0 or 2, starts, left and right by turns) on a snow or
+  sand land's own plain ground (`Footprints.grounds`, theme `ground`: snow, sand, desert; not a path, patch, hill, the
+  shore or a blocked cell, `ContinentScene.printLook`), a dent is pressed in, three depths lit from the top left
+  (tinted toward the palette's `shadow`, in the sand mostly toward a warm brown, `sandShade`: a beach's blue shadow
+  alone turned them grey-green; a darker wall along its top, a bright lip along its bottom, the sand's its
+  `highlight` half white), filling back in over about six seconds. The article's map of bytes is the brightest stamp
+  less the fade since it, so each print is its own sprite showing its stamp less its age's fade
+  (`Footprints.frames`). Keep the tool and the Swift in step; debug scenes `snow_trail`, `snow_trail_rosen` (the one that shows them), `sand_trail*`.
 - Town roads (the user's pick from `tools/road_preview.py`, 2026-11-17): in a town's square (`GroundTiles.inTown`,
   `WorldMap.townSquare`) every road cell is drawn by `ArtLibrary.townRoad` (`GroundLayer.cobbled`): cobbles about half a
   cell across down its middle in the colour of the land's `tile_town` (graded), their edge ragged stone by stone, sand
