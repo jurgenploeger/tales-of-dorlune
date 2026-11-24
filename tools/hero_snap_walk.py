@@ -4,7 +4,7 @@
   hero_snap_walk.py <out> [pixel size, 6.9] [painting.png]
 
 ChatGPT's own 1x redraws and loses the motion (docs/ai-sprite-test/heroes/HANDOVER.md); its painting is the design.
-Each frame keeps its place in its painted cell; one baseline per painted row lands on row 60."""
+Each frame keeps its place in its painted cell; its planted foot (its lowest pixel) lands on row 60."""
 import sys
 import numpy as np
 from PIL import Image
@@ -59,7 +59,7 @@ for r in range(2):
     base = max(np.nonzero(g[..., 3].any(1))[0].max() for g, _ in group)
     for i, (g, _) in enumerate(group):
         k = r * 4 + i
-        dy = 60 - base
+        dy = 60 - np.nonzero(g[..., 3].any(1))[0].max()     # a planted foot is always on the ground
         dx = 32 - g.shape[1] // 2
         for y, x in zip(*np.nonzero(g[..., 3])):
             yy, xx = y + dy, x + dx
