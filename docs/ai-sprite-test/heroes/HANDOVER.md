@@ -308,6 +308,10 @@ One doll, end to end (it was the Human Male pilot until 2026-11-24).
     both views now carry the snapped ears with no pixel fixes, only lifted onto the approved head (down-right's
     far side, snapped a pixel wider, taken a column over so the face and its right eye stay the approved ones).
     Lesson: don't redraw ChatGPT's ears; place them.
+31. **Elf ear, facing right** (2026-11-24): two paintings (`tries/ears_right_try1{a,b}_painting.png`). The user
+    picked the first: its snapped head matched the approved right view pixel for pixel, so its ear (a long leaf
+    pointing back and a little up, the small round ear painted over in skin) is placed exactly as drawn. Left is
+    its mirror.
 
 ## What has gone wrong before (read before prompting)
 - ChatGPT failed the monster test (`../HANDOVER.md`): drew bigger than asked (44 to 48 px for 35), and the
