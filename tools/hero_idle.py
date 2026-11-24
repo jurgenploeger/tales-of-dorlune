@@ -9,6 +9,7 @@ the waistband and the arms a pixel lower) left chopped pixels where moved and st
 
   hero_idle.py doll              the idle sheet
   hero_idle.py doll walk --gif   the walk sheet, and hero64_<body>_walk.gif: the rows there are, at 4x
+                                 (and hero64_<body>_run.gif, the walk at RUN_MS a frame)
 """
 import os
 import sys
@@ -69,6 +70,7 @@ def breathe(view):
 
 
 GIF_MS = {"idle": 300, "walk": 83, "attack": 110}
+RUN_MS = 50    # running is the walk played faster (the user, 2026-11-24): about 1.7 times
 
 
 def rows(body, anim):
@@ -90,7 +92,7 @@ def rows(body, anim):
     return out
 
 
-def gif(body, anim, path):
+def gif(body, anim, path, ms=None):
     """Every row there is, side by side in the sheet's order, playing at 4x on white."""
     got = [r for d, r in rows(body, anim).items()]
     n, f = t.ANIMS[anim], t.FRAME
@@ -100,7 +102,7 @@ def gif(body, anim, path):
         for i, r in enumerate(got):
             im.alpha_composite(r.crop((c * f, 0, (c + 1) * f, f)), (i * f, 0))
         frames.append(im.convert("RGB").resize((im.width * 4, im.height * 4), Image.NEAREST))
-    frames[0].save(path, save_all=True, append_images=frames[1:], duration=GIF_MS[anim], loop=0)
+    frames[0].save(path, save_all=True, append_images=frames[1:], duration=ms or GIF_MS[anim], loop=0)
 
 
 def sheet(body, anim="idle"):
@@ -121,4 +123,6 @@ if __name__ == "__main__":
     s.resize((s.width * 4, s.height * 4), Image.NEAREST).save(os.path.join(HEROES, f"hero64_{body}_{anim}_4x.png"))
     if "--gif" in sys.argv:
         gif(body, anim, os.path.join(HEROES, f"hero64_{body}_{anim}.gif"))
+        if anim == "walk":     # and the run: the same frames, faster
+            gif(body, anim, os.path.join(HEROES, f"hero64_{body}_run.gif"), RUN_MS)
     print("wrote", f"hero64_{body}_{anim}.png", "rows:", ", ".join(rows(body, anim)))
