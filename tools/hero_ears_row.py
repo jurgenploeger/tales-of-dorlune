@@ -23,13 +23,16 @@ lay=np.zeros_like(row); shifts=[]
 for c in range(n):
     f=row[:,c*64:(c+1)*64]; g=S[:,c*64:(c+1)*64]
     dy,dx=he.fit(g,f); shifts.append((dy,dx)); g=np.roll(np.roll(g,-dy,0),-dx,1)
-    cols=np.nonzero(f[15:35,:,3].any(0))[0]; left,right=cols.min(),cols.max()
+    # the head's edges from the standing view moved onto this frame: from the frame itself, a raised arm passed
+    # for the back of the head and the small human ear was left showing (attack right, 2026-11-24)
+    ref=he.standing(d); ry,rx=he.fit(f,ref)
+    cols=np.nonzero(ref[15:35,:,3].any(0))[0]; left,right=cols.min()+rx,cols.max()+rx
     for y in range(14,38):
         for x in range(64):
             p,q=g[y,x],f[y,x]
             if not p[3]: continue
             diff = q[3]==0 or (p[:3]!=q[:3]).any()
-            if x<=left+6 and diff: lay[y,c*64+x]=p
+            if x<=left+8 and diff: lay[y,c*64+x]=p                  # the ear and the small human ear it covers
             elif both and x>=right-6 and diff: lay[y,c*64+x]=p
             elif far_tip and x>right and q[3]==0: lay[y,c*64+x]=p
 print('shifts',shifts)
