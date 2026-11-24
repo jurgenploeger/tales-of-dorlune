@@ -69,7 +69,7 @@ walking along a row of cells moves diagonally on screen: the diagonals are the v
 | Animation | Frames | Sheet | Notes |
 |---|---|---|---|
 | idle | 4 | 256 × 512 | a breath: chest and head down a pixel and back, arms settle; blinks stay in code |
-| walk | 6 | 384 × 512 | contact, down, pass, contact, down, pass; feet on row 60 at contact |
+| walk | 8 | 512 × 512 | after the user's reference video: contact, lift, pass, reach, twice; 83 ms a frame; the planted foot on row 60 |
 | run | 6 | 384 × 512 | leaning forward, longer stride, one airborne frame a pixel or two up |
 | attack | 6 | 384 × 512 | ready, wind-up, strike, follow-through, recover, ready; empty hand closed as a grip |
 
@@ -233,6 +233,14 @@ Pilot **Human Male** end to end before the other eight. Don't start a second bod
     - shoulders move at most 1 px with the arms; the head bobs 1 px on frames 2 and 5.
     Lesson: for any view where limbs overlap, build the target in code from the approved still and let ChatGPT
     match it; describing the motion in words took nine tries and never got there.
+17. **Walk, 8 frames** (2026-11-24). The user sent a video of the walk they want (`reference/`: 8 poses at
+    83 ms, a real stride, a 2 px bob, gear that lags a frame). ChatGPT painted a lively 8-frame down-right walk,
+    then its own 1× "turned shit": it redrew instead of sampling, and our "keep the standing view exactly / never
+    wider" lines pulled it back to the standing pose. We snapped the painting ourselves (`tools/hero_snap_walk.py`:
+    the painting's ~6.9 px cells, each cell's middle colour mapped to the approved view's palette, each frame's
+    planted foot on row 60) and the stride survived. A second painting with the arms swinging more was made; the
+    user preferred the first (`tries/walk8_down-right_try1_*`), now `hero64_human_male_walk_down-right.png`. The
+    6-frame walk down and down-right went to `tries/walk6_*_approved.png`; walk down is to be redone the new way.
 
 ## What has gone wrong before (read before prompting)
 - ChatGPT failed the monster test (`../HANDOVER.md`): drew bigger than asked (44 to 48 px for 35), and the

@@ -179,34 +179,30 @@ Then the animation's own lines:
 > A slow breath while standing: frame 1 the master pose; frame 2 the shoulders and head down 1 pixel, the
 > arms settling; frame 3 like frame 2; frame 4 back up, as frame 1. Nothing else moves; the feet stay put.
 
-**walk (6 frames)**
-> A relaxed walk, looping from frame 6 back to 1. Use the approved view's own legs, feet, arms and hands in
-> every frame (the same widths, gaps and outlines), only moved: no mitts or fists, no merged legs, never a leg
-> cut off by a flat bar. The arms hang nearly straight, 1 pixel clear of the body, and swing only 1 to 2 pixels.
-> The head is the approved view's in every frame, only ever moved, never redrawn.
->
-> {down/up, the cycle that passed for walk down (2026-11-23):}
-> - frame 1: both feet down, exactly the approved view's legs
-> - frame 2: the right foot up 2 px with its whole foot shape; everything above the shorts up 1 px
-> - frame 3: the right foot up 1 px; the body back down
-> - frame 4: both feet down, exactly the approved view's legs
-> - frame 5: the left foot up 2 px; everything above the shorts up 1 px
-> - frame 6: the left foot up 1 px; the body back down
-> - the hand on the side opposite the lifted foot 1 px lower
->
-> {right, down-right, up-right: don't describe the motion in words. Build the six frames in code from the approved
-> standing view (moving whole pieces, as `tries/walk_down-right_target.png` was made), get the user's OK on a GIF,
-> then attach it and ask ChatGPT to "make the final row from this target, keep every pixel's position, clean up only
-> doubled outlines". The down-right walk took nine word-only tries and never landed; the target landed first time.
-> The motion that passed for down-right: the feet lift as in the down walk, stepping 1 px forward only at the top;
-> the hand swinging back rises 2 then 1 px, the hand swinging forward drops 1 px and crosses the hip; nothing moves
-> sideways past the standing outline; the body keeps its width. The older wording, kept for reference:}
-> - frame 1: contact, the near foot 3 px forward and the far foot 3 px back, both on row 60
-> - frame 2: down, the stride 2 px each way, the body above the shorts 1 px lower
-> - frame 3: passing, the far foot lifted 2 px beside the near leg, the body back up
-> - frames 4 to 6: the same with the legs swapped
-> - the near leg and arm one shade lighter than the far ones; the far ones never hidden completely
-> - the arm swings opposite its leg, 1 to 2 px
+**walk (8 frames, a 512 × 64 row; the user's pick, 2026-11-24)**
+
+The motion comes from the user's reference video (`reference/walk_reference.gif`, `reference/walk_reference_strip_6x.png`:
+8 poses at 83 ms). Ask ChatGPT for the **painting only** and snap it ourselves with `tools/hero_snap_walk.py`: its own
+1× redraws and loses the motion (2026-11-24: "it came up with this, which looks great, but then ChatGPT resized it
+and it turned shit"). Don't tie it to "the standing view exactly" or "never wider": those lines pulled its 1× back to
+the standing pose and killed the stride. Attach the reference strip and the approved standing view for that direction.
+
+> Paint a walk cycle for our hero facing {direction}, 8 frames in a 4 × 2 grid on a transparent background. The
+> attached strip is a MOTION reference only: copy its timing, stride and bob, not its character, armour or style.
+> Our character is the attached approved standing view: the same head, face, body, proportions, colours and
+> underwear.
+> - frame 1: contact, one foot forward and one back, both on the ground, body at its lowest
+> - frame 2: the back foot lifts, body rising
+> - frame 3: passing, the lifted foot passes the standing leg, body at its highest
+> - frame 4: the lifted foot reaches forward, body coming down
+> - frames 5 to 8: the same with the legs swapped
+> - the arms swing opposite the legs from the shoulder, close to the body; at the passing frames they hang down
+> - the thighs stay on their own hips; a lifted foot keeps its whole shape
+> Send only the painting. Don't make a small 1× version; I'll do that myself.
+
+Then: `python3 tools/hero_snap_walk.py <out> 6.9 <painting.png>` (the pixel size is the figure's height over 46),
+look at the GIF, and save it as `hero64_{body}_walk_{direction}.png`. The 6-frame rows that came before, with the
+wording that made them, are kept in `tries/` (`walk6_*_approved.png`).
 
 **run (6 frames)**
 > A run cycle, loops: the body leaning forward a little, longer strides than the walk, arms bent and

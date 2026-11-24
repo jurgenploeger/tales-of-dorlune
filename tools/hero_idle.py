@@ -68,7 +68,7 @@ def breathe(view):
     return Image.fromarray(out)
 
 
-GIF_MS = {"idle": 300, "walk": 150, "run": 100, "attack": 110}
+GIF_MS = {"idle": 300, "walk": 83, "run": 100, "attack": 110}
 
 
 def rows(body, anim):
