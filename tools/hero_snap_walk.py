@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Snap a ChatGPT walk painting (8 frames in a 4x2 grid) to a 64x64 row in the approved view's palette.
 
-  hero_snap_walk.py <out> [pixel size, 6.9] [painting.png] [--centre]
+  hero_snap_walk.py <out> [pixel size, 6.9] [painting.png] [--centre] [--grid COLSxROWS]
+
+--grid: the painting's frames as columns x rows (default 4x2, a walk's 8; an attack's 6 are 3x2).
 
 --centre: each frame moved so its head (its top 18 rows) is centred on column 32, for a painting whose figure
 slides across its cell (walk up-right, 2026-11-24): played in place, that jittered.
@@ -11,6 +13,10 @@ Each frame keeps its place in its painted cell; its planted foot (its lowest pix
 import sys
 CENTRE = "--centre" in sys.argv
 sys.argv = [a for a in sys.argv if a != "--centre"]
+GC, GR = 4, 2
+if "--grid" in sys.argv:
+    i = sys.argv.index("--grid"); GC, GR = map(int, sys.argv[i + 1].split("x")); del sys.argv[i:i + 2]
+N = GC * GR
 import numpy as np
 from PIL import Image
 P = float(sys.argv[2]) if len(sys.argv) > 2 else 6.9
@@ -59,18 +65,18 @@ def snap(c):
     return out, oy
 
 cells = []
-for k in range(8):
-    r, cc = divmod(k, 4)
-    c = a[r * H // 2:(r + 1) * H // 2, cc * W // 4:(cc + 1) * W // 4]
+for k in range(N):
+    r, cc = divmod(k, GC)
+    c = a[r * H // GR:(r + 1) * H // GR, cc * W // GC:(cc + 1) * W // GC]
     cells.append(snap(c))
 # one baseline per painted row: the lowest solid row among that row's 4 frames, at canvas row 60;
 # horizontally each frame keeps its place in its painted cell (the cell's middle at column 32)
-row = np.zeros((64, 512, 4), np.uint8)
-for r in range(2):
-    group = cells[r * 4:(r + 1) * 4]
+row = np.zeros((64, 64 * N, 4), np.uint8)
+for r in range(GR):
+    group = cells[r * GC:(r + 1) * GC]
     base = max(np.nonzero(g[..., 3].any(1))[0].max() for g, _ in group)
     for i, (g, _) in enumerate(group):
-        k = r * 4 + i
+        k = r * GC + i
         dy = 60 - np.nonzero(g[..., 3].any(1))[0].max()     # a planted foot is always on the ground
         dx = 32 - g.shape[1] // 2
         if CENTRE:
@@ -82,7 +88,7 @@ for r in range(2):
                 row[yy, k * 64 + xx] = g[y, x]
 out = sys.argv[1]
 Image.fromarray(row).save(out + ".png")
-Image.fromarray(row).resize((4096, 512), Image.NEAREST).save(out + "_8x.png")
-for k in range(8):
+Image.fromarray(row).resize((64 * N * 8, 512), Image.NEAREST).save(out + "_8x.png")
+for k in range(N):
     ys, xs = np.nonzero(row[:, k * 64:(k + 1) * 64, 3])
     print(k + 1, "rows", ys.min(), ys.max(), "h", ys.max() - ys.min() + 1, "cols", xs.min(), xs.max())
