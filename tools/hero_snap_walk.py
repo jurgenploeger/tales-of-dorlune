@@ -1,11 +1,16 @@
 #!/usr/bin/env python3
 """Snap a ChatGPT walk painting (8 frames in a 4x2 grid) to a 64x64 row in the approved view's palette.
 
-  hero_snap_walk.py <out> [pixel size, 6.9] [painting.png]
+  hero_snap_walk.py <out> [pixel size, 6.9] [painting.png] [--centre]
+
+--centre: each frame moved so its head (its top 18 rows) is centred on column 32, for a painting whose figure
+slides across its cell (walk up-right, 2026-11-24): played in place, that jittered.
 
 ChatGPT's own 1x redraws and loses the motion (docs/ai-sprite-test/heroes/HANDOVER.md); its painting is the design.
 Each frame keeps its place in its painted cell; its planted foot (its lowest pixel) lands on row 60."""
 import sys
+CENTRE = "--centre" in sys.argv
+sys.argv = [a for a in sys.argv if a != "--centre"]
 import numpy as np
 from PIL import Image
 P = float(sys.argv[2]) if len(sys.argv) > 2 else 6.9
@@ -68,6 +73,9 @@ for r in range(2):
         k = r * 4 + i
         dy = 60 - np.nonzero(g[..., 3].any(1))[0].max()     # a planted foot is always on the ground
         dx = 32 - g.shape[1] // 2
+        if CENTRE:
+            ys = np.nonzero(g[..., 3].any(1))[0]
+            dx = int(round(32 - np.nonzero(g[ys.min():ys.min() + 18, :, 3].any(0))[0].mean()))
         for y, x in zip(*np.nonzero(g[..., 3])):
             yy, xx = y + dy, x + dx
             if 0 <= yy < 64 and 0 <= xx < 64:

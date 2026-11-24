@@ -250,6 +250,12 @@ Pilot **Human Male** end to end before the other eight. Don't start a second bod
 19. **Walk right, 8 frames** (2026-11-24). Two paintings (`tries/walk8_right_try1{a,b}_painting.png`), snapped at
     7.0 and thinned; the user picked the first (the same motion as the second, without its stray dark marks).
     Walk left is its mirror.
+20. **Walk up-right, 8 frames** (2026-11-24). ChatGPT first re-sent its walk-right paintings; asked again with
+    only the up-right view and the reference strip attached and the view spelled out (the back of the head, no
+    face), it sent three (`tries/walk8_up-right_try1{a,b,c}_painting.png`). The first was the side walk seen a
+    little from behind; the user picked the second, snapped at 6.95 and thinned. The second and third drew the
+    figure sliding across its cell (the head 6 and 12 px over half a step), which in place jitters: each frame
+    was moved so its head stays on column 32 (`hero_snap_walk.py --centre`). Walk up-left is its mirror.
 
 ## What has gone wrong before (read before prompting)
 - ChatGPT failed the monster test (`../HANDOVER.md`): drew bigger than asked (44 to 48 px for 35), and the
