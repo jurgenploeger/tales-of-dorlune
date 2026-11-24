@@ -302,8 +302,12 @@ One doll, end to end (it was the Human Male pilot until 2026-11-24).
     the near ear out behind the head, the far one's tip past the face. The user picked the first's near ear (as
     long as the down ears; the big painting's, the cleanest, was half as long), its outline closed where it
     faced clear air. Its face had snapped a pixel wider, which moved the right eye: only the ears are kept, the
-    approved face untouched, and the far tip drawn small (a pixel of skin in an outline). `hero_ears.py` lays them
-    on the down-right frames and, mirrored, the down-left.
+    approved face untouched. `hero_ears.py` lays them on the down-right frames and, mirrored, the down-left.
+30. **The ears as ChatGPT drew them** (the user, 2026-11-24: "Just use what chatgpt provided"). The outlines I
+    closed made the ears stiff (a straight six-pixel top edge), and raising their tips in code was "a regression":
+    both views now carry the snapped ears with no pixel fixes, only lifted onto the approved head (down-right's
+    far side, snapped a pixel wider, taken a column over so the face and its right eye stay the approved ones).
+    Lesson: don't redraw ChatGPT's ears; place them.
 
 ## What has gone wrong before (read before prompting)
 - ChatGPT failed the monster test (`../HANDOVER.md`): drew bigger than asked (44 to 48 px for 35), and the
