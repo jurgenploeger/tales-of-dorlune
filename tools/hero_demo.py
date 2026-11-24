@@ -3,19 +3,21 @@
 
   git fetch --depth=1 --filter=blob:none origin screenshots
   git show origin/screenshots:claude/come-back-features/store_land_explore.png > /tmp/explore.png
-  hero_demo.py /tmp/explore.png <out dir>     -> demo_walk.gif, demo_battle.gif
+  hero_demo.py /tmp/explore.png <out dir> [doll|elf]   -> demo_walk.gif, demo_battle.gif (demo_elf_*.gif for the elf)
 
 The scene is a HUD-free screenshot at 3x, shrunk to 1x (a pixel a point), and the doll goes in at 1 pixel an art pixel (as the
 game draws it), and at 2 in battle (fighters stand twice as big). The battle's backdrop is the map blurred and
 shaded as BattleScene.buildGround does; the monster flashes white and is knocked back on the strike."""
 import sys, os
+BODY=sys.argv[3] if len(sys.argv)>3 else 'doll'
+NAME='demo' if BODY=='doll' else f'demo_{BODY}'
 import math, numpy as np
 from PIL import Image, ImageDraw, ImageFilter
 H='/home/user/tales-of-dorlune/docs/ai-sprite-test/heroes/'
 SPR='/home/user/tales-of-dorlune/art/sprites/'
 DIRS=["up","up-right","right","down-right","down","down-left","left","up-left"]
 def sheet(anim, n):
-    s=Image.open(H+f'hero64_doll_{anim}.png').convert('RGBA')
+    s=Image.open(H+f'hero64_{BODY}_{anim}.png').convert('RGBA')
     return {d:[s.crop((c*64,r*64,(c+1)*64,(r+1)*64)) for c in range(n)] for r,d in enumerate(DIRS)}
 walk=sheet('walk',8); idle=sheet('idle',4); attack=sheet('attack',6)
 def big(im,k): return im.resize((im.width*k, im.height*k), Image.NEAREST)
@@ -45,7 +47,7 @@ for i in range(steps):
     sh=shadow(16*K,5*K,90); im.alpha_composite(sh,(int(x-sh.width/2),int(y-sh.height/2)))
     im.alpha_composite(f,(int(x-32*K),int(y-60*K)))   # feet (row 60) on the path
     frames.append(im.convert('RGB'))
-frames[0].save(os.path.join(OUT,'demo_walk.gif'),save_all=True,append_images=frames[1:],duration=83,loop=0,optimize=True)
+frames[0].save(os.path.join(OUT,NAME+'_walk.gif'),save_all=True,append_images=frames[1:],duration=83,loop=0,optimize=True)
 
 # --- an attack in battle -------------------------------------------------------------------------
 B=scene.crop((900,250,900+1050,250+600)).resize((350,200),Image.BOX).filter(ImageFilter.GaussianBlur(3.3))
@@ -71,5 +73,5 @@ for j,(anim,c) in enumerate(seq):
     im.alpha_composite(f,(int(hx-32*K2),int(hy-60*K2)))
     frames.append(im.convert('RGB'))
 dur=[300 if a=='idle' else 110 for a,_ in seq]
-frames[0].save(os.path.join(OUT,'demo_battle.gif'),save_all=True,append_images=frames[1:],duration=dur,loop=0,optimize=True)
+frames[0].save(os.path.join(OUT,NAME+'_battle.gif'),save_all=True,append_images=frames[1:],duration=dur,loop=0,optimize=True)
 print('ok', len(frames))
