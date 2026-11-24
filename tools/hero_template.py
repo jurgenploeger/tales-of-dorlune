@@ -353,22 +353,14 @@ def board():
     pieces = []
     hero = old_frames("doll")[("down", 0)]
     pieces.append(("hero today", trimmed(hero)))
-    for b in BUILDS:
-        name = " ".join(SPEC[b][:2])
-        pieces.append((name, trimmed(mannequin(b))))
-        pieces.append((name + "\n+ armour", trimmed(mannequin(b, True))))
-    tries = [("ChatGPT 1", "try1_human_male.png", None), ("ChatGPT 2", "try2_human_male_big.png", "big"),
-             ("ChatGPT 3", "try3_human_male.png", None), ("ChatGPT 4", "try4_human_male.png", None), ("ChatGPT 5", "try5_human_male.png", None),
-             ("ChatGPT 6 (semi-chibi)", "try6_human_male.png", None), ("ChatGPT 6 big, snapped", "try6_human_male_snapped.png", None),
-             ("Master (try 8)", "try8_human_male.png", None)]
-    for label, f, kind in tries:
-        p = os.path.join(TRIES, f)
-        if os.path.exists(p):
-            pieces.append((label, trimmed(chatgpt_big(p) if kind else Image.open(p).convert("RGBA"))))
-    for name, label in (("monster_jelly", "jelly"), ("town_gate", "town gate"), ("tree", "tree"),
+    # the doll as approved, beside today's hero and the world (the user, 2026-11-24: just the hero today, the
+    # newest doll, a monster and the buildings; the code mannequins and ChatGPT's tries are in the handover)
+    doll = os.path.join(ROOT, "docs", "ai-sprite-test", "heroes", "hero64_doll_master.png")
+    pieces.append(("the doll (v2)", trimmed(Image.open(doll).convert("RGBA"))))
+    for name, label in (("monster_jelly", "monster (jelly)"), ("town_gate", "town gate"), ("tree", "tree"),
                         ("house", "house"), ("inn", "inn")):
         pieces.append((label, world_piece(name)))
-    gap = 10
+    gap = 30
     width = sum(p.width for _, p in pieces) + gap * (len(pieces) + 1)
     tall = max(p.height for _, p in pieces)
     ground = 14
