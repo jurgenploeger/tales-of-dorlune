@@ -1099,3 +1099,5 @@ snow_trail_b    | newgame,level=163,map=snow_white_forest,at=-6_4,zoom=1.8,walk=
 snow_trail_rosen | newgame,level=163,map=rosen_lake,at=4_-5,zoom=1.8,walk=1_0,weather=clear,hour=12 | 10
 sand_trail_desert | newgame,level=163,map=genie_desert,at=5_5,zoom=1.8,walk=1_0,weather=clear,hour=12 | 10
 sand_trail_beach | newgame,level=163,map=pineapple_shore,at=-5_5,zoom=1.8,walk=1_0,weather=clear,hour=12 | 10
+# The townsfolk's own prints: the hero standing still in Goldburg's sandy square while its people stroll.
+sand_trail_npcs | newgame,level=163,map=goldburg,zoom=1.3,weather=clear,hour=12 | 20
