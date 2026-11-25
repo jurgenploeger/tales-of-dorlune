@@ -139,9 +139,11 @@ final class LandStage {
                 if let line = waterline(for: reed.art, size: node.size, anchor: node.anchorPoint) {
                     line.zPosition = -0.01
                     node.addChild(line)
+                    // With a key: in this async function a bare `run` is SKNode's async one, awaiting the
+                    // action's end, which a forever action never reaches.
                     line.run(.sequence([.wait(forDuration: .random(in: 0...2)), .repeatForever(.sequence([
                         .fadeAlpha(to: 0.55, duration: 0), .wait(forDuration: 1.1), .fadeAlpha(to: 1, duration: 0), .wait(forDuration: 1.6),
-                    ]))]))
+                    ]))]), withKey: "lap")
                 }
             }
         }
