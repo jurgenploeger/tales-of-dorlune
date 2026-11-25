@@ -962,27 +962,15 @@ private struct AutoPlaying: View {
 }
 
 /// Your companion's turn, after the hero's choice: the same row as the hero's, Auto to let it
-/// decide for itself where More is, then its skills, Guard, and Attack at the right end. The chip
-/// on top shows whose turn it is. The hero's choice is made by then, so there's no going back to
-/// it (that would start their clock over).
+/// decide for itself where More is, then its skills, Guard, and Attack at the right end. Whose turn
+/// it is shows in its circle lighting up and its portrait in the turn order (a chip over the row
+/// saying so was dropped, the user, 2026-11-25). The hero's choice is made by then, so there's no
+/// going back to it (that would start their clock over).
 private struct CompanionPad: View {
     let controller: BattleController
 
     var body: some View {
         VStack(alignment: .trailing, spacing: 16) {
-            if let companion = controller.companion {
-                HStack(spacing: 8) {
-                    SpriteImage(art: companion.art, size: 30)
-                    Text(L("{companion}'s turn", ["companion": companion.name]))
-                        .font(HUDStyle.font(13))
-                        .foregroundStyle(HUDStyle.cream)
-                }
-                .padding(.leading, 8)
-                .padding(.trailing, 12)
-                .padding(.vertical, 5)
-                .background(Capsule().fill(HUDStyle.ink.opacity(0.88)).overlay(Capsule().strokeBorder(HUDStyle.gold.opacity(0.7), lineWidth: 1.5)))
-            }
-
             // Its buttons the size of the hero's (`commandButtonSize`), closed up at the right.
             SkillRow(controller: controller, skills: controller.companionSkills, others: 2,
                      matching: controller.commandButtonSize) { size, _ in
