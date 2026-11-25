@@ -356,6 +356,11 @@ One doll, end to end (it was the Human Male pilot until 2026-11-24).
     about 3 pixels past the head, the third round's painting 1 (`try3a`) matched: open in every frame, 4 to 6 skin
     pixels past the head (the idle's 7), no grey specks (`hero64_doll_ears_walk_up-right.png`; up-left mirrored).
     Name the ear's width, its reach and its open base in the prompt from the start.
+42. **Elf ears up-right, standing, redone from the walk** (2026-11-25): next to the walk, the standing ear looked
+    too thin and a different shape (the user). The walk's ear from frame 3 (whose head matches the standing one
+    with no shift and whose outline was closed) was laid on the standing view as ChatGPT drew it, rows 31 and
+    below left as the standing view has them; one outline pixel missing at its lower edge, (27, 41), was filled
+    with the ear's own outline colour at the user's word ("it has a hole"). Idle wears it; up-left mirrored.
 
 ## What has gone wrong before (read before prompting)
 - ChatGPT failed the monster test (`../HANDOVER.md`): drew bigger than asked (44 to 48 px for 35), and the
