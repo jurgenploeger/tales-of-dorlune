@@ -147,15 +147,20 @@ def clip_front(w, base, f, hair, sh, ref, d):
                     w[y, x] = base[y, x]
     return w
 
-def real_ear(diff, f):
+def real_ear(diff, f, dark=None):
     """Of the pixels where the elf differs from the doll, the ear: those in rows where some stand 2 or more pixels
     past the doll's head."""
     # only in the rows where the ear stands out past the head: below them (the nape facing right) the elf's own
     # head pixels laid over the hair showed as skin under the ear (the user, 2026-11-25)
     far = ~ndimage.binary_dilation(f[..., 3] > 0, np.ones((3, 3), bool))
-    rows = (diff & far).any(1)
-    # and wherever the head is clear: the hair, grown a pixel round the head, covered the ear's edge there
-    return (diff & rows[:, None]) | (diff & (f[..., 3] == 0))
+    # near what stands past the head: up to 7 pixels in along its row and a row above and below (its own
+    # outline along its top and bottom; facing right the hair covered its top edge, the user, 2026-11-25), not
+    # the whole row, where ChatGPT's head shaded otherwise showed through the hair as skin
+    zone = ndimage.binary_dilation(diff & far, np.ones((1, 15), bool))
+    # the row above and below only for the ear's dark outline: its skin there was ChatGPT's head showing
+    # through the hair as patches above the ear
+    edge = ndimage.binary_dilation(diff & far, np.ones((3, 15), bool)) & dark
+    return (diff & (zone | edge)) | (diff & (f[..., 3] == 0))
 
 def lone_specks(img):
     """Opaque pixels with no opaque neighbour, cleared."""
@@ -229,13 +234,14 @@ def wear_style(style, anim, race="human"):
                 # head flapped over the near ear (the user, 2026-11-25); above it the hair still covers ChatGPT's
                 # head pixels round the ears
                 e = elf[sl]
-                ear = real_ear((e[..., 3] > 0) & ((e != f).any(2)), f)
+                ear = real_ear((e[..., 3] > 0) & ((e != f).any(2)), f, e[..., :3].max(2) < 110)
                 top = ear_top(d)
                 # from behind (up, up-right, up-left) the ears layer lies over the back of the head: there the hair
                 # goes over it and only what stands out past the head shows (2026-11-25)
                 if top is not None and not d.startswith("up"):
-                    band = np.zeros_like(ear); band[max(top + sh[0], 0):] = True
-                    keep = (ear & band) | (ear & (f[..., 3] == 0))   # past the head: always the ear
+                    # the ear's rows (`real_ear`), not a band from the standing view's ear top: a walk frame's ear
+                    # can start higher, and the hair covered its top edge (the user, 2026-11-25)
+                    keep = ear
                     w = w.copy(); w[keep] = e[keep]
             out[sl] = lone_specks(w)
     return out
