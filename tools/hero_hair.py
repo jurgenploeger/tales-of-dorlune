@@ -51,12 +51,29 @@ def lift(S, M):
         if dark(p) and (M[y, x, 3] == 0 or (p != M[y, x]).any()):
             hm[y, x] = True
     layer = np.zeros_like(S); layer[hm] = S[hm]
-    return layer, (dy, dx)
+    return grade(layer), (dy, dx)
+
+# ChatGPT paints the hair a very saturated ginger (asked for, so it parts from the skin), and every hair colour is
+# worked from it: too bright and unnatural (the user, 2026-11-25). The lifted layer is graded once, the user's pick B
+# of three: saturation x0.72, brightness x0.9, hue 4 degrees toward red (copper). Still inside appearance.json's
+# hairLayer window, so the game's colours all reach it.
+GRADE = (0.72, 0.9, -4)
+
+def grade(layer, g=GRADE):
+    sm, vm, dh = g
+    out = layer.copy()
+    for y, x in zip(*np.nonzero(layer[..., 3])):
+        h, s, v = colorsys.rgb_to_hsv(*(layer[y, x, :3] / 255))
+        r, gg, b = colorsys.hsv_to_rgb(((h * 360 + dh) % 360) / 360, min(1, s * sm), min(1, v * vm))
+        out[y, x, :3] = np.round(np.array([r, gg, b]) * 255).astype(np.uint8)
+    return out
 
 def worn(M, layer):
     out = Image.fromarray(M.copy()); out.alpha_composite(Image.fromarray(layer)); return np.asarray(out)
 
 if __name__ == "__main__":
+    if sys.argv[1] == "grade":     # grade a layer lifted before GRADE: hero_hair.py grade <in.png> <out.png>
+        Image.fromarray(grade(np.asarray(Image.open(sys.argv[2]).convert("RGBA")))).save(sys.argv[3])
     if sys.argv[1] == "lift":
         S = np.asarray(Image.open(sys.argv[2]).convert("RGBA")); M = np.asarray(Image.open(sys.argv[3]).convert("RGBA"))
         tag = sys.argv[4]
