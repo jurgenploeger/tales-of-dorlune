@@ -142,6 +142,8 @@ after_battle_coast | newgame,map=crystal_mountain,at=-31_-75,battle,win,back,wea
 border_gate  | newgame,map=sunny_meadow,border=frog_swamp,landscape,weather=clear,hour=12 | 6
 border_rocks | newgame,map=sunny_meadow,border=pineapple_shore,landscape,weather=clear,hour=12 | 6
 border_fence | newgame,map=frog_swamp,border=twilight_woods,landscape,weather=clear,hour=12 | 6
+# Snow coming over a green land by a snowy one's border, the trees there capped (2026-11-25).
+snow_border | newgame,level=60,map=swan_lake,border=snow_white_forest,landscape,weather=clear,hour=12 | 6
 border_sand  | newgame,map=frog_swamp,border=goldburg_lake,weather=clear,hour=12 | 6
 # The swamp's border with the dark woods once roads join the two (both quests done): its fence gone,
 # you walk over anywhere, and the two grounds meet along a winding line, each one's trees on its own.
