@@ -88,6 +88,20 @@ def row_ears(anim, d):
     return np.asarray(Image.open(p).convert("RGBA")) if os.path.exists(p) else None
 
 
+def row_cut(anim, d):
+    """Where a row's elf head is narrower than the doll's (hero64_doll_ears_<anim>_<direction>_cut.png, opaque
+    where the doll's pixels go): ChatGPT drew the head from behind tapering under the ears, and the doll's wider
+    head and its small human ears showed past it (walk up, the user, 2026-11-25); mirrored like row_ears."""
+    if d.endswith("left"):
+        r = row_cut(anim, d[:-4] + "right")
+        if r is None:
+            return None
+        n = t.ANIMS[anim]
+        return np.concatenate([r[:, c * 64:(c + 1) * 64][:, ::-1] for c in range(n)], 1)
+    p = os.path.join(HEROES, f"hero64_doll_ears_{anim}_{d}_cut.png")
+    return np.asarray(Image.open(p).convert("RGBA")) if os.path.exists(p) else None
+
+
 def elf(anim):
     """Idle's heads are the standing views', so the standing ears fit them; walk and attack were painted apart,
     their heads 30 to 70% like the standing views', so they take ears ChatGPT painted on each row (the user,
@@ -98,7 +112,11 @@ def elf(anim):
     for r, d in enumerate(t.DIRECTIONS):
         own = row_ears(anim, d)
         if own is not None:
-            band = Image.fromarray(doll[r * 64:(r + 1) * 64].copy())
+            body = doll[r * 64:(r + 1) * 64].copy()
+            cut = row_cut(anim, d)
+            if cut is not None:
+                body[cut[:, :body.shape[1], 3] > 0] = 0
+            band = Image.fromarray(body)
             band.alpha_composite(Image.fromarray(own[:, :band.width]))
             out[r * 64:(r + 1) * 64] = np.asarray(band)
             continue

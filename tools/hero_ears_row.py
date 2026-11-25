@@ -20,7 +20,7 @@ both = d in ('down', 'up'); far_tip = d=='down-right'
 behind = d=='up-right'   # the near ear on the right of the head, the far ear's tip past its left
 row=np.asarray(Image.open(D+f'hero64_doll_{anim}_{d}.png').convert('RGBA'))
 S=np.asarray(Image.open(snap))
-lay=np.zeros_like(row); shifts=[]
+lay=np.zeros_like(row); cut=np.zeros_like(row); shifts=[]
 for c in range(n):
     f=row[:,c*64:(c+1)*64]; g=S[:,c*64:(c+1)*64]
     dy,dx=he.fit(g,f); shifts.append((dy,dx)); g=np.roll(np.roll(g,-dy,0),-dx,1)
@@ -31,7 +31,11 @@ for c in range(n):
     for y in range(14,38):
         for x in range(64):
             p,q=g[y,x],f[y,x]
-            if not p[3]: continue
+            if not p[3]:
+                # facing up, where the elf's head is narrower than the doll's, the doll's pixels go (its wider
+                # head and small human ears showed past ChatGPT's, the user, 2026-11-25)
+                if d=='up' and q[3] and (x<=left+8 or x>=right-8): cut[y,c*64+x]=(255,0,0,255)
+                continue
             diff = q[3]==0 or (p[:3]!=q[:3]).any()
             if behind:
                 if (x>=right-8 and diff) or (x<left and q[3]==0): lay[y,c*64+x]=p
@@ -40,7 +44,9 @@ for c in range(n):
             elif far_tip and x>right and q[3]==0: lay[y,c*64+x]=p
 print('shifts',shifts)
 Image.fromarray(lay).save(f'ears_{tag}.png')
-im=Image.fromarray(row.copy()); im.alpha_composite(Image.fromarray(lay)); el=np.asarray(im); Image.fromarray(el).save(f'elf_{tag}.png')
+if cut[...,3].any(): Image.fromarray(cut).save(f'ears_{tag}_cut.png')  # save as ..._cut.png beside the ears
+body=row.copy(); body[cut[...,3]>0]=0
+im=Image.fromarray(body); im.alpha_composite(Image.fromarray(lay)); el=np.asarray(im); Image.fromarray(el).save(f'elf_{tag}.png')
 st=Image.open(D+('hero64_elf_down.png' if d=='down' else f'hero64_elf_{d}.png')).convert('RGBA')
 out=Image.new('RGBA',(64*n,64*3),(120,170,90,255))
 out.alpha_composite(Image.fromarray(row),(0,0)); out.alpha_composite(Image.fromarray(S),(0,64)); out.alpha_composite(Image.fromarray(el),(0,128))
