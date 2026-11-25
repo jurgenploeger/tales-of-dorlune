@@ -418,6 +418,10 @@ One doll, end to end (it was the Human Male pilot until 2026-11-24).
     (`tries/elf_walk_up_try2{a..e}_painting.png`); lifted with `hero_ears_row.py --band 3`, the user picked 2 (35 to 49
     pixels past the head, the idle's 40), as lifted. Putting the rows above and below the ears back to the human
     walk was tried and called a regression (the user), so not kept. The run follows the walk.
+    In motion the head hobbled (the user): each frame's lower head was ChatGPT's, 1 to 3 pixels wider or narrower,
+    and frames 5 to 8 had 1 to 3 outline gaps. Now the rows from the ears' foot to above the neck come from one frame
+    (3, closest to the human head) in every frame, moved with the head, and every gap has its outline pixel
+    (`tools/hero_ears_walk_up_steady.py`).
  Idle wears it; up-left mirrored.
 
 ## What has gone wrong before (read before prompting)
