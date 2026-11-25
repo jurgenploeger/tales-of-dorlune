@@ -3791,6 +3791,13 @@ def recolour_cape(img, base, accent, to_main, to_accent):
     return Image.fromarray((out * 255).round().astype(np.uint8), "RGBA")
 
 
+# `recolour_set` brings the base's value onto the target's by a power curve. For a target at full brightness
+# that curve goes flat (every pixel, outline and shading too, at value 1: the Shiverpeak Gloves a glowing cyan
+# blob, 2026-11-25), so above NEAR_WHITE the curve is never flatter than LIFT_FLOOR: 1 keeps the base's own
+# values, its outline and rim as deep as drawn (`pixel_style.py` rim_lit; 0.6 left the glove's rim lit).
+NEAR_WHITE, LIFT_FLOOR = 0.975, 1.0
+
+
 def recolour_set(img, base, target, below=40, above=10, min_s=0.12, keep_dark=0.0, from_row=0):
     """A set piece in another set's colour: every pixel of the base colour's hue family (from 40 degrees redder,
     its shadows, to 10 yellower, short of a gold band) onto `target`, as `recolour_cape` does."""
@@ -3816,7 +3823,10 @@ def recolour_set(img, base, target, below=40, above=10, min_s=0.12, keep_dark=0.
             ns = min(1, s ** (math.log(max(s1, 0.03)) / math.log(s0)))
             if s1 < 0.08:   # white or grey: no hue to aim at, so the colour drains out
                 ns = s * 0.15
-            nv = min(1, v ** (math.log(max(v1, 0.05)) / math.log(v0)))
+            lift = math.log(max(v1, 0.05)) / math.log(v0)
+            if v1 > NEAR_WHITE:
+                lift = max(lift, LIFT_FLOOR)
+            nv = min(1, v ** lift)
             out[y, x, :3] = colorsys.hsv_to_rgb(nh, ns, nv)
     return Image.fromarray((out * 255).round().astype(np.uint8), "RGBA")
 

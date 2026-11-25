@@ -48,6 +48,7 @@ final class LandStage {
     /// 2026-11-19: the sea's shallows over the ground, `ContinentScene.shallows`).
     static var offForDebug: Set<String> = []
     static func isOffForDebug(_ name: String) -> Bool {
+        if GameSettings.devOff.contains(name) { return true }
         #if DEBUG
         return offForDebug.contains(name)
         #else
@@ -126,13 +127,26 @@ final class LandStage {
     /// Sets it all down, a piece at a time (`pause` between them: grading with its own palette).
     func build(pause: @escaping () async -> Void) async {
         placeLilyPads(plan.lilyPads)
+        if !Self.isOffForDebug("water") { placeFloaters(plan.floaters) }
         placeBridges()
         placeHarbors()
         for reed in plan.reeds {
             let node = addScenery(reed)
             // The rocks cast one where the shade can't fall (the user, 2026-11-16: "The rocks in the water
             // should also have the shadows"): a lake and its shore lie sunk.
-            if reed.art == "water_rock" || reed.art == "shore_stones" { roundShadow(under: node, at: reed.cell) }
+            if reed.art.hasPrefix("water_rock") || reed.art == "shore_stones" { roundShadow(under: node, at: reed.cell) }
+            // The water's pale line round a rock's foot, lapping: brighter and fainter by turns.
+            if reed.art.hasPrefix("water_rock") {
+                if let line = waterline(for: reed.art, size: node.size, anchor: node.anchorPoint) {
+                    line.zPosition = -0.01
+                    node.addChild(line)
+                    // With a key: in this async function a bare `run` is SKNode's async one, awaiting the
+                    // action's end, which a forever action never reaches.
+                    line.run(.sequence([.wait(forDuration: .random(in: 0...2)), .repeatForever(.sequence([
+                        .fadeAlpha(to: 0.55, duration: 0), .wait(forDuration: 1.1), .fadeAlpha(to: 1, duration: 0), .wait(forDuration: 1.6),
+                    ]))]), withKey: "lap")
+                }
+            }
         }
         placeWaterfalls(plan.waterfalls)
         placeCliffFalls(plan.cliffFalls)
@@ -156,6 +170,7 @@ final class LandStage {
         await pause()
         placePlateaus()
         placeBorders()
+        hidePanesBehindScenery()
         bringIntoView()
         for npc in npcs { npc.node.settle() }
         await pause()
@@ -188,17 +203,26 @@ final class LandStage {
     func update(dt: TimeInterval, player: CGPoint, camera: CGPoint, scale: CGFloat, screen: CGSize, isHere: Bool = true) {
         let you = local(player), eye = local(camera)
         if onScreen || isHere { crowd?.update(dt: dt, player: you) }
+        FrameTiming.shared.lap("crowd")
         let visible = CGRect(x: eye.x - screen.width / 2 * scale, y: eye.y - screen.height / 2 * scale,
                              width: screen.width * scale, height: screen.height * scale)
         critters?.update(dt: dt, player: you, visible: visible, flocks: isHere) { [map] in map.isWalkable(map.rawCell(at: $0)) }
+        FrameTiming.shared.lap("critters")
         show(around: camera, scale: scale, screen: screen)
+        FrameTiming.shared.lap("chunks")
         if let grass, isHere || onScreen { wade(through: grass, dt: dt, you: you) }
-        if !Self.isOffForDebug("shade") { canopy.draw() }
+        FrameTiming.shared.lap("grass")
+        let shadeOff = Self.isOffForDebug("shade")
+        canopy.setOff(shadeOff)
+        if !shadeOff { canopy.draw() }
+        FrameTiming.shared.lap("shade")
         coverPanes(dt)
+        FrameTiming.shared.lap("panes")
     }
 
     /// Lays the shade under its scenery away from `sun` (`CanopyShade.follow`).
     func follow(_ sun: Sun) {
+        guard !Self.isOffForDebug("shade") else { return }
         canopy.follow(sun)
     }
 
@@ -345,7 +369,18 @@ final class LandStage {
     /// graded as it is there).
     @discardableResult
     private func addScenery(_ placement: Placement, sprite: SpriteArt? = nil) -> SKSpriteNode {
-        let drawn = sprite ?? art.sprite(placement.art)
+        var drawn = sprite ?? art.sprite(placement.art)
+        // Snow on its top near a snowy land's border, as the ground there is snowed over
+        // (`GroundTiles.snowCover`, `ArtLibrary.capped`; the user, 2026-11-25), unless it's a snowy land's
+        // own (already drawn in snow) or a building.
+        let snowyOwn = (placement.land ?? def).theme.ground.contains("snow")
+        if !snowyOwn, art.asset(placement.art)?.kind != "building", drawn.size.height >= 12 {
+            let cover = tiles.snowCover(placement.cell)
+            let stage = cover > 0.75 ? 3 : cover > 0.45 ? 2 : cover > 0.15 ? 1 : 0
+            if stage > 0, let tones = tiles.snowTones(placement.cell) {
+                drawn = SpriteArt(texture: art.capped(drawn.texture, stage: stage, tones: tones), size: drawn.size)
+            }
+        }
         let node = addScenery(drawn, at: placement.cell, nudge: placement.nudge, sway: placement.sway, scale: placement.scale,
                               wind: placement.art)
         reflect(node, picture: drawn.texture, art: placement.art, cell: placement.cell)
@@ -461,25 +496,36 @@ final class LandStage {
         LampLight.shared.follow(lit)
         let sx = node.size.width / width, sy = node.size.height / height
         let left = -node.anchorPoint.x * node.size.width, bottom = -node.anchorPoint.y * node.size.height
+        // Crystals glow softer than a window or a flame (the user, 2026-11-25: "a bit too bright and
+        // obvious at night"): their lit copy a little dimmer, their glow fainter and closer.
+        let mineral = Self.minerals.contains { id.contains($0) }
         for box in windowBoxes(of: name, picture: picture) {
             let part = SKTexture(rect: CGRect(x: box.minX / width, y: 1 - box.maxY / height, width: box.width / width,
                                               height: box.height / height), in: texture)
             part.filteringMode = .nearest
             let pane = SKSpriteNode(texture: part, size: CGSize(width: box.width * sx, height: box.height * sy))
             pane.position = CGPoint(x: left + box.midX * sx, y: bottom + (height - box.midY) * sy)
+            if mineral {
+                pane.color = .black
+                pane.colorBlendFactor = 0.3
+            }
             lit.addChild(pane)
             // Its glow: soft light spilling round it, behind it, added to what's under it.
-            let reach = max(pane.size.width, pane.size.height)
+            let reach = max(pane.size.width, pane.size.height) * (mineral ? 0.7 : 1)
             let halo = SKSpriteNode(texture: SoftTextures.glow, size: CGSize(width: pane.size.width * 1.6 + reach * 1.4 + 14,
                                                                              height: pane.size.height * 1.6 + reach * 1.4 + 14))
             halo.color = colour ?? UIColor(red: 1, green: 0.78, blue: 0.45, alpha: 1)
             halo.colorBlendFactor = 1
             halo.blendMode = .add
-            halo.alpha = 0.42
+            halo.alpha = mineral ? 0.2 : 0.42
+            halo.position = pane.position
             halo.zPosition = -0.01
             // Steady: a land can hold hundreds of lights (Twilight Woods' glowing mushrooms), each
-            // pulsing would cost the frame.
-            pane.addChild(halo)
+            // pulsing would cost the frame. Beside its pane, not on it: it stays while the pane fades
+            // for someone standing in front (`coverPanes`; the user, 2026-11-25: the glow went too).
+            lit.addChild(halo)
+            litPanes.append(LitPane(pane: pane, halo: halo, building: node, box: box, picture: picture,
+                                    left: left, bottom: bottom, sx: sx, sy: sy, height: height))
             // Where it shows in the land's points, and how far down the screen its building stands.
             let middle = CGPoint(x: node.position.x + pane.position.x * node.xScale, y: node.position.y + pane.position.y)
             panes.append(Pane(node: pane, box: CGRect(x: middle.x - pane.size.width / 2, y: middle.y - pane.size.height / 2,
@@ -495,6 +541,112 @@ final class LandStage {
     }
     private var panes: [Pane] = []
     private var paneTimer: TimeInterval = 0
+    private static let coverKey = "cover"
+    /// What's a crystal by its art's name (`addWindows`): lit softer than windows and flames.
+    private static let minerals = ["crystal", "spire", "geode", "shard", "ice_cluster", "amethyst"]
+
+    /// Something set down that can stand in front of a lit window (`hidePanesBehindScenery`): its
+    /// node and the picture it was set down with.
+    private struct Occluder {
+        let node: SKSpriteNode
+        let picture: CGImage
+    }
+    private var occluders: [Occluder] = []
+
+    /// A lit window as `addWindows` cut it: its sprite and glow, its building, its box in the windows
+    /// picture's pixels (from the top left) and how that picture lies on the building.
+    private struct LitPane {
+        let pane: SKSpriteNode
+        let halo: SKSpriteNode
+        let building: SKSpriteNode
+        let box: CGRect
+        let picture: CGImage
+        let left: CGFloat
+        let bottom: CGFloat
+        let sx: CGFloat
+        let sy: CGFloat
+        let height: CGFloat
+    }
+    private var litPanes: [LitPane] = []
+
+    /// Cuts out of each lit window whatever stands in front of it (the user, 2026-11-25: "whenever
+    /// another building sits in front of it, it doesn't block the window"): drawn above the night's
+    /// shade, a pane showed through a house, a tree or a wall nearer you. Once, after everything is
+    /// set down: each pane pixel under an opaque pixel of something sorted in front of its building
+    /// is cleared; a pane hidden whole is taken away, and a glow dimmed by how much of its pane is left.
+    private func hidePanesBehindScenery() {
+        defer {
+            litPanes = []
+            occluders = []
+        }
+        guard !litPanes.isEmpty else { return }
+        var cache: [ObjectIdentifier: (w: Int, h: Int, bytes: [UInt8])] = [:]
+        func pixels(_ image: CGImage) -> (w: Int, h: Int, bytes: [UInt8])? {
+            let key = ObjectIdentifier(image)
+            if let known = cache[key] { return known }
+            guard image.width > 0, image.height > 0,
+                  let bytes = PixelImage.pixels(of: image, width: image.width, height: image.height) else { return nil }
+            let made = (w: image.width, h: image.height, bytes: bytes)
+            cache[key] = made
+            return made
+        }
+        // Whether `o` has an opaque pixel at `point` (in the land's points). Only upright, unscaled ones.
+        func covers(_ o: Occluder, _ point: CGPoint) -> Bool {
+            let n = o.node
+            guard n.xScale == 1, n.yScale == 1, n.size.width > 0, n.size.height > 0 else { return false }
+            let u = (point.x - n.position.x) / n.size.width + n.anchorPoint.x
+            let v = (point.y - n.position.y) / n.size.height + n.anchorPoint.y
+            guard u >= 0, u < 1, v >= 0, v < 1, let px = pixels(o.picture) else { return false }
+            let x = Int(u * CGFloat(px.w)), y = Int((1 - v) * CGFloat(px.h))
+            guard x >= 0, x < px.w, y >= 0, y < px.h else { return false }
+            return px.bytes[(y * px.w + x) * 4 + 3] > 127
+        }
+        var gone: Set<ObjectIdentifier> = []
+        for lit in litPanes {
+            let building = lit.building
+            guard building.xScale == 1, building.yScale == 1 else { continue }
+            func land(_ px: CGFloat, _ py: CGFloat) -> CGPoint {
+                CGPoint(x: building.position.x + lit.left + px * lit.sx, y: building.position.y + lit.bottom + (lit.height - py) * lit.sy)
+            }
+            let a = land(lit.box.minX, lit.box.minY), b = land(lit.box.maxX, lit.box.maxY)
+            let area = CGRect(x: min(a.x, b.x), y: min(a.y, b.y), width: abs(b.x - a.x), height: abs(b.y - a.y))
+            let front = occluders.filter {
+                $0.node !== building && $0.node.zPosition > building.zPosition && $0.node.frame.intersects(area)
+            }
+            guard !front.isEmpty, let own = pixels(lit.picture) else { continue }
+            let x0 = Int(lit.box.minX), y0 = Int(lit.box.minY)
+            let cols = Int(lit.box.width), rows = Int(lit.box.height)
+            guard cols > 0, rows > 0 else { continue }
+            var out = [UInt8](repeating: 0, count: cols * rows * 4)
+            var shown = 0, total = 0
+            for j in 0..<rows {
+                for i in 0..<cols {
+                    let sx = x0 + i, sy = y0 + j
+                    guard sx >= 0, sx < own.w, sy >= 0, sy < own.h else { continue }
+                    let source = (sy * own.w + sx) * 4
+                    guard own.bytes[source + 3] > 0 else { continue }
+                    total += 1
+                    let at = land(CGFloat(sx) + 0.5, CGFloat(sy) + 0.5)
+                    if front.contains(where: { covers($0, at) }) { continue }
+                    shown += 1
+                    for c in 0..<4 { out[(j * cols + i) * 4 + c] = own.bytes[source + c] }
+                }
+            }
+            guard shown < total else { continue }
+            if shown == 0 {
+                lit.pane.removeFromParent()
+                lit.halo.removeFromParent()
+                gone.insert(ObjectIdentifier(lit.pane))
+                continue
+            }
+            guard let image = PixelImage.make(out, width: cols, height: rows) else { continue }
+            let texture = SKTexture(cgImage: image)
+            texture.filteringMode = .nearest
+            lit.pane.texture = texture
+            lit.halo.alpha *= CGFloat(shown) / CGFloat(total)
+        }
+        if !gone.isEmpty { panes.removeAll { gone.contains(ObjectIdentifier($0.node)) } }
+    }
     /// The windows of each windows picture, in its pixels from its top left: panes within two pixels
     /// of each other are one window.
     private var windowBoxCache: [String: [CGRect]] = [:]
@@ -543,8 +695,12 @@ final class LandStage {
             let covered = people.contains { at in
                 at.y < pane.foot + 2 && CGRect(x: at.x - 13, y: at.y, width: 26, height: 54).intersects(pane.box)
             }
+            // Faded, not put out at once (the user, 2026-11-25: it "turns off immediately, which looks
+            // weird"), its glow left shining round it.
             let alpha: CGFloat = covered ? 0 : 1
-            if pane.node.alpha != alpha { pane.node.alpha = alpha }
+            if pane.node.action(forKey: Self.coverKey) == nil, pane.node.alpha != alpha {
+                pane.node.run(.fadeAlpha(to: alpha, duration: 0.3), withKey: Self.coverKey)
+            }
         }
     }
 
@@ -578,11 +734,33 @@ final class LandStage {
         halo.blendMode = .add
         halo.alpha = 0.4
         halo.zPosition = -0.01
-        bright.addChild(halo)
+        lit.addChild(halo)
         halo.run(.repeatForever(.sequence([.fadeAlpha(to: 0.3, duration: 0.5), .fadeAlpha(to: 0.45, duration: 0.4)])))
-        let frame = CGRect(x: node.position.x - node.anchorPoint.x * node.size.width, y: node.position.y - node.anchorPoint.y * node.size.height,
+        // Put out for someone in front only where its flame is (the user, 2026-11-25: the whole
+        // building's frame put the forge's fire out while its healer stood anywhere before it).
+        var frame = CGRect(x: node.position.x - node.anchorPoint.x * node.size.width, y: node.position.y - node.anchorPoint.y * node.size.height,
                            width: node.size.width, height: node.size.height)
+        if let flame = Self.opaqueBounds(art.picture(of: frames[0])) {
+            frame = CGRect(x: frame.minX + flame.minX * node.size.width, y: frame.maxY - flame.maxY * node.size.height,
+                           width: flame.width * node.size.width, height: flame.height * node.size.height)
+        }
         panes.append(Pane(node: bright, box: frame, foot: node.position.y))
+    }
+
+    /// Where a picture's opaque pixels lie, as fractions of it from its top left; nil if it has none.
+    private static func opaqueBounds(_ image: CGImage) -> CGRect? {
+        let w = image.width, h = image.height
+        guard w > 0, h > 0, let pixels = PixelImage.pixels(of: image, width: w, height: h) else { return nil }
+        var minX = w, minY = h, maxX = -1, maxY = -1
+        for y in 0..<h {
+            for x in 0..<w where pixels[(y * w + x) * 4 + 3] > 0 {
+                minX = min(minX, x); maxX = max(maxX, x)
+                minY = min(minY, y); maxY = max(maxY, y)
+            }
+        }
+        guard maxX >= minX else { return nil }
+        return CGRect(x: CGFloat(minX) / CGFloat(w), y: CGFloat(minY) / CGFloat(h),
+                      width: CGFloat(maxX - minX + 1) / CGFloat(w), height: CGFloat(maxY - minY + 1) / CGFloat(h))
     }
 
     /// The lighthouse's light turning at night (the user, 2026-11-22: "make everything feel more
@@ -684,11 +862,13 @@ final class LandStage {
         }
         chunk(at: node.position).addChild(node)
         see.note(node)
+        occluders.append(Occluder(node: node, picture: art.picture(of: sprite.texture)))
         // Everything set down on flat ground casts shade, merged and cast away from the sun (on a hill
         // or the sunk shore, a prop with `shadow` keeps its round one: `plant`).
         if map.hillIndex(at: cell) == nil, !map.isSunken(cell) {
             // A building's walls cast it, not a crown's rounds (`CanopyPainter.Caster.walls`).
-            canopy.add(node, picture: art.picture(of: sprite.texture), walls: wind.flatMap { art.asset($0)?.kind } == "building",
+            canopy.add(node, picture: art.picture(of: sprite.texture),
+                       walls: wind.flatMap { art.asset($0)?.kind } == "building" || wind.map(CanopyShade.isRock) == true,
                        flatBase: wind.map { CanopyShade.flatBases.contains($0) } ?? false)
         }
         return node
@@ -750,6 +930,44 @@ final class LandStage {
 
     // MARK: What it sets down
 
+    /// The water's pale line where it meets something sitting in it (`rim_<art>`, `tools/float_art.py`): a
+    /// sprite the same size and anchor as it, nil if the art has none.
+    private func waterline(for id: String, size: CGSize, anchor: CGPoint) -> SKSpriteNode? {
+        guard art.asset("rim_" + id) != nil else { return nil }
+        let line = SKSpriteNode(texture: art.sprite("rim_" + id).texture, size: size)
+        line.anchorPoint = anchor
+        return line
+    }
+
+    /// Petals, blossoms and leaves floating on the water (`LandPlan.planFloaters`; the user, 2026-11-25,
+    /// after ZeFrost's pond): each bobbing a whole pixel down and up again, slowly and in its own time,
+    /// over the water's pale line round it, which stays put, so it rides on the water.
+    private func placeFloaters(_ floaters: [(cell: GridPoint, drift: CGVector, art: String)]) {
+        for floater in floaters {
+            let sprite = art.sprite(floater.art)
+            let spot = map.center(of: floater.cell) + floater.drift
+            let at = CGPoint(x: spot.x.rounded(), y: (spot.y + map.height(at: spot)).rounded())
+            let holder = SKNode()
+            holder.position = at
+            if let line = waterline(for: floater.art, size: sprite.size, anchor: CGPoint(x: 0.5, y: 0.5)) { holder.addChild(line) }
+            let node = SKSpriteNode(texture: sprite.texture, size: sprite.size)
+            node.zPosition = 0.01
+            holder.addChild(node)
+            let rise = TimeInterval.random(in: 2.2...3.2), fall = TimeInterval.random(in: 1.8...2.6)
+            node.run(.sequence([.wait(forDuration: .random(in: 0...5)), .repeatForever(.sequence([
+                .moveBy(x: 0, y: -PondMotion.pixel, duration: 0), .wait(forDuration: fall),
+                .moveBy(x: 0, y: PondMotion.pixel, duration: 0), .wait(forDuration: rise),
+            ]))]))
+            if map.isSunken(floater.cell), let z = flatZ(at: spot) {
+                holder.zPosition = z
+                chunk(at: holder.position).addChild(holder)
+            } else {
+                holder.zPosition = -99_000
+                layer(at: holder.position).addChild(holder)
+            }
+        }
+    }
+
     private func placeLilyPads(_ pads: [(cell: GridPoint, drift: CGVector)]) {
         guard !pads.isEmpty else { return }
         let sprite = art.sprite("lily_pad")
@@ -758,6 +976,9 @@ final class LandStage {
             let spot = map.center(of: cell) + drift
             // On a lake sunk with the shore, down on its water.
             node.position = CGPoint(x: spot.x, y: spot.y + map.height(at: spot))
+            // The water's pale line round it, staying put as it bobs and turns (the user, 2026-11-25).
+            let line = waterline(for: "lily_pad", size: sprite.size, anchor: node.anchorPoint)
+            line?.position = node.position
             node.run(.repeatForever(.sequence([
                 .rotate(toAngle: 0.08, duration: 2.2, shortestUnitArc: true),
                 .rotate(toAngle: -0.08, duration: 2.2, shortestUnitArc: true),
@@ -775,6 +996,10 @@ final class LandStage {
                 node.zPosition = -99_000
                 layer(at: node.position).addChild(node)
             }
+            if let line {
+                line.zPosition = node.zPosition - 0.01
+                node.parent?.addChild(line)
+            }
         }
     }
 
@@ -785,12 +1010,27 @@ final class LandStage {
     /// time, glints flickering (one every half second or so) and a drop rippling out every few seconds.
     /// Unseeded: the land's layout stays what it was.
     private func placePondMotion() {
-        guard (def.theme.water ?? "tile_water") == "tile_water" else { return }
+        guard !Self.isOffForDebug("water") else { return }
+        let water = def.theme.water ?? "tile_water"
+        // Nothing laps, glints or rings on ice.
+        guard ArtLibrary.isPondWater(water), def.theme.frozen != true else { return }
+        // Chocolate's glints and rings in a creamy sheen, not the water's pale blue.
+        let tint: UIColor? = water == "tile_water" ? nil : UIColor(red: 1, green: 0.86, blue: 0.7, alpha: 1)
+        func make(_ texture: SKTexture) -> SKSpriteNode {
+            let node = PondMotion.sprite(texture)
+            if let tint {
+                node.color = tint
+                node.colorBlendFactor = 0.6
+            }
+            return node
+        }
         var cells = map.river
         for lake in map.lakes { cells.formUnion(lake.water) }
+        // The small ponds too (the user, 2026-11-25: "Lakes and ponds are too lifeless"): they had none.
+        for pond in map.ponds { cells.formUnion(pond) }
         guard !cells.isEmpty else { return }
         let tile = WorldMap.tileSize
-        var open: [GridPoint: [(point: CGPoint, cell: GridPoint)]] = [:]
+        var open: [GridPoint: [(point: CGPoint, cell: GridPoint, shore: Bool)]] = [:]
         for cell in cells.sorted(by: WorldMap.inOrder) where !map.bridgeCells.contains(cell) {
             var shore = false
             for (dc, dr) in [(1, 0), (-1, 0), (0, 1), (0, -1)] {
@@ -808,7 +1048,7 @@ final class LandStage {
                 let offset = CGPoint(x: (Double(dc) * inset - Double(dr) * along) * tile, y: (Double(dr) * inset + Double(dc) * along) * tile)
                 let point = map.center(of: cell) + CGVector(dx: WorldMap.project(offset).x, dy: WorldMap.project(offset).y)
                 if far {
-                    let node = PondMotion.sprite(PondMotion.creep)
+                    let node = make(PondMotion.creep)
                     node.alpha = 0
                     node.run(.sequence([.wait(forDuration: .random(in: 0...6)), .repeatForever(.sequence([
                         .fadeAlpha(to: 1, duration: 0), .wait(forDuration: 2.5, withRange: 2),
@@ -820,7 +1060,7 @@ final class LandStage {
                     let toward = WorldMap.project(CGPoint(x: -Double(dc), y: -Double(dr)))
                     let length = max(0.001, (toward.x * toward.x + toward.y * toward.y).squareRoot())
                     let step = CGVector(dx: (toward.x / length * PondMotion.pixel).rounded(), dy: (toward.y / length * PondMotion.pixel).rounded())
-                    let node = PondMotion.sprite(PondMotion.lap)
+                    let node = make(PondMotion.lap)
                     node.alpha = 0
                     node.run(.repeatForever(.sequence([
                         .wait(forDuration: 1.25), .moveBy(x: step.dx, y: step.dy, duration: 0),
@@ -833,11 +1073,11 @@ final class LandStage {
                     onWater(node, at: point, cell: cell)
                 }
             }
-            if !shore {
-                let point = map.center(of: cell)
-                // Down on the water, with its height, for the glints and drops set round it.
-                open[Self.key(point.x, point.y), default: []].append((CGPoint(x: point.x, y: point.y + map.height(at: point)), cell))
-            }
+            // Down on the water, with its height, for the glints, drops and rings set round it: every
+            // cell of it, a shore's kept nearer its middle (only open water's, a pond or a narrow river
+            // had none, and no rain fell on it).
+            let point = map.center(of: cell)
+            open[Self.key(point.x, point.y), default: []].append((CGPoint(x: point.x, y: point.y + map.height(at: point)), cell, shore))
         }
         // Glints and drops, a spawner for each chunk of open water.
         for spots in open.values {
@@ -845,15 +1085,16 @@ final class LandStage {
             let spawner = SKNode()
             onWater(spawner, at: map.center(of: first.cell), cell: first.cell)
             let base = spawner.position
-            let places = spots.map { $0.point }
+            let places = spots.map { (point: $0.point, reach: $0.shore ? 0.22 : 0.4) }
             let spot: () -> CGPoint = {
                 let pick = places[Int.random(in: 0..<places.count)]
-                let jitter = WorldMap.project(CGPoint(x: Double.random(in: -0.4...0.4) * tile, y: Double.random(in: -0.4...0.4) * tile))
-                return CGPoint(x: (pick.x + jitter.x - base.x).rounded(), y: (pick.y + jitter.y - base.y).rounded())
+                let jitter = WorldMap.project(CGPoint(x: Double.random(in: -pick.reach...pick.reach) * tile,
+                                                      y: Double.random(in: -pick.reach...pick.reach) * tile))
+                return CGPoint(x: (pick.point.x + jitter.x - base.x).rounded(), y: (pick.point.y + jitter.y - base.y).rounded())
             }
             let glint = SKAction.run { [weak spawner] in
                 guard let spawner else { return }
-                let node = PondMotion.sprite(PondMotion.glint[0].texture)
+                let node = make(PondMotion.glint[0].texture)
                 node.position = spot()
                 spawner.addChild(node)
                 var steps: [SKAction] = []
@@ -866,22 +1107,37 @@ final class LandStage {
             }
             let drop = SKAction.run { [weak spawner] in
                 guard let spawner, let first = PondMotion.ripple.first else { return }
-                let node = PondMotion.sprite(first)
+                let node = make(first)
                 node.position = spot()
                 spawner.addChild(node)
                 node.run(.sequence([.animate(with: PondMotion.ripple, timePerFrame: 0.2), .removeFromParent()]))
             }
-            spawner.run(.repeatForever(.sequence([.wait(forDuration: 0.55, withRange: 0.6), glint])))
-            spawner.run(.repeatForever(.sequence([.wait(forDuration: 3.5, withRange: 3), drop])))
+            // As lively over a big lake as a small pond: as often for every ten cells of it.
+            let busy = max(1, Double(spots.count) / 10)
+            // A wavelet drifting across: a light dash, two pixels downwind in steps, then gone.
+            let drift = SKAction.run { [weak spawner] in
+                guard let spawner else { return }
+                let node = make(PondMotion.lap)
+                node.position = spot()
+                node.alpha = 0.8
+                spawner.addChild(node)
+                let step = PondMotion.pixel.rounded()
+                node.run(.sequence([.wait(forDuration: 0.6), .moveBy(x: step, y: 0, duration: 0), .wait(forDuration: 0.6),
+                                    .moveBy(x: step, y: 0, duration: 0), .fadeAlpha(to: 0.45, duration: 0), .wait(forDuration: 0.5),
+                                    .removeFromParent()]))
+            }
+            spawner.run(.repeatForever(.sequence([.wait(forDuration: 0.55 / busy, withRange: 0.6 / busy), glint])))
+            spawner.run(.repeatForever(.sequence([.wait(forDuration: 3.5 / busy, withRange: 3 / busy), drop])))
+            spawner.run(.repeatForever(.sequence([.wait(forDuration: 0.9 / busy, withRange: 0.8 / busy), drift])))
             // In the rain, drops ring the water many times a second (the user, 2026-11-18).
             let rain = SKAction.run { [weak spawner] in
                 guard let spawner, PondMotion.raining, let first = PondMotion.rainRipple.first else { return }
-                let node = PondMotion.sprite(first)
+                let node = make(first)
                 node.position = spot()
                 spawner.addChild(node)
                 node.run(.sequence([.animate(with: PondMotion.rainRipple, timePerFrame: 0.12), .removeFromParent()]))
             }
-            spawner.run(.repeatForever(.sequence([.wait(forDuration: 0.25, withRange: 0.3), rain])))
+            spawner.run(.repeatForever(.sequence([.wait(forDuration: max(0.03, 0.22 / busy), withRange: max(0.03, 0.25 / busy)), rain])))
         }
     }
 
@@ -900,7 +1156,7 @@ final class LandStage {
     /// bit of the water color"). Painted into four pictures here: a shader did it, and on a phone it
     /// didn't take and the reflections lay over the land. Not what stands in the water.
     private func reflect(_ node: SKSpriteNode, picture texture: SKTexture, art id: String, cell: GridPoint) {
-        guard reflections < Self.reflectionsAtMost, !id.hasPrefix("waterfall"), id != "water_rock", id != "lily_pad",
+        guard !Self.isOffForDebug("water"), reflections < Self.reflectionsAtMost, !id.hasPrefix("waterfall"), id != "water_rock", id != "lily_pad",
               map.contains(cell), map.ground[cell.row][cell.col] != .water else { return }
         // Water down the screen from it (south and west) within reach of its reflection.
         var nearWater = false
@@ -1371,6 +1627,11 @@ final class LandStage {
         guard !falls.isEmpty else { return }
         func frames(_ name: String) -> [SKTexture] { ["", "_2", "_3", "_4"].map { art.sprite(name + $0).texture } }
         let tops = frames("cliff_fall_top"), sheets = frames("cliff_fall_sheet"), pools = frames("cliff_fall_pool")
+        // The spring pond on the level above that its stream runs out of (the user, 2026-11-25: "there
+        // is no water it comes from"), its mouth overlapping the stream's head by a few of its pixels.
+        let springs = frames("cliff_fall_spring")
+        let topSize = art.sprite("cliff_fall_top").size, springSize = art.sprite("cliff_fall_spring").size
+        let overlap = topSize.height * 3 / 12
         let tile = WorldMap.tileSize
         /// A point in cells on the ground (its place on the map) and shown up at its height.
         func spot(_ point: CGPoint) -> (ground: CGPoint, shown: CGPoint) {
@@ -1387,6 +1648,7 @@ final class LandStage {
                 (sheets, CGSize(width: art.sprite("cliff_fall_sheet").size.width, height: drop), CGPoint(x: 0.5, y: 0),
                  CGPoint(x: x, y: foot.shown.y.rounded()), 0.2),
                 (pools, art.sprite("cliff_fall_pool").size, CGPoint(x: 0.5, y: 0.5), CGPoint(x: x, y: foot.shown.y.rounded()), 0.3),
+                (springs, springSize, CGPoint(x: 0.5, y: 0), CGPoint(x: x, y: (foot.shown.y.rounded() + drop - 2 + topSize.height - overlap).rounded()), 0.05),
             ]
             for piece in pieces {
                 let node = SKSpriteNode(texture: piece.frames[0], size: piece.size)
@@ -1455,6 +1717,8 @@ final class LandStage {
     /// The theme's props, and past the lines the land meets the lands beside it along (`Seam`)
     /// theirs, graded as they are there.
     private func placeProps(_ props: [Placement], seams: [Placement], pause: @escaping () async -> Void) async {
+        // Its trees' and bushes' wind frames on one texture, so they draw in batches (`packWindFrames`).
+        if !Self.isOffForDebug("wind") { art.packWindFrames(props.map { $0.art }) }
         for (number, prop) in props.enumerated() {
             if number % 32 == 31 { await pause() }
             plant(prop)
@@ -1584,6 +1848,7 @@ final class LandStage {
         for crag in map.crags {
             let hill = map.hills[crag.hill]
             strewStones(on: hill, inland: crag.inland)
+            if let mouth = hill.mouth, mouth.pictured { placeMouth(mouth, on: hill, cave: crag.to) }
             // A hill inland stands in the land's own ground: no range past the edge to fade out.
             guard !crag.inland else { continue }
             let length = crag.edge == .north || crag.edge == .south ? map.columns : map.rows
@@ -1635,6 +1900,110 @@ final class LandStage {
             raised.zPosition = shift.dy + Self.above + 15_000
             world.addChild(raised)
         }
+    }
+
+    /// A cave's mouth as its picture (`WorldMap.mouthArt`, ChatGPT's drawings, `tools/cave_mouth_art.py`):
+    /// laid over its rock face, its bottom row on the mouth's foot where the road runs in, graded with the
+    /// land's palette as everything is. The face runs along the map's diagonal on screen, so the picture,
+    /// drawn face on, is sheared to lean with it: each column moved up or down in whole pixels by how far
+    /// along the face it lies (as the town terraces' walls are). Sorted just behind whoever stands at its
+    /// foot, in front of the rock behind it.
+    private func placeMouth(_ mouth: WorldMap.Hill.Mouth, on hill: WorldMap.Hill, cave: String) {
+        let id = WorldMap.mouthArt(for: cave)
+        guard art.asset(id) != nil else { return }
+        let picture = art.picture(of: art.sprite(id).texture)
+        // How the face leans on screen: up this many points for each one across.
+        let along = WorldMap.project(CGPoint(x: mouth.along.x, y: mouth.along.y))
+        let slope = abs(along.x) > 0.001 ? along.y / along.x : 0
+        // The opening's columns (`tools/cave_mouth_art.py`: x 20 to 107 of 128), its floor faded into the ground.
+        let opening = Int(Double(picture.width) * 22 / 128)...Int(Double(picture.width) * 105 / 128)
+        guard let made = Self.shear(picture, slope: slope, fade: opening) else { return }
+        let sheared = made.0, footUp = made.1
+        let texture = SKTexture(cgImage: sheared)
+        texture.filteringMode = .nearest
+        let size = CGSize(width: sheared.width, height: sheared.height)
+        let node = SKSpriteNode(texture: texture, size: size)
+        node.anchorPoint = CGPoint(x: 0.5, y: footUp / size.height)
+        let tile = WorldMap.tileSize
+        let foot = WorldMap.project(CGPoint(x: mouth.x * tile, y: mouth.y * tile))
+        node.position = CGPoint(x: foot.x.rounded(), y: (foot.y + hill.height(atCells: mouth.x, mouth.y)).rounded() - Self.mouthSink)
+        node.zPosition = -foot.y - 1
+        // It stands off the face (the user, 2026-11-25: "add some depth to the cave entrance drawing,
+        // because it shows flat now while they are rocks"): its rocks cast a hard shadow on the rock behind,
+        // down and to the right, away from the light, in two steps, a near one darker, a far one fainter.
+        for (offset, darkness) in [(CGFloat(4), CGFloat(0.16)), (CGFloat(2), CGFloat(0.32))] {
+            let shadow = SKSpriteNode(texture: texture, size: size)
+            shadow.anchorPoint = node.anchorPoint
+            shadow.color = .black
+            shadow.colorBlendFactor = 1
+            shadow.alpha = darkness
+            shadow.position = CGPoint(x: offset, y: -offset)
+            shadow.zPosition = -0.001 * offset
+            node.addChild(shadow)
+        }
+        chunk(at: node.position).addChild(node)
+    }
+
+    /// `picture` sheared to lean `slope` points up for each across, in whole pixels about its middle
+    /// column, and how far its middle column's bottom stands over the new picture's bottom.
+    /// How far a cave mouth's picture is sunk below its foot, onto the road in front, and how many rows up
+    /// from its bottom its floor fades out into the land's ground there (`fadeFloor`).
+    static let mouthSink: CGFloat = 6
+    static let mouthFade = 8
+
+    /// A cave mouth's floor faded out into the land's ground under it (the user, 2026-11-25: "The cave
+    /// entrance ground should fade/merge better with the world ground"): the picture sunk `mouthSink` onto the
+    /// road in front of the face, and across its opening's `columns` its bottom `mouthFade` rows cleared
+    /// through an ordered dither, all of the bottom row, fewer and fewer up toward the dark, so the road and
+    /// the cave's floor mix in whole pixels, with no edge between them.
+    static func fadeFloor(_ pixels: inout [UInt8], width w: Int, height h: Int, columns: ClosedRange<Int>) {
+        let bayer: [Double] = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5].map { ($0 + 0.5) / 16 }
+        let rows = mouthFade
+        for up in 0..<min(rows, h) {
+            let y = h - 1 - up
+            // The share cleared: all of the bottom row, none `rows` up.
+            let clear = 1 - Double(up) / Double(rows)
+            for x in max(0, columns.lowerBound)...min(w - 1, columns.upperBound) where bayer[(y % 4) * 4 + x % 4] < clear {
+                let at = (y * w + x) * 4
+                for k in 0..<4 { pixels[at + k] = 0 }
+            }
+        }
+    }
+
+    static func shear(_ picture: CGImage, slope: CGFloat, fade: ClosedRange<Int>? = nil) -> (CGImage, CGFloat)? {
+        let w = picture.width, h = picture.height
+        guard w > 0, h > 0 else { return nil }
+        let middle = CGFloat(w) / 2
+        let lifts = (0..<w).map { Int((slope * (CGFloat($0) + 0.5 - middle)).rounded()) }
+        let low = lifts.min() ?? 0, high = lifts.max() ?? 0
+        let tall = h + high - low
+        var source = [UInt8](repeating: 0, count: w * h * 4)
+        var out = [UInt8](repeating: 0, count: w * tall * 4)
+        let space = CGColorSpaceCreateDeviceRGB(), info = CGImageAlphaInfo.premultipliedLast.rawValue
+        let drawn = source.withUnsafeMutableBytes { buffer -> Bool in
+            guard let context = CGContext(data: buffer.baseAddress, width: w, height: h, bitsPerComponent: 8, bytesPerRow: w * 4,
+                                          space: space, bitmapInfo: info) else { return false }
+            context.draw(picture, in: CGRect(x: 0, y: 0, width: w, height: h))
+            return true
+        }
+        guard drawn else { return nil }
+        if let fade { fadeFloor(&source, width: w, height: h, columns: fade) }
+        // Rows from the top in memory: a column lifted `lift` up starts `high - lift` rows down.
+        for x in 0..<w {
+            let down = high - lifts[x]
+            for y in 0..<h {
+                let from = (y * w + x) * 4, to = ((y + down) * w + x) * 4
+                for k in 0..<4 { out[to + k] = source[from + k] }
+            }
+        }
+        let made = out.withUnsafeMutableBytes { buffer -> CGImage? in
+            CGContext(data: buffer.baseAddress, width: w, height: tall, bitsPerComponent: 8, bytesPerRow: w * 4,
+                      space: space, bitmapInfo: info)?.makeImage()
+        }
+        guard let made else { return nil }
+        // The middle column's lift is about 0: its bottom stands `-low` over the picture's bottom.
+        let middleLift = lifts[w / 2]
+        return (made, CGFloat(middleLift - low))
     }
 
     /// Boulders and stones strewn over a range where a road leads into a cave, out past the land's

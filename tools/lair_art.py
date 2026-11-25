@@ -257,8 +257,11 @@ PROPS = {"standing_stone": standing_stone, "brazier": brazier, "wall_torch": wal
 # Redrawn by ChatGPT and copied, not drawn (docs/ai-sprite-test/scenery; the user's pick, 2026-11-21): the brazier
 # as delivered (every rule, soft 100%), the hoard with its outline, too dark beside its inside, snapped to the
 # sprite's own colours 12% lighter.
+# The torn tent too (docs/ai-sprite-test/tents, 2026-11-25), as delivered: 48 x 48, a size up from ours (32), as
+# beside the lair's other pieces ours read as a small heap.
 PICKED = {"brazier": "art-variants/brazier/chatgpt_1.png",
-          "gold_hoard": "art-variants/gold_hoard/chatgpt_1_fixed.png"}
+          "gold_hoard": "art-variants/gold_hoard/chatgpt_1_fixed.png",
+          "torn_tent": "art-variants/tents/torn_tent.png"}
 
 
 def main(argv):

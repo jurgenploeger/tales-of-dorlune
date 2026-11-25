@@ -103,6 +103,7 @@ extension GameSession {
         guard pendingBid == nil, let item = forTrade.randomElement() else { return }
         let worth = max(1, Int((Double(Self.sellPrice(of: item)) * (0.8 + 1.2 * roll)).rounded()))
         pendingBid = Bid(buyer: buyer, item: item, price: min(worth, tradeAsk(item.id).price))
+        bidOpen = false
         SoundEffects.shared.play(.talk)
     }
 

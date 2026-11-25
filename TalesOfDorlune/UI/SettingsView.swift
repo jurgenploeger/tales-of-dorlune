@@ -51,6 +51,9 @@ struct SettingsView: View {
     @AppStorage(GameSettings.battleSpeedKey) private var battleSpeed = 1.0
     @AppStorage(GameSettings.autoBattleKey) private var autoBattle = false
     @AppStorage(GameSettings.appearanceKey) private var appearance = "system"
+    @AppStorage(GameSettings.devOffKey) private var devOff = ""
+    @AppStorage(GameSettings.devStatsKey) private var devStats = false
+    @AppStorage(GameSettings.devTimingKey) private var devTiming = false
     @State private var music = MusicPlayer.shared
     @State private var justSaved = false
     @State private var confirmQuit = false
@@ -236,6 +239,29 @@ struct SettingsView: View {
                         .fixedSize(horizontal: false, vertical: true)
                 }
 
+                // For testing what slows the game (the user, 2026-11-25): the frame rate in the corner,
+                // and parts of the world's drawing switched off (`GameSettings.devParts`).
+                section(L("Developer"), icon: .hammer) {
+                    Toggle(L("Show frame rate"), isOn: $devStats)
+                    Text(L("Frames a second, nodes and draw calls, in the corner of the map and fights."))
+                        .font(HUDStyle.font(10))
+                        .foregroundStyle(HUDStyle.dim)
+                        .fixedSize(horizontal: false, vertical: true)
+                    Toggle(L("Frame timing"), isOn: $devTiming)
+                        .onChange(of: devTiming) { _, on in FrameTiming.isOn = on }
+                    Text(L("How long each part of the map's frame takes, in milliseconds, over the joystick."))
+                        .font(HUDStyle.font(10))
+                        .foregroundStyle(HUDStyle.dim)
+                        .fixedSize(horizontal: false, vertical: true)
+                    ForEach(GameSettings.devParts, id: \.self) { part in
+                        Toggle(Self.devTitle(part), isOn: devBinding(part))
+                    }
+                    Text(L("Trees in the wind, shade, footprints and frame rate change at once. The rest changes in lands drawn after it: go back to the title and continue."))
+                        .font(HUDStyle.font(10))
+                        .foregroundStyle(HUDStyle.dim)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+
                 if let session, let onQuitToTitle {
                     section(L("Danger zone"), icon: .close) {
                         Text(L("Deleting a game can't be undone."))
@@ -285,6 +311,31 @@ struct SettingsView: View {
                 .padding(12)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .background(GlassCard())
+        }
+    }
+
+    /// A developer switch: on while its part of the world is drawn, kept in `devOff` and in
+    /// `GameSettings.devOff`, which the game reads every frame.
+    private func devBinding(_ part: String) -> Binding<Bool> {
+        Binding(get: { !devOff.split(separator: ",").contains(Substring(part)) }, set: { on in
+            var off = Set(devOff.split(separator: ",").map(String.init))
+            if on { off.remove(part) } else { off.insert(part) }
+            devOff = GameSettings.devParts.filter { off.contains($0) }.joined(separator: ",")
+            GameSettings.devOff = off
+        })
+    }
+
+    /// What each developer switch is called (`GameSettings.devParts`).
+    private static func devTitle(_ part: String) -> String {
+        switch part {
+        case "wind": L("Trees and signs in the wind")
+        case "shade": L("Shade under trees and buildings")
+        case "grass": L("Tall grass")
+        case "water": L("Water ripples, floaters and reflections")
+        case "footprints": L("Footprints in snow and sand")
+        case "ambience": L("Petals, fireflies and cloud shadows")
+        case "lighting": L("Sunbeams, light pools and haze")
+        default: part
         }
     }
 

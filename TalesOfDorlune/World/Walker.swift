@@ -588,6 +588,40 @@ final class Walker: SKNode {
         if footsteps.count > 64 { footsteps.removeLast() }
     }
 
+    /// The stride frame its foot last came down on (`footfall`), and how many it's put down, so its
+    /// prints fall left and right by turns.
+    private var lastStride: SKTexture?
+    private var strides = 0
+
+    /// Where a foot of its has just come down, in its parent's points, or nil. A walk sheet's
+    /// strides are frames 0 and 2 (one foot forward), its feet together 1 and 3: a foot comes down
+    /// as a stride frame starts (`Footprints`, tools/snow_trail_preview.py). Only a four-frame walk
+    /// sheet: a hopping monster leaves none.
+    func footfall() -> (point: CGPoint, lift: CGFloat)? {
+        let frames = cycle.frames(facing)
+        guard isWalking, frames.count == 4, let shown = sprite.texture else {
+            lastStride = nil
+            return nil
+        }
+        guard shown === frames[0] || shown === frames[2], shown !== lastStride else { return nil }
+        lastStride = shown
+        strides += 1
+        let side: CGFloat = strides % 2 == 0 ? 1 : -1
+        let offset = facing.isHorizontal ? CGVector(dx: 0, dy: Footprints.apart.along * side)
+            : CGVector(dx: Footprints.apart.across * side, dy: 0)
+        return (CGPoint(x: position.x + offset.dx, y: position.y + lift + feet + offset.dy), lift)
+    }
+
+    /// Every footfall in the scene `space` is in this frame (`footfall`), in `space`'s points.
+    /// Each with how high the ground it's on stands (`lift`), so a print on a raised level sits on it.
+    static func footfalls(in space: SKNode) -> [(point: CGPoint, lift: CGFloat)] {
+        everyone.allObjects.compactMap { walker -> (point: CGPoint, lift: CGFloat)? in
+            guard walker.scene === space.scene, !walker.isHidden, let parent = walker.parent,
+                  let fall = walker.footfall() else { return nil }
+            return (parent.convert(fall.point, to: space), fall.lift)
+        }
+    }
+
     /// The point `distance` back along its footsteps. Where they don't go back that far (it's only
     /// just arrived), the rest is straight back from the way it faces.
     func footstep(behind distance: CGFloat) -> CGPoint {

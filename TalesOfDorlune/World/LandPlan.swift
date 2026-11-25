@@ -29,6 +29,9 @@ struct Placement {
 struct LandPlan {
     /// Lily pads: the pond cell each floats on, and how far it's drifted off its middle.
     var lilyPads: [(cell: GridPoint, drift: CGVector)] = []
+    /// What floats on its lakes, rivers and ponds besides: petals, a blossom, a leaf (`tools/float_art.py`),
+    /// the water cell each is on, how far off its middle, and its art (`LandStage.placeFloaters`).
+    var floaters: [(cell: GridPoint, drift: CGVector, art: String)] = []
     var reeds: [Placement] = []
     /// Waterfalls where the rivers spring (`planWaterfalls`), played frame by frame (`LandStage.placeWaterfalls`).
     var waterfalls: [Placement] = []
@@ -137,7 +140,7 @@ final class LandPlanner {
     private func planLilyPads() {
         // Frozen ponds and chocolate ones don't grow lily pads.
         let water = def.theme.water ?? ""
-        guard !water.contains("ice"), !water.contains("chocolate") else { return }
+        guard !water.contains("ice"), def.theme.frozen != true, !water.contains("chocolate") else { return }
         var padRNG = SeededRandom(text: def.id + "/lilies")
         for pond in map.ponds {
             // A few on a pond, more on a lake.
@@ -146,6 +149,33 @@ final class LandPlanner {
                 let dx = CGFloat.random(in: -6...6, using: &padRNG)
                 let dy = CGFloat.random(in: -6...6, using: &padRNG)
                 plan.lilyPads.append((cell: cell, drift: CGVector(dx: dx, dy: dy)))
+            }
+        }
+        planFloaters()
+    }
+
+    /// Petals, blossoms and leaves floating on the lakes, ponds and rivers (the user, 2026-11-25: "Our
+    /// lakes, rivers and ponds should also have the floating petals"): one to about every ten cells of
+    /// a pond or lake, every fourteen of a river, never on a bridge or a lily pad's cell. Their own
+    /// random numbers, so nothing else in the land moves.
+    private func planFloaters() {
+        var rng = SeededRandom(text: def.id + "/floaters")
+        let pads = Set(plan.lilyPads.map(\.cell))
+        let kinds: [(art: String, weight: Double)] = [("float_petals", 0.35), ("float_petals_white", 0.2), ("float_blossom", 0.2), ("float_leaf", 0.25)]
+        func pick() -> String {
+            var roll = Double.random(in: 0..<1, using: &rng)
+            for kind in kinds {
+                roll -= kind.weight
+                if roll < 0 { return kind.art }
+            }
+            return kinds[0].art
+        }
+        let river = map.river.sorted(by: WorldMap.inOrder)
+        for (waters, per) in map.ponds.map({ ($0, 10) }) + [(river, 14)] where !waters.isEmpty {
+            for _ in 0..<max(1, waters.count / per) {
+                guard let cell = waters.randomElement(using: &rng), !map.bridgeCells.contains(cell), !pads.contains(cell) else { continue }
+                let drift = CGVector(dx: CGFloat.random(in: -9...9, using: &rng), dy: CGFloat.random(in: -5...5, using: &rng))
+                plan.floaters.append((cell: cell, drift: drift, art: pick()))
             }
         }
     }
@@ -170,6 +200,7 @@ final class LandPlanner {
         planWaterfalls()
         planCliffFalls()
         let water = def.theme.water ?? ""
+        // Reeds and the shallows' rocks stand in frozen water too (the snow and ice article's rocks do).
         guard !water.contains("ice"), !water.contains("chocolate"), !map.lakes.isEmpty || !map.river.isEmpty else { return }
         var reedRNG = SeededRandom(text: def.id + "/reeds")
         var seen: Set<GridPoint> = []
@@ -213,7 +244,9 @@ final class LandPlanner {
                     return map.contains(land) && map.ground[land.row][land.col] != .water
                 }
                 guard let bank = banks.first, Double.random(in: 0..<1, using: &rockRNG) < 0.07 else { continue }
-                var placement = Placement(art: "water_rock", cell: cell, scale: CGFloat.random(in: 0.85...1.25, using: &rockRNG))
+                // Of a few shapes (the user, 2026-11-25: "I also like the rocks in different shapes").
+                let shape = ["water_rock", "water_rock_2", "water_rock_3", "water_rock_4"][Int.random(in: 0..<4, using: &rockRNG)]
+                var placement = Placement(art: shape, cell: cell, scale: CGFloat.random(in: 0.85...1.25, using: &rockRNG))
                 // Toward the shore it's off, a little, so it stands in the shallows.
                 let reach = WorldMap.tileSize * 0.18
                 let toward = WorldMap.project(CGPoint(x: CGFloat(bank.0) * reach, y: CGFloat(bank.1) * reach))
@@ -229,7 +262,7 @@ final class LandPlanner {
     /// Nothing else grows on the cells round it.
     private func planWaterfalls() {
         let water = def.theme.water ?? ""
-        guard let region = map.region, !water.contains("ice"), !water.contains("chocolate") else { return }
+        guard let region = map.region, !water.contains("ice"), def.theme.frozen != true, !water.contains("chocolate") else { return }
         for line in region.rivers where line.count > 8 {
             // Its first cell that's laid as river: the spring's own may be narrower than a cell.
             guard let first = line.prefix(4).firstIndex(where: { point in
@@ -274,7 +307,7 @@ final class LandPlanner {
     private func planCliffFalls() {
         let water = def.theme.water ?? ""
         // Nor in the dry lands, off a mesa of sand or desert rock.
-        guard !water.contains("ice"), !water.contains("chocolate"),
+        guard !water.contains("ice"), def.theme.frozen != true, !water.contains("chocolate"),
               def.theme.ground != "tile_desert", def.theme.ground != "tile_sand" else { return }
         for hill in map.hills where hill.terrace != nil {
             var draw = SeededRandom(text: def.id + "/cliff falls \(hill.origin.col) \(hill.origin.row)")
@@ -306,10 +339,18 @@ final class LandPlanner {
                 // The pool a little out in front of the foot; its cell open ground, kept for it.
                 let pool = GridPoint(col: Int((foot.x - 0.2).rounded(.down)), row: Int((foot.y - 0.2).rounded(.down)))
                 let top = GridPoint(col: Int((lip.x + 0.3).rounded(.down)), row: Int((lip.y + 0.3).rounded(.down)))
-                guard map.contains(pool), map.isWalkable(pool), map.ground[pool.row][pool.col] == .ground,
+                // Not on a mountain's stairs (`WorldMap.carveStairs`) or beside them.
+                let nearStairs = (-2...2).contains { dr in (-2...2).contains { dc in map.trailCells.contains(GridPoint(col: pool.col + dc, row: pool.row + dr)) } }
+                guard !nearStairs, map.contains(pool), map.isWalkable(pool), map.ground[pool.row][pool.col] == .ground,
                       falls.allSatisfy({ abs(Double($0.foot.x) - foot.x) + abs(Double($0.foot.y) - foot.y) > 6 }) else { continue }
                 map.occupy(pool, blocking: true)
-                if map.isFreeForScenery(top) { map.occupy(top, blocking: false) }
+                // The pond is wider than a cell, across the screen (along x - y), and its spring sits a
+                // cell back on the level above: nothing set down on them (`LandStage.placeCliffFalls`).
+                let beside = [GridPoint(col: pool.col + 1, row: pool.row - 1), GridPoint(col: pool.col - 1, row: pool.row + 1)]
+                let spring = GridPoint(col: Int((lip.x + 1.1).rounded(.down)), row: Int((lip.y + 1.1).rounded(.down)))
+                for cell in [top, spring] + beside where map.contains(cell) && map.isFreeForScenery(cell) {
+                    map.occupy(cell, blocking: false)
+                }
                 falls.append((foot: CGPoint(x: foot.x, y: foot.y), lip: CGPoint(x: lip.x, y: lip.y)))
             }
             plan.cliffFalls += falls
@@ -933,7 +974,9 @@ final class LandPlanner {
             default:
                 // Its fire in the middle of the trodden ground, the tent behind, stores and seats round it.
                 put(own["fire"] ?? "brazier", m, blocking: true, nudged: false)
-                put(own["tent"] ?? "torn_tent", at(0, 3), blocking: true, scale: 1.3, nudged: false)
+                // The torn tent drawn at 48 pixels since 2026-11-25 (ChatGPT's), set down as it is; a land's
+                // own tent (a beach umbrella) at 1.3, as before.
+                put(own["tent"] ?? "torn_tent", at(0, 3), blocking: true, scale: own["tent"] == nil ? 1 : 1.3, nudged: false)
                 let stores = own["stores"] ?? "barrels"
                 put(stores, at(-2, 2), blocking: true)
                 put(own["seat"] ?? "tree_stump", at(2, -2), blocking: true)

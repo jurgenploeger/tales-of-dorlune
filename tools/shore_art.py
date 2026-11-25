@@ -105,6 +105,13 @@ def shade(f, cols, rows, t):
     gap = np.mod(np.sin(bx * 12.9898 + by * 78.233) * 43758.5453, 1)
     reach = np.clip((2.8 - d) / 0.9, 0, 1) * np.clip((d - 0.3) / 0.45, 0, 1)
     wave = crest * (gap >= 0.35) * reach * 0.5
+    # Foam along the waterline, broken in 3-pixel specks, lapping in and out, and a fainter fringe past it
+    # (the user, 2026-11-25: the land's edge "a bit flat where it meets the sea").
+    lap = 0.08 + 0.05 * np.sin(t * 0.9 + (pix_x + pix_y) * 0.045)
+    speck = np.mod(np.sin(np.floor(pix_x / 3) * 12.9898 + np.floor(pix_y / 3) * 78.233) * 43758.5453, 1)
+    edge = (d >= -0.25) * (d < lap + 0.1) * (speck >= 0.2) * 0.75
+    fringe = (d >= lap + 0.17) * (d < lap + 0.23) * (speck >= 0.55) * 0.4
+    wave = np.maximum(wave, np.maximum(edge, fringe))
     rgb = PALE[None, None, :] * pale[..., None] * (1 - wave[..., None]) + wave[..., None]
     a = pale * (1 - wave) + wave
     return np.dstack([rgb, a])

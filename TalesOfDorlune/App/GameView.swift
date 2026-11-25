@@ -93,7 +93,7 @@ struct GameView: View {
         }
         .overlay {
             // An adventurer's offer for what you've put up for trade, once nothing else is up.
-            if let bid = coordinator.session.pendingBid, coordinator.isReady, coordinator.battle == nil,
+            if let bid = coordinator.session.pendingBid, coordinator.session.bidOpen, coordinator.isReady, coordinator.battle == nil,
                coordinator.overlay == nil, coordinator.dailyGift == nil, !touring {
                 TradeBidCard(session: coordinator.session, bid: bid) { accept in
                     withAnimation(.easeOut(duration: 0.2)) { coordinator.answerBid(accept) }

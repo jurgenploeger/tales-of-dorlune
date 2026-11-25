@@ -64,15 +64,17 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   (`here`) brings its music, air and encounters. Caves are scenes of their own (`WorldScene`), behind the card;
   `GameCoordinator.mapScene` is whichever you're in.
 - Terraced hills (maps.json theme `hills.terraces`, a step in points, with `bank` the faces' rock; Sunny Meadow
-  since 0.9.105, after `tools/cliff_preview.py`, every wild land's since 0.9.110; a mountain range stays smooth): `Hill.terrace` steps each range's height into flat levels with a
+  since 0.9.105, after `tools/cliff_preview.py`, every wild land's since 0.9.110; a mountain too since 0.9.189, in five levels, `WorldMap.mountainLevels`, its face
+  nearly as deep as its back, stairs cut across each face as ledges zig-zagging up it (not drawn as a path: messy, the user), `carveStairs`,
+  the user's pick from `tools/mountain_preview.py`, 2026-11-25): `Hill.terrace` steps each range's height into flat levels with a
   sheer face, only where its slopes face you (`Hill.stepped`: stepped all round, the faces turned away were laid
   back by `unfold()` into long ramps in deep shade), the faces dwindling round its sides and its back the smooth
   slope you walk up (no trails);
   `WorldMap.blockFaces` blocks the faces and keeps the cell in front clear; `HillLooks.terraced` (`HillArt.Look.cliff`): the
   faces' rock is drawn by the lifting shader on the screen's pixels (`u_rock`, by height and across the screen:
   painted into the picture it stretched into streaks), with shade at each face's foot; up to two waterfalls a
-  range over faces turned to you (`LandPlanner.planCliffFalls`, `LandStage.placeCliffFalls`: a stream, a sheet
-  stretched to the face, a pool, from `tools/waterfall_art.py`).
+  range over faces turned to you (`LandPlanner.planCliffFalls`, `LandStage.placeCliffFalls`: a spring pond on the level above, a stream, a sheet
+  stretched to the face, a pond at its foot, from `tools/waterfall_art.py`; drawn, not the land's own water).
 - A town's terraces (maps.json town `terraces`, `WorldMap.raiseTerrace`, 34 points high) in stacked sandstone
   (the user's pick from `tools/terrace_preview.py`, 2026-11-17): `tools/terrace_art.py` draws a cell's stretch of
   wall (sheared along its edge), of balustrade, a post and the flagstones; `LandStage.placePlateaus` lays them,
@@ -100,7 +102,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   under 12 points) lays its own outline on the ground away from the sun, each chunk's pixels worked out off
   the main thread (`CanopyPainter.render`: on it, the game went slow), a round
   slice per row of it (a building's set back from its front by its depth, a block: as thin bands its midday shade was a sliver, 2026-11-18;
-  a gate's arch thin bands, `Caster.thin`), the top of the crown farthest (short at midday, long at evening), all merged into one,
+  a gate's arch thin bands, `Caster.thin`; a rock or boulder a block too, `CanopyShade.isRock`), the top of the crown farthest (short at midday, long at evening), all merged into one,
   deepest at the foot and fading toward the tip, its edge blurred (`softness`; in hard steps it was too stark), soft flecks of light where the leaves part, and multiplied over the ground
   as the night's shade is, by one cool tint in every land (`CanopyShade.lean`: each palette's own shadow
   colour turned a desert red), stopping at a town's wall (`blocks`, `WorldMap.fenceCells`), which casts its own, as do its towers and gates (`LandStage.placeFence`, `throughWalls`); drawn a `LandStage` chunk at a time while shown, again as the sun moves (`follow`,
@@ -136,7 +138,8 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   acceptance criteria and what went wrong before: the skill `.claude/skills/sprite-idle-animation` (its
   `scripts/eyes.py dump | zoom | fills | check` previews and checks every body, hairstyle, helmet and armour).
 - `website/`: talesofdorlune.com (Astro, hosted on Vercel with Root Directory `website`): a landing page and a guide
-  generated from `content/*.json`. `python3 website/tools/export.py` (pillow + numpy) rewrites its data, sprites and
+  generated from `content/*.json`. Vercel deploys only pushes that change `website/` (`website/vercel.json` `ignoreCommand`), and
+  TestFlight only pushes that change the app (`testflight.yml` `paths`): keep app and site updates apart. `python3 website/tools/export.py` (pillow + numpy) rewrites its data, sprites and
   world map; rerun it and commit after content or art changes. `website/README.md` has the rest; its look and words
   follow the Figma brand guidelines.
 - `TalesOfDorlune/`: Swift code (World = maps and walking, Battle = combat, UI = SwiftUI HUD and menus).
@@ -160,6 +163,16 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   one shape for the family, each land's with its own badge; a land's cape ChatGPT hasn't drawn yet is Sunny Meadow's
   recoloured to its `color` and `accent`, `recolour_cape`). ChatGPT paints them big with its image model (asked for
   a 64-pixel PNG it drew with code: flat, 8 to 13 colours) and they're snapped to the grid (`ai_sprite_eval.py`).
+- Settings → Advanced → Developer (the user, 2026-11-25: test what makes the game slow): the frame rate,
+  nodes and draw calls in the corner (`GameSettings.devStatsKey`, `SpriteKitView`), and switches that leave
+  parts of the world's drawing out (`GameSettings.devParts`, the debug flag `off=`'s names: `LandStage.isOffForDebug`
+  reads both): trees in the wind (`WindField.tick`), shade, tall grass, water motion, footprints, ambience,
+  lighting. Wind, shade and footprints change at once, the rest in lands built after. Frame timing (`FrameTiming`, end of
+  `ContinentScene.swift`): each part of the continent's frame laps it (`lap`), shown once a second over the joystick.
+- A town's market traders (bots under a sign, `Crowd.placeTraders`) are closed for now (`Crowd.marketOpen`, the user,
+  2026-11-25: a busy town ran at a few frames a second): as many adventurers walk about instead. Set it back to bring them back.
+- Monsters turn up 30% less often on a land's main roads (`WorldMap.mainRoads`, the roads out through its exits,
+  not trails or footpaths; `ContinentScene.roadEncounterShare`; the user, 2026-11-25).
 - Dark Mode: the game follows the phone's look, or Settings → Appearance (`GameSettings.appearanceKey`, set on the
   window by `RootView.applyAppearance`). `Color.adaptive(light:dark:)` (`TalesOfDorlune/UI/Style.swift`) gives the
   HUD's light surfaces (frames, plates, buttons, portraits) a dimmer twin and the glass a deeper one;
@@ -171,17 +184,23 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   blue overhead to a pale haze in dithered bands (`day_sky`), and scaled by a whole number; dark is the scene at dusk under the night `TalesOfDorluneSky` draws, lit by its gold, fireflies, sparkles
   and stars (`light_up`), in hard steps; tinted (iOS's Tinted and Clear looks) the hero bright, cut on his
   outline, on a dim backdrop (`tint`), as the system's own icons are a light figure on a dark field. `--preview` shows Home Screen sizes.
+- `tools/picked_icon_art.py`: the app icon's dark look and all three festive icons (light and dark) since
+  2026-11-24 are the user's picked drawings (`art-variants/app_icon_picked/`), snapped to their 96-cell grid and
+  scaled by 11 to 1024; tinted from them (the hero is the cells all seven agree on). `app_icon_art.py` and
+  `season_icon_art.py` leave those files alone while a picked drawing is there.
 - `tools/season_icon_art.py`: the festive seasons' app icons (AppIcon-Halloween, -Christmas, -Easter), from the
   app icon's drawing cropped a little looser (`BOX`) so a hat fits: the hero as drawn (`HERO`), RD's scenery
   recoloured class by class, each colour onto the same rank of a hue-shifted seasonal ramp (its clusters kept),
   snow on the leaves' lit clusters, and hats and props drawn with `pixel_kit`, a hat's band on the head's widest row;
   each light, dark (its night, lit by the season's lights, `at_night`) and tinted, as the app icon is.
   The game switches to Halloween's all October, Christmas's all December and Easter's while its season runs (`SeasonalIcon.icon`; rewards.json `seasons` for Easter; never in tests or debug launches).
-- `tools/logo_art.py`: the logo (`Logo.png`), styled on Neopets' "Tales of Dacardia" logo, which the user pointed to:
-  TALES OF over DORLUNE in chunky Luckiest Guy capitals (`tools/fonts/`, Apache 2.0), set tight, each letter tipped
-  and lifted a little so the word bounces, each in a thin outline of its own; all gold, each line in one smooth
-  gradient with a light rim along the tops, in one thick dark outline dropping into a block shadow. One colour,
-  no bands, no emblem, tagline or rays. The sky's light sits behind DORLUNE (`Brand.raysInLogo`).
+- `tools/logo_art.py`: the logo (`Logo.png`): since 2026-11-23 the user's own drawing (`PICKED`,
+  `art-variants/logo/picked.png`), TALES OF over DORLUNE in gold with a dark plum outline, copied as drawn: its
+  faint halo cleared, the small letter holes its background removal left half see-through filled with its ink,
+  cropped and scaled to 1904 pixels wide. `--drawn` writes the one before it (Luckiest Guy capitals, styled on
+  Neopets' "Tales of Dacardia"), which the store slides' captions still follow. The sky's light sits behind
+  DORLUNE (`Brand.raysInLogo`). After changing it: copy it to `website/public/img/logo.png` and rerun
+  `tools/social_art.py`.
 - `tools/allo_font.py`: the game's text font, Allo (Josh Puckett, OFL, `tools/fonts/`) cut to two static instances
   at roundness 60, named Allo Dorlune (`TalesOfDorlune/Resources/Fonts/AlloDorlune-*.ttf`, project.yml `UIAppFonts`;
   the user's pick from a mock-up, 2026-11-18): Body, weight 620 (560 till 2026-11-20, "slightly thicker"), for
@@ -216,6 +235,15 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
 - `tools/armour_views.py`: armour sheets whose views disagree in colour (RD's ranger cloak: a green cape from behind,
   near-black from the front and sides), the front and side views' cape given the back's shades, so a tint or dye
   colours every view; idempotent, its `VIEWS` table names each sheet. Rerun `dye_art.py cut` and `check` after.
+- `tools/cave_mouth_art.py`: the caves' mouths, ChatGPT's drawings (docs/ai-sprite-test/cave-mouths, the user,
+  2026-11-25: "the gates should look more like a cave opening instead of a black gap"), snapped from
+  `art-variants/cave_mouth/` to 128 × 80 (`PICKED`): the plain one, the Rat Cavern's, the Gooey Grotto's and the
+  Glimmerdeep's (`WorldMap.mouthArt`; the Whispering Hollow's not drawn yet, the plain one meanwhile). Laid over
+  the crag's rock face by `LandStage.placeMouth`, sheared to lean with the face, so `HillArt` paints no arch there
+  (`Hill.Mouth.pictured`, on the continent). In a land of terraced hills the crag round it is terraced too, its first level
+  and its wall as high as the picture (`WorldMap.mouthTop`), so the plateau's edge runs level with the opening's top. Its floor runs into the road in front:
+  the picture sunk 6 points onto it, its bottom 8 rows dithered out across the opening (`LandStage.fadeFloor`). It casts a hard
+  shadow on the face behind, down and right in two steps, so its rocks stand off the rock (`placeMouth`).
 - `tools/prop_art.py`: the same for the few props a generated sprite got wrong (`candy_cane`, whose hook came out
   as a two-sided arch) or none was made for (the harbors' `ship`, built in 3D and projected as the game's view is,
   then lit and finished as the buildings are and held to their bands, `form_relief` too;
@@ -236,7 +264,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   distracted and was slow), and gusts in patches, timed by where each tree stands, that bow the crown downwind
   and let it spring back, bounce and settle. Only pixels move,
   so RD's art stays as drawn, and the game cuts the frames from the sprite as it's graded
-  (`ArtLibrary.windFrames`, `WindField` keeps the clock, `LandStage.addScenery`); a rigged sprite moves
+  (`ArtLibrary.windFrames`; a land's props' strips packed onto one texture first, `packWindFrames`, so its trees draw in batches, `WindField` keeps the clock, `LandStage.addScenery`); a rigged sprite moves
   instead of swaying, caves keep the old sway (their depth of field swaps textures). Rerun it after
   redrawing a rigged sprite (`check_content.py` checks each rig fits); `--sheet` shows the clumps, `--gif`
   a grove in the wind. Buildings' hanging signs, lanterns and flags move in the same gusts (`tools/sway_art.py`,
@@ -278,12 +306,22 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   in a grass tile's plain colours for the land's palette to grade; bladed, not rounded puffs: the user, 2026-11-19).
   The land's people bend it too, and anyone in it has their legs cut along the grass's top in front of them
   (`GrassField.cover`, `Walker.wade`: the sprite in an `SKCropNode`, a column a point wide each).
+- Footprints in the snow and the sand (the user's picks from `tools/snow_trail_preview.py`, 2026-11-24: look C, and
+  `--sand` S2, after SpriteCook's trail render texture article; visual only): where anyone with a four-frame walk
+  sheet puts a foot down (`Walker.footfall`: as a stride frame, 0 or 2, starts, left and right by turns) on a snow or
+  sand land's own plain ground (`Footprints.grounds`, theme `ground`: snow, sand, desert; not a path, patch, slope,
+  stair, the shore or a blocked cell, `ContinentScene.printLook`; on a raised level's flat top too since 0.9.191, sorted at its spot's depth), a dent is pressed in, three depths lit from the top left
+  (tinted toward the palette's `shadow`, in the sand mostly toward a warm brown, `sandShade`: a beach's blue shadow
+  alone turned them grey-green; a darker wall along its top, a bright lip along its bottom, the sand's its
+  `highlight` half white), filling back in over about six seconds. The article's map of bytes is the brightest stamp
+  less the fade since it, so each print is its own sprite showing its stamp less its age's fade
+  (`Footprints.frames`). Keep the tool and the Swift in step; debug scenes `snow_trail`, `snow_trail_rosen` (the one that shows them), `sand_trail*`.
 - Town roads (the user's pick from `tools/road_preview.py`, 2026-11-17): in a town's square (`GroundTiles.inTown`,
   `WorldMap.townSquare`) every road cell is drawn by `ArtLibrary.townRoad` (`GroundLayer.cobbled`): cobbles about half a
   cell across down its middle in the colour of the land's `tile_town` (graded), their edge ragged stone by stone, sand
   (`tile_path`) with pebbles either side, and grass growing over the edges in clumps where the ground beside is green, else the sand giving way to it raggedly (straight at the cell's edge it read as clipped, the user, 2026-11-18);
   the pattern repeats every four cells (`cobblePhase`), so its tiles are made for 16 places. Wild roads stay sand.
-- `tools/window_art.py`: lit windows at night: each building's warm, bright window panes cut into `windows_<id>.png`
+- `tools/window_art.py`: lit windows at night (cut where anything sorted in front covers them, `LandStage.hidePanesBehindScenery`): each building's warm, bright window panes cut into `windows_<id>.png`
   (small patches only, so thatch and gold trim stay out; `SKIP` for what has none), laid over the building above the
   night's shade by `LandStage.addWindows` and faded in with the dark (`LampLight.follow`). Rerun it after adding or
   redrawing a building, and register any new `windows_<id>` in art/assets.json; `--sheet out.png` shows them at night.
@@ -343,13 +381,13 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   Iconaut's vector icons for small inline glyphs. `--sheet out.png` previews them on the game's button colours.
 - `tools/water_art.py`: the same for the water: `sea.png` (16 × 16 cells that tile as a whole; the continent gives each
   world cell its own, `ContinentScene.seaGroups`) and `tile_water.png` (a land's lakes and rivers, calm so its versions
-  don't make a grid), ripples level on screen. Round a land's own water (`tile_water`, not ice or chocolate)
+  don't make a grid), ripples level on screen. Round a land's own water (`tile_water` or `tile_chocolate`, `ArtLibrary.isPondWater`; chocolate in warm tones, `pondTones`; not ice)
   `ArtLibrary.organicTile` adds depth and a bank: paler shallows by the shore, deeper water out from it (two
   cells out, `deepWaterTile`), broken foam, and a strip of damp earth and pebbles on the land; mirrored in
   `tools/palette_preview.py`. A land's own lakes and rivers are drawn in a pond's tones (after SpriteCook's
   pond water article, the user's pick from `tools/pond_preview.py`, 2026-11-17): every water pixel one of
   a few tones in the land's water colour (`ArtLibrary.pondTones`), by how far it lies from land and how far
-  below the far shore up the screen (`GroundTiles.PondField`, 16 spots a cell, worked out once a land:
+  below the far shore up the screen (`GroundTiles.PondField`, 16 spots a cell, worked out once a land, following a river 8 cells on past the border (`pastBorder`) with the far and near shores counted at most 4 cells (`shoreCap`), and a river's colour blended into the next land's over 6 cells either side (`acrossBorder`):
   dark out from the shore, the near half lighter where it mirrors the sky, a dark line under the far
   bank), the tile's own ripples kept over them; moving in whole pixels (`PondMotion`, `LandStage.placePondMotion`:
   dashes lapping the near shores, a bright rim along them painted on the water as its edge curves (`ArtLibrary.organicTile`, tone 6; a cell edge at a time it ran in straight steps, the user, 2026-11-19), the far waterline creeping, glints and drops on the open water, many a second in the rain, `PondMotion.raining`; the user, 2026-11-18, after Daniil Ch.'s pond); and what
@@ -358,6 +396,21 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   on the CPU, as a shader for it didn't take on a phone and the reflections lay over the land).
   It replaced a generated tile that repeated every 16 pixels; rerun it
   after editing, `--preview out.png` shows them turned as the game draws them.
+- `tools/float_art.py`: what floats on the lakes, rivers and ponds (the user, 2026-11-25, after ZeFrost's pond): petals,
+  a blossom and a leaf (`float_*`, `LandPlan.planFloaters`, `LandStage.placeFloaters`), each bobbing a whole pixel over
+  the water's pale line round it (`rim_<id>`, the lower half of its outline, which stays put); the lily pad and the
+  shallows' rocks (`water_rock` and `_2` to `_4`, a slab, a pair and a spire, `tools/scenery_art.py`) get one too, a
+  rock's lapping. Rerun it after redrawing anything in `RIMMED`; `--sheet out.png` previews them.
+- Snow and ice (the user's picks from `tools/snow_ice_preview.py`, 2026-11-25, after SpriteCook's snow and ice article):
+  a cold land's lakes, rivers and ponds frozen over (maps.json theme `frozen`: Briarmere and Snow White Forest, whose
+  water is `tile_water` under it): `ArtLibrary.freeze` lays the article's five ice tones a step lighter than the pond's
+  own over its water (`pondTile`, `organicTile`), snow drifted by the shore, still glare streaks and cracks
+  (`GroundTiles.makeCracks`, seeded random walks); nothing floats, laps or rings on it (`LandPlan`, `placePondMotion`),
+  reeds and the shallows' rocks still stand in it. Where a snowy land meets one that isn't, the other's ground in the band
+  is snowed over pixel by pixel (`GroundTiles.snowCover`: all of it at the border, none `reach` in; `snowOver`,
+  `ArtLibrary.snowed`: clusters first, dark crevices last, in the snowy land's own snow, `snowTones`), and its trees and
+  bushes there capped with snow by stage (`ArtLibrary.capped`, `LandStage.addScenery`). A snowy land's own grass patches (theme `accent`, where
+  it's melted) are snowed over the same way at their edges, thinning toward their middles (`GroundTiles.meltCover`). Keep the tool and the Swift in step.
 - `tools/fx_art.py`: the same for the few battle marks that aren't light (`art/sprites/fx_*.png`: poison's bubble
   and the glossy marks by the HP bars, drawn smooth at 3×: poison's drop and the arrows for lowered and raised
   stats). `--sheet out.png` writes a contact sheet. Spells are light, not sprites:
@@ -370,7 +423,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   the coins are. `--sheet out.png` previews them.
 - `tools/lair_art.py`: the pieces of the bosses' lairs no sprite had (a standing stone, a brazier, a gold hoard, a
   warning post, the Rat King's junk throne, a heap of bones, a hunter's torn tent, a broken pillar), drawn with
-  `pixel_kit` and scored as scenery (the brazier and gold hoard redrawn by ChatGPT and copied, `PICKED`, the user's pick, 2026-11-21; ChatGPT's
+  `pixel_kit` and scored as scenery (the brazier and gold hoard redrawn by ChatGPT and copied, `PICKED`, the user's pick, 2026-11-21, and the torn tent, 48 pixels, 2026-11-25, docs/ai-sprite-test/tents; ChatGPT's
   blossom tree lost to ours). A boss's lair is maps.json `lair` on the boss: pieces round it, its way in to
   the south, turned by `LandPlanner.planLair` to face the way up its trail (else the land's middle); `lairRing`, a
   ring of the land's own tall scenery behind it and low in front, open toward the way in; `lairApproach`, pairs

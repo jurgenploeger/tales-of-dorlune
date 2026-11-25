@@ -160,7 +160,7 @@ first (`FitOrScroll`, a `ScrollView` under fixed tabs and title). Menu windows a
 margins allow (`menuWindowMargins()`: 8 pt from the sides and top). Check both orientations, every time.
 
 **Speech is Fairyland Online's** (`NPCDialogView`): the character stands big in the bottom-right corner, cut
-off by the screen's edge, over a window running the screen's width; the window's content keeps clear of
+off by the screen's edge, over a window running the screen's width, as wide as a menu window (inside the safe area, `HUDMargins.side` in from it; on a phone on its side it ran into the notch's side, 2026-11-25); the window's content keeps clear of
 them (`speakerRoom`). A narrow bubble beside them with a tail was tried and dropped (2026-10-26). Their
 name is the window's title.
 

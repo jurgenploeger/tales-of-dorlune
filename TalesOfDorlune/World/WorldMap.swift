@@ -117,6 +117,11 @@ nonisolated final class WorldMap: @unchecked Sendable {
     /// The cells of the lands next door, just over the border, where their roads run on from where
     /// this land's cross it (`crossingCells`), for its road's edges to meet theirs (`GroundTiles`).
     private(set) var roadsPast: Set<GridPoint> = []
+    /// The cells of its main roads, the ones out through its exits (`carveRoad`), not its trails or
+    /// footpaths: monsters turn up a little less often on them (`ContinentScene.roadEncounterShare`).
+    private(set) var mainRoads: Set<GridPoint> = []
+    /// Whether `paintRoad` is painting a main road now (`mainRoads`).
+    private var carvingMainRoads = false
     /// Where a road or trail crosses a river with no room for a bridge, fording it.
     private(set) var fords = 0
     /// Bridges where roads cross the river, footbridges out to the lakes' islands and jetties.
@@ -226,6 +231,25 @@ nonisolated final class WorldMap: @unchecked Sendable {
         let cave: MapDef.Cave
         let hill: Int
         var inland = false
+        /// The cave its road leads into, by id (its mouth's picture, `mouthArt`).
+        var to = ""
+    }
+
+    /// The picture of a cave's mouth (ChatGPT's, `tools/cave_mouth_art.py`, the user, 2026-11-25: "the gates
+    /// should look more like a cave opening instead of a black gap"), by the cave: each its own, else the
+    /// plain one, laid over its rock face by `LandStage.placeMouth`.
+    /// How tall a cave mouth's picture stands over its foot, in points (its 80 pixels, less the ragged rocks
+    /// along its top and the rows sunk onto the road in front, `LandStage.mouthSink`): a terraced crag's first
+    /// level and its wall stand this high (`raiseGate`).
+    static let mouthTop = 72.0
+
+    static func mouthArt(for cave: String) -> String {
+        switch cave {
+        case "rat_cavern": "cave_mouth_rat"
+        case "slime_cave": "cave_mouth_slime"
+        case "glimmerdeep": "cave_mouth_glimmer"
+        default: "cave_mouth"
+        }
     }
     private(set) var crags: [Crag] = []
     /// The map's cells a crag's range rises over, kept clear of ponds (and, taken, of scenery and
@@ -306,7 +330,9 @@ nonisolated final class WorldMap: @unchecked Sendable {
         if let around { layOutShape(around) }
         lap("shape")
         if def.fence == true { layOutTownBorder() }
+        carvingMainRoads = true
         for exit in def.exits { carveRoad(for: exit, &rng) }
+        carvingMainRoads = false
         if let region { roadsPast = crossingCells(region) }
         lap("roads")
         for trail in def.trails ?? [] { carveTrail(trail, &rng) }
@@ -325,7 +351,7 @@ nonisolated final class WorldMap: @unchecked Sendable {
             keepNPCsInView()
         }
         lap("town and buildings")
-        var ranges: [(edge: Edge, cave: MapDef.Cave, hill: Hill, inland: Bool)] = []
+        var ranges: [(edge: Edge, cave: MapDef.Cave, hill: Hill, inland: Bool, to: String)] = []
         if def.theme.cave == nil, def.town == nil {
             // Its own random numbers, so the rest of the map comes out as it did before.
             var cragRNG = SeededRandom(text: def.id + "/crags")
@@ -333,9 +359,9 @@ nonisolated final class WorldMap: @unchecked Sendable {
                 guard let cave = caves[exit.to] else { continue }
                 if let road = region?.roads[exit.to], let into = road.into {
                     guard let gate = raiseGate(at: road.at, into: into, &cragRNG) else { continue }
-                    ranges.append((exit.edge, cave, gate, true))
+                    ranges.append((exit.edge, cave, gate, true, exit.to))
                 } else if let range = raiseCrags(along: exit.edge, &cragRNG) {
-                    ranges.append((exit.edge, cave, range, false))
+                    ranges.append((exit.edge, cave, range, false, exit.to))
                 }
             }
         }
@@ -365,8 +391,11 @@ nonisolated final class WorldMap: @unchecked Sendable {
         // places in the list.
         for range in ranges {
             for cell in range.hill.cells where contains(cell) { hillOf[cell] = self.hills.count }
-            crags.append(Crag(edge: range.edge, cave: range.cave, hill: self.hills.count, inland: range.inland))
-            self.hills.append(range.hill)
+            crags.append(Crag(edge: range.edge, cave: range.cave, hill: self.hills.count, inland: range.inland, to: range.to))
+            // Its mouth a picture laid over the rock (`LandStage.placeMouth`), not painted in it.
+            var hill = range.hill
+            hill.mouth?.pictured = region != nil
+            self.hills.append(hill)
         }
         // Where you arrive through a cave's mouth beside the road has moved.
         if !ranges.isEmpty { cachedEntryCells = nil }
@@ -1194,6 +1223,7 @@ nonisolated final class WorldMap: @unchecked Sendable {
                 let cellCenter = CGPoint(x: CGFloat(cell.col) + 0.5, y: CGFloat(cell.row) + 0.5)
                 guard cellCenter.distance(to: point) <= radius else { continue }
                 ground[cell.row][cell.col] = .path
+                if carvingMainRoads { mainRoads.insert(cell) }
                 fenceCells.removeAll { $0 == cell }   // gate
             }
         }
@@ -1821,8 +1851,13 @@ nonisolated final class WorldMap: @unchecked Sendable {
         // side, then tapering away, the end away from you (up the map) slowly enough to stay in sight.
         let mouth = Hill.Mouth(x: foot.x, y: foot.y, along: along, into: inward, half: 1.3, depth: 2, beside: false)
         hill.mouth = mouth
+        // In a land of terraced hills, terraced too, its first level as high as the mouth's picture, so the
+        // plateau's edge runs level with the top of the opening (the user, 2026-11-25: "for the caves we
+        // also should have the plateau leveling with the cave entrance"); the wall in front that high.
+        let terraced = def.theme.hills?.terraces != nil
+        if terraced { hill.terrace = Self.mouthTop }
         hill.wall = Hill.Wall(x: mouth.x, y: mouth.y, along: mouth.along, into: mouth.into, base: nil, reach: mouth.half + 1.2,
-                              taper: (toward: 3.0, away: 6.0), run: 0.8, rise: 60, fall: 10)
+                              taper: (toward: 3.0, away: 6.0), run: 0.8, rise: terraced ? Self.mouthTop : 60, fall: 10)
         // Every cell any of it rises over: a box round its summits and its wall.
         var low = (x: foot.x - 6, y: foot.y - 6), high = (x: foot.x + 6, y: foot.y + 6)
         for lobe in lobes {
@@ -2333,7 +2368,8 @@ nonisolated final class WorldMap: @unchecked Sendable {
     private static let mountainTop = 0.88
     private static let mountainFace = 2.4
     private static let mountainSides = 1.6
-    private static let mountainRound = max((1 + 1 / mountainFace) / 2, 1 / mountainSides)
+    /// A terraced mountain's (`raiseHills`): how many times shorter its reach toward you than back.
+    private static let terracedMountainFace = 1.25
 
     /// The chance a range has a trail up it, but for a land's first and those with a mountain, which
     /// always do (`shapeHill`).
@@ -2360,6 +2396,11 @@ nonisolated final class WorldMap: @unchecked Sendable {
         let steep = Hill.steepness(rockiness: rockiness)
         // A mountain is steep whatever the land, or it'd need more room than a map has.
         let mountainSteep = max(steep, 17)
+        // A terraced mountain's face reaches out nearly as far as its back, so its five levels are
+        // wide enough to walk along and take a stair (`carveStairs`); else steep toward you.
+        let terraced = hills.terraces != nil
+        let face = terraced ? Self.terracedMountainFace : Self.mountainFace
+        let reachRound = max((1 + 1 / face) / 2, 1 / Self.mountainSides)
         let mountains = [Double?](repeating: hills.mountains?.height, count: hills.mountains?.count ?? 0)
         var claimed: Set<GridPoint> = []
         for mountain in mountains + [Double?](repeating: nil, count: hills.count) {
@@ -2384,12 +2425,12 @@ nonisolated final class WorldMap: @unchecked Sendable {
                         // As tall as asked, if anywhere has room for one that wide (it needs the
                         // reach back to climb that high gently and still have a top); else as tall
                         // as fits. It faces you (`Hill.Lobe.front`), steeper across and toward you.
-                        let fits = ((widest - 1) / Self.mountainRound - 1) * Self.mountainTop * steepness / 1.5
+                        let fits = ((widest - 1) / reachRound - 1) * Self.mountainTop * steepness / 1.5
                         peak = max(tallest, min(mountain * Double.random(in: 0.92...1.08, using: &rng), fits))
                         let need = 1.5 * peak / steepness / Self.mountainTop + 1
-                        along = max(need, min((widest - 1) / Self.mountainRound, need * Double.random(in: 1...1.1, using: &rng)))
+                        along = max(need, min((widest - 1) / reachRound, need * Double.random(in: 1...1.1, using: &rng)))
                         across = along / Self.mountainSides
-                        front = along / Self.mountainFace
+                        front = along / face
                     } else {
                         // A narrow one stands lower, so it still has a top.
                         peak = min(peak, min(along, across) * 0.85 * steepness / 1.5)
@@ -2406,9 +2447,12 @@ nonisolated final class WorldMap: @unchecked Sendable {
                         // Turned to face you, its spurs down the face.
                         var lobe = Hill.Lobe(x: x, y: y, along: along, across: across, angle: Double.pi / 4, peak: peak, steepness: steepness)
                         lobe.front = front
-                        lobe.spurs = Hill.Lobe.Spurs(count: Double(Int.random(in: 11...15, using: &rng)), depth: 0.22,
-                                                     phases: (Double.random(in: 0..<6.3, using: &rng), Double.random(in: 0..<6.3, using: &rng),
-                                                              Double.random(in: 0..<6.3, using: &rng)))
+                        let spurs = Hill.Lobe.Spurs(count: Double(Int.random(in: 11...15, using: &rng)), depth: 0.22,
+                                                    phases: (Double.random(in: 0..<6.3, using: &rng), Double.random(in: 0..<6.3, using: &rng),
+                                                             Double.random(in: 0..<6.3, using: &rng)))
+                        // A terraced one's levels run round it unbroken, with no ridges down them
+                        // (drawn all the same, so the land's other draws stay as they were).
+                        if !terraced { lobe.spurs = spurs }
                         lobes.append(lobe)
                     } else {
                         lobes.append(Hill.Lobe(x: x, y: y, along: along, across: across,
@@ -2426,7 +2470,13 @@ nonisolated final class WorldMap: @unchecked Sendable {
                      fy: Double.random(in: 0.4...1, using: &rng), py: Double.random(in: 0..<6.3, using: &rng))
                 }
                 var hill = Hill(lobes: lobes, ripples: ripples, steepness: steep)
-                if tall == nil { hill.terrace = hills.terraces }
+                // A mountain too, in five levels whatever its height (the user, 2026-11-25: "for a
+                // mountain we just stack a lot of plateaus, so you have to walk zig zag to go up";
+                // five, its back a gentle slope): stairs up its face (`carveStairs`). A step a little
+                // short of a fifth, so its top level has room on it.
+                if let step = hills.terraces {
+                    hill.terrace = tall.map { lobes[$0].peak / (Double(Self.mountainLevels) + 0.7) } ?? step
+                }
                 // How its trails wind: from where on its front, which way round, how far and how
                 // they bend, its own.
                 let winding = Winding(aim: 1.25 * Double.pi + Double.random(in: -0.35...0.35, using: &rng),
@@ -2569,6 +2619,7 @@ nonisolated final class WorldMap: @unchecked Sendable {
         hill.unfold()
         hill.highest = CGFloat(hill.heights.max() ?? 0)
         if hill.terrace != nil {
+            if let mountain { carveStairs(&hill, mountain: mountain) }
             blockFaces(of: hill, ring: ring)
             return true
         }
@@ -2662,6 +2713,110 @@ nonisolated final class WorldMap: @unchecked Sendable {
             for cell in hill.cells where !reached.contains(cell) { blocked.insert(cell) }
         }
         return true
+    }
+
+    /// How many levels a terraced mountain stands in (`raiseHills`; the user's pick, 2026-11-25).
+    static let mountainLevels = 5
+
+    /// Stairs up a terraced mountain's face (`tools/mountain_preview.py`, the user's pick,
+    /// 2026-11-25): one up each face, cut across it as a ledge from the level below to the level
+    /// above, the first rising left to right, the next right to left and so on, each starting where
+    /// the last came out: a zig-zag up the front. Kept clear (`trailCells`), not drawn as a path, and
+    /// walked like the levels. Its back stays the gentle slope it was,
+    /// the other way up. A stair that doesn't fit (a level too narrow there) is left out; any level
+    /// you can't reach then is closed by `blockFaces`.
+    private func carveStairs(_ hill: inout Hill, mountain index: Int) {
+        guard let step = hill.terrace, step > 0 else { return }
+        let lobe = hill.lobes[index]
+        let half = 0.5.squareRoot()
+        // Toward you (down the screen) and across the face (left to right on screen).
+        let toward = (x: -half, y: -half), across = (x: half, y: -half)
+        func spot(_ r: Double, _ o: Double) -> CGPoint {
+            CGPoint(x: lobe.x + toward.x * r + across.x * o, y: lobe.y + toward.y * r + across.y * o)
+        }
+        func height(_ point: CGPoint) -> Double { Double(hill.height(atCells: Double(point.x), Double(point.y))) }
+        // How far in front of the middle level `k`'s face is, `o` across: coming in from out in front,
+        // where the ground first stands halfway up it.
+        let reach = max(lobe.along, lobe.across) + 3
+        func face(_ k: Int, _ o: Double) -> Double? {
+            var r = reach
+            while r > 0 {
+                if height(spot(r, o)) >= (Double(k) - 0.5) * step { return r }
+                r -= 0.1
+            }
+            return nil
+        }
+        let levels = Self.mountainLevels
+        var side = 1.0
+        var points: [CGPoint] = []
+        for k in 1...levels {
+            var carved: (foot: CGPoint, top: CGPoint)?
+            // As wide across as fits, its ends as far out onto the levels as they're deep.
+            search: for width in [2.6, 2.1, 1.6] {
+                let a = -side * width, b = side * width
+                guard let rf = face(k, a), let rt = face(k, b) else { continue }
+                for gap in [1.3, 0.9, 0.6] {
+                    let foot = spot(rf + gap, a), top = spot(rt - gap, b)
+                    let rise = height(top) - height(foot)
+                    guard rise > 0.6 * step, rise < 1.6 * step,
+                          owns(GridPoint(col: Int(foot.x.rounded(.down)), row: Int(foot.y.rounded(.down)))) else { continue }
+                    carved = (foot, top)
+                    break search
+                }
+            }
+            guard let carved else { break }
+            let foot = carved.foot, top = carved.top
+            carveRamp(&hill, from: foot, to: top)
+            // On from where the last stair came out, along the level, to this one's foot.
+            if let last = points.last { points += Self.line(from: last, to: foot) }
+            points += Self.line(from: foot, to: top)
+            side = -side
+        }
+        guard points.count > 1 else { return }
+        hill.unfold()
+        hill.highest = CGFloat(hill.heights.max() ?? 0)
+        // Not worn as a trail (the user, 2026-11-25: "The road looks messy now"): drawn over the stepped
+        // rock, the path broke up across the faces and wound along the levels between the stairs. The
+        // ledges show the way up on their own; the cells along them are kept clear and on the minimap.
+        let path = Self.cells(along: points)
+        for cell in path { occupy(cell, blocking: false) }
+        trailCells.formUnion(path)
+    }
+
+    /// A stair's ledge cut into a face: the ground within `stairReach` of the line from `foot` to
+    /// `top` laid as a ramp rising evenly between their heights.
+    private func carveRamp(_ hill: inout Hill, from foot: CGPoint, to top: CGPoint) {
+        let samples = Hill.samples
+        let width = hill.size.columns * samples + 1, depth = hill.size.rows * samples + 1
+        let low = Float(hill.height(atCells: Double(foot.x), Double(foot.y)))
+        let high = Float(hill.height(atCells: Double(top.x), Double(top.y)))
+        let dx = Double(top.x - foot.x), dy = Double(top.y - foot.y)
+        let length2 = dx * dx + dy * dy
+        guard length2 > 0 else { return }
+        for j in 0..<depth {
+            for i in 0..<width {
+                let x = Double(hill.origin.col) + Double(i) / Double(samples) - Double(foot.x)
+                let y = Double(hill.origin.row) + Double(j) / Double(samples) - Double(foot.y)
+                let t = (x * dx + y * dy) / length2
+                guard t >= 0, t <= 1 else { continue }
+                let ox = x - t * dx, oy = y - t * dy
+                guard (ox * ox + oy * oy).squareRoot() <= Self.stairReach else { continue }
+                hill.heights[j * width + i] = low + (high - low) * Float(t)
+            }
+        }
+    }
+
+    /// How far either side of its line a stair's ledge reaches, in cells: room for a row of whole
+    /// cells along it, walked from one to the next, clear of the faces' steep edges either side.
+    private static let stairReach = 1.6
+
+    /// Points every quarter of a cell from `a` to `b`, not counting `a`.
+    private static func line(from a: CGPoint, to b: CGPoint) -> [CGPoint] {
+        let count = max(1, Int((a.distance(to: b) * 4).rounded(.up)))
+        return (1...count).map { k in
+            let t = CGFloat(k) / CGFloat(count)
+            return CGPoint(x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t)
+        }
     }
 
     /// A terraced range's faces (`Hill.terrace`), where the ground rises faster than `faceSlope`:
@@ -3410,7 +3565,8 @@ nonisolated final class WorldMap: @unchecked Sendable {
                 // A river running east is crossed going north.
                 guard let bridge = span(.road, at: shift == 0 ? middle : line[index], northward: abs(to.x - from.x) >= abs(to.y - from.y),
                                         lanes: 3, clear: clear) else { continue }
-                meetRoad(bridge)
+                // Moved along the river from where the road crossed it: the old road's end there cleared.
+                meetRoad(bridge, movedFrom: shift == 0 ? nil : middle)
                 return true
             }
         }
@@ -3513,8 +3669,26 @@ nonisolated final class WorldMap: @unchecked Sendable {
     /// The road on either bank bent to meet a bridge squarely: straight on out of each end as wide
     /// as the deck (`bridgeApproach`), then a stretch of road from there to the nearest bit of the
     /// road farther on.
-    private func meetRoad(_ bridge: Bridge) {
+    /// `movedFrom`: where the road crossed the river, when the bridge stands elsewhere along it. The
+    /// road is then met from farther back, off the bank, and its old end down to the water there is
+    /// taken up (the user, 2026-11-25, Briarmere: "The road here doesn't line up with the bridge any
+    /// more": it still ran to the water beside the bridge, the way onto the bridge a stub off it).
+    private func meetRoad(_ bridge: Bridge, movedFrom crossing: CGPoint? = nil) {
         let centre = CGFloat(bridge.lane) + CGFloat(bridge.lanes) / 2
+        /// Whether there's water within `reach` cells of a cell (a square round it).
+        func byWater(_ cell: GridPoint, _ reach: Int) -> Bool {
+            for dr in -reach...reach {
+                for dc in -reach...reach {
+                    let near = GridPoint(col: cell.col + dc, row: cell.row + dr)
+                    if contains(near), ground[near.row][near.col] == .water, !bridgeCells.contains(near) { return true }
+                }
+            }
+            return false
+        }
+        // The road laid here to meet the bridge, kept when the old end is taken up.
+        var laid: Set<GridPoint> = []
+        let search = crossing == nil ? 8 : 11
+        var joined = 0
         for (end, step) in [(bridge.start - 1, -1), (bridge.end + 1, 1)] {
             // Only over open ground: not into water, a border, the sea or a land next door's.
             // As wide as the deck where it meets it, then giving way: a corner off the second
@@ -3531,28 +3705,35 @@ nonisolated final class WorldMap: @unchecked Sendable {
                     let cell = bridge.cell(lane: lane, along: end + step * out)
                     guard contains(cell), owns(cell), ([.ground, .accent, .path] as [Ground]).contains(ground[cell.row][cell.col]) else { continue }
                     ground[cell.row][cell.col] = .path
+                    laid.insert(cell)
                 }
             }
             let along = end + step * (Self.bridgeApproach - 1)
             let foot = bridge.northward ? CGPoint(x: centre, y: CGFloat(along) + 0.5) : CGPoint(x: CGFloat(along) + 0.5, y: centre)
             var best: (distance: CGFloat, spot: CGPoint)?
-            for dr in -8...8 {
-                for dc in -8...8 {
+            for dr in -search...search {
+                for dc in -search...search {
                     let cell = GridPoint(col: Int(foot.x.rounded(.down)) + dc, row: Int(foot.y.rounded(.down)) + dr)
                     guard contains(cell), ground[cell.row][cell.col] == .path else { continue }
                     // Only on past the straight run, on its own bank.
                     guard ((bridge.northward ? cell.row : cell.col) - along) * step >= 1 else { continue }
+                    // Moved, only off the bank: the old road's end by the water is taken up.
+                    if crossing != nil, laid.contains(cell) || byWater(cell, 3) { continue }
                     let spot = CGPoint(x: CGFloat(cell.col) + 0.5, y: CGFloat(cell.row) + 0.5)
                     let distance = spot.distance(to: foot)
-                    if distance < 7, distance < best?.distance ?? .infinity { best = (distance, spot) }
+                    if distance < CGFloat(search - 1), distance < best?.distance ?? .infinity { best = (distance, spot) }
                 }
             }
             if let best {
+                joined += 1
                 let steps = max(2, Int(best.distance * 4))
                 for k in 0...steps {
                     let t = CGFloat(k) / CGFloat(steps)
                     let spot = CGPoint(x: foot.x + (best.spot.x - foot.x) * t, y: foot.y + (best.spot.y - foot.y) * t)
-                    for cell in cells(around: spot, radius: 1.05) where ground[cell.row][cell.col] != .water { ground[cell.row][cell.col] = .path }
+                    for cell in cells(around: spot, radius: 1.05) where ground[cell.row][cell.col] != .water {
+                        ground[cell.row][cell.col] = .path
+                        laid.insert(cell)
+                    }
                 }
             }
             // No road beside the deck's end: where the bridge stands a little along the river from
@@ -3565,6 +3746,16 @@ nonisolated final class WorldMap: @unchecked Sendable {
                     let cell = bridge.cell(lane: lane, along: end + step * out)
                     if contains(cell), ground[cell.row][cell.col] == .path { ground[cell.row][cell.col] = .ground }
                 }
+            }
+        }
+        // Moved: the old road's end down to the water where it crossed, on both banks, taken up, so
+        // the road leads onto the bridge and nowhere else at the river.
+        // Only once the road on both banks is joined to the bridge farther back: else the old end is
+        // the only way onto it.
+        if let crossing, joined == 2 {
+            for cell in cells(around: crossing, radius: 8)
+            where contains(cell) && ground[cell.row][cell.col] == .path && !laid.contains(cell) && byWater(cell, 3) {
+                ground[cell.row][cell.col] = .ground
             }
         }
     }
@@ -3849,7 +4040,7 @@ nonisolated final class WorldMap: @unchecked Sendable {
                 case .accent: color(forTile: theme.accent ?? theme.ground).shaded(1.08)
                 case .path: tileColor == nil && theme.path == "tile_path" ? PixelColor(0xE8C98C) : color(forTile: theme.path).shaded(1.15)
                 case .border: color(forTile: theme.border ?? theme.ground)
-                case .water: tileColor == nil ? PixelColor(0x4FA3E0) : color(forTile: theme.water ?? "tile_water")
+                case .water: tileColor == nil ? PixelColor(0x4FA3E0) : color(forTile: theme.frozen == true ? "tile_ice" : (theme.water ?? "tile_water"))
                 // The sea it draws (`Region`), and none of a land next door's: those draw their own.
                 case .sea: region?.drawsSea(at: cell) == false ? .clear : Self.seaColor
                 case .away: .clear

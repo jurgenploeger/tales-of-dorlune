@@ -112,6 +112,13 @@ continent_swamp_edge | newgame,map=sunny_meadow,at=18_-56,weather=clear,hour=12 
 # Sunny Meadow's river where it springs (2026-11-17): its waterfall, the shore dressed, and its water
 # in the pond's tones (GroundTiles.PondField).
 continent_waterfall | newgame,map=sunny_meadow,at=38_48,weather=clear,hour=12 | 8
+# A terrace's waterfall: its spring pond above, its pond below (2026-11-25).
+cliff_falls | newgame,map=sunny_meadow,hill=0,face,weather=clear,hour=12 | 8
+# A mountain as five plateaus, its stairs zig-zagging up the face and its back a gentle slope (2026-11-25).
+# A snowy land's melted grass patches, snowed over at their edges (2026-11-25).
+snow_patches | newgame,map=snow_white_forest,weather=clear,hour=12 | 8
+mountain_stairs | newgame,map=crystal_mountain,hill=tallest,weather=clear,hour=12 | 8
+mountain_face   | newgame,map=valley_of_fear,hill=tallest,face,landscape,weather=clear,hour=12 | 8
 # A road running on from Frog Swamp into the Valley of Fear: its look fades across the band, not cut
 # at the border (playtesting 2026-10-15). Roads lined here and there (`LandPlanner.planRoadsides`):
 # a picket fence, a low stone wall, a row of the land's own props (lanterns, an avenue; along Frog
@@ -140,6 +147,8 @@ after_battle_coast | newgame,map=crystal_mountain,at=-31_-75,battle,win,back,wea
 border_gate  | newgame,map=sunny_meadow,border=frog_swamp,landscape,weather=clear,hour=12 | 6
 border_rocks | newgame,map=sunny_meadow,border=pineapple_shore,landscape,weather=clear,hour=12 | 6
 border_fence | newgame,map=frog_swamp,border=twilight_woods,landscape,weather=clear,hour=12 | 6
+# Snow coming over a green land by a snowy one's border, the trees there capped (2026-11-25).
+snow_border | newgame,level=60,map=swan_lake,border=snow_white_forest,landscape,weather=clear,hour=12 | 6
 border_sand  | newgame,map=frog_swamp,border=goldburg_lake,weather=clear,hour=12 | 6
 # The swamp's border with the dark woods once roads join the two (both quests done): its fence gone,
 # you walk over anywhere, and the two grounds meet along a winding line, each one's trees on its own.
@@ -1092,3 +1101,13 @@ grass_woods | newgame,level=20,map=twilight_woods,at=grass,landscape,weather=cle
 grass_swan | newgame,level=40,map=swan_lake,at=grass1,weather=clear,hour=12 | 8
 # Flowers knee-high, planted at 0.55 to 0.7 (the user, 2026-11-19: "a flower shouldn't be just as tall as a tree").
 flowers_meadow | newgame,map=sunny_meadow,landscape,weather=clear,hour=12 | 8
+# Footprints in the snow and the sand (Footprints, look C and S2 from tools/snow_trail_preview.py): the hero
+# walking a loop on snow, a desert and a beach, close up, the prints behind him filling back in.
+snow_trail      | newgame,level=163,map=snow_white_forest,at=5_5,zoom=1.8,walk=1_0,weather=clear,hour=12 | 10
+snow_trail_rosen | newgame,level=163,map=rosen_lake,at=4_-5,zoom=1.8,walk=1_0,weather=clear,hour=12 | 10
+# On a raised level's top too (2026-11-25): up on a terraced hill in Briarmere, walking.
+snow_trail_hill | newgame,level=163,map=rosen_lake,hill=0,ontop,zoom=1.8,walk=1_0,weather=clear,hour=12 | 10
+sand_trail_desert | newgame,level=163,map=genie_desert,at=5_5,zoom=1.8,walk=1_0,weather=clear,hour=12 | 10
+sand_trail_beach | newgame,level=163,map=pineapple_shore,at=-5_5,zoom=1.8,walk=1_0,weather=clear,hour=12 | 10
+# The townsfolk's own prints: the hero standing still in Goldburg's sandy square while its people stroll.
+sand_trail_npcs | newgame,level=163,map=goldburg,zoom=1.3,weather=clear,hour=12 | 20

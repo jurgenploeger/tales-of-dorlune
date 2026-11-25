@@ -590,6 +590,9 @@ nonisolated struct MapDef: Decodable, Identifiable, Sendable {
         /// beside rock mixed over 28 cells read as a glitch, a checkerboard of pink and blue
         /// (playtesting 2026-11-11, Briarmere).
         let blend: Double?
+        /// Its lakes, rivers and ponds frozen over (`ArtLibrary.freeze`; the user, 2026-11-25): ice over
+        /// the water's tones, drifts by the shore, glare and cracks; nothing floats or ripples on it.
+        let frozen: Bool?
     }
 
     /// Tall grass in a green wild land: how many patches, how far each reaches from its middle in
@@ -653,7 +656,8 @@ nonisolated struct MapDef: Decodable, Identifiable, Sendable {
         let bank: String?
         /// Terraces instead of smooth slopes, if set: each range stepped into flat levels this many
         /// points apart, a sheer face of rock (`bank`) between each and the next where it faces you
-        /// and a walkable slope round its back (`WorldMap.Hill.terrace`). Not with mountains.
+        /// and a walkable slope round its back (`WorldMap.Hill.terrace`). A mountain's in five levels
+        /// whatever this says, with stairs up its face (`WorldMap.carveStairs`).
         let terraces: Double?
 
         nonisolated struct Mountains: Decodable, Sendable {

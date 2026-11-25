@@ -98,13 +98,16 @@ DRAWINGS = {"waterfall": lambda: waterfall(0), "waterfall_2": lambda: waterfall(
 # Waterfalls over the terraces' cliffs (the user, 2026-11-17: "Also add the waterfalls over the cliffs"),
 # in three pieces the game fits to each face (`LandStage.placeCliffFalls`): the stream on the level above
 # running to the lip (`cliff_fall_top`), the sheet of water down the face, stretched to its height
-# (`cliff_fall_sheet`), and the pool it lands in at the foot (`cliff_fall_pool`). Hard pixels in the
+# (`cliff_fall_sheet`), and the pool it lands in at the foot (`cliff_fall_pool`), and the spring pond the stream
+# runs out of up there (`cliff_fall_spring`; the user, 2026-11-25: "there is no water it comes from ... at the
+# bottom of the waterfall should be a lake or pond": the pool grown into a pond). Hard pixels in the
 # waterfall's water colours, no outline but the water's own deep shade along its sides; four frames each.
 STONE, STONE_DARK, STONE_LIGHT, MOSS = (0x8e, 0x8a, 0x80), (0x4e, 0x4a, 0x48), (0xb4, 0xb0, 0xa4), (0x6a, 0x9a, 0x3e)
 INK = (0x2e, 0x2a, 0x30)
 TOP_W, TOP_H = 20, 12
 SHEET_W, SHEET_H = 14, 24
-POOL_W, POOL_H = 34, 13
+POOL_W, POOL_H = 52, 20
+SPRING_W, SPRING_H = 40, 17
 
 
 def _image(h, w):
@@ -182,20 +185,56 @@ def cliff_pool(frame=0):
     cx, cy = POOL_W / 2 - 0.5, POOL_H / 2
     for y in range(POOL_H):
         for x in range(POOL_W):
-            e = ((x - cx) / 15.5) ** 2 + ((y - cy) / 5.2) ** 2
+            e = ((x - cx) / 24.5) ** 2 + ((y - cy) / 8.6) ** 2
             if e > 1:
                 continue
             churn = ((x * 73856093) ^ (y * 19349663) ^ (frame * 83492791)) % 11
-            near = ((x - cx) / 6) ** 2 + ((y - cy + 2) / 3) ** 2
+            near = ((x - cx) / 6) ** 2 + ((y - cy + 5) / 3) ** 2
             colour = FOAM if near < 1 and churn < 7 else LIGHT if e < 0.55 and churn < 4 else MID if e < 0.75 else BASE
             if e > 0.8:
                 colour = DEEP
             _put(img, x, y, colour)
-    for sx, sy, rx, ry in ((3, 8, 2, 1), (POOL_W - 4, 7, 2, 2), (9, POOL_H - 2, 2, 1), (POOL_W - 11, POOL_H - 2, 2, 1)):
+    for sx, sy, rx, ry in ((3, 11, 2, 1), (POOL_W - 4, 9, 2, 2), (12, POOL_H - 2, 2, 1), (POOL_W - 15, POOL_H - 2, 3, 1)):
         _stone(img, sx, sy, rx, ry)
+    # Rings spreading from where it lands, out on the still water, a step each frame.
+    ring = 7 + 3 * frame
+    for x in range(POOL_W):
+        for y in range(POOL_H):
+            r = (((x - cx) / ring) ** 2 + ((y - cy + 4) / (ring * 0.36)) ** 2) ** 0.5
+            if 0.94 < r < 1.06 and img[y, x, 3] and tuple(img[y, x, :3]) in (BASE, MID) and (x + frame) % 4:
+                _put(img, x, y, LIGHT)
     for dx, dy in ((-6, 1), (5, 0), (-3, 2), (4, 2)):
         if (dx + dy + frame) % 3:
             _put(img, round(cx) + dx, dy + (frame % 2), FOAM)
+    return Image.fromarray(img, "RGBA")
+
+
+def cliff_spring(frame=0):
+    """The pond on the level above that the stream runs out of, toward you (the bottom middle, where the
+    stream's narrow head meets it): still water, deep in its middle, a glint drifting a pixel a frame, a
+    rim of stones and moss."""
+    img = _image(SPRING_H, SPRING_W)
+    cx, cy = SPRING_W / 2 - 0.5, SPRING_H / 2 - 1
+    for y in range(SPRING_H):
+        for x in range(SPRING_W):
+            e = ((x - cx) / 18.5) ** 2 + ((y - cy) / 6.8) ** 2
+            if e > 1:
+                continue
+            colour = DEEP if e > 0.8 else BASE if e < 0.35 else MID
+            _put(img, x, y, colour)
+    # Its mouth toward you, where the stream leaves it.
+    for y in range(round(cy) + 5, SPRING_H):
+        for x in range(round(cx) - 2, round(cx) + 3):
+            _put(img, x, y, DEEP if x in (round(cx) - 2, round(cx) + 2) else MID)
+    for k in range(3):
+        gx = round(cx) - 8 + k * 6 + (frame + k) % 4
+        _put(img, gx, round(cy) - 2 + k % 2, LIGHT)
+        _put(img, gx + 1, round(cy) - 2 + k % 2, LIGHT)
+    for sx, sy, rx, ry in ((3, 7, 2, 2), (SPRING_W - 4, 8, 2, 1), (10, 2, 2, 1), (SPRING_W - 12, 1, 2, 1), (8, SPRING_H - 3, 2, 1),
+                           (SPRING_W - 9, SPRING_H - 3, 2, 1)):
+        _stone(img, sx, sy, rx, ry)
+    for mx, my in ((5, 5), (SPRING_W - 6, 6), (14, 1), (SPRING_W - 15, SPRING_H - 3)):
+        _put(img, mx, my, MOSS)
     return Image.fromarray(img, "RGBA")
 
 
@@ -205,6 +244,7 @@ for _k in range(FRAMES):
     CLIFF_FALLS[f"cliff_fall_top{_suffix}"] = (lambda k: lambda: cliff_top(k))(_k)
     CLIFF_FALLS[f"cliff_fall_sheet{_suffix}"] = (lambda k: lambda: cliff_sheet(k))(_k)
     CLIFF_FALLS[f"cliff_fall_pool{_suffix}"] = (lambda k: lambda: cliff_pool(k))(_k)
+    CLIFF_FALLS[f"cliff_fall_spring{_suffix}"] = (lambda k: lambda: cliff_spring(k))(_k)
 
 
 def main(argv):

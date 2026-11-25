@@ -245,7 +245,7 @@ def render(mid, terraced, seed=5):
     S = grass.shape[0]
     rock_base = np.array([0.66, 0.6, 0.52])
     moss = np.array([0.36, 0.5, 0.24])
-    for L in range(3):
+    for L in range(len(LIFTS)):
         # The top of level L isn't flat: it rises and dips a few pixels (`top_height`), so where it lies
         # on screen depends on where on the ground it is: found by settling on it a few times.
         gx, gy = grid_of(xs, ys, LIFTS[L])
@@ -269,7 +269,7 @@ def render(mid, terraced, seed=5):
             ground = ground * (sway * relief * np.where(tuft, 0.8, 1.0))[..., None]
             ground = ground * np.array([0.92, 1.0, 0.94])
         colour = np.where(wet[..., None], water_tex[v, u] * 0.92, ground)
-        if terraced and L < 2:
+        if terraced and L < len(LIFTS) - 1:
             # The dark band at a wall's foot: the ground just in front of higher ground.
             for d, k in ((0.05, 0.5), (0.12, 0.68), (0.22, 0.84)):
                 behind, _ = level_at(terraced, gx + d, gy + d)
@@ -377,7 +377,7 @@ def render(mid, terraced, seed=5):
         img[found] = rock[found]
     # Foam where each fall lands: the water just in front of a wall the stream comes over.
     if terraced:
-        for L in range(2):
+        for L in range(len(LIFTS) - 1):
             gx, gy = grid_of(xs, ys, LIFTS[L])
             for _ in range(3):
                 gx, gy = grid_of(xs, ys, top_height(L, gx, gy))

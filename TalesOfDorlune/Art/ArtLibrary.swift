@@ -437,7 +437,8 @@ final class ArtLibrary {
     /// ripples over it. One for each cell, as the tones change across a lake.
     /// `seaward`: how much of the sea's colour the water at a point takes (`seaTones`), near a river's mouth.
     func pondTile(_ id: String, _ index: Int, cell: GridPoint, seaward: ((Double, Double) -> Double)? = nil,
-                  tone: (Double, Double) -> Int) -> SKTexture {
+                  across: ((Double, Double) -> (tones: [(r: Double, g: Double, b: Double)], share: Double)?)? = nil,
+                  ice: Ice? = nil, tone: (Double, Double) -> Int) -> SKTexture {
         let key = "pond|\(id)|\(cell.col),\(cell.row)|\(index % 4)"
         if let cached = blended[key] { return cached }
         let size = max(tileImage(id).width, 16)
@@ -449,7 +450,9 @@ final class ArtLibrary {
                 let x = Double(cell.col) + (Double(px) + 0.5) / Double(size)
                 let y = Double(cell.row) + 1 - (Double(py) + 0.5) / Double(size)
                 let sea = seaward.map { (tones: seaTones, share: $0(x, y)) }
-                Self.paintPond(&out, (py * size + px) * 4, texels: texels, tone: tone(x, y), palette: palette, shade: 1, sea: sea)
+                Self.paintPond(&out, (py * size + px) * 4, texels: texels, tone: tone(x, y), palette: palette, shade: 1, sea: sea,
+                               other: across?(x, y))
+                if let ice { Self.freeze(&out, (py * size + px) * 4, x: x, y: y, size: size, tones: palette.tones, ice: ice) }
             }
         }
         let texture = makeTexture(out, size: size)
@@ -463,14 +466,26 @@ final class ArtLibrary {
     /// colour (`water`, its tile's average: darker toward a deep blue-green, lighter toward a pale sky),
     /// 7 the shallows over the mud, and 8 and 9 the far bank's mud and grass mirrored under it (the article's,
     /// a little of the water in them). Mirrored in `tools/pond_preview.py` (`toned`).
+    /// A warm liquid (chocolate: red well over blue) is darker toward a deep cocoa and lighter toward a
+    /// creamy sheen instead, its shallows a little lighter and the bank's mirrored mud and grass taking
+    /// more of it: the blue-green pulls turned it grey (the user, 2026-11-25: chocolate lakes had none
+    /// of the other water's depth).
     nonisolated static func pondTones(water: (r: Double, g: Double, b: Double)) -> [(r: Double, g: Double, b: Double)] {
         let article: [(Double, Double, Double)] = [(0x1d, 0x3a, 0x44), (0x24, 0x50, 0x5a), (0x2c, 0x66, 0x70), (0x3a, 0x7f, 0x84),
                                                    (0x5a, 0x9f, 0xa0), (0x8c, 0xc8, 0xc0), (0xc4, 0xec, 0xe2), (0x5a, 0x93, 0x84)]
         func bright(_ c: (Double, Double, Double)) -> Double { 0.3 * c.0 + 0.59 * c.1 + 0.11 * c.2 }
         let ref = bright(article[3]), low = bright(article[0]) / ref, top = bright(article[6]) / ref
         let w = (water.r * 0.88, water.g * 0.88, water.b * 0.88)
-        let deep = (w.0 * 0.45 + 0.02, w.1 * 0.45 + 0.05, w.2 * 0.45 + 0.08)
-        let pale = (w.0 + (0.86 - w.0) * 0.75, w.1 + (0.96 - w.1) * 0.75, w.2 + (0.95 - w.2) * 0.75)
+        let warm = water.r > water.b + 0.08
+        let deep: (Double, Double, Double)
+        let pale: (Double, Double, Double)
+        if warm {
+            deep = (w.0 * 0.45, w.1 * 0.4, w.2 * 0.38)
+            pale = (w.0 + (1 - w.0) * 0.55, w.1 + (0.86 - w.1) * 0.55, w.2 + (0.72 - w.2) * 0.55)
+        } else {
+            deep = (w.0 * 0.45 + 0.02, w.1 * 0.45 + 0.05, w.2 * 0.45 + 0.08)
+            pale = (w.0 + (0.86 - w.0) * 0.75, w.1 + (0.96 - w.1) * 0.75, w.2 + (0.95 - w.2) * 0.75)
+        }
         func clamp(_ v: Double) -> Double { max(0, min(1, v)) }
         var tones: [(r: Double, g: Double, b: Double)] = []
         for k in 0..<7 {
@@ -484,12 +499,224 @@ final class ArtLibrary {
             }
         }
         let mud = article[7]
-        tones.append((clamp((mud.0 / 255 + w.0) / 2), clamp((mud.1 / 255 + w.1) / 2), clamp((mud.2 / 255 + w.2) / 2)))
+        if warm {
+            tones.append((clamp(w.0 * 1.08), clamp(w.1 * 1.08), clamp(w.2 * 1.08)))
+        } else {
+            tones.append((clamp((mud.0 / 255 + w.0) / 2), clamp((mud.1 / 255 + w.1) / 2), clamp((mud.2 / 255 + w.2) / 2)))
+        }
+        let own = warm ? 0.45 : 0.25
         for bank in [(0x2c, 0x3b, 0x36), (0x2d, 0x52, 0x46)] as [(Double, Double, Double)] {
-            tones.append((clamp(bank.0 / 255 * 0.75 + w.0 * 0.25), clamp(bank.1 / 255 * 0.75 + w.1 * 0.25), clamp(bank.2 / 255 * 0.75 + w.2 * 0.25)))
+            tones.append((clamp(bank.0 / 255 * (1 - own) + w.0 * own), clamp(bank.1 / 255 * (1 - own) + w.1 * own),
+                          clamp(bank.2 / 255 * (1 - own) + w.2 * own)))
         }
         return tones
     }
+
+    /// Whether a land's water tile is drawn as a pond (`pondTones`, depth, a bank, reflections): its
+    /// lakes and rivers, and chocolate's (the user, 2026-11-25); not ice.
+    nonisolated static func isPondWater(_ id: String) -> Bool { id == "tile_water" || id == "tile_chocolate" }
+
+    /// The pond tones of a land next door's water (`id`, graded as it is there: `Foreign`), for its
+    /// river's colour carried over the border (`paintPond`'s `other`).
+    func foreignPondTones(_ id: String, from: Foreign) -> [(r: Double, g: Double, b: Double)] {
+        let size = max(tileImage(id).width, 16)
+        return Self.pondPalette(foreignPixels(id, palette: from.palette, from: from.land, variant: 0, size: size)).tones
+    }
+
+    /// A frozen land's lakes, rivers and ponds (maps.json theme `frozen`; the user, 2026-11-25, after
+    /// SpriteCook's "2D pixel art snow and ice": Briarmere and Snow White Forest frozen over): where the
+    /// land's box lies on the continent (so the glare and drifts run on across borders), the pixels its
+    /// cracks run through (`iceKey`), and how far a point of its water lies from the shore, in cells.
+    nonisolated struct Ice {
+        let origin: GridPoint
+        let cracks: Set<Int>
+        let shore: (Double, Double) -> Double
+    }
+
+    /// The article's ice: each a step lighter than the water it lies on, dark to light.
+    /// (#426280, #6890ac, #92bace, #bedce9, #eaf6fb; spelled out, the hex literals mapped through a
+    /// closure were more than the type checker would take.)
+    nonisolated static let iceTones: [(Double, Double, Double)] = [
+        (0.259, 0.384, 0.502), (0.408, 0.565, 0.675), (0.573, 0.729, 0.808), (0.745, 0.863, 0.914), (0.918, 0.965, 0.984),
+    ]
+
+    /// A crack's pixel, in art pixels on the continent.
+    nonisolated static func iceKey(_ u: Int, _ v: Int) -> Int { u &* 1_000_003 &+ v }
+
+    /// Pixel `index` of `out`, already painted as the pond's water (`paintPond`), turned to ice (after
+    /// the article): one of `iceTones` a step lighter than the water's own tone among `tones`, snow
+    /// drifted on it in soft patches thickest by the shore (a step lighter again), still glare streaks
+    /// across it out from the shore, and its cracks in the darkest tone. (`x`, `y`): where it lies in the
+    /// land's cells; `size`: its tile's pixels a cell. Mirrored in `tools/snow_ice_preview.py`.
+    nonisolated static func freeze(_ out: inout [UInt8], _ index: Int, x: Double, y: Double, size: Int,
+                                   tones: [(r: Double, g: Double, b: Double)], ice: Ice) {
+        guard tones.count >= 7, index + 2 < out.count else { return }
+        func lum(_ c: (r: Double, g: Double, b: Double)) -> Double { 0.3 * c.r + 0.59 * c.g + 0.11 * c.b }
+        let lo = lum(tones[0]), hi = lum(tones[6])
+        let here = (0.3 * Double(out[index]) + 0.59 * Double(out[index + 1]) + 0.11 * Double(out[index + 2])) / 255
+        var tone = min(4, max(0, Int(((here - lo) / max(hi - lo, 0.001) * 5).rounded(.down)))) + 1
+        let u = Int(((Double(ice.origin.col) + x) * Double(size)).rounded(.down))
+        let v = Int(((Double(ice.origin.row) + y) * Double(size)).rounded(.down))
+        let shore = ice.shore(x, y)
+        let drift = 0.6 * iceNoise(u, v, every: 9) + 0.4 * max(0, 1 - shore / 0.3) + 0.1 * iceHash(u, v)
+        if drift > 0.66 { tone += 1 }
+        tone = min(4, tone)
+        let lane = u + Int((0.35 * Double(v)).rounded(.down))
+        if shore > 0.12, ((lane % 64) + 64) % 64 < 2 || (((lane + 5) % 64) + 64) % 64 < 1 { tone = 4 }
+        if ice.cracks.contains(iceKey(u, v)) { tone = 0 }
+        let colour = iceTones[tone]
+        out[index] = UInt8(max(0, min(255, (colour.0 * 255).rounded())))
+        out[index + 1] = UInt8(max(0, min(255, (colour.1 * 255).rounded())))
+        out[index + 2] = UInt8(max(0, min(255, (colour.2 * 255).rounded())))
+    }
+
+    /// A pixel's own fixed number, 0..<1 (ice and snow).
+    nonisolated static func iceHash(_ u: Int, _ v: Int) -> Double {
+        let a: UInt64 = UInt64(bitPattern: Int64(u)) &* 0x9E37_79B9_7F4A_7C15
+        let b: UInt64 = UInt64(bitPattern: Int64(v)) &* 0xC2B2_AE3D_27D4_EB4F
+        var h = a ^ b
+        h ^= h >> 31
+        h = h &* 0xBF58_476D_1CE4_E5B9
+        h ^= h >> 29
+        return Double(h >> 11) / Double(1 << 53)
+    }
+
+    /// Smooth noise, 0...1, blobs about `every` pixels across: `iceHash` at a grid's corners, blended.
+    nonisolated static func iceNoise(_ u: Int, _ v: Int, every: Int) -> Double {
+        let fu = Double(u) / Double(every), fv = Double(v) / Double(every)
+        let iu = Int(fu.rounded(.down)), iv = Int(fv.rounded(.down))
+        let tu = fu - Double(iu), tv = fv - Double(iv)
+        let su = tu * tu * (3 - 2 * tu), sv = tv * tv * (3 - 2 * tv)
+        let a = iceHash(iu, iv), b = iceHash(iu + 1, iv), c = iceHash(iu, iv + 1), d = iceHash(iu + 1, iv + 1)
+        return (a + (b - a) * su) * (1 - sv) + (c + (d - c) * su) * sv
+    }
+
+    /// Five snow tones, dark to light, from a snowy land's ground tile `id` graded as it is there
+    /// (`Foreign`): the colours at five steps up its brightness, so the snow laid over a border
+    /// (`snowed`, `capped`) is that land's own snow.
+    func snowTones(_ id: String, from: Foreign) -> [(Double, Double, Double)] {
+        let size = max(tileImage(id).width, 16)
+        let pixels = foreignPixels(id, palette: from.palette, from: from.land, variant: 0, size: size)
+        var colours: [(Double, Double, Double)] = []
+        for i in stride(from: 0, to: pixels.count - 3, by: 4) where pixels[i + 3] > 200 {
+            colours.append((Double(pixels[i]) / 255, Double(pixels[i + 1]) / 255, Double(pixels[i + 2]) / 255))
+        }
+        guard !colours.isEmpty else { return Array(repeating: (0.95, 0.96, 1.0), count: 5) }
+        func bright(_ c: (Double, Double, Double)) -> Double { 0.3 * c.0 + 0.59 * c.1 + 0.11 * c.2 }
+        colours.sort { bright($0) < bright($1) }
+        return [0.04, 0.25, 0.5, 0.75, 0.97].map { colours[Int(Double(colours.count - 1) * $0)] }
+    }
+
+    /// A ground tile's picture with snow laid over it pixel by pixel (after SpriteCook's snow and ice
+    /// article; mirrored in `tools/snow_ice_preview.py`): each pixel has its place in the order snow comes
+    /// (clusters first, from smooth noise over the continent, the ground's brighter pixels before its
+    /// dark crevices, a few lone specks early), and is snowed where that's under how snowed over the
+    /// ground is there (`front`, 0 to 1, at a point in the land's cells), in one of `tones` by its own
+    /// brightness in the tile. (`cell`, `origin`: where it lies, so the clusters run on from tile to tile.)
+    func snowed(_ texture: SKTexture, cell: GridPoint, origin: GridPoint, front: (Double, Double) -> Double,
+                tones: [(Double, Double, Double)]) -> SKTexture {
+        let image = picture(of: texture)
+        let size = image.width
+        guard size > 0, image.height == size, tones.count == 5,
+              var out = PixelImage.pixels(of: image, width: size, height: size) else { return texture }
+        var lums: [Double] = []
+        for i in stride(from: 0, to: out.count, by: 4) where out[i + 3] > 0 {
+            lums.append(0.3 * Double(out[i]) + 0.59 * Double(out[i + 1]) + 0.11 * Double(out[i + 2]))
+        }
+        guard !lums.isEmpty else { return texture }
+        lums.sort()
+        let lo = lums[Int(Double(lums.count - 1) * 0.05)], hi = lums[Int(Double(lums.count - 1) * 0.97)]
+        for py in 0..<size {
+            for px in 0..<size {
+                let index = (py * size + px) * 4
+                guard out[index + 3] > 0 else { continue }
+                let x = Double(cell.col) + (Double(px) + 0.5) / Double(size)
+                let y = Double(cell.row) + 1 - (Double(py) + 0.5) / Double(size)
+                let cover = front(x, y)
+                guard cover > 0 else { continue }
+                let u = (origin.col + cell.col) * size + px, v = (origin.row + cell.row) * size + (size - 1 - py)
+                let lum = 0.3 * Double(out[index]) + 0.59 * Double(out[index + 1]) + 0.11 * Double(out[index + 2])
+                let rank = min(1, max(0, (lum - lo) / max(hi - lo, 1)))
+                var order = 0.55 * Self.iceNoise(u, v, every: 7) + 0.25 * (1 - rank) + 0.2 * Self.iceNoise(u + 917, v + 331, every: 3)
+                if Self.iceHash(u, v) < 0.006 { order *= 0.3 }
+                guard order < cover * 1.05 - 0.05 else { continue }
+                let tone = tones[min(4, Int(rank * 4.999))]
+                out[index] = UInt8((tone.0 * 255).rounded())
+                out[index + 1] = UInt8((tone.1 * 255).rounded())
+                out[index + 2] = UInt8((tone.2 * 255).rounded())
+                out[index + 3] = 255
+            }
+        }
+        return makeTexture(out, size: size)
+    }
+
+    /// A sprite with snow on its top surfaces, as far as `stage` (1 to 3) has come (the article's caps;
+    /// mirrored in `tools/snow_ice_preview.py` `caps`): down `depth` rows from where each column starts,
+    /// or where a lit clump starts under a darker gap, on its lit pixels only (its dark outline and
+    /// shaded side stay); the first fifth or so of them, by depth, darkness and noise, at stage 1, more
+    /// than half by 2, all by 3, in `tones` a step lighter than each pixel's own brightness.
+    func capped(_ texture: SKTexture, stage: Int, tones: [(Double, Double, Double)]) -> SKTexture {
+        guard stage > 0, tones.count == 5 else { return texture }
+        let key = "cap|\(ObjectIdentifier(texture).hashValue)|\(stage)"
+        if let cached = blended[key] { return cached }
+        let image = picture(of: texture)
+        let w = image.width, h = image.height
+        guard w > 0, h > 0, var out = PixelImage.pixels(of: image, width: w, height: h) else { return texture }
+        func lum(_ i: Int) -> Double { 0.3 * Double(out[i]) + 0.59 * Double(out[i + 1]) + 0.11 * Double(out[i + 2]) }
+        var lums: [Double] = []
+        for i in stride(from: 0, to: out.count, by: 4) where out[i + 3] > 127 { lums.append(lum(i)) }
+        guard lums.count > 8 else { return texture }
+        lums.sort()
+        let lo = lums[Int(Double(lums.count - 1) * 0.1)], hi = lums[Int(Double(lums.count - 1) * 0.95)]
+        let depth = h >= 40 ? 4.5 : 3
+        var spots: [(index: Int, rank: Double, tone: Int)] = []
+        for x in 0..<w {
+            var starts: [Int] = []
+            for y in 0..<h where out[(y * w + x) * 4 + 3] > 127 {
+                if starts.isEmpty { starts.append(y); continue }
+                if y >= 2, out[((y - 2) * w + x) * 4 + 3] > 127, lum((y * w + x) * 4) - lum(((y - 2) * w + x) * 4) > 28 { starts.append(y) }
+            }
+            var taken: Set<Int> = []
+            for start in starts {
+                for k in 0..<Int(depth) {
+                    let y = start + k
+                    guard y < h, !taken.contains(y) else { continue }
+                    let index = (y * w + x) * 4
+                    guard out[index + 3] > 127 else { continue }
+                    let l = lum(index)
+                    guard l > lo + 0.1 * (hi - lo) else { continue }
+                    taken.insert(y)
+                    let bright = min(1, max(0, (l - lo) / max(hi - lo, 1)))
+                    let rank = 0.35 * Double(k) / depth + 0.25 * (1 - bright) + 0.4 * Self.iceHash(x &* 31, y &* 17)
+                    spots.append((index, rank, min(4, Int(bright * 4.999) + 1)))
+                }
+            }
+        }
+        guard !spots.isEmpty else { return texture }
+        spots.sort { $0.rank < $1.rank }
+        let shown = Int(Double(spots.count) * (stage >= 3 ? 1 : stage == 2 ? 0.58 : 0.22))
+        for spot in spots.prefix(shown) {
+            let tone = tones[spot.tone]
+            out[spot.index] = UInt8((tone.0 * 255).rounded())
+            out[spot.index + 1] = UInt8((tone.1 * 255).rounded())
+            out[spot.index + 2] = UInt8((tone.2 * 255).rounded())
+        }
+        let made = makeRect(out, width: w, height: h)
+        blended[key] = made
+        return made
+    }
+
+    /// A texture from premultiplied RGBA rows top down, `width` by `height`, its picture remembered.
+    private func makeRect(_ bytes: [UInt8], width: Int, height: Int) -> SKTexture {
+        guard let image = PixelImage.make(bytes, width: width, height: height) else { return SKTexture() }
+        let texture = SKTexture(cgImage: image)
+        texture.filteringMode = .nearest
+        remember(image, for: texture)
+        return texture
+    }
+
+    /// How many pixels a cell of tile `id` is (as `pondTile` draws it).
+    func tilePixels(_ id: String) -> Int { max(tileImage(id).width, 16) }
 
     /// The sea's own pond tones (`pondTones` of its average colour): the sea as it's drawn, graded for
     /// no land, the same blue round every land. What a river turns to as it runs into it (`paintPond`).
@@ -523,13 +750,20 @@ final class ArtLibrary {
     /// kept over it, darkened by `shade`.
     /// `sea`: the sea's own tones and how much of them to take (near a river's mouth, so the river
     /// turns to the sea's colour as it runs into it instead of meeting it in a hard edge).
+    /// `other`: a land next door's water's tones and how much of them to take, by the border, so a
+    /// river runs from one land's colour into the next's (the user, 2026-11-25: it changed at the line).
     nonisolated static func paintPond(_ out: inout [UInt8], _ index: Int, texels: [UInt8],
                                       tone: Int, palette: (tones: [(r: Double, g: Double, b: Double)], mean: Double), shade: Double,
-                                      sea: (tones: [(r: Double, g: Double, b: Double)], share: Double)? = nil) {
+                                      sea: (tones: [(r: Double, g: Double, b: Double)], share: Double)? = nil,
+                                      other: (tones: [(r: Double, g: Double, b: Double)], share: Double)? = nil) {
         guard index + 2 < texels.count, index + 2 < out.count, !palette.tones.isEmpty else { return }
         let lum = (0.3 * Double(texels[index]) + 0.59 * Double(texels[index + 1]) + 0.11 * Double(texels[index + 2])) / 255
         let ripple = (lum - palette.mean) * 1.1
         var colour = palette.tones[max(0, min(palette.tones.count - 1, tone))]
+        if let other, other.share > 0, other.tones.count == palette.tones.count {
+            let theirs = other.tones[max(0, min(other.tones.count - 1, tone))], t = min(1, other.share)
+            colour = (colour.r + (theirs.r - colour.r) * t, colour.g + (theirs.g - colour.g) * t, colour.b + (theirs.b - colour.b) * t)
+        }
         if let sea, sea.share > 0, sea.tones.count == palette.tones.count {
             let other = sea.tones[max(0, min(sea.tones.count - 1, tone))], t = min(1, sea.share)
             colour = (colour.r + (other.r - colour.r) * t, colour.g + (other.g - colour.g) * t, colour.b + (other.b - colour.b) * t)
@@ -784,7 +1018,9 @@ final class ArtLibrary {
     /// lakes and rivers drawn in the pond's tones (`pondTones`) instead of shaded from the shore.
     /// `seaward`: how much of the sea's colour its pond water takes at a point (`paintPond`).
     func organicTile(base: String, layers: [GroundLayer], cell: GridPoint, variant: Int, pond: ((Double, Double) -> Int)? = nil,
-                     seaward: ((Double, Double) -> Double)? = nil) -> SKTexture {
+                     seaward: ((Double, Double) -> Double)? = nil,
+                     across: ((Double, Double) -> (tones: [(r: Double, g: Double, b: Double)], share: Double)?)? = nil,
+                     ice: Ice? = nil) -> SKTexture {
         let hasWater = layers.contains { $0.style == .water || $0.style == .cut }
         let place = (hasWater ? "@\(cell.col),\(cell.row)#\(variant)" : "") + (pond == nil ? "" : "|pond")
         let key = "organic|\(base)|" + layers.map { "\($0.tile):\($0.mask):\($0.style):\($0.from?.land ?? ""):\($0.fade?.key ?? "")" }.joined(separator: "|") + place
@@ -855,7 +1091,7 @@ final class ArtLibrary {
                 texels = variantPixels(layer.tile, pick, size: size)
             }
             let segments: [(x0: Double, y0: Double, x1: Double, y1: Double)] = shore ? [] : Self.strokes(mask: layer.mask)
-            let palette = pond != nil && layer.style == .water && layer.tile == "tile_water" ? Self.pondPalette(texels) : nil
+            let palette = pond != nil && layer.style == .water && Self.isPondWater(layer.tile) ? Self.pondPalette(texels) : nil
             // A town's road: the sand either side of its cobbles and the stones' colour, from the land's
             // own path and cobble tiles as graded here.
             let sand = layer.cobbled ? variantPixels("tile_path", pick, size: size) : []
@@ -904,10 +1140,11 @@ final class ArtLibrary {
                         for c in 0..<3 { out[index + c] = UInt8(Double(texels[index + c]) * shade) }
                         out[index + 3] = 255
                     case .water:
-                        // A land's own water (not ice or chocolate) gets depth and a bank: paler in the
-                        // shallows, deeper out from the shore, and a strip of damp earth and pebbles
-                        // along it, where the land had stopped dead at a flat blue (playtesting 2026-10-23).
-                        let natural = layer.tile == "tile_water"
+                        // A land's own water (not ice) gets depth and a bank: paler in the shallows,
+                        // deeper out from the shore, and a strip of damp earth and pebbles along it,
+                        // where the land had stopped dead at a flat blue (playtesting 2026-10-23).
+                        // Chocolate too (the user, 2026-11-25), but not the blue shallows.
+                        let natural = Self.isPondWater(layer.tile)
                         let speck = Self.speck(px, py, cell)
                         // Grass in the outline (the user, 2026-11-16): the land's own grass grows out over
                         // the waterline in blades, each its own height (`bladeReach`, along the screen's
@@ -939,12 +1176,17 @@ final class ArtLibrary {
                                 if below <= start { tone = 6 }
                             }
                             let sea = seaward.map { (tones: seaTones, share: $0(Double(cell.col) + 0.5 + x, Double(cell.row) + 0.5 + y)) }
-                            Self.paintPond(&out, index, texels: texels, tone: tone, palette: palette, shade: shadowed ? 0.7 : 1, sea: sea)
+                            Self.paintPond(&out, index, texels: texels, tone: tone, palette: palette, shade: shadowed ? 0.7 : 1, sea: sea,
+                                           other: across?(Double(cell.col) + 0.5 + x, Double(cell.row) + 0.5 + y))
+                            if let ice {
+                                Self.freeze(&out, index, x: Double(cell.col) + 0.5 + x, y: Double(cell.row) + 0.5 + y, size: size,
+                                            tones: palette.tones, ice: ice)
+                            }
                             out[index + 3] = 255
                         } else if depth > 0 {
                             // Foam along the edge, broken here and there, with a few flecks out past it.
                             let foam = depth < 0.05 ? (speck < 0.75 ? 0.35 : 0.12) : (depth < 0.1 && speck < 0.12 ? 0.22 : 0)
-                            let shallow = natural ? 0.3 * pow(max(0, 1 - depth / 0.4), 1.5) : 0
+                            let shallow = layer.tile == "tile_water" ? 0.3 * pow(max(0, 1 - depth / 0.4), 1.5) : 0
                             let deep = natural ? Self.deepShade(depth) : 0
                             for c in 0..<3 {
                                 var value: Double = Double(texels[index + c]) * (1 - deep)
@@ -1052,6 +1294,78 @@ final class ArtLibrary {
         windStrips[key] = WindStrip(texture: texture, frames: frames)
         return frames
     }
+
+    /// The wind frames of every sprite in `ids` that moves in the wind, as `sprite(_:)` draws it now
+    /// (graded for the land being set down), cut from strips packed side by side on one texture, so a
+    /// mixed wood's trees and bushes share it and SpriteKit draws them in batches, not one by one
+    /// (the user, 2026-11-25, after a post on pixel-art trees in the wind: the clumps aren't what's
+    /// slow, drawing each tree off a picture of its own is). `windFrames` then finds them made; what
+    /// it doesn't find (a land next door's recolour, or past `atlasSide`) it cuts on its own, as before.
+    func packWindFrames(_ ids: [String]) {
+        guard let book = WindBook.shared else { return }
+        var items: [(texture: SKTexture, strip: CGImage, count: Int)] = []
+        var seen: Set<ObjectIdentifier> = []
+        for id in Set(ids).sorted() {
+            guard let rig = windRig(id) else { continue }
+            let texture = sprite(id).texture
+            let key = ObjectIdentifier(texture)
+            guard seen.insert(key).inserted else { continue }
+            if let known = windStrips[key], known.texture === texture { continue }
+            guard rig.frames.count > 0, let strip = book.strip(picture(of: texture), rig: rig) else { continue }
+            items.append((texture, strip, rig.frames.count))
+        }
+        guard items.count > 1 else { return }
+        // Shelves, tallest first, a clear pixel round each so no neighbour's edge creeps in.
+        let side = Self.atlasSide, gap = 1
+        let order = items.indices.sorted { items[$0].strip.height > items[$1].strip.height }
+        var spots: [Int: (x: Int, y: Int)] = [:]
+        var x = gap, y = gap, shelf = 0
+        for index in order {
+            let w = items[index].strip.width, h = items[index].strip.height
+            guard w + 2 * gap <= side else { continue }
+            if x + w + gap > side {
+                x = gap
+                y += shelf + gap
+                shelf = 0
+            }
+            guard y + h + gap <= side else { break }
+            spots[index] = (x, y)
+            x += w + gap
+            shelf = max(shelf, h)
+        }
+        let height = y + shelf + gap
+        guard spots.count > 1, height > 0,
+              let context = CGContext(data: nil, width: side, height: height, bitsPerComponent: 8, bytesPerRow: 0,
+                                      space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)
+        else { return }
+        context.interpolationQuality = .none
+        for (index, spot) in spots {
+            let strip = items[index].strip
+            // The context's rows run up from the bottom.
+            context.draw(strip, in: CGRect(x: spot.x, y: height - spot.y - strip.height, width: strip.width, height: strip.height))
+        }
+        guard let image = context.makeImage() else { return }
+        let page = SKTexture(cgImage: image)
+        page.filteringMode = .nearest
+        let pageWidth = CGFloat(side), pageHeight = CGFloat(height)
+        for (index, spot) in spots {
+            let item = items[index]
+            let frameWidth = CGFloat(item.strip.width / item.count), frameHeight = CGFloat(item.strip.height)
+            let bottom = pageHeight - CGFloat(spot.y) - frameHeight
+            let frames = (0..<item.count).map { f -> SKTexture in
+                let rect = CGRect(x: (CGFloat(spot.x) + CGFloat(f) * frameWidth) / pageWidth, y: bottom / pageHeight,
+                                  width: frameWidth / pageWidth, height: frameHeight / pageHeight)
+                let frame = SKTexture(rect: rect, in: page)
+                frame.filteringMode = .nearest
+                return frame
+            }
+            windStrips[ObjectIdentifier(item.texture)] = WindStrip(texture: item.texture, frames: frames)
+        }
+    }
+
+    /// How wide (and at most how tall) a land's packed wind texture is, in pixels: well inside what
+    /// every iPhone's GPU takes (8192 since the A9).
+    private static let atlasSide = 4096
 
     private func remember(_ image: CGImage, for texture: SKTexture) {
         sources[ObjectIdentifier(texture)] = Source(texture: texture, image: image)

@@ -2157,6 +2157,70 @@
       "kind": "prop"
     },
     {
+      "id": "water_rock_2",
+      "kind": "prop"
+    },
+    {
+      "id": "water_rock_3",
+      "kind": "prop"
+    },
+    {
+      "id": "water_rock_4",
+      "kind": "prop"
+    },
+    {
+      "id": "float_petals",
+      "kind": "prop"
+    },
+    {
+      "id": "float_petals_white",
+      "kind": "prop"
+    },
+    {
+      "id": "float_blossom",
+      "kind": "prop"
+    },
+    {
+      "id": "float_leaf",
+      "kind": "prop"
+    },
+    {
+      "id": "rim_float_petals",
+      "kind": "prop"
+    },
+    {
+      "id": "rim_float_petals_white",
+      "kind": "prop"
+    },
+    {
+      "id": "rim_float_blossom",
+      "kind": "prop"
+    },
+    {
+      "id": "rim_float_leaf",
+      "kind": "prop"
+    },
+    {
+      "id": "rim_lily_pad",
+      "kind": "prop"
+    },
+    {
+      "id": "rim_water_rock",
+      "kind": "prop"
+    },
+    {
+      "id": "rim_water_rock_2",
+      "kind": "prop"
+    },
+    {
+      "id": "rim_water_rock_3",
+      "kind": "prop"
+    },
+    {
+      "id": "rim_water_rock_4",
+      "kind": "prop"
+    },
+    {
       "id": "waterfall",
       "kind": "prop"
     },
@@ -2206,6 +2270,22 @@
     },
     {
       "id": "cliff_fall_pool",
+      "kind": "prop"
+    },
+    {
+      "id": "cliff_fall_spring",
+      "kind": "prop"
+    },
+    {
+      "id": "cliff_fall_spring_2",
+      "kind": "prop"
+    },
+    {
+      "id": "cliff_fall_spring_3",
+      "kind": "prop"
+    },
+    {
+      "id": "cliff_fall_spring_4",
       "kind": "prop"
     },
     {
@@ -3086,6 +3166,22 @@
       "kind": "building"
     },
     {
+      "id": "cave_mouth",
+      "kind": "prop"
+    },
+    {
+      "id": "cave_mouth_glimmer",
+      "kind": "prop"
+    },
+    {
+      "id": "cave_mouth_slime",
+      "kind": "prop"
+    },
+    {
+      "id": "cave_mouth_rat",
+      "kind": "prop"
+    },
+    {
       "id": "warrior_guild",
       "scale": 1.35,
       "kind": "building"
@@ -3624,10 +3720,6 @@
       "kind": "prop"
     },
     {
-      "id": "windows_brazier",
-      "kind": "prop"
-    },
-    {
       "id": "windows_bubbling_cauldron",
       "kind": "prop"
     },
@@ -3893,6 +3985,22 @@
     },
     {
       "id": "fire_blacksmith_3",
+      "kind": "prop"
+    },
+    {
+      "id": "fire_brazier_0",
+      "kind": "prop"
+    },
+    {
+      "id": "fire_brazier_1",
+      "kind": "prop"
+    },
+    {
+      "id": "fire_brazier_2",
+      "kind": "prop"
+    },
+    {
+      "id": "fire_brazier_3",
       "kind": "prop"
     },
     {

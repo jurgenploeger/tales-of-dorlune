@@ -118,6 +118,16 @@ final class CanopyShade {
     /// of spires, tents and lamps' plinths, which stand, were taken for flat too.
     static let flatBases: Set<String> = ["oasis_palm"]
 
+    /// A rock or boulder, by its art's name: solid to the ground, it casts its shade as a building does,
+    /// a block set back from its front (`Caster.walls`), not as a crown's rounds about its foot, which
+    /// laid shade out in front of it (the user, 2026-11-25: "The shadow on this boulder or rocks is
+    /// not correct", Snow White Forest's `rock_formation_large`). Not what's in the water (its own
+    /// round, `LandStage`) or a rocking horse.
+    static func isRock(_ id: String) -> Bool {
+        guard !id.hasPrefix("water_rock"), !id.contains("rocking") else { return false }
+        return id.contains("boulder") || id.contains("rock_formation") || id == "rock" || id.hasSuffix("_rock")
+    }
+
     /// A raised terrace casts shade as a block `height` points tall (`LandStage.placePlateaus`): a round
     /// as wide as a cell (`half` its half width on screen) from each cell's middle at every few points up,
     /// so together they lay its outline on the ground away from the sun, its shade as long as its
@@ -138,6 +148,16 @@ final class CanopyShade {
                 }
             }
         }
+    }
+
+    /// Switched off in Settings → Developer: what's drawn hides, and nothing new is drawn (`LandStage.update`).
+    private(set) var isOff = false
+
+    /// Hides or shows every chunk's shade as Settings → Developer switches it.
+    func setOff(_ off: Bool) {
+        guard off != isOff else { return }
+        isOff = off
+        for node in nodes.values where node.texture != nil { node.isHidden = off }
     }
 
     /// Lays the shade away from `sun` from now on: drawn again once it has moved far enough to show
@@ -240,7 +260,7 @@ final class CanopyShade {
         }
         node.texture = texture
         node.size = CGSize(width: size, height: size)
-        node.isHidden = false
+        node.isHidden = isOff
     }
 
     private func isShown(_ spot: GridPoint) -> Bool {

@@ -72,6 +72,9 @@ final class GameSession {
     /// An adventurer's offer for something you've put up for trade, waiting for your answer
     /// (`GameSession+TradeList`).
     var pendingBid: Bid?
+    /// Whether its window is open: the buyer walks up, and the HUD's Trade button opens it (the user,
+    /// 2026-11-25: "they come up to me and a button should appear to open the trading modal").
+    var bidOpen = false
     /// The tile the hero stands on, for the minimap.
     var mapCell = GridPoint(col: 0, row: 0)
     /// Everyone else on this map, as dots on the minimap.
