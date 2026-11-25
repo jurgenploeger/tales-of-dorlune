@@ -165,6 +165,8 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   reads both): trees in the wind (`WindField.tick`), shade, tall grass, water motion, footprints, ambience,
   lighting. Wind, shade and footprints change at once, the rest in lands built after. Frame timing (`FrameTiming`, end of
   `ContinentScene.swift`): each part of the continent's frame laps it (`lap`), shown once a second over the joystick.
+- A town's market traders (bots under a sign, `Crowd.placeTraders`) are closed for now (`Crowd.marketOpen`, the user,
+  2026-11-25: a busy town ran at a few frames a second): as many adventurers walk about instead. Set it back to bring them back.
 - Monsters turn up 30% less often on a land's main roads (`WorldMap.mainRoads`, the roads out through its exits,
   not trails or footpaths; `ContinentScene.roadEncounterShare`; the user, 2026-11-25).
 - Dark Mode: the game follows the phone's look, or Settings → Appearance (`GameSettings.appearanceKey`, set on the
