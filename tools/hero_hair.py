@@ -14,11 +14,13 @@ import numpy as np
 from PIL import Image
 from scipy import ndimage
 
+SAT = 0.5          # lift --sat: lower for a painting already in calm colours (it stays above the skin's 0.45)
+
 def hairy(p):
     if p[3] == 0:
         return False
     h, s, v = colorsys.rgb_to_hsv(*(p[:3] / 255))
-    return s >= 0.5 and v >= 0.3 and (h * 360 <= 50 or h * 360 >= 350)
+    return s >= SAT and v >= 0.3 and (h * 360 <= 50 or h * 360 >= 350)
 
 def dark(p):
     return p[3] > 0 and p[:3].max() < 0.45 * 255
@@ -51,7 +53,7 @@ def lift(S, M):
         if dark(p) and (M[y, x, 3] == 0 or (p != M[y, x]).any()):
             hm[y, x] = True
     layer = np.zeros_like(S); layer[hm] = S[hm]
-    return grade(layer), (dy, dx)
+    return (layer if NO_GRADE else grade(layer)), (dy, dx)
 
 # ChatGPT paints the hair a very saturated ginger (asked for, so it parts from the skin), and every hair colour is
 # worked from it: too bright and unnatural (the user, 2026-11-25). The lifted layer is graded once, the user's pick B
@@ -71,7 +73,12 @@ def grade(layer, g=GRADE):
 def worn(M, layer):
     out = Image.fromarray(M.copy()); out.alpha_composite(Image.fromarray(layer)); return np.asarray(out)
 
+NO_GRADE = False
 if __name__ == "__main__":
+    if "--no-grade" in sys.argv:    # ChatGPT painted it in the toned-down colours already: grading again dulled it
+        NO_GRADE = True; sys.argv.remove("--no-grade")
+    if "--sat" in sys.argv:
+        i = sys.argv.index("--sat"); SAT = float(sys.argv[i + 1]); del sys.argv[i:i + 2]
     if sys.argv[1] == "grade":     # grade a layer lifted before GRADE: hero_hair.py grade <in.png> <out.png>
         Image.fromarray(grade(np.asarray(Image.open(sys.argv[2]).convert("RGBA")))).save(sys.argv[3])
     if sys.argv[1] == "lift":

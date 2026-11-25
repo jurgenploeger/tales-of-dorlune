@@ -21,6 +21,9 @@ if "--grid" in sys.argv:
     i = sys.argv.index("--grid"); GC, GR = map(int, sys.argv[i + 1].split("x")); del sys.argv[i:i + 2]
 N = GC * GR
 HAIR = 0
+HAIR_SAT = 0.5      # --hair-sat: a calmer painting's hair (ChatGPT copied the toned-down reference, 2026-11-25)
+if "--hair-sat" in sys.argv:
+    i = sys.argv.index("--hair-sat"); HAIR_SAT = float(sys.argv[i + 1]); del sys.argv[i:i + 2]
 if "--hair" in sys.argv:
     i = sys.argv.index("--hair"); HAIR = int(sys.argv[i + 1]); del sys.argv[i:i + 2]
 import colorsys
@@ -65,7 +68,7 @@ def snap(c):
             if HAIR:
                 med = np.median(core[:, :3], 0)
                 h, sat, v = colorsys.rgb_to_hsv(*(med / 255))
-                if sat >= 0.5 and v >= 0.3 and (h * 360 <= 50 or h * 360 >= 350):
+                if sat >= HAIR_SAT and v >= 0.3 and (h * 360 <= 50 or h * 360 >= 350):
                     out[j, i, :3] = med; out[j, i, 3] = 254       # 254 marks hair till its shades are cut
                     continue
             idx = np.argmin(((core[:, None, :3] - pal[None]) ** 2).sum(2), 1)
