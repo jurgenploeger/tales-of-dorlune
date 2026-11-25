@@ -104,6 +104,15 @@ def style_view(style, d):
     s = he.standing(d)
     return None if s is None or not os.path.exists(p) else (s, np.asarray(Image.open(p).convert("RGBA")))
 
+def ear_top(d):
+    """The top row of the elf's ears in a direction's standing view (hero64_doll_ears_<direction>.png), or None."""
+    import hero_ears as he
+    v = he.view(d)
+    if v is None:
+        return None
+    rows = np.nonzero(v[1][..., 3].any(1))[0]
+    return int(rows.min()) if len(rows) else None
+
 def wear_style(style, anim, race="human"):
     """The doll's (or the elf's) sheet with the style on every frame of every direction drawn so far: the standing
     view's hair moved with the head (hero_ears.fit), over clear pixels and the head (hero_ears.wear: a raised arm
@@ -126,23 +135,18 @@ def wear_style(style, anim, race="human"):
             # on the elf the hair goes over the elf's frame: the walk and attack ears layers carry ChatGPT's own
             # head pixels round the ears, and laid back over the hair they showed through it as skin and specks
             # (the user, 2026-11-25)
-            w = he.wear(elf[sl] if elf is not None else f, hair, he.fit(f, ref), ref)
+            sh = he.fit(f, ref)
+            w = he.wear(elf[sl] if elf is not None else f, hair, sh, ref)
             if elf is not None:
-                # from the row where the ears stick out past the head down, the ears stay over the hair: there the
-                # sideburns' strands crossed their roots (the user, 2026-11-25); above it the hair still covers
-                # ChatGPT's head pixels round the ears
+                # from the ears' top row down (the standing view's ears, moved with the head), the ears stay over
+                # the hair: the sideburns crossed their roots and, facing down-right, the hair at the back of the
+                # head flapped over the near ear (the user, 2026-11-25); above it the hair still covers ChatGPT's
+                # head pixels round the ears
                 e = elf[sl]
                 ear = (e[..., 3] > 0) & ((e != f).any(2))
-                # an ear's row: one with ear pixels 3 or more past the doll's own sides (ChatGPT's head ran a pixel
-                # or two wider higher up, and from there its skin showed in the hair)
-                out_ = np.zeros_like(ear)
-                for y in range(64):
-                    xs = np.nonzero(f[y, :, 3])[0]
-                    if len(xs):
-                        out_[y, :max(xs.min() - 2, 0)] = ear[y, :max(xs.min() - 2, 0)]
-                        out_[y, xs.max() + 3:] = ear[y, xs.max() + 3:]
-                if out_.any():
-                    band = np.zeros_like(ear); band[np.nonzero(out_.any(1))[0].min():] = True
+                top = ear_top(d)
+                if top is not None:
+                    band = np.zeros_like(ear); band[max(top + sh[0], 0):] = True
                     keep = ear & band
                     w = w.copy(); w[keep] = e[keep]
             out[sl] = w

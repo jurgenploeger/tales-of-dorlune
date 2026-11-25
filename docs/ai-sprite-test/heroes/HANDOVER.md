@@ -439,8 +439,9 @@ One doll, end to end (it was the Human Male pilot until 2026-11-24).
     spiky` lays it on every frame by the head fit, as the idle ears are, with the elf's ears back over it
     (`hero64_<human|elf>_spiky_<anim>.png`, `.gif`). Every lifted layer is toned down once (`hero_hair.GRADE`,
     saturation x0.72, brightness x0.9, hue 4° toward red: the user's pick B of three; the bright ginger made every
-    hair colour look unnatural). On the elf, from the row its ears stick out past the head, the ears stay over the
-    hair (the sideburns crossed them).
+    hair colour look unnatural). On the elf, from the ears' top row down (the standing view's ears moved with the head,
+    `hero_hair.ear_top`), the ears stay over the hair (sideburns crossed them; facing down-right the back hair flapped
+    over the near ear).
     Spiky down-right: two paintings (`tries/hair_spiky_down-right_try1{a,b}_painting.png`), the user picked 1
     (`hero64_hair_spiky_down-right.png`; down-left its mirror), worn on every frame the same way.
  Idle wears it; up-left mirrored.
