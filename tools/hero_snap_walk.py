@@ -5,6 +5,9 @@
 
 --grid: the painting's frames as columns x rows (default 4x2, a walk's 8; an attack's 6 are 3x2).
 
+--hair N: hair keeps its own colours (a saturated ginger cell, by its middle's median: saturation 0.5 and up, hue 0
+to 50), cut to N shades over the whole row; everything else still maps to the doll's palette (hair layers, 2026-11-25).
+
 --centre: each frame moved so its head (its top 18 rows) is centred on column 32, for a painting whose figure
 slides across its cell (walk up-right, 2026-11-24): played in place, that jittered.
 
@@ -17,6 +20,10 @@ GC, GR = 4, 2
 if "--grid" in sys.argv:
     i = sys.argv.index("--grid"); GC, GR = map(int, sys.argv[i + 1].split("x")); del sys.argv[i:i + 2]
 N = GC * GR
+HAIR = 0
+if "--hair" in sys.argv:
+    i = sys.argv.index("--hair"); HAIR = int(sys.argv[i + 1]); del sys.argv[i:i + 2]
+import colorsys
 import numpy as np
 from PIL import Image
 P = float(sys.argv[2]) if len(sys.argv) > 2 else 6.9
@@ -55,6 +62,12 @@ def snap(c):
             # each painted pixel to its nearest palette colour, then the cell takes the most common one, an
             # outline colour only where most of the cell is outline: a median let a cell straddling the
             # painting's soft outline go dark, and the outline came out two pixels thick (the user, 2026-11-24)
+            if HAIR:
+                med = np.median(core[:, :3], 0)
+                h, sat, v = colorsys.rgb_to_hsv(*(med / 255))
+                if sat >= 0.5 and v >= 0.3 and (h * 360 <= 50 or h * 360 >= 350):
+                    out[j, i, :3] = med; out[j, i, 3] = 254       # 254 marks hair till its shades are cut
+                    continue
             idx = np.argmin(((core[:, None, :3] - pal[None]) ** 2).sum(2), 1)
             counts = np.bincount(idx, minlength=len(pal))
             darkpal = pal.max(1) < 0.35 * 255
@@ -86,6 +99,15 @@ for r in range(GR):
             yy, xx = y + dy, x + dx
             if 0 <= yy < 64 and 0 <= xx < 64:
                 row[yy, k * 64 + xx] = g[y, x]
+if HAIR:
+    m = row[..., 3] == 254
+    if m.any():
+        px = row[m][:, :3].astype(float)
+        cent = np.array(sorted({tuple(c) for c in px}, key=sum))[np.linspace(0, len({tuple(c) for c in px}) - 1, HAIR).astype(int)].astype(float)
+        for _ in range(20):
+            lab = np.argmin(((px[:, None] - cent[None]) ** 2).sum(2), 1)
+            cent = np.array([px[lab == k].mean(0) if (lab == k).any() else cent[k] for k in range(HAIR)])
+        row[m, :3] = np.round(cent[lab]).astype(np.uint8); row[m, 3] = 255
 out = sys.argv[1]
 Image.fromarray(row).save(out + ".png")
 Image.fromarray(row).resize((64 * N * 8, 512), Image.NEAREST).save(out + "_8x.png")
