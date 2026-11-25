@@ -534,9 +534,11 @@ final class ArtLibrary {
     }
 
     /// The article's ice: each a step lighter than the water it lies on, dark to light.
+    /// (#426280, #6890ac, #92bace, #bedce9, #eaf6fb; spelled out, the hex literals mapped through a
+    /// closure were more than the type checker would take.)
     nonisolated static let iceTones: [(Double, Double, Double)] = [
-        (0x42, 0x62, 0x80), (0x68, 0x90, 0xac), (0x92, 0xba, 0xce), (0xbe, 0xdc, 0xe9), (0xea, 0xf6, 0xfb),
-    ].map { (Double($0.0) / 255, Double($0.1) / 255, Double($0.2) / 255) }
+        (0.259, 0.384, 0.502), (0.408, 0.565, 0.675), (0.573, 0.729, 0.808), (0.745, 0.863, 0.914), (0.918, 0.965, 0.984),
+    ]
 
     /// A crack's pixel, in art pixels on the continent.
     nonisolated static func iceKey(_ u: Int, _ v: Int) -> Int { u &* 1_000_003 &+ v }
