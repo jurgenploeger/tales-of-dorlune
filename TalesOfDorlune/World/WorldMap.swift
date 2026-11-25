@@ -3885,7 +3885,7 @@ nonisolated final class WorldMap: @unchecked Sendable {
                 case .accent: color(forTile: theme.accent ?? theme.ground).shaded(1.08)
                 case .path: tileColor == nil && theme.path == "tile_path" ? PixelColor(0xE8C98C) : color(forTile: theme.path).shaded(1.15)
                 case .border: color(forTile: theme.border ?? theme.ground)
-                case .water: tileColor == nil ? PixelColor(0x4FA3E0) : color(forTile: theme.water ?? "tile_water")
+                case .water: tileColor == nil ? PixelColor(0x4FA3E0) : color(forTile: theme.frozen == true ? "tile_ice" : (theme.water ?? "tile_water"))
                 // The sea it draws (`Region`), and none of a land next door's: those draw their own.
                 case .sea: region?.drawsSea(at: cell) == false ? .clear : Self.seaColor
                 case .away: .clear

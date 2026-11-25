@@ -359,7 +359,18 @@ final class LandStage {
     /// graded as it is there).
     @discardableResult
     private func addScenery(_ placement: Placement, sprite: SpriteArt? = nil) -> SKSpriteNode {
-        let drawn = sprite ?? art.sprite(placement.art)
+        var drawn = sprite ?? art.sprite(placement.art)
+        // Snow on its top near a snowy land's border, as the ground there is snowed over
+        // (`GroundTiles.snowCover`, `ArtLibrary.capped`; the user, 2026-11-25), unless it's a snowy land's
+        // own (already drawn in snow) or a building.
+        let snowyOwn = (placement.land ?? def).theme.ground.contains("snow")
+        if !snowyOwn, art.asset(placement.art)?.kind != "building", drawn.size.height >= 12 {
+            let cover = tiles.snowCover(placement.cell)
+            let stage = cover > 0.75 ? 3 : cover > 0.45 ? 2 : cover > 0.15 ? 1 : 0
+            if stage > 0, let tones = tiles.snowTones(placement.cell) {
+                drawn = SpriteArt(texture: art.capped(drawn.texture, stage: stage, tones: tones), size: drawn.size)
+            }
+        }
         let node = addScenery(drawn, at: placement.cell, nudge: placement.nudge, sway: placement.sway, scale: placement.scale,
                               wind: placement.art)
         reflect(node, picture: drawn.texture, art: placement.art, cell: placement.cell)
@@ -989,7 +1000,8 @@ final class LandStage {
     /// Unseeded: the land's layout stays what it was.
     private func placePondMotion() {
         let water = def.theme.water ?? "tile_water"
-        guard ArtLibrary.isPondWater(water) else { return }
+        // Nothing laps, glints or rings on ice.
+        guard ArtLibrary.isPondWater(water), def.theme.frozen != true else { return }
         // Chocolate's glints and rings in a creamy sheen, not the water's pale blue.
         let tint: UIColor? = water == "tile_water" ? nil : UIColor(red: 1, green: 0.86, blue: 0.7, alpha: 1)
         func make(_ texture: SKTexture) -> SKSpriteNode {

@@ -5733,7 +5733,8 @@
         "path": "tile_snow_path",
         "accent": "tile_grass",
         "accentPatches": 18,
-        "water": "tile_ice",
+        "water": "tile_water",
+        "frozen": true,
         "ponds": 9,
         "hills": {
           "count": 3,
@@ -19586,6 +19587,7 @@
         "accent": "tile_grass",
         "accentPatches": 8,
         "water": "tile_water",
+        "frozen": true,
         "ponds": 3,
         "lakes": {
           "count": 1,

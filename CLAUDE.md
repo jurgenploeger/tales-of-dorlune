@@ -376,6 +376,15 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   the water's pale line round it (`rim_<id>`, the lower half of its outline, which stays put); the lily pad and the
   shallows' rocks (`water_rock` and `_2` to `_4`, a slab, a pair and a spire, `tools/scenery_art.py`) get one too, a
   rock's lapping. Rerun it after redrawing anything in `RIMMED`; `--sheet out.png` previews them.
+- Snow and ice (the user's picks from `tools/snow_ice_preview.py`, 2026-11-25, after SpriteCook's snow and ice article):
+  a cold land's lakes, rivers and ponds frozen over (maps.json theme `frozen`: Briarmere and Snow White Forest, whose
+  water is `tile_water` under it): `ArtLibrary.freeze` lays the article's five ice tones a step lighter than the pond's
+  own over its water (`pondTile`, `organicTile`), snow drifted by the shore, still glare streaks and cracks
+  (`GroundTiles.makeCracks`, seeded random walks); nothing floats, laps or rings on it (`LandPlan`, `placePondMotion`),
+  reeds and the shallows' rocks still stand in it. Where a snowy land meets one that isn't, the other's ground in the band
+  is snowed over pixel by pixel (`GroundTiles.snowCover`: all of it at the border, none `reach` in; `snowOver`,
+  `ArtLibrary.snowed`: clusters first, dark crevices last, in the snowy land's own snow, `snowTones`), and its trees and
+  bushes there capped with snow by stage (`ArtLibrary.capped`, `LandStage.addScenery`). Keep the tool and the Swift in step.
 - `tools/fx_art.py`: the same for the few battle marks that aren't light (`art/sprites/fx_*.png`: poison's bubble
   and the glossy marks by the HP bars, drawn smooth at 3×: poison's drop and the arrows for lowered and raised
   stats). `--sheet out.png` writes a contact sheet. Spells are light, not sprites:

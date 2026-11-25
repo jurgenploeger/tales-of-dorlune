@@ -140,7 +140,7 @@ final class LandPlanner {
     private func planLilyPads() {
         // Frozen ponds and chocolate ones don't grow lily pads.
         let water = def.theme.water ?? ""
-        guard !water.contains("ice"), !water.contains("chocolate") else { return }
+        guard !water.contains("ice"), def.theme.frozen != true, !water.contains("chocolate") else { return }
         var padRNG = SeededRandom(text: def.id + "/lilies")
         for pond in map.ponds {
             // A few on a pond, more on a lake.
@@ -200,6 +200,7 @@ final class LandPlanner {
         planWaterfalls()
         planCliffFalls()
         let water = def.theme.water ?? ""
+        // Reeds and the shallows' rocks stand in frozen water too (the snow and ice article's rocks do).
         guard !water.contains("ice"), !water.contains("chocolate"), !map.lakes.isEmpty || !map.river.isEmpty else { return }
         var reedRNG = SeededRandom(text: def.id + "/reeds")
         var seen: Set<GridPoint> = []
@@ -261,7 +262,7 @@ final class LandPlanner {
     /// Nothing else grows on the cells round it.
     private func planWaterfalls() {
         let water = def.theme.water ?? ""
-        guard let region = map.region, !water.contains("ice"), !water.contains("chocolate") else { return }
+        guard let region = map.region, !water.contains("ice"), def.theme.frozen != true, !water.contains("chocolate") else { return }
         for line in region.rivers where line.count > 8 {
             // Its first cell that's laid as river: the spring's own may be narrower than a cell.
             guard let first = line.prefix(4).firstIndex(where: { point in
@@ -306,7 +307,7 @@ final class LandPlanner {
     private func planCliffFalls() {
         let water = def.theme.water ?? ""
         // Nor in the dry lands, off a mesa of sand or desert rock.
-        guard !water.contains("ice"), !water.contains("chocolate"),
+        guard !water.contains("ice"), def.theme.frozen != true, !water.contains("chocolate"),
               def.theme.ground != "tile_desert", def.theme.ground != "tile_sand" else { return }
         for hill in map.hills where hill.terrace != nil {
             var draw = SeededRandom(text: def.id + "/cliff falls \(hill.origin.col) \(hill.origin.row)")
