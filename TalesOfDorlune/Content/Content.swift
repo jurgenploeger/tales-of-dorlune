@@ -656,7 +656,8 @@ nonisolated struct MapDef: Decodable, Identifiable, Sendable {
         let bank: String?
         /// Terraces instead of smooth slopes, if set: each range stepped into flat levels this many
         /// points apart, a sheer face of rock (`bank`) between each and the next where it faces you
-        /// and a walkable slope round its back (`WorldMap.Hill.terrace`). Not with mountains.
+        /// and a walkable slope round its back (`WorldMap.Hill.terrace`). A mountain's in five levels
+        /// whatever this says, with stairs up its face (`WorldMap.carveStairs`).
         let terraces: Double?
 
         nonisolated struct Mountains: Decodable, Sendable {

@@ -2341,7 +2341,8 @@ nonisolated final class WorldMap: @unchecked Sendable {
     private static let mountainTop = 0.88
     private static let mountainFace = 2.4
     private static let mountainSides = 1.6
-    private static let mountainRound = max((1 + 1 / mountainFace) / 2, 1 / mountainSides)
+    /// A terraced mountain's (`raiseHills`): how many times shorter its reach toward you than back.
+    private static let terracedMountainFace = 1.25
 
     /// The chance a range has a trail up it, but for a land's first and those with a mountain, which
     /// always do (`shapeHill`).
@@ -2368,6 +2369,11 @@ nonisolated final class WorldMap: @unchecked Sendable {
         let steep = Hill.steepness(rockiness: rockiness)
         // A mountain is steep whatever the land, or it'd need more room than a map has.
         let mountainSteep = max(steep, 17)
+        // A terraced mountain's face reaches out nearly as far as its back, so its five levels are
+        // wide enough to walk along and take a stair (`carveStairs`); else steep toward you.
+        let terraced = hills.terraces != nil
+        let face = terraced ? Self.terracedMountainFace : Self.mountainFace
+        let reachRound = max((1 + 1 / face) / 2, 1 / Self.mountainSides)
         let mountains = [Double?](repeating: hills.mountains?.height, count: hills.mountains?.count ?? 0)
         var claimed: Set<GridPoint> = []
         for mountain in mountains + [Double?](repeating: nil, count: hills.count) {
@@ -2392,12 +2398,12 @@ nonisolated final class WorldMap: @unchecked Sendable {
                         // As tall as asked, if anywhere has room for one that wide (it needs the
                         // reach back to climb that high gently and still have a top); else as tall
                         // as fits. It faces you (`Hill.Lobe.front`), steeper across and toward you.
-                        let fits = ((widest - 1) / Self.mountainRound - 1) * Self.mountainTop * steepness / 1.5
+                        let fits = ((widest - 1) / reachRound - 1) * Self.mountainTop * steepness / 1.5
                         peak = max(tallest, min(mountain * Double.random(in: 0.92...1.08, using: &rng), fits))
                         let need = 1.5 * peak / steepness / Self.mountainTop + 1
-                        along = max(need, min((widest - 1) / Self.mountainRound, need * Double.random(in: 1...1.1, using: &rng)))
+                        along = max(need, min((widest - 1) / reachRound, need * Double.random(in: 1...1.1, using: &rng)))
                         across = along / Self.mountainSides
-                        front = along / Self.mountainFace
+                        front = along / face
                     } else {
                         // A narrow one stands lower, so it still has a top.
                         peak = min(peak, min(along, across) * 0.85 * steepness / 1.5)
@@ -2414,9 +2420,12 @@ nonisolated final class WorldMap: @unchecked Sendable {
                         // Turned to face you, its spurs down the face.
                         var lobe = Hill.Lobe(x: x, y: y, along: along, across: across, angle: Double.pi / 4, peak: peak, steepness: steepness)
                         lobe.front = front
-                        lobe.spurs = Hill.Lobe.Spurs(count: Double(Int.random(in: 11...15, using: &rng)), depth: 0.22,
-                                                     phases: (Double.random(in: 0..<6.3, using: &rng), Double.random(in: 0..<6.3, using: &rng),
-                                                              Double.random(in: 0..<6.3, using: &rng)))
+                        let spurs = Hill.Lobe.Spurs(count: Double(Int.random(in: 11...15, using: &rng)), depth: 0.22,
+                                                    phases: (Double.random(in: 0..<6.3, using: &rng), Double.random(in: 0..<6.3, using: &rng),
+                                                             Double.random(in: 0..<6.3, using: &rng)))
+                        // A terraced one's levels run round it unbroken, with no ridges down them
+                        // (drawn all the same, so the land's other draws stay as they were).
+                        if !terraced { lobe.spurs = spurs }
                         lobes.append(lobe)
                     } else {
                         lobes.append(Hill.Lobe(x: x, y: y, along: along, across: across,
@@ -2434,7 +2443,13 @@ nonisolated final class WorldMap: @unchecked Sendable {
                      fy: Double.random(in: 0.4...1, using: &rng), py: Double.random(in: 0..<6.3, using: &rng))
                 }
                 var hill = Hill(lobes: lobes, ripples: ripples, steepness: steep)
-                if tall == nil { hill.terrace = hills.terraces }
+                // A mountain too, in five levels whatever its height (the user, 2026-11-25: "for a
+                // mountain we just stack a lot of plateaus, so you have to walk zig zag to go up";
+                // five, its back a gentle slope): stairs up its face (`carveStairs`). A step a little
+                // short of a fifth, so its top level has room on it.
+                if let step = hills.terraces {
+                    hill.terrace = tall.map { lobes[$0].peak / (Double(Self.mountainLevels) + 0.7) } ?? step
+                }
                 // How its trails wind: from where on its front, which way round, how far and how
                 // they bend, its own.
                 let winding = Winding(aim: 1.25 * Double.pi + Double.random(in: -0.35...0.35, using: &rng),
@@ -2577,6 +2592,7 @@ nonisolated final class WorldMap: @unchecked Sendable {
         hill.unfold()
         hill.highest = CGFloat(hill.heights.max() ?? 0)
         if hill.terrace != nil {
+            if let mountain { carveStairs(&hill, mountain: mountain) }
             blockFaces(of: hill, ring: ring)
             return true
         }
@@ -2670,6 +2686,108 @@ nonisolated final class WorldMap: @unchecked Sendable {
             for cell in hill.cells where !reached.contains(cell) { blocked.insert(cell) }
         }
         return true
+    }
+
+    /// How many levels a terraced mountain stands in (`raiseHills`; the user's pick, 2026-11-25).
+    static let mountainLevels = 5
+
+    /// Stairs up a terraced mountain's face (`tools/mountain_preview.py`, the user's pick,
+    /// 2026-11-25): one up each face, cut across it as a ledge from the level below to the level
+    /// above, the first rising left to right, the next right to left and so on, each starting where
+    /// the last came out: a zig-zag up the front. Worn as a trail (`Hill.trails`, drawn as the hills'
+    /// trails are), kept clear, and walked like the levels. Its back stays the gentle slope it was,
+    /// the other way up. A stair that doesn't fit (a level too narrow there) is left out; any level
+    /// you can't reach then is closed by `blockFaces`.
+    private func carveStairs(_ hill: inout Hill, mountain index: Int) {
+        guard let step = hill.terrace, step > 0 else { return }
+        let lobe = hill.lobes[index]
+        let half = 0.5.squareRoot()
+        // Toward you (down the screen) and across the face (left to right on screen).
+        let toward = (x: -half, y: -half), across = (x: half, y: -half)
+        func spot(_ r: Double, _ o: Double) -> CGPoint {
+            CGPoint(x: lobe.x + toward.x * r + across.x * o, y: lobe.y + toward.y * r + across.y * o)
+        }
+        func height(_ point: CGPoint) -> Double { Double(hill.height(atCells: Double(point.x), Double(point.y))) }
+        // How far in front of the middle level `k`'s face is, `o` across: coming in from out in front,
+        // where the ground first stands halfway up it.
+        let reach = max(lobe.along, lobe.across) + 3
+        func face(_ k: Int, _ o: Double) -> Double? {
+            var r = reach
+            while r > 0 {
+                if height(spot(r, o)) >= (Double(k) - 0.5) * step { return r }
+                r -= 0.1
+            }
+            return nil
+        }
+        let levels = Self.mountainLevels
+        var side = 1.0
+        var points: [CGPoint] = []
+        for k in 1...levels {
+            var carved: (foot: CGPoint, top: CGPoint)?
+            // As wide across as fits, its ends as far out onto the levels as they're deep.
+            search: for width in [2.6, 2.1, 1.6] {
+                let a = -side * width, b = side * width
+                guard let rf = face(k, a), let rt = face(k, b) else { continue }
+                for gap in [1.3, 0.9, 0.6] {
+                    let foot = spot(rf + gap, a), top = spot(rt - gap, b)
+                    let rise = height(top) - height(foot)
+                    guard rise > 0.6 * step, rise < 1.6 * step,
+                          owns(GridPoint(col: Int(foot.x.rounded(.down)), row: Int(foot.y.rounded(.down)))) else { continue }
+                    carved = (foot, top)
+                    break search
+                }
+            }
+            guard let carved else { break }
+            let foot = carved.foot, top = carved.top
+            carveRamp(&hill, from: foot, to: top)
+            // On from where the last stair came out, along the level, to this one's foot.
+            if let last = points.last { points += Self.line(from: last, to: foot) }
+            points += Self.line(from: foot, to: top)
+            side = -side
+        }
+        guard points.count > 1 else { return }
+        hill.unfold()
+        hill.highest = CGFloat(hill.heights.max() ?? 0)
+        hill.trails = [Hill.Trail(lobe: index, points: points)]
+        let path = Self.cells(along: points)
+        for cell in path { occupy(cell, blocking: false) }
+        trailCells.formUnion(path)
+    }
+
+    /// A stair's ledge cut into a face: the ground within `stairReach` of the line from `foot` to
+    /// `top` laid as a ramp rising evenly between their heights.
+    private func carveRamp(_ hill: inout Hill, from foot: CGPoint, to top: CGPoint) {
+        let samples = Hill.samples
+        let width = hill.size.columns * samples + 1, depth = hill.size.rows * samples + 1
+        let low = Float(hill.height(atCells: Double(foot.x), Double(foot.y)))
+        let high = Float(hill.height(atCells: Double(top.x), Double(top.y)))
+        let dx = Double(top.x - foot.x), dy = Double(top.y - foot.y)
+        let length2 = dx * dx + dy * dy
+        guard length2 > 0 else { return }
+        for j in 0..<depth {
+            for i in 0..<width {
+                let x = Double(hill.origin.col) + Double(i) / Double(samples) - Double(foot.x)
+                let y = Double(hill.origin.row) + Double(j) / Double(samples) - Double(foot.y)
+                let t = (x * dx + y * dy) / length2
+                guard t >= 0, t <= 1 else { continue }
+                let ox = x - t * dx, oy = y - t * dy
+                guard (ox * ox + oy * oy).squareRoot() <= Self.stairReach else { continue }
+                hill.heights[j * width + i] = low + (high - low) * Float(t)
+            }
+        }
+    }
+
+    /// How far either side of its line a stair's ledge reaches, in cells: room for a row of whole
+    /// cells along it, walked from one to the next, clear of the faces' steep edges either side.
+    private static let stairReach = 1.6
+
+    /// Points every quarter of a cell from `a` to `b`, not counting `a`.
+    private static func line(from a: CGPoint, to b: CGPoint) -> [CGPoint] {
+        let count = max(1, Int((a.distance(to: b) * 4).rounded(.up)))
+        return (1...count).map { k in
+            let t = CGFloat(k) / CGFloat(count)
+            return CGPoint(x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t)
+        }
     }
 
     /// A terraced range's faces (`Hill.terrace`), where the ground rises faster than `faceSlope`:
