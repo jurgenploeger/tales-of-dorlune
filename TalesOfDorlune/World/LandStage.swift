@@ -930,12 +930,25 @@ final class LandStage {
     /// time, glints flickering (one every half second or so) and a drop rippling out every few seconds.
     /// Unseeded: the land's layout stays what it was.
     private func placePondMotion() {
-        guard (def.theme.water ?? "tile_water") == "tile_water" else { return }
+        let water = def.theme.water ?? "tile_water"
+        guard ArtLibrary.isPondWater(water) else { return }
+        // Chocolate's glints and rings in a creamy sheen, not the water's pale blue.
+        let tint: UIColor? = water == "tile_water" ? nil : UIColor(red: 1, green: 0.86, blue: 0.7, alpha: 1)
+        func make(_ texture: SKTexture) -> SKSpriteNode {
+            let node = PondMotion.sprite(texture)
+            if let tint {
+                node.color = tint
+                node.colorBlendFactor = 0.6
+            }
+            return node
+        }
         var cells = map.river
         for lake in map.lakes { cells.formUnion(lake.water) }
+        // The small ponds too (the user, 2026-11-25: "Lakes and ponds are too lifeless"): they had none.
+        for pond in map.ponds { cells.formUnion(pond) }
         guard !cells.isEmpty else { return }
         let tile = WorldMap.tileSize
-        var open: [GridPoint: [(point: CGPoint, cell: GridPoint)]] = [:]
+        var open: [GridPoint: [(point: CGPoint, cell: GridPoint, shore: Bool)]] = [:]
         for cell in cells.sorted(by: WorldMap.inOrder) where !map.bridgeCells.contains(cell) {
             var shore = false
             for (dc, dr) in [(1, 0), (-1, 0), (0, 1), (0, -1)] {
@@ -953,7 +966,7 @@ final class LandStage {
                 let offset = CGPoint(x: (Double(dc) * inset - Double(dr) * along) * tile, y: (Double(dr) * inset + Double(dc) * along) * tile)
                 let point = map.center(of: cell) + CGVector(dx: WorldMap.project(offset).x, dy: WorldMap.project(offset).y)
                 if far {
-                    let node = PondMotion.sprite(PondMotion.creep)
+                    let node = make(PondMotion.creep)
                     node.alpha = 0
                     node.run(.sequence([.wait(forDuration: .random(in: 0...6)), .repeatForever(.sequence([
                         .fadeAlpha(to: 1, duration: 0), .wait(forDuration: 2.5, withRange: 2),
@@ -965,7 +978,7 @@ final class LandStage {
                     let toward = WorldMap.project(CGPoint(x: -Double(dc), y: -Double(dr)))
                     let length = max(0.001, (toward.x * toward.x + toward.y * toward.y).squareRoot())
                     let step = CGVector(dx: (toward.x / length * PondMotion.pixel).rounded(), dy: (toward.y / length * PondMotion.pixel).rounded())
-                    let node = PondMotion.sprite(PondMotion.lap)
+                    let node = make(PondMotion.lap)
                     node.alpha = 0
                     node.run(.repeatForever(.sequence([
                         .wait(forDuration: 1.25), .moveBy(x: step.dx, y: step.dy, duration: 0),
@@ -978,11 +991,11 @@ final class LandStage {
                     onWater(node, at: point, cell: cell)
                 }
             }
-            if !shore {
-                let point = map.center(of: cell)
-                // Down on the water, with its height, for the glints and drops set round it.
-                open[Self.key(point.x, point.y), default: []].append((CGPoint(x: point.x, y: point.y + map.height(at: point)), cell))
-            }
+            // Down on the water, with its height, for the glints, drops and rings set round it: every
+            // cell of it, a shore's kept nearer its middle (only open water's, a pond or a narrow river
+            // had none, and no rain fell on it).
+            let point = map.center(of: cell)
+            open[Self.key(point.x, point.y), default: []].append((CGPoint(x: point.x, y: point.y + map.height(at: point)), cell, shore))
         }
         // Glints and drops, a spawner for each chunk of open water.
         for spots in open.values {
@@ -990,15 +1003,16 @@ final class LandStage {
             let spawner = SKNode()
             onWater(spawner, at: map.center(of: first.cell), cell: first.cell)
             let base = spawner.position
-            let places = spots.map { $0.point }
+            let places = spots.map { (point: $0.point, reach: $0.shore ? 0.22 : 0.4) }
             let spot: () -> CGPoint = {
                 let pick = places[Int.random(in: 0..<places.count)]
-                let jitter = WorldMap.project(CGPoint(x: Double.random(in: -0.4...0.4) * tile, y: Double.random(in: -0.4...0.4) * tile))
-                return CGPoint(x: (pick.x + jitter.x - base.x).rounded(), y: (pick.y + jitter.y - base.y).rounded())
+                let jitter = WorldMap.project(CGPoint(x: Double.random(in: -pick.reach...pick.reach) * tile,
+                                                      y: Double.random(in: -pick.reach...pick.reach) * tile))
+                return CGPoint(x: (pick.point.x + jitter.x - base.x).rounded(), y: (pick.point.y + jitter.y - base.y).rounded())
             }
             let glint = SKAction.run { [weak spawner] in
                 guard let spawner else { return }
-                let node = PondMotion.sprite(PondMotion.glint[0].texture)
+                let node = make(PondMotion.glint[0].texture)
                 node.position = spot()
                 spawner.addChild(node)
                 var steps: [SKAction] = []
@@ -1011,22 +1025,37 @@ final class LandStage {
             }
             let drop = SKAction.run { [weak spawner] in
                 guard let spawner, let first = PondMotion.ripple.first else { return }
-                let node = PondMotion.sprite(first)
+                let node = make(first)
                 node.position = spot()
                 spawner.addChild(node)
                 node.run(.sequence([.animate(with: PondMotion.ripple, timePerFrame: 0.2), .removeFromParent()]))
             }
-            spawner.run(.repeatForever(.sequence([.wait(forDuration: 0.55, withRange: 0.6), glint])))
-            spawner.run(.repeatForever(.sequence([.wait(forDuration: 3.5, withRange: 3), drop])))
+            // As lively over a big lake as a small pond: as often for every ten cells of it.
+            let busy = max(1, Double(spots.count) / 10)
+            // A wavelet drifting across: a light dash, two pixels downwind in steps, then gone.
+            let drift = SKAction.run { [weak spawner] in
+                guard let spawner else { return }
+                let node = make(PondMotion.lap)
+                node.position = spot()
+                node.alpha = 0.8
+                spawner.addChild(node)
+                let step = PondMotion.pixel.rounded()
+                node.run(.sequence([.wait(forDuration: 0.6), .moveBy(x: step, y: 0, duration: 0), .wait(forDuration: 0.6),
+                                    .moveBy(x: step, y: 0, duration: 0), .fadeAlpha(to: 0.45, duration: 0), .wait(forDuration: 0.5),
+                                    .removeFromParent()]))
+            }
+            spawner.run(.repeatForever(.sequence([.wait(forDuration: 0.55 / busy, withRange: 0.6 / busy), glint])))
+            spawner.run(.repeatForever(.sequence([.wait(forDuration: 3.5 / busy, withRange: 3 / busy), drop])))
+            spawner.run(.repeatForever(.sequence([.wait(forDuration: 0.9 / busy, withRange: 0.8 / busy), drift])))
             // In the rain, drops ring the water many times a second (the user, 2026-11-18).
             let rain = SKAction.run { [weak spawner] in
                 guard let spawner, PondMotion.raining, let first = PondMotion.rainRipple.first else { return }
-                let node = PondMotion.sprite(first)
+                let node = make(first)
                 node.position = spot()
                 spawner.addChild(node)
                 node.run(.sequence([.animate(with: PondMotion.rainRipple, timePerFrame: 0.12), .removeFromParent()]))
             }
-            spawner.run(.repeatForever(.sequence([.wait(forDuration: 0.25, withRange: 0.3), rain])))
+            spawner.run(.repeatForever(.sequence([.wait(forDuration: max(0.03, 0.22 / busy), withRange: max(0.03, 0.25 / busy)), rain])))
         }
     }
 
