@@ -399,6 +399,19 @@ final class ArtLibrary {
         /// A road in a town's square: cobbles down its middle, sand and pebbles either side, grass
         /// growing over its edges (`townRoad`, the user's pick from `tools/road_preview.py`, 2026-11-17).
         var cobbled = false
+        /// A carved road's curve near the cell (`WorldMap.roadSpots`), in the cell's coordinates, and
+        /// which cells of the 3×3 its carving painted (`curved`, as `mask`): its edge is drawn from the
+        /// curve, smooth as a road's, not round the cells it painted (the user, 2026-11-25: "too
+        /// patchy, while it should have more natural curves like an actual road").
+        var curves: [RoadSpot] = []
+        var curved = 0
+    }
+
+    /// A spot on a carved road's middle and how far its drawn edge lies from it (`GroundLayer.curves`).
+    nonisolated struct RoadSpot: Sendable {
+        let x: Double
+        let y: Double
+        let half: Double
     }
 
     /// A land next door, for its tiles (`GroundLayer.from`).
@@ -1055,7 +1068,9 @@ final class ArtLibrary {
                      ice: Ice? = nil) -> SKTexture {
         let hasWater = layers.contains { $0.style == .water || $0.style == .cut }
         let place = (hasWater ? "@\(cell.col),\(cell.row)#\(variant)" : "") + (pond == nil ? "" : "|pond")
+        let curving = layers.contains { !$0.curves.isEmpty }
         let key = "organic|\(base)|" + layers.map { "\($0.tile):\($0.mask):\($0.style):\($0.from?.land ?? ""):\($0.fade?.key ?? "")" }.joined(separator: "|") + place
+            + (curving && !hasWater ? "@\(cell.col),\(cell.row)" : "")
             + (layers.contains { $0.cobbled } ? "|cob\(Self.cobblePhase(cell))" : "")
         if let cached = blended[key] { return cached }
         let size = max(tileImage(base).width, 16)
@@ -1122,7 +1137,13 @@ final class ArtLibrary {
             } else {
                 texels = variantPixels(layer.tile, pick, size: size)
             }
-            let segments: [(x0: Double, y0: Double, x1: Double, y1: Double)] = shore ? [] : Self.strokes(mask: layer.mask)
+            // Along a carved road its curve draws the edge (`curves`): the strokes between the cells it
+            // painted go, those to a cell it didn't (a footpath's, a place's earth) stay.
+            let segments: [(x0: Double, y0: Double, x1: Double, y1: Double)] = shore ? [] : Self.strokes(mask: layer.mask).filter { segment in
+                guard !layer.curves.isEmpty else { return true }
+                func painted(_ x: Double, _ y: Double) -> Bool { layer.curved & (1 << (Int(1 - y) * 3 + Int(x + 1))) != 0 }
+                return !(painted(segment.x0, segment.y0) && painted(segment.x1, segment.y1))
+            }
             let palette = pond != nil && layer.style == .water && Self.isPondWater(layer.tile) ? Self.pondPalette(texels) : nil
             // A town's road: the sand either side of its cobbles and the stones' colour, from the land's
             // own path and cobble tiles as graded here.
@@ -1156,7 +1177,16 @@ final class ArtLibrary {
                     } else {
                         var distance = Double.infinity
                         for segment in segments { distance = min(distance, Self.distance(x, y, to: segment)) }
-                        depth = radius + wobble - distance
+                        var deepest = radius + wobble - distance
+                        if !layer.curves.isEmpty {
+                            // Its edge wanders a little along the road, by where it lies, not every tile alike.
+                            let sway = 0.5 * Self.wobble(x, y, style: .water, cell: cell)
+                            for spot in layer.curves {
+                                let dx = x - spot.x, dy = y - spot.y
+                                deepest = max(deepest, spot.half + sway - (dx * dx + dy * dy).squareRoot())
+                            }
+                        }
+                        depth = deepest
                     }
                     let index = (py * size + px) * 4
                     switch layer.style {

@@ -111,6 +111,44 @@ final class GroundTiles {
         return bits
     }
 
+    /// How far a carved road's drawn edge lies past the half width it painted its cells to (`carve`):
+    /// as wide as its cells drew it before, when each was rounded off a third of a cell past its middle.
+    private static let roadVerge = 0.2
+
+    /// The spots along the land's carved roads (`WorldMap.roadSpots`) whose drawn edge reaches into
+    /// each cell, worked out once.
+    private lazy var roadSpots: [GridPoint: [(x: Double, y: Double, half: Double)]] = {
+        var near: [GridPoint: [(x: Double, y: Double, half: Double)]] = [:]
+        // Every other spot, half a cell apart at most: closer, a tile's every pixel measured to twice
+        // as many for an edge no smoother.
+        for (index, spot) in map.roadSpots.enumerated() where index % 2 == 0 {
+            let reach = spot.half + Self.roadVerge + 0.1
+            for col in Int((spot.x - reach - 1).rounded(.down))...Int((spot.x + reach + 1).rounded(.down)) {
+                for row in Int((spot.y - reach - 1).rounded(.down))...Int((spot.y + reach + 1).rounded(.down)) {
+                    // Its nearest point to the cell's square within reach (with the edge's sway).
+                    let dx = max(0, abs(Double(col) + 0.5 - spot.x) - 0.5), dy = max(0, abs(Double(row) + 0.5 - spot.y) - 0.5)
+                    guard (dx * dx + dy * dy).squareRoot() < reach else { continue }
+                    near[GridPoint(col: col, row: row), default: []].append(spot)
+                }
+            }
+        }
+        return near
+    }()
+
+    /// Which cells of the 3×3 around `cell` a carved road painted and are road still (as `mask`).
+    private func curvedMask(_ cell: GridPoint) -> Int {
+        var bits = 0
+        for dy in -1...1 {
+            for dx in -1...1 {
+                let next = GridPoint(col: cell.col + dx, row: cell.row + dy)
+                if map.curvedRoad.contains(next), map.contains(next), map.ground[next.row][next.col] == .path {
+                    bits |= 1 << ((1 - dy) * 3 + dx + 1)
+                }
+            }
+        }
+        return bits
+    }
+
     /// The water cells of the 5×5 around `cell` (bit row * 5 + col, row 0 north), for shorelines.
     private func poolMask(_ cell: GridPoint) -> Int {
         var bits = 0
@@ -455,7 +493,16 @@ final class GroundTiles {
         let fade = road == 0 || map.seams.isEmpty ? nil : roadFade(cell)
         // In a town's square its roads are cobbled (`ArtLibrary.GroundLayer.cobbled`); out in the wild, sand.
         let cobbled = road != 0 && fade == nil && inTown(cell)
-        if road != 0 { layers.append(.init(tile: theme.path, mask: road, style: .road, fade: fade, cobbled: cobbled)) }
+        if road != 0 {
+            var layer = ArtLibrary.GroundLayer(tile: theme.path, mask: road, style: .road, fade: fade, cobbled: cobbled)
+            if !cobbled, let spots = roadSpots[cell] {
+                layer.curves = spots.map {
+                    ArtLibrary.RoadSpot(x: $0.x - Double(col) - 0.5, y: $0.y - Double(row) - 0.5, half: $0.half + Self.roadVerge)
+                }
+                layer.curved = curvedMask(cell)
+            }
+            layers.append(layer)
+        }
         if pond != 0 { layers.append(.init(tile: waterID, mask: poolMask(cell), style: .water)) }
         let near = sea.isEmpty ? 0 : seaPool(cell)
         let coast = near == 0 ? 0 : shore(cell)
@@ -492,7 +539,8 @@ final class GroundTiles {
             chosen = plain(accent, variant)
         } else {
             // Shorelines depend on where they are (see organicTile), so each gets its own tile.
-            let place = (pond != 0 || coast != 0 ? "@\(col),\(row)" : "") + (cobbled ? "|cob\(ArtLibrary.cobblePhase(cell))" : "")
+            let curving = layers.contains { !$0.curves.isEmpty }
+            let place = (pond != 0 || coast != 0 || curving ? "@\(col),\(row)" : "") + (cobbled ? "|cob\(ArtLibrary.cobblePhase(cell))" : "")
             let key = base + "|" + layers.map { "\($0.style)\($0.mask)\($0.tile)\($0.from?.land ?? "")\($0.fade?.key ?? "")" }.joined(separator: "|") + place
             var tone: ((Double, Double) -> Int)? = nil
             if pond != 0, let field = pondField { tone = { field.tone($0, $1) } }
