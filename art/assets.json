@@ -3624,10 +3624,6 @@
       "kind": "prop"
     },
     {
-      "id": "windows_brazier",
-      "kind": "prop"
-    },
-    {
       "id": "windows_bubbling_cauldron",
       "kind": "prop"
     },
@@ -3893,6 +3889,22 @@
     },
     {
       "id": "fire_blacksmith_3",
+      "kind": "prop"
+    },
+    {
+      "id": "fire_brazier_0",
+      "kind": "prop"
+    },
+    {
+      "id": "fire_brazier_1",
+      "kind": "prop"
+    },
+    {
+      "id": "fire_brazier_2",
+      "kind": "prop"
+    },
+    {
+      "id": "fire_brazier_3",
       "kind": "prop"
     },
     {

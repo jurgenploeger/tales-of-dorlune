@@ -156,6 +156,24 @@ enum TownFence {
         let anchor = CGPoint(x: 0.5, y: middle.y / size.height)
 
         func has(_ dc: Int, _ dr: Int, _ cell: GridPoint) -> Bool { fence.contains(GridPoint(col: cell.col + dc, row: cell.row + dr)) }
+        // A thick wall's end, where it turns its side to you (its west end along x, its south end
+        // along y): the stones' own colour a shade darker, from its foot up to its top and back as
+        // deep as its top goes (the user, 2026-11-25: "The small walls are missing their side
+        // parts, so now it shows a hole").
+        let side = top == nil ? nil : averageColour(pickets, shade: 0.78)
+        let sideLip = top == nil ? nil : averageColour(pickets, shade: 1.05)
+        func end(at foot: CGPoint, back: CGVector, in context: CGContext) {
+            guard let side, let sideLip, deep > 0 else { return }
+            let corners = [foot, foot + back, foot + back + lift, foot + lift]
+            context.setFillColor(side)
+            context.beginPath()
+            context.addLines(between: corners)
+            context.closePath()
+            context.fillPath()
+            context.setStrokeColor(sideLip)
+            context.setLineWidth(1)
+            context.strokeLineSegments(between: [foot + lift + CGVector(dx: 0, dy: -0.5), foot + back + lift + CGVector(dx: 0, dy: -0.5)])
+        }
         var textures: [Int: SKTexture] = [:]
         var found: [(cell: GridPoint, texture: SKTexture, size: CGSize, anchor: CGPoint)] = []
         for cell in cells {
@@ -164,9 +182,11 @@ enum TownFence {
             if has(0, 1, cell) { mask |= 2 }
             if has(-1, 0, cell) { mask |= 4 }
             if has(0, -1, cell) { mask |= 8 }
-            if mask == 0 { mask = 5 }
-            if textures[mask] == nil {
-                textures[mask] = render(size: size) { context in
+            let alone = mask == 0
+            if alone { mask = 5 }
+            let key = alone ? -1 : mask
+            if textures[key] == nil {
+                textures[key] = render(size: size) { context in
                     // Along x the picture runs from the west end to the east end; along y from the
                     // north end to the south end, so it reads left to right on screen. Each half of
                     // the cell shows its half of the picture, so straight runs repeat seamlessly.
@@ -195,9 +215,17 @@ enum TownFence {
                         walk(top, from: middle + north, along: north * -2, back: east * deep, part: 1)
                         draw(pickets, in: context, from: middle + north, along: north * -2, part: 1, height: height)
                     }
+                    // Its ends that face you.
+                    if alone {
+                        end(at: middle + east * -1, back: north * deep, in: context)
+                    } else if mask == 1 {
+                        end(at: middle, back: north * deep, in: context)
+                    } else if mask == 2 {
+                        end(at: middle, back: east * deep, in: context)
+                    }
                 }
             }
-            guard let texture = textures[mask] else { continue }
+            guard let texture = textures[key] else { continue }
             found.append((cell: cell, texture: texture, size: size, anchor: anchor))
         }
         return found
@@ -331,6 +359,20 @@ enum TownFence {
     }
 
     /// The image with its colour multiplied by `factor` (its alpha as it is).
+    /// The average colour of `image`'s opaque pixels, `shade` times as bright (a wall's end, `pieces`).
+    nonisolated private static func averageColour(_ image: CGImage, shade: CGFloat) -> CGColor {
+        let w = image.width, h = image.height
+        var r = 0.0, g = 0.0, b = 0.0, n = 0.0
+        if w > 0, h > 0, let pixels = PixelImage.pixels(of: image, width: w, height: h) {
+            for i in stride(from: 0, to: pixels.count, by: 4) where pixels[i + 3] > 200 {
+                r += Double(pixels[i]); g += Double(pixels[i + 1]); b += Double(pixels[i + 2]); n += 1
+            }
+        }
+        guard n > 0 else { return CGColor(red: 0.4, green: 0.4, blue: 0.42, alpha: 1) }
+        func c(_ v: Double) -> CGFloat { min(1, CGFloat(v / n / 255) * shade) }
+        return CGColor(red: c(r), green: c(g), blue: c(b), alpha: 1)
+    }
+
     static func dimmed(_ image: CGImage, by factor: CGFloat) -> CGImage {
         let width = image.width, height = image.height
         guard let context = CGContext(data: nil, width: width, height: height, bitsPerComponent: 8, bytesPerRow: width * 4,

@@ -31,6 +31,8 @@ SPR = ROOT / "art" / "sprites"
 # the PNG's pixels.
 FIRES = {
     "blacksmith": {"box": (39, 51, 58, 64), "glow": (34, 45, 64, 64)},
+    # The camps' and lairs' brazier (the user, 2026-11-25: "The fire wasn't animating").
+    "brazier": {"box": (10, 0, 22, 12), "glow": (8, 0, 24, 13)},
 }
 FRAMES = 4
 # How far each frame's tongues reach past the drawing (pixels, up is +), and how bright its glow is.
@@ -88,7 +90,7 @@ def frames(sprite, spec):
                 if not rows:
                     continue
                 k = reach[i]
-                for y in range(y0 - 2, max(rows) + 1):   # never down past its foot, into the hearth
+                for y in range(max(0, y0 - 2), max(rows) + 1):   # never down past its foot, into the hearth
                     from_y = y + k
                     inside = y0 <= from_y <= y1 and flame[from_y, x]
                     if inside:

@@ -462,25 +462,34 @@ final class LandStage {
         LampLight.shared.follow(lit)
         let sx = node.size.width / width, sy = node.size.height / height
         let left = -node.anchorPoint.x * node.size.width, bottom = -node.anchorPoint.y * node.size.height
+        // Crystals glow softer than a window or a flame (the user, 2026-11-25: "a bit too bright and
+        // obvious at night"): their lit copy a little dimmer, their glow fainter and closer.
+        let mineral = Self.minerals.contains { id.contains($0) }
         for box in windowBoxes(of: name, picture: picture) {
             let part = SKTexture(rect: CGRect(x: box.minX / width, y: 1 - box.maxY / height, width: box.width / width,
                                               height: box.height / height), in: texture)
             part.filteringMode = .nearest
             let pane = SKSpriteNode(texture: part, size: CGSize(width: box.width * sx, height: box.height * sy))
             pane.position = CGPoint(x: left + box.midX * sx, y: bottom + (height - box.midY) * sy)
+            if mineral {
+                pane.color = .black
+                pane.colorBlendFactor = 0.3
+            }
             lit.addChild(pane)
             // Its glow: soft light spilling round it, behind it, added to what's under it.
-            let reach = max(pane.size.width, pane.size.height)
+            let reach = max(pane.size.width, pane.size.height) * (mineral ? 0.7 : 1)
             let halo = SKSpriteNode(texture: SoftTextures.glow, size: CGSize(width: pane.size.width * 1.6 + reach * 1.4 + 14,
                                                                              height: pane.size.height * 1.6 + reach * 1.4 + 14))
             halo.color = colour ?? UIColor(red: 1, green: 0.78, blue: 0.45, alpha: 1)
             halo.colorBlendFactor = 1
             halo.blendMode = .add
-            halo.alpha = 0.42
+            halo.alpha = mineral ? 0.2 : 0.42
+            halo.position = pane.position
             halo.zPosition = -0.01
             // Steady: a land can hold hundreds of lights (Twilight Woods' glowing mushrooms), each
-            // pulsing would cost the frame.
-            pane.addChild(halo)
+            // pulsing would cost the frame. Beside its pane, not on it: it stays while the pane fades
+            // for someone standing in front (`coverPanes`; the user, 2026-11-25: the glow went too).
+            lit.addChild(halo)
             litPanes.append(LitPane(pane: pane, halo: halo, building: node, box: box, picture: picture,
                                     left: left, bottom: bottom, sx: sx, sy: sy, height: height))
             // Where it shows in the land's points, and how far down the screen its building stands.
@@ -498,6 +507,9 @@ final class LandStage {
     }
     private var panes: [Pane] = []
     private var paneTimer: TimeInterval = 0
+    private static let coverKey = "cover"
+    /// What's a crystal by its art's name (`addWindows`): lit softer than windows and flames.
+    private static let minerals = ["crystal", "spire", "geode", "shard", "ice_cluster", "amethyst"]
 
     /// Something set down that can stand in front of a lit window (`hidePanesBehindScenery`): its
     /// node and the picture it was set down with.
@@ -589,6 +601,7 @@ final class LandStage {
             guard shown < total else { continue }
             if shown == 0 {
                 lit.pane.removeFromParent()
+                lit.halo.removeFromParent()
                 gone.insert(ObjectIdentifier(lit.pane))
                 continue
             }
@@ -648,8 +661,12 @@ final class LandStage {
             let covered = people.contains { at in
                 at.y < pane.foot + 2 && CGRect(x: at.x - 13, y: at.y, width: 26, height: 54).intersects(pane.box)
             }
+            // Faded, not put out at once (the user, 2026-11-25: it "turns off immediately, which looks
+            // weird"), its glow left shining round it.
             let alpha: CGFloat = covered ? 0 : 1
-            if pane.node.alpha != alpha { pane.node.alpha = alpha }
+            if pane.node.action(forKey: Self.coverKey) == nil, pane.node.alpha != alpha {
+                pane.node.run(.fadeAlpha(to: alpha, duration: 0.3), withKey: Self.coverKey)
+            }
         }
     }
 
@@ -683,11 +700,33 @@ final class LandStage {
         halo.blendMode = .add
         halo.alpha = 0.4
         halo.zPosition = -0.01
-        bright.addChild(halo)
+        lit.addChild(halo)
         halo.run(.repeatForever(.sequence([.fadeAlpha(to: 0.3, duration: 0.5), .fadeAlpha(to: 0.45, duration: 0.4)])))
-        let frame = CGRect(x: node.position.x - node.anchorPoint.x * node.size.width, y: node.position.y - node.anchorPoint.y * node.size.height,
+        // Put out for someone in front only where its flame is (the user, 2026-11-25: the whole
+        // building's frame put the forge's fire out while its healer stood anywhere before it).
+        var frame = CGRect(x: node.position.x - node.anchorPoint.x * node.size.width, y: node.position.y - node.anchorPoint.y * node.size.height,
                            width: node.size.width, height: node.size.height)
+        if let flame = Self.opaqueBounds(art.picture(of: frames[0])) {
+            frame = CGRect(x: frame.minX + flame.minX * node.size.width, y: frame.maxY - flame.maxY * node.size.height,
+                           width: flame.width * node.size.width, height: flame.height * node.size.height)
+        }
         panes.append(Pane(node: bright, box: frame, foot: node.position.y))
+    }
+
+    /// Where a picture's opaque pixels lie, as fractions of it from its top left; nil if it has none.
+    private static func opaqueBounds(_ image: CGImage) -> CGRect? {
+        let w = image.width, h = image.height
+        guard w > 0, h > 0, let pixels = PixelImage.pixels(of: image, width: w, height: h) else { return nil }
+        var minX = w, minY = h, maxX = -1, maxY = -1
+        for y in 0..<h {
+            for x in 0..<w where pixels[(y * w + x) * 4 + 3] > 0 {
+                minX = min(minX, x); maxX = max(maxX, x)
+                minY = min(minY, y); maxY = max(maxY, y)
+            }
+        }
+        guard maxX >= minX else { return nil }
+        return CGRect(x: CGFloat(minX) / CGFloat(w), y: CGFloat(minY) / CGFloat(h),
+                      width: CGFloat(maxX - minX + 1) / CGFloat(w), height: CGFloat(maxY - minY + 1) / CGFloat(h))
     }
 
     /// The lighthouse's light turning at night (the user, 2026-11-22: "make everything feel more
