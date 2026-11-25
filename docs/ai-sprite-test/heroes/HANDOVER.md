@@ -378,6 +378,17 @@ One doll, end to end (it was the Human Male pilot until 2026-11-24).
 45. **Elf attack up-right** (2026-11-25): five paintings (`tries/elf_attack_up-right_try1{a..e}_painting.png`), all
     lined up within a pixel; painting 1 picked, its ear 11 to 19 pixels past the head (idle 17, walk 13 to 20; the
     others ran to 29), no grey specks (`hero64_doll_ears_attack_up-right.png`; up-left mirrored).
+46. **Elf attack up** (2026-11-25): five paintings (`tries/elf_attack_up_try1{a..e}_painting.png`; the fifth on a grey
+    haze). Lifted as for walk up, ChatGPT's head tops snapped into jagged steps; taking only what lies outside the doll's
+    head kept the human ears showing under the elf ears (the user). So `hero_ears_row.py --band 3`: the doll's head
+    kept, only a strip 3 pixels in from each side of it (and what lies outside) taken from ChatGPT's, the doll cut
+    where ChatGPT's head is narrower there, so the human ears go and the face, shading and raised arm stay. Painting 3
+    (`hero64_doll_ears_attack_up.png`, `_cut.png`), ears 44 to 49 pixels past the head (16 where the arm is up).
+47. **Idle up with open ears** (2026-11-25): walk and attack facing up have ears open at the base, as ChatGPT drew them;
+    the idle's met the head along the human head's outline and showed the human ear's lines under them. The 16 outline
+    pixels between ear and head were given the ear's skin beside them (in `hero64_doll_ears_up.png`), at the user's
+    word ("or update the idle version so it doesn't close the ears"). The elf now has ears in every direction for
+    idle, walk and attack.
  Idle wears it; up-left mirrored.
 
 ## What has gone wrong before (read before prompting)

@@ -15,6 +15,9 @@ sys.path.insert(0,'/home/user/tales-of-dorlune/tools')
 from PIL import Image
 import hero_ears as he
 D='/home/user/tales-of-dorlune/docs/ai-sprite-test/heroes/'
+BAND=None
+if '--band' in sys.argv:
+    i=sys.argv.index('--band'); BAND=int(sys.argv[i+1]); del sys.argv[i:i+2]
 anim,d,snap,tag,n=sys.argv[1],sys.argv[2],sys.argv[3],sys.argv[4],int(sys.argv[5])
 both = d in ('down', 'up'); far_tip = d=='down-right'
 behind = d=='up-right'   # the near ear on the right of the head, the far ear's tip past its left
@@ -48,6 +51,29 @@ for c in range(n):
             elif x<=left+8 and diff: lay[y,c*64+x]=p                # the ear and the small human ear it covers
             elif both and x>=right-(8 if d=='up' else 6) and diff: lay[y,c*64+x]=p
             elif far_tip and x>right and q[3]==0: lay[y,c*64+x]=p
+if BAND is not None:
+    # --band N: the doll's own head kept, only a strip N pixels in from each side of it (row by row, from three rows
+    # under its top to just above the neck) and what lies outside it taken from ChatGPT's, the doll's pixels in the
+    # strip cut where ChatGPT's head is narrower: its small human ears go, and its face, shading and raised arm stay
+    # (attack up, the user, 2026-11-25: "use the human animation with just the ears")
+    from scipy import ndimage
+    lay=np.zeros_like(row); cut=np.zeros_like(row)
+    for c in range(n):
+        f=row[:,c*64:(c+1)*64]; g=S[:,c*64:(c+1)*64]; dy,dx=shifts[c]; g=np.roll(np.roll(g,-dy,0),-dx,1)
+        w=f[...,3].astype(bool).sum(1); top=int(np.nonzero(w)[0].min()); last=min(range(top+12,top+24),key=lambda r:w[r])-2
+        m=np.zeros((64,64),bool); k=np.zeros((64,64),bool)
+        for y in range(top+3,last):
+            xs=np.nonzero(f[y,:,3])[0]
+            if not len(xs): continue
+            l,r=xs.min(),xs.max()
+            for x in range(64):
+                band = x<=l+BAND or x>=r-BAND
+                if g[y,x,3] and (f[y,x,3]==0 or (band and (g[y,x,:3]!=f[y,x,:3]).any())): m[y,x]=True
+                if band and f[y,x,3] and not g[y,x,3]: k[y,x]=True
+        lab,nl=ndimage.label(m,structure=np.ones((3,3)))
+        for j in range(1,nl+1):
+            if (lab==j).sum()<5: m[lab==j]=False                                  # specks, not ears
+        lay[:,c*64:(c+1)*64][m]=g[m]; cut[:,c*64:(c+1)*64][k]=(255,0,0,255)
 print('shifts',shifts)
 Image.fromarray(lay).save(f'ears_{tag}.png')
 if cut[...,3].any(): Image.fromarray(cut).save(f'ears_{tag}_cut.png')  # save as ..._cut.png beside the ears
