@@ -414,6 +414,11 @@ One doll, end to end (it was the Human Male pilot until 2026-11-24).
     human's little ears sit at the head's widest rows, and smoothing them shaved the head), so they stay as they
     were for now; ChatGPT is to repaint them with these ears (the user). The right ear's foot had a doubled outline
     (28 and 29, 41-42); the inner column was given the skin beside it, as the left ear has (the user).
+51. **Walk up with the outward ears** (2026-11-25): five ChatGPT repaints of the walk with the new idle ears
+    (`tries/elf_walk_up_try2{a..e}_painting.png`); lifted with `hero_ears_row.py --band 3`, the user picked 2 (35 to 49
+    pixels past the head, the idle's 40). The rows above and below the ears were put back to the human walk, its top
+    of head and neck as drawn (the user), and the human ear's red inner pixels there given the skin beside them
+    (`tools/hero_ears_walk_up_keep.py`). The run follows the walk.
  Idle wears it; up-left mirrored.
 
 ## What has gone wrong before (read before prompting)
