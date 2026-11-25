@@ -157,6 +157,13 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   one shape for the family, each land's with its own badge; a land's cape ChatGPT hasn't drawn yet is Sunny Meadow's
   recoloured to its `color` and `accent`, `recolour_cape`). ChatGPT paints them big with its image model (asked for
   a 64-pixel PNG it drew with code: flat, 8 to 13 colours) and they're snapped to the grid (`ai_sprite_eval.py`).
+- Settings → Advanced → Developer (the user, 2026-11-25: test what makes the game slow): the frame rate,
+  nodes and draw calls in the corner (`GameSettings.devStatsKey`, `SpriteKitView`), and switches that leave
+  parts of the world's drawing out (`GameSettings.devParts`, the debug flag `off=`'s names: `LandStage.isOffForDebug`
+  reads both): trees in the wind (`WindField.tick`), shade, tall grass, water motion, footprints, ambience,
+  lighting. Wind, shade and footprints change at once, the rest in lands built after.
+- Monsters turn up 30% less often on a land's main roads (`WorldMap.mainRoads`, the roads out through its exits,
+  not trails or footpaths; `ContinentScene.roadEncounterShare`; the user, 2026-11-25).
 - Dark Mode: the game follows the phone's look, or Settings → Appearance (`GameSettings.appearanceKey`, set on the
   window by `RootView.applyAppearance`). `Color.adaptive(light:dark:)` (`TalesOfDorlune/UI/Style.swift`) gives the
   HUD's light surfaces (frames, plates, buttons, portraits) a dimmer twin and the glass a deeper one;

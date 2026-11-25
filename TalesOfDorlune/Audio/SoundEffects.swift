@@ -35,6 +35,14 @@ nonisolated enum GameSettings {
     static let appearanceChoices = ["system", "light", "dark"]
     /// The newest release notes opened from the title screen (What's new); newer ones get its gold dot.
     static let seenReleaseKey = "seenRelease"
+    /// Developer switches (Settings → Advanced → Developer, the user, 2026-11-25: "I want to test if the
+    /// game is faster when it's off"): what of the world's drawing is left out, by the names of the debug
+    /// flag `off=` (`LandStage.isOffForDebug`), kept as one comma-separated string.
+    static let devOffKey = "devOff"
+    /// The frame rate, nodes and draw calls in the corner of the map and fights (`SpriteKitView`).
+    static let devStatsKey = "devStats"
+    /// What the Developer switches can leave out, in the order Settings shows them.
+    static let devParts = ["wind", "shade", "grass", "water", "footprints", "ambience", "lighting"]
 
     static var musicVolume: Double { value(musicVolumeKey, fallback: 1) }
     static var soundVolume: Double { value(soundVolumeKey, fallback: 1) }
@@ -52,6 +60,9 @@ nonisolated enum GameSettings {
     /// Whether the game shows in Dark Mode now (the phone's or Settings → Appearance), kept by
     /// `RootView` for what SpriteKit draws (an encounter's flash, `SKScene.encounterFlashPeak`).
     nonisolated(unsafe) static var looksDark = false
+    /// The developer switches switched off now (`devOffKey`), read once at launch and kept up to date
+    /// by Settings, so what checks them every frame doesn't read UserDefaults.
+    nonisolated(unsafe) static var devOff: Set<String> = Set(value(devOffKey, fallback: "").split(separator: ",").map(String.init))
 
     private static func value<T>(_ key: String, fallback: T) -> T {
         UserDefaults.standard.object(forKey: key) as? T ?? fallback

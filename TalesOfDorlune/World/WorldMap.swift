@@ -117,6 +117,11 @@ nonisolated final class WorldMap: @unchecked Sendable {
     /// The cells of the lands next door, just over the border, where their roads run on from where
     /// this land's cross it (`crossingCells`), for its road's edges to meet theirs (`GroundTiles`).
     private(set) var roadsPast: Set<GridPoint> = []
+    /// The cells of its main roads, the ones out through its exits (`carveRoad`), not its trails or
+    /// footpaths: monsters turn up a little less often on them (`ContinentScene.roadEncounterShare`).
+    private(set) var mainRoads: Set<GridPoint> = []
+    /// Whether `paintRoad` is painting a main road now (`mainRoads`).
+    private var carvingMainRoads = false
     /// Where a road or trail crosses a river with no room for a bridge, fording it.
     private(set) var fords = 0
     /// Bridges where roads cross the river, footbridges out to the lakes' islands and jetties.
@@ -306,7 +311,9 @@ nonisolated final class WorldMap: @unchecked Sendable {
         if let around { layOutShape(around) }
         lap("shape")
         if def.fence == true { layOutTownBorder() }
+        carvingMainRoads = true
         for exit in def.exits { carveRoad(for: exit, &rng) }
+        carvingMainRoads = false
         if let region { roadsPast = crossingCells(region) }
         lap("roads")
         for trail in def.trails ?? [] { carveTrail(trail, &rng) }
@@ -1194,6 +1201,7 @@ nonisolated final class WorldMap: @unchecked Sendable {
                 let cellCenter = CGPoint(x: CGFloat(cell.col) + 0.5, y: CGFloat(cell.row) + 0.5)
                 guard cellCenter.distance(to: point) <= radius else { continue }
                 ground[cell.row][cell.col] = .path
+                if carvingMainRoads { mainRoads.insert(cell) }
                 fenceCells.removeAll { $0 == cell }   // gate
             }
         }

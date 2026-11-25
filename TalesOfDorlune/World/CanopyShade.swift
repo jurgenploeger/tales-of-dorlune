@@ -140,6 +140,16 @@ final class CanopyShade {
         }
     }
 
+    /// Switched off in Settings → Developer: what's drawn hides, and nothing new is drawn (`LandStage.update`).
+    private(set) var isOff = false
+
+    /// Hides or shows every chunk's shade as Settings → Developer switches it.
+    func setOff(_ off: Bool) {
+        guard off != isOff else { return }
+        isOff = off
+        for node in nodes.values where node.texture != nil { node.isHidden = off }
+    }
+
     /// Lays the shade away from `sun` from now on: drawn again once it has moved far enough to show
     /// (the tip of a tall tree's shade a few points).
     func follow(_ sun: Sun) {
@@ -240,7 +250,7 @@ final class CanopyShade {
         }
         node.texture = texture
         node.size = CGSize(width: size, height: size)
-        node.isHidden = false
+        node.isHidden = isOff
     }
 
     private func isShown(_ spot: GridPoint) -> Bool {

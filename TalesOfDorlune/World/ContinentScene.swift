@@ -671,7 +671,9 @@ final class ContinentScene: SKScene {
         #if DEBUG
         wadeForDebug = wading.map { cut in "\(Int(cut.max() ?? 0))/\(cut.filter { $0 > 0 }.count)" } ?? "-"
         #endif
-        footprints.update(dt: dt, footfalls: Walker.footfalls(in: layer)) { self.printLook(at: $0) }
+        if !LandStage.isOffForDebug("footprints") {
+            footprints.update(dt: dt, footfalls: Walker.footfalls(in: layer)) { self.printLook(at: $0) }
+        }
         updateAir(dt)
         if currentTime - lookedAround > 0.25 {
             lookedAround = currentTime
@@ -826,11 +828,17 @@ final class ContinentScene: SKScene {
         // none out on a pier.
         guard ashore != nil, let encounters = here.encounters else { return }
         stepsSinceBattle += 1
-        if !holdsEncounters, stepsSinceBattle > encounters.graceSteps, Double.random(in: 0..<1) < encounters.rate {
+        // A little less often on a main road (the user, 2026-11-25), still now and then.
+        let onRoad = land.map.mainRoads.contains(session.mapCell)
+        let rate = encounters.rate * (onRoad ? Self.roadEncounterShare : 1)
+        if !holdsEncounters, stepsSinceBattle > encounters.graceSteps, Double.random(in: 0..<1) < rate {
             stepsSinceBattle = 0
             startEncounter(encounters)
         }
     }
+
+    /// How often monsters turn up on a main road (`WorldMap.mainRoads`) next to off it: 30% less.
+    static let roadEncounterShare = 0.7
 
     /// The screen flashes twice and the battle begins, where you stand (`WorldScene.startEncounter`).
     private func startEncounter(_ encounters: MapDef.Encounters) {

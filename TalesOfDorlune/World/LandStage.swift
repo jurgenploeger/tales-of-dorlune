@@ -48,6 +48,7 @@ final class LandStage {
     /// 2026-11-19: the sea's shallows over the ground, `ContinentScene.shallows`).
     static var offForDebug: Set<String> = []
     static func isOffForDebug(_ name: String) -> Bool {
+        if GameSettings.devOff.contains(name) { return true }
         #if DEBUG
         return offForDebug.contains(name)
         #else
@@ -126,7 +127,7 @@ final class LandStage {
     /// Sets it all down, a piece at a time (`pause` between them: grading with its own palette).
     func build(pause: @escaping () async -> Void) async {
         placeLilyPads(plan.lilyPads)
-        placeFloaters(plan.floaters)
+        if !Self.isOffForDebug("water") { placeFloaters(plan.floaters) }
         placeBridges()
         placeHarbors()
         for reed in plan.reeds {
@@ -207,12 +208,15 @@ final class LandStage {
         critters?.update(dt: dt, player: you, visible: visible, flocks: isHere) { [map] in map.isWalkable(map.rawCell(at: $0)) }
         show(around: camera, scale: scale, screen: screen)
         if let grass, isHere || onScreen { wade(through: grass, dt: dt, you: you) }
-        if !Self.isOffForDebug("shade") { canopy.draw() }
+        let shadeOff = Self.isOffForDebug("shade")
+        canopy.setOff(shadeOff)
+        if !shadeOff { canopy.draw() }
         coverPanes(dt)
     }
 
     /// Lays the shade under its scenery away from `sun` (`CanopyShade.follow`).
     func follow(_ sun: Sun) {
+        guard !Self.isOffForDebug("shade") else { return }
         canopy.follow(sun)
     }
 
@@ -999,6 +1003,7 @@ final class LandStage {
     /// time, glints flickering (one every half second or so) and a drop rippling out every few seconds.
     /// Unseeded: the land's layout stays what it was.
     private func placePondMotion() {
+        guard !Self.isOffForDebug("water") else { return }
         let water = def.theme.water ?? "tile_water"
         // Nothing laps, glints or rings on ice.
         guard ArtLibrary.isPondWater(water), def.theme.frozen != true else { return }
@@ -1144,7 +1149,7 @@ final class LandStage {
     /// bit of the water color"). Painted into four pictures here: a shader did it, and on a phone it
     /// didn't take and the reflections lay over the land. Not what stands in the water.
     private func reflect(_ node: SKSpriteNode, picture texture: SKTexture, art id: String, cell: GridPoint) {
-        guard reflections < Self.reflectionsAtMost, !id.hasPrefix("waterfall"), id != "water_rock", id != "lily_pad",
+        guard !Self.isOffForDebug("water"), reflections < Self.reflectionsAtMost, !id.hasPrefix("waterfall"), id != "water_rock", id != "lily_pad",
               map.contains(cell), map.ground[cell.row][cell.col] != .water else { return }
         // Water down the screen from it (south and west) within reach of its reflection.
         var nearWater = false
@@ -1706,7 +1711,7 @@ final class LandStage {
     /// theirs, graded as they are there.
     private func placeProps(_ props: [Placement], seams: [Placement], pause: @escaping () async -> Void) async {
         // Its trees' and bushes' wind frames on one texture, so they draw in batches (`packWindFrames`).
-        art.packWindFrames(props.map { $0.art })
+        if !Self.isOffForDebug("wind") { art.packWindFrames(props.map { $0.art }) }
         for (number, prop) in props.enumerated() {
             if number % 32 == 31 { await pause() }
             plant(prop)

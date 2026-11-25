@@ -183,6 +183,8 @@ final class WindField {
     private var hidden: Set<ObjectIdentifier> = []
     private var clock: TimeInterval = 0
     private var shownTick = -1
+    /// Whether every tree was put back as drawn while the wind is switched off (`tick`).
+    private var stilled = false
     /// How many there may be before those gone (a land let go) are dropped.
     private var prunedAt = 4096
 
@@ -191,7 +193,7 @@ final class WindField {
     func add(_ node: SKSpriteNode, frames: [SKTexture], at point: CGPoint, land: SKNode? = nil) {
         guard let book = WindBook.shared, frames.count == book.loop + book.gust else { return }
         let tree = Tree(node: node, land: land.map { ObjectIdentifier($0) }, frames: frames, x: Double(point.x), y: Double(point.y))
-        if let frame = book.gustFrame(at: clock, x: tree.x, y: tree.y) { node.texture = frames[frame] }
+        if !LandStage.isOffForDebug("wind"), let frame = book.gustFrame(at: clock, x: tree.x, y: tree.y) { node.texture = frames[frame] }
         trees.append(tree)
         if trees.count > prunedAt {
             trees.removeAll { $0.node == nil }
@@ -216,6 +218,15 @@ final class WindField {
         let tick = Int(clock * book.fps)
         guard tick != shownTick else { return }
         shownTick = tick
+        // Switched off (Settings → Developer): every tree back as drawn once, then left alone.
+        if LandStage.isOffForDebug("wind") {
+            if !stilled {
+                stilled = true
+                for tree in trees { if let node = tree.node, node.texture !== tree.rest { node.texture = tree.rest } }
+            }
+            return
+        }
+        stilled = false
         for tree in trees {
             if let land = tree.land, hidden.contains(land) { continue }
             // Only what's on stage: a chunk out of sight waits.
