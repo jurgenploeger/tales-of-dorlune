@@ -361,7 +361,7 @@ One doll, end to end (it was the Human Male pilot until 2026-11-24).
     with no shift and whose outline was closed) was laid on the standing view as ChatGPT drew it, rows 31 and
     below left as the standing view has them; one pixel missing at its lower edge, (27, 41), was filled with
     the ear's skin (filled with the outline colour it made two dark pixels side by side, the user), and one outline
-    pixel set beside it, (27, 42), so the outer edge stays closed (the user's pick). Idle wears it; up-left mirrored.
+    pixel set beside it, (27, 42), so the outer edge stays closed (the user's pick); the dark pixel left inside the ear beside it, (27, 40), turned skin too (the user). Idle wears it; up-left mirrored.
 
 ## What has gone wrong before (read before prompting)
 - ChatGPT failed the monster test (`../HANDOVER.md`): drew bigger than asked (44 to 48 px for 35), and the
