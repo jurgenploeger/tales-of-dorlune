@@ -452,6 +452,9 @@ One doll, end to end (it was the Human Male pilot until 2026-11-24).
     time, so it was lifted untoned (`lift --no-grade --sat 0.47`, snapped `--hair-sat 0.47`); its reddish inner ear
     came off with the hair (6 pixels taken out; the lift now wants hue 12 and up). From behind the hair goes over
     the elf's ears wherever it lies; only what stands past it shows.
+    Facing right and down-right (and their mirrors), a walk frame's face can stand a pixel or two forward of the
+    standing view's and the fringe covered its brow and nose (the user): in each row where the standing hair stops
+    short of the face's front, it stops as far short of the frame's face (`hero_hair.clip_front`).
  Idle wears it; up-left mirrored.
 
 ## What has gone wrong before (read before prompting)

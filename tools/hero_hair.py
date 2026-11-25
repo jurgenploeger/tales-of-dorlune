@@ -121,6 +121,32 @@ def wear_hair(frame, hair, shift, ref):
     grown[..., 3] = np.where(ndimage.binary_dilation(ref[..., 3] > 0, np.ones((3, 3), bool)), 255, 0)
     return he.wear(frame, hair, shift, grown)
 
+def clip_front(w, base, f, hair, sh, ref, d):
+    """Facing right (and down-right; left ones mirrored) a walk frame's face can stand a pixel or two forward of the
+    standing view's, and the fringe moved with the head covered its brow and nose (the user, 2026-11-25): in each
+    row where the standing hair stops short of the face's front, it stops as far short of this frame's face."""
+    if d not in ("right", "down-right", "left", "down-left"):
+        return w
+    sgn = 1 if d.endswith("right") else -1
+    def front(mask_row):
+        xs = np.nonzero(mask_row)[0]
+        return None if not len(xs) else (xs.max() if sgn > 0 else xs.min())
+    dy, dx = sh
+    w = w.copy()
+    for yr in range(64):
+        y = yr + dy
+        if not (0 <= y < 64):
+            continue
+        rf, hf, ff = front(ref[yr, :, 3] > 0), front(hair[yr, :, 3] > 0), front(f[y, :, 3] > 0)
+        if rf is None or hf is None or ff is None or (hf - rf) * sgn >= 0:
+            continue
+        limit = ff - (rf - hf)
+        for x in range(64):
+            if hair[yr, x - dx, 3] if 0 <= x - dx < 64 else False:
+                if (x - limit) * sgn > 0:
+                    w[y, x] = base[y, x]
+    return w
+
 def ear_top(d):
     """The top row of the elf's ears in a direction's standing view (hero64_doll_ears_<direction>.png), or None."""
     import hero_ears as he
@@ -163,6 +189,7 @@ def wear_style(style, anim, race="human"):
                 out[sl] = w
                 continue
             w = wear_hair(elf[sl] if elf is not None else f, hair, sh, ref)
+            w = clip_front(w, elf[sl] if elf is not None else f, f, hair, sh, ref, d)
             if elf is not None:
                 # from the ears' top row down (the standing view's ears, moved with the head), the ears stay over
                 # the hair: the sideburns crossed their roots and, facing down-right, the hair at the back of the
