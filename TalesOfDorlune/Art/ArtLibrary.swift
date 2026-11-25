@@ -1110,7 +1110,7 @@ final class ArtLibrary {
             let key = ObjectIdentifier(texture)
             guard seen.insert(key).inserted else { continue }
             if let known = windStrips[key], known.texture === texture { continue }
-            guard let strip = book.strip(picture(of: texture), rig: rig) else { continue }
+            guard rig.frames.count > 0, let strip = book.strip(picture(of: texture), rig: rig) else { continue }
             items.append((texture, strip, rig.frames.count))
         }
         guard items.count > 1 else { return }
