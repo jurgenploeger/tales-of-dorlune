@@ -176,6 +176,10 @@ final class ContinentScene: SKScene {
     private var painting = false
     /// When the work under way last had the frame back (`breathe`).
     private var sliceStart = ContinuousClock.now
+    /// Frame timing (`breathe`): when the land work on the main thread last went on, and which step of
+    /// a land's build it's at.
+    private var workMark: TimeInterval = 0
+    private var buildPhase = "build"
     /// The land you're in (`arrive(in:)`): the one that owns where you stand, once you're a cell
     /// over its line.
     private(set) var here: MapDef?
@@ -591,7 +595,10 @@ final class ContinentScene: SKScene {
         let dt = lastUpdate == 0 ? 0 : min(currentTime - lastUpdate, 1.0 / 8)
         lastUpdate = currentTime
         // Settings → Developer's frame timing: each part of the frame laps it (`FrameTiming`).
-        if FrameTiming.isOn, FrameTiming.shared.begin() { showTiming() }
+        if FrameTiming.isOn {
+            FrameTiming.shared.note = building.map { "building \($0) (\(buildPhase))" } ?? (painting ? "drawing hills" : "")
+            if FrameTiming.shared.begin() { showTiming() }
+        }
         if !FrameTiming.isOn, let back = timingBack, !back.isHidden { back.isHidden = true }
         // The trees and bushes in the wind (`WindField`), on its own clock: it stops while the scene does.
         WindField.shared.tick(dt)
@@ -1941,6 +1948,8 @@ final class ContinentScene: SKScene {
         }
         progress[id] = 0.45
         layOutNext(after: id)
+        workMark = ProcessInfo.processInfo.systemUptime
+        buildPhase = "build plan"
         let rest = pause(for: def)
         art.use(palette: def.theme.palette, for: def.id)
         let planner = LandPlanner(def: def, map: map, art: art)
@@ -1948,8 +1957,10 @@ final class ContinentScene: SKScene {
         progress[id] = 0.55
         await planner.planTheRest(pause: rest)
         progress[id] = 0.65
+        buildPhase = "build hills"
         let tiles = GroundTiles(map: map, art: art)
         let painters = await ranges(of: map, tiles: tiles, place: place, pause: rest)
+        buildPhase = "build stage"
         progress[id] = 0.8
         let stage = LandStage(def: def, map: map, plan: planner.plan, tiles: tiles, art: art, session: session, shift: Self.shift(of: place))
         await stage.build(pause: rest)
@@ -1980,8 +1991,18 @@ final class ContinentScene: SKScene {
         #endif
         // Its ground in the chunks drawn already; while a battle or a cave is up, once you're back
         // (`didMove`): playtesting saw a chunk's ground made during a fight never show.
+        // A chunk at a time, the frame given back between (all at once, the frame waited for every
+        // tile of them: the user's gauges, 2026-11-25).
         if view != nil {
-            for (key, chunk) in chunks where owners(of: key).contains(id) { show(land, in: chunk, at: key) }
+            buildPhase = "build ground"
+            for (key, chunk) in chunks where owners(of: key).contains(id) {
+                // A battle or a cave come up meanwhile: back, the chunks round you are drawn afresh and
+                // the rest as you come near them (`didMove`, `stale`), its ground in them.
+                guard view != nil else { break }
+                if chunks[key] === chunk { show(land, in: chunk, at: key) }
+                await rest()
+            }
+            buildPhase = "build"
         } else {
             unshown.insert(id)
         }
@@ -2038,10 +2059,10 @@ final class ContinentScene: SKScene {
 
     /// A pause in work on `def`'s land: gives the frame back once the work's had it a while, then
     /// grades with that land's palette again, as other work may have changed it meanwhile.
-    private func pause(for def: MapDef) -> () async -> Void {
+    private func pause(for def: MapDef, _ label: String? = nil) -> () async -> Void {
         { [weak self] in
             guard let self else { return }
-            await breathe()
+            await breathe(label ?? buildPhase)
             art.use(palette: def.theme.palette, for: def.id)
         }
     }
@@ -2055,7 +2076,15 @@ final class ContinentScene: SKScene {
     /// every 22, about 30 frames a second while it comes in. They were 16 and 40, and walking
     /// toward a new land the game ran at 15 to 22 frames a second on a phone for as long as it
     /// took (the user's gauges, 2026-11-17): smoother now, the land a little later.
-    private func breathe() async {
+    private func breathe(_ label: String = "build") async {
+        // Settings → Developer's frame timing: the work since this task last went on, on the main
+        // thread between frames, is the frame's `label` (`FrameTiming.charge`).
+        if FrameTiming.isOn {
+            let now = ProcessInfo.processInfo.systemUptime
+            FrameTiming.shared.charge(label, now - workMark)
+            workMark = now
+        }
+        defer { workMark = ProcessInfo.processInfo.systemUptime }
         // The loading clouds parting: wait till they're gone (`holdWork`).
         if let until = heldUntil {
             while ContinuousClock.now < until {
@@ -2160,20 +2189,21 @@ final class ContinentScene: SKScene {
             else { break }
             let job = waiting.remove(at: next)
             guard let drawn = chunks[job.chunk], let land = lands[job.land] else { continue }
+            workMark = ProcessInfo.processInfo.systemUptime
             if job.painter == Self.bankJob {
                 drawBank(of: land, in: drawn, at: job.chunk)
-                await breathe()
+                await breathe("banks")
                 continue
             }
             let things = drawn.things
             art.use(palette: land.def.theme.palette, for: land.def.id)
-            let square = await land.painters[job.painter].draw(job.corner, self.pause(for: land.def))
+            let square = await land.painters[job.painter].draw(job.corner, self.pause(for: land.def, "hills"))
             // Made sprites here, on the scene's thread (`Painter.sprites(of:)`).
             let sprites = land.painters[job.painter].sprites(of: square)
             #if DEBUG
             // `hills=off`: none drawn, to see what lies under them; `hills=tint`: each hill's
             // squares in a colour of its own, every other square paler, to see which draws what.
-            if Self.hillsForDebug == "off" { await breathe(); continue }
+            if Self.hillsForDebug == "off" { await breathe("hills"); continue }
             if Self.hillsForDebug == "tint" {
                 let odd = (job.corner.col / HillArt.square + job.corner.row / HillArt.square) % 2 == 0
                 let color = UIColor(hue: CGFloat(job.painter % 6) / 6, saturation: 1, brightness: odd ? 1 : 0.6, alpha: 1)
@@ -2193,7 +2223,7 @@ final class ContinentScene: SKScene {
                 sprite.zPosition -= land.shift.dy
                 things.addChild(sprite)
             }
-            await breathe()
+            await breathe("hills")
         }
         painting = false
     }
@@ -2613,6 +2643,13 @@ final class FrameTiming {
     private var since: TimeInterval = 0
     private var frames = 0
     private var worst: Double = 0
+    /// What the worst frame's time went to most, of the work charged to it (`charge`).
+    private var worstWhat = ""
+    /// Work done on the main thread between frames (a land's build, its hills), by name, since the
+    /// frame began: told apart from the rest of "other" (`charge`).
+    private var charged: [String: Double] = [:]
+    /// What the land work is doing now, shown under the numbers.
+    var note = ""
     /// The last second's numbers, one line each.
     private(set) var summary = ""
 
@@ -2624,8 +2661,15 @@ final class FrameTiming {
         let now = Self.now()
         if frameStart > 0 {
             let frame = now - frameStart
-            worst = max(worst, frame)
-            spent["other", default: 0] += max(0, frame - (last - frameStart))
+            let outside = charged.values.reduce(0, +)
+            if frame > worst {
+                worst = frame
+                worstWhat = charged.max { $0.value < $1.value }.map { String(format: "%@ %.0f ms", $0.key, $0.value * 1000) } ?? ""
+            }
+            for (name, seconds) in charged { spent[name, default: 0] += seconds }
+            charged = [:]
+            // What's left: SpriteKit drawing the frame, SwiftUI, and anything else on the main thread.
+            spent["other", default: 0] += max(0, frame - (last - frameStart) - outside)
         }
         frameStart = now
         last = now
@@ -2636,12 +2680,21 @@ final class FrameTiming {
         let parts = spent.map { (name: $0.key, ms: $0.value / counted * 1000) }.sorted { $0.ms > $1.ms }
         let head = String(format: "%.1f fps, frame %.1f ms, worst %.0f ms", Double(frames - 1) / seconds,
                           seconds / counted * 1000, worst * 1000)
-        summary = ([head] + parts.prefix(8).map { String(format: "%@ %.1f", $0.name, $0.ms) }).joined(separator: "\n")
+        let worstLine = worstWhat.isEmpty ? [] : ["worst: " + worstWhat]
+        let noteLine = note.isEmpty ? [] : [note]
+        summary = ([head] + worstLine + parts.prefix(8).map { String(format: "%@ %.1f", $0.name, $0.ms) } + noteLine).joined(separator: "\n")
         spent = [:]
         since = now
         frames = 1
         worst = 0
+        worstWhat = ""
         return true
+    }
+
+    /// Work done between frames (`ContinentScene.breathe`): `seconds` of it, `name`'s.
+    func charge(_ name: String, _ seconds: Double) {
+        guard Self.isOn, seconds > 0, seconds < 30 else { return }
+        charged[name, default: 0] += seconds
     }
 
     /// The part `name` has just finished: the time since the last lap is its.

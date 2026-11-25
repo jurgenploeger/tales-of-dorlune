@@ -168,7 +168,10 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   parts of the world's drawing out (`GameSettings.devParts`, the debug flag `off=`'s names: `LandStage.isOffForDebug`
   reads both): trees in the wind (`WindField.tick`), shade, tall grass, water motion, footprints, ambience,
   lighting. Wind, shade and footprints change at once, the rest in lands built after. Frame timing (`FrameTiming`, end of
-  `ContinentScene.swift`): each part of the continent's frame laps it (`lap`), shown once a second over the joystick.
+  `ContinentScene.swift`): each part of the continent's frame laps it (`lap`), shown once a second over the joystick;
+  the land work on the main thread between frames is charged by step (`charge`, from `ContinentScene.breathe`: a land's
+  `build plan`/`hills`/`stage`/`ground`, `hills`, `banks`), with what the worst frame went to and the land being built;
+  "other" is what's left: SpriteKit drawing, SwiftUI and the rest.
 - A town's market traders (bots under a sign, `Crowd.placeTraders`) are closed for now (`Crowd.marketOpen`, the user,
   2026-11-25: a busy town ran at a few frames a second): as many adventurers walk about instead. Set it back to bring them back.
 - Monsters turn up 30% less often on a land's main roads (`WorldMap.mainRoads`, the roads out through its exits,
