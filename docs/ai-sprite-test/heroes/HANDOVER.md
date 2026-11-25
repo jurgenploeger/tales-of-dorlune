@@ -375,6 +375,9 @@ One doll, end to end (it was the Human Male pilot until 2026-11-24).
     the walk head's shading and spoiled the face), so only its pixels outside the standing head, from the walk frame
     nearest it (up 3, down 1, right 4), were laid over the idle ears; stray single pixels left by the walk head's
     outline (one by the chin) dropped (the user). Idle now 51, 53 and 25.
+45. **Elf attack up-right** (2026-11-25): five paintings (`tries/elf_attack_up-right_try1{a..e}_painting.png`), all
+    lined up within a pixel; painting 1 picked, its ear 11 to 19 pixels past the head (idle 17, walk 13 to 20; the
+    others ran to 29), no grey specks (`hero64_doll_ears_attack_up-right.png`; up-left mirrored).
  Idle wears it; up-left mirrored.
 
 ## What has gone wrong before (read before prompting)
