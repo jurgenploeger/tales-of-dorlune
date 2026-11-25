@@ -161,7 +161,9 @@ def wear_style(style, anim, race="human"):
                 e = elf[sl]
                 ear = (e[..., 3] > 0) & ((e != f).any(2))
                 top = ear_top(d)
-                if top is not None:
+                # from behind (up, up-right, up-left) the ears layer lies over the back of the head: there the hair
+                # goes over it and only what stands out past the head shows (2026-11-25)
+                if top is not None and not d.startswith("up"):
                     band = np.zeros_like(ear); band[max(top + sh[0], 0):] = True
                     keep = ear & band
                     w = w.copy(); w[keep] = e[keep]
