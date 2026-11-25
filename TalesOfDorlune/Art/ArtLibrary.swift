@@ -1094,6 +1094,78 @@ final class ArtLibrary {
         return frames
     }
 
+    /// The wind frames of every sprite in `ids` that moves in the wind, as `sprite(_:)` draws it now
+    /// (graded for the land being set down), cut from strips packed side by side on one texture, so a
+    /// mixed wood's trees and bushes share it and SpriteKit draws them in batches, not one by one
+    /// (the user, 2026-11-25, after a post on pixel-art trees in the wind: the clumps aren't what's
+    /// slow, drawing each tree off a picture of its own is). `windFrames` then finds them made; what
+    /// it doesn't find (a land next door's recolour, or past `atlasSide`) it cuts on its own, as before.
+    func packWindFrames(_ ids: [String]) {
+        guard let book = WindBook.shared else { return }
+        var items: [(texture: SKTexture, strip: CGImage, count: Int)] = []
+        var seen: Set<ObjectIdentifier> = []
+        for id in Set(ids).sorted() {
+            guard let rig = windRig(id) else { continue }
+            let texture = sprite(id).texture
+            let key = ObjectIdentifier(texture)
+            guard seen.insert(key).inserted else { continue }
+            if let known = windStrips[key], known.texture === texture { continue }
+            guard let strip = book.strip(picture(of: texture), rig: rig) else { continue }
+            items.append((texture, strip, rig.frames.count))
+        }
+        guard items.count > 1 else { return }
+        // Shelves, tallest first, a clear pixel round each so no neighbour's edge creeps in.
+        let side = Self.atlasSide, gap = 1
+        let order = items.indices.sorted { items[$0].strip.height > items[$1].strip.height }
+        var spots: [Int: (x: Int, y: Int)] = [:]
+        var x = gap, y = gap, shelf = 0
+        for index in order {
+            let w = items[index].strip.width, h = items[index].strip.height
+            guard w + 2 * gap <= side else { continue }
+            if x + w + gap > side {
+                x = gap
+                y += shelf + gap
+                shelf = 0
+            }
+            guard y + h + gap <= side else { break }
+            spots[index] = (x, y)
+            x += w + gap
+            shelf = max(shelf, h)
+        }
+        let height = y + shelf + gap
+        guard spots.count > 1, height > 0,
+              let context = CGContext(data: nil, width: side, height: height, bitsPerComponent: 8, bytesPerRow: 0,
+                                      space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)
+        else { return }
+        context.interpolationQuality = .none
+        for (index, spot) in spots {
+            let strip = items[index].strip
+            // The context's rows run up from the bottom.
+            context.draw(strip, in: CGRect(x: spot.x, y: height - spot.y - strip.height, width: strip.width, height: strip.height))
+        }
+        guard let image = context.makeImage() else { return }
+        let page = SKTexture(cgImage: image)
+        page.filteringMode = .nearest
+        let pageWidth = CGFloat(side), pageHeight = CGFloat(height)
+        for (index, spot) in spots {
+            let item = items[index]
+            let frameWidth = CGFloat(item.strip.width / item.count), frameHeight = CGFloat(item.strip.height)
+            let bottom = pageHeight - CGFloat(spot.y) - frameHeight
+            let frames = (0..<item.count).map { f -> SKTexture in
+                let rect = CGRect(x: (CGFloat(spot.x) + CGFloat(f) * frameWidth) / pageWidth, y: bottom / pageHeight,
+                                  width: frameWidth / pageWidth, height: frameHeight / pageHeight)
+                let frame = SKTexture(rect: rect, in: page)
+                frame.filteringMode = .nearest
+                return frame
+            }
+            windStrips[ObjectIdentifier(item.texture)] = WindStrip(texture: item.texture, frames: frames)
+        }
+    }
+
+    /// How wide (and at most how tall) a land's packed wind texture is, in pixels: well inside what
+    /// every iPhone's GPU takes (8192 since the A9).
+    private static let atlasSide = 4096
+
     private func remember(_ image: CGImage, for texture: SKTexture) {
         sources[ObjectIdentifier(texture)] = Source(texture: texture, image: image)
         if sources.count > sourcesPrunedAt {

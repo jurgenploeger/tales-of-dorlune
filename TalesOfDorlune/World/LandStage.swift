@@ -1635,6 +1635,8 @@ final class LandStage {
     /// The theme's props, and past the lines the land meets the lands beside it along (`Seam`)
     /// theirs, graded as they are there.
     private func placeProps(_ props: [Placement], seams: [Placement], pause: @escaping () async -> Void) async {
+        // Its trees' and bushes' wind frames on one texture, so they draw in batches (`packWindFrames`).
+        art.packWindFrames(props.map { $0.art })
         for (number, prop) in props.enumerated() {
             if number % 32 == 31 { await pause() }
             plant(prop)

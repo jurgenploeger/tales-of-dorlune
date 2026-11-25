@@ -3410,7 +3410,8 @@ nonisolated final class WorldMap: @unchecked Sendable {
                 // A river running east is crossed going north.
                 guard let bridge = span(.road, at: shift == 0 ? middle : line[index], northward: abs(to.x - from.x) >= abs(to.y - from.y),
                                         lanes: 3, clear: clear) else { continue }
-                meetRoad(bridge)
+                // Moved along the river from where the road crossed it: the old road's end there cleared.
+                meetRoad(bridge, movedFrom: shift == 0 ? nil : middle)
                 return true
             }
         }
@@ -3513,8 +3514,26 @@ nonisolated final class WorldMap: @unchecked Sendable {
     /// The road on either bank bent to meet a bridge squarely: straight on out of each end as wide
     /// as the deck (`bridgeApproach`), then a stretch of road from there to the nearest bit of the
     /// road farther on.
-    private func meetRoad(_ bridge: Bridge) {
+    /// `movedFrom`: where the road crossed the river, when the bridge stands elsewhere along it. The
+    /// road is then met from farther back, off the bank, and its old end down to the water there is
+    /// taken up (the user, 2026-11-25, Briarmere: "The road here doesn't line up with the bridge any
+    /// more": it still ran to the water beside the bridge, the way onto the bridge a stub off it).
+    private func meetRoad(_ bridge: Bridge, movedFrom crossing: CGPoint? = nil) {
         let centre = CGFloat(bridge.lane) + CGFloat(bridge.lanes) / 2
+        /// Whether there's water within `reach` cells of a cell (a square round it).
+        func byWater(_ cell: GridPoint, _ reach: Int) -> Bool {
+            for dr in -reach...reach {
+                for dc in -reach...reach {
+                    let near = GridPoint(col: cell.col + dc, row: cell.row + dr)
+                    if contains(near), ground[near.row][near.col] == .water, !bridgeCells.contains(near) { return true }
+                }
+            }
+            return false
+        }
+        // The road laid here to meet the bridge, kept when the old end is taken up.
+        var laid: Set<GridPoint> = []
+        let search = crossing == nil ? 8 : 11
+        var joined = 0
         for (end, step) in [(bridge.start - 1, -1), (bridge.end + 1, 1)] {
             // Only over open ground: not into water, a border, the sea or a land next door's.
             // As wide as the deck where it meets it, then giving way: a corner off the second
@@ -3531,28 +3550,35 @@ nonisolated final class WorldMap: @unchecked Sendable {
                     let cell = bridge.cell(lane: lane, along: end + step * out)
                     guard contains(cell), owns(cell), ([.ground, .accent, .path] as [Ground]).contains(ground[cell.row][cell.col]) else { continue }
                     ground[cell.row][cell.col] = .path
+                    laid.insert(cell)
                 }
             }
             let along = end + step * (Self.bridgeApproach - 1)
             let foot = bridge.northward ? CGPoint(x: centre, y: CGFloat(along) + 0.5) : CGPoint(x: CGFloat(along) + 0.5, y: centre)
             var best: (distance: CGFloat, spot: CGPoint)?
-            for dr in -8...8 {
-                for dc in -8...8 {
+            for dr in -search...search {
+                for dc in -search...search {
                     let cell = GridPoint(col: Int(foot.x.rounded(.down)) + dc, row: Int(foot.y.rounded(.down)) + dr)
                     guard contains(cell), ground[cell.row][cell.col] == .path else { continue }
                     // Only on past the straight run, on its own bank.
                     guard ((bridge.northward ? cell.row : cell.col) - along) * step >= 1 else { continue }
+                    // Moved, only off the bank: the old road's end by the water is taken up.
+                    if crossing != nil, laid.contains(cell) || byWater(cell, 3) { continue }
                     let spot = CGPoint(x: CGFloat(cell.col) + 0.5, y: CGFloat(cell.row) + 0.5)
                     let distance = spot.distance(to: foot)
-                    if distance < 7, distance < best?.distance ?? .infinity { best = (distance, spot) }
+                    if distance < CGFloat(search - 1), distance < best?.distance ?? .infinity { best = (distance, spot) }
                 }
             }
             if let best {
+                joined += 1
                 let steps = max(2, Int(best.distance * 4))
                 for k in 0...steps {
                     let t = CGFloat(k) / CGFloat(steps)
                     let spot = CGPoint(x: foot.x + (best.spot.x - foot.x) * t, y: foot.y + (best.spot.y - foot.y) * t)
-                    for cell in cells(around: spot, radius: 1.05) where ground[cell.row][cell.col] != .water { ground[cell.row][cell.col] = .path }
+                    for cell in cells(around: spot, radius: 1.05) where ground[cell.row][cell.col] != .water {
+                        ground[cell.row][cell.col] = .path
+                        laid.insert(cell)
+                    }
                 }
             }
             // No road beside the deck's end: where the bridge stands a little along the river from
@@ -3565,6 +3591,16 @@ nonisolated final class WorldMap: @unchecked Sendable {
                     let cell = bridge.cell(lane: lane, along: end + step * out)
                     if contains(cell), ground[cell.row][cell.col] == .path { ground[cell.row][cell.col] = .ground }
                 }
+            }
+        }
+        // Moved: the old road's end down to the water where it crossed, on both banks, taken up, so
+        // the road leads onto the bridge and nowhere else at the river.
+        // Only once the road on both banks is joined to the bridge farther back: else the old end is
+        // the only way onto it.
+        if let crossing, joined == 2 {
+            for cell in cells(around: crossing, radius: 8)
+            where contains(cell) && ground[cell.row][cell.col] == .path && !laid.contains(cell) && byWater(cell, 3) {
+                ground[cell.row][cell.col] = .ground
             }
         }
     }
