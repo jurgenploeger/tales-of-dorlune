@@ -5,6 +5,8 @@ import SwiftUI
 /// except walking over a border into the land next door, which was on screen already.
 struct SpriteKitView: UIViewRepresentable {
     let scene: SKScene
+    /// Settings → Developer's frame rate, nodes and draw calls, in any build.
+    @AppStorage(GameSettings.devStatsKey) private var showsStats = false
 
     func makeUIView(context: Context) -> SKView {
         let view = SKView()
@@ -17,11 +19,23 @@ struct SpriteKitView: UIViewRepresentable {
             view.showsNodeCount = true
         }
         #endif
+        showStats(on: view)
         view.presentScene(scene)
         return view
     }
 
+    /// The counters in the corner while Settings → Developer asks for them (debug builds show them anyway).
+    private func showStats(on view: SKView) {
+        #if DEBUG
+        if !DebugLaunch.hidesFrameCounter { return }
+        #endif
+        view.showsFPS = showsStats
+        view.showsNodeCount = showsStats
+        view.showsDrawCount = showsStats
+    }
+
     func updateUIView(_ view: SKView, context: Context) {
+        showStats(on: view)
         guard view.scene !== scene else { return }
         let transition: SKTransition = scene is BattleScene
             ? .fade(with: .white, duration: 0.45)
