@@ -318,19 +318,35 @@ private struct LockInStrip: View {
             TimelineView(.periodic(from: lockIns?.since ?? Date(), by: 0.25)) { context in
                 HStack(spacing: 5) {
                     ForEach(lockIns == nil ? controller.choosers.filter(\.isHero) : controller.choosers) { fighter in
-                        if ringed && fighter.isHero {
-                            face(fighter, ready: isReady(fighter, at: context.date))
-                                .padding(TurnRing.inset)
-                                .overlay {
-                                    TurnRing(deadline: controller.turnDeadline, window: BattleController.turnSeconds ?? 10)
-                                }
+                        // The ring is on whoever you're choosing for: you, then your companion beside you
+                        // once you've chosen, you with your tick (the user, 2026-11-25: "it should show the
+                        // companion's little avatar with the countdown. If there is no companion, then we
+                        // show the green tick").
+                        if ringed && fighter.isHero && !controller.choosingForCompanion {
+                            ringedFace(fighter, ready: false)
                         } else {
                             face(fighter, ready: isReady(fighter, at: context.date))
+                        }
+                        if fighter.isHero, controller.choosingForCompanion, let companion = controller.companion {
+                            if ringed {
+                                ringedFace(companion, ready: false)
+                            } else {
+                                face(companion, ready: false)
+                            }
                         }
                     }
                 }
             }
         }
+    }
+
+    /// A face with the time to choose as a ring round it (`TurnRing`).
+    private func ringedFace(_ fighter: Combatant, ready: Bool) -> some View {
+        face(fighter, ready: ready)
+            .padding(TurnRing.inset)
+            .overlay {
+                TurnRing(deadline: controller.turnDeadline, window: BattleController.turnSeconds ?? 10)
+            }
     }
 
     /// You once you've chosen; a friend once the time to choose has run to their share of it.
