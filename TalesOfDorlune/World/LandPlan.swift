@@ -339,7 +339,9 @@ final class LandPlanner {
                 // The pool a little out in front of the foot; its cell open ground, kept for it.
                 let pool = GridPoint(col: Int((foot.x - 0.2).rounded(.down)), row: Int((foot.y - 0.2).rounded(.down)))
                 let top = GridPoint(col: Int((lip.x + 0.3).rounded(.down)), row: Int((lip.y + 0.3).rounded(.down)))
-                guard map.contains(pool), map.isWalkable(pool), map.ground[pool.row][pool.col] == .ground,
+                // Not on a mountain's stairs (`WorldMap.carveStairs`) or beside them.
+                let nearStairs = (-2...2).contains { dr in (-2...2).contains { dc in map.trailCells.contains(GridPoint(col: pool.col + dc, row: pool.row + dr)) } }
+                guard !nearStairs, map.contains(pool), map.isWalkable(pool), map.ground[pool.row][pool.col] == .ground,
                       falls.allSatisfy({ abs(Double($0.foot.x) - foot.x) + abs(Double($0.foot.y) - foot.y) > 6 }) else { continue }
                 map.occupy(pool, blocking: true)
                 // The pond is wider than a cell, across the screen (along x - y), and its spring sits a
