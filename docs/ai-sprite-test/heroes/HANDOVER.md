@@ -458,6 +458,9 @@ One doll, end to end (it was the Human Male pilot until 2026-11-24).
     The elf's ears go over the hair only in rows where they stand 2 or more pixels past the doll's head
     (`hero_hair.real_ear`): below them, facing right, the elf's own head pixels showed as skin over the nape hair
     (the user). Lone opaque pixels are cleared (`lone_specks`).
+    Spiky up: ChatGPT sent its own 64-pixel files this time (`tries/hair_spiky_up_try1{a,b}{,_8x}.png`), the body
+    pixel for pixel the doll's; the user picked a (`hero64_hair_spiky_up.png`), lifted untoned. **Spiky is done in all
+    eight directions** (five drawn, three mirrored), on idle, walk, run and attack, human and elf.
  Idle wears it; up-left mirrored.
 
 ## What has gone wrong before (read before prompting)
