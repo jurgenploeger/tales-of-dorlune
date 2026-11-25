@@ -447,6 +447,11 @@ One doll, end to end (it was the Human Male pilot until 2026-11-24).
     Spiky right: four paintings (`tries/hair_spiky_right_try1{a..d}_painting.png`), the user picked 1
     (`hero64_hair_spiky_right.png`; left its mirror). The hair now covers the standing head grown by a pixel
     (`hero_hair.wear_hair`): a walk frame's head stood a pixel past it and its outline showed through the hair.
+    Spiky up-right: three images (`tries/hair_spiky_up-right_try1{a..c}_painting.png`, b two figures), the user
+    picked 1 (`hero64_hair_spiky_up-right.png`; up-left its mirror). ChatGPT copied the toned-down colours this
+    time, so it was lifted untoned (`lift --no-grade --sat 0.47`, snapped `--hair-sat 0.47`); its reddish inner ear
+    came off with the hair (6 pixels taken out; the lift now wants hue 12 and up). From behind the hair goes over
+    the elf's ears wherever it lies; only what stands past it shows.
  Idle wears it; up-left mirrored.
 
 ## What has gone wrong before (read before prompting)

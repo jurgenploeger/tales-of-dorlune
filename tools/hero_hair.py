@@ -20,7 +20,8 @@ def hairy(p):
     if p[3] == 0:
         return False
     h, s, v = colorsys.rgb_to_hsv(*(p[:3] / 255))
-    return s >= SAT and v >= 0.3 and (h * 360 <= 50 or h * 360 >= 350)
+    # hue 12 and up: a reddish inner ear is as saturated as the hair (it came off with the hair facing up-right)
+    return s >= SAT and v >= 0.3 and 12 <= h * 360 <= 50
 
 def dark(p):
     return p[3] > 0 and p[:3].max() < 0.45 * 255
@@ -152,6 +153,15 @@ def wear_style(style, anim, race="human"):
             # head pixels round the ears, and laid back over the hair they showed through it as skin and specks
             # (the user, 2026-11-25)
             sh = he.fit(f, ref)
+            if elf is not None and d.startswith("up"):
+                # from behind the hair goes over the ears wherever it lies (laid over the elf's frame, the ears'
+                # pixels where the head is clear showed through it as lines, the user, 2026-11-25); the elf shows
+                # wherever no hair went
+                w0 = wear_hair(f, hair, sh, ref)
+                bare = (w0 == f).all(2)
+                w = w0.copy(); w[bare] = elf[sl][bare]
+                out[sl] = w
+                continue
             w = wear_hair(elf[sl] if elf is not None else f, hair, sh, ref)
             if elf is not None:
                 # from the ears' top row down (the standing view's ears, moved with the head), the ears stay over
