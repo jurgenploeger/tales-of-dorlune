@@ -1848,6 +1848,7 @@ final class LandStage {
         for crag in map.crags {
             let hill = map.hills[crag.hill]
             strewStones(on: hill, inland: crag.inland)
+            if let mouth = hill.mouth, mouth.pictured { placeMouth(mouth, on: hill, cave: crag.to) }
             // A hill inland stands in the land's own ground: no range past the edge to fade out.
             guard !crag.inland else { continue }
             let length = crag.edge == .north || crag.edge == .south ? map.columns : map.rows
@@ -1899,6 +1900,70 @@ final class LandStage {
             raised.zPosition = shift.dy + Self.above + 15_000
             world.addChild(raised)
         }
+    }
+
+    /// A cave's mouth as its picture (`WorldMap.mouthArt`, ChatGPT's drawings, `tools/cave_mouth_art.py`):
+    /// laid over its rock face, its bottom row on the mouth's foot where the road runs in, graded with the
+    /// land's palette as everything is. The face runs along the map's diagonal on screen, so the picture,
+    /// drawn face on, is sheared to lean with it: each column moved up or down in whole pixels by how far
+    /// along the face it lies (as the town terraces' walls are). Sorted just behind whoever stands at its
+    /// foot, in front of the rock behind it.
+    private func placeMouth(_ mouth: WorldMap.Hill.Mouth, on hill: WorldMap.Hill, cave: String) {
+        let id = WorldMap.mouthArt(for: cave)
+        guard art.asset(id) != nil else { return }
+        let picture = art.picture(of: art.sprite(id).texture)
+        // How the face leans on screen: up this many points for each one across.
+        let along = WorldMap.project(CGPoint(x: mouth.along.x, y: mouth.along.y))
+        let slope = abs(along.x) > 0.001 ? along.y / along.x : 0
+        guard let made = Self.shear(picture, slope: slope) else { return }
+        let sheared = made.0, footUp = made.1
+        let texture = SKTexture(cgImage: sheared)
+        texture.filteringMode = .nearest
+        let size = CGSize(width: sheared.width, height: sheared.height)
+        let node = SKSpriteNode(texture: texture, size: size)
+        node.anchorPoint = CGPoint(x: 0.5, y: footUp / size.height)
+        let tile = WorldMap.tileSize
+        let foot = WorldMap.project(CGPoint(x: mouth.x * tile, y: mouth.y * tile))
+        node.position = CGPoint(x: foot.x.rounded(), y: (foot.y + hill.height(atCells: mouth.x, mouth.y)).rounded())
+        node.zPosition = -foot.y - 1
+        chunk(at: node.position).addChild(node)
+    }
+
+    /// `picture` sheared to lean `slope` points up for each across, in whole pixels about its middle
+    /// column, and how far its middle column's bottom stands over the new picture's bottom.
+    static func shear(_ picture: CGImage, slope: CGFloat) -> (CGImage, CGFloat)? {
+        let w = picture.width, h = picture.height
+        guard w > 0, h > 0 else { return nil }
+        let middle = CGFloat(w) / 2
+        let lifts = (0..<w).map { Int((slope * (CGFloat($0) + 0.5 - middle)).rounded()) }
+        let low = lifts.min() ?? 0, high = lifts.max() ?? 0
+        let tall = h + high - low
+        var source = [UInt8](repeating: 0, count: w * h * 4)
+        var out = [UInt8](repeating: 0, count: w * tall * 4)
+        let space = CGColorSpaceCreateDeviceRGB(), info = CGImageAlphaInfo.premultipliedLast.rawValue
+        let drawn = source.withUnsafeMutableBytes { buffer -> Bool in
+            guard let context = CGContext(data: buffer.baseAddress, width: w, height: h, bitsPerComponent: 8, bytesPerRow: w * 4,
+                                          space: space, bitmapInfo: info) else { return false }
+            context.draw(picture, in: CGRect(x: 0, y: 0, width: w, height: h))
+            return true
+        }
+        guard drawn else { return nil }
+        // Rows from the top in memory: a column lifted `lift` up starts `high - lift` rows down.
+        for x in 0..<w {
+            let down = high - lifts[x]
+            for y in 0..<h {
+                let from = (y * w + x) * 4, to = ((y + down) * w + x) * 4
+                for k in 0..<4 { out[to + k] = source[from + k] }
+            }
+        }
+        let made = out.withUnsafeMutableBytes { buffer -> CGImage? in
+            CGContext(data: buffer.baseAddress, width: w, height: tall, bitsPerComponent: 8, bytesPerRow: w * 4,
+                      space: space, bitmapInfo: info)?.makeImage()
+        }
+        guard let made else { return nil }
+        // The middle column's lift is about 0: its bottom stands `-low` over the picture's bottom.
+        let middleLift = lifts[w / 2]
+        return (made, CGFloat(middleLift - low))
     }
 
     /// Boulders and stones strewn over a range where a road leads into a cave, out past the land's

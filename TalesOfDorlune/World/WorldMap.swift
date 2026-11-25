@@ -231,6 +231,20 @@ nonisolated final class WorldMap: @unchecked Sendable {
         let cave: MapDef.Cave
         let hill: Int
         var inland = false
+        /// The cave its road leads into, by id (its mouth's picture, `mouthArt`).
+        var to = ""
+    }
+
+    /// The picture of a cave's mouth (ChatGPT's, `tools/cave_mouth_art.py`, the user, 2026-11-25: "the gates
+    /// should look more like a cave opening instead of a black gap"), by the cave: each its own, else the
+    /// plain one, laid over its rock face by `LandStage.placeMouth`.
+    static func mouthArt(for cave: String) -> String {
+        switch cave {
+        case "rat_cavern": "cave_mouth_rat"
+        case "slime_cave": "cave_mouth_slime"
+        case "glimmerdeep": "cave_mouth_glimmer"
+        default: "cave_mouth"
+        }
     }
     private(set) var crags: [Crag] = []
     /// The map's cells a crag's range rises over, kept clear of ponds (and, taken, of scenery and
@@ -332,7 +346,7 @@ nonisolated final class WorldMap: @unchecked Sendable {
             keepNPCsInView()
         }
         lap("town and buildings")
-        var ranges: [(edge: Edge, cave: MapDef.Cave, hill: Hill, inland: Bool)] = []
+        var ranges: [(edge: Edge, cave: MapDef.Cave, hill: Hill, inland: Bool, to: String)] = []
         if def.theme.cave == nil, def.town == nil {
             // Its own random numbers, so the rest of the map comes out as it did before.
             var cragRNG = SeededRandom(text: def.id + "/crags")
@@ -340,9 +354,9 @@ nonisolated final class WorldMap: @unchecked Sendable {
                 guard let cave = caves[exit.to] else { continue }
                 if let road = region?.roads[exit.to], let into = road.into {
                     guard let gate = raiseGate(at: road.at, into: into, &cragRNG) else { continue }
-                    ranges.append((exit.edge, cave, gate, true))
+                    ranges.append((exit.edge, cave, gate, true, exit.to))
                 } else if let range = raiseCrags(along: exit.edge, &cragRNG) {
-                    ranges.append((exit.edge, cave, range, false))
+                    ranges.append((exit.edge, cave, range, false, exit.to))
                 }
             }
         }
@@ -372,8 +386,11 @@ nonisolated final class WorldMap: @unchecked Sendable {
         // places in the list.
         for range in ranges {
             for cell in range.hill.cells where contains(cell) { hillOf[cell] = self.hills.count }
-            crags.append(Crag(edge: range.edge, cave: range.cave, hill: self.hills.count, inland: range.inland))
-            self.hills.append(range.hill)
+            crags.append(Crag(edge: range.edge, cave: range.cave, hill: self.hills.count, inland: range.inland, to: range.to))
+            // Its mouth a picture laid over the rock (`LandStage.placeMouth`), not painted in it.
+            var hill = range.hill
+            hill.mouth?.pictured = region != nil
+            self.hills.append(hill)
         }
         // Where you arrive through a cave's mouth beside the road has moved.
         if !ranges.isEmpty { cachedEntryCells = nil }
