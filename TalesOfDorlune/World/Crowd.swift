@@ -171,8 +171,10 @@ final class Crowd {
             ?? max(1, heroLevel - 12)...max(8, heroLevel + 8)
         // Fewer computer-run adventurers as real players arrive (crowd.json `botDensity`).
         let density = max(0, options.botDensity ?? 1)
-        let count = Int((Double(def.crowd?.adventurers ?? 0) * density).rounded())
-        let traders = market == nil ? 0 : Int((Double(def.crowd?.traders ?? 0) * density).rounded())
+        // The market's traders closed for now (`marketOpen`): as many adventurers walk about instead.
+        let traderCount = market == nil ? 0 : Int((Double(def.crowd?.traders ?? 0) * density).rounded())
+        let traders = Self.marketOpen ? traderCount : 0
+        let count = Int((Double(def.crowd?.adventurers ?? 0) * density).rounded()) + (Self.marketOpen ? 0 : traderCount)
         pace = max(1, Double(count + traders) / 8)
         // Your friends who are here now (`GameSession.friendsIn`: where the Friends list says they
         // are), among its adventurers.
@@ -300,6 +302,11 @@ final class Crowd {
         add(member, to: world)
         if let facing { walker.face(facing) }
     }
+
+    /// Whether a town's market traders stand under their signs (`placeTraders`). Closed for now (the user,
+    /// 2026-11-25: "Perhaps we should remove the trading feature for now and have the bots just walk around
+    /// here normally. Maybe later we can add it back"): a busy town ran at a few frames a second.
+    static let marketOpen = false
 
     /// Market traders about the main square: a step apart, clear of the middle where you arrive and
     /// of the townsfolk with jobs, each under a sign with something they're selling today.
