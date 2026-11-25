@@ -118,7 +118,7 @@ struct BattleView: View {
         switch controller.phase {
         case .command:
             if controller.choosingForCompanion {
-                CompanionPad(controller: controller)
+                CompanionPad(controller: controller, chip: !(ringed || controller.lockIns != nil))
                     .padding(.top, 64)
                     .transition(.scale(scale: 0.6, anchor: .bottomTrailing).combined(with: .opacity))
             } else {
@@ -1024,10 +1024,14 @@ private struct AutoPlaying: View {
 /// it (that would start their clock over).
 private struct CompanionPad: View {
     let controller: BattleController
+    /// Whether the chip shows whose turn it is: only where the party's row bottom left doesn't, its face
+    /// there taking your place in the ring (the user, 2026-11-25: "We don't need to show the pill ... their
+    /// circle already lights up and it shows in the small avatar bottom left").
+    var chip = true
 
     var body: some View {
         VStack(alignment: .trailing, spacing: 16) {
-            if let companion = controller.companion {
+            if chip, let companion = controller.companion {
                 HStack(spacing: 8) {
                     SpriteImage(art: companion.art, size: 30)
                     Text(L("{companion}'s turn", ["companion": companion.name]))
