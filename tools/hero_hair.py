@@ -104,6 +104,15 @@ def style_view(style, d):
     s = he.standing(d)
     return None if s is None or not os.path.exists(p) else (s, np.asarray(Image.open(p).convert("RGBA")))
 
+def wear_hair(frame, hair, shift, ref):
+    """hero_ears.wear for hair: over clear pixels and over the head, the standing view's head grown by a pixel, as
+    a walk frame's head can stand a pixel past the standing view's and its outline showed through the hair (facing
+    right, 2026-11-25); an arm raised past the head stays in front."""
+    import hero_ears as he
+    grown = ref.copy()
+    grown[..., 3] = np.where(ndimage.binary_dilation(ref[..., 3] > 0, np.ones((3, 3), bool)), 255, 0)
+    return he.wear(frame, hair, shift, grown)
+
 def ear_top(d):
     """The top row of the elf's ears in a direction's standing view (hero64_doll_ears_<direction>.png), or None."""
     import hero_ears as he
@@ -136,7 +145,7 @@ def wear_style(style, anim, race="human"):
             # head pixels round the ears, and laid back over the hair they showed through it as skin and specks
             # (the user, 2026-11-25)
             sh = he.fit(f, ref)
-            w = he.wear(elf[sl] if elf is not None else f, hair, sh, ref)
+            w = wear_hair(elf[sl] if elf is not None else f, hair, sh, ref)
             if elf is not None:
                 # from the ears' top row down (the standing view's ears, moved with the head), the ears stay over
                 # the hair: the sideburns crossed their roots and, facing down-right, the hair at the back of the

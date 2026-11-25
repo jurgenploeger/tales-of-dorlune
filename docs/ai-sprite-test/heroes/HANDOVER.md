@@ -444,6 +444,9 @@ One doll, end to end (it was the Human Male pilot until 2026-11-24).
     over the near ear).
     Spiky down-right: two paintings (`tries/hair_spiky_down-right_try1{a,b}_painting.png`), the user picked 1
     (`hero64_hair_spiky_down-right.png`; down-left its mirror), worn on every frame the same way.
+    Spiky right: four paintings (`tries/hair_spiky_right_try1{a..d}_painting.png`), the user picked 1
+    (`hero64_hair_spiky_right.png`; left its mirror). The hair now covers the standing head grown by a pixel
+    (`hero_hair.wear_hair`): a walk frame's head stood a pixel past it and its outline showed through the hair.
  Idle wears it; up-left mirrored.
 
 ## What has gone wrong before (read before prompting)
