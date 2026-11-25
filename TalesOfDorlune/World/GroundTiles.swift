@@ -183,19 +183,24 @@ final class GroundTiles {
     /// A cell's tile with snow laid over it pixel by pixel as far as `snowCover` says (`ArtLibrary.snowed`),
     /// its cover blended between the cells' middles so the snow comes on smoothly across them. Not on
     /// water or the coast; on a snowy land, only where its band brought the land next door's ground.
-    private func snowOver(_ group: SKTileGroup, cell: GridPoint, band: Bool, wet: Bool) -> SKTileGroup {
-        guard !snowSeams.isEmpty, !wet, !(Self.snowy(map.def) && !band) else { return group }
+    /// On a snowy land, a cell with its grass patches in it (`patched`) is snowed over too, by
+    /// `meltCover` in the land's own snow (the user, 2026-11-25: "This partly melted spots should have
+    /// the new treatment as well").
+    private func snowOver(_ group: SKTileGroup, cell: GridPoint, band: Bool, wet: Bool, patched: Bool = false) -> SKTileGroup {
+        guard !wet else { return group }
+        let melting = Self.snowy(map.def) && !band && patched
+        guard melting || (!snowSeams.isEmpty && !(Self.snowy(map.def) && !band)) else { return group }
         var corners: [GridPoint: Double] = [:]
         var any = false
         for dr in -1...1 {
             for dc in -1...1 {
                 let near = GridPoint(col: cell.col + dc, row: cell.row + dr)
-                let cover = snowCover(near)
+                let cover = melting ? meltCover(near) : snowCover(near)
                 corners[near] = cover
                 if cover > 0.01 { any = true }
             }
         }
-        guard any, let tones = snowTones(cell), let picture = pictures[ObjectIdentifier(group)] else { return group }
+        guard any, let tones = melting ? ownSnowTones : snowTones(cell), let picture = pictures[ObjectIdentifier(group)] else { return group }
         let covers = corners
         let front: (Double, Double) -> Double = { x, y in
             let fx = x - 0.5, fy = y - 0.5
@@ -207,6 +212,27 @@ final class GroundTiles {
         let place = origin
         return self.group("snow@\(cell.col),\(cell.row)") { art.snowed(picture, cell: cell, origin: place, front: front, tones: tones) }
     }
+
+    /// How snowed over a cell of a snowy land's grass patches (theme `accent`, the spots where it's
+    /// melted) is, 0 to 1: the snow all round them, three quarters of it on a patch's edge, thinning a
+    /// third a cell further in, none from four cells in, so a patch's middle stays green and its edge
+    /// is snow giving way to grass pixel by pixel.
+    private func meltCover(_ cell: GridPoint) -> Double {
+        guard map.owns(cell), map.ground[cell.row][cell.col] == .accent else { return 1 }
+        for reach in 1...3 {
+            for dr in -reach...reach {
+                for dc in -reach...reach where max(abs(dr), abs(dc)) == reach {
+                    let near = GridPoint(col: cell.col + dc, row: cell.row + dr)
+                    guard map.owns(near), map.ground[near.row][near.col] != .accent else { continue }
+                    return max(0, 0.75 - 0.33 * Double(reach - 1))
+                }
+            }
+        }
+        return 0
+    }
+
+    /// A snowy land's own snow's tones (`meltCover`).
+    private lazy var ownSnowTones: [(Double, Double, Double)]? = art.snowTones(theme.ground, from: ArtLibrary.Foreign(land: map.def.id, palette: theme.palette))
 
     /// A land next door, for its ground graded as it is there.
     private func foreignLand(_ id: String) -> (land: MapDef, from: ArtLibrary.Foreign)? {
@@ -422,7 +448,7 @@ final class GroundTiles {
                                 ice: frozen)
             }
         }
-        return (snowOver(chosen, cell: cell, band: band != nil, wet: pond != 0 || coast != 0), near != 0)
+        return (snowOver(chosen, cell: cell, band: band != nil, wet: pond != 0 || coast != 0, patched: patch != 0), near != 0)
     }
 
     // MARK: Pond water

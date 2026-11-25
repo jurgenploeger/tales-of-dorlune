@@ -115,6 +115,8 @@ continent_waterfall | newgame,map=sunny_meadow,at=38_48,weather=clear,hour=12 | 
 # A terrace's waterfall: its spring pond above, its pond below (2026-11-25).
 cliff_falls | newgame,map=sunny_meadow,hill=0,face,weather=clear,hour=12 | 8
 # A mountain as five plateaus, its stairs zig-zagging up the face and its back a gentle slope (2026-11-25).
+# A snowy land's melted grass patches, snowed over at their edges (2026-11-25).
+snow_patches | newgame,map=snow_white_forest,weather=clear,hour=12 | 8
 mountain_stairs | newgame,map=crystal_mountain,hill=tallest,weather=clear,hour=12 | 8
 mountain_face   | newgame,map=valley_of_fear,hill=tallest,face,landscape,weather=clear,hour=12 | 8
 # A road running on from Frog Swamp into the Valley of Fear: its look fades across the band, not cut
