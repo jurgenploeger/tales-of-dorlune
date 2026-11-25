@@ -437,6 +437,9 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   (`BorderArt.wallTopLevel`, `wallThickness`): face on it looked flat, and the walk drawn on its face still read as thin (the user, 2026-11-18).
   Along the walk's far edge stands a parapet too, the face's own merlons above the walk's level (the user, 2026-11-18: "The walls miss the ridge on the outer edge").
   The pieces are drawn with no edge smoothing (smoothed, a seam a pixel wide showed between every two). `--sheet out.png` previews them.
+- Gates have depth (`TownFence.gate`, the user, 2026-11-25: "too flat"): a town's and a quest's border gate go back
+  `gateThickness` (0.35 of a cell) into the screen, the pillars and beam only (`solidParts`, not what hangs between),
+  in flat tones of the arch's own colour, tops lit and ends a shade darker, the arch's face over them.
 - `tools/gate_art.py`: each town's own gate over its roads (maps.json town `gate`: Meadowbrook's thatched
   lychgate, Prismhaven's crystal keystone, Ingothold's gold and red cloth, Larkspur's bluebird); quests'
   gates across borders keep RD's `town_gate`. Each is laid out as `town_gate` is (`TownFence.widened` spans a
