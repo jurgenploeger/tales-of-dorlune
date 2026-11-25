@@ -106,6 +106,13 @@ def pool(mask):
     cols = np.where(mask[neck])[0]
     return standing, neck, (max(0, cols[0] - 1), min(mask.shape[1] - 1, cols[-1] + 1))
 
+def is_rock(art):
+    """A rock or boulder casts as a block, as a building does (CanopyShade.isRock)."""
+    if art.startswith("water_rock") or "rocking" in art:
+        return False
+    return "boulder" in art or "rock_formation" in art or art == "rock" or art.endswith("_rock")
+
+
 def cast(mask, foot_x, foot_y, foot_row, s, H, W, walls=False):
     """The silhouette `mask` (its foot on `foot_row`) laid on the ground from (foot_x, foot_y), away
     from the sun `s`. Each run of a row is taken as a slice of a round crown: its shade an ellipse as
@@ -159,7 +166,7 @@ def canopy(hour, flecks_phase=(0.0, 0.0)):
                 mask[neck + 1:, right + 1:] = False
             else:
                 foot = base_row(mask)
-            walls = pp.assets.get(art, {}).get('kind') == 'building'
+            walls = pp.assets.get(art, {}).get('kind') == 'building' or is_rock(art)
             depth = np.maximum(depth, cast(mask, x0 + w / 2, y0 + foot, foot, s, H, W, walls))
         if not depth.any(): return
         core = depth > 0
