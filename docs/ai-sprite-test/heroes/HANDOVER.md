@@ -422,6 +422,12 @@ One doll, end to end (it was the Human Male pilot until 2026-11-24).
     and frames 5 to 8 had 1 to 3 outline gaps. Now the rows from the ears' foot to above the neck come from one frame
     (3, closest to the human head) in every frame, moved with the head, and every gap has its outline pixel
     (`tools/hero_ears_walk_up_steady.py`).
+52. **Attack up with the outward ears** (2026-11-25): five ChatGPT repaints of the attack with the new ears
+    (`tries/elf_attack_up_try2{a..e}_painting.png`), lifted with `hero_ears_row.py --band 3` and steadied as the walk
+    (`hero_ears_walk_up_steady.py attack <row> <out> 6`; where the human frame differs from the reference, the raised
+    arm by the head, the frame's own pixels stay). The user picked 4 (30 to 34 pixels past the head; ChatGPT drew
+    every attack's ears smaller than the idle's 40). In frame 2 the raised arm hides the right ear, as painted.
+    Item 49's attack up is replaced: idle, walk, run and attack facing up now wear the outward ears.
  Idle wears it; up-left mirrored.
 
 ## What has gone wrong before (read before prompting)
