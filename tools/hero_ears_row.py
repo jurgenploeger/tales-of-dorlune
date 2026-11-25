@@ -62,6 +62,13 @@ if BAND is not None:
         f=row[:,c*64:(c+1)*64]; g=S[:,c*64:(c+1)*64]; dy,dx=shifts[c]; g=np.roll(np.roll(g,-dy,0),-dx,1)
         w=f[...,3].astype(bool).sum(1); top=int(np.nonzero(w)[0].min()); last=min(range(top+12,top+24),key=lambda r:w[r])-2
         m=np.zeros((64,64),bool); k=np.zeros((64,64),bool)
+        # the ear tips rise to about the head's top: there only what lies past the head's widest sides (the middle
+        # would bring ChatGPT's taller head top in as a cap; from top+3 alone the tips were cut off, the user)
+        ext=[np.nonzero(f[y,:,3])[0] for y in range(top,last)]
+        L0=min(e.min() for e in ext if len(e)); R0=max(e.max() for e in ext if len(e))
+        for y in range(max(top-4,0),top+3):
+            for x in range(64):
+                if g[y,x,3] and not f[y,x,3] and (x<=L0+BAND or x>=R0-BAND): m[y,x]=True
         for y in range(top+3,last):
             xs=np.nonzero(f[y,:,3])[0]
             if not len(xs): continue

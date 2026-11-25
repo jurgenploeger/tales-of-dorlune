@@ -389,6 +389,12 @@ One doll, end to end (it was the Human Male pilot until 2026-11-24).
     pixels between ear and head were given the ear's skin beside them (in `hero64_doll_ears_up.png`), at the user's
     word ("or update the idle version so it doesn't close the ears"). The elf now has ears in every direction for
     idle, walk and attack.
+48. **Up: tips and specks** (2026-11-25, the user): opened all the way, the idle's ears lost their points; the inner
+    line was put back from the tip down to row 23 and the base below kept open, and the two dark red pixels low on
+    the right ear (26 and 27, 43) given the skin beside them. The attack's tips had been cut (the band started three
+    rows under the head's top); `--band` now also takes what lies past the head's widest sides up to four rows above
+    it. Three snap specks in the doll's own attack up (an orange and two greys, frames 2 and 4, low on the right of
+    the head) were given the skin beside them, in the doll and so in the elf.
  Idle wears it; up-left mirrored.
 
 ## What has gone wrong before (read before prompting)
