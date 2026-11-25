@@ -1173,7 +1173,13 @@ final class ArtLibrary {
                         for bit in 0..<9 where layer.mask & (1 << bit) == 0 {
                             nearest = min(nearest, Self.gap(x, y, to: (x: Double(bit % 3 - 1), y: Double(1 - bit / 3))))
                         }
-                        depth = nearest + wobble
+                        // Its edge sways a little, in a pattern that repeats every four cells as its cobbles do,
+                        // so its tiles still serve 16 places: along the cells' edges it ran dead straight (the
+                        // user, 2026-11-25: streets "natural" too).
+                        let phase = Self.cobblePhase(cell)
+                        let wx = Double(phase / 4) + x + 0.5, wy = Double(phase % 4) + y + 0.5
+                        let sway = 0.07 * sin(Double.pi / 2 * (wx + 2 * wy)) + 0.045 * sin(Double.pi / 2 * (3 * wx - wy) + 1.1)
+                        depth = layer.mask == (1 << 9) - 1 ? nearest + wobble : nearest + wobble + sway
                     } else {
                         var distance = Double.infinity
                         for segment in segments { distance = min(distance, Self.distance(x, y, to: segment)) }
@@ -1191,6 +1197,33 @@ final class ArtLibrary {
                     let index = (py * size + px) * 4
                     switch layer.style {
                     case .road, .patch, .ground:
+                        // A path's edge, natural (the user, 2026-11-25: "like pieces of grass or stones covering
+                        // the edges of the paths"): the grass beside it growing over it in blades, and pebbles
+                        // lying along it, half on the path and half off.
+                        if layer.style == .road, depth > -0.08, depth < 0.12, texels.count == out.count {
+                            let grassy = Int(out[index + 1]) > Int(out[index]) + 8 && Int(out[index + 1]) > Int(out[index + 2]) + 8
+                            let reach = grassy && !layer.cobbled ? 0.7 * Self.bladeReach(Double(cell.col) + x - Double(cell.row) - y) : -1
+                            if depth > 0, depth < reach {
+                                let shade = depth > reach - 0.03 ? 1.12 : 0.9
+                                for c in 0..<3 { out[index + c] = UInt8(max(0, min(255, Double(out[index + c]) * shade))) }
+                                out[index + 3] = 255
+                                continue
+                            }
+                            // The cobbled streets' pebbles where their pattern repeats (`cobblePhase`), so their
+                            // tiles still serve 16 places; out in the lands, where the tile lies.
+                            let phase = Self.cobblePhase(cell)
+                            let at = layer.cobbled ? (x: Double(phase / 4) + x, y: Double(phase % 4) + y)
+                                : (x: Double(cell.col) + x, y: Double(cell.row) + y)
+                            if depth > -0.06, depth < 0.08, let tone = Self.edgePebble(at.x, at.y) {
+                                let r = Double(texels[index]), g = Double(texels[index + 1]), b = Double(texels[index + 2])
+                                let grey = (r + g + b) / 3
+                                for (c, v) in [r, g, b].enumerated() {
+                                    out[index + c] = UInt8(max(0, min(255, (v * 0.45 + grey * 0.55) * 0.9 * tone)))
+                                }
+                                out[index + 3] = 255
+                                continue
+                            }
+                        }
                         guard depth > 0 else { continue }
                         if layer.cobbled, sand.count == out.count {
                             Self.townRoad(&out, index, x: x, y: y, depth: depth, rim: rim, cell: cell,
@@ -1560,6 +1593,29 @@ final class ArtLibrary {
         let grey = 0.3 * mean.0 + 0.59 * mean.1 + 0.11 * mean.2
         func mix(_ c: Double) -> Double { (grey + (c - grey) * 0.45) * 0.92 }
         return (mix(mean.0), mix(mean.1), mix(mean.2) + 4)
+    }
+
+    /// A pebble along a path's edge (`organicTile`) where `(gx, gy)`, in cells, falls on one: how it's
+    /// lit there (from the top left, a dark rim at its lower right), else nil. A few to a cell, on a
+    /// jittered grid, each its own size.
+    nonisolated static func edgePebble(_ gx: Double, _ gy: Double) -> Double? {
+        let size = 0.24
+        let cx = Int((gx / size).rounded(.down)), cy = Int((gy / size).rounded(.down))
+        for dy in -1...1 {
+            for dx in -1...1 {
+                let kx = (cx + dx) & 1023, ky = (cy + dy) & 1023
+                guard hash(kx, ky, 41) < 0.3 else { continue }
+                let px = (Double(cx + dx) + 0.25 + 0.5 * hash(kx, ky, 42)) * size
+                let py = (Double(cy + dy) + 0.25 + 0.5 * hash(kx, ky, 43)) * size
+                let radius = 0.04 + 0.035 * hash(kx, ky, 44)
+                let ox = (gx - px) / radius, oy = (gy - py) / (radius * 0.8)
+                let d = ox * ox + oy * oy
+                guard d < 1 else { continue }
+                if d > 0.6, ox - oy > 0.2 { return 0.55 }
+                return ox - oy < -0.35 ? 1.2 : 0.92
+            }
+        }
+        return nil
     }
 
     nonisolated private static func hash(_ a: Int, _ b: Int, _ c: Int) -> Double {

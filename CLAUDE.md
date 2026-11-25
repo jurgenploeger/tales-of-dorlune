@@ -324,7 +324,11 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   curve with its half width (`roadSpots`) and the cells it painted (`curvedRoad`); `GroundTiles` gives a road cell's
   layer the spots reaching it (`roadSpots`, every other one, `roadVerge` 0.2 past the painted width) and
   `ArtLibrary.organicTile` draws the edge as their distance, swaying a little by where it lies, the strokes
-  between painted cells dropped (to a footpath's or a place's cells kept). Each such edge tile is its own.
+  between painted cells dropped (to a place's earth kept). Each such edge tile is its own. Footpaths too
+  (`WorldMap.curveFootpath`: a footpath's cells' middles smoothed three times, `footpathHalf`). Every path's edge is
+  natural (the user, 2026-11-25: "like pieces of grass or stones covering the edges"): the grass beside growing over it
+  in blades (`bladeReach`) and pebbles along it half on and half off (`ArtLibrary.edgePebble`); a town street's edge
+  sways in a four-cell pattern (its tiles still made for 16 places, `cobblePhase`), its pebbles in the same pattern.
 - Town roads (the user's pick from `tools/road_preview.py`, 2026-11-17): in a town's square (`GroundTiles.inTown`,
   `WorldMap.townSquare`) every road cell is drawn by `ArtLibrary.townRoad` (`GroundLayer.cobbled`): cobbles about half a
   cell across down its middle in the colour of the land's `tile_town` (graded), their edge ragged stone by stone, sand

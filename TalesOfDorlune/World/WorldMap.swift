@@ -2988,12 +2988,44 @@ nonisolated final class WorldMap: @unchecked Sendable {
                 }
             }
             guard var cell = reached else { continue }
+            var chain = [cell]
             while let back = from[cell] {
                 cell = back
                 ground[cell.row][cell.col] = .path
                 occupy(cell, blocking: false)
+                chain.append(cell)
+            }
+            curveFootpath(chain)
+        }
+    }
+
+    /// How far a footpath's drawn edge lies from its middle, less the road's verge (`GroundTiles.roadVerge`).
+    static let footpathHalf = 0.22
+
+    /// A footpath laid cell by cell (`layFootpaths`, a place's in `layPlaces`), drawn as a curve as a
+    /// road is (`roadSpots`): its cells' middles in order, smoothed three times (each the mean of
+    /// itself twice and the cells either side, its ends kept), so a staircase of cells reads as a
+    /// path running aslant and a corner as a bend (the user, 2026-11-25: footpaths "natural" too).
+    private func curveFootpath(_ chain: [GridPoint]) {
+        guard chain.count > 1 else { return }
+        var points = chain.map { (x: Double($0.col) + 0.5, y: Double($0.row) + 0.5) }
+        for _ in 0..<3 where points.count > 2 {
+            var next = points
+            for index in 1..<(points.count - 1) {
+                next[index] = (x: (points[index - 1].x + 2 * points[index].x + points[index + 1].x) / 4,
+                               y: (points[index - 1].y + 2 * points[index].y + points[index + 1].y) / 4)
+            }
+            points = next
+        }
+        for (a, b) in zip(points, points.dropFirst()) {
+            let steps = max(1, Int((hypot(b.x - a.x, b.y - a.y) * 4).rounded(.up)))
+            for step in 0..<steps {
+                let t = Double(step) / Double(steps)
+                roadSpots.append((a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t, Self.footpathHalf))
             }
         }
+        if let last = points.last { roadSpots.append((last.x, last.y, Self.footpathHalf)) }
+        for cell in chain where contains(cell) && ground[cell.row][cell.col] == .path { curvedRoad.insert(cell) }
     }
 
     /// The cheapest cell first (a binary heap), for `layFootpaths`.
@@ -3191,6 +3223,7 @@ nonisolated final class WorldMap: @unchecked Sendable {
                     ground[cell.row][cell.col] = .path
                     if !occupied.contains(cell) { occupy(cell, blocking: false) }
                 }
+                if !way.isEmpty { curveFootpath([road] + way) }
                 for cell in Self.earth(of: place.kind, at: middle) { ground[cell.row][cell.col] = .path }
                 places.append(Site(def: place, middle: middle))
                 made += 1
