@@ -541,39 +541,55 @@ final class GroundTiles {
     /// The land's own water cells within `acrossReach` of a land next door's river, with that land and
     /// how many steps off its river lies (8 ways a step, as `seaShare`), and that land's river cells
     /// beside the land's own water, at 0.
-    private lazy var borderWater: [GridPoint: (land: String, steps: Int)] = {
+    private lazy var borderWater: [GridPoint: (land: String, steps: Double)] = {
         guard map.region != nil else { return [:] }
-        var found: [GridPoint: (land: String, steps: Int)] = [:]
+        // Each cell's nearest cell of the river past the border, found ring by ring (8 ways a step), and
+        // how far it lies from it in a straight line: counted in steps, the colour's contours were squares,
+        // straight edges across a lake by the border (the user, 2026-11-25: "corners around water create a
+        // strange reflection in the water").
+        var source: [GridPoint: (land: String, from: GridPoint)] = [:]
         var frontier: [GridPoint] = []
         for row in 0..<map.rows {
             for col in 0..<map.columns where map.ground[row][col] == .water {
                 for dr in -1...1 {
                     for dc in -1...1 {
                         let next = GridPoint(col: col + dc, row: row + dr)
-                        guard found[next] == nil, !isOwn(next), waterBeyond(next),
+                        guard source[next] == nil, !isOwn(next), waterBeyond(next),
                               let land = Continent.owner(of: next, from: map.def), land.id != map.def.id else { continue }
-                        found[next] = (land.id, 0)
+                        source[next] = (land.id, next)
                         frontier.append(next)
                     }
                 }
             }
         }
-        var steps = 0
-        while !frontier.isEmpty, steps <= Self.acrossReach {
-            steps += 1
+        var rings = 0
+        while !frontier.isEmpty, rings <= Self.acrossReach + 1 {
+            rings += 1
             var next: [GridPoint] = []
             for cell in frontier {
-                guard let from = found[cell] else { continue }
+                guard let from = source[cell] else { continue }
                 for dr in -1...1 {
                     for dc in -1...1 {
                         let other = GridPoint(col: cell.col + dc, row: cell.row + dr)
-                        guard isOwn(other), map.ground[other.row][other.col] == .water, found[other] == nil else { continue }
-                        found[other] = (from.land, steps)
+                        guard isOwn(other), map.ground[other.row][other.col] == .water else { continue }
+                        let far = Double((other.col - from.from.col) * (other.col - from.from.col) + (other.row - from.from.row) * (other.row - from.from.row))
+                        if let known = source[other] {
+                            let had = Double((other.col - known.from.col) * (other.col - known.from.col) + (other.row - known.from.row) * (other.row - known.from.row))
+                            if far < had { source[other] = from }
+                            continue
+                        }
+                        source[other] = from
                         next.append(other)
                     }
                 }
             }
             frontier = next
+        }
+        var found: [GridPoint: (land: String, steps: Double)] = [:]
+        for (cell, from) in source {
+            let dc = Double(cell.col - from.from.col), dr = Double(cell.row - from.from.row)
+            let distance = (dc * dc + dr * dr).squareRoot()
+            if distance <= Double(Self.acrossReach) + 1 { found[cell] = (from.land, distance) }
         }
         return found
     }()
@@ -610,7 +626,7 @@ final class GroundTiles {
                 let cell = GridPoint(col: col + dc, row: row + dr)
                 if let found = near[cell] {
                     // How far into the land from the border: its river's cells half a cell out past it.
-                    let t = Double(found.steps) - 0.5
+                    let t = found.steps - 0.5
                     sum += max(0, min(1, 0.5 - t / (2 * reach))) * w
                     weight += w
                     if next == nil { next = found.land }
@@ -745,6 +761,8 @@ struct PondField {
     /// Spots either way across the screen, and up and down it, `along` is averaged over.
     private static let acrossReach = 24
     private static let upReach = 3
+    /// Spots either way, across and up, `along` is evened out over after (a cell's worth).
+    private static let evenReach = 16
     /// How far up or down the screen the far and near shores are counted, in spots (4 cells): past it,
     /// a long river running up the screen took its far shore from wherever its next bend lay, and its
     /// mirrored sky jumped where the shore did (the user, 2026-11-25: "a corner in the river shows
@@ -833,7 +851,15 @@ struct PondField {
             return out
         }
         let across = smooth(raw, { (di: $0, dj: -$0) }, reach: Self.acrossReach)
-        along = smooth(across, { (di: $0, dj: $0) }, reach: Self.upReach)
+        var blended = smooth(across, { (di: $0, dj: $0) }, reach: Self.upReach)
+        // Then evenly both ways, twice: smoothed across the screen alone, where the far shore turned a
+        // corner the mirrored sky ended in a straight edge running on down the lake (the user,
+        // 2026-11-25: "corners around water create a strange reflection in the water").
+        for _ in 0..<2 {
+            blended = smooth(blended, { (di: $0, dj: -$0) }, reach: Self.evenReach)
+            blended = smooth(blended, { (di: $0, dj: $0) }, reach: Self.evenReach)
+        }
+        along = blended
         // The nearest land among the spots round each, nearest first.
         var offsets: [(di: Int, dj: Int, d: Float)] = []
         for dj in -Self.reach...Self.reach {
