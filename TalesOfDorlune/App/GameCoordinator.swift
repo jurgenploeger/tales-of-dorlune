@@ -641,6 +641,7 @@ final class GameCoordinator {
     /// sold, or not; either way they say so.
     func answerBid(_ accept: Bool) {
         guard let bid = session.pendingBid else { return }
+        session.bidOpen = false
         let line: String
         if accept {
             line = session.acceptBid() ? L("Just what I needed, thanks!") : L("Looks like you don't have that any more.")

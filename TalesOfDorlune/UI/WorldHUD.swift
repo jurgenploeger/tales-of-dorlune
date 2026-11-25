@@ -161,6 +161,17 @@ struct WorldHUD: View {
                     .buttonStyle(PixelButtonStyle(tint: HUDStyle.gold))
                     .transition(.scale(scale: 0.7, anchor: .bottomTrailing).combined(with: .opacity))
                     .stepsAside(controlsHidden || following)
+                } else if let bid = session.pendingBid, !session.bidOpen {
+                    // An adventurer has walked up to buy what you've put up for trade: their offer
+                    // opens when you tap (`GameView`'s `TradeBidCard`).
+                    Button {
+                        withAnimation(.easeOut(duration: 0.2)) { session.bidOpen = true }
+                    } label: {
+                        Label(L("Trade with {name}", ["name": bid.buyer.name]), icon: .coins)
+                    }
+                    .buttonStyle(PixelButtonStyle(tint: HUDStyle.gold))
+                    .transition(.scale(scale: 0.7, anchor: .bottomTrailing).combined(with: .opacity))
+                    .stepsAside(controlsHidden || following)
                 } else if let adventurer = session.nearbyAdventurer {
                     AdventurerCard(coordinator: coordinator, adventurer: adventurer, width: toolbarWidth)
                         .transition(.scale(scale: 0.8, anchor: .bottomTrailing).combined(with: .opacity))
