@@ -2209,6 +2209,22 @@
       "kind": "prop"
     },
     {
+      "id": "cliff_fall_spring",
+      "kind": "prop"
+    },
+    {
+      "id": "cliff_fall_spring_2",
+      "kind": "prop"
+    },
+    {
+      "id": "cliff_fall_spring_3",
+      "kind": "prop"
+    },
+    {
+      "id": "cliff_fall_spring_4",
+      "kind": "prop"
+    },
+    {
       "id": "cliff_fall_pool_2",
       "kind": "prop"
     },

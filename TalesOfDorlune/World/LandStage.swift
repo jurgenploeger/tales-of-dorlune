@@ -1516,6 +1516,11 @@ final class LandStage {
         guard !falls.isEmpty else { return }
         func frames(_ name: String) -> [SKTexture] { ["", "_2", "_3", "_4"].map { art.sprite(name + $0).texture } }
         let tops = frames("cliff_fall_top"), sheets = frames("cliff_fall_sheet"), pools = frames("cliff_fall_pool")
+        // The spring pond on the level above that its stream runs out of (the user, 2026-11-25: "there
+        // is no water it comes from"), its mouth overlapping the stream's head by a few of its pixels.
+        let springs = frames("cliff_fall_spring")
+        let topSize = art.sprite("cliff_fall_top").size, springSize = art.sprite("cliff_fall_spring").size
+        let overlap = topSize.height * 3 / 12
         let tile = WorldMap.tileSize
         /// A point in cells on the ground (its place on the map) and shown up at its height.
         func spot(_ point: CGPoint) -> (ground: CGPoint, shown: CGPoint) {
@@ -1532,6 +1537,7 @@ final class LandStage {
                 (sheets, CGSize(width: art.sprite("cliff_fall_sheet").size.width, height: drop), CGPoint(x: 0.5, y: 0),
                  CGPoint(x: x, y: foot.shown.y.rounded()), 0.2),
                 (pools, art.sprite("cliff_fall_pool").size, CGPoint(x: 0.5, y: 0.5), CGPoint(x: x, y: foot.shown.y.rounded()), 0.3),
+                (springs, springSize, CGPoint(x: 0.5, y: 0), CGPoint(x: x, y: (foot.shown.y.rounded() + drop - 2 + topSize.height - overlap).rounded()), 0.05),
             ]
             for piece in pieces {
                 let node = SKSpriteNode(texture: piece.frames[0], size: piece.size)

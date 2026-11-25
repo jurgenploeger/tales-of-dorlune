@@ -184,23 +184,24 @@ final class BattleScene: SKScene {
     /// between them (`layout` works it out).
     private var fieldScale: CGFloat = 1
 
-    /// Upright, room at the top for the HUD: below the Dynamic Island (or the clock), the time to
-    /// choose's pill, the message line, and in a boss fight its waves under that, with the field
-    /// kept well clear of them.
+    /// Upright, room at the top for the HUD: below the Dynamic Island (or the clock), the message
+    /// line, and in a boss fight its waves under that, with the field kept well clear of them. No
+    /// party plate, time pill or boss bar there since 2026-11-25 (the user: the monsters covered
+    /// each other), so the field starts 54 points higher than it did (150 and 176 before).
     private var portraitTopInset: CGFloat {
-        (view?.safeAreaInsets.top ?? 0) + (controller.waveCount > 1 ? 176 : 150) + bossBarRoom
+        (view?.safeAreaInsets.top ?? 0) + (controller.waveCount > 1 ? 122 : 96)
     }
 
-    /// Room under the HUD's top row for the boss's HP bar while a boss is on the field (BattleView's
-    /// `BossBar`).
-    private var bossBarRoom: CGFloat { controller.boss == nil ? 0 : 44 }
+    /// On its side, room under the HUD's top row for a boss fight's waves (BattleView's
+    /// `WaveTracker`).
+    private var waveRoom: CGFloat { controller.waveCount > 1 ? 28 : 0 }
 
     private func layout() {
         guard size.width > 1, size.height > 1 else { return }
         buildGround()
         // Leave room for the HUD: your faces and the message line along the top, the command wheel
         // bottom-right.
-        let insets: (top: CGFloat, bottom: CGFloat) = isPortrait ? (portraitTopInset, 240) : (70 + bossBarRoom, 40)
+        let insets: (top: CGFloat, bottom: CGFloat) = isPortrait ? (portraitTopInset, 240) : (70 + waveRoom, 40)
         let area = CGRect(x: 0, y: insets.bottom, width: size.width, height: max(120, size.height - insets.top - insets.bottom))
         lineSpacing = sharedSpacing()
         // Up to eight on the field at full size; past that everyone shrinks a little more with

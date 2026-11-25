@@ -309,7 +309,13 @@ final class LandPlanner {
                 guard map.contains(pool), map.isWalkable(pool), map.ground[pool.row][pool.col] == .ground,
                       falls.allSatisfy({ abs(Double($0.foot.x) - foot.x) + abs(Double($0.foot.y) - foot.y) > 6 }) else { continue }
                 map.occupy(pool, blocking: true)
-                if map.isFreeForScenery(top) { map.occupy(top, blocking: false) }
+                // The pond is wider than a cell, across the screen (along x - y), and its spring sits a
+                // cell back on the level above: nothing set down on them (`LandStage.placeCliffFalls`).
+                let beside = [GridPoint(col: pool.col + 1, row: pool.row - 1), GridPoint(col: pool.col - 1, row: pool.row + 1)]
+                let spring = GridPoint(col: Int((lip.x + 1.1).rounded(.down)), row: Int((lip.y + 1.1).rounded(.down)))
+                for cell in [top, spring] + beside where map.contains(cell) && map.isFreeForScenery(cell) {
+                    map.occupy(cell, blocking: false)
+                }
                 falls.append((foot: CGPoint(x: foot.x, y: foot.y), lip: CGPoint(x: lip.x, y: lip.y)))
             }
             plan.cliffFalls += falls

@@ -71,8 +71,8 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   `WorldMap.blockFaces` blocks the faces and keeps the cell in front clear; `HillLooks.terraced` (`HillArt.Look.cliff`): the
   faces' rock is drawn by the lifting shader on the screen's pixels (`u_rock`, by height and across the screen:
   painted into the picture it stretched into streaks), with shade at each face's foot; up to two waterfalls a
-  range over faces turned to you (`LandPlanner.planCliffFalls`, `LandStage.placeCliffFalls`: a stream, a sheet
-  stretched to the face, a pool, from `tools/waterfall_art.py`).
+  range over faces turned to you (`LandPlanner.planCliffFalls`, `LandStage.placeCliffFalls`: a spring pond on the level above, a stream, a sheet
+  stretched to the face, a pond at its foot, from `tools/waterfall_art.py`; drawn, not the land's own water).
 - A town's terraces (maps.json town `terraces`, `WorldMap.raiseTerrace`, 34 points high) in stacked sandstone
   (the user's pick from `tools/terrace_preview.py`, 2026-11-17): `tools/terrace_art.py` draws a cell's stretch of
   wall (sheared along its edge), of balustrade, a post and the flagstones; `LandStage.placePlateaus` lays them,
