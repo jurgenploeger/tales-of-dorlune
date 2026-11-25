@@ -658,8 +658,47 @@ def water_rock(seed=161):
     return s
 
 
+def water_slab(seed=162):
+    """water_rock_2: a flat slab of rock lying low in the water, wider than it's tall, a crack across it
+    and a little moss on its back edge (the user, 2026-11-25: "I also like the rocks in different shapes")."""
+    s = scene(32)
+    grey, dark, moss = Material("#a6a49a", texture=0.06), Material("#86847a", texture=0.06), foliage("#6e9a3a")
+    line = 24.0
+    x, y = s._grid()
+    s.mask((((x - 16) / 12.5) ** 2 + ((y - 21) / 5.5) ** 2 <= 1) & (y < line), grey)
+    s.mask((((x - 22) / 5) ** 2 + ((y - 20.5) / 3.2) ** 2 <= 1) & (y < line), dark)
+    s.stroke([(10, 20), (14, 21.5), (17, 20.5)], 0.9, dark)
+    puffs(s, 13, 17.2, 4.5, 1.4, moss, 7, 1.8, seed, flat=0.6, bulge=1.4)
+    return s
+
+
+def water_pair(seed=163):
+    """water_rock_3: two bare stones side by side, a big round one and a small one leaning on it."""
+    s = scene(32)
+    grey, light, dark = Material("#a8a69c", texture=0.06), Material("#b6b4aa", texture=0.06), Material("#8a887e", texture=0.06)
+    line = 23.5
+    x, y = s._grid()
+    s.mask((((x - 13) / 7.5) ** 2 + ((y - 18) / 7) ** 2 <= 1) & (y < line), grey)
+    s.mask((((x - 22) / 4.5) ** 2 + ((y - 20.5) / 4) ** 2 <= 1) & (y < line), light)
+    s.mask((((x - 22) / 4.5) ** 2 + ((y - 20.5) / 4) ** 2 <= 1) & (y < line) & (x > 23.5), dark)
+    return s
+
+
+def water_spire(seed=164):
+    """water_rock_4: a tall, narrow stone leaning a little, moss down its shaded side."""
+    s = scene(32)
+    grey, dark, moss = Material("#a2a096", texture=0.06), Material("#86847a", texture=0.06), foliage("#6e9a3a")
+    s.poly([(10.5, 23), (21.5, 23), (19.5, 12), (17, 5.5), (13.5, 9), (11.5, 15)], grey)
+    s.poly([(17, 23), (21.5, 23), (19.5, 12), (17.5, 8)], dark)
+    puffs(s, 19.5, 18, 2.2, 3.5, moss, 6, 1.7, seed, flat=0.8, bulge=1.4)
+    return s
+
+
 BUSHES = {
     "water_rock": water_rock,
+    "water_rock_2": water_slab,
+    "water_rock_3": water_pair,
+    "water_rock_4": water_spire,
     "shore_grass": lambda: grass_tuft("#4c9636", 151),
     "shore_stones": shore_stones,
     "bush": lambda: mound("#4aa63a", 131),

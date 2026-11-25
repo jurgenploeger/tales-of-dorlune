@@ -2157,6 +2157,70 @@
       "kind": "prop"
     },
     {
+      "id": "water_rock_2",
+      "kind": "prop"
+    },
+    {
+      "id": "water_rock_3",
+      "kind": "prop"
+    },
+    {
+      "id": "water_rock_4",
+      "kind": "prop"
+    },
+    {
+      "id": "float_petals",
+      "kind": "prop"
+    },
+    {
+      "id": "float_petals_white",
+      "kind": "prop"
+    },
+    {
+      "id": "float_blossom",
+      "kind": "prop"
+    },
+    {
+      "id": "float_leaf",
+      "kind": "prop"
+    },
+    {
+      "id": "rim_float_petals",
+      "kind": "prop"
+    },
+    {
+      "id": "rim_float_petals_white",
+      "kind": "prop"
+    },
+    {
+      "id": "rim_float_blossom",
+      "kind": "prop"
+    },
+    {
+      "id": "rim_float_leaf",
+      "kind": "prop"
+    },
+    {
+      "id": "rim_lily_pad",
+      "kind": "prop"
+    },
+    {
+      "id": "rim_water_rock",
+      "kind": "prop"
+    },
+    {
+      "id": "rim_water_rock_2",
+      "kind": "prop"
+    },
+    {
+      "id": "rim_water_rock_3",
+      "kind": "prop"
+    },
+    {
+      "id": "rim_water_rock_4",
+      "kind": "prop"
+    },
+    {
       "id": "waterfall",
       "kind": "prop"
     },

@@ -126,13 +126,24 @@ final class LandStage {
     /// Sets it all down, a piece at a time (`pause` between them: grading with its own palette).
     func build(pause: @escaping () async -> Void) async {
         placeLilyPads(plan.lilyPads)
+        placeFloaters(plan.floaters)
         placeBridges()
         placeHarbors()
         for reed in plan.reeds {
             let node = addScenery(reed)
             // The rocks cast one where the shade can't fall (the user, 2026-11-16: "The rocks in the water
             // should also have the shadows"): a lake and its shore lie sunk.
-            if reed.art == "water_rock" || reed.art == "shore_stones" { roundShadow(under: node, at: reed.cell) }
+            if reed.art.hasPrefix("water_rock") || reed.art == "shore_stones" { roundShadow(under: node, at: reed.cell) }
+            // The water's pale line round a rock's foot, lapping: brighter and fainter by turns.
+            if reed.art.hasPrefix("water_rock") {
+                if let line = waterline(for: reed.art, size: node.size, anchor: node.anchorPoint) {
+                    line.zPosition = -0.01
+                    node.addChild(line)
+                    line.run(.sequence([.wait(forDuration: .random(in: 0...2)), .repeatForever(.sequence([
+                        .fadeAlpha(to: 0.55, duration: 0), .wait(forDuration: 1.1), .fadeAlpha(to: 1, duration: 0), .wait(forDuration: 1.6),
+                    ]))]))
+                }
+            }
         }
         placeWaterfalls(plan.waterfalls)
         placeCliffFalls(plan.cliffFalls)
@@ -895,6 +906,44 @@ final class LandStage {
 
     // MARK: What it sets down
 
+    /// The water's pale line where it meets something sitting in it (`rim_<art>`, `tools/float_art.py`): a
+    /// sprite the same size and anchor as it, nil if the art has none.
+    private func waterline(for id: String, size: CGSize, anchor: CGPoint) -> SKSpriteNode? {
+        guard art.asset("rim_" + id) != nil else { return nil }
+        let line = SKSpriteNode(texture: art.sprite("rim_" + id).texture, size: size)
+        line.anchorPoint = anchor
+        return line
+    }
+
+    /// Petals, blossoms and leaves floating on the water (`LandPlan.planFloaters`; the user, 2026-11-25,
+    /// after ZeFrost's pond): each bobbing a whole pixel down and up again, slowly and in its own time,
+    /// over the water's pale line round it, which stays put, so it rides on the water.
+    private func placeFloaters(_ floaters: [(cell: GridPoint, drift: CGVector, art: String)]) {
+        for floater in floaters {
+            let sprite = art.sprite(floater.art)
+            let spot = map.center(of: floater.cell) + floater.drift
+            let at = CGPoint(x: spot.x.rounded(), y: (spot.y + map.height(at: spot)).rounded())
+            let holder = SKNode()
+            holder.position = at
+            if let line = waterline(for: floater.art, size: sprite.size, anchor: CGPoint(x: 0.5, y: 0.5)) { holder.addChild(line) }
+            let node = SKSpriteNode(texture: sprite.texture, size: sprite.size)
+            node.zPosition = 0.01
+            holder.addChild(node)
+            let rise = TimeInterval.random(in: 2.2...3.2), fall = TimeInterval.random(in: 1.8...2.6)
+            node.run(.sequence([.wait(forDuration: .random(in: 0...5)), .repeatForever(.sequence([
+                .moveBy(x: 0, y: -PondMotion.pixel, duration: 0), .wait(forDuration: fall),
+                .moveBy(x: 0, y: PondMotion.pixel, duration: 0), .wait(forDuration: rise),
+            ]))]))
+            if map.isSunken(floater.cell), let z = flatZ(at: spot) {
+                holder.zPosition = z
+                chunk(at: holder.position).addChild(holder)
+            } else {
+                holder.zPosition = -99_000
+                layer(at: holder.position).addChild(holder)
+            }
+        }
+    }
+
     private func placeLilyPads(_ pads: [(cell: GridPoint, drift: CGVector)]) {
         guard !pads.isEmpty else { return }
         let sprite = art.sprite("lily_pad")
@@ -903,6 +952,9 @@ final class LandStage {
             let spot = map.center(of: cell) + drift
             // On a lake sunk with the shore, down on its water.
             node.position = CGPoint(x: spot.x, y: spot.y + map.height(at: spot))
+            // The water's pale line round it, staying put as it bobs and turns (the user, 2026-11-25).
+            let line = waterline(for: "lily_pad", size: sprite.size, anchor: node.anchorPoint)
+            line?.position = node.position
             node.run(.repeatForever(.sequence([
                 .rotate(toAngle: 0.08, duration: 2.2, shortestUnitArc: true),
                 .rotate(toAngle: -0.08, duration: 2.2, shortestUnitArc: true),
@@ -919,6 +971,10 @@ final class LandStage {
             } else {
                 node.zPosition = -99_000
                 layer(at: node.position).addChild(node)
+            }
+            if let line {
+                line.zPosition = node.zPosition - 0.01
+                node.parent?.addChild(line)
             }
         }
     }

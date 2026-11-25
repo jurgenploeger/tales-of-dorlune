@@ -29,6 +29,9 @@ struct Placement {
 struct LandPlan {
     /// Lily pads: the pond cell each floats on, and how far it's drifted off its middle.
     var lilyPads: [(cell: GridPoint, drift: CGVector)] = []
+    /// What floats on its lakes, rivers and ponds besides: petals, a blossom, a leaf (`tools/float_art.py`),
+    /// the water cell each is on, how far off its middle, and its art (`LandStage.placeFloaters`).
+    var floaters: [(cell: GridPoint, drift: CGVector, art: String)] = []
     var reeds: [Placement] = []
     /// Waterfalls where the rivers spring (`planWaterfalls`), played frame by frame (`LandStage.placeWaterfalls`).
     var waterfalls: [Placement] = []
@@ -148,6 +151,33 @@ final class LandPlanner {
                 plan.lilyPads.append((cell: cell, drift: CGVector(dx: dx, dy: dy)))
             }
         }
+        planFloaters()
+    }
+
+    /// Petals, blossoms and leaves floating on the lakes, ponds and rivers (the user, 2026-11-25: "Our
+    /// lakes, rivers and ponds should also have the floating petals"): one to about every ten cells of
+    /// a pond or lake, every fourteen of a river, never on a bridge or a lily pad's cell. Their own
+    /// random numbers, so nothing else in the land moves.
+    private func planFloaters() {
+        var rng = SeededRandom(text: def.id + "/floaters")
+        let pads = Set(plan.lilyPads.map(\.cell))
+        let kinds: [(art: String, weight: Double)] = [("float_petals", 0.35), ("float_petals_white", 0.2), ("float_blossom", 0.2), ("float_leaf", 0.25)]
+        func pick() -> String {
+            var roll = Double.random(in: 0..<1, using: &rng)
+            for kind in kinds {
+                roll -= kind.weight
+                if roll < 0 { return kind.art }
+            }
+            return kinds[0].art
+        }
+        let river = map.river.sorted(by: WorldMap.inOrder)
+        for (waters, per) in map.ponds.map({ ($0, 10) }) + [(river, 14)] where !waters.isEmpty {
+            for _ in 0..<max(1, waters.count / per) {
+                guard let cell = waters.randomElement(using: &rng), !map.bridgeCells.contains(cell), !pads.contains(cell) else { continue }
+                let drift = CGVector(dx: CGFloat.random(in: -9...9, using: &rng), dy: CGFloat.random(in: -5...5, using: &rng))
+                plan.floaters.append((cell: cell, drift: drift, art: pick()))
+            }
+        }
     }
 
     /// Nothing grows right beside a bridge's deck either, on the bank its planks and rails reach
@@ -213,7 +243,9 @@ final class LandPlanner {
                     return map.contains(land) && map.ground[land.row][land.col] != .water
                 }
                 guard let bank = banks.first, Double.random(in: 0..<1, using: &rockRNG) < 0.07 else { continue }
-                var placement = Placement(art: "water_rock", cell: cell, scale: CGFloat.random(in: 0.85...1.25, using: &rockRNG))
+                // Of a few shapes (the user, 2026-11-25: "I also like the rocks in different shapes").
+                let shape = ["water_rock", "water_rock_2", "water_rock_3", "water_rock_4"][Int.random(in: 0..<4, using: &rockRNG)]
+                var placement = Placement(art: shape, cell: cell, scale: CGFloat.random(in: 0.85...1.25, using: &rockRNG))
                 // Toward the shore it's off, a little, so it stands in the shallows.
                 let reach = WorldMap.tileSize * 0.18
                 let toward = WorldMap.project(CGPoint(x: CGFloat(bank.0) * reach, y: CGFloat(bank.1) * reach))
