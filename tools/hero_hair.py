@@ -109,7 +109,26 @@ def wear_style(style, anim, race="human"):
             # on the elf the hair goes over the elf's frame: the walk and attack ears layers carry ChatGPT's own
             # head pixels round the ears, and laid back over the hair they showed through it as skin and specks
             # (the user, 2026-11-25)
-            out[sl] = he.wear(elf[sl] if elf is not None else f, hair, he.fit(f, ref), ref)
+            w = he.wear(elf[sl] if elf is not None else f, hair, he.fit(f, ref), ref)
+            if elf is not None:
+                # from the row where the ears stick out past the head down, the ears stay over the hair: there the
+                # sideburns' strands crossed their roots (the user, 2026-11-25); above it the hair still covers
+                # ChatGPT's head pixels round the ears
+                e = elf[sl]
+                ear = (e[..., 3] > 0) & ((e != f).any(2))
+                # an ear's row: one with ear pixels 3 or more past the doll's own sides (ChatGPT's head ran a pixel
+                # or two wider higher up, and from there its skin showed in the hair)
+                out_ = np.zeros_like(ear)
+                for y in range(64):
+                    xs = np.nonzero(f[y, :, 3])[0]
+                    if len(xs):
+                        out_[y, :max(xs.min() - 2, 0)] = ear[y, :max(xs.min() - 2, 0)]
+                        out_[y, xs.max() + 3:] = ear[y, xs.max() + 3:]
+                if out_.any():
+                    band = np.zeros_like(ear); band[np.nonzero(out_.any(1))[0].min():] = True
+                    keep = ear & band
+                    w = w.copy(); w[keep] = e[keep]
+            out[sl] = w
     return out
 
 if __name__ == "__main__" and sys.argv[1] == "wear":
