@@ -238,9 +238,10 @@ nonisolated final class WorldMap: @unchecked Sendable {
     /// The picture of a cave's mouth (ChatGPT's, `tools/cave_mouth_art.py`, the user, 2026-11-25: "the gates
     /// should look more like a cave opening instead of a black gap"), by the cave: each its own, else the
     /// plain one, laid over its rock face by `LandStage.placeMouth`.
-    /// How tall a cave mouth's picture stands, in points (its 80 pixels, less the ragged rocks along its
-    /// top): a terraced crag's first level and its wall stand this high (`raiseGate`).
-    static let mouthTop = 78.0
+    /// How tall a cave mouth's picture stands over its foot, in points (its 80 pixels, less the ragged rocks
+    /// along its top and the rows sunk onto the road in front, `LandStage.mouthSink`): a terraced crag's first
+    /// level and its wall stand this high (`raiseGate`).
+    static let mouthTop = 72.0
 
     static func mouthArt(for cave: String) -> String {
         switch cave {
