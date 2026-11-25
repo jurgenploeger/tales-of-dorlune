@@ -164,6 +164,22 @@ def lone_specks(img):
     out = img.copy(); out[a & (nb == 0)] = 0
     return out
 
+def head_shift(f, ref, anim):
+    """How far a frame's head moved from the standing view's. Idle and walk (and so run): its top row, and the middle
+    of its top 14 rows, as hero_ears.fit, the best match of the head's colours, jumped a pixel or two between walk
+    frames whose heads ChatGPT drew a little differently, and the hair wobbled (the user, 2026-11-25). The attack keeps
+    the fit: its fist reaches the head's rows and top."""
+    import hero_ears as he
+    if anim == "attack":
+        return he.fit(f, ref)
+    def top_mid(img):
+        rows = np.nonzero(img[..., 3].any(1))[0]
+        t = int(rows.min())
+        xs = [np.nonzero(img[y, :, 3])[0] for y in range(t, t + 14)]
+        return t, float(np.mean([(x.min() + x.max()) / 2 for x in xs if len(x)]))
+    ft, fm = top_mid(f); rt, rm = top_mid(ref)
+    return ft - rt, int(np.floor(fm - rm + 0.5))
+
 def ear_top(d):
     """The top row of the elf's ears in a direction's standing view (hero64_doll_ears_<direction>.png), or None."""
     import hero_ears as he
@@ -195,7 +211,7 @@ def wear_style(style, anim, race="human"):
             # on the elf the hair goes over the elf's frame: the walk and attack ears layers carry ChatGPT's own
             # head pixels round the ears, and laid back over the hair they showed through it as skin and specks
             # (the user, 2026-11-25)
-            sh = he.fit(f, ref)
+            sh = head_shift(f, ref, anim)
             if elf is not None and d.startswith("up"):
                 # from behind the hair goes over the ears wherever it lies (laid over the elf's frame, the ears'
                 # pixels where the head is clear showed through it as lines, the user, 2026-11-25); the elf shows

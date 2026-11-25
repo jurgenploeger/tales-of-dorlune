@@ -461,6 +461,9 @@ One doll, end to end (it was the Human Male pilot until 2026-11-24).
     Spiky up: ChatGPT sent its own 64-pixel files this time (`tries/hair_spiky_up_try1{a,b}{,_8x}.png`), the body
     pixel for pixel the doll's; the user picked a (`hero64_hair_spiky_up.png`), lifted untoned. **Spiky is done in all
     eight directions** (five drawn, three mirrored), on idle, walk, run and attack, human and elf.
+    The hair wobbled on the head walking (the user): the head-colour fit jumped a pixel or two between walk frames
+    whose heads ChatGPT drew a little differently. Idle and walk now place it by the head's top row and the middle of
+    its top 14 rows (`hero_hair.head_shift`); the attack keeps the fit (its fist reaches the head).
  Idle wears it; up-left mirrored.
 
 ## What has gone wrong before (read before prompting)
