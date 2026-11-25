@@ -590,6 +590,9 @@ nonisolated struct MapDef: Decodable, Identifiable, Sendable {
         /// beside rock mixed over 28 cells read as a glitch, a checkerboard of pink and blue
         /// (playtesting 2026-11-11, Briarmere).
         let blend: Double?
+        /// Its lakes, rivers and ponds frozen over (`ArtLibrary.freeze`; the user, 2026-11-25): ice over
+        /// the water's tones, drifts by the shore, glare and cracks; nothing floats or ripples on it.
+        let frozen: Bool?
     }
 
     /// Tall grass in a green wild land: how many patches, how far each reaches from its middle in

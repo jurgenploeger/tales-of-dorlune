@@ -141,6 +141,73 @@ final class GroundTiles {
         return bits
     }
 
+    // MARK: Snow over a border
+
+    /// Whether a land's ground is snow (Briarmere, Snow White Forest).
+    private static func snowy(_ land: MapDef) -> Bool { land.theme.ground.contains("snow") }
+
+    /// The snowy land on the far side of each of this land's borders with one, where this land isn't
+    /// snowy, or this land itself (snowy) toward each that isn't: its band (`Seam`) and the snow's tones.
+    private lazy var snowSeams: [(seam: Seam, tones: [(Double, Double, Double)], here: Bool)] = map.seams.compactMap {
+        (seam: Seam) -> (seam: Seam, tones: [(Double, Double, Double)], here: Bool)? in
+        guard let other = foreignLand(seam.neighbour), Self.snowy(other.land) != Self.snowy(map.def) else { return nil }
+        let snowyLand = Self.snowy(other.land) ? other.land : map.def
+        let from = Self.snowy(other.land) ? other.from : ArtLibrary.Foreign(land: map.def.id, palette: theme.palette)
+        return (seam, art.snowTones(snowyLand.theme.ground, from: from), Self.snowy(map.def))
+    }
+
+    /// How snowed over a cell of this land's is, 0 to 1 (after SpriteCook's snow and ice article; the user,
+    /// 2026-11-25: "nice for areas that go from one map to another"): on a land that isn't snowy, all of
+    /// it on the border and none `reach` cells in from it, by the band of a snowy land next door; on a
+    /// snowy land, all of it (what its band brought over of the land next door, `snowOver`).
+    func snowCover(_ cell: GridPoint) -> Double {
+        var cover = 0.0
+        for entry in snowSeams {
+            guard let side = entry.seam.side(cell) else { continue }
+            let amount = entry.here ? 1 : min(1, max(0, 1 - (side - 0.5) / max(1, entry.seam.reach)))
+            cover = max(cover, amount)
+        }
+        return cover
+    }
+
+    /// The snow's tones where a cell is snowed over: the snowy land's own, by the nearest band.
+    func snowTones(_ cell: GridPoint) -> [(Double, Double, Double)]? {
+        var best: (side: Double, tones: [(Double, Double, Double)])?
+        for entry in snowSeams {
+            guard let side = entry.seam.side(cell), abs(side) < best?.side ?? .infinity else { continue }
+            best = (abs(side), entry.tones)
+        }
+        return best?.tones
+    }
+
+    /// A cell's tile with snow laid over it pixel by pixel as far as `snowCover` says (`ArtLibrary.snowed`),
+    /// its cover blended between the cells' middles so the snow comes on smoothly across them. Not on
+    /// water or the coast; on a snowy land, only where its band brought the land next door's ground.
+    private func snowOver(_ group: SKTileGroup, cell: GridPoint, band: Bool, wet: Bool) -> SKTileGroup {
+        guard !snowSeams.isEmpty, !wet, !(Self.snowy(map.def) && !band) else { return group }
+        var corners: [GridPoint: Double] = [:]
+        var any = false
+        for dr in -1...1 {
+            for dc in -1...1 {
+                let near = GridPoint(col: cell.col + dc, row: cell.row + dr)
+                let cover = snowCover(near)
+                corners[near] = cover
+                if cover > 0.01 { any = true }
+            }
+        }
+        guard any, let tones = snowTones(cell), let picture = pictures[ObjectIdentifier(group)] else { return group }
+        let covers = corners
+        let front: (Double, Double) -> Double = { x, y in
+            let fx = x - 0.5, fy = y - 0.5
+            let col = Int(fx.rounded(.down)), row = Int(fy.rounded(.down))
+            let tx = fx - Double(col), ty = fy - Double(row)
+            func at(_ dc: Int, _ dr: Int) -> Double { covers[GridPoint(col: col + dc, row: row + dr)] ?? 0 }
+            return (at(0, 0) * (1 - tx) + at(1, 0) * tx) * (1 - ty) + (at(0, 1) * (1 - tx) + at(1, 1) * tx) * ty
+        }
+        let place = origin
+        return self.group("snow@\(cell.col),\(cell.row)") { art.snowed(picture, cell: cell, origin: place, front: front, tones: tones) }
+    }
+
     /// A land next door, for its ground graded as it is there.
     private func foreignLand(_ id: String) -> (land: MapDef, from: ArtLibrary.Foreign)? {
         if let known = others[id] { return known }
@@ -318,9 +385,9 @@ final class GroundTiles {
         // the deep tile, nearer it's drawn as a shore is, shaded by how far in it lies.
         let natural = ArtLibrary.isPondWater(waterID) && waterVaries
         if pond == full, coast == 0, natural, poolMask(cell) == Self.wholePool, let field = pondField {
-            let toSea = seaward, across = acrossBorder
+            let toSea = seaward, across = acrossBorder, frozen = ice
             chosen = group("pond|\(waterID)@\(col),\(row)#\(variant)") {
-                art.pondTile(waterID, variant, cell: cell, seaward: toSea, across: across) { field.tone($0, $1) }
+                art.pondTile(waterID, variant, cell: cell, seaward: toSea, across: across, ice: frozen) { field.tone($0, $1) }
             }
         } else if pond == full, coast == 0, natural, poolMask(cell) == Self.wholePool {
             chosen = group("deep|\(waterID)#\(variant)") { art.deepWaterTile(waterID, variant) }
@@ -349,12 +416,13 @@ final class GroundTiles {
             let key = base + "|" + layers.map { "\($0.style)\($0.mask)\($0.tile)\($0.from?.land ?? "")\($0.fade?.key ?? "")" }.joined(separator: "|") + place
             var tone: ((Double, Double) -> Int)? = nil
             if pond != 0, let field = pondField { tone = { field.tone($0, $1) } }
-            let toSea = tone == nil ? nil : seaward, across = tone == nil ? nil : acrossBorder
+            let toSea = tone == nil ? nil : seaward, across = tone == nil ? nil : acrossBorder, frozen = tone == nil ? nil : ice
             chosen = group(key) {
-                art.organicTile(base: base, layers: layers, cell: cell, variant: variant, pond: tone, seaward: toSea, across: across)
+                art.organicTile(base: base, layers: layers, cell: cell, variant: variant, pond: tone, seaward: toSea, across: across,
+                                ice: frozen)
             }
         }
-        return (chosen, near != 0)
+        return (snowOver(chosen, cell: cell, band: band != nil, wet: pond != 0 || coast != 0), near != 0)
     }
 
     // MARK: Pond water
@@ -362,6 +430,59 @@ final class GroundTiles {
     /// The land's own lakes and rivers worked out once (`PondField`), for their water in the pond's
     /// tones (`ArtLibrary.pondTones`); none where its water is ice or animated.
     private lazy var pondField: PondField? = makePondField()
+
+    /// A frozen land's ice (theme `frozen`, `ArtLibrary.freeze`): where its box lies, its cracks, and how
+    /// far its water lies from the shore. Nil where its water isn't frozen.
+    private lazy var ice: ArtLibrary.Ice? = {
+        guard theme.frozen == true, let field = pondField else { return nil }
+        return ArtLibrary.Ice(origin: origin, cracks: makeCracks(), shore: { field.shore($0, $1) })
+    }()
+
+    /// The ice's cracks (after the article): a few to a lake, by how much water the land has, each a
+    /// wandering line from somewhere out in the water, a pixel a step, now and then a short branch off it,
+    /// stopping at the shore. The same every time (seeded by the land), in art pixels on the continent.
+    private func makeCracks() -> Set<Int> {
+        var random = SeededRandom(text: map.def.id + "/ice cracks")
+        var open: [GridPoint] = []
+        for row in 0..<map.rows {
+            for col in 0..<map.columns where map.ground[row][col] == .water {
+                let all = (-1...1).allSatisfy { dr in
+                    (-1...1).allSatisfy { dc in
+                        let next = GridPoint(col: col + dc, row: row + dr)
+                        return map.contains(next) && map.ground[next.row][next.col] == .water
+                    }
+                }
+                if all { open.append(GridPoint(col: col, row: row)) }
+            }
+        }
+        guard !open.isEmpty else { return [] }
+        let size = Double(art.tilePixels(waterID))
+        var cracks: Set<Int> = []
+        for _ in 0..<min(40, max(1, open.count / 30)) {
+            let start = open[Int.random(in: 0..<open.count, using: &random)]
+            var walks: [(x: Double, y: Double, a: Double, steps: Int)] = [(
+                Double(start.col) + Double.random(in: 0..<1, using: &random), Double(start.row) + Double.random(in: 0..<1, using: &random),
+                Double.random(in: 0..<(2 * Double.pi), using: &random), Int.random(in: 14...30, using: &random))]
+            while let walk = walks.popLast() {
+                var x = walk.x, y = walk.y, a = walk.a
+                for _ in 0..<walk.steps {
+                    a += Double.random(in: -0.6...0.6, using: &random)
+                    x += cos(a) / size
+                    y += 0.5 * sin(a) / size
+                    let cell = GridPoint(col: Int(x.rounded(.down)), row: Int(y.rounded(.down)))
+                    guard map.contains(cell), map.ground[cell.row][cell.col] == .water else { break }
+                    let u = Int(((Double(origin.col) + x) * size).rounded(.down))
+                    let v = Int(((Double(origin.row) + y) * size).rounded(.down))
+                    cracks.insert(ArtLibrary.iceKey(u, v))
+                    if Double.random(in: 0..<1, using: &random) < 0.12 {
+                        let turn = Bool.random(using: &random) ? 1.1 : -1.1
+                        walks.append((x, y, a + turn, Int.random(in: 3...6, using: &random)))
+                    }
+                }
+            }
+        }
+        return cracks
+    }
 
     /// The tone (`ArtLibrary.pondTones`) of the land's own water at (x, y) in its cells; nil off its water,
     /// or where its water is ice or animated. What a reflection falls on (`LandStage.reflect`).
@@ -748,6 +869,17 @@ struct PondField {
         let other = GridPoint(col: cell.col + dc, row: cell.row + dr)
         guard let base = start[other] else { return nil }
         return base + (j - dr * s) * s + (i - dc * s)
+    }
+
+    /// How far the water at (x, y) in the land's cells lies from the land, in cells (as far as the field
+    /// looks, about a third of a cell); 0 off its water.
+    func shore(_ x: Double, _ y: Double) -> Double {
+        let s = Self.samples
+        let col = Int(x.rounded(.down)), row = Int(y.rounded(.down))
+        let i = min(s - 1, max(0, Int(((x - Double(col)) * Double(s)).rounded(.down))))
+        let j = min(s - 1, max(0, Int(((y - Double(row)) * Double(s)).rounded(.down))))
+        guard let k = spot(GridPoint(col: col, row: row), i, j), water[k] else { return 0 }
+        return Double(near[k]) / Double(s)
     }
 
     /// `tone`, or nil where (x, y) isn't water.
