@@ -2347,6 +2347,9 @@ final class ContinentScene: SKScene {
     /// Cells out from the land the distances reach (and under it, `shallowUnder`): past them, open sea.
     private static let shallowReach = 5
     private static let shallowUnder = 0.75
+    /// How far up a river's mouth the sea's shallows reach, in cells (`shallowField`), as far as its
+    /// water dissolves into the sea's (`ArtLibrary.opensToSea`).
+    private static let mouthReach = 3
 
     /// How far each spot of a chunk lies from the land, in cells (under the land, how far in, as less
     /// than none): at `shallowSamples` spots a cell, from the chunk's south-west corner to its far
@@ -2360,6 +2363,19 @@ final class ContinentScene: SKScene {
         var land = [Bool](repeating: false, count: side * side)
         for row in 0..<side {
             for col in 0..<side { land[row * side + col] = store.land(at: GridPoint(col: low.col + col, row: low.row + row)) != nil }
+        }
+        // A river's mouth counts as sea, up to `mouthReach` cells in from the sea, so the shallows and
+        // their waves reach up into it: as land, they ran along it in a straight line where its water
+        // met the sea's (the user, 2026-11-25: "The sea and river should meet more naturally here").
+        let open = land
+        let mouth = Self.mouthReach
+        for row in 0..<side {
+            for col in 0..<side where open[row * side + col] && store.isRiver(GridPoint(col: low.col + col, row: low.row + row)) {
+                let near = (max(0, row - mouth)...min(side - 1, row + mouth)).contains { r in
+                    (max(0, col - mouth)...min(side - 1, col + mouth)).contains { c in !open[r * side + c] }
+                }
+                if near { land[row * side + col] = false }
+            }
         }
         guard land.contains(true), land.contains(false) else { return nil }
         let spots = size * per + 1
@@ -2492,7 +2508,11 @@ final class ContinentScene: SKScene {
         var cells: [(col: Int, row: Int, group: SKTileGroup)] = []
         var groups: [ObjectIdentifier: SKTileGroup] = [:]
         for cell in World.cells(in: chunk) where store.land(at: cell)?.id == land.def.id {
-            let pick = land.tiles.pick(store.local(cell, in: land.place))
+            let local = store.local(cell, in: land.place)
+            // None under a river's mouth: its water dissolves into the sea's there (`ArtLibrary.opensToSea`),
+            // and the bank showed through it.
+            guard land.map.contains(local), land.map.ground[local.row][local.col] != .water else { continue }
+            let pick = land.tiles.pick(local)
             guard pick.nearSea, let group = pick.group else { continue }
             cells.append((cell.col - origin.col, cell.row - origin.row, group))
             groups[ObjectIdentifier(group)] = group

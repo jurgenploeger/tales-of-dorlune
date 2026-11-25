@@ -45,7 +45,9 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   (`WorldMap.shore`, drawn sunk by `HillArt`, darker the lower it lies; the sea paler in the shallows, `ContinentScene.shallows`:
   a distance field, after SpriteCook's shoreline article, each chunk's distances from the land worked out once,
   `shallowField`, 4 spots a cell, and drawn by `shallowShader` on the sea's own pixels, bands that round every bay and
-  point and broken crests rolling in; `tools/shore_art.py` mirrors it, before and after or `--gif`). `TalesOfDorlune/World/Region.swift` is a land's shape; `Continent.swift` reads
+  point and broken crests rolling in; `tools/shore_art.py` mirrors it, before and after or `--gif`; up a river's mouth too,
+  `mouthReach` 3 cells, its river cells taken for sea, `World.isRiver`, while the river's water dissolves into the sea's
+  over its last cells in clusters, `ArtLibrary.opensToSea`, no bank under it: the user, 2026-11-25). `TalesOfDorlune/World/Region.swift` is a land's shape; `Continent.swift` reads
   them: neighbours where shapes touch, open and walled borders (a border opens along its length once a road you can
   take joins the two lands, so none skips a quest), and the sea all round, each cell drawn by the nearest land
   (`BorderArt` draws the fences, rocks and city walls along the cell edges). Boxes overlap: a land lays out and

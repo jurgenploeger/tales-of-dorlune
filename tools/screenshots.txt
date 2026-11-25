@@ -165,6 +165,8 @@ coast_bay    | newgame,map=goldburg_lake,edge=west,landscape,weather=clear,hour=
 coast_beach  | newgame,map=pineapple_shore,at=-10_-47,landscape,weather=clear,hour=12 | 6
 coast_north  | newgame,map=rosen_lake,edge=north,landscape,weather=clear,hour=12 | 6
 coast_lair   | newgame,map=wolf_lair,edge=south,landscape,weather=clear,hour=12 | 6
+# Where Frog Swamp's river runs into the sea: its water dissolving into the sea's, the shallows up its mouth (2026-11-25).
+river_mouth  | newgame,map=frog_swamp,at=-93_-52,landscape,weather=clear,hour=12 | 8
 # The lair's border with the candy land, where playtesting once saw its ground missing past the line.
 border_built | newgame,map=wolf_lair,edge=east,landscape,weather=clear,hour=12 | 8
 # A town in its own countryside: Prismhaven's stone city wall and its south gate from the fields

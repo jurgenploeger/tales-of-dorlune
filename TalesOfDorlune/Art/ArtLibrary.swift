@@ -482,6 +482,9 @@ final class ArtLibrary {
                 Self.paintPond(&out, (py * size + px) * 4, texels: texels, tone: tone(x, y), palette: palette, shade: 1, sea: sea,
                                other: across?(x, y))
                 if let ice { Self.freeze(&out, (py * size + px) * 4, x: x, y: y, size: size, tones: palette.tones, ice: ice) }
+                if let share = sea?.share, Self.opensToSea(x, y, share: share) {
+                    for c in 0..<4 { out[(py * size + px) * 4 + c] = 0 }
+                }
             }
         }
         let texture = makeTexture(out, size: size)
@@ -597,6 +600,18 @@ final class ArtLibrary {
         out[index] = UInt8(max(0, min(255, (colour.0 * 255).rounded())))
         out[index + 1] = UInt8(max(0, min(255, (colour.1 * 255).rounded())))
         out[index + 2] = UInt8(max(0, min(255, (colour.2 * 255).rounded())))
+    }
+
+    /// Whether a river's water at (x, y), in cells, has dissolved into the sea's (clear, the sea and its
+    /// shallows showing through, `ContinentScene.shallowField`): by how near the sea it lies along the
+    /// river (`share`, 1 at the sea, `GroundTiles.seaShare`), in clusters, all of it a cell from the sea
+    /// and none three up. Its last tiles stopped dead at the cells' edge (the user, 2026-11-25).
+    nonisolated static func opensToSea(_ x: Double, _ y: Double, share: Double) -> Bool {
+        let fade = min(1, max(0, (share - 0.74) / 0.26))
+        guard fade > 0 else { return false }
+        let u = Int((x * 32).rounded(.down)), v = Int((y * 32).rounded(.down))
+        let noise = 0.6 * iceNoise(u, v, every: 6) + 0.25 * iceNoise(u + 917, v + 331, every: 2) + 0.15 * iceHash(u, v)
+        return noise < fade
     }
 
     /// A pixel's own fixed number, 0..<1 (ice and snow).
@@ -1304,6 +1319,9 @@ final class ArtLibrary {
                                             tones: palette.tones, ice: ice)
                             }
                             out[index + 3] = 255
+                            if let share = sea?.share, Self.opensToSea(Double(cell.col) + 0.5 + x, Double(cell.row) + 0.5 + y, share: share) {
+                                for c in 0..<4 { out[index + c] = 0 }
+                            }
                         } else if depth > 0 {
                             // Foam along the edge, broken here and there, with a few flecks out past it.
                             let foam = depth < 0.05 ? (speck < 0.75 ? 0.35 : 0.12) : (depth < 0.1 && speck < 0.12 ? 0.22 : 0)
