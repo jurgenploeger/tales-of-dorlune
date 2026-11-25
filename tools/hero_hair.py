@@ -147,6 +147,22 @@ def clip_front(w, base, f, hair, sh, ref, d):
                     w[y, x] = base[y, x]
     return w
 
+def real_ear(diff, f):
+    """Of the pixels where the elf differs from the doll, the ear: those in rows where some stand 2 or more pixels
+    past the doll's head."""
+    # only in the rows where the ear stands out past the head: below them (the nape facing right) the elf's own
+    # head pixels laid over the hair showed as skin under the ear (the user, 2026-11-25)
+    far = ~ndimage.binary_dilation(f[..., 3] > 0, np.ones((3, 3), bool))
+    rows = (diff & far).any(1)
+    return diff & rows[:, None]
+
+def lone_specks(img):
+    """Opaque pixels with no opaque neighbour, cleared."""
+    a = img[..., 3] > 0
+    nb = ndimage.convolve(a.astype(int), np.ones((3, 3), int), mode="constant") - a
+    out = img.copy(); out[a & (nb == 0)] = 0
+    return out
+
 def ear_top(d):
     """The top row of the elf's ears in a direction's standing view (hero64_doll_ears_<direction>.png), or None."""
     import hero_ears as he
@@ -196,7 +212,7 @@ def wear_style(style, anim, race="human"):
                 # head flapped over the near ear (the user, 2026-11-25); above it the hair still covers ChatGPT's
                 # head pixels round the ears
                 e = elf[sl]
-                ear = (e[..., 3] > 0) & ((e != f).any(2))
+                ear = real_ear((e[..., 3] > 0) & ((e != f).any(2)), f)
                 top = ear_top(d)
                 # from behind (up, up-right, up-left) the ears layer lies over the back of the head: there the hair
                 # goes over it and only what stands out past the head shows (2026-11-25)
@@ -204,7 +220,7 @@ def wear_style(style, anim, race="human"):
                     band = np.zeros_like(ear); band[max(top + sh[0], 0):] = True
                     keep = ear & band
                     w = w.copy(); w[keep] = e[keep]
-            out[sl] = w
+            out[sl] = lone_specks(w)
     return out
 
 if __name__ == "__main__" and sys.argv[1] == "wear":

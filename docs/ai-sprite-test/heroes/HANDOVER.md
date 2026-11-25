@@ -455,6 +455,9 @@ One doll, end to end (it was the Human Male pilot until 2026-11-24).
     Facing right and down-right (and their mirrors), a walk frame's face can stand a pixel or two forward of the
     standing view's and the fringe covered its brow and nose (the user): in each row where the standing hair stops
     short of the face's front, it stops as far short of the frame's face (`hero_hair.clip_front`).
+    The elf's ears go over the hair only in rows where they stand 2 or more pixels past the doll's head
+    (`hero_hair.real_ear`): below them, facing right, the elf's own head pixels showed as skin over the nape hair
+    (the user). Lone opaque pixels are cleared (`lone_specks`).
  Idle wears it; up-left mirrored.
 
 ## What has gone wrong before (read before prompting)
