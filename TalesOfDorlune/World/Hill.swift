@@ -139,6 +139,8 @@ nonisolated extension WorldMap {
             let into: (x: Double, y: Double)
             let half, depth: Double
             let beside: Bool
+            /// Its doorway a picture laid over the rock (`LandStage.placeMouth`), so `HillArt` paints none.
+            var pictured = false
         }
         var mouth: Mouth?
         /// The rock wall a cave's mouth is in, facing you (`WorldMap.raiseCrags`): from its foot, a

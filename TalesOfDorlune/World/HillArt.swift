@@ -410,7 +410,9 @@ enum HillArt {
         }
 
         // A cave's mouth, standing upright on the screen however its slope leans.
-        let doorway = hill.mouth.map { mouth in Self.doorway(mouth, height: { x, y in Double(hill.height(atCells: x, y)) }) }
+        let doorway = hill.mouth.flatMap { mouth in
+            mouth.pictured ? nil : Self.doorway(mouth, height: { x, y in Double(hill.height(atCells: x, y)) })
+        }
 
         // The pictures, a square of cells at a time, all drawn in the range's own pixels (from its
         // corner, `low`).

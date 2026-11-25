@@ -229,6 +229,12 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
 - `tools/armour_views.py`: armour sheets whose views disagree in colour (RD's ranger cloak: a green cape from behind,
   near-black from the front and sides), the front and side views' cape given the back's shades, so a tint or dye
   colours every view; idempotent, its `VIEWS` table names each sheet. Rerun `dye_art.py cut` and `check` after.
+- `tools/cave_mouth_art.py`: the caves' mouths, ChatGPT's drawings (docs/ai-sprite-test/cave-mouths, the user,
+  2026-11-25: "the gates should look more like a cave opening instead of a black gap"), snapped from
+  `art-variants/cave_mouth/` to 128 × 80 (`PICKED`): the plain one, the Rat Cavern's, the Gooey Grotto's and the
+  Glimmerdeep's (`WorldMap.mouthArt`; the Whispering Hollow's not drawn yet, the plain one meanwhile). Laid over
+  the crag's rock face by `LandStage.placeMouth`, sheared to lean with the face, so `HillArt` paints no arch there
+  (`Hill.Mouth.pictured`, on the continent).
 - `tools/prop_art.py`: the same for the few props a generated sprite got wrong (`candy_cane`, whose hook came out
   as a two-sided arch) or none was made for (the harbors' `ship`, built in 3D and projected as the game's view is,
   then lit and finished as the buildings are and held to their bands, `form_relief` too;

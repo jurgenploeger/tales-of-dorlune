@@ -3166,6 +3166,22 @@
       "kind": "building"
     },
     {
+      "id": "cave_mouth",
+      "kind": "prop"
+    },
+    {
+      "id": "cave_mouth_glimmer",
+      "kind": "prop"
+    },
+    {
+      "id": "cave_mouth_slime",
+      "kind": "prop"
+    },
+    {
+      "id": "cave_mouth_rat",
+      "kind": "prop"
+    },
+    {
       "id": "warrior_guild",
       "scale": 1.35,
       "kind": "building"
