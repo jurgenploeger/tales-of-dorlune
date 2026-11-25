@@ -120,6 +120,9 @@ final class Crowd {
     /// Whoever's on their way over to buy, and how long till the next sets off.
     private var buyer: Member?
     private var nextBuyer: TimeInterval = .random(in: 12...25)
+    /// How long till the buyer's way over to you is worked out again (`seekBuyer`): every frame, a
+    /// buyer who couldn't get near you looked for a way each frame.
+    private var buyerRepath: TimeInterval = 0
 
     private let map: WorldMap
     private var members: [Member] = []
@@ -538,9 +541,12 @@ final class Crowd {
                 nextBuyer = .random(in: 30...90, using: &rng)
                 if let profile = member.profile { onOffer?(profile) }
             } else if (walker.path.last?.distance(to: player) ?? .infinity) > 80 {
-                // After you as you move.
+                // After you as you move, twice a second at most; given up where there's no way near you.
+                buyerRepath -= dt
+                guard buyerRepath <= 0 else { return }
+                buyerRepath = 0.5
                 walker.path = map.path(from: walker.position, to: player)
-                if walker.path.isEmpty { buyer = nil }
+                if walker.path.isEmpty || (walker.path.last?.distance(to: player) ?? .infinity) > 80 { buyer = nil }
             }
             return
         }
