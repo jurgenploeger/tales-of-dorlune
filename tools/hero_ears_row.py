@@ -28,7 +28,13 @@ for c in range(n):
     # for the back of the head and the small human ear was left showing (attack right, 2026-11-24)
     ref=he.standing(d); ry,rx=he.fit(f,ref)
     cols=np.nonzero(ref[15:35,:,3].any(0))[0]; left,right=cols.min()+rx,cols.max()+rx
-    for y in range(14,38):
+    # facing up, only the head: below it the doll's own neck stays (ChatGPT's, lifted too, came out muddy, the user,
+    # 2026-11-25); the neck is the narrowest row a head's height under the frame's top
+    last=38
+    if d=='up':
+        w=f[...,3].astype(bool).sum(1); top=int(np.nonzero(w)[0].min())
+        last=min(range(top+12,top+24),key=lambda r:w[r])-2
+    for y in range(14,last):
         for x in range(64):
             p,q=g[y,x],f[y,x]
             if not p[3]:
