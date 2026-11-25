@@ -974,7 +974,9 @@ final class LandPlanner {
             default:
                 // Its fire in the middle of the trodden ground, the tent behind, stores and seats round it.
                 put(own["fire"] ?? "brazier", m, blocking: true, nudged: false)
-                put(own["tent"] ?? "torn_tent", at(0, 3), blocking: true, scale: 1.3, nudged: false)
+                // The torn tent drawn at 48 pixels since 2026-11-25 (ChatGPT's), set down as it is; a land's
+                // own tent (a beach umbrella) at 1.3, as before.
+                put(own["tent"] ?? "torn_tent", at(0, 3), blocking: true, scale: own["tent"] == nil ? 1 : 1.3, nudged: false)
                 let stores = own["stores"] ?? "barrels"
                 put(stores, at(-2, 2), blocking: true)
                 put(own["seat"] ?? "tree_stump", at(2, -2), blocking: true)

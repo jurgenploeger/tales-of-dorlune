@@ -318,16 +318,14 @@ private struct LockInStrip: View {
             TimelineView(.periodic(from: lockIns?.since ?? Date(), by: 0.25)) { context in
                 HStack(spacing: 5) {
                     ForEach(lockIns == nil ? controller.choosers.filter(\.isHero) : controller.choosers) { fighter in
-                        // The ring is on whoever you're choosing for: you, then your companion beside you
-                        // once you've chosen, you with your tick (the user, 2026-11-25: "it should show the
-                        // companion's little avatar with the countdown. If there is no companion, then we
-                        // show the green tick"). Your companion stands beside you the whole time you choose,
-                        // so nothing moves when its turn comes but the ring (the user, 2026-11-25: added only
-                        // then, it pushed in where the ring had been and read as your face swapped for its).
-                        slot(fighter, ready: isReady(fighter, at: context.date),
-                             active: fighter.isHero && !controller.choosingForCompanion)
-                        if fighter.isHero, GameSettings.commandCompanion, let companion = controller.companion {
-                            slot(companion, ready: false, active: controller.choosingForCompanion)
+                        // Your place shows whoever you're choosing for, with the ring: you, then on its turn
+                        // your companion in your place (the user, 2026-11-25: "it should show the companion's
+                        // little avatar with the countdown"; "It shouldn't show my hero and companion avatar
+                        // ... at the same time, only when it's the companion's turn, it swaps with the hero").
+                        if fighter.isHero, controller.choosingForCompanion, let companion = controller.companion {
+                            slot(companion, ready: false, active: true)
+                        } else {
+                            slot(fighter, ready: isReady(fighter, at: context.date), active: fighter.isHero)
                         }
                     }
                 }

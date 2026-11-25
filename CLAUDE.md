@@ -234,7 +234,10 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   `art-variants/cave_mouth/` to 128 × 80 (`PICKED`): the plain one, the Rat Cavern's, the Gooey Grotto's and the
   Glimmerdeep's (`WorldMap.mouthArt`; the Whispering Hollow's not drawn yet, the plain one meanwhile). Laid over
   the crag's rock face by `LandStage.placeMouth`, sheared to lean with the face, so `HillArt` paints no arch there
-  (`Hill.Mouth.pictured`, on the continent).
+  (`Hill.Mouth.pictured`, on the continent). In a land of terraced hills the crag round it is terraced too, its first level
+  and its wall as high as the picture (`WorldMap.mouthTop`), so the plateau's edge runs level with the opening's top. Its floor runs into the road in front:
+  the picture sunk 6 points onto it, its bottom 8 rows dithered out across the opening (`LandStage.fadeFloor`). It casts a hard
+  shadow on the face behind, down and right in two steps, so its rocks stand off the rock (`placeMouth`).
 - `tools/prop_art.py`: the same for the few props a generated sprite got wrong (`candy_cane`, whose hook came out
   as a two-sided arch) or none was made for (the harbors' `ship`, built in 3D and projected as the game's view is,
   then lit and finished as the buildings are and held to their bands, `form_relief` too;
@@ -414,7 +417,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   the coins are. `--sheet out.png` previews them.
 - `tools/lair_art.py`: the pieces of the bosses' lairs no sprite had (a standing stone, a brazier, a gold hoard, a
   warning post, the Rat King's junk throne, a heap of bones, a hunter's torn tent, a broken pillar), drawn with
-  `pixel_kit` and scored as scenery (the brazier and gold hoard redrawn by ChatGPT and copied, `PICKED`, the user's pick, 2026-11-21; ChatGPT's
+  `pixel_kit` and scored as scenery (the brazier and gold hoard redrawn by ChatGPT and copied, `PICKED`, the user's pick, 2026-11-21, and the torn tent, 48 pixels, 2026-11-25, docs/ai-sprite-test/tents; ChatGPT's
   blossom tree lost to ours). A boss's lair is maps.json `lair` on the boss: pieces round it, its way in to
   the south, turned by `LandPlanner.planLair` to face the way up its trail (else the land's middle); `lairRing`, a
   ring of the land's own tall scenery behind it and low in front, open toward the way in; `lairApproach`, pairs

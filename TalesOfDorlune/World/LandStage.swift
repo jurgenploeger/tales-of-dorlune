@@ -1915,7 +1915,9 @@ final class LandStage {
         // How the face leans on screen: up this many points for each one across.
         let along = WorldMap.project(CGPoint(x: mouth.along.x, y: mouth.along.y))
         let slope = abs(along.x) > 0.001 ? along.y / along.x : 0
-        guard let made = Self.shear(picture, slope: slope) else { return }
+        // The opening's columns (`tools/cave_mouth_art.py`: x 20 to 107 of 128), its floor faded into the ground.
+        let opening = Int(Double(picture.width) * 22 / 128)...Int(Double(picture.width) * 105 / 128)
+        guard let made = Self.shear(picture, slope: slope, fade: opening) else { return }
         let sheared = made.0, footUp = made.1
         let texture = SKTexture(cgImage: sheared)
         texture.filteringMode = .nearest
@@ -1924,14 +1926,51 @@ final class LandStage {
         node.anchorPoint = CGPoint(x: 0.5, y: footUp / size.height)
         let tile = WorldMap.tileSize
         let foot = WorldMap.project(CGPoint(x: mouth.x * tile, y: mouth.y * tile))
-        node.position = CGPoint(x: foot.x.rounded(), y: (foot.y + hill.height(atCells: mouth.x, mouth.y)).rounded())
+        node.position = CGPoint(x: foot.x.rounded(), y: (foot.y + hill.height(atCells: mouth.x, mouth.y)).rounded() - Self.mouthSink)
         node.zPosition = -foot.y - 1
+        // It stands off the face (the user, 2026-11-25: "add some depth to the cave entrance drawing,
+        // because it shows flat now while they are rocks"): its rocks cast a hard shadow on the rock behind,
+        // down and to the right, away from the light, in two steps, a near one darker, a far one fainter.
+        for (offset, darkness) in [(CGFloat(4), CGFloat(0.16)), (CGFloat(2), CGFloat(0.32))] {
+            let shadow = SKSpriteNode(texture: texture, size: size)
+            shadow.anchorPoint = node.anchorPoint
+            shadow.color = .black
+            shadow.colorBlendFactor = 1
+            shadow.alpha = darkness
+            shadow.position = CGPoint(x: offset, y: -offset)
+            shadow.zPosition = -0.001 * offset
+            node.addChild(shadow)
+        }
         chunk(at: node.position).addChild(node)
     }
 
     /// `picture` sheared to lean `slope` points up for each across, in whole pixels about its middle
     /// column, and how far its middle column's bottom stands over the new picture's bottom.
-    static func shear(_ picture: CGImage, slope: CGFloat) -> (CGImage, CGFloat)? {
+    /// How far a cave mouth's picture is sunk below its foot, onto the road in front, and how many rows up
+    /// from its bottom its floor fades out into the land's ground there (`fadeFloor`).
+    static let mouthSink: CGFloat = 6
+    static let mouthFade = 8
+
+    /// A cave mouth's floor faded out into the land's ground under it (the user, 2026-11-25: "The cave
+    /// entrance ground should fade/merge better with the world ground"): the picture sunk `mouthSink` onto the
+    /// road in front of the face, and across its opening's `columns` its bottom `mouthFade` rows cleared
+    /// through an ordered dither, all of the bottom row, fewer and fewer up toward the dark, so the road and
+    /// the cave's floor mix in whole pixels, with no edge between them.
+    static func fadeFloor(_ pixels: inout [UInt8], width w: Int, height h: Int, columns: ClosedRange<Int>) {
+        let bayer: [Double] = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5].map { ($0 + 0.5) / 16 }
+        let rows = mouthFade
+        for up in 0..<min(rows, h) {
+            let y = h - 1 - up
+            // The share cleared: all of the bottom row, none `rows` up.
+            let clear = 1 - Double(up) / Double(rows)
+            for x in max(0, columns.lowerBound)...min(w - 1, columns.upperBound) where bayer[(y % 4) * 4 + x % 4] < clear {
+                let at = (y * w + x) * 4
+                for k in 0..<4 { pixels[at + k] = 0 }
+            }
+        }
+    }
+
+    static func shear(_ picture: CGImage, slope: CGFloat, fade: ClosedRange<Int>? = nil) -> (CGImage, CGFloat)? {
         let w = picture.width, h = picture.height
         guard w > 0, h > 0 else { return nil }
         let middle = CGFloat(w) / 2
@@ -1948,6 +1987,7 @@ final class LandStage {
             return true
         }
         guard drawn else { return nil }
+        if let fade { fadeFloor(&source, width: w, height: h, columns: fade) }
         // Rows from the top in memory: a column lifted `lift` up starts `high - lift` rows down.
         for x in 0..<w {
             let down = high - lifts[x]
