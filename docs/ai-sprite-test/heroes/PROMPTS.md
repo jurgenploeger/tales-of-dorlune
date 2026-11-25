@@ -252,14 +252,32 @@ check each is drawn at the walk's size and on a clear background before snapping
 
 ## 6. Hairstyle layer (after the base passes)
 
-Attach the base sheet row (or master) and today's hairstyle for reference (`art/sprites/hair_<style>_<race>.png`).
+**Ask for the doll wearing the hair, not the hair alone** (the ears taught us: ChatGPT paints a whole figure
+well and a layer alone on transparency badly). `tools/hero_hair.py` lifts the hair off the painting in code.
+Standing view first, one direction per message (down, down-right, right, up-right, up; the left views are
+mirrors). Attach the approved doll view (`hero64_doll_<dir>.png` and its `_8x`; down is
+`hero64_doll_master`) and the old style for its shape only (`reference/hair_<style>_old_8x.png`: the old
+48-pixel hero, down, right and up).
 
-> Draw only the **{style}** hairstyle for this character, facing **{direction}** (one of down, down-right, right, up-right, up), for every frame of the
-> attached row ({n} frames, a {64·n} × 64 PNG). Nothing but the hair: the rest transparent, so it sits
-> exactly over the body. The hair in **one warm brown ramp** (from a deep red-brown outline to a pale ginger
-> highlight, 6 or more shades): the game recolours it to every hair colour. It hugs the bald head from the
-> master, moves with the head (1 pixel down when the head is), and long hair sways a pixel with the walk.
-> From behind ("up") the hair covers the back of the head. Keep the ears showing if an elf.
+> Attached: (1) our approved 64 × 64 pixel-art doll facing **{direction}**, at 1× and 8×; (2) an old,
+> smaller sprite wearing the **{style}** hairstyle, for the hairstyle's shape only (ignore its body,
+> clothes and size).
+>
+> Paint image (1) again with the **{style}** hairstyle added, facing {direction}. Everything else stays
+> exactly as it is: the same body, pose, size, face, outline and colours, pixel for pixel. Only add hair.
+>
+> - The hair in **one saturated warm ginger ramp**: 6 or more shades, from a deep red-brown outline to a
+>   bright orange-ginger highlight, every shade clearly more saturated and orange than the skin (the game
+>   recolours exactly those shades to every hair colour, so no hair pixel may be skin-coloured, grey or
+>   pale yellow).
+> - Lit from the top left like the body; a one-pixel outline in the deepest red-brown, never black.
+> - It sits on the head: no more than {reach} pixels above the top of the bald head and out past its sides;
+>   the face, eyes and ears stay as they are{fringe}.
+> - Pixel art on the same 64-pixel grid as the doll: hard edges, no anti-aliasing, no glow.
+> - Transparent background. Show it big, on that grid. Give me 2 variants.
+
+For Spiky: `{reach}` 3, `{fringe}` ", with a short spiky fringe over the forehead that stops above the
+brows". From behind (up) the hair covers the whole back of the head down to the nape.
 
 ---
 
