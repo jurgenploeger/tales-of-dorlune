@@ -95,19 +95,27 @@ final class Footprints {
 
     /// Presses a print in at each of `footfalls` (in its node's parent's points) where `ground` says
     /// the snow there takes one, ages the rest by `dt` and lets go of those filled back in.
-    func update(dt: TimeInterval, footfalls: [CGPoint], ground: (CGPoint) -> Look?) {
-        for point in footfalls {
+    /// `ground` is asked at points on the ground's plane (the print's spot less the lift it's raised by)
+    /// with the lift, and says no where the ground there isn't that high (a slope, a face, a stair). On a
+    /// raised level (a terrace, a mountain's), the print is sorted at its own spot's depth, over the
+    /// level's picture and under whoever stands in front (the user, 2026-11-25: "It should show the
+    /// footsteps on elevated levels as well"); on the flat it's in the prints' own layer under it all.
+    func update(dt: TimeInterval, footfalls: [(point: CGPoint, lift: CGFloat)], ground: (CGPoint, CGFloat) -> Look?) {
+        for fall in footfalls {
+            let point = fall.point, lift = fall.lift
             let spot = CGPoint(x: point.x.rounded(), y: point.y.rounded())
+            let base = CGPoint(x: spot.x, y: spot.y - lift)
             // All it shows on the snow (a dent reaches 4 points across and 3 down from its middle,
             // its lip a row under that), so none lies over a path's edge.
             let rx: CGFloat = 4, ry: CGFloat = 4
-            guard let found = ground(spot),
+            guard let found = ground(base, lift),
                   [CGPoint(x: -rx, y: -ry), CGPoint(x: rx, y: -ry), CGPoint(x: -rx, y: ry), CGPoint(x: rx, y: ry)]
-                    .allSatisfy({ ground(CGPoint(x: spot.x + $0.x, y: spot.y + $0.y)) != nil }),
+                    .allSatisfy({ ground(CGPoint(x: base.x + $0.x, y: base.y + $0.y), lift) != nil }),
                   let first = found.frames.first else { continue }
             let sprite = SKSpriteNode(texture: first)
             sprite.size = first.size()
             sprite.position = spot
+            if lift > 0.5 { sprite.zPosition = -base.y - 0.01 - Self.depth }
             node.addChild(sprite)
             prints.append(Print(node: sprite, look: found))
         }

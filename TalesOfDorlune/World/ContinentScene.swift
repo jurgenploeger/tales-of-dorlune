@@ -559,17 +559,19 @@ final class ContinentScene: SKScene {
         return land.map.height(at: CGPoint(x: point.x - land.shift.dx, y: point.y - land.shift.dy))
     }
 
-    /// How the ground at `point` (in the continent's points) takes a print (`Footprints`), or nil where
-    /// it takes none: only a snow or sand land's own plain ground, on the flat (not a path, a patch, a
-    /// hill, the shore or anything in the way).
-    private func printLook(at point: CGPoint) -> Footprints.Look? {
+    /// How the ground at `point` (in the continent's points, on the ground's plane) takes a print
+    /// (`Footprints`), or nil where it takes none: only a snow or sand land's own plain ground, standing
+    /// `lift` high (the flat, or a raised level's top; not a slope, a face, a mountain's stairs, a path,
+    /// a patch, the shore or anything in the way).
+    private func printLook(at point: CGPoint, lift: CGFloat) -> Footprints.Look? {
         let cell = Self.cell(at: point)
         guard let owner = store.land(at: cell), let land = lands[owner.id],
               Footprints.grounds[land.def.theme.ground] != nil else { return nil }
         let local = GridPoint(col: cell.col - land.place.origin.col, row: cell.row - land.place.origin.row)
         guard local.row >= 0, local.row < land.map.ground.count, local.col >= 0, local.col < land.map.ground[local.row].count,
-              land.map.ground[local.row][local.col] == .ground, land.map.isWalkable(local),
-              land.map.height(at: CGPoint(x: point.x - land.shift.dx, y: point.y - land.shift.dy)) == 0 else { return nil }
+              land.map.ground[local.row][local.col] == .ground, land.map.isWalkable(local), !land.map.trailCells.contains(local),
+              abs(land.map.height(at: CGPoint(x: point.x - land.shift.dx, y: point.y - land.shift.dy)) - lift) < 1.5,
+              lift == 0 || lift > 4 else { return nil }
         return Footprints.look(for: land.def)
     }
 
@@ -672,7 +674,7 @@ final class ContinentScene: SKScene {
         wadeForDebug = wading.map { cut in "\(Int(cut.max() ?? 0))/\(cut.filter { $0 > 0 }.count)" } ?? "-"
         #endif
         if !LandStage.isOffForDebug("footprints") {
-            footprints.update(dt: dt, footfalls: Walker.footfalls(in: layer)) { self.printLook(at: $0) }
+            footprints.update(dt: dt, footfalls: Walker.footfalls(in: layer)) { self.printLook(at: $0, lift: $1) }
         }
         updateAir(dt)
         if currentTime - lookedAround > 0.25 {

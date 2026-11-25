@@ -1105,6 +1105,8 @@ flowers_meadow | newgame,map=sunny_meadow,landscape,weather=clear,hour=12 | 8
 # walking a loop on snow, a desert and a beach, close up, the prints behind him filling back in.
 snow_trail      | newgame,level=163,map=snow_white_forest,at=5_5,zoom=1.8,walk=1_0,weather=clear,hour=12 | 10
 snow_trail_rosen | newgame,level=163,map=rosen_lake,at=4_-5,zoom=1.8,walk=1_0,weather=clear,hour=12 | 10
+# On a raised level's top too (2026-11-25): up on a terraced hill in Briarmere, walking.
+snow_trail_hill | newgame,level=163,map=rosen_lake,hill=0,ontop,zoom=1.8,walk=1_0,weather=clear,hour=12 | 10
 sand_trail_desert | newgame,level=163,map=genie_desert,at=5_5,zoom=1.8,walk=1_0,weather=clear,hour=12 | 10
 sand_trail_beach | newgame,level=163,map=pineapple_shore,at=-5_5,zoom=1.8,walk=1_0,weather=clear,hour=12 | 10
 # The townsfolk's own prints: the hero standing still in Goldburg's sandy square while its people stroll.

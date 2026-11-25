@@ -597,7 +597,7 @@ final class Walker: SKNode {
     /// strides are frames 0 and 2 (one foot forward), its feet together 1 and 3: a foot comes down
     /// as a stride frame starts (`Footprints`, tools/snow_trail_preview.py). Only a four-frame walk
     /// sheet: a hopping monster leaves none.
-    func footfall() -> CGPoint? {
+    func footfall() -> (point: CGPoint, lift: CGFloat)? {
         let frames = cycle.frames(facing)
         guard isWalking, frames.count == 4, let shown = sprite.texture else {
             lastStride = nil
@@ -609,15 +609,16 @@ final class Walker: SKNode {
         let side: CGFloat = strides % 2 == 0 ? 1 : -1
         let offset = facing.isHorizontal ? CGVector(dx: 0, dy: Footprints.apart.along * side)
             : CGVector(dx: Footprints.apart.across * side, dy: 0)
-        return CGPoint(x: position.x + offset.dx, y: position.y + lift + feet + offset.dy)
+        return (CGPoint(x: position.x + offset.dx, y: position.y + lift + feet + offset.dy), lift)
     }
 
     /// Every footfall in the scene `space` is in this frame (`footfall`), in `space`'s points.
-    static func footfalls(in space: SKNode) -> [CGPoint] {
-        everyone.allObjects.compactMap { walker -> CGPoint? in
+    /// Each with how high the ground it's on stands (`lift`), so a print on a raised level sits on it.
+    static func footfalls(in space: SKNode) -> [(point: CGPoint, lift: CGFloat)] {
+        everyone.allObjects.compactMap { walker -> (point: CGPoint, lift: CGFloat)? in
             guard walker.scene === space.scene, !walker.isHidden, let parent = walker.parent,
-                  let point = walker.footfall() else { return nil }
-            return parent.convert(point, to: space)
+                  let fall = walker.footfall() else { return nil }
+            return (parent.convert(fall.point, to: space), fall.lift)
         }
     }
 

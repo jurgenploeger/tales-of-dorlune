@@ -293,8 +293,8 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
 - Footprints in the snow and the sand (the user's picks from `tools/snow_trail_preview.py`, 2026-11-24: look C, and
   `--sand` S2, after SpriteCook's trail render texture article; visual only): where anyone with a four-frame walk
   sheet puts a foot down (`Walker.footfall`: as a stride frame, 0 or 2, starts, left and right by turns) on a snow or
-  sand land's own plain ground (`Footprints.grounds`, theme `ground`: snow, sand, desert; not a path, patch, hill, the
-  shore or a blocked cell, `ContinentScene.printLook`), a dent is pressed in, three depths lit from the top left
+  sand land's own plain ground (`Footprints.grounds`, theme `ground`: snow, sand, desert; not a path, patch, slope,
+  stair, the shore or a blocked cell, `ContinentScene.printLook`; on a raised level's flat top too since 0.9.191, sorted at its spot's depth), a dent is pressed in, three depths lit from the top left
   (tinted toward the palette's `shadow`, in the sand mostly toward a warm brown, `sandShade`: a beach's blue shadow
   alone turned them grey-green; a darker wall along its top, a bright lip along its bottom, the sand's its
   `highlight` half white), filling back in over about six seconds. The article's map of bytes is the brightest stamp
