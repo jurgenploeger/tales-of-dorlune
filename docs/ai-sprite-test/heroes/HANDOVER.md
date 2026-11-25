@@ -349,6 +349,13 @@ One doll, end to end (it was the Human Male pilot until 2026-11-24).
     ear's outer outline (rows 20 to 23) and its tips sit 2 rows above the up-right ear's
     (`hero64_doll_ears_up.png`). Idle now has ears in every direction; walk and attack still need their up-right
     and up rows painted.
+41. **Elf walk up-right** (2026-11-25): three rounds. The first six (`tries/elf_walk_up-right_try1{a..f}`) drew the
+    ear 3 to 4 pixels wide inside its outline against the idle's 1 to 3 ("thicker than the idle version", the user);
+    told to halve it, the next nine (`try2{a..i}`) were thin but closed the ear off with a line across its base, or
+    shrank it to a sliver ("it has a closing line while the idle one doesn't"); told both, open at the base and
+    about 3 pixels past the head, the third round's painting 1 (`try3a`) matched: open in every frame, 4 to 6 skin
+    pixels past the head (the idle's 7), no grey specks (`hero64_doll_ears_walk_up-right.png`; up-left mirrored).
+    Name the ear's width, its reach and its open base in the prompt from the start.
 
 ## What has gone wrong before (read before prompting)
 - ChatGPT failed the monster test (`../HANDOVER.md`): drew bigger than asked (44 to 48 px for 35), and the
