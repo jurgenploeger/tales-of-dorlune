@@ -84,7 +84,10 @@ final class GroundTiles {
 
     /// Which cells of the 3×3 around `cell` are `kind` (bit row * 3 + col, row 0 north).
     private func mask(_ cell: GridPoint, _ kind: Ground) -> Int {
-        let own = map.ground[cell.row][cell.col] == kind
+        // Past the land's box no ground is laid: asked about a river cell out there (`makePondField`
+        // follows rivers past the border), it read past the end of `ground` and the game crashed
+        // building Ingothold's countryside (the user, 2026-11-25).
+        let own = map.contains(cell) && map.ground[cell.row][cell.col] == kind
         var bits = 0
         for dy in -1...1 {
             for dx in -1...1 {
@@ -537,7 +540,7 @@ final class GroundTiles {
                 for dr in -1...1 {
                     for dc in -1...1 {
                         let next = GridPoint(col: col + dc, row: row + dr)
-                        guard !isOwn(next), waterBeyond(next), beyond.insert(next).inserted else { continue }
+                        guard map.contains(next), !isOwn(next), waterBeyond(next), beyond.insert(next).inserted else { continue }
                         frontier.append(next)
                     }
                 }
@@ -549,7 +552,7 @@ final class GroundTiles {
                 for dr in -1...1 {
                     for dc in -1...1 {
                         let other = GridPoint(col: cell.col + dc, row: cell.row + dr)
-                        guard !isOwn(other), waterBeyond(other), beyond.insert(other).inserted else { continue }
+                        guard map.contains(other), !isOwn(other), waterBeyond(other), beyond.insert(other).inserted else { continue }
                         next.append(other)
                     }
                 }
