@@ -14,6 +14,7 @@ Drawn with `tools/cliff_preview.py`'s terraces (the look the user picked for the
    sheer face of the cliffs' rock, its top dark rock with a pale lip, lit round you by your lantern.
 
     python3 tools/cave_preview.py out.png [map] [--now now.png]
+    python3 tools/cave_preview.py --handover DIR      # the reference pictures for ChatGPT's cave mouths
 
 Needs pillow + numpy.
 """
@@ -349,6 +350,9 @@ def main(argv):
     if not argv:
         print(__doc__)
         return 1
+    if argv[0] == "--handover":
+        handover(argv[1])
+        return 0
     out = argv[0]
     mid = argv[1] if len(argv) > 1 and not argv[1].startswith("--") else "valley_of_fear"
     now = argv[argv.index("--now") + 1] if "--now" in argv else None
@@ -369,6 +373,78 @@ def main(argv):
     sheet.resize((sheet.width * 2, sheet.height * 2), Image.NEAREST).save(out)
     print(out)
     return 0
+
+
+# ---- ChatGPT's hand-off (docs/ai-sprite-test/cave-mouths) -------------------------------------------------------
+
+# A cave mouth's canvas and its opening, in its pixels (one a point in the game): the opening at the bottom
+# middle, its sides straight up from the foot row and its top an arch; the road runs in along the bottom row.
+MOUTH_W, MOUTH_H = 128, 80
+OPEN_X0, OPEN_X1, OPEN_TOP, OPEN_SIDE = 20, 107, 24, 52
+FLOOR_ROWS = 8
+
+
+def opening_mask():
+    """The opening's zone on the canvas: straight sides from the foot (row 79) up to OPEN_SIDE, an arch
+    over them up to OPEN_TOP."""
+    m = np.zeros((MOUTH_H, MOUTH_W), bool)
+    cx, half = (OPEN_X0 + OPEN_X1) / 2, (OPEN_X1 - OPEN_X0 + 1) / 2
+    for x in range(OPEN_X0, OPEN_X1 + 1):
+        u = (x + 0.5 - cx) / half
+        top = OPEN_SIDE - (OPEN_SIDE - OPEN_TOP) * max(0.0, 1 - u * u) ** 0.5
+        m[int(round(top)):, x] = True
+    return m
+
+
+def layout_guide():
+    """The zones at 8x: grey outside (the cliff shows), sandy the rock frame (at least 6 pixels round the
+    opening, ragged out toward the edges), dark blue the opening, orange its floor where the road runs in,
+    and a white line on the foot row."""
+    m = opening_mask()
+    grow = m.copy()
+    for _ in range(6):
+        g = grow.copy()
+        g[1:] |= grow[:-1]
+        g[:-1] |= grow[1:]
+        g[:, 1:] |= grow[:, :-1]
+        g[:, :-1] |= grow[:, 1:]
+        grow = g
+    img = np.zeros((MOUTH_H, MOUTH_W, 3), np.uint8)
+    img[:] = (128, 128, 128)
+    img[grow & ~m] = (214, 176, 120)
+    img[m] = (40, 46, 96)
+    floor = m.copy()
+    floor[:MOUTH_H - FLOOR_ROWS] = False
+    img[floor] = (232, 140, 60)
+    big = Image.fromarray(img).resize((MOUTH_W * 8, MOUTH_H * 8), Image.NEAREST)
+    d = ImageDraw.Draw(big)
+    d.line([(0, MOUTH_H * 8 - 4), (MOUTH_W * 8, MOUTH_H * 8 - 4)], fill=(255, 255, 255), width=2)
+    for x in range(0, MOUTH_W * 8, 8 * 8):
+        d.line([(x, 0), (x, MOUTH_H * 8)], fill=(150, 150, 150), width=1)
+    return big
+
+
+def handover(out):
+    out = pathlib.Path(out)
+    out.mkdir(parents=True, exist_ok=True)
+    global ORIGINAL_LAYOUT
+    ORIGINAL_LAYOUT = cp.layout
+    layout_guide().save(out / "layout_guide_8x.png")
+    # The cliff face a mouth goes in, as the terraced hills draw it: the bare crag, cropped round the mouth's foot.
+    mid = "valley_of_fear"
+    setup(crag, [0, 96, 150], lambda seed=5: [])
+    bare = cp.render(mid, True)
+    fx, fy = cp.screen_of(MOUTH[0], MOUTH[1], 0)
+    box = (int(fx - 110), int(fy - 120), int(fx + 110), int(fy + 20))
+    face = bare.crop(box)
+    face.save(out / "cliff_face_1x.png")
+    face.resize((face.width * 4, face.height * 4), Image.NEAREST).save(out / "cliff_face_4x.png")
+    # What it is now and what code made of it, both on that face.
+    cp.layout = ORIGINAL_LAYOUT
+    for name, new in (("mouth_now_4x.png", False), ("mouth_code_4x.png", True)):
+        shot = render_mouth(mid, new).crop(box)
+        shot.resize((shot.width * 4, shot.height * 4), Image.NEAREST).save(out / name)
+    print(out)
 
 
 ORIGINAL_LAYOUT = None
