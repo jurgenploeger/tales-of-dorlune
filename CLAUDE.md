@@ -393,7 +393,8 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   reeds and the shallows' rocks still stand in it. Where a snowy land meets one that isn't, the other's ground in the band
   is snowed over pixel by pixel (`GroundTiles.snowCover`: all of it at the border, none `reach` in; `snowOver`,
   `ArtLibrary.snowed`: clusters first, dark crevices last, in the snowy land's own snow, `snowTones`), and its trees and
-  bushes there capped with snow by stage (`ArtLibrary.capped`, `LandStage.addScenery`). Keep the tool and the Swift in step.
+  bushes there capped with snow by stage (`ArtLibrary.capped`, `LandStage.addScenery`). A snowy land's own grass patches (theme `accent`, where
+  it's melted) are snowed over the same way at their edges, thinning toward their middles (`GroundTiles.meltCover`). Keep the tool and the Swift in step.
 - `tools/fx_art.py`: the same for the few battle marks that aren't light (`art/sprites/fx_*.png`: poison's bubble
   and the glossy marks by the HP bars, drawn smooth at 3×: poison's drop and the arrows for lowered and raised
   stats). `--sheet out.png` writes a contact sheet. Spells are light, not sprites:
