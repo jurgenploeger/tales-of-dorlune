@@ -441,6 +441,8 @@ One doll, end to end (it was the Human Male pilot until 2026-11-24).
     saturation x0.72, brightness x0.9, hue 4° toward red: the user's pick B of three; the bright ginger made every
     hair colour look unnatural). On the elf, from the row its ears stick out past the head, the ears stay over the
     hair (the sideburns crossed them).
+    Spiky down-right: two paintings (`tries/hair_spiky_down-right_try1{a,b}_painting.png`), the user picked 1
+    (`hero64_hair_spiky_down-right.png`; down-left its mirror), worn on every frame the same way.
  Idle wears it; up-left mirrored.
 
 ## What has gone wrong before (read before prompting)
