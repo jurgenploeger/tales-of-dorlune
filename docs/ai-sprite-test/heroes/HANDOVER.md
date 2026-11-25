@@ -399,12 +399,14 @@ One doll, end to end (it was the Human Male pilot until 2026-11-24).
     of the human ear by the head's right edge stayed (26, 40; 27, 39-40); they were given the skin beside them in
     the ears layer (the user). Taking the band from the head's own outline instead wiped the line between head and
     arm, so it wasn't kept.
-49. **Walk and attack up redone on the human head** (2026-11-25): ChatGPT's head pieces left the edges messy (the
+49. **Attack up redone on the human head** (2026-11-25; the walk up was redone the same way by mistake and put back,
+    the user: it "shouldn't be updated"): ChatGPT's head pieces left the edges messy (the
     user: "reuse the head shape of the human attack, and just have the elf ears"). Now every frame is the human walk
     or attack as it is, with the idle up ears laid on by the head (as idle does), and the human's own little ears,
     which sit lower in these frames, smoothed into the head's edge: the edge drawn straight from above them to below
     them, their red inner pixels given the skin beside them (`tools/hero_ears_up_smooth.py`, the user's pick). The
-    rows' ears and cut files are taken from it. ChatGPT's walk and attack up elf paintings are no longer used.
+    attack row's ears and cut files are taken from it; ChatGPT's attack up elf paintings are no longer used. The walk
+    up keeps item 43's.
  Idle wears it; up-left mirrored.
 
 ## What has gone wrong before (read before prompting)
