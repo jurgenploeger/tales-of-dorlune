@@ -296,7 +296,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   cell across down its middle in the colour of the land's `tile_town` (graded), their edge ragged stone by stone, sand
   (`tile_path`) with pebbles either side, and grass growing over the edges in clumps where the ground beside is green, else the sand giving way to it raggedly (straight at the cell's edge it read as clipped, the user, 2026-11-18);
   the pattern repeats every four cells (`cobblePhase`), so its tiles are made for 16 places. Wild roads stay sand.
-- `tools/window_art.py`: lit windows at night: each building's warm, bright window panes cut into `windows_<id>.png`
+- `tools/window_art.py`: lit windows at night (cut where anything sorted in front covers them, `LandStage.hidePanesBehindScenery`): each building's warm, bright window panes cut into `windows_<id>.png`
   (small patches only, so thatch and gold trim stay out; `SKIP` for what has none), laid over the building above the
   night's shade by `LandStage.addWindows` and faded in with the dark (`LampLight.follow`). Rerun it after adding or
   redrawing a building, and register any new `windows_<id>` in art/assets.json; `--sheet out.png` shows them at night.
@@ -356,13 +356,13 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   Iconaut's vector icons for small inline glyphs. `--sheet out.png` previews them on the game's button colours.
 - `tools/water_art.py`: the same for the water: `sea.png` (16 × 16 cells that tile as a whole; the continent gives each
   world cell its own, `ContinentScene.seaGroups`) and `tile_water.png` (a land's lakes and rivers, calm so its versions
-  don't make a grid), ripples level on screen. Round a land's own water (`tile_water`, not ice or chocolate)
+  don't make a grid), ripples level on screen. Round a land's own water (`tile_water` or `tile_chocolate`, `ArtLibrary.isPondWater`; chocolate in warm tones, `pondTones`; not ice)
   `ArtLibrary.organicTile` adds depth and a bank: paler shallows by the shore, deeper water out from it (two
   cells out, `deepWaterTile`), broken foam, and a strip of damp earth and pebbles on the land; mirrored in
   `tools/palette_preview.py`. A land's own lakes and rivers are drawn in a pond's tones (after SpriteCook's
   pond water article, the user's pick from `tools/pond_preview.py`, 2026-11-17): every water pixel one of
   a few tones in the land's water colour (`ArtLibrary.pondTones`), by how far it lies from land and how far
-  below the far shore up the screen (`GroundTiles.PondField`, 16 spots a cell, worked out once a land:
+  below the far shore up the screen (`GroundTiles.PondField`, 16 spots a cell, worked out once a land, following a river 8 cells on past the border (`pastBorder`) with the far and near shores counted at most 4 cells (`shoreCap`), and a river's colour blended into the next land's over 6 cells either side (`acrossBorder`):
   dark out from the shore, the near half lighter where it mirrors the sky, a dark line under the far
   bank), the tile's own ripples kept over them; moving in whole pixels (`PondMotion`, `LandStage.placePondMotion`:
   dashes lapping the near shores, a bright rim along them painted on the water as its edge curves (`ArtLibrary.organicTile`, tone 6; a cell edge at a time it ran in straight steps, the user, 2026-11-19), the far waterline creeping, glints and drops on the open water, many a second in the rain, `PondMotion.raining`; the user, 2026-11-18, after Daniil Ch.'s pond); and what

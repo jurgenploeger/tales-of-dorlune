@@ -156,6 +156,7 @@ final class LandStage {
         await pause()
         placePlateaus()
         placeBorders()
+        hidePanesBehindScenery()
         bringIntoView()
         for npc in npcs { npc.node.settle() }
         await pause()
@@ -480,6 +481,8 @@ final class LandStage {
             // Steady: a land can hold hundreds of lights (Twilight Woods' glowing mushrooms), each
             // pulsing would cost the frame.
             pane.addChild(halo)
+            litPanes.append(LitPane(pane: pane, halo: halo, building: node, box: box, picture: picture,
+                                    left: left, bottom: bottom, sx: sx, sy: sy, height: height))
             // Where it shows in the land's points, and how far down the screen its building stands.
             let middle = CGPoint(x: node.position.x + pane.position.x * node.xScale, y: node.position.y + pane.position.y)
             panes.append(Pane(node: pane, box: CGRect(x: middle.x - pane.size.width / 2, y: middle.y - pane.size.height / 2,
@@ -495,6 +498,108 @@ final class LandStage {
     }
     private var panes: [Pane] = []
     private var paneTimer: TimeInterval = 0
+
+    /// Something set down that can stand in front of a lit window (`hidePanesBehindScenery`): its
+    /// node and the picture it was set down with.
+    private struct Occluder {
+        let node: SKSpriteNode
+        let picture: CGImage
+    }
+    private var occluders: [Occluder] = []
+
+    /// A lit window as `addWindows` cut it: its sprite and glow, its building, its box in the windows
+    /// picture's pixels (from the top left) and how that picture lies on the building.
+    private struct LitPane {
+        let pane: SKSpriteNode
+        let halo: SKSpriteNode
+        let building: SKSpriteNode
+        let box: CGRect
+        let picture: CGImage
+        let left: CGFloat
+        let bottom: CGFloat
+        let sx: CGFloat
+        let sy: CGFloat
+        let height: CGFloat
+    }
+    private var litPanes: [LitPane] = []
+
+    /// Cuts out of each lit window whatever stands in front of it (the user, 2026-11-25: "whenever
+    /// another building sits in front of it, it doesn't block the window"): drawn above the night's
+    /// shade, a pane showed through a house, a tree or a wall nearer you. Once, after everything is
+    /// set down: each pane pixel under an opaque pixel of something sorted in front of its building
+    /// is cleared; a pane hidden whole is taken away, and a glow dimmed by how much of its pane is left.
+    private func hidePanesBehindScenery() {
+        defer {
+            litPanes = []
+            occluders = []
+        }
+        guard !litPanes.isEmpty else { return }
+        var cache: [ObjectIdentifier: (w: Int, h: Int, bytes: [UInt8])] = [:]
+        func pixels(_ image: CGImage) -> (w: Int, h: Int, bytes: [UInt8])? {
+            let key = ObjectIdentifier(image)
+            if let known = cache[key] { return known }
+            guard image.width > 0, image.height > 0,
+                  let bytes = PixelImage.pixels(of: image, width: image.width, height: image.height) else { return nil }
+            let made = (w: image.width, h: image.height, bytes: bytes)
+            cache[key] = made
+            return made
+        }
+        // Whether `o` has an opaque pixel at `point` (in the land's points). Only upright, unscaled ones.
+        func covers(_ o: Occluder, _ point: CGPoint) -> Bool {
+            let n = o.node
+            guard n.xScale == 1, n.yScale == 1, n.size.width > 0, n.size.height > 0 else { return false }
+            let u = (point.x - n.position.x) / n.size.width + n.anchorPoint.x
+            let v = (point.y - n.position.y) / n.size.height + n.anchorPoint.y
+            guard u >= 0, u < 1, v >= 0, v < 1, let px = pixels(o.picture) else { return false }
+            let x = Int(u * CGFloat(px.w)), y = Int((1 - v) * CGFloat(px.h))
+            guard x >= 0, x < px.w, y >= 0, y < px.h else { return false }
+            return px.bytes[(y * px.w + x) * 4 + 3] > 127
+        }
+        var gone: Set<ObjectIdentifier> = []
+        for lit in litPanes {
+            let building = lit.building
+            guard building.xScale == 1, building.yScale == 1 else { continue }
+            func land(_ px: CGFloat, _ py: CGFloat) -> CGPoint {
+                CGPoint(x: building.position.x + lit.left + px * lit.sx, y: building.position.y + lit.bottom + (lit.height - py) * lit.sy)
+            }
+            let a = land(lit.box.minX, lit.box.minY), b = land(lit.box.maxX, lit.box.maxY)
+            let area = CGRect(x: min(a.x, b.x), y: min(a.y, b.y), width: abs(b.x - a.x), height: abs(b.y - a.y))
+            let front = occluders.filter {
+                $0.node !== building && $0.node.zPosition > building.zPosition && $0.node.frame.intersects(area)
+            }
+            guard !front.isEmpty, let own = pixels(lit.picture) else { continue }
+            let x0 = Int(lit.box.minX), y0 = Int(lit.box.minY)
+            let cols = Int(lit.box.width), rows = Int(lit.box.height)
+            guard cols > 0, rows > 0 else { continue }
+            var out = [UInt8](repeating: 0, count: cols * rows * 4)
+            var shown = 0, total = 0
+            for j in 0..<rows {
+                for i in 0..<cols {
+                    let sx = x0 + i, sy = y0 + j
+                    guard sx >= 0, sx < own.w, sy >= 0, sy < own.h else { continue }
+                    let source = (sy * own.w + sx) * 4
+                    guard own.bytes[source + 3] > 0 else { continue }
+                    total += 1
+                    let at = land(CGFloat(sx) + 0.5, CGFloat(sy) + 0.5)
+                    if front.contains(where: { covers($0, at) }) { continue }
+                    shown += 1
+                    for c in 0..<4 { out[(j * cols + i) * 4 + c] = own.bytes[source + c] }
+                }
+            }
+            guard shown < total else { continue }
+            if shown == 0 {
+                lit.pane.removeFromParent()
+                gone.insert(ObjectIdentifier(lit.pane))
+                continue
+            }
+            guard let image = PixelImage.make(out, width: cols, height: rows) else { continue }
+            let texture = SKTexture(cgImage: image)
+            texture.filteringMode = .nearest
+            lit.pane.texture = texture
+            lit.halo.alpha *= CGFloat(shown) / CGFloat(total)
+        }
+        if !gone.isEmpty { panes.removeAll { gone.contains(ObjectIdentifier($0.node)) } }
+    }
     /// The windows of each windows picture, in its pixels from its top left: panes within two pixels
     /// of each other are one window.
     private var windowBoxCache: [String: [CGRect]] = [:]
@@ -684,6 +789,7 @@ final class LandStage {
         }
         chunk(at: node.position).addChild(node)
         see.note(node)
+        occluders.append(Occluder(node: node, picture: art.picture(of: sprite.texture)))
         // Everything set down on flat ground casts shade, merged and cast away from the sun (on a hill
         // or the sunk shore, a prop with `shadow` keeps its round one: `plant`).
         if map.hillIndex(at: cell) == nil, !map.isSunken(cell) {

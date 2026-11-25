@@ -60,10 +60,16 @@ def toned(water_rgb):
     and the shallows' as they are, tinted a little toward it."""
     ref = brightness(TONES[3])
     # The tile's own colour is its lightest ripples' too: tone 3, the shore's, a little under it.
+    # A warm liquid (chocolate) darkens toward cocoa and lightens toward a creamy sheen instead.
+    warm = water_rgb[0] > water_rgb[2] + 0.08
     water_rgb = water_rgb * 0.88
     out = TONES.copy()
-    deep = water_rgb * 0.45 + np.array([0.02, 0.05, 0.08])
-    pale = water_rgb + (np.array([0.86, 0.96, 0.95]) - water_rgb) * 0.75
+    if warm:
+        deep = water_rgb * np.array([0.45, 0.4, 0.38])
+        pale = water_rgb + (np.array([1.0, 0.86, 0.72]) - water_rgb) * 0.55
+    else:
+        deep = water_rgb * 0.45 + np.array([0.02, 0.05, 0.08])
+        pale = water_rgb + (np.array([0.86, 0.96, 0.95]) - water_rgb) * 0.75
     for k in range(7):
         f = brightness(TONES[k]) / ref
         if f <= 1:
@@ -71,7 +77,9 @@ def toned(water_rgb):
         else:
             top = brightness(TONES[6]) / ref
             out[k] = water_rgb + (pale - water_rgb) * (f - 1) / (top - 1)
-    out[7] = (TONES[7] + water_rgb) / 2
+    out[7] = water_rgb * 1.08 if warm else (TONES[7] + water_rgb) / 2
+    own = 0.45 if warm else 0.25
+    out[8:10] = TONES[8:10] * (1 - own) + water_rgb * own
     return np.clip(out, 0, 1)
 
 
