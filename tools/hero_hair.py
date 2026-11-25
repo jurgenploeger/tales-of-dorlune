@@ -154,7 +154,8 @@ def real_ear(diff, f):
     # head pixels laid over the hair showed as skin under the ear (the user, 2026-11-25)
     far = ~ndimage.binary_dilation(f[..., 3] > 0, np.ones((3, 3), bool))
     rows = (diff & far).any(1)
-    return diff & rows[:, None]
+    # and wherever the head is clear: the hair, grown a pixel round the head, covered the ear's edge there
+    return (diff & rows[:, None]) | (diff & (f[..., 3] == 0))
 
 def lone_specks(img):
     """Opaque pixels with no opaque neighbour, cleared."""
@@ -218,7 +219,7 @@ def wear_style(style, anim, race="human"):
                 # goes over it and only what stands out past the head shows (2026-11-25)
                 if top is not None and not d.startswith("up"):
                     band = np.zeros_like(ear); band[max(top + sh[0], 0):] = True
-                    keep = ear & band
+                    keep = (ear & band) | (ear & (f[..., 3] == 0))   # past the head: always the ear
                     w = w.copy(); w[keep] = e[keep]
             out[sl] = lone_specks(w)
     return out
