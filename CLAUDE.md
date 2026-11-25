@@ -371,6 +371,11 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   on the CPU, as a shader for it didn't take on a phone and the reflections lay over the land).
   It replaced a generated tile that repeated every 16 pixels; rerun it
   after editing, `--preview out.png` shows them turned as the game draws them.
+- `tools/float_art.py`: what floats on the lakes, rivers and ponds (the user, 2026-11-25, after ZeFrost's pond): petals,
+  a blossom and a leaf (`float_*`, `LandPlan.planFloaters`, `LandStage.placeFloaters`), each bobbing a whole pixel over
+  the water's pale line round it (`rim_<id>`, the lower half of its outline, which stays put); the lily pad and the
+  shallows' rocks (`water_rock` and `_2` to `_4`, a slab, a pair and a spire, `tools/scenery_art.py`) get one too, a
+  rock's lapping. Rerun it after redrawing anything in `RIMMED`; `--sheet out.png` previews them.
 - `tools/fx_art.py`: the same for the few battle marks that aren't light (`art/sprites/fx_*.png`: poison's bubble
   and the glossy marks by the HP bars, drawn smooth at 3×: poison's drop and the arrows for lowered and raised
   stats). `--sheet out.png` writes a contact sheet. Spells are light, not sprites:
