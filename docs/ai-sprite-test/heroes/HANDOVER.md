@@ -369,6 +369,12 @@ One doll, end to end (it was the Human Male pilot until 2026-11-24).
     narrower the doll's pixels go (`hero64_doll_ears_walk_up_cut.png`, applied by `hero_ears.row_cut` before the ears),
     and only the head is lifted, the doll's own neck kept (ChatGPT's came out muddy, the user). Walk now has ears in
     every direction.
+44. **Idle ears grown to the walk's** (2026-11-25): on the map the ears grew as he started walking (the user): past
+    the doll's outline walking up 39 to 56 pixels against idle's 26, down 40 to 52 against 26, right 18 to 25 against
+    11. The walk's whole ear can't go on the standing views (their heads match the walk's only about 35%; it brought
+    the walk head's shading and spoiled the face), so only its pixels outside the standing head, from the walk frame
+    nearest it (up 3, down 1, right 4), were laid over the idle ears; stray single pixels left by the walk head's
+    outline (one by the chin) dropped (the user). Idle now 51, 53 and 25.
  Idle wears it; up-left mirrored.
 
 ## What has gone wrong before (read before prompting)
