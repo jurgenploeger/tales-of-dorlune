@@ -361,7 +361,15 @@ One doll, end to end (it was the Human Male pilot until 2026-11-24).
     with no shift and whose outline was closed) was laid on the standing view as ChatGPT drew it, rows 31 and
     below left as the standing view has them; one pixel missing at its lower edge, (27, 41), was filled with
     the ear's skin (filled with the outline colour it made two dark pixels side by side, the user), and one outline
-    pixel set beside it, (27, 42), so the outer edge stays closed (the user's pick); the dark pixel left inside the ear beside it, (27, 40), turned skin too (the user). Idle wears it; up-left mirrored.
+    pixel set beside it, (27, 42), so the outer edge stays closed (the user's pick); the dark pixel left inside the ear beside it, (27, 40), turned skin too (the user).
+43. **Elf walk up** (2026-11-25): five paintings (`tries/elf_walk_up_try1{a..e}_painting.png`); 2 and 3 stuck the ears
+    out sideways, 4 and 5 drew the head bigger or lower so they lined up 2 to 4 pixels off; painting 1 lined up within a
+    pixel, its ears as big as the standing up elf's. ChatGPT drew the head from behind tapering under the ears, narrower
+    than the doll's, so the doll's wider head and its small human ears showed past it (the user): where its head is
+    narrower the doll's pixels go (`hero64_doll_ears_walk_up_cut.png`, applied by `hero_ears.row_cut` before the ears),
+    and only the head is lifted, the doll's own neck kept (ChatGPT's came out muddy, the user). Walk now has ears in
+    every direction.
+ Idle wears it; up-left mirrored.
 
 ## What has gone wrong before (read before prompting)
 - ChatGPT failed the monster test (`../HANDOVER.md`): drew bigger than asked (44 to 48 px for 35), and the
