@@ -41,7 +41,7 @@ def lift(S, M):
     dy, dx = align(S, M)
     S = np.roll(np.roll(S, dy, 0), dx, 1)
     hm = np.zeros(S.shape[:2], bool)
-    for y in range(40):
+    for y in range(64):       # the whole frame: long hair reaches the shoulders and back
         for x in range(64):
             hm[y, x] = hairy(S[y, x].astype(int))
     lab, n = ndimage.label(hm)
