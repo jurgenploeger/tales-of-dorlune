@@ -234,7 +234,8 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   `art-variants/cave_mouth/` to 128 × 80 (`PICKED`): the plain one, the Rat Cavern's, the Gooey Grotto's and the
   Glimmerdeep's (`WorldMap.mouthArt`; the Whispering Hollow's not drawn yet, the plain one meanwhile). Laid over
   the crag's rock face by `LandStage.placeMouth`, sheared to lean with the face, so `HillArt` paints no arch there
-  (`Hill.Mouth.pictured`, on the continent).
+  (`Hill.Mouth.pictured`, on the continent). In a land of terraced hills the crag round it is terraced too, its first level
+  and its wall as high as the picture (`WorldMap.mouthTop`), so the plateau's edge runs level with the opening's top.
 - `tools/prop_art.py`: the same for the few props a generated sprite got wrong (`candy_cane`, whose hook came out
   as a two-sided arch) or none was made for (the harbors' `ship`, built in 3D and projected as the game's view is,
   then lit and finished as the buildings are and held to their bands, `form_relief` too;

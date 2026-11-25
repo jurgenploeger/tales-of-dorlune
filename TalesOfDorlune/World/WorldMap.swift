@@ -238,6 +238,10 @@ nonisolated final class WorldMap: @unchecked Sendable {
     /// The picture of a cave's mouth (ChatGPT's, `tools/cave_mouth_art.py`, the user, 2026-11-25: "the gates
     /// should look more like a cave opening instead of a black gap"), by the cave: each its own, else the
     /// plain one, laid over its rock face by `LandStage.placeMouth`.
+    /// How tall a cave mouth's picture stands, in points (its 80 pixels, less the ragged rocks along its
+    /// top): a terraced crag's first level and its wall stand this high (`raiseGate`).
+    static let mouthTop = 78.0
+
     static func mouthArt(for cave: String) -> String {
         switch cave {
         case "rat_cavern": "cave_mouth_rat"
@@ -1846,8 +1850,13 @@ nonisolated final class WorldMap: @unchecked Sendable {
         // side, then tapering away, the end away from you (up the map) slowly enough to stay in sight.
         let mouth = Hill.Mouth(x: foot.x, y: foot.y, along: along, into: inward, half: 1.3, depth: 2, beside: false)
         hill.mouth = mouth
+        // In a land of terraced hills, terraced too, its first level as high as the mouth's picture, so the
+        // plateau's edge runs level with the top of the opening (the user, 2026-11-25: "for the caves we
+        // also should have the plateau leveling with the cave entrance"); the wall in front that high.
+        let terraced = def.theme.hills?.terraces != nil
+        if terraced { hill.terrace = Self.mouthTop }
         hill.wall = Hill.Wall(x: mouth.x, y: mouth.y, along: mouth.along, into: mouth.into, base: nil, reach: mouth.half + 1.2,
-                              taper: (toward: 3.0, away: 6.0), run: 0.8, rise: 60, fall: 10)
+                              taper: (toward: 3.0, away: 6.0), run: 0.8, rise: terraced ? Self.mouthTop : 60, fall: 10)
         // Every cell any of it rises over: a box round its summits and its wall.
         var low = (x: foot.x - 6, y: foot.y - 6), high = (x: foot.x + 6, y: foot.y + 6)
         for lobe in lobes {
