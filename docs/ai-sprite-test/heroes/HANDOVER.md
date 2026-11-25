@@ -412,7 +412,8 @@ One doll, end to end (it was the Human Male pilot until 2026-11-24).
     user picked 5, the broadest: its pixels outside the standing head and over the old ears' spots inside it make
     `hero64_doll_ears_up.png`. The walk and attack up laid on the human head with these ears came out messy (the
     human's little ears sit at the head's widest rows, and smoothing them shaved the head), so they stay as they
-    were for now.
+    were for now; ChatGPT is to repaint them with these ears (the user). The right ear's foot had a doubled outline
+    (28 and 29, 41-42); the inner column was given the skin beside it, as the left ear has (the user).
  Idle wears it; up-left mirrored.
 
 ## What has gone wrong before (read before prompting)
