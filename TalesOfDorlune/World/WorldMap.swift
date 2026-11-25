@@ -125,7 +125,9 @@ nonisolated final class WorldMap: @unchecked Sendable {
     /// Its roads' and trails' middles as carved (`carve`), a spot every quarter of a cell along each
     /// curve with its half width there, in grid cells, and the cells they painted (`curvedRoad`):
     /// `GroundTiles` draws their edges from the curves, smooth, not round the cells.
-    private(set) var roadSpots: [(x: Double, y: Double, half: Double)] = []
+    private(set) var roadSpots: [(x: Double, y: Double, half: Double, road: Int)] = []
+    /// How many roads and footpaths have been curved (`roadSpots`' `road`, each its own number).
+    private var curvesLaid = 0
     private(set) var curvedRoad: Set<GridPoint> = []
     /// Whether `paintRoad` is painting along a carved curve now (`curvedRoad`).
     private var carvingCurve = false
@@ -1189,12 +1191,13 @@ nonisolated final class WorldMap: @unchecked Sendable {
                 // door's meets it cell for cell; swelling and narrowing again beyond.
                 let settle = crossing.map { min(1, max(0, point.distance(to: $0) - CGFloat(Self.crossingSteady)) / 5) } ?? 1
                 let halfWidth = fenced ? base : base + base / 3 * sin(travelled / 6) * settle
-                roadSpots.append((Double(point.x), Double(point.y), Double(halfWidth)))
+                roadSpots.append((Double(point.x), Double(point.y), Double(halfWidth), curvesLaid))
                 carvingCurve = true
                 paintRoad(around: point, radius: halfWidth)
                 carvingCurve = false
             }
         }
+        curvesLaid += 1
     }
 
     /// How many cells in from where a road crosses into the land next door it keeps its plain width,
@@ -3021,10 +3024,11 @@ nonisolated final class WorldMap: @unchecked Sendable {
             let steps = max(1, Int((hypot(b.x - a.x, b.y - a.y) * 4).rounded(.up)))
             for step in 0..<steps {
                 let t = Double(step) / Double(steps)
-                roadSpots.append((a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t, Self.footpathHalf))
+                roadSpots.append((a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t, Self.footpathHalf, curvesLaid))
             }
         }
-        if let last = points.last { roadSpots.append((last.x, last.y, Self.footpathHalf)) }
+        if let last = points.last { roadSpots.append((last.x, last.y, Self.footpathHalf, curvesLaid)) }
+        curvesLaid += 1
         for cell in chain where contains(cell) && ground[cell.row][cell.col] == .path { curvedRoad.insert(cell) }
     }
 

@@ -325,7 +325,8 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   layer the spots reaching it (`roadSpots`, every other one, `roadVerge` 0.2 past the painted width) and
   `ArtLibrary.organicTile` draws the edge as their distance, swaying a little by where it lies, the strokes
   between painted cells dropped (to a place's earth kept). Each such edge tile is its own. Footpaths too
-  (`WorldMap.curveFootpath`: a footpath's cells' middles smoothed three times, `footpathHalf`). Every path's edge is
+  (`WorldMap.curveFootpath`: a footpath's cells' middles smoothed three times, `footpathHalf`). Where two meet, their
+  edges round into each other (`ArtLibrary.smoothMax` over each road's own depth, `roadFillet` 1.4; each spot knows its `road`). Every path's edge is
   natural (the user, 2026-11-25: "like pieces of grass or stones covering the edges"): the grass beside growing over it
   in blades (`bladeReach`) and pebbles along it half on and half off (`ArtLibrary.edgePebble`); a town street's edge
   sways in a four-cell pattern (its tiles still made for 16 places, `cobblePhase`), its pebbles in the same pattern.

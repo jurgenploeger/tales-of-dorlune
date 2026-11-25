@@ -412,6 +412,22 @@ final class ArtLibrary {
         let x: Double
         let y: Double
         let half: Double
+        /// Which road or footpath it's on: where two meet, their edges round into each other.
+        let road: Int
+    }
+
+    /// How far round two roads' edges flare into each other where they meet (`organicTile`), in cells:
+    /// joined as a plain union, a road met another at a hard corner (the user, 2026-11-25: "should curve
+    /// more naturally to the other sides when it connects here").
+    nonisolated static let roadFillet = 1.4
+
+    /// The greater of two depths, rounded off where they're within `k` of each other (a polynomial
+    /// smooth maximum).
+    nonisolated static func smoothMax(_ a: Double, _ b: Double, _ k: Double) -> Double {
+        guard a > -.infinity else { return b }
+        guard b > -.infinity else { return a }
+        let h = max(k - abs(a - b), 0) / k
+        return max(a, b) + h * h * k / 4
     }
 
     /// A land next door, for its tiles (`GroundLayer.from`).
@@ -1187,10 +1203,20 @@ final class ArtLibrary {
                         if !layer.curves.isEmpty {
                             // Its edge wanders a little along the road, by where it lies, not every tile alike.
                             let sway = 0.5 * Self.wobble(x, y, style: .water, cell: cell)
+                            // Each road's own depth the deepest of its spots; the roads' together rounded
+                            // off where they meet (`smoothMax`). The spots come a road at a time.
+                            var joined = -Double.infinity, own = -Double.infinity
+                            var road = layer.curves[0].road
                             for spot in layer.curves {
+                                if spot.road != road {
+                                    joined = Self.smoothMax(joined, own, Self.roadFillet)
+                                    own = -.infinity
+                                    road = spot.road
+                                }
                                 let dx = x - spot.x, dy = y - spot.y
-                                deepest = max(deepest, spot.half + sway - (dx * dx + dy * dy).squareRoot())
+                                own = max(own, spot.half + sway - (dx * dx + dy * dy).squareRoot())
                             }
+                            deepest = max(deepest, Self.smoothMax(joined, own, Self.roadFillet))
                         }
                         depth = deepest
                     }
