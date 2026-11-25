@@ -54,4 +54,6 @@ the grid if they come back big (`tools/ai_sprite_eval.py`), with the camp's scal
 
 ## Results
 
-(none yet)
+- **2026-11-25**: `torn_tent` back as asked (48 × 48, 40 wide, 31 tall, lowest row 44, 25 colours, alpha 0 or 255),
+  copied as delivered (`tools/lair_art.py` `PICKED`); the camps set it down at 1, not 1.3. `camp_tent` not asked for:
+  the camps keep the torn one.
