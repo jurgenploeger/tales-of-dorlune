@@ -407,6 +407,12 @@ One doll, end to end (it was the Human Male pilot until 2026-11-24).
     them, their red inner pixels given the skin beside them (`tools/hero_ears_up_smooth.py`, the user's pick). The
     attack row's ears and cut files are taken from it; ChatGPT's attack up elf paintings are no longer used. The walk
     up keeps item 43's.
+50. **Idle up ears tilted outward** (2026-11-25): in a loop the ears facing up pointed straight up; the user wanted
+    them more outward. Five ChatGPT paintings tilted at about 45° (`tries/elf_up_try2{a..e}_painting.png`); the
+    user picked 5, the broadest: its pixels outside the standing head and over the old ears' spots inside it make
+    `hero64_doll_ears_up.png`. The walk and attack up laid on the human head with these ears came out messy (the
+    human's little ears sit at the head's widest rows, and smoothing them shaved the head), so they stay as they
+    were for now.
  Idle wears it; up-left mirrored.
 
 ## What has gone wrong before (read before prompting)
