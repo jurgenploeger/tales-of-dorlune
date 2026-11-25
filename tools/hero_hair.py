@@ -90,7 +90,7 @@ def style_view(style, d):
 def wear_style(style, anim, race="human"):
     """The doll's (or the elf's) sheet with the style on every frame of every direction drawn so far: the standing
     view's hair moved with the head (hero_ears.fit), over clear pixels and the head (hero_ears.wear: a raised arm
-    stays in front); on the elf, its ears go back over the hair."""
+    stays in front); on the elf, over the elf's frame, so the hair covers the ears' roots."""
     import hero_ears as he, hero_template as t
     n = t.ANIMS[anim]
     doll = np.asarray(Image.open(os.path.join(he.HEROES, f"hero64_doll_{anim}.png")).convert("RGBA"))
@@ -106,12 +106,10 @@ def wear_style(style, anim, race="human"):
             f = doll[sl]
             if not f[..., 3].any():
                 continue
-            w = he.wear(f, hair, he.fit(f, ref), ref)
-            if elf is not None:
-                e = elf[sl]
-                ear = (e[..., 3] > 0) & ((e != f).any(2))
-                w = w.copy(); w[ear] = e[ear]
-            out[sl] = w
+            # on the elf the hair goes over the elf's frame: the walk and attack ears layers carry ChatGPT's own
+            # head pixels round the ears, and laid back over the hair they showed through it as skin and specks
+            # (the user, 2026-11-25)
+            out[sl] = he.wear(elf[sl] if elf is not None else f, hair, he.fit(f, ref), ref)
     return out
 
 if __name__ == "__main__" and sys.argv[1] == "wear":
