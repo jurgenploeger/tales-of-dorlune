@@ -236,7 +236,8 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   the crag's rock face by `LandStage.placeMouth`, sheared to lean with the face, so `HillArt` paints no arch there
   (`Hill.Mouth.pictured`, on the continent). In a land of terraced hills the crag round it is terraced too, its first level
   and its wall as high as the picture (`WorldMap.mouthTop`), so the plateau's edge runs level with the opening's top. Its floor runs into the road in front:
-  the picture sunk 6 points onto it, its bottom 8 rows dithered out across the opening (`LandStage.fadeFloor`).
+  the picture sunk 6 points onto it, its bottom 8 rows dithered out across the opening (`LandStage.fadeFloor`). It casts a hard
+  shadow on the face behind, down and right in two steps, so its rocks stand off the rock (`placeMouth`).
 - `tools/prop_art.py`: the same for the few props a generated sprite got wrong (`candy_cane`, whose hook came out
   as a two-sided arch) or none was made for (the harbors' `ship`, built in 3D and projected as the game's view is,
   then lit and finished as the buildings are and held to their bands, `form_relief` too;

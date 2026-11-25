@@ -1928,6 +1928,19 @@ final class LandStage {
         let foot = WorldMap.project(CGPoint(x: mouth.x * tile, y: mouth.y * tile))
         node.position = CGPoint(x: foot.x.rounded(), y: (foot.y + hill.height(atCells: mouth.x, mouth.y)).rounded() - Self.mouthSink)
         node.zPosition = -foot.y - 1
+        // It stands off the face (the user, 2026-11-25: "add some depth to the cave entrance drawing,
+        // because it shows flat now while they are rocks"): its rocks cast a hard shadow on the rock behind,
+        // down and to the right, away from the light, in two steps, a near one darker, a far one fainter.
+        for (offset, darkness) in [(CGFloat(4), CGFloat(0.16)), (CGFloat(2), CGFloat(0.32))] {
+            let shadow = SKSpriteNode(texture: texture, size: size)
+            shadow.anchorPoint = node.anchorPoint
+            shadow.color = .black
+            shadow.colorBlendFactor = 1
+            shadow.alpha = darkness
+            shadow.position = CGPoint(x: offset, y: -offset)
+            shadow.zPosition = -0.001 * offset
+            node.addChild(shadow)
+        }
         chunk(at: node.position).addChild(node)
     }
 
