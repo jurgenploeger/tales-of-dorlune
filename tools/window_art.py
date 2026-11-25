@@ -7,7 +7,8 @@ while the house dims. Retro Diffusion's art stays as it is.
 A window pixel is warm and bright (a lit pane's yellow). Thatch, gold trim and lantern-lit awnings are too, so
 only small patches of them count (`BIGGEST` pixels at most, a pane or a small window; a thatched roof is one
 patch of hundreds), and `SKIP` names what has no windows to light (gates, fences, tents and stalls, and the
-few whose roofs still came through). The forge keeps its own fire (`tools/fire_art.py`).
+few whose roofs still came through). The forge and the brazier keep their own fire (`tools/fire_art.py`): a still
+copy of the flame over it at night hid the flame moving.
 
     python3 tools/window_art.py              # writes art/sprites/windows_<id>.png and lists the ids
     python3 tools/window_art.py --sheet out.png
@@ -76,8 +77,8 @@ BOXES = {"thatched_cottage": [(60, 96, 0, 96)],
 # Windows the warm rule can't find (Retro Diffusion drew their glass dim, orange or dark, and a few of ChatGPT's
 # panes carry mullions that split them): every pixel in each box is lit, laid on a lamplight ramp by how light it
 # is in the box (`paint`), so the frames and mullions stay darker. Rows y0 to y1, columns x0 to x1.
-PAINT = {"house": [(44, 55, 29, 35), (44, 55, 61, 67)],
-         "inn": [(41, 50, 64, 70), (52, 64, 46, 53), (56, 65, 59, 71)],
+PAINT = {"house": [(47, 62, 27, 37), (47, 62, 59, 70)],
+         "inn": [(43, 52, 62, 70), (55, 66, 45, 52), (55, 66, 58, 72)],
          "dwarf_cottage": [(32, 40, 45, 51), (45, 52, 33, 38), (45, 52, 58, 63), (59, 66, 25, 30), (59, 66, 64, 69)],
          "crooked_house": [(40, 50, 32, 40), (36, 42, 62, 66)],
          "fisher_shack": [(41, 62, 18, 22)],
@@ -85,12 +86,16 @@ PAINT = {"house": [(44, 55, 29, 35), (44, 55, 61, 67)],
          "sandstone_house": [(44, 56, 27, 36), (66, 78, 27, 36)],
          "spice_shop": [(64, 76, 25, 35)]}
 DEEP, PALE = np.array([205, 105, 40]), np.array([255, 238, 160])
+# Which pixels of a `PAINT` box are the glass (the user, 2026-11-25: lit as whole boxes, the inn's slanted
+# windows lit the plaster round them and the round house's lit its wall above them): the house's dark holes,
+# the inn's orange panes. Others light the whole box.
+GLASS = {"house": "dark", "inn": "warm"}
 
 # Lights (the user, 2026-11-22: "fires, lanterns, street lights and anything else that could have light in the
 # evening/night should be lit up"): what glows of each, cut as a window is and laid above the night's shade with a
 # soft glow round it (`LandStage.addWindows`). A lit pixel is bright (value from `v`) and coloured (saturation from
 # `s`), or a white-hot core beside one; `boxes` keeps it to the light (a torch's flame, not its pole).
-LIGHTS = {"street_lamp": {}, "brazier": {}, "wall_torch": {}, "wall_torch_2": {}, "wall_torch_3": {}, "wall_torch_4": {},
+LIGHTS = {"street_lamp": {}, "wall_torch": {}, "wall_torch_2": {}, "wall_torch_3": {}, "wall_torch_4": {},
           "tiki_torch": {"boxes": [(0, 13, 8, 24)]}, "moon_lantern_post": {}, "spooky_lantern": {}, "wisp_lantern": {},
           "stone_lantern": {}, "mine_lantern_post": {"boxes": [(25, 36, 18, 28)]},
           "firefly_jar_post": {"boxes": [(20, 36, 16, 28)]}, "magic_lamp": {"boxes": [(0, 13, 0, 32)]},
@@ -135,6 +140,21 @@ def paint(name):
     for y0, y1, x0, x1 in PAINT[name]:
         box = (slice(y0, y1), slice(x0, x1))
         solid = im[box][..., 3] > 0
+        rgb = im[box][..., :3] / 255
+        top, low = rgb.max(-1), rgb.min(-1)
+        sat = np.where(top > 0, (top - low) / np.maximum(top, 1e-6), 0)
+        if GLASS.get(name) == "dark":
+            # The glass is the darkest of it, inside the frame: the biggest patch under the frame's shade.
+            dark = solid & (luma[box] < 55)
+            labels, count = ndimage.label(dark)
+            if count:
+                sizes = ndimage.sum(dark, labels, range(1, count + 1))
+                dark = labels == (1 + int(np.argmax(sizes)))
+            solid = dark
+        elif GLASS.get(name) == "warm":
+            solid &= (sat > 0.4) & (rgb[..., 0] > rgb[..., 2]) & (luma[box] > 80)
+            # The highlights between its panes too, where glass lies on both sides.
+            solid |= (im[box][..., 3] > 0) & (luma[box] > 170) & ndimage.binary_closing(solid, iterations=1)
         if not solid.any():
             continue
         lo, hi = luma[box][solid].min(), luma[box][solid].max()

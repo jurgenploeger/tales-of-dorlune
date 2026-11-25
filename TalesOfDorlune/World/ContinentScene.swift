@@ -2334,6 +2334,11 @@ final class ContinentScene: SKScene {
             float gap = fract(sin(dot(floor(pixel / 10.0) + swell * 3.17, vec2(12.9898, 78.233))) * 43758.5453);
             float reach = clamp((2.8 - d) / 0.9, 0.0, 1.0) * clamp((d - 0.3) / 0.45, 0.0, 1.0);
             float wave = crest * step(0.35, gap) * reach * 0.5;
+            float lap = 0.08 + 0.05 * sin(u_time * 0.9 + (pixel.x + pixel.y) * 0.045);
+            float speck = fract(sin(dot(floor(pixel / 3.0), vec2(12.9898, 78.233))) * 43758.5453);
+            float edge = step(-0.25, d) * (1.0 - step(lap + 0.1, d)) * step(0.2, speck) * 0.75;
+            float fringe = step(lap + 0.17, d) * (1.0 - step(lap + 0.23, d)) * step(0.55, speck) * 0.4;
+            wave = max(wave, max(edge, fringe));
             vec4 water = vec4(vec3(0.8, 0.96, 0.95) * pale, pale);
             gl_FragColor = vec4(wave) + water * (1.0 - wave);
         }

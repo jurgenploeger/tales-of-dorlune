@@ -51,12 +51,16 @@ struct NPCDialogView: View {
                 Group {
                     // How high they stand over the window's foot: their top, less a little of the
                     // picture's own clear margin, is where what's beside them has to give them room.
+                    // As wide as a menu window (`menuWindowMargins`): inside the safe area, 8 points in from
+                    // it (the user, 2026-11-25: on a phone on its side it ran into the notch's side).
                     bubble(maxHeight: proxy.size.height * 0.5, speakerRoom: portrait * 0.5, speakerRise: portrait * 0.84 - bottom + 6)
-                        .padding(.horizontal, 12)
+                        .padding(.leading, screen.safeAreaInsets.leading + HUDMargins.side)
+                        .padding(.trailing, screen.safeAreaInsets.trailing + HUDMargins.side)
                         .padding(.bottom, bottom)
 
+                    // Standing where the window's corner is, past it to the screen's edge.
                     SpriteImage(art: npc.art, size: portrait)
-                        .offset(x: portrait * 0.22, y: portrait * 0.16)
+                        .offset(x: portrait * 0.22 - screen.safeAreaInsets.trailing, y: portrait * 0.16)
                         .allowsHitTesting(false)
                         .accessibilityHidden(true)
                 }

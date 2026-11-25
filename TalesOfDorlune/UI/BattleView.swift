@@ -1,10 +1,10 @@
 import SwiftUI
 import UIKit
 
-/// Battle HUD: what just happened in a slim line top centre, the time left to choose in a pill by
-/// it, and the commands in a row along the bottom, all one size, your skills among them. How fast
-/// the fight plays and Auto wait behind More. Results at the end. Names, levels, HP and MP sit on
-/// the fighters themselves. No chat in a fight: it's back on the map once the fight is over.
+/// Battle HUD: what just happened in a slim line top centre, the time left to choose in a ring round
+/// your face bottom left (on a phone on its side in a pill by the line), and the commands in a row
+/// along the bottom, all one size, your skills among them. How fast the fight plays and Auto wait
+/// behind More. Results at the end. Names, levels, HP and MP sit on the fighters themselves. No chat in a fight: it's back on the map once the fight is over.
 struct BattleView: View {
     let controller: BattleController
     /// A phone on its side: the line of what just happened can run wider.
@@ -17,8 +17,8 @@ struct BattleView: View {
                 .padding(.horizontal, 8)
                 .padding(.top, 4)
 
-            if controller.phase == .command {
-                LockInStrip(controller: controller)
+            if showsStrip {
+                LockInStrip(controller: controller, ringed: ringed)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
                     .padding(.leading, 14)
                     // Upright, above the commands' row, which can reach across the bottom.
@@ -44,12 +44,31 @@ struct BattleView: View {
         .animation(.spring(response: 0.35, dampingFraction: 0.75), value: controller.isAuto)
     }
 
-    /// Along the top: your party's HP and MP at the left (`PartyPlate`), what just happened in the
-    /// middle, and under them, in a boss fight, how far through its waves you are and the boss's HP.
-    /// Upright, the time to choose's pill in the middle beside your plate and the line under both,
-    /// as wide as ever; on its side, the pill and the line in a row beside the plate, as the
-    /// fighters' heads come up close under the top row there (`BattleScene.layout`). Whatever is
-    /// tallest in the first row, the waves and the boss's bar start under it.
+    /// Upright, with a turn clock: the time to choose runs as a ring round your own face in the
+    /// party's row bottom left (`TurnRing`), not in a pill at the top (the user, 2026-11-25: the top
+    /// of the screen is the monsters' room).
+    private var ringed: Bool {
+        verticalSizeClass != .compact && BattleController.turnSeconds != nil
+    }
+
+    /// The party's faces while you choose: with the commands, and upright with a turn clock in every
+    /// phase of the turn the clock runs in (a list, picking a target), as the pill did.
+    private var showsStrip: Bool {
+        switch controller.phase {
+        case .command: return true
+        case .items, .stones, .target: return ringed
+        case .animating, .finished: return false
+        }
+    }
+
+    /// Along the top: what just happened in the middle, and under it, in a boss fight, how far
+    /// through its waves you are. On its side, your party's HP and MP at the left (`PartyPlate`)
+    /// and the time to choose's pill in a row with the line, as the fighters' heads come up close
+    /// under the top row there (`BattleScene.layout`). Upright, no plate and no pill (the user,
+    /// 2026-11-25, a boss fight's monsters covering each other: "In portrait mode, the hero and
+    /// companion stats at the top can be removed"): your HP and MP are under your feet and the time
+    /// runs round your face bottom left (`TurnRing`). No boss bar either: the boss's HP is on its
+    /// own plate under its feet, as everyone's is (the user, the same day).
     private var topBar: some View {
         VStack(spacing: 6) {
             if verticalSizeClass == .compact {
@@ -65,23 +84,12 @@ struct BattleView: View {
                     .frame(maxWidth: .infinity)
                 }
             } else {
-                // The pill centred on the screen, the plate at the left (`PartyPlate.width` keeps
-                // clear of the pill on the narrowest phone).
-                ZStack(alignment: .topLeading) {
-                    clockPill
-                        .frame(maxWidth: .infinity)
-                    PartyPlate(controller: controller)
-                }
                 logLine
                     .frame(minHeight: Self.topRowHeight)
                     .frame(maxWidth: 360)
             }
             if controller.waveCount > 1 {
                 WaveTracker(wave: controller.wave, total: controller.waveCount)
-            }
-            if let boss = controller.boss {
-                BossBar(boss: boss)
-                    .transition(.opacity)
             }
         }
         .frame(maxWidth: .infinity)
@@ -294,60 +302,42 @@ private struct PartyPlate: View {
     }
 }
 
-/// The boss's HP along the top while it's on the field: its name in gold and its level over a long
-/// red bar that drains with every blow (its own plate under its feet is as small as its wave's).
-private struct BossBar: View {
-    let boss: Combatant
-
-    var body: some View {
-        let level = L("Lv{level}", ["level": boss.level])
-        VStack(spacing: 3) {
-            HStack(spacing: 6) {
-                Text(boss.name)
-                    .font(HUDStyle.font(12))
-                    .foregroundStyle(HUDStyle.gold)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.75)
-                Text(level)
-                    .font(HUDStyle.font(10).monospacedDigit())
-                    .foregroundStyle(HUDStyle.cream)
-                    .fixedSize()
-            }
-            GlossyBar(fraction: CGFloat(boss.hpFraction), color: HUDStyle.hp, height: 9)
-                .animation(.easeOut(duration: 0.35), value: boss.hpFraction)
-        }
-        .frame(width: 240)
-        .padding(.horizontal, 12)
-        .padding(.vertical, 5)
-        .background(
-            RoundedRectangle(cornerRadius: 12)
-                .fill(HUDStyle.ink.opacity(0.85))
-                .overlay(RoundedRectangle(cornerRadius: 12).strokeBorder(HUDStyle.gold.opacity(0.7), lineWidth: 1.5))
-        )
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel("\(boss.name), \(level), \(L("HP")) \(Int((boss.hpFraction * 100).rounded()))%")
-    }
-}
-
 /// While you choose, your party's faces bottom left, each ticked once that one has locked in their
 /// move: your friends one by one as the time to choose runs (`BattleController.lockIns`), you when
 /// you've chosen. Your side acts in the order it chose, as in Fairyland Online, so the ticks show who
-/// you'd go before. Only with friends at your side.
+/// you'd go before. Only with friends at your side, or upright with a turn clock (`ringed`), when
+/// your own face wears the time left as a ring (`TurnRing`), alone without friends.
 private struct LockInStrip: View {
     let controller: BattleController
+    /// The time to choose as a ring round your face.
+    var ringed = false
 
     var body: some View {
-        if let lockIns = controller.lockIns {
-            TimelineView(.periodic(from: lockIns.since, by: 0.25)) { context in
+        let lockIns = controller.lockIns
+        if lockIns != nil || ringed {
+            TimelineView(.periodic(from: lockIns?.since ?? Date(), by: 0.25)) { context in
                 HStack(spacing: 5) {
-                    ForEach(controller.choosers) { fighter in
-                        face(fighter, ready: fighter.isHero
-                             ? controller.choosingForCompanion
-                             : lockIns.friends[fighter.id].map { context.date >= lockIns.since.addingTimeInterval($0 * lockIns.window) } ?? false)
+                    ForEach(lockIns == nil ? controller.choosers.filter(\.isHero) : controller.choosers) { fighter in
+                        if ringed && fighter.isHero {
+                            face(fighter, ready: isReady(fighter, at: context.date))
+                                .padding(TurnRing.inset)
+                                .overlay {
+                                    TurnRing(deadline: controller.turnDeadline, window: BattleController.turnSeconds ?? 10)
+                                }
+                        } else {
+                            face(fighter, ready: isReady(fighter, at: context.date))
+                        }
                     }
                 }
             }
         }
+    }
+
+    /// You once you've chosen; a friend once the time to choose has run to their share of it.
+    private func isReady(_ fighter: Combatant, at date: Date) -> Bool {
+        if fighter.isHero { return controller.choosingForCompanion }
+        guard let lockIns = controller.lockIns, let share = lockIns.friends[fighter.id] else { return false }
+        return date >= lockIns.since.addingTimeInterval(share * lockIns.window)
     }
 
     private func face(_ fighter: Combatant, ready: Bool) -> some View {
@@ -379,7 +369,51 @@ private struct LockInStrip: View {
     }
 }
 
-/// The time left to choose, top centre in a dark pill like the map's (`mapPill`): an hourglass and
+/// The time left to choose as a ring round your face in the party's row, upright (`LockInStrip`;
+/// the user, 2026-11-25: "The timer at the top should be incorporated as a circle line around the
+/// little hero avatar in the bottom left corner"): gold on a dark track, emptying from the top as
+/// the time runs, red for the last three seconds, as the pill was. With Reduce Motion it steps a
+/// whole second at a time instead of sweeping. Unseen while no clock ticks.
+private struct TurnRing: View {
+    let deadline: Date?
+    /// The whole time a turn gives, in seconds: the ring is full at it.
+    let window: TimeInterval
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    /// How far the ring stands out round the 32-point face (its stroke clear of the face's rim).
+    static let inset: CGFloat = 6
+    private static let lineWidth: CGFloat = 3.5
+
+    var body: some View {
+        TimelineView(.animation(minimumInterval: reduceMotion ? 0.25 : nil, paused: deadline == nil)) { context in
+            let left = deadline.map { max(0, $0.timeIntervalSince(context.date)) } ?? 0
+            let seconds = Int(left.rounded(.up))
+            let shown = reduceMotion ? Double(seconds) : left
+            let share = CGFloat(min(1, shown / max(window, 1)))
+            let urgent = deadline != nil && left <= TurnClockPill.urgentSeconds
+            ZStack {
+                Circle()
+                    .stroke(HUDStyle.ink.opacity(0.6), lineWidth: Self.lineWidth)
+                Circle()
+                    .trim(from: 0, to: share)
+                    .stroke(urgent ? TurnClockPill.urgentRed : HUDStyle.gold,
+                            style: StrokeStyle(lineWidth: Self.lineWidth, lineCap: .round))
+                    .rotationEffect(.degrees(-90))
+            }
+            .padding(Self.lineWidth / 2)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(L("Time left to choose before you attack"))
+            .accessibilityValue(L("{seconds} s", ["seconds": seconds]))
+        }
+        .opacity(deadline == nil ? 0 : 1)
+        .animation(.easeOut(duration: 0.2), value: deadline == nil)
+        .allowsHitTesting(false)
+        .accessibilityHidden(deadline == nil)
+    }
+}
+
+/// The time left to choose on a phone on its side (upright it's a ring round your face, `TurnRing`),
+/// top centre in a dark pill like the map's (`mapPill`): an hourglass and
 /// the seconds over a yellow bar running down as the time does (playtesting 2026-10-26: "The timer
 /// should show a yellow bar"), the same in every phase of a turn (the commands, a list, picking a
 /// target). Red for the last three, with a beat as each goes. When it runs out the hero attacks. While no clock
@@ -390,9 +424,9 @@ private struct TurnClockPill: View {
     let window: TimeInterval
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-    private static let urgentSeconds: TimeInterval = 3
+    static let urgentSeconds: TimeInterval = 3
     /// Red that reads on the navy (`HUDStyle.hp` is too deep there).
-    private static let urgentRed = Color(red: 1, green: 0.45, blue: 0.4)
+    static let urgentRed = Color(red: 1, green: 0.45, blue: 0.4)
 
     var body: some View {
         TimelineView(.animation(minimumInterval: nil, paused: deadline == nil)) { context in
