@@ -71,3 +71,56 @@ if __name__ == "__main__":
         head = np.nonzero(M[..., 3].any(1))[0].min()
         hx = np.nonzero(M[head:head + 20, :, 3].any(0))[0]
         print(tag, "shift", sh, "hair px", len(ys), "above head", head - ys.min(), "past sides", hx.min() - xs.min(), xs.max() - hx.max())
+
+
+# ---- wearing a style on every frame -------------------------------------------------------------------------
+import os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+def style_view(style, d):
+    """(standing view, hair layer) for a direction, a left one its right twin's mirrored; None if not drawn."""
+    import hero_ears as he
+    if d.endswith("left"):
+        r = style_view(style, d[:-4] + "right")
+        return None if r is None else (r[0][:, ::-1], r[1][:, ::-1])
+    p = os.path.join(he.HEROES, f"hero64_hair_{style}_{d}.png")
+    s = he.standing(d)
+    return None if s is None or not os.path.exists(p) else (s, np.asarray(Image.open(p).convert("RGBA")))
+
+def wear_style(style, anim, race="human"):
+    """The doll's (or the elf's) sheet with the style on every frame of every direction drawn so far: the standing
+    view's hair moved with the head (hero_ears.fit), over clear pixels and the head (hero_ears.wear: a raised arm
+    stays in front); on the elf, its ears go back over the hair."""
+    import hero_ears as he, hero_template as t
+    n = t.ANIMS[anim]
+    doll = np.asarray(Image.open(os.path.join(he.HEROES, f"hero64_doll_{anim}.png")).convert("RGBA"))
+    elf = np.asarray(Image.open(os.path.join(he.HEROES, f"hero64_elf_{anim}.png")).convert("RGBA")) if race == "elf" else None
+    out = (elf if elf is not None else doll).copy()
+    for r, d in enumerate(t.DIRECTIONS):
+        v = style_view(style, d)
+        if v is None:
+            continue
+        ref, hair = v
+        for c in range(n):
+            sl = (slice(r * 64, (r + 1) * 64), slice(c * 64, (c + 1) * 64))
+            f = doll[sl]
+            if not f[..., 3].any():
+                continue
+            w = he.wear(f, hair, he.fit(f, ref), ref)
+            if elf is not None:
+                e = elf[sl]
+                ear = (e[..., 3] > 0) & ((e != f).any(2))
+                w = w.copy(); w[ear] = e[ear]
+            out[sl] = w
+    return out
+
+if __name__ == "__main__" and sys.argv[1] == "wear":
+    import hero_ears as he
+    style = sys.argv[2]
+    for race in ("human", "elf"):
+        for anim, ms in (("idle", 250), ("walk", 90), ("attack", 110)):
+            sheet = wear_style(style, anim, race)
+            name = f"hero64_{race}_{style}_{anim}"
+            Image.fromarray(sheet).save(os.path.join(he.HEROES, name + ".png"))
+            he.gif(sheet, anim, os.path.join(he.HEROES, name + ".gif"), ms)
+            print("wrote", name)

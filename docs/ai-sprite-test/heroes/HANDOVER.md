@@ -428,6 +428,16 @@ One doll, end to end (it was the Human Male pilot until 2026-11-24).
     arm by the head, the frame's own pixels stay). The user picked 4 (30 to 34 pixels past the head; ChatGPT drew
     every attack's ears smaller than the idle's 40). In frame 2 the raised arm hides the right ear, as painted.
     Item 49's attack up is replaced: idle, walk, run and attack facing up now wear the outward ears.
+53. **Hair: the style list and Spiky facing down** (2026-11-25). The user's list, 16 styles: short (Spiky, Crop, Buzz
+    cut, Messy), medium (Bob, Swept fringe, Curly, Mohawk), long (Long straight, Ponytail, Braids, Bun), fantasy (Twin
+    tails, Top knot, Wild mane, Side shave). At the engine move, saves with the old `shoulder` need mapping (to Long
+    straight or Bob); the other old ids carry over. ChatGPT paints the doll wearing the style (PROMPTS.md § 6),
+    snapped with `hero_snap_walk.py --hair 8` (the hair keeps its own shades) and lifted by `tools/hero_hair.py lift`
+    (the saturated ginger and the outline touching it). Spiky down: five paintings
+    (`tries/hair_spiky_down_try1{a..e}_painting.png`), the user picked 1 (`hero64_hair_spiky_down.png`: 3 pixels
+    above the head, 1 past its sides); every `appearance.json` hair colour recolours it whole. `hero_hair.py wear
+    spiky` lays it on every frame by the head fit, as the idle ears are, with the elf's ears back over it
+    (`hero64_<human|elf>_spiky_<anim>.png`, `.gif`).
  Idle wears it; up-left mirrored.
 
 ## What has gone wrong before (read before prompting)
