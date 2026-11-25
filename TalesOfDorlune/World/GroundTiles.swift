@@ -234,6 +234,53 @@ final class GroundTiles {
     /// A snowy land's own snow's tones (`meltCover`).
     private lazy var ownSnowTones: [(Double, Double, Double)]? = art.snowTones(theme.ground, from: ArtLibrary.Foreign(land: map.def.id, palette: theme.palette))
 
+    /// A plain ground cell in the band where this land meets one that isn't snow (or both are): its own
+    /// ground with the land next door's laid over it pixel by pixel (`ArtLibrary.blendedIn`), as much as
+    /// that land's share of the ground there (`Seam.share`, half on the border), blended between the
+    /// cells' middles so it comes on smoothly. Nil where no such band reaches, or across a snow border,
+    /// which has its own (`snowOver`).
+    private func seamBlend(_ cell: GridPoint, base: String, variant: Int) -> SKTileGroup? {
+        var best: (seam: Int, share: Double)?
+        for index in map.seams.indices {
+            guard let share = pixelShare(map.seams[index], cell), share > (best?.share ?? 0.005) else { continue }
+            best = (index, share)
+        }
+        guard let best, let other = foreignLand(map.seams[best.seam].neighbour),
+              Self.snowy(other.land) == Self.snowy(map.def) else { return nil }
+        let seam = map.seams[best.seam]
+        var corners: [GridPoint: Double] = [:]
+        for dr in -1...1 {
+            for dc in -1...1 {
+                let near = GridPoint(col: cell.col + dc, row: cell.row + dr)
+                corners[near] = pixelShare(seam, near) ?? best.share
+            }
+        }
+        let own = wang(cell, base: base)
+        guard let picture = pictures[ObjectIdentifier(own)] else { return nil }
+        let theirs = art.foreignTile(other.land.theme.ground, palette: other.from.palette, from: other.from.land,
+                                     variant: variant, base: base)
+        let covers = corners
+        let front: (Double, Double) -> Double = { x, y in
+            let fx = x - 0.5, fy = y - 0.5
+            let col = Int(fx.rounded(.down)), row = Int(fy.rounded(.down))
+            let tx = fx - Double(col), ty = fy - Double(row)
+            func at(_ dc: Int, _ dr: Int) -> Double { covers[GridPoint(col: col + dc, row: row + dr)] ?? 0 }
+            return (at(0, 0) * (1 - tx) + at(1, 0) * tx) * (1 - ty) + (at(0, 1) * (1 - tx) + at(1, 1) * tx) * ty
+        }
+        let place = origin, first = seam.sign > 0
+        return group("seam@\(cell.col),\(cell.row)") {
+            art.blendedIn(picture, other: theirs, cell: cell, origin: place, first: first, front: front)
+        }
+    }
+
+    /// How much of a cell's ground is the land next door's in the pixel blend (`seamBlend`): `Seam.share`
+    /// over `pixelBand` cells either side of the border, not the seam's own width (the patches spread over
+    /// 14; pixel by pixel, 5 reads as one soft edge, as the snow's does, and keeps the cells it makes few).
+    private func pixelShare(_ seam: Seam, _ cell: GridPoint) -> Double? {
+        seam.side(cell).map { Seam.share(at: $0, over: min(seam.reach, Self.pixelBand)) }
+    }
+    private static let pixelBand = 5.0
+
     /// A land next door, for its ground graded as it is there.
     private func foreignLand(_ id: String) -> (land: MapDef, from: ArtLibrary.Foreign)? {
         if let known = others[id] { return known }
@@ -246,7 +293,14 @@ final class GroundTiles {
     /// past its border as the land there lays it out (`Blend.shows`), a land next door's own or a
     /// third land's come over onto it. Nil on the sea, or past where the band could reach.
     private func look(_ cell: GridPoint) -> String? {
-        if map.owns(cell) { return map.foreign[cell].map { map.seams[$0].neighbour } ?? map.def.id }
+        if map.owns(cell) {
+            // The land next door's patches show only across a snow border; elsewhere its ground comes in
+            // pixel by pixel instead (`seamBlend`).
+            guard let index = map.foreign[cell] else { return map.def.id }
+            let neighbour = map.seams[index].neighbour
+            guard let other = foreignLand(neighbour), Self.snowy(other.land) != Self.snowy(map.def) else { return map.def.id }
+            return neighbour
+        }
         if let known = lookPast[cell] { return known }
         let found = map.blend.flatMap { blend in blend.shows(cell).map { blend.around.lands[$0] } }
         lookPast[cell] = found
@@ -447,6 +501,12 @@ final class GroundTiles {
                 art.organicTile(base: base, layers: layers, cell: cell, variant: variant, pond: tone, seaward: toSea, across: across,
                                 ice: frozen)
             }
+        }
+        // Across a border with a land that isn't snow, its plain ground comes in pixel by pixel, not in
+        // patches (`seamBlend`); a road, pond, shore or patch there keeps the patches it had.
+        if !map.seams.isEmpty, road == 0, pond == 0, coast == 0, lush == 0, patch == 0, map.ground[row][col] == .ground,
+           let blended = seamBlend(cell, base: base, variant: variant) {
+            return (blended, near != 0)
         }
         return (snowOver(chosen, cell: cell, band: band != nil, wet: pond != 0 || coast != 0, patched: patch != 0), near != 0)
     }

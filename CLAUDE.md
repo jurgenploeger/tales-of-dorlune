@@ -53,6 +53,10 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   land's ground and scenery give way to the next's in patches, measured from the border (14 cells each side, fewer where
   either land's maps.json theme `blend` says: Briarmere's and Snow White Forest's snow, beside rock, 5); its `Blend` says what
   any cell shows the same from every land, so a tile meets the one past the border (that land's) cleanly.
+  Since 0.9.204 the ground itself doesn't change in patches but pixel by pixel, as the snow comes over a border (the user,
+  2026-11-25): a plain ground cell within 5 of the border has the land next door's ground laid over its own in clusters,
+  half on the line (`GroundTiles.seamBlend`, `pixelShare`, `ArtLibrary.blendedIn`, the pair's one pattern so both sides
+  meet); a snow border keeps its patches and snow (`snowOver`), and roads, ponds, shores and patches theirs. The scenery still comes in patches.
   The world map (`WorldAtlas`) shows every land's minimap where it lies (`WorldOverview`, cached on disk).
   The continent is one scene (`ContinentScene`, docs/continuous-world.md): `World` holds which land owns each world
   cell and where you can walk; each land near you is laid out, planned (`LandPlanner`) and drawn a 32-cell chunk at a

@@ -613,6 +613,38 @@ final class ArtLibrary {
     /// dark crevices, a few lone specks early), and is snowed where that's under how snowed over the
     /// ground is there (`front`, 0 to 1, at a point in the land's cells), in one of `tones` by its own
     /// brightness in the tile. (`cell`, `origin`: where it lies, so the clusters run on from tile to tile.)
+    /// A cell's own ground with the land next door's laid over it pixel by pixel, as far as `front`
+    /// says at each (0 none, 1 all), in clusters that grow as it rises, as the snow comes over a border
+    /// (`snowed`; the user, 2026-11-25: "we should apply that everywhere, because it's a much nicer change
+    /// from one land to the other than the patches we have now"). `other` is the land next door's ground
+    /// as it's graded there; both tiles the same size. The same clusters from either side, by where each
+    /// pixel lies on the continent (`origin`), so the two lands' cells meet at the border: each pixel's
+    /// order is the pair's, the first of the two lands by id (`first`) taking it turned over, so where one
+    /// side shows the other land's ground the other side shows it too.
+    func blendedIn(_ texture: SKTexture, other: SKTexture, cell: GridPoint, origin: GridPoint, first: Bool,
+                   front: (Double, Double) -> Double) -> SKTexture {
+        let image = picture(of: texture)
+        let size = image.width
+        guard size > 0, image.height == size, var out = PixelImage.pixels(of: image, width: size, height: size),
+              let theirs = PixelImage.pixels(of: picture(of: other), width: size, height: size) else { return texture }
+        for py in 0..<size {
+            for px in 0..<size {
+                let index = (py * size + px) * 4
+                guard theirs[index + 3] > 0 else { continue }
+                let x = Double(cell.col) + (Double(px) + 0.5) / Double(size)
+                let y = Double(cell.row) + 1 - (Double(py) + 0.5) / Double(size)
+                let cover = front(x, y)
+                guard cover > 0 else { continue }
+                let u = (origin.col + cell.col) * size + px, v = (origin.row + cell.row) * size + (size - 1 - py)
+                let raw = 0.6 * Self.iceNoise(u, v, every: 6) + 0.25 * Self.iceNoise(u + 917, v + 331, every: 2)
+                    + 0.15 * Self.iceHash(u, v)
+                guard (first ? 1 - raw : raw) < cover else { continue }
+                for k in 0..<4 { out[index + k] = theirs[index + k] }
+            }
+        }
+        return makeTexture(out, size: size)
+    }
+
     func snowed(_ texture: SKTexture, cell: GridPoint, origin: GridPoint, front: (Double, Double) -> Double,
                 tones: [(Double, Double, Double)]) -> SKTexture {
         let image = picture(of: texture)
