@@ -900,6 +900,8 @@
     "Developer": "Desarrollador",
     "Show frame rate": "Mostrar fotogramas",
     "Frames a second, nodes and draw calls, in the corner of the map and fights.": "Fotogramas por segundo, nodos y llamadas de dibujo, en la esquina del mapa y en los combates.",
+    "Frame timing": "Tiempos por fotograma",
+    "How long each part of the map's frame takes, in milliseconds, over the joystick.": "Cuánto tarda cada parte del fotograma del mapa, en milisegundos, sobre el joystick.",
     "Trees in the wind, shade, footprints and frame rate change at once. The rest changes in lands drawn after it: go back to the title and continue.": "Los árboles al viento, la sombra, las huellas y los fotogramas cambian al momento. El resto cambia en las tierras dibujadas después: vuelve al título y continúa.",
     "Danger zone": "Zona de peligro",
     "Deleting a game can't be undone.": "Borrar una partida no se puede deshacer.",

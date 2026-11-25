@@ -900,6 +900,8 @@
     "Developer": "Développeur",
     "Show frame rate": "Afficher les images/s",
     "Frames a second, nodes and draw calls, in the corner of the map and fights.": "Images par seconde, nœuds et appels de dessin, dans le coin de la carte et des combats.",
+    "Frame timing": "Temps par image",
+    "How long each part of the map's frame takes, in milliseconds, over the joystick.": "Le temps que prend chaque partie d'une image de la carte, en millisecondes, au-dessus du joystick.",
     "Trees in the wind, shade, footprints and frame rate change at once. The rest changes in lands drawn after it: go back to the title and continue.": "Les arbres au vent, l'ombre, les traces de pas et les images/s changent aussitôt. Le reste change dans les terres dessinées ensuite : reviens à l'écran titre et continue.",
     "Danger zone": "Zone de danger",
     "Deleting a game can't be undone.": "La suppression d'une partie est irréversible.",

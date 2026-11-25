@@ -163,7 +163,8 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   nodes and draw calls in the corner (`GameSettings.devStatsKey`, `SpriteKitView`), and switches that leave
   parts of the world's drawing out (`GameSettings.devParts`, the debug flag `off=`'s names: `LandStage.isOffForDebug`
   reads both): trees in the wind (`WindField.tick`), shade, tall grass, water motion, footprints, ambience,
-  lighting. Wind, shade and footprints change at once, the rest in lands built after.
+  lighting. Wind, shade and footprints change at once, the rest in lands built after. Frame timing (`FrameTiming`, end of
+  `ContinentScene.swift`): each part of the continent's frame laps it (`lap`), shown once a second over the joystick.
 - Monsters turn up 30% less often on a land's main roads (`WorldMap.mainRoads`, the roads out through its exits,
   not trails or footpaths; `ContinentScene.roadEncounterShare`; the user, 2026-11-25).
 - Dark Mode: the game follows the phone's look, or Settings → Appearance (`GameSettings.appearanceKey`, set on the

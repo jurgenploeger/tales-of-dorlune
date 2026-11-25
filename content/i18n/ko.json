@@ -900,6 +900,8 @@
     "Developer": "개발자",
     "Show frame rate": "프레임 속도 표시",
     "Frames a second, nodes and draw calls, in the corner of the map and fights.": "맵과 전투 화면 구석에 초당 프레임, 노드, 드로우 콜을 표시해요.",
+    "Frame timing": "프레임 시간",
+    "How long each part of the map's frame takes, in milliseconds, over the joystick.": "맵 프레임의 각 부분이 걸리는 시간을 밀리초로 조이스틱 위에 표시해요.",
     "Trees in the wind, shade, footprints and frame rate change at once. The rest changes in lands drawn after it: go back to the title and continue.": "바람에 흔들리는 나무, 그림자, 발자국, 프레임 속도는 바로 바뀌어요. 나머지는 그다음에 그려지는 땅부터 바뀌어요. 타이틀로 돌아가 이어서 하세요.",
     "Danger zone": "위험 구역",
     "Deleting a game can't be undone.": "게임을 삭제하면 되돌릴 수 없어요.",

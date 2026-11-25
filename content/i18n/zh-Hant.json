@@ -900,6 +900,8 @@
     "Developer": "開發者",
     "Show frame rate": "顯示影格率",
     "Frames a second, nodes and draw calls, in the corner of the map and fights.": "在地圖和戰鬥畫面的角落顯示每秒影格數、節點數和繪製呼叫數。",
+    "Frame timing": "影格耗時",
+    "How long each part of the map's frame takes, in milliseconds, over the joystick.": "在搖桿上方顯示地圖每個影格各部分所用的毫秒數。",
     "Trees in the wind, shade, footprints and frame rate change at once. The rest changes in lands drawn after it: go back to the title and continue.": "風中的樹、陰影、腳印和影格率會立即改變。其餘的在之後繪製的土地上生效：回到標題畫面再繼續。",
     "Danger zone": "危險區域",
     "Deleting a game can't be undone.": "刪除遊戲後無法復原。",
