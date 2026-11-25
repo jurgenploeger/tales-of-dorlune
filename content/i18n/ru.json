@@ -900,6 +900,8 @@
     "Developer": "Разработчик",
     "Show frame rate": "Показывать частоту кадров",
     "Frames a second, nodes and draw calls, in the corner of the map and fights.": "Кадры в секунду, узлы и вызовы отрисовки в углу карты и в боях.",
+    "Frame timing": "Время кадра",
+    "How long each part of the map's frame takes, in milliseconds, over the joystick.": "Сколько миллисекунд занимает каждая часть кадра карты, над джойстиком.",
     "Trees in the wind, shade, footprints and frame rate change at once. The rest changes in lands drawn after it: go back to the title and continue.": "Деревья на ветру, тени, следы и частота кадров меняются сразу. Остальное меняется в землях, нарисованных после: вернись на титульный экран и продолжи.",
     "Danger zone": "Опасная зона",
     "Deleting a game can't be undone.": "Удаление игры нельзя отменить.",

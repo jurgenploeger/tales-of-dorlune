@@ -900,6 +900,8 @@
     "Developer": "開発者",
     "Show frame rate": "フレームレートを表示",
     "Frames a second, nodes and draw calls, in the corner of the map and fights.": "マップと戦闘の隅に、毎秒フレーム数、ノード数、描画回数を表示します。",
+    "Frame timing": "フレーム時間",
+    "How long each part of the map's frame takes, in milliseconds, over the joystick.": "マップの1フレームの各処理にかかる時間をミリ秒でジョイスティックの上に表示します。",
     "Trees in the wind, shade, footprints and frame rate change at once. The rest changes in lands drawn after it: go back to the title and continue.": "風に揺れる木、影、足あと、フレームレートはすぐに切り替わります。ほかはこのあと描かれる土地から変わります。タイトルに戻って続きから始めてください。",
     "Danger zone": "危険ゾーン",
     "Deleting a game can't be undone.": "ゲームを削除すると元にもどせません。",

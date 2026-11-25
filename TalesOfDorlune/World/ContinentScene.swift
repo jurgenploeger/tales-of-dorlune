@@ -559,17 +559,19 @@ final class ContinentScene: SKScene {
         return land.map.height(at: CGPoint(x: point.x - land.shift.dx, y: point.y - land.shift.dy))
     }
 
-    /// How the ground at `point` (in the continent's points) takes a print (`Footprints`), or nil where
-    /// it takes none: only a snow or sand land's own plain ground, on the flat (not a path, a patch, a
-    /// hill, the shore or anything in the way).
-    private func printLook(at point: CGPoint) -> Footprints.Look? {
+    /// How the ground at `point` (in the continent's points, on the ground's plane) takes a print
+    /// (`Footprints`), or nil where it takes none: only a snow or sand land's own plain ground, standing
+    /// `lift` high (the flat, or a raised level's top; not a slope, a face, a mountain's stairs, a path,
+    /// a patch, the shore or anything in the way).
+    private func printLook(at point: CGPoint, lift: CGFloat) -> Footprints.Look? {
         let cell = Self.cell(at: point)
         guard let owner = store.land(at: cell), let land = lands[owner.id],
               Footprints.grounds[land.def.theme.ground] != nil else { return nil }
         let local = GridPoint(col: cell.col - land.place.origin.col, row: cell.row - land.place.origin.row)
         guard local.row >= 0, local.row < land.map.ground.count, local.col >= 0, local.col < land.map.ground[local.row].count,
-              land.map.ground[local.row][local.col] == .ground, land.map.isWalkable(local),
-              land.map.height(at: CGPoint(x: point.x - land.shift.dx, y: point.y - land.shift.dy)) == 0 else { return nil }
+              land.map.ground[local.row][local.col] == .ground, land.map.isWalkable(local), !land.map.trailCells.contains(local),
+              abs(land.map.height(at: CGPoint(x: point.x - land.shift.dx, y: point.y - land.shift.dy)) - lift) < 1.5,
+              lift == 0 || lift > 4 else { return nil }
         return Footprints.look(for: land.def)
     }
 
@@ -588,8 +590,12 @@ final class ContinentScene: SKScene {
     override func update(_ currentTime: TimeInterval) {
         let dt = lastUpdate == 0 ? 0 : min(currentTime - lastUpdate, 1.0 / 8)
         lastUpdate = currentTime
+        // Settings → Developer's frame timing: each part of the frame laps it (`FrameTiming`).
+        if FrameTiming.isOn, FrameTiming.shared.begin() { showTiming() }
+        if !FrameTiming.isOn, let back = timingBack, !back.isHidden { back.isHidden = true }
         // The trees and bushes in the wind (`WindField`), on its own clock: it stops while the scene does.
         WindField.shared.tick(dt)
+        FrameTiming.shared.lap("wind")
         let stick = input.move
         // In a party you've joined you go where it goes: the stick and taps do nothing till you
         // leave it (the HUD's Leave party).
@@ -661,24 +667,66 @@ final class ContinentScene: SKScene {
         }
         player.settle()
         cam.position = player.position + CGVector(dx: 0, dy: player.lift)
+        FrameTiming.shared.lap("you")
         for id in nearLands {
             lands[id]?.stage.update(dt: dt, player: player.position, camera: cam.position, scale: cam.xScale, screen: size,
                                     isHere: id == here?.id)
         }
+        FrameTiming.shared.lap("lands")
         // Your legs hidden in tall grass (`Walker.wade`).
         let wading = here.flatMap { lands[$0.id]?.stage.wading(at: player.position, width: player.frameWidth) }
         player.wade(wading)
+        FrameTiming.shared.lap("wade")
         #if DEBUG
         wadeForDebug = wading.map { cut in "\(Int(cut.max() ?? 0))/\(cut.filter { $0 > 0 }.count)" } ?? "-"
         #endif
         if !LandStage.isOffForDebug("footprints") {
-            footprints.update(dt: dt, footfalls: Walker.footfalls(in: layer)) { self.printLook(at: $0) }
+            footprints.update(dt: dt, footfalls: Walker.footfalls(in: layer)) { self.printLook(at: $0, lift: $1) }
         }
+        FrameTiming.shared.lap("prints")
         updateAir(dt)
+        FrameTiming.shared.lap("air")
         if currentTime - lookedAround > 0.25 {
             lookedAround = currentTime
             lookAround()
         }
+        FrameTiming.shared.lap("look")
+    }
+
+    /// The actions SpriteKit ran after `update` (every `run`, the walkers' animations), timed.
+    override func didEvaluateActions() {
+        FrameTiming.shared.lap("actions")
+    }
+
+    /// Settings → Developer's frame timing, over the joystick: renewed once a second (`FrameTiming`).
+    private var timingLabel: SKLabelNode?
+    private var timingBack: SKSpriteNode?
+
+    private func showTiming() {
+        if timingLabel == nil {
+            let back = SKSpriteNode(color: UIColor(white: 0, alpha: 0.6), size: .zero)
+            back.anchorPoint = CGPoint(x: 0.5, y: 0)
+            back.zPosition = 1_000_000
+            cam.addChild(back)
+            let label = SKLabelNode(fontNamed: "Menlo-Bold")
+            label.fontSize = 10
+            label.fontColor = .white
+            label.numberOfLines = 0
+            label.verticalAlignmentMode = .bottom
+            label.horizontalAlignmentMode = .center
+            label.zPosition = 1
+            back.addChild(label)
+            timingBack = back
+            timingLabel = label
+        }
+        guard let label = timingLabel, let back = timingBack else { return }
+        back.isHidden = false
+        label.preferredMaxLayoutWidth = size.width - 24
+        label.text = FrameTiming.shared.summary
+        let frame = label.frame
+        back.size = CGSize(width: frame.width + 12, height: frame.height + 8)
+        label.position = CGPoint(x: 0, y: 4)
+        back.position = CGPoint(x: 0, y: -size.height / 2 + 230)
     }
 
     /// Whether you can step onto a point from where you stand: onto ground you can walk on (on a land
@@ -2546,5 +2594,61 @@ final class ContinentScene: SKScene {
             }
         }
         return cells
+    }
+}
+
+/// Settings → Developer → Frame timing (the user, 2026-11-25: 3 frames a second in a busy town, with
+/// nothing to say why): how long each part of the continent's frame takes on the phone, in
+/// milliseconds a frame, averaged over a second. Each part laps it as it finishes (`lap`), from the
+/// scene's `update` round to the actions SpriteKit runs after it; "other" is the rest of the frame,
+/// outside them: SpriteKit drawing, SwiftUI's HUD, the system.
+final class FrameTiming {
+    static let shared = FrameTiming()
+    /// Read every lap, so kept here, not in UserDefaults (Settings sets it, `GameSettings.devTimingKey`).
+    nonisolated(unsafe) static var isOn = UserDefaults.standard.bool(forKey: GameSettings.devTimingKey)
+
+    private var spent: [String: Double] = [:]
+    private var last: TimeInterval = 0
+    private var frameStart: TimeInterval = 0
+    private var since: TimeInterval = 0
+    private var frames = 0
+    private var worst: Double = 0
+    /// The last second's numbers, one line each.
+    private(set) var summary = ""
+
+    private static func now() -> TimeInterval { ProcessInfo.processInfo.systemUptime }
+
+    /// The frame starts (the scene's `update`): counts it, and once a second sums up the last and says
+    /// so (true), for the label to show it.
+    func begin() -> Bool {
+        let now = Self.now()
+        if frameStart > 0 {
+            let frame = now - frameStart
+            worst = max(worst, frame)
+            spent["other", default: 0] += max(0, frame - (last - frameStart))
+        }
+        frameStart = now
+        last = now
+        if since == 0 { since = now }
+        frames += 1
+        guard now - since >= 1, frames > 1 else { return false }
+        let seconds = now - since, counted = Double(frames - 1)
+        let parts = spent.map { (name: $0.key, ms: $0.value / counted * 1000) }.sorted { $0.ms > $1.ms }
+        let head = String(format: "%.1f fps, frame %.1f ms, worst %.0f ms", Double(frames - 1) / seconds,
+                          seconds / counted * 1000, worst * 1000)
+        summary = ([head] + parts.prefix(8).map { String(format: "%@ %.1f", $0.name, $0.ms) }).joined(separator: "\n")
+        spent = [:]
+        since = now
+        frames = 1
+        worst = 0
+        return true
+    }
+
+    /// The part `name` has just finished: the time since the last lap is its.
+    func lap(_ name: String) {
+        guard Self.isOn, frameStart > 0 else { return }
+        let now = Self.now()
+        spent[name, default: 0] += now - last
+        last = now
     }
 }

@@ -65,7 +65,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   `GameCoordinator.mapScene` is whichever you're in.
 - Terraced hills (maps.json theme `hills.terraces`, a step in points, with `bank` the faces' rock; Sunny Meadow
   since 0.9.105, after `tools/cliff_preview.py`, every wild land's since 0.9.110; a mountain too since 0.9.189, in five levels, `WorldMap.mountainLevels`, its face
-  nearly as deep as its back, stairs cut across each face as ledges zig-zagging up it and worn as its trail, `carveStairs`,
+  nearly as deep as its back, stairs cut across each face as ledges zig-zagging up it (not drawn as a path: messy, the user), `carveStairs`,
   the user's pick from `tools/mountain_preview.py`, 2026-11-25): `Hill.terrace` steps each range's height into flat levels with a
   sheer face, only where its slopes face you (`Hill.stepped`: stepped all round, the faces turned away were laid
   back by `unfold()` into long ramps in deep shade), the faces dwindling round its sides and its back the smooth
@@ -102,7 +102,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   under 12 points) lays its own outline on the ground away from the sun, each chunk's pixels worked out off
   the main thread (`CanopyPainter.render`: on it, the game went slow), a round
   slice per row of it (a building's set back from its front by its depth, a block: as thin bands its midday shade was a sliver, 2026-11-18;
-  a gate's arch thin bands, `Caster.thin`), the top of the crown farthest (short at midday, long at evening), all merged into one,
+  a gate's arch thin bands, `Caster.thin`; a rock or boulder a block too, `CanopyShade.isRock`), the top of the crown farthest (short at midday, long at evening), all merged into one,
   deepest at the foot and fading toward the tip, its edge blurred (`softness`; in hard steps it was too stark), soft flecks of light where the leaves part, and multiplied over the ground
   as the night's shade is, by one cool tint in every land (`CanopyShade.lean`: each palette's own shadow
   colour turned a desert red), stopping at a town's wall (`blocks`, `WorldMap.fenceCells`), which casts its own, as do its towers and gates (`LandStage.placeFence`, `throughWalls`); drawn a `LandStage` chunk at a time while shown, again as the sun moves (`follow`,
@@ -163,7 +163,8 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   nodes and draw calls in the corner (`GameSettings.devStatsKey`, `SpriteKitView`), and switches that leave
   parts of the world's drawing out (`GameSettings.devParts`, the debug flag `off=`'s names: `LandStage.isOffForDebug`
   reads both): trees in the wind (`WindField.tick`), shade, tall grass, water motion, footprints, ambience,
-  lighting. Wind, shade and footprints change at once, the rest in lands built after.
+  lighting. Wind, shade and footprints change at once, the rest in lands built after. Frame timing (`FrameTiming`, end of
+  `ContinentScene.swift`): each part of the continent's frame laps it (`lap`), shown once a second over the joystick.
 - Monsters turn up 30% less often on a land's main roads (`WorldMap.mainRoads`, the roads out through its exits,
   not trails or footpaths; `ContinentScene.roadEncounterShare`; the user, 2026-11-25).
 - Dark Mode: the game follows the phone's look, or Settings → Appearance (`GameSettings.appearanceKey`, set on the
@@ -293,8 +294,8 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
 - Footprints in the snow and the sand (the user's picks from `tools/snow_trail_preview.py`, 2026-11-24: look C, and
   `--sand` S2, after SpriteCook's trail render texture article; visual only): where anyone with a four-frame walk
   sheet puts a foot down (`Walker.footfall`: as a stride frame, 0 or 2, starts, left and right by turns) on a snow or
-  sand land's own plain ground (`Footprints.grounds`, theme `ground`: snow, sand, desert; not a path, patch, hill, the
-  shore or a blocked cell, `ContinentScene.printLook`), a dent is pressed in, three depths lit from the top left
+  sand land's own plain ground (`Footprints.grounds`, theme `ground`: snow, sand, desert; not a path, patch, slope,
+  stair, the shore or a blocked cell, `ContinentScene.printLook`; on a raised level's flat top too since 0.9.191, sorted at its spot's depth), a dent is pressed in, three depths lit from the top left
   (tinted toward the palette's `shadow`, in the sand mostly toward a warm brown, `sandShade`: a beach's blue shadow
   alone turned them grey-green; a darker wall along its top, a bright lip along its bottom, the sand's its
   `highlight` half white), filling back in over about six seconds. The article's map of bytes is the brightest stamp

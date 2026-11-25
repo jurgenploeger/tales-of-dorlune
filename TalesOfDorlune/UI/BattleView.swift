@@ -321,22 +321,31 @@ private struct LockInStrip: View {
                         // The ring is on whoever you're choosing for: you, then your companion beside you
                         // once you've chosen, you with your tick (the user, 2026-11-25: "it should show the
                         // companion's little avatar with the countdown. If there is no companion, then we
-                        // show the green tick").
-                        if ringed && fighter.isHero && !controller.choosingForCompanion {
-                            ringedFace(fighter, ready: false)
-                        } else {
-                            face(fighter, ready: isReady(fighter, at: context.date))
-                        }
-                        if fighter.isHero, controller.choosingForCompanion, let companion = controller.companion {
-                            if ringed {
-                                ringedFace(companion, ready: false)
-                            } else {
-                                face(companion, ready: false)
-                            }
+                        // show the green tick"). Your companion stands beside you the whole time you choose,
+                        // so nothing moves when its turn comes but the ring (the user, 2026-11-25: added only
+                        // then, it pushed in where the ring had been and read as your face swapped for its).
+                        slot(fighter, ready: isReady(fighter, at: context.date),
+                             active: fighter.isHero && !controller.choosingForCompanion)
+                        if fighter.isHero, GameSettings.commandCompanion, let companion = controller.companion {
+                            slot(companion, ready: false, active: controller.choosingForCompanion)
                         }
                     }
                 }
             }
+        }
+    }
+
+    /// A face in the row: with a turn clock (`ringed`) every face keeps the ring's room round it, so
+    /// the row stands still as the ring moves from one to the next, and the one being chosen for
+    /// (`active`) wears it.
+    @ViewBuilder
+    private func slot(_ fighter: Combatant, ready: Bool, active: Bool) -> some View {
+        if ringed && active {
+            ringedFace(fighter, ready: ready)
+        } else if ringed {
+            face(fighter, ready: ready).padding(TurnRing.inset)
+        } else {
+            face(fighter, ready: ready)
         }
     }
 

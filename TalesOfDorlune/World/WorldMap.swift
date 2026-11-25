@@ -2694,8 +2694,8 @@ nonisolated final class WorldMap: @unchecked Sendable {
     /// Stairs up a terraced mountain's face (`tools/mountain_preview.py`, the user's pick,
     /// 2026-11-25): one up each face, cut across it as a ledge from the level below to the level
     /// above, the first rising left to right, the next right to left and so on, each starting where
-    /// the last came out: a zig-zag up the front. Worn as a trail (`Hill.trails`, drawn as the hills'
-    /// trails are), kept clear, and walked like the levels. Its back stays the gentle slope it was,
+    /// the last came out: a zig-zag up the front. Kept clear (`trailCells`), not drawn as a path, and
+    /// walked like the levels. Its back stays the gentle slope it was,
     /// the other way up. A stair that doesn't fit (a level too narrow there) is left out; any level
     /// you can't reach then is closed by `blockFaces`.
     private func carveStairs(_ hill: inout Hill, mountain index: Int) {
@@ -2748,7 +2748,9 @@ nonisolated final class WorldMap: @unchecked Sendable {
         guard points.count > 1 else { return }
         hill.unfold()
         hill.highest = CGFloat(hill.heights.max() ?? 0)
-        hill.trails = [Hill.Trail(lobe: index, points: points)]
+        // Not worn as a trail (the user, 2026-11-25: "The road looks messy now"): drawn over the stepped
+        // rock, the path broke up across the faces and wound along the levels between the stairs. The
+        // ledges show the way up on their own; the cells along them are kept clear and on the minimap.
         let path = Self.cells(along: points)
         for cell in path { occupy(cell, blocking: false) }
         trailCells.formUnion(path)

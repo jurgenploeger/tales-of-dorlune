@@ -41,6 +41,8 @@ nonisolated enum GameSettings {
     static let devOffKey = "devOff"
     /// The frame rate, nodes and draw calls in the corner of the map and fights (`SpriteKitView`).
     static let devStatsKey = "devStats"
+    /// How long each part of the map's frame takes, over the joystick (`FrameTiming`).
+    static let devTimingKey = "devTiming"
     /// What the Developer switches can leave out, in the order Settings shows them.
     static let devParts = ["wind", "shade", "grass", "water", "footprints", "ambience", "lighting"]
 

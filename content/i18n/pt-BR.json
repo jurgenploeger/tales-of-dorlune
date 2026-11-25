@@ -900,6 +900,8 @@
     "Developer": "Desenvolvedor",
     "Show frame rate": "Mostrar taxa de quadros",
     "Frames a second, nodes and draw calls, in the corner of the map and fights.": "Quadros por segundo, nós e chamadas de desenho, no canto do mapa e das lutas.",
+    "Frame timing": "Tempo por quadro",
+    "How long each part of the map's frame takes, in milliseconds, over the joystick.": "Quanto tempo cada parte do quadro do mapa leva, em milissegundos, acima do joystick.",
     "Trees in the wind, shade, footprints and frame rate change at once. The rest changes in lands drawn after it: go back to the title and continue.": "Árvores ao vento, sombra, pegadas e taxa de quadros mudam na hora. O resto muda nas terras desenhadas depois: volte ao título e continue.",
     "Danger zone": "Zona de perigo",
     "Deleting a game can't be undone.": "Apagar um jogo não pode ser desfeito.",

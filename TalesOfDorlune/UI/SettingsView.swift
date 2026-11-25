@@ -53,6 +53,7 @@ struct SettingsView: View {
     @AppStorage(GameSettings.appearanceKey) private var appearance = "system"
     @AppStorage(GameSettings.devOffKey) private var devOff = ""
     @AppStorage(GameSettings.devStatsKey) private var devStats = false
+    @AppStorage(GameSettings.devTimingKey) private var devTiming = false
     @State private var music = MusicPlayer.shared
     @State private var justSaved = false
     @State private var confirmQuit = false
@@ -243,6 +244,12 @@ struct SettingsView: View {
                 section(L("Developer"), icon: .hammer) {
                     Toggle(L("Show frame rate"), isOn: $devStats)
                     Text(L("Frames a second, nodes and draw calls, in the corner of the map and fights."))
+                        .font(HUDStyle.font(10))
+                        .foregroundStyle(HUDStyle.dim)
+                        .fixedSize(horizontal: false, vertical: true)
+                    Toggle(L("Frame timing"), isOn: $devTiming)
+                        .onChange(of: devTiming) { _, on in FrameTiming.isOn = on }
+                    Text(L("How long each part of the map's frame takes, in milliseconds, over the joystick."))
                         .font(HUDStyle.font(10))
                         .foregroundStyle(HUDStyle.dim)
                         .fixedSize(horizontal: false, vertical: true)

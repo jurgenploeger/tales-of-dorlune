@@ -203,15 +203,21 @@ final class LandStage {
     func update(dt: TimeInterval, player: CGPoint, camera: CGPoint, scale: CGFloat, screen: CGSize, isHere: Bool = true) {
         let you = local(player), eye = local(camera)
         if onScreen || isHere { crowd?.update(dt: dt, player: you) }
+        FrameTiming.shared.lap("crowd")
         let visible = CGRect(x: eye.x - screen.width / 2 * scale, y: eye.y - screen.height / 2 * scale,
                              width: screen.width * scale, height: screen.height * scale)
         critters?.update(dt: dt, player: you, visible: visible, flocks: isHere) { [map] in map.isWalkable(map.rawCell(at: $0)) }
+        FrameTiming.shared.lap("critters")
         show(around: camera, scale: scale, screen: screen)
+        FrameTiming.shared.lap("chunks")
         if let grass, isHere || onScreen { wade(through: grass, dt: dt, you: you) }
+        FrameTiming.shared.lap("grass")
         let shadeOff = Self.isOffForDebug("shade")
         canopy.setOff(shadeOff)
         if !shadeOff { canopy.draw() }
+        FrameTiming.shared.lap("shade")
         coverPanes(dt)
+        FrameTiming.shared.lap("panes")
     }
 
     /// Lays the shade under its scenery away from `sun` (`CanopyShade.follow`).
@@ -861,7 +867,8 @@ final class LandStage {
         // or the sunk shore, a prop with `shadow` keeps its round one: `plant`).
         if map.hillIndex(at: cell) == nil, !map.isSunken(cell) {
             // A building's walls cast it, not a crown's rounds (`CanopyPainter.Caster.walls`).
-            canopy.add(node, picture: art.picture(of: sprite.texture), walls: wind.flatMap { art.asset($0)?.kind } == "building",
+            canopy.add(node, picture: art.picture(of: sprite.texture),
+                       walls: wind.flatMap { art.asset($0)?.kind } == "building" || wind.map(CanopyShade.isRock) == true,
                        flatBase: wind.map { CanopyShade.flatBases.contains($0) } ?? false)
         }
         return node
