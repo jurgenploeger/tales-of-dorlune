@@ -111,6 +111,44 @@ final class GroundTiles {
         return bits
     }
 
+    /// How far a carved road's drawn edge lies past the half width it painted its cells to (`carve`):
+    /// as wide as its cells drew it before, when each was rounded off a third of a cell past its middle.
+    private static let roadVerge = 0.2
+
+    /// The spots along the land's carved roads (`WorldMap.roadSpots`) whose drawn edge reaches into
+    /// each cell, worked out once.
+    private lazy var roadSpots: [GridPoint: [(x: Double, y: Double, half: Double)]] = {
+        var near: [GridPoint: [(x: Double, y: Double, half: Double)]] = [:]
+        // Every other spot, half a cell apart at most: closer, a tile's every pixel measured to twice
+        // as many for an edge no smoother.
+        for (index, spot) in map.roadSpots.enumerated() where index % 2 == 0 {
+            let reach = spot.half + Self.roadVerge + 0.1
+            for col in Int((spot.x - reach - 1).rounded(.down))...Int((spot.x + reach + 1).rounded(.down)) {
+                for row in Int((spot.y - reach - 1).rounded(.down))...Int((spot.y + reach + 1).rounded(.down)) {
+                    // Its nearest point to the cell's square within reach (with the edge's sway).
+                    let dx = max(0, abs(Double(col) + 0.5 - spot.x) - 0.5), dy = max(0, abs(Double(row) + 0.5 - spot.y) - 0.5)
+                    guard (dx * dx + dy * dy).squareRoot() < reach else { continue }
+                    near[GridPoint(col: col, row: row), default: []].append(spot)
+                }
+            }
+        }
+        return near
+    }()
+
+    /// Which cells of the 3×3 around `cell` a carved road painted and are road still (as `mask`).
+    private func curvedMask(_ cell: GridPoint) -> Int {
+        var bits = 0
+        for dy in -1...1 {
+            for dx in -1...1 {
+                let next = GridPoint(col: cell.col + dx, row: cell.row + dy)
+                if map.curvedRoad.contains(next), map.contains(next), map.ground[next.row][next.col] == .path {
+                    bits |= 1 << ((1 - dy) * 3 + dx + 1)
+                }
+            }
+        }
+        return bits
+    }
+
     /// The water cells of the 5×5 around `cell` (bit row * 5 + col, row 0 north), for shorelines.
     private func poolMask(_ cell: GridPoint) -> Int {
         var bits = 0
@@ -234,6 +272,53 @@ final class GroundTiles {
     /// A snowy land's own snow's tones (`meltCover`).
     private lazy var ownSnowTones: [(Double, Double, Double)]? = art.snowTones(theme.ground, from: ArtLibrary.Foreign(land: map.def.id, palette: theme.palette))
 
+    /// A plain ground cell in the band where this land meets one that isn't snow (or both are): its own
+    /// ground with the land next door's laid over it pixel by pixel (`ArtLibrary.blendedIn`), as much as
+    /// that land's share of the ground there (`Seam.share`, half on the border), blended between the
+    /// cells' middles so it comes on smoothly. Nil where no such band reaches, or across a snow border,
+    /// which has its own (`snowOver`).
+    private func seamBlend(_ cell: GridPoint, base: String, variant: Int) -> SKTileGroup? {
+        var best: (seam: Int, share: Double)?
+        for index in map.seams.indices {
+            guard let share = pixelShare(map.seams[index], cell), share > (best?.share ?? 0.005) else { continue }
+            best = (index, share)
+        }
+        guard let best, let other = foreignLand(map.seams[best.seam].neighbour),
+              Self.snowy(other.land) == Self.snowy(map.def) else { return nil }
+        let seam = map.seams[best.seam]
+        var corners: [GridPoint: Double] = [:]
+        for dr in -1...1 {
+            for dc in -1...1 {
+                let near = GridPoint(col: cell.col + dc, row: cell.row + dr)
+                corners[near] = pixelShare(seam, near) ?? best.share
+            }
+        }
+        let own = wang(cell, base: base)
+        guard let picture = pictures[ObjectIdentifier(own)] else { return nil }
+        let theirs = art.foreignTile(other.land.theme.ground, palette: other.from.palette, from: other.from.land,
+                                     variant: variant, base: base)
+        let covers = corners
+        let front: (Double, Double) -> Double = { x, y in
+            let fx = x - 0.5, fy = y - 0.5
+            let col = Int(fx.rounded(.down)), row = Int(fy.rounded(.down))
+            let tx = fx - Double(col), ty = fy - Double(row)
+            func at(_ dc: Int, _ dr: Int) -> Double { covers[GridPoint(col: col + dc, row: row + dr)] ?? 0 }
+            return (at(0, 0) * (1 - tx) + at(1, 0) * tx) * (1 - ty) + (at(0, 1) * (1 - tx) + at(1, 1) * tx) * ty
+        }
+        let place = origin, first = seam.sign > 0
+        return group("seam@\(cell.col),\(cell.row)") {
+            art.blendedIn(picture, other: theirs, cell: cell, origin: place, first: first, front: front)
+        }
+    }
+
+    /// How much of a cell's ground is the land next door's in the pixel blend (`seamBlend`): `Seam.share`
+    /// over `pixelBand` cells either side of the border, not the seam's own width (the patches spread over
+    /// 14; pixel by pixel, 5 reads as one soft edge, as the snow's does, and keeps the cells it makes few).
+    private func pixelShare(_ seam: Seam, _ cell: GridPoint) -> Double? {
+        seam.side(cell).map { Seam.share(at: $0, over: min(seam.reach, Self.pixelBand)) }
+    }
+    private static let pixelBand = 5.0
+
     /// A land next door, for its ground graded as it is there.
     private func foreignLand(_ id: String) -> (land: MapDef, from: ArtLibrary.Foreign)? {
         if let known = others[id] { return known }
@@ -246,7 +331,14 @@ final class GroundTiles {
     /// past its border as the land there lays it out (`Blend.shows`), a land next door's own or a
     /// third land's come over onto it. Nil on the sea, or past where the band could reach.
     private func look(_ cell: GridPoint) -> String? {
-        if map.owns(cell) { return map.foreign[cell].map { map.seams[$0].neighbour } ?? map.def.id }
+        if map.owns(cell) {
+            // The land next door's patches show only across a snow border; elsewhere its ground comes in
+            // pixel by pixel instead (`seamBlend`).
+            guard let index = map.foreign[cell] else { return map.def.id }
+            let neighbour = map.seams[index].neighbour
+            guard let other = foreignLand(neighbour), Self.snowy(other.land) != Self.snowy(map.def) else { return map.def.id }
+            return neighbour
+        }
         if let known = lookPast[cell] { return known }
         let found = map.blend.flatMap { blend in blend.shows(cell).map { blend.around.lands[$0] } }
         lookPast[cell] = found
@@ -401,7 +493,16 @@ final class GroundTiles {
         let fade = road == 0 || map.seams.isEmpty ? nil : roadFade(cell)
         // In a town's square its roads are cobbled (`ArtLibrary.GroundLayer.cobbled`); out in the wild, sand.
         let cobbled = road != 0 && fade == nil && inTown(cell)
-        if road != 0 { layers.append(.init(tile: theme.path, mask: road, style: .road, fade: fade, cobbled: cobbled)) }
+        if road != 0 {
+            var layer = ArtLibrary.GroundLayer(tile: theme.path, mask: road, style: .road, fade: fade, cobbled: cobbled)
+            if !cobbled, let spots = roadSpots[cell] {
+                layer.curves = spots.map {
+                    ArtLibrary.RoadSpot(x: $0.x - Double(col) - 0.5, y: $0.y - Double(row) - 0.5, half: $0.half + Self.roadVerge)
+                }
+                layer.curved = curvedMask(cell)
+            }
+            layers.append(layer)
+        }
         if pond != 0 { layers.append(.init(tile: waterID, mask: poolMask(cell), style: .water)) }
         let near = sea.isEmpty ? 0 : seaPool(cell)
         let coast = near == 0 ? 0 : shore(cell)
@@ -438,7 +539,8 @@ final class GroundTiles {
             chosen = plain(accent, variant)
         } else {
             // Shorelines depend on where they are (see organicTile), so each gets its own tile.
-            let place = (pond != 0 || coast != 0 ? "@\(col),\(row)" : "") + (cobbled ? "|cob\(ArtLibrary.cobblePhase(cell))" : "")
+            let curving = layers.contains { !$0.curves.isEmpty }
+            let place = (pond != 0 || coast != 0 || curving ? "@\(col),\(row)" : "") + (cobbled ? "|cob\(ArtLibrary.cobblePhase(cell))" : "")
             let key = base + "|" + layers.map { "\($0.style)\($0.mask)\($0.tile)\($0.from?.land ?? "")\($0.fade?.key ?? "")" }.joined(separator: "|") + place
             var tone: ((Double, Double) -> Int)? = nil
             if pond != 0, let field = pondField { tone = { field.tone($0, $1) } }
@@ -447,6 +549,12 @@ final class GroundTiles {
                 art.organicTile(base: base, layers: layers, cell: cell, variant: variant, pond: tone, seaward: toSea, across: across,
                                 ice: frozen)
             }
+        }
+        // Across a border with a land that isn't snow, its plain ground comes in pixel by pixel, not in
+        // patches (`seamBlend`); a road, pond, shore or patch there keeps the patches it had.
+        if !map.seams.isEmpty, road == 0, pond == 0, coast == 0, lush == 0, patch == 0, map.ground[row][col] == .ground,
+           let blended = seamBlend(cell, base: base, variant: variant) {
+            return (blended, near != 0)
         }
         return (snowOver(chosen, cell: cell, band: band != nil, wet: pond != 0 || coast != 0, patched: patch != 0), near != 0)
     }

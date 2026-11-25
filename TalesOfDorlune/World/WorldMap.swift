@@ -122,6 +122,13 @@ nonisolated final class WorldMap: @unchecked Sendable {
     private(set) var mainRoads: Set<GridPoint> = []
     /// Whether `paintRoad` is painting a main road now (`mainRoads`).
     private var carvingMainRoads = false
+    /// Its roads' and trails' middles as carved (`carve`), a spot every quarter of a cell along each
+    /// curve with its half width there, in grid cells, and the cells they painted (`curvedRoad`):
+    /// `GroundTiles` draws their edges from the curves, smooth, not round the cells.
+    private(set) var roadSpots: [(x: Double, y: Double, half: Double)] = []
+    private(set) var curvedRoad: Set<GridPoint> = []
+    /// Whether `paintRoad` is painting along a carved curve now (`curvedRoad`).
+    private var carvingCurve = false
     /// Where a road or trail crosses a river with no room for a bridge, fording it.
     private(set) var fords = 0
     /// Bridges where roads cross the river, footbridges out to the lakes' islands and jetties.
@@ -1182,7 +1189,10 @@ nonisolated final class WorldMap: @unchecked Sendable {
                 // door's meets it cell for cell; swelling and narrowing again beyond.
                 let settle = crossing.map { min(1, max(0, point.distance(to: $0) - CGFloat(Self.crossingSteady)) / 5) } ?? 1
                 let halfWidth = fenced ? base : base + base / 3 * sin(travelled / 6) * settle
+                roadSpots.append((Double(point.x), Double(point.y), Double(halfWidth)))
+                carvingCurve = true
                 paintRoad(around: point, radius: halfWidth)
+                carvingCurve = false
             }
         }
     }
@@ -1224,6 +1234,7 @@ nonisolated final class WorldMap: @unchecked Sendable {
                 guard cellCenter.distance(to: point) <= radius else { continue }
                 ground[cell.row][cell.col] = .path
                 if carvingMainRoads { mainRoads.insert(cell) }
+                if carvingCurve { curvedRoad.insert(cell) }
                 fenceCells.removeAll { $0 == cell }   // gate
             }
         }

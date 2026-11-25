@@ -399,6 +399,19 @@ final class ArtLibrary {
         /// A road in a town's square: cobbles down its middle, sand and pebbles either side, grass
         /// growing over its edges (`townRoad`, the user's pick from `tools/road_preview.py`, 2026-11-17).
         var cobbled = false
+        /// A carved road's curve near the cell (`WorldMap.roadSpots`), in the cell's coordinates, and
+        /// which cells of the 3×3 its carving painted (`curved`, as `mask`): its edge is drawn from the
+        /// curve, smooth as a road's, not round the cells it painted (the user, 2026-11-25: "too
+        /// patchy, while it should have more natural curves like an actual road").
+        var curves: [RoadSpot] = []
+        var curved = 0
+    }
+
+    /// A spot on a carved road's middle and how far its drawn edge lies from it (`GroundLayer.curves`).
+    nonisolated struct RoadSpot: Sendable {
+        let x: Double
+        let y: Double
+        let half: Double
     }
 
     /// A land next door, for its tiles (`GroundLayer.from`).
@@ -613,6 +626,38 @@ final class ArtLibrary {
     /// dark crevices, a few lone specks early), and is snowed where that's under how snowed over the
     /// ground is there (`front`, 0 to 1, at a point in the land's cells), in one of `tones` by its own
     /// brightness in the tile. (`cell`, `origin`: where it lies, so the clusters run on from tile to tile.)
+    /// A cell's own ground with the land next door's laid over it pixel by pixel, as far as `front`
+    /// says at each (0 none, 1 all), in clusters that grow as it rises, as the snow comes over a border
+    /// (`snowed`; the user, 2026-11-25: "we should apply that everywhere, because it's a much nicer change
+    /// from one land to the other than the patches we have now"). `other` is the land next door's ground
+    /// as it's graded there; both tiles the same size. The same clusters from either side, by where each
+    /// pixel lies on the continent (`origin`), so the two lands' cells meet at the border: each pixel's
+    /// order is the pair's, the first of the two lands by id (`first`) taking it turned over, so where one
+    /// side shows the other land's ground the other side shows it too.
+    func blendedIn(_ texture: SKTexture, other: SKTexture, cell: GridPoint, origin: GridPoint, first: Bool,
+                   front: (Double, Double) -> Double) -> SKTexture {
+        let image = picture(of: texture)
+        let size = image.width
+        guard size > 0, image.height == size, var out = PixelImage.pixels(of: image, width: size, height: size),
+              let theirs = PixelImage.pixels(of: picture(of: other), width: size, height: size) else { return texture }
+        for py in 0..<size {
+            for px in 0..<size {
+                let index = (py * size + px) * 4
+                guard theirs[index + 3] > 0 else { continue }
+                let x = Double(cell.col) + (Double(px) + 0.5) / Double(size)
+                let y = Double(cell.row) + 1 - (Double(py) + 0.5) / Double(size)
+                let cover = front(x, y)
+                guard cover > 0 else { continue }
+                let u = (origin.col + cell.col) * size + px, v = (origin.row + cell.row) * size + (size - 1 - py)
+                let raw = 0.6 * Self.iceNoise(u, v, every: 6) + 0.25 * Self.iceNoise(u + 917, v + 331, every: 2)
+                    + 0.15 * Self.iceHash(u, v)
+                guard (first ? 1 - raw : raw) < cover else { continue }
+                for k in 0..<4 { out[index + k] = theirs[index + k] }
+            }
+        }
+        return makeTexture(out, size: size)
+    }
+
     func snowed(_ texture: SKTexture, cell: GridPoint, origin: GridPoint, front: (Double, Double) -> Double,
                 tones: [(Double, Double, Double)]) -> SKTexture {
         let image = picture(of: texture)
@@ -1023,7 +1068,9 @@ final class ArtLibrary {
                      ice: Ice? = nil) -> SKTexture {
         let hasWater = layers.contains { $0.style == .water || $0.style == .cut }
         let place = (hasWater ? "@\(cell.col),\(cell.row)#\(variant)" : "") + (pond == nil ? "" : "|pond")
+        let curving = layers.contains { !$0.curves.isEmpty }
         let key = "organic|\(base)|" + layers.map { "\($0.tile):\($0.mask):\($0.style):\($0.from?.land ?? ""):\($0.fade?.key ?? "")" }.joined(separator: "|") + place
+            + (curving && !hasWater ? "@\(cell.col),\(cell.row)" : "")
             + (layers.contains { $0.cobbled } ? "|cob\(Self.cobblePhase(cell))" : "")
         if let cached = blended[key] { return cached }
         let size = max(tileImage(base).width, 16)
@@ -1090,7 +1137,13 @@ final class ArtLibrary {
             } else {
                 texels = variantPixels(layer.tile, pick, size: size)
             }
-            let segments: [(x0: Double, y0: Double, x1: Double, y1: Double)] = shore ? [] : Self.strokes(mask: layer.mask)
+            // Along a carved road its curve draws the edge (`curves`): the strokes between the cells it
+            // painted go, those to a cell it didn't (a footpath's, a place's earth) stay.
+            let segments: [(x0: Double, y0: Double, x1: Double, y1: Double)] = shore ? [] : Self.strokes(mask: layer.mask).filter { segment in
+                guard !layer.curves.isEmpty else { return true }
+                func painted(_ x: Double, _ y: Double) -> Bool { layer.curved & (1 << (Int(1 - y) * 3 + Int(x + 1))) != 0 }
+                return !(painted(segment.x0, segment.y0) && painted(segment.x1, segment.y1))
+            }
             let palette = pond != nil && layer.style == .water && Self.isPondWater(layer.tile) ? Self.pondPalette(texels) : nil
             // A town's road: the sand either side of its cobbles and the stones' colour, from the land's
             // own path and cobble tiles as graded here.
@@ -1124,7 +1177,16 @@ final class ArtLibrary {
                     } else {
                         var distance = Double.infinity
                         for segment in segments { distance = min(distance, Self.distance(x, y, to: segment)) }
-                        depth = radius + wobble - distance
+                        var deepest = radius + wobble - distance
+                        if !layer.curves.isEmpty {
+                            // Its edge wanders a little along the road, by where it lies, not every tile alike.
+                            let sway = 0.5 * Self.wobble(x, y, style: .water, cell: cell)
+                            for spot in layer.curves {
+                                let dx = x - spot.x, dy = y - spot.y
+                                deepest = max(deepest, spot.half + sway - (dx * dx + dy * dy).squareRoot())
+                            }
+                        }
+                        depth = deepest
                     }
                     let index = (py * size + px) * 4
                     switch layer.style {

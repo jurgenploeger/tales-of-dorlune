@@ -53,6 +53,10 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   land's ground and scenery give way to the next's in patches, measured from the border (14 cells each side, fewer where
   either land's maps.json theme `blend` says: Briarmere's and Snow White Forest's snow, beside rock, 5); its `Blend` says what
   any cell shows the same from every land, so a tile meets the one past the border (that land's) cleanly.
+  Since 0.9.204 the ground itself doesn't change in patches but pixel by pixel, as the snow comes over a border (the user,
+  2026-11-25): a plain ground cell within 5 of the border has the land next door's ground laid over its own in clusters,
+  half on the line (`GroundTiles.seamBlend`, `pixelShare`, `ArtLibrary.blendedIn`, the pair's one pattern so both sides
+  meet); a snow border keeps its patches and snow (`snowOver`), and roads, ponds, shores and patches theirs. The scenery still comes in patches.
   The world map (`WorldAtlas`) shows every land's minimap where it lies (`WorldOverview`, cached on disk).
   The continent is one scene (`ContinentScene`, docs/continuous-world.md): `World` holds which land owns each world
   cell and where you can walk; each land near you is laid out, planned (`LandPlanner`) and drawn a 32-cell chunk at a
@@ -312,6 +316,12 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   `highlight` half white), filling back in over about six seconds. The article's map of bytes is the brightest stamp
   less the fade since it, so each print is its own sprite showing its stamp less its age's fade
   (`Footprints.frames`). Keep the tool and the Swift in step; debug scenes `snow_trail`, `snow_trail_rosen` (the one that shows them), `sand_trail*`.
+- Roads and trails out in the lands are drawn from their curves as carved (the user, 2026-11-25: "too patchy, while it
+  should have more natural curves like an actual road"): `WorldMap.carve` keeps a spot every quarter cell along each
+  curve with its half width (`roadSpots`) and the cells it painted (`curvedRoad`); `GroundTiles` gives a road cell's
+  layer the spots reaching it (`roadSpots`, every other one, `roadVerge` 0.2 past the painted width) and
+  `ArtLibrary.organicTile` draws the edge as their distance, swaying a little by where it lies, the strokes
+  between painted cells dropped (to a footpath's or a place's cells kept). Each such edge tile is its own.
 - Town roads (the user's pick from `tools/road_preview.py`, 2026-11-17): in a town's square (`GroundTiles.inTown`,
   `WorldMap.townSquare`) every road cell is drawn by `ArtLibrary.townRoad` (`GroundLayer.cobbled`): cobbles about half a
   cell across down its middle in the colour of the land's `tile_town` (graded), their edge ragged stone by stone, sand
@@ -433,6 +443,9 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   (`BorderArt.wallTopLevel`, `wallThickness`): face on it looked flat, and the walk drawn on its face still read as thin (the user, 2026-11-18).
   Along the walk's far edge stands a parapet too, the face's own merlons above the walk's level (the user, 2026-11-18: "The walls miss the ridge on the outer edge").
   The pieces are drawn with no edge smoothing (smoothed, a seam a pixel wide showed between every two). `--sheet out.png` previews them.
+- Gates have depth (`TownFence.gate`, the user, 2026-11-25: "too flat"): a town's and a quest's border gate go back
+  `gateThickness` (0.35 of a cell) into the screen, the pillars and beam only (`solidParts`, not what hangs between),
+  in flat tones of the arch's own colour, tops lit and ends a shade darker, the arch's face over them.
 - `tools/gate_art.py`: each town's own gate over its roads (maps.json town `gate`: Meadowbrook's thatched
   lychgate, Prismhaven's crystal keystone, Ingothold's gold and red cloth, Larkspur's bluebird); quests'
   gates across borders keep RD's `town_gate`. Each is laid out as `town_gate` is (`TownFence.widened` spans a

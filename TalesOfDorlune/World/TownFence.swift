@@ -236,11 +236,36 @@ enum TownFence {
     static func gate(_ picture: CGImage, from a: CGPoint, to b: CGPoint) -> SKSpriteNode {
         let pad: CGFloat = 2
         let span = CGVector(dx: b.x - a.x, dy: b.y - a.y)
-        let gateSize = CGSize(width: abs(span.dx) + pad * 2, height: abs(span.dy) + gateHeight + pad * 2)
-        let start = CGPoint(x: span.dx >= 0 ? pad : gateSize.width - pad, y: span.dy >= 0 ? pad : gateSize.height - gateHeight - pad)
+        // Its depth (the user, 2026-11-25: "The gates should also be thicker because now it's too
+        // flat"): its pillars and beam go back into the screen `gateThickness` of a cell, at right
+        // angles to the line (north from a gate along x, east from one along y), as a city wall's
+        // walk does.
+        let c = CGFloat(0.5).squareRoot() * WorldMap.tileSize
+        let back = CGVector(dx: (span.dy >= 0 ? -c : c) * gateThickness, dy: c / 2 * gateThickness)
+        let gateSize = CGSize(width: abs(span.dx) + abs(back.dx) + pad * 2, height: abs(span.dy) + back.dy + gateHeight + pad * 2)
+        let left = min(0, span.dx, back.dx, span.dx + back.dx)
+        let start = CGPoint(x: pad - left, y: span.dy >= 0 ? pad : gateSize.height - gateHeight - back.dy - pad)
         // As wide as the gap, its pillars and banner as they are (`widened`).
         let arch = widened(picture, to: Int((abs(span.dx) / gateHeight * CGFloat(picture.height)).rounded()))
+        // In flat tones of its own colour (copies of its pixels stacked, each one's outline showed as
+        // stripes): its tops lit, its ends a shade darker, as a city wall's are.
+        let solid = solidParts(arch, of: picture)
+        let tops = filled(solid, averageColour(solid, shade: 1.05))
+        let sides = filled(solid, averageColour(solid, shade: 0.78))
+        let steps = max(1, Int(abs(back.dx).rounded(.up)))
         let texture = render(size: gateSize) { context in
+            // Its body: a lit copy a step from the back to the front. Then over the body only
+            // (`sourceAtop`), shaded copies as deep down as the tops go back, so the lit band left
+            // is its tops and the rest its ends; the arch's face last, over them.
+            for step in stride(from: steps, through: 1, by: -1) {
+                draw(tops, in: context, from: start + back * (CGFloat(step) / CGFloat(steps)), along: span, part: nil, height: gateHeight)
+            }
+            context.setBlendMode(.sourceAtop)
+            for step in stride(from: steps, through: 1, by: -1) {
+                let at = start + back * (CGFloat(step) / CGFloat(steps)) + CGVector(dx: 0, dy: -back.dy)
+                draw(sides, in: context, from: at, along: span, part: nil, height: gateHeight)
+            }
+            context.setBlendMode(.normal)
             draw(arch, in: context, from: start, along: span, part: nil, height: gateHeight)
         }
         let node = SKSpriteNode(texture: texture, size: gateSize)
@@ -286,6 +311,46 @@ enum TownFence {
         context.draw(right, in: CGRect(x: width - side, y: 0, width: side, height: h))
         context.draw(banner, in: CGRect(x: (width - banner.width) / 2, y: h - banner.height, width: banner.width, height: banner.height))
         return context.makeImage() ?? picture
+    }
+
+    /// `image`'s shape filled with one colour.
+    private static func filled(_ image: CGImage, _ colour: CGColor) -> CGImage {
+        let w = image.width, h = image.height
+        guard let context = CGContext(data: nil, width: w, height: h, bitsPerComponent: 8, bytesPerRow: w * 4,
+                                      space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)
+        else { return image }
+        let rect = CGRect(x: 0, y: 0, width: w, height: h)
+        context.draw(image, in: rect)
+        context.setBlendMode(.sourceIn)
+        context.setFillColor(colour)
+        context.fill(rect)
+        return context.makeImage() ?? image
+    }
+
+    /// How far a gate goes back into the screen (`gate`), in cells.
+    static let gateThickness: CGFloat = 0.35
+
+    /// What of a gate's arch (`widened` from `picture`) has depth (`gate`): its pillars, full height,
+    /// and the beam across their tops; not what hangs between them under the beam (a banner, a bell),
+    /// which would come out a slab.
+    private static func solidParts(_ arch: CGImage, of picture: CGImage) -> CGImage {
+        let w = arch.width, h = arch.height
+        let side = Int((Double(picture.width) * pillar).rounded())
+        let under = Int((Double(picture.height) * beam.upperBound).rounded())
+        guard side > 0, side * 2 < w, under < h,
+              let context = CGContext(data: nil, width: w, height: h, bitsPerComponent: 8, bytesPerRow: w * 4,
+                                      space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue),
+              let data = context.data
+        else { return arch }
+        context.draw(arch, in: CGRect(x: 0, y: 0, width: w, height: h))
+        let pixels = data.bindMemory(to: UInt8.self, capacity: w * h * 4)
+        // The bitmap's rows run top to bottom: everything between the pillars below the beam goes.
+        for y in under..<h {
+            for x in side..<(w - side) {
+                for channel in 0..<4 { pixels[(y * w + x) * 4 + channel] = 0 }
+            }
+        }
+        return context.makeImage() ?? arch
     }
 
     /// The town gate's parts (`widened`), as shares of its cropped picture (70 × 51 pixels).
