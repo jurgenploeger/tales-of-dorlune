@@ -29,13 +29,21 @@ def ears(d):
     return np.asarray(Image.open(p).convert("RGBA")) if os.path.exists(p) else None
 
 
+def cut(d):
+    """Where the elf's head is narrower than the doll's standing view (hero64_doll_ears_<direction>_cut.png, opaque
+    where the doll's pixels go), as on the walk rows (row_cut); None without one."""
+    p = os.path.join(HEROES, f"hero64_doll_ears_{d}_cut.png")
+    return np.asarray(Image.open(p).convert("RGBA")) if os.path.exists(p) else None
+
+
 def view(d):
-    """(standing view, ears) for a direction, a left one mirrored from its right twin; None without ears."""
+    """(standing view, ears, cut or None) for a direction, a left one mirrored from its right twin; None without
+    ears."""
     if d.endswith("left"):
         r = view(d[:-4] + "right")
-        return None if r is None else (r[0][:, ::-1], r[1][:, ::-1])
+        return None if r is None else (r[0][:, ::-1], r[1][:, ::-1], None if r[2] is None else r[2][:, ::-1])
     s, e = standing(d), ears(d)
-    return None if s is None or e is None else (s, e)
+    return None if s is None or e is None else (s, e, cut(d))
 
 
 def fit(frame, ref):
@@ -123,11 +131,18 @@ def elf(anim):
         v = view(d) if anim == "idle" else None
         if v is None:
             continue
-        ref, ear = v
+        ref, ear, gone = v
         for c in range(n):
             f = doll[r * 64:(r + 1) * 64, c * 64:(c + 1) * 64]
             if f[..., 3].any():
-                out[r * 64:(r + 1) * 64, c * 64:(c + 1) * 64] = wear(f, ear, fit(f, ref), ref)
+                sh = fit(f, ref)
+                if gone is not None:
+                    f = f.copy()
+                    ys, xs = np.nonzero(gone[..., 3])
+                    for y, x in zip(ys + sh[0], xs + sh[1]):
+                        if 0 <= y < 64 and 0 <= x < 64:
+                            f[y, x] = 0
+                out[r * 64:(r + 1) * 64, c * 64:(c + 1) * 64] = wear(f, ear, sh, ref)
     return out
 
 
