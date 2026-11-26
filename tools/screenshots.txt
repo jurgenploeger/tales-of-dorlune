@@ -1119,3 +1119,8 @@ gate_ingothold_2 | newgame,map=goldburg,at=gate1,landscape,weather=clear,hour=12
 gate_larkspur_2  | newgame,map=bluebird,at=gate1,landscape,weather=clear,hour=12 | 6
 city_wall_gate | newgame,map=rainbow_city,at=gate,landscape,weather=clear,hour=12 | 6
 roadside_wall_land | newgame,level=60,map=genie_desert,roadside=wall,landscape,weather=clear,hour=12 | 8
+# ChatGPT's trees and bushes (docs/ai-sprite-test/trees-bushes) in a few lands.
+trees_snow   | newgame,level=163,map=snow_white_forest,landscape,weather=clear,hour=12 | 8
+trees_swamp  | newgame,level=60,map=frog_swamp,landscape,weather=clear,hour=12 | 8
+trees_candy  | newgame,level=60,map=candy_mountain,landscape,weather=clear,hour=12 | 8
+trees_twilight | newgame,level=30,map=twilight_woods,landscape,weather=clear,hour=12 | 8
