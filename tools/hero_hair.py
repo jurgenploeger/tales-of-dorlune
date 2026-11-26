@@ -9,7 +9,8 @@ shades) and thinned with hero_outline_thin.py. It is lined up with the doll by t
 under the hair). The layer is the hair as drawn: its saturated ginger pixels, joined into patches (under 5 pixels,
 a blush, dropped), and the dark outline pixels touching them where the doll is clear there or differs. Nothing is
 redrawn (the user's rule for ChatGPT's art, 2026-11-24)."""
-import sys, colorsys
+import sys, os, colorsys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import numpy as np
 from PIL import Image
 from scipy import ndimage
@@ -80,6 +81,16 @@ if __name__ == "__main__":
         NO_GRADE = True; sys.argv.remove("--no-grade")
     if "--sat" in sys.argv:
         i = sys.argv.index("--sat"); SAT = float(sys.argv[i + 1]); del sys.argv[i:i + 2]
+    if sys.argv[1] == "lift-row":   # hero_hair.py lift-row <snapped row.png> <anim> <direction> <out.png>
+        import hero_ears as he, hero_template as t
+        S = np.asarray(Image.open(sys.argv[2]).convert("RGBA")); anim, d = sys.argv[3], sys.argv[4]
+        D = np.asarray(Image.open(os.path.join(he.HEROES, f"hero64_doll_{anim}_{d}.png")).convert("RGBA"))
+        out = np.zeros_like(D)
+        for c in range(t.ANIMS[anim]):
+            layer, sh = lift(S[:, c * 64:(c + 1) * 64], D[:, c * 64:(c + 1) * 64])
+            out[:, c * 64:(c + 1) * 64] = layer
+            print("frame", c + 1, "shift", sh, "hair px", int((layer[..., 3] > 0).sum()))
+        Image.fromarray(out).save(sys.argv[5])
     if sys.argv[1] == "grade":     # grade a layer lifted before GRADE: hero_hair.py grade <in.png> <out.png>
         Image.fromarray(grade(np.asarray(Image.open(sys.argv[2]).convert("RGBA")))).save(sys.argv[3])
     if sys.argv[1] == "lift":
@@ -111,6 +122,20 @@ def style_view(style, d):
     p = os.path.join(he.HEROES, f"hero64_hair_{style}_{d}.png")
     s = he.standing(d)
     return None if s is None or not os.path.exists(p) else (s, np.asarray(Image.open(p).convert("RGBA")))
+
+def row_hair(style, anim, d):
+    """A row's own hair, frame by frame (hero64_hair_<style>_<anim>_<direction>.png, lifted from ChatGPT's repaint of
+    that row with the hair: long hair hanging past the head showed gaps laid on as the standing view's, the user,
+    2026-11-26), a left row its right twin's mirrored frame by frame; None if not drawn."""
+    import hero_ears as he, hero_template as t
+    if d.endswith("left"):
+        r = row_hair(style, anim, d[:-4] + "right")
+        if r is None:
+            return None
+        n = t.ANIMS[anim]
+        return np.concatenate([r[:, c * 64:(c + 1) * 64][:, ::-1] for c in range(n)], 1)
+    p = os.path.join(he.HEROES, f"hero64_hair_{style}_{anim}_{d}.png")
+    return np.asarray(Image.open(p).convert("RGBA")) if os.path.exists(p) else None
 
 def wear_hair(frame, hair, shift, ref):
     """hero_ears.wear for hair: over clear pixels and over the head, the standing view's head grown by a pixel, as
@@ -208,15 +233,20 @@ def wear_style(style, anim, race="human"):
         if v is None:
             continue
         ref, hair = v
+        own = row_hair(style, anim, d)
         for c in range(n):
             sl = (slice(r * 64, (r + 1) * 64), slice(c * 64, (c + 1) * 64))
             f = doll[sl]
             if not f[..., 3].any():
                 continue
+            if own is not None:
+                # the row's own hair, lifted from this very frame: laid where it was drawn (its own frame the
+                # standing view, so it may go over the body, as painted)
+                ref, hair = f, own[:, c * 64:(c + 1) * 64]
             # on the elf the hair goes over the elf's frame: the walk and attack ears layers carry ChatGPT's own
             # head pixels round the ears, and laid back over the hair they showed through it as skin and specks
             # (the user, 2026-11-25)
-            sh = head_shift(f, ref, anim)
+            sh = (0, 0) if own is not None else head_shift(f, ref, anim)
             if elf is not None and d.startswith("up"):
                 # from behind the hair goes over the ears wherever it lies (laid over the elf's frame, the ears'
                 # pixels where the head is clear showed through it as lines, the user, 2026-11-25); the elf shows

@@ -461,6 +461,14 @@ One doll, end to end (it was the Human Male pilot until 2026-11-24).
     Facing right the hair still covered the ear's top (the user): the ear over the hair is now what stands past the
     head and, on its rows, up to 7 pixels in from it, plus its dark outline a row above and below; no band from the
     standing view's ear top.
+54. **Hair: Long straight** (2026-11-26), the first long style. Round 1 read as pigtails sitting high (the prompt had
+    asked for the hair close at the ears; now it covers them, the elf's ears coming over it in code); round 2 the
+    user liked the side-swept one but it was bulky; round 3 slimmer, 1 pixel past the head
+    (`tries/hair_long_down_try{1,2,3}{a,b}{,_8x}.png`), a picked (`hero64_hair_long_down.png`). Laid on the walk and
+    attack as the standing view's it showed gaps (the user): long hair gets ChatGPT's repaint of each row, lifted
+    frame by frame (`hero_hair.py lift-row`) to `hero64_hair_long_<anim>_<direction>.png`, which `wear_style`
+    uses over the standing view's where it's there (`row_hair`). Under a helmet (later, with the wearables) the
+    hair above its rim is hidden and the rest shows, as today's `nape_` layers do.
     Spiky up: ChatGPT sent its own 64-pixel files this time (`tries/hair_spiky_up_try1{a,b}{,_8x}.png`), the body
     pixel for pixel the doll's; the user picked a (`hero64_hair_spiky_up.png`), lifted untoned. **Spiky is done in all
     eight directions** (five drawn, three mirrored), on idle, walk, run and attack, human and elf.
