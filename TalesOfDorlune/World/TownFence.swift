@@ -100,8 +100,11 @@ enum TownFence {
     static func placeRoadsides(_ lines: [RoadsideLine], map: WorldMap, art: ArtLibrary, put: (SKSpriteNode) -> Void) {
         guard lines.contains(where: { $0.kind != .row }) else { return }
         let pickets = art.picture(of: art.sprite("fence").texture)
-        let stones = BorderArt.lowWallPicture(palette: map.def.theme.palette)
-        let capstones = BorderArt.lowWallTop(palette: map.def.theme.palette)
+        // ChatGPT's drawings (`tools/city_wall_art.py` `PICKED`), else the ones drawn in Swift.
+        let palette = map.def.theme.palette
+        let stones = art.gradedTile("low_wall", palette: palette) ?? BorderArt.lowWallPicture(palette: palette)
+        let capstones = art.gradedTile("low_wall_top", palette: palette) ?? BorderArt.lowWallTop(palette: palette)
+        let wallEnd = art.gradedTile("low_wall_end", palette: palette)
         for line in lines where line.kind != .row {
             let wall = line.kind == .wall
             guard let picture = wall ? stones : pickets else { continue }
@@ -109,7 +112,7 @@ enum TownFence {
             // 2026-11-18: "These little walls are also very thin").
             let made = wall
                 ? pieces(cells: line.cells, picture: picture, height: BorderArt.lowWallHeight, top: capstones,
-                         topLevel: BorderArt.lowWallHeight, thickness: BorderArt.lowWallThickness)
+                         topLevel: BorderArt.lowWallHeight, thickness: BorderArt.lowWallThickness, endPicture: wallEnd)
                 : pieces(cells: line.cells, picture: picture, height: roadsideHeight)
             for piece in made {
                 let node = SKSpriteNode(texture: piece.texture, size: piece.size)
@@ -132,7 +135,8 @@ enum TownFence {
     /// city wall's walk, or a low wall's capstones (`BorderArt.lowWallTop`).
     static func pieces(cells: [GridPoint], picture source: CGImage, height: CGFloat,
                        shaded: CGFloat = 1, top: CGImage? = nil, topLevel: CGFloat = BorderArt.wallTopLevel,
-                       thickness: CGFloat = BorderArt.wallThickness) -> [(cell: GridPoint, texture: SKTexture, size: CGSize, anchor: CGPoint)] {
+                       thickness: CGFloat = BorderArt.wallThickness,
+                       endPicture: CGImage? = nil) -> [(cell: GridPoint, texture: SKTexture, size: CGSize, anchor: CGPoint)] {
         let fence = Set(cells)
         guard !fence.isEmpty, let pickets = cropped(source) else { return [] }
         // `shaded`: how much darker the stretches along x are drawn (their south face, from the light).
@@ -164,8 +168,15 @@ enum TownFence {
         // parts, so now it shows a hole").
         let side = top == nil ? nil : averageColour(pickets, shade: 0.78)
         let sideLip = top == nil ? nil : averageColour(pickets, shade: 1.05)
+        // `endPicture`: the end drawn (a low wall's, `low_wall_end`), its column 0 at the near edge, standing
+        // from the foot back as deep as the top goes, a shade darker where it turns its side to the right.
         func end(at foot: CGPoint, back: CGVector, in context: CGContext) {
-            guard let side, let sideLip, deep > 0 else { return }
+            guard deep > 0 else { return }
+            if let endPicture {
+                draw(back.dx < 0 ? endPicture : dimmed(endPicture, by: 0.88), in: context, from: foot, along: back, part: nil, height: topLevel)
+                return
+            }
+            guard let side, let sideLip else { return }
             let corners = [foot, foot + back, foot + back + lift, foot + lift]
             context.setFillColor(side)
             context.beginPath()

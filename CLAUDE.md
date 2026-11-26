@@ -462,6 +462,9 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   (`BorderArt.wallTopLevel`, `wallThickness`): face on it looked flat, and the walk drawn on its face still read as thin (the user, 2026-11-18).
   Along the walk's far edge stands a parapet too, the face's own merlons above the walk's level (the user, 2026-11-18: "The walls miss the ridge on the outer edge").
   The pieces are drawn with no edge smoothing (smoothed, a seam a pixel wide showed between every two). `--sheet out.png` previews them.
+  ChatGPT's redraws are copied over them (`PICKED`, from `art-variants/walls/`, docs/ai-sprite-test/walls, 2026-11-26): the walk
+  and the tower so far (the face still to come), and the low wall along the roads (`low_wall`, `_top`, `_end`), which
+  `TownFence.placeRoadsides` takes over `BorderArt.lowWallPicture`, `lowWallTop` and the flat end (`pieces`' `endPicture`).
 - Gates have depth (`TownFence.gate`, the user, 2026-11-25: "too flat"): a town's and a quest's border gate go back
   `gateThickness` (0.35 of a cell) into the screen, the pillars and beam only (`solidParts`, not what hangs between),
   in flat tones of the arch's own colour, tops lit and ends a shade darker, the arch's face over them; where ChatGPT drew a
