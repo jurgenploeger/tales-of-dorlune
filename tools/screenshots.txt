@@ -139,6 +139,9 @@ slope_lotus_back | newgame,level=40,map=lotus_land,hill=0,weather=clear,hour=12 
 # Ingothold's countryside meeting Shiverdell: both sides blend pixel by pixel, and the road across too
 # (0.9.237, 0.9.238; the user, 2026-11-26: "In the land border it's still a hard line").
 border_ingothold | newgame,level=60,map=goldburg,border=valley_of_fear,weather=clear,hour=12 | 8
+# Glimmerbough's fairy tree houses drawn at their own size (0.9.244, ChatGPT's), by day and their windows lit at night.
+fairy_houses       | newgame,level=80,map=starfall_isle,at=4_4,weather=clear,hour=12 | 8
+fairy_houses_night | newgame,level=80,map=starfall_isle,at=4_4,weather=clear,hour=23 | 8
 # The countryside round the towns and cities, as full as the lands round it (playtesting 2026-10-15),
 # and a road into a city lined.
 countryside_city | newgame,level=60,map=goldburg,at=-50_0,weather=clear,hour=12 | 8
