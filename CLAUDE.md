@@ -384,7 +384,8 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
 - `tools/place_hamlets.py`: hamlets along the wild lands' roads (the user, 2026-11-22: "The world needs to feel alive
   and no empty boring areas"): each land filled to about 8 to 16 buildings by its size, in hamlets of up to five a few
   cells either side of its roads, each spot held to `world_layout.py`'s rules for what's set down by hand (on the land,
-  clear of rivers, apart from what's there), the land's own mix of buildings in each (`POOLS`, no one-offs: `UNIQUE`).
+  clear of rivers, apart from what's there), the land's own mix of buildings in each (`POOLS`, no one-offs: `UNIQUE`). Nothing in the way (a boulder, a tree) is set down within two cells of
+  any building, in town or out (`WorldMap.nearBuilding`, `LandPlanner`: a boulder stood before a hamlet's tent, the user, 2026-11-26).
   What it adds carries `"hamlet": true` and a rerun redoes them: rerun it after adding a land's buildings to its pool,
   then `world_layout.py --check` and `check_content.py`.
 - `tools/crystal_art.py`: the Glimmerdeep's crystal scenery from the caves' own rock (its walls, floor, spires and
