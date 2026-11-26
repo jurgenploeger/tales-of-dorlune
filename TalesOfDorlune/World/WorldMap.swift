@@ -1179,6 +1179,7 @@ nonisolated final class WorldMap: @unchecked Sendable {
 
         // Paint along a Catmull-Rom curve through the waypoints.
         var travelled: CGFloat = 0
+        var drawn: [(x: Double, y: Double, half: Double)] = []
         for index in 0..<(points.count - 1) {
             let p0 = points[max(0, index - 1)], p1 = points[index], p2 = points[index + 1], p3 = points[min(points.count - 1, index + 2)]
             let straight = crossing != nil && index == points.count - 2
@@ -1191,14 +1192,42 @@ nonisolated final class WorldMap: @unchecked Sendable {
                 // door's meets it cell for cell; swelling and narrowing again beyond.
                 let settle = crossing.map { min(1, max(0, point.distance(to: $0) - CGFloat(Self.crossingSteady)) / 5) } ?? 1
                 let halfWidth = fenced ? base : base + base / 3 * sin(travelled / 6) * settle
-                roadSpots.append((Double(point.x), Double(point.y), Double(halfWidth), curvesLaid))
+                drawn.append((Double(point.x), Double(point.y), Double(halfWidth)))
                 carvingCurve = true
                 paintRoad(around: point, radius: halfWidth)
                 carvingCurve = false
             }
         }
+        for spot in Self.rounded(drawn) { roadSpots.append((spot.x, spot.y, spot.half, curvesLaid)) }
         curvesLaid += 1
     }
+
+    /// A road's middle as it's drawn (`roadSpots`), rounded where it turns sharply: each spot the mean of
+    /// those up to `roundReach` either side, twice, fewer toward its ends so they stay where they are (where
+    /// it crosses into the land next door, the two meet). Sharp, a road's inside edge came to a point at a
+    /// bend (the user, 2026-11-26: "This corner is strange"); its cells are painted as carved.
+    private static func rounded(_ spots: [(x: Double, y: Double, half: Double)]) -> [(x: Double, y: Double, half: Double)] {
+        guard spots.count > 2 else { return spots }
+        var points = spots
+        for _ in 0..<2 {
+            var next = points
+            for index in 1..<(points.count - 1) {
+                let reach = min(roundReach, index, points.count - 1 - index)
+                var x = 0.0, y = 0.0
+                for k in (index - reach)...(index + reach) {
+                    x += points[k].x
+                    y += points[k].y
+                }
+                let count = Double(2 * reach + 1)
+                next[index] = (x: x / count, y: y / count, half: points[index].half)
+            }
+            points = next
+        }
+        return points
+    }
+
+    /// How many spots (a quarter of a cell each) either side a road's drawn middle is averaged over (`rounded`).
+    private static let roundReach = 10
 
     /// How many cells in from where a road crosses into the land next door it keeps its plain width,
     /// three cells across (`carve`), on both sides of the line.

@@ -324,7 +324,8 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   (`Footprints.frames`). Keep the tool and the Swift in step; debug scenes `snow_trail`, `snow_trail_rosen` (the one that shows them), `sand_trail*`.
 - Roads and trails out in the lands are drawn from their curves as carved (the user, 2026-11-25: "too patchy, while it
   should have more natural curves like an actual road"): `WorldMap.carve` keeps a spot every quarter cell along each
-  curve with its half width (`roadSpots`) and the cells it painted (`curvedRoad`); `GroundTiles` gives a road cell's
+  curve with its half width (`roadSpots`, rounded where it turns sharply, `WorldMap.rounded`: a moving mean, its ends kept, as a
+  sharp turn's inside edge came to a point) and the cells it painted (`curvedRoad`); `GroundTiles` gives a road cell's
   layer the spots reaching it (`roadSpots`, every other one, `roadVerge` 0.2 past the painted width) and
   `ArtLibrary.organicTile` draws the edge as their distance, swaying by where it lies and crumbling in clusters and single pixels (smooth, on bare ground it read as ruled, the user, 2026-11-26), the strokes
   between painted cells dropped (to a place's earth kept). Each such edge tile is its own. Footpaths too
