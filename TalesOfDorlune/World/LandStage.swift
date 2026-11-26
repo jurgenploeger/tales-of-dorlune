@@ -125,12 +125,23 @@ final class LandStage {
     func local(_ point: CGPoint) -> CGPoint { CGPoint(x: point.x - shift.dx, y: point.y - shift.dy) }
 
     /// Sets it all down, a piece at a time (`pause` between them: grading with its own palette).
-    func build(pause: @escaping () async -> Void) async {
+    /// `step`: says which step it's at (Settings → Developer's frame timing, `ContinentScene.breathe`). The
+    /// frame's given back after every step (`pause`): between a dozen of them at once, one frame took 720 ms
+    /// (the user's gauges, 2026-11-26).
+    func build(pause: @escaping () async -> Void, step: @escaping (String) -> Void = { _ in }) async {
+        func next(_ name: String) async {
+            await pause()
+            step(name)
+        }
+        step("water")
         placeLilyPads(plan.lilyPads)
         if !Self.isOffForDebug("water") { placeFloaters(plan.floaters) }
+        await next("bridges")
         placeBridges()
         placeHarbors()
-        for reed in plan.reeds {
+        await next("reeds")
+        for (index, reed) in plan.reeds.enumerated() {
+            if index % 40 == 39 { await pause() }
             let node = addScenery(reed)
             // The rocks cast one where the shade can't fall (the user, 2026-11-16: "The rocks in the water
             // should also have the shadows"): a lake and its shore lie sunk.
@@ -148,32 +159,51 @@ final class LandStage {
                 }
             }
         }
+        await next("falls")
         placeWaterfalls(plan.waterfalls)
         placeCliffFalls(plan.cliffFalls)
+        await next("pond motion")
         placePondMotion()
-        await pause()
+        await next("fence")
         placeFence()
+        await next("buildings")
         placeBuildings()
-        await pause()
+        await next("decor")
         placeDecor(plan.decor)
+        await next("npcs")
         placeNPCs(plan.npcs)
-        for prop in plan.localProps { addScenery(prop) }
-        await pause()
+        await next("local props")
+        for (index, prop) in plan.localProps.enumerated() {
+            if index % 40 == 39 { await pause() }
+            addScenery(prop)
+        }
+        await next("fairy rings")
         placeFairyRings(plan.fairyRings)
-        for rock in plan.outcrops { addScenery(rock) }
-        await pause()
+        await next("outcrops")
+        for (index, rock) in plan.outcrops.enumerated() {
+            if index % 40 == 39 { await pause() }
+            addScenery(rock)
+        }
+        await next("props")
         await placeProps(plan.props, seams: plan.seamProps, pause: pause)
+        await next("tall grass")
         placeTallGrass()
+        await next("roadsides")
         placeRoadsides()
+        await next("signposts")
         placeSignposts(plan.signposts)
+        await next("crags")
         placeCrags()
-        await pause()
+        await next("plateaus")
         placePlateaus()
+        await next("borders")
         placeBorders()
+        await next("panes")
         hidePanesBehindScenery()
+        await next("into view")
         bringIntoView()
         for npc in npcs { npc.node.settle() }
-        await pause()
+        await next("crowd")
         // A town's market traders sell what they have today, around your level.
         let market = Crowd.Market(sign: { [weak session] in session?.marketSign(for: $0) },
                                   shout: { [weak session] in session?.marketShout(for: $0) },
@@ -189,7 +219,9 @@ final class LandStage {
         }
         crowd.dares = { [weak session] rival in session?.dares(rival) ?? false }
         self.crowd = crowd
+        await next("critters")
         critters = Critters(def.ambience, world: world, map: map, seed: def.id)
+        step("done")
     }
 
     /// Whether any of its chunks is in the scene, near the camera (`show`).
