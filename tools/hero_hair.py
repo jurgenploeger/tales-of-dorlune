@@ -207,6 +207,46 @@ def ear_through(diff, f, worn, reach=5):
     inside = ndimage.distance_transform_cdt(worn[..., 3] > 0, metric="chessboard")
     return ear & (~hair | (inside <= reach))
 
+def tidy_ear(ear, hair):
+    """The ear laid over the hair, tidied: a pixel or two of hair between its pixels in a row filled with the ear
+    (the elf's own pixels there, which equal the doll's head and so weren't counted as ear), and a pixel of it over
+    the hair touching the rest of it on one side only dropped. Hair showed through the ear and its specks lay out
+    in the hair (the user, 2026-11-26: "stray pixels, it's a bit messy")."""
+    filled = ndimage.binary_closing(ear, np.ones((1, 3), bool)) | ear
+    filled = ndimage.binary_fill_holes(filled)
+    for _ in range(2):
+        nb = ndimage.convolve(filled.astype(int), np.array([[0, 1, 0], [1, 0, 1], [0, 1, 0]]), mode="constant")
+        filled = filled & ~(hair & (nb <= 1))
+    return filled
+
+def clean_ear(w, keep, hair, ear=None):
+    """The ear's own brown and grey specks (ChatGPT's elf painting has them where the ear meets the head and along
+    its edge: on bare skin they read as its shade, against the hair as stray pixels, the user, 2026-11-26): over the
+    hair they take the colour of the ear's skin beside them, and a grey one on its edge the ear's dark outline."""
+    out = w.copy()
+    def hsv(p):
+        return colorsys.rgb_to_hsv(*(p[:3] / 255))
+    # the edge's greys anywhere on the ear (`ear`: where the elf differs from the doll), its specks over the hair
+    for y, x in zip(*np.nonzero(keep | (ear if ear is not None else keep))):
+        if w[y, x, 3] == 0:
+            continue
+        h, s, v = hsv(w[y, x])
+        grey = s < 0.2 and v < 0.6
+        brown = hair[y, x] and s >= 0.5 and 0.3 <= v < 0.6 and 12 <= h * 360 <= 50
+        if not (grey or brown):
+            continue
+        nb = [(y + dy, x + dx) for dy, dx in ((0, -1), (0, 1), (-1, 0), (1, 0)) if 0 <= y + dy < 64 and 0 <= x + dx < 64]
+        edge = any(w[q][3] == 0 for q in nb)
+        if edge:
+            pick = [w[q] for q in nb if w[q][3] and w[q][:3].max() < 0.45 * 255 and hsv(w[q])[1] >= 0.2]
+        elif hair[y, x] or grey:
+            pick = [w[q] for q in nb if w[q][3] and w[q][:3].max() >= 0.45 * 255 and 0.2 <= hsv(w[q])[1] < 0.5]
+        else:
+            continue
+        if pick:
+            out[y, x] = pick[0]
+    return out
+
 def lone_specks(img):
     """Opaque pixels with no opaque neighbour, cleared."""
     a = img[..., 3] > 0
@@ -285,7 +325,8 @@ def wear_style(style, anim, race="human"):
                 # head pixels round the ears
                 e = elf[sl]
                 diff = (e[..., 3] > 0) & ((e != f).any(2))
-                ear = real_ear(diff, f, e[..., :3].max(2) < 110) | ear_through(diff, f, wear_hair(f, hair, sh, ref))
+                worn = wear_hair(f, hair, sh, ref)
+                ear = tidy_ear(real_ear(diff, f, e[..., :3].max(2) < 110) | ear_through(diff, f, worn), (worn != f).any(2))
                 top = ear_top(d)
                 # from behind (up, up-right, up-left) the ears layer lies over the back of the head: there the hair
                 # goes over it and only what stands out past the head shows (2026-11-25)
@@ -294,6 +335,7 @@ def wear_style(style, anim, race="human"):
                     # can start higher, and the hair covered its top edge (the user, 2026-11-25)
                     keep = ear
                     w = w.copy(); w[keep] = e[keep]
+                    w = clean_ear(w, keep, (worn != f).any(2), diff)
             out[sl] = lone_specks(w)
     return out
 
