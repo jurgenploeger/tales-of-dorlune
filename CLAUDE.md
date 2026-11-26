@@ -270,7 +270,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   distracted and was slow), and gusts in patches, timed by where each tree stands, that bow the crown downwind
   and let it spring back, bounce and settle. Only pixels move,
   so RD's art stays as drawn, and the game cuts the frames from the sprite as it's graded
-  (`ArtLibrary.windFrames`; a land's props' strips packed onto one texture first, `packWindFrames`, so its trees draw in batches, `WindField` keeps the clock, `LandStage.addScenery`); a rigged sprite moves
+  (`ArtLibrary.windFrames`; a land's props' strips packed onto one texture first, `packWindFrames`, the frame given back after each sprite's strip (all at once it held a frame 650 ms), so its trees draw in batches, `WindField` keeps the clock, `LandStage.addScenery`); a rigged sprite moves
   instead of swaying, caves keep the old sway (their depth of field swaps textures). Rerun it after
   redrawing a rigged sprite (`check_content.py` checks each rig fits); `--sheet` shows the clumps, `--gif`
   a grove in the wind. Buildings' hanging signs, lanterns and flags move in the same gusts (`tools/sway_art.py`,

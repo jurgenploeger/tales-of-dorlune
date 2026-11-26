@@ -1440,11 +1440,14 @@ final class ArtLibrary {
     /// (the user, 2026-11-25, after a post on pixel-art trees in the wind: the clumps aren't what's
     /// slow, drawing each tree off a picture of its own is). `windFrames` then finds them made; what
     /// it doesn't find (a land next door's recolour, or past `atlasSide`) it cuts on its own, as before.
-    func packWindFrames(_ ids: [String]) {
+    /// `pause`: the frame given back after each sprite's strip is cut: all of a land's at once held one
+    /// frame for 650 ms (the user's gauges, 2026-11-26, Frog Swamp).
+    func packWindFrames(_ ids: [String], pause: () async -> Void = {}) async {
         guard let book = WindBook.shared else { return }
         var items: [(texture: SKTexture, strip: CGImage, count: Int)] = []
         var seen: Set<ObjectIdentifier> = []
         for id in Set(ids).sorted() {
+            await pause()
             guard let rig = windRig(id) else { continue }
             let texture = sprite(id).texture
             let key = ObjectIdentifier(texture)
@@ -1473,6 +1476,7 @@ final class ArtLibrary {
             shelf = max(shelf, h)
         }
         let height = y + shelf + gap
+        await pause()
         guard spots.count > 1, height > 0,
               let context = CGContext(data: nil, width: side, height: height, bitsPerComponent: 8, bytesPerRow: 0,
                                       space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)
