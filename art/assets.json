@@ -302,6 +302,24 @@
       }
     },
     {
+      "id": "tile_rich_dark_grass",
+      "kind": "tile",
+      "derive": {
+        "from": "tile_rich_grass",
+        "recolor": [
+          {
+            "hue": [
+              40,
+              140
+            ],
+            "to": 168,
+            "saturation": 0.65,
+            "value": 0.52
+          }
+        ]
+      }
+    },
+    {
       "id": "tile_dark_flowers",
       "kind": "tile",
       "request": {

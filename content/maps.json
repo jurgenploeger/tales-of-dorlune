@@ -17573,6 +17573,7 @@
         "ground": "tile_dark_grass",
         "path": "tile_path",
         "accent": "tile_dark_flowers",
+        "lush": "tile_rich_dark_grass",
         "accentPatches": 16,
         "water": "tile_water",
         "ponds": 6,
