@@ -249,6 +249,18 @@ def clean_ear(w, keep, hair, ear=None):
             out[y, x] = pick[0]
     return out
 
+def back_ear_tips(e, f):
+    """Seen from behind, the elf's ears where they stand out past the doll's head, and the ear round them two
+    pixels in: the pixels of the ear joined to what stands past the head."""
+    diff = (e[..., 3] > 0) & (e != f).any(2)
+    far = ~ndimage.binary_dilation(f[..., 3] > 0, np.ones((3, 3), bool))
+    seed = diff & far
+    if not seed.any():
+        return np.zeros_like(diff)
+    lab, _ = ndimage.label(diff)
+    ear = np.isin(lab, [i for i in np.unique(lab[seed]) if i])
+    return ear & ndimage.binary_dilation(seed, np.ones((5, 5), bool))
+
 def lone_specks(img):
     """Opaque pixels with no opaque neighbour, cleared."""
     a = img[..., 3] > 0
@@ -316,6 +328,10 @@ def wear_style(style, anim, race="human"):
                 w0 = wear_hair(f, hair, sh, ref)
                 bare = (w0 == f).all(2)
                 w = w0.copy(); w[bare] = elf[sl][bare]
+                # but the ears' tips, where they stand out past the head, and two pixels round them: long hair
+                # covered the elf's ears from behind but for a speck (the user, 2026-11-26: show the near ear)
+                tip = back_ear_tips(elf[sl], f)
+                w[tip] = elf[sl][tip]
                 out[sl] = w
                 continue
             w = wear_hair(elf[sl] if elf is not None else f, hair, sh, ref)
