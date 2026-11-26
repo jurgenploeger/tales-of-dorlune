@@ -8331,8 +8331,21 @@
             "shadow": true
           },
           {
-            "art": "tree",
-            "count": 34,
+            "art": "autumn_tree",
+            "count": 18,
+            "within": 38,
+            "blocking": true,
+            "cluster": 2,
+            "size": [
+              0.8,
+              1.1
+            ],
+            "sway": true,
+            "shadow": true
+          },
+          {
+            "art": "golden_tree",
+            "count": 16,
             "within": 38,
             "blocking": true,
             "cluster": 2,
