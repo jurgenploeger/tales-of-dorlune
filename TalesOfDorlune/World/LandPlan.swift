@@ -1129,9 +1129,11 @@ final class LandPlanner {
                     )
                     // Nothing in the way set down against a building: a well stood in the corner of a house
                     // in town (the user, 2026-11-17), and out at a hamlet a boulder before a tent (2026-11-26).
+                    // Out in the lands, not what keeps near something (`near`: a milestone by the road, a
+                    // clam by the water), whose few spots the hamlets along the roads would take.
                     guard map.isFreeForScenery(cell, insideFence: placement.within != nil, blocking: placement.blocking),
                           index == 0 || suits(placement, cell),
-                          !placement.blocking || !map.nearBuilding(cell),
+                          !placement.blocking || (placement.within == nil && placement.near != nil) || !map.nearBuilding(cell),
                           map.foreign[cell] == nil, !isCoast(cell), !placement.blocking || roomOnIsland(cell),
                           gap == 0 || !nearPath(cell, within: gap),
                           placement.near.map({ isNear(cell, $0) }) ?? true else { continue }
