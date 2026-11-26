@@ -668,6 +668,9 @@ nonisolated struct MapDef: Decodable, Identifiable, Sendable {
             /// How high a mountain's top stands, in points: as asked where there's room for one that
             /// wide, else as high as the roomiest place allows.
             let height: Double
+            /// The most levels a terraced one stands in (`WorldMap.terracedMountainShapes`): fewer, steeper, on a
+            /// small land, so its places still find room (Hachoo Island's camp, 2026-11-26). Five when not given.
+            let levels: Int?
         }
     }
 

@@ -2478,7 +2478,10 @@ nonisolated final class WorldMap: @unchecked Sendable {
             // five every time, in ten lands they came out short or not at all, took the room for their
             // places, and left what stood on top where you couldn't climb (2026-11-26). And a level
             // fewer every 20 tries that find no spot for it.
-            let choices = terraced ? Self.terracedMountainShapes : [(levels: Self.mountainLevels, face: Self.mountainFace)]
+            let most = hills.mountains?.levels ?? Self.mountainLevels
+            let allowed = Self.terracedMountainShapes.filter { $0.levels <= most }
+            let choices = terraced ? (allowed.isEmpty ? [Self.terracedMountainShapes[Self.terracedMountainShapes.count - 1]] : allowed)
+                : [(levels: Self.mountainLevels, face: Self.mountainFace)]
             let fitting = mountain.flatMap { asked in
                 choices.firstIndex { ((widest - 1) / reachRound($0.face) - 1) * Self.mountainTop * mountainSteep / 1.5 >= asked * 0.92 }
             } ?? choices.count - 1

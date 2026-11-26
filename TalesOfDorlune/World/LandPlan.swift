@@ -1118,7 +1118,12 @@ final class LandPlanner {
                 } else {
                     map.randomFreeCell(blocking: placement.blocking, using: &rng)
                 }
-                guard let middle = found else { break }
+                // What keeps near something tries again while it has tries left: its spots are few and
+                // crowded, and stopping at the first miss left some lands with none (LandPlanTests, 2026-11-26).
+                guard let middle = found else {
+                    if placement.near != nil { continue }
+                    break
+                }
                 guard suits(placement, middle) else { continue }
                 let wanted = min(groupSize, placement.count - placed)
                 var inGroup = 0

@@ -14862,8 +14862,8 @@
         "hills": {
           "count": 2,
           "size": [
-            5,
-            9
+            6,
+            11
           ],
           "chain": [
             2,
@@ -19013,7 +19013,8 @@
           "height": 96,
           "mountains": {
             "count": 1,
-            "height": 160
+            "height": 160,
+            "levels": 3
           },
           "terraces": 44,
           "bank": "tile_cliff_rock"
