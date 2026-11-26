@@ -74,3 +74,49 @@ Check each in code (44 × 44, opaque, seamless: every edge row and column agains
 `art/sprites/<id>.png` (the original kept in `art-variants/ground_tiles/rd/`), rerun `tools/wang_art.py` and `check`,
 `tools/palette_preview.py`, `python3 tools/check_content.py`, `tools/pixel_scale.py` (the three at 1, the rest still
 1.375), then a Screenshots run (`slope_lotus`, `hill_bare`, `road_fade`, `continent_border`) before and after.
+
+## The pilot's result (2026-11-26)
+
+ChatGPT's grass and path (`art-variants/ground_tiles/`, `pilot_phone_compare.png`): 44 × 44, opaque, 20 and 21 colours,
+seamless (each edge as different from the opposite one as neighbouring pixels inside). At a phone's 3 screen pixels a
+point they read crisp and even, and the grass's stripes are gone. Its cliff rock read flat and grey, its moss faint: redone
+below. Not in the game yet: a land draws its tiles together (a road's path over its ground, patches over the grass), each
+resized to its ground's size (`ArtLibrary.variantPixels`), so 44 beside 32 would be resized 44 to 32 or 32 to 44, uneven
+again. Every drawn ground tile goes to 44 at once; the recolours follow their bases (dark grass, sand, shells, dark
+flowers, rich dark grass, sugar path; ice and chocolate the water, `tools/water_art.py`, redrawn in code at 44).
+
+## Batch 2: the lands' surfaces
+
+Attach, in this order: `style_reference_rd_4x.png`, `tile_grass_new_8x.png` and `tile_path_new_8x.png` (the pilot's,
+to match), then each tile's `_now_8x.png` and `_now_tiled_4x.png` in the list's order.
+
+> Redraw ten more of my game's ground tiles, one at a time, as the project's instructions say and exactly as the
+> last three (same rules: **44 × 44**, don't measure from the attached pictures; seamless on all four sides, with the
+> 3 × 3 preview `<id>_tiled.png` at 4×; fully opaque; a flat texture, no light from one side, no objects, no border, no
+> text; no long streaks or lines; small clusters of 2 to 6 pixels evenly scattered; 12 to 24 colours, hue-shifted;
+> natural colours close to today's). The first picture is our style sheet, the next two the grass and path you drew,
+> to match in look and pixel size: the others are today's 32 × 32 tiles at 8× and repeated 3 × 3.
+>
+> 1. `tile_cliff_rock` (again): a rough grey-brown rock cliff face seen from the front, **with much more contrast than
+>    last time**: light grey-beige stones with a lit top-left edge, dark brown-grey cracks between them, and clumps of
+>    clearly visible yellow-green moss (4 to 8 pixels each, a few per tile). Even all over (it repeats up and across
+>    tall walls), no single big stone or ledge.
+> 2. `tile_rich_grass`: deeper, richer green grass than the grass you drew, the same short tufts in clusters, a little
+>    darker and more saturated (it lies in broad patches over the plain grass).
+> 3. `tile_flowers`: the grass you drew, with small flowers scattered evenly over it: tiny pink and yellow blossoms of
+>    2 to 3 pixels, about 10 to 14 on the tile.
+> 4. `tile_desert`: warm orange-gold desert sand from above, soft wind ripples suggested by short clusters (not long
+>    lines), a few darker grains.
+> 5. `tile_swamp`: dark olive-green swamp ground from above, damp moss and mud in clusters, a few darker wet spots.
+> 6. `tile_forest_floor`: a forest floor from above: dark mossy green with scattered fallen leaves in brown, orange and
+>    gold, 2 to 4 pixels each.
+> 7. `tile_scree`: light grey gravel and small stones from above, each stone 2 to 4 pixels with a lit top-left pixel.
+> 8. `tile_snow`: soft fresh snow from above, near white with pale blue shadows in soft clusters.
+> 9. `tile_snow_path`: a trodden snow path from above: whiter and flatter than the snow, a few faint blue-grey
+>    footprint dents and specks of grit.
+> 10. `tile_town`: pale beige town paving stone colour from above, a little grain (the game uses it for the colour of
+>     its cobbled streets).
+
+## Batch 3: the caves (after batch 2)
+
+`tile_cave_floor`, `tile_cave_rock`, `tile_crystal_floor`, `tile_crystal_rock`, the same way, with their `_now_` pictures.
