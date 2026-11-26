@@ -2793,16 +2793,32 @@ final class WorldScene: SKScene {
         updateNotices()
     }
 
+    /// What each chest shows now, opened or not (`showChest`).
+    private var chestShown: [String: Bool] = [:]
+
+    /// A chest closed in its land's style till it's opened, then open (`ChestLook`); with no closed
+    /// drawing for the land, faded while it's empty.
+    private func showChest(_ chest: NPCDef, _ node: Walker) {
+        let opened = session.isOpened(chest.id)
+        guard let closed = ChestLook.closed(in: def, art: art) else {
+            if opened == (node.alpha > 0.5) { node.run(.fadeAlpha(to: opened ? 0.35 : 1, duration: 0.3)) }
+            return
+        }
+        guard chestShown[chest.id] != opened else { return }
+        chestShown[chest.id] = opened
+        node.setCycle(art.walkCycle(opened ? chest.art : closed))
+        node.alpha = 1
+    }
+
     // MARK: - Upkeep
 
     private func updateNotices() {
         var nearest: (id: String, distance: CGFloat)?
         for npc in npcs {
             npc.node.isNear = npc.node.position.distance(to: player.position) < Walker.nameRange
-            // A chest stands faded while it's empty, and comes back as something new turns up in it.
-            if npc.def.role == .chest, session.isOpened(npc.def.id) == (npc.node.alpha > 0.5) {
-                npc.node.run(.fadeAlpha(to: session.isOpened(npc.def.id) ? 0.35 : 1, duration: 0.3))
-            }
+            // A chest stands closed in its land's style (`ChestLook`) till it's opened, then open; with no
+            // closed drawing for its land, faded while it's empty, and back as something new turns up in it.
+            if npc.def.role == .chest { showChest(npc.def, npc.node) }
             // A waystone stands faded while it sleeps, and comes back once its quest wakes it.
             if npc.def.role == .waystone, session.isAwake(npc.def) == (npc.node.alpha < 0.9) {
                 npc.node.run(.fadeAlpha(to: session.isAwake(npc.def) ? 1 : 0.55, duration: 0.3))

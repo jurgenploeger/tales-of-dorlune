@@ -10016,6 +10016,7 @@
       ],
       "theme": {
         "ground": "tile_scree",
+        "chest": "chest_crystal",
         "path": "tile_path",
         "accent": "tile_cave_floor",
         "accentPatches": 27,
@@ -12529,6 +12530,7 @@
       "music": "meadow",
       "theme": {
         "ground": "tile_grass",
+        "chest": "chest_candy",
         "path": "tile_sugar_path",
         "accent": "tile_flowers",
         "accentPatches": 42,
@@ -20194,6 +20196,7 @@
       ],
       "theme": {
         "ground": "tile_scree",
+        "chest": "chest_coral",
         "path": "tile_path",
         "accent": "tile_cave_floor",
         "accentPatches": 12,
@@ -22756,6 +22759,7 @@
       ],
       "theme": {
         "ground": "tile_crystal_floor",
+        "chest": "chest_crystal",
         "path": "tile_scree",
         "accent": "tile_cave_floor",
         "accentPatches": 30,
@@ -23009,6 +23013,7 @@
       "battleMusic": "battle_dark",
       "theme": {
         "ground": "tile_crystal_floor",
+        "chest": "chest_crystal",
         "path": "tile_scree",
         "accent": "tile_cave_floor",
         "accentPatches": 30,
@@ -23295,6 +23300,7 @@
       "battleMusic": "battle_dark",
       "theme": {
         "ground": "tile_crystal_floor",
+        "chest": "chest_crystal",
         "path": "tile_scree",
         "accent": "tile_cave_floor",
         "accentPatches": 30,

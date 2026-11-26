@@ -64,5 +64,10 @@ Each copied from `art-variants/chests/` (a `PICKED` table, snapped to the grid i
 
 ## Results
 
-- **2026-11-26**: asked for; none back yet. Meanwhile the chests are already off the minimap and the world map, with no "!"
+- **2026-11-26**: three back as asked (32 × 32, alpha 0 or 255, 24 colours each): `chest_coral` (a teal shell, a pearl
+  lock), `chest_candy` (gingerbread, candy-cane bands, a green gem lock) and `chest_crystal` (grey stone, pink and blue
+  crystals; sent at 8× only, cut back to 1×). Copied as delivered (`tools/chest_art.py` `PICKED`), and Crystal Mountain
+  and the Glimmerdeep, Candy Mountain and the Water Temple show them (theme `chest`). Six to come; their lands keep the
+  open chest, faded once emptied, till then.
+- Earlier the same day: Meanwhile the chests are already off the minimap and the world map, with no "!"
   over them, and `treasure_chest` no longer stands as sand decoration on the three beaches.
