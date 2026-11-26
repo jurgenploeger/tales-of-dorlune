@@ -11174,6 +11174,22 @@
       "kind": "prop"
     },
     {
+      "id": "chest_desert",
+      "kind": "prop"
+    },
+    {
+      "id": "chest_beach",
+      "kind": "prop"
+    },
+    {
+      "id": "chest_wood",
+      "kind": "prop"
+    },
+    {
+      "id": "chest_frost",
+      "kind": "prop"
+    },
+    {
       "id": "chest_coral_open",
       "kind": "prop"
     },
