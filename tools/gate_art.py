@@ -348,6 +348,13 @@ DEPTH = {
     "gate_ingothold_top": "art-variants/gate_depth/gate_ingothold_top.png",
     "gate_ingothold_side": "art-variants/gate_depth/gate_ingothold_side.png",
     "gate_larkspur_side": "art-variants/gate_depth/gate_larkspur_side.png",
+    "gate_larkspur_top": "art-variants/gate_depth/gate_larkspur_top.png",
+    "gate_meadowbrook_top": "art-variants/gate_depth/gate_meadowbrook_top.png",
+    "gate_meadowbrook_side": "art-variants/gate_depth/gate_meadowbrook_side.png",
+    "gate_prismhaven_top": "art-variants/gate_depth/gate_prismhaven_top.png",
+    "gate_prismhaven_side": "art-variants/gate_depth/gate_prismhaven_side.png",
+    "town_gate_top": "art-variants/gate_depth/town_gate_top.png",
+    "town_gate_side": "art-variants/gate_depth/town_gate_side.png",
 }
 
 

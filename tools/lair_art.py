@@ -262,6 +262,9 @@ PROPS = {"standing_stone": standing_stone, "brazier": brazier, "wall_torch": wal
 PICKED = {"brazier": "art-variants/brazier/chatgpt_1.png",
           "gold_hoard": "art-variants/gold_hoard/chatgpt_1_fixed.png",
           "torn_tent": "art-variants/tents/torn_tent.png",
+          # The camps' own tent, whole and lived in (2026-11-26): painted at 1254 pixels on a 48-pixel grid
+          # (`art-variants/tents/raw/chatgpt_38.png`), snapped to 40 × 32 (`ai_sprite_eval.to_grid`), foot on row 44.
+          "camp_tent": "art-variants/tents/camp_tent.png",
           # The rest (docs/ai-sprite-test/lair-props, the user, 2026-11-26), as delivered: each its canvas and foot row,
           # the torch's four frames its plate, bracket and torch alike, only the flame moving.
           **{name: f"art-variants/{name}/chatgpt_1.png" for name in
@@ -275,7 +278,7 @@ def main(argv):
         i = argv.index("--sheet")
         sheet = argv[i + 1]
         argv = argv[:i] + argv[i + 2:]
-    ids = argv or list(PROPS)
+    ids = argv or list(dict.fromkeys([*PROPS, *PICKED]))
     out = {}
     for name in ids:
         if name in PICKED:

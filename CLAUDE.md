@@ -254,7 +254,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
 - Chests (NPC role `chest`) are found, not pointed to (the user, 2026-11-26): no "!" over them (`GameSession.notice`), nothing on the
   minimap or world map (`minimapKind`), and `treasure_chest` (RD's open one) isn't set down as decoration. Closed ones in each
   area's style (maps.json theme `chest`, `ChestLook`, `tools/chest_art.py` copies ChatGPT's from `art-variants/chests/`; all nine
-  closed, every wild land and cave one, docs/ai-sprite-test/chests) stand closed till opened, then their style's open one (`<id>_open`, `ChestLook.open`) or else `treasure_chest`; a land with none drawn yet fades it.
+  closed and open, every wild land and cave one, docs/ai-sprite-test/chests) stand closed till opened, then their style's open one (`<id>_open`, `ChestLook.open`); a land with none (the towns) keeps `treasure_chest`.
 - `tools/prop_art.py`: the same for the few props a generated sprite got wrong (`candy_cane`, whose hook came out
   as a two-sided arch) or none was made for (the harbors' `ship`, built in 3D and projected as the game's view is,
   then lit and finished as the buildings are and held to their bands, `form_relief` too;
@@ -451,7 +451,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   the coins are. `--sheet out.png` previews them.
 - `tools/lair_art.py`: the pieces of the bosses' lairs no sprite had (a standing stone, a brazier, a gold hoard, a
   warning post, the Rat King's junk throne, a heap of bones, a hunter's torn tent, a broken pillar), drawn with
-  `pixel_kit` and scored as scenery (the brazier and gold hoard redrawn by ChatGPT and copied, `PICKED`, the user's pick, 2026-11-21, and the torn tent, 48 pixels, 2026-11-25, docs/ai-sprite-test/tents; ChatGPT's
+  `pixel_kit` and scored as scenery (the brazier and gold hoard redrawn by ChatGPT and copied, `PICKED`, the user's pick, 2026-11-21, and the torn tent, 48 pixels, 2026-11-25, docs/ai-sprite-test/tents, for the lairs, and the camps' whole `camp_tent`, 2026-11-26, snapped from its painting; ChatGPT's
   blossom tree lost to ours). Since 2026-11-26 every piece is ChatGPT's (docs/ai-sprite-test/lair-props: the standing stone,
   warning post, throne, pillar, bones and the cave's wall torch, four frames, its flame's glow cut from rows 0 to 16, `window_art.py` `TORCH`),
   as are `prop_art.py`'s waystone, lost pile, candy cane, cave ladder and rope, and the ship (`PICKED`). A boss's lair is maps.json `lair` on the boss: pieces round it, its way in to
@@ -474,7 +474,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   `gateThickness` (0.35 of a cell) into the screen, the pillars and beam only (`solidParts`, not what hangs between),
   in flat tones of the arch's own colour, tops lit and ends a shade darker, the arch's face over them; where ChatGPT drew a
   gate's depth (`<gate>_top` 70 × 10, `<gate>_side` 10 × 51, docs/ai-sprite-test/gate-depth, `tools/gate_art.py` `DEPTH`), those are
-  laid over the flat tones: the top back from the front's top edge, widened as the front is (`widenedTop`), the side at the end that shows.
+  laid over the flat tones: the top back from the front's top edge, widened as the front is (`widenedTop`), the side at the end that shows. Every gate has both since 2026-11-26, the quests' `town_gate` too.
 - `tools/gate_art.py`: each town's own gate over its roads (maps.json town `gate`: Meadowbrook's thatched
   lychgate, Prismhaven's crystal keystone, Ingothold's gold and red cloth, Larkspur's bluebird); quests'
   gates across borders keep RD's `town_gate`. Each is laid out as `town_gate` is (`TownFence.widened` spans a

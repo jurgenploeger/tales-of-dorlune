@@ -2518,6 +2518,34 @@
       "kind": "prop"
     },
     {
+      "id": "gate_larkspur_top",
+      "kind": "prop"
+    },
+    {
+      "id": "gate_meadowbrook_top",
+      "kind": "prop"
+    },
+    {
+      "id": "gate_meadowbrook_side",
+      "kind": "prop"
+    },
+    {
+      "id": "gate_prismhaven_top",
+      "kind": "prop"
+    },
+    {
+      "id": "gate_prismhaven_side",
+      "kind": "prop"
+    },
+    {
+      "id": "town_gate_top",
+      "kind": "prop"
+    },
+    {
+      "id": "town_gate_side",
+      "kind": "prop"
+    },
+    {
       "id": "adobe_house",
       "scale": 1.35,
       "kind": "building",
@@ -3085,6 +3113,10 @@
     },
     {
       "id": "torn_tent",
+      "kind": "prop"
+    },
+    {
+      "id": "camp_tent",
       "kind": "prop"
     },
     {
@@ -11187,6 +11219,34 @@
     },
     {
       "id": "chest_frost",
+      "kind": "prop"
+    },
+    {
+      "id": "chest_crystal_open",
+      "kind": "prop"
+    },
+    {
+      "id": "chest_shadow_open",
+      "kind": "prop"
+    },
+    {
+      "id": "chest_swamp_open",
+      "kind": "prop"
+    },
+    {
+      "id": "chest_frost_open",
+      "kind": "prop"
+    },
+    {
+      "id": "chest_desert_open",
+      "kind": "prop"
+    },
+    {
+      "id": "chest_beach_open",
+      "kind": "prop"
+    },
+    {
+      "id": "chest_wood_open",
       "kind": "prop"
     },
     {

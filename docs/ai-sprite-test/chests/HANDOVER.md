@@ -78,3 +78,5 @@ Each copied from `art-variants/chests/` (a `PICKED` table, snapped to the grid i
   byte for byte). Wood for the green lands, the Emerald Road, Starfall Isle and the three plain caves; beach for the
   three shores; desert for Genie Desert and the Hidden Steppe; frost for Snow White Forest, Briarmere and Moonglow.
   Still to come as files: the open crystal, shadow, swamp, frost, desert, beach and wood chests.
+- **2026-11-26, last**: the open crystal, shadow, swamp, frost, desert, beach and wood chests in (coral's and candy's
+  came back the same). Every style has both now.

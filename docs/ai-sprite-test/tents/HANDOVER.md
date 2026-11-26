@@ -57,3 +57,6 @@ the grid if they come back big (`tools/ai_sprite_eval.py`), with the camp's scal
 - **2026-11-25**: `torn_tent` back as asked (48 × 48, 40 wide, 31 tall, lowest row 44, 25 colours, alpha 0 or 255),
   copied as delivered (`tools/lair_art.py` `PICKED`); the camps set it down at 1, not 1.3. `camp_tent` not back yet:
   the camps keep the torn one meanwhile.
+- **2026-11-26**: `camp_tent` back as paintings (1254 pixels, no 1×): the one on a 48-pixel grid snapped to 40 × 32
+  (`ai_sprite_eval.to_grid`, 22 colours), foot on row 44, kept in `art-variants/tents/` (raw in `raw/`); made the camps'
+  tent (`LandPlan`, at 1). The two torn ones painted again matched ours; the finer camp tent (60 × 44) was too big.
