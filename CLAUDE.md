@@ -267,7 +267,10 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   each where every tree had been a recolour of RD's `tree` and every bush of its `berry_bush`: a cherry, a
   gnarled dark tree, an autumn oak, a maple, a birch, a frosted bare tree, a willow, a jacaranda, candy trees,
   and ten bushes (a fir sapling, a tumbleweed, a bramble...), and the fir under snow for the snow lands. Each writes its own PNG, which wins over the
-  asset's `derive`; its `big_` twin, derived from it, follows. `--sheet out.png` previews them.
+  asset's `derive`; its `big_` twin, derived from it, follows, but for the seven ChatGPT drew at their own size
+  (`big_blossom_tree`, `_dark_`, `_frost_`, `_golden_`, `_lilac_`, `_red_maple`, `_swamp_`, 108 pixels, at scale 1, not
+  the small one at 1.7; and the fairy tree houses, 102 and 134, once the hollow tree recoloured at 1.6 and 2.1:
+  docs/ai-sprite-test/big-trees, `art-variants/big_trees/`, the user, 2026-11-26). `--sheet out.png` previews them.
   Since 2026-11-26 every tree and bush is ChatGPT's redraw, copied as drawn (`PICKED_DIR`, `art-variants/trees/`,
   docs/ai-sprite-test/trees-bushes: same canvas and foot row, hard alpha); the code still draws the shallows' rocks and
   the shore's grass and stones. Rerun `wind_art.py` after.
