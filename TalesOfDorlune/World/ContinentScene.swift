@@ -1963,7 +1963,7 @@ final class ContinentScene: SKScene {
         buildPhase = "build stage"
         progress[id] = 0.8
         let stage = LandStage(def: def, map: map, plan: planner.plan, tiles: tiles, art: art, session: session, shift: Self.shift(of: place))
-        await stage.build(pause: rest)
+        await stage.build(pause: rest) { [weak self] step in self?.buildPhase = "stage " + step }
         progress[id] = nil
         // Its adventurers spoiling for a fight dare you only in the land you're in.
         stage.crowd?.onChallenge = { [weak self, weak stage] rival in
