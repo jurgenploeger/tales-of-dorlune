@@ -2435,15 +2435,6 @@
             "blocking": true
           },
           {
-            "art": "treasure_chest",
-            "count": 10,
-            "blocking": true,
-            "size": [
-              0.9,
-              1.1
-            ]
-          },
-          {
             "art": "message_bottle",
             "count": 14,
             "blocking": false,
@@ -2841,6 +2832,7 @@
       "battleMusic": "battle_dark",
       "theme": {
         "ground": "tile_dark_grass",
+        "chest": "chest_shadow",
         "path": "tile_path",
         "accent": "tile_dark_flowers",
         "accentPatches": 40,
@@ -6558,6 +6550,7 @@
       ],
       "theme": {
         "ground": "tile_swamp",
+        "chest": "chest_swamp",
         "path": "tile_path",
         "accent": "tile_dark_grass",
         "accentPatches": 27,
@@ -7175,6 +7168,7 @@
       "danger": true,
       "theme": {
         "ground": "tile_dark_grass",
+        "chest": "chest_shadow",
         "path": "tile_path",
         "accent": "tile_scree",
         "accentPatches": 27,
@@ -8331,8 +8325,21 @@
             "shadow": true
           },
           {
-            "art": "tree",
-            "count": 34,
+            "art": "autumn_tree",
+            "count": 18,
+            "within": 38,
+            "blocking": true,
+            "cluster": 2,
+            "size": [
+              0.8,
+              1.1
+            ],
+            "sway": true,
+            "shadow": true
+          },
+          {
+            "art": "golden_tree",
+            "count": 16,
             "within": 38,
             "blocking": true,
             "cluster": 2,
@@ -10012,6 +10019,7 @@
       ],
       "theme": {
         "ground": "tile_scree",
+        "chest": "chest_crystal",
         "path": "tile_path",
         "accent": "tile_cave_floor",
         "accentPatches": 27,
@@ -12525,6 +12533,7 @@
       "music": "meadow",
       "theme": {
         "ground": "tile_grass",
+        "chest": "chest_candy",
         "path": "tile_sugar_path",
         "accent": "tile_flowers",
         "accentPatches": 42,
@@ -13332,6 +13341,7 @@
       "music": "cave",
       "theme": {
         "ground": "tile_dark_grass",
+        "chest": "chest_shadow",
         "path": "tile_path",
         "accent": "tile_dark_flowers",
         "accentPatches": 16,
@@ -15694,6 +15704,7 @@
       ],
       "theme": {
         "ground": "tile_swamp",
+        "chest": "chest_swamp",
         "path": "tile_path",
         "accent": "tile_dark_grass",
         "accentPatches": 12,
@@ -16291,6 +16302,7 @@
       "danger": true,
       "theme": {
         "ground": "tile_dark_grass",
+        "chest": "chest_shadow",
         "path": "tile_path",
         "accent": "tile_scree",
         "accentPatches": 12,
@@ -17115,15 +17127,6 @@
             "blocking": true
           },
           {
-            "art": "treasure_chest",
-            "count": 5,
-            "blocking": true,
-            "size": [
-              0.9,
-              1.1
-            ]
-          },
-          {
             "art": "message_bottle",
             "count": 8,
             "blocking": false,
@@ -17558,8 +17561,10 @@
       "music": "snow",
       "theme": {
         "ground": "tile_dark_grass",
+        "chest": "chest_shadow",
         "path": "tile_path",
         "accent": "tile_dark_flowers",
+        "lush": "tile_rich_dark_grass",
         "accentPatches": 16,
         "water": "tile_water",
         "ponds": 6,
@@ -19147,15 +19152,6 @@
             "blocking": true
           },
           {
-            "art": "treasure_chest",
-            "count": 6,
-            "blocking": true,
-            "size": [
-              0.9,
-              1.1
-            ]
-          },
-          {
             "art": "message_bottle",
             "count": 12,
             "blocking": false,
@@ -20207,6 +20203,7 @@
       ],
       "theme": {
         "ground": "tile_scree",
+        "chest": "chest_coral",
         "path": "tile_path",
         "accent": "tile_cave_floor",
         "accentPatches": 12,
@@ -22769,6 +22766,7 @@
       ],
       "theme": {
         "ground": "tile_crystal_floor",
+        "chest": "chest_crystal",
         "path": "tile_scree",
         "accent": "tile_cave_floor",
         "accentPatches": 30,
@@ -23022,6 +23020,7 @@
       "battleMusic": "battle_dark",
       "theme": {
         "ground": "tile_crystal_floor",
+        "chest": "chest_crystal",
         "path": "tile_scree",
         "accent": "tile_cave_floor",
         "accentPatches": 30,
@@ -23308,6 +23307,7 @@
       "battleMusic": "battle_dark",
       "theme": {
         "ground": "tile_crystal_floor",
+        "chest": "chest_crystal",
         "path": "tile_scree",
         "accent": "tile_cave_floor",
         "accentPatches": 30,

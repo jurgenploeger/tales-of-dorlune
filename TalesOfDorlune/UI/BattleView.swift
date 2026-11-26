@@ -316,7 +316,7 @@ private struct LockInStrip: View {
         let lockIns = controller.lockIns
         if lockIns != nil || ringed {
             TimelineView(.periodic(from: lockIns?.since ?? Date(), by: 0.25)) { context in
-                HStack(spacing: 5) {
+                HStack(spacing: 4) {
                     ForEach(lockIns == nil ? controller.choosers.filter(\.isHero) : controller.choosers) { fighter in
                         // Your place shows whoever you're choosing for, with the ring: you, then on its turn
                         // your companion in your place (the user, 2026-11-25: "it should show the companion's
@@ -333,15 +333,16 @@ private struct LockInStrip: View {
         }
     }
 
-    /// A face in the row: with a turn clock (`ringed`) every face keeps the ring's room round it, so
-    /// the row stands still as the ring moves from one to the next, and the one being chosen for
-    /// (`active`) wears it.
+    /// A face in the row: with a turn clock (`ringed`) the one being chosen for (`active`, always the
+    /// first: your companion takes your place on its turn) wears the ring, and the others keep its room
+    /// above and below only, so the row stands still: round them all it set the faces far apart (the
+    /// user, 2026-11-26: "The spacing between the small avatars ... should be less").
     @ViewBuilder
     private func slot(_ fighter: Combatant, ready: Bool, active: Bool) -> some View {
         if ringed && active {
             ringedFace(fighter, ready: ready)
         } else if ringed {
-            face(fighter, ready: ready).padding(TurnRing.inset)
+            face(fighter, ready: ready).padding(.vertical, TurnRing.inset)
         } else {
             face(fighter, ready: ready)
         }

@@ -860,7 +860,7 @@ final class LandPlanner {
         var rocks = SeededRandom(text: def.id + "/outcrops")
         for hill in map.hills {
             for cell in hill.cells.sorted(by: { ($0.row, $0.col) < ($1.row, $1.col) }) {
-                guard map.rise(across: cell) >= 6, map.isFreeForScenery(cell),
+                guard map.rise(across: cell) >= 6, map.isFreeForScenery(cell), !map.nearBuilding(cell),
                       Double.random(in: 0..<1, using: &rocks) < 0.08 * rocky else { continue }
                 let kind = kinds[Int.random(in: 0..<kinds.count, using: &rocks)]
                 map.occupy(cell, blocking: true)
@@ -1127,11 +1127,13 @@ final class LandPlanner {
                         col: middle.col + Int.random(in: -spread...spread, using: &rng),
                         row: middle.row + Int.random(in: -spread...spread, using: &rng)
                     )
-                    // In town, nothing in the way set down against a building: a well stood in the
-                    // corner of a house (the user, 2026-11-17).
+                    // Nothing in the way set down against a building: a well stood in the corner of a house
+                    // in town (the user, 2026-11-17), and out at a hamlet a boulder before a tent (2026-11-26).
+                    // Out in the lands, not what keeps near something (`near`: a milestone by the road, a
+                    // clam by the water), whose few spots the hamlets along the roads would take.
                     guard map.isFreeForScenery(cell, insideFence: placement.within != nil, blocking: placement.blocking),
                           index == 0 || suits(placement, cell),
-                          placement.within == nil || !placement.blocking || !map.nearBuilding(cell),
+                          !placement.blocking || (placement.within == nil && placement.near != nil) || !map.nearBuilding(cell),
                           map.foreign[cell] == nil, !isCoast(cell), !placement.blocking || roomOnIsland(cell),
                           gap == 0 || !nearPath(cell, within: gap),
                           placement.near.map({ isNear(cell, $0) }) ?? true else { continue }

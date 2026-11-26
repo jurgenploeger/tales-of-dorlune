@@ -205,6 +205,9 @@ nonisolated extension WorldMap {
         /// faces dwindle, and its back is the smooth slope it was, the way up
         /// (`WorldMap.shapeHill` blocks the faces).
         var terrace: Double?
+        /// How many levels a terraced mountain stands in (`WorldMap.raiseHills`, `carveStairs`): five where
+        /// they fit, fewer with a steeper face where they don't.
+        var levels = WorldMap.mountainLevels
         /// A range along a map's edge with a cave's mouth in it, rising on past the edge, rather than
         /// hills out in the fields.
         var isCrag: Bool { mouth != nil }

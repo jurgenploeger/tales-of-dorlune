@@ -560,6 +560,9 @@ nonisolated struct MapDef: Decodable, Identifiable, Sendable {
         /// A richer ground in broad soft patches across the land's own (`WorldMap.layLush`,
         /// `GroundTiles.lushMask`): darker, lusher grass in a meadow. A tile's id.
         let lush: String?
+        /// Its chests' closed drawing (`ChestLook`): the land's own style, ChatGPT's (docs/ai-sprite-test/chests).
+        /// Opened, a chest shows its NPC art, the open one.
+        let chest: String?
         /// Trees and the like in woods with open clearings between them, flowers in drifts in the
         /// clearings, rather than everything spread evenly (`LandPlanner.grove`).
         let groves: Bool?

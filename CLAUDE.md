@@ -71,7 +71,8 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   `GameCoordinator.mapScene` is whichever you're in.
 - Terraced hills (maps.json theme `hills.terraces`, a step in points, with `bank` the faces' rock; Sunny Meadow
   since 0.9.105, after `tools/cliff_preview.py`, every wild land's since 0.9.110; a mountain too since 0.9.189, in five levels, `WorldMap.mountainLevels`, its face
-  nearly as deep as its back, stairs cut across each face as ledges zig-zagging up it (not drawn as a path: messy, the user), `carveStairs`,
+  nearly as deep as its back (where one that tall doesn't fit, four, then three, steeper: `terracedMountainShapes`, `Hill.levels`; a
+  summit's chest or NPC on the nearest walkable cell of its top, `nearestOnTop`; in five every time ten lands lost room, 2026-11-26), stairs cut across each face as ledges zig-zagging up it (not drawn as a path: messy, the user), `carveStairs`,
   the user's pick from `tools/mountain_preview.py`, 2026-11-25): `Hill.terrace` steps each range's height into flat levels with a
   sheer face, only where its slopes face you (`Hill.stepped`: stepped all round, the faces turned away were laid
   back by `unfold()` into long ramps in deep shade), the faces dwindling round its sides and its back the smooth
@@ -250,6 +251,10 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   and its wall as high as the picture (`WorldMap.mouthTop`), so the plateau's edge runs level with the opening's top. Its floor runs into the road in front:
   the picture sunk 6 points onto it, its bottom 8 rows dithered out across the opening (`LandStage.fadeFloor`). It casts a hard
   shadow on the face behind, down and right in two steps, so its rocks stand off the rock (`placeMouth`).
+- Chests (NPC role `chest`) are found, not pointed to (the user, 2026-11-26): no "!" over them (`GameSession.notice`), nothing on the
+  minimap or world map (`minimapKind`), and `treasure_chest` (RD's open one) isn't set down as decoration. Closed ones in each
+  area's style (maps.json theme `chest`, `ChestLook`, `tools/chest_art.py` copies ChatGPT's from `art-variants/chests/`; three of
+  nine so far, docs/ai-sprite-test/chests) stand closed till opened, then their style's open one (`<id>_open`, `ChestLook.open`) or else `treasure_chest`; a land with none drawn yet fades it.
 - `tools/prop_art.py`: the same for the few props a generated sprite got wrong (`candy_cane`, whose hook came out
   as a two-sided arch) or none was made for (the harbors' `ship`, built in 3D and projected as the game's view is,
   then lit and finished as the buildings are and held to their bands, `form_relief` too;
@@ -270,7 +275,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   distracted and was slow), and gusts in patches, timed by where each tree stands, that bow the crown downwind
   and let it spring back, bounce and settle. Only pixels move,
   so RD's art stays as drawn, and the game cuts the frames from the sprite as it's graded
-  (`ArtLibrary.windFrames`; a land's props' strips packed onto one texture first, `packWindFrames`, so its trees draw in batches, `WindField` keeps the clock, `LandStage.addScenery`); a rigged sprite moves
+  (`ArtLibrary.windFrames`; a land's props' strips packed onto one texture first, `packWindFrames`, the frame given back after each sprite's strip (all at once it held a frame 650 ms), so its trees draw in batches, `WindField` keeps the clock, `LandStage.addScenery`); a rigged sprite moves
   instead of swaying, caves keep the old sway (their depth of field swaps textures). Rerun it after
   redrawing a rigged sprite (`check_content.py` checks each rig fits); `--sheet` shows the clumps, `--gif`
   a grove in the wind. Buildings' hanging signs, lanterns and flags move in the same gusts (`tools/sway_art.py`,
@@ -302,7 +307,8 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   Each kind of place is a landmark too (`WorldMap.landmark`: `at: "farm"`, `"ruin"`…, `which`): every land has a
   chest at one of its places (a potion or ether by its level, refilling as chests do) and someone living at another
   (maps.json `locals`). Theme `lush`: a richer ground tile in broad soft patches over the plain ground
-  (`WorldMap.layLush`, `GroundTiles.lushMask`; the grass lands' `tile_rich_grass`). A brazier smokes (`LandStage.addSmoke`), and so does a building's smoke hole (`LandStage.smokeHoles`: the yurt's, the teapot house's spout, the smokehouse's stack, the genie lamp's spout; their drawn smoke cut out of ChatGPT's pictures, `*_nosmoke.png`; steam and the lamp's wisp in their own colours, `smokeColours`; the user, 2026-11-22: "Any house that has something with smoke needs to be animated").
+  (`WorldMap.layLush`, `GroundTiles.lushMask`; the grass lands' `tile_rich_grass`, Sleepy Town's `tile_rich_dark_grass`, recoloured as
+  `tile_dark_grass` is: its ground read flat, the user, 2026-11-26). A brazier smokes (`LandStage.addSmoke`), and so does a building's smoke hole (`LandStage.smokeHoles`: the yurt's, the teapot house's spout, the smokehouse's stack, the genie lamp's spout; their drawn smoke cut out of ChatGPT's pictures, `*_nosmoke.png`; steam and the lamp's wisp in their own colours, `smokeColours`; the user, 2026-11-22: "Any house that has something with smoke needs to be animated").
 - Tall grass (the user's pick from `tools/grass_preview.py`, 2026-11-19, after SpriteCook's interactive tall grass article;
   visual only, green wild lands only): theme `tallGrass` (`patches`, `size`, `art`) lays soft rounds of cells
   (`WorldMap.layTallGrass`, kept from other scenery; debug `at=grass`), filled by `GrassField` with tufts about nine a
@@ -324,9 +330,10 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   (`Footprints.frames`). Keep the tool and the Swift in step; debug scenes `snow_trail`, `snow_trail_rosen` (the one that shows them), `sand_trail*`.
 - Roads and trails out in the lands are drawn from their curves as carved (the user, 2026-11-25: "too patchy, while it
   should have more natural curves like an actual road"): `WorldMap.carve` keeps a spot every quarter cell along each
-  curve with its half width (`roadSpots`) and the cells it painted (`curvedRoad`); `GroundTiles` gives a road cell's
+  curve with its half width (`roadSpots`, rounded where it turns sharply, `WorldMap.rounded`: a moving mean, its ends kept, as a
+  sharp turn's inside edge came to a point) and the cells it painted (`curvedRoad`); `GroundTiles` gives a road cell's
   layer the spots reaching it (`roadSpots`, every other one, `roadVerge` 0.2 past the painted width) and
-  `ArtLibrary.organicTile` draws the edge as their distance, swaying a little by where it lies, the strokes
+  `ArtLibrary.organicTile` draws the edge as their distance, swaying by where it lies and crumbling in clusters and single pixels (smooth, on bare ground it read as ruled, the user, 2026-11-26), the strokes
   between painted cells dropped (to a place's earth kept). Each such edge tile is its own. Footpaths too
   (`WorldMap.curveFootpath`: a footpath's cells' middles smoothed three times, `footpathHalf`). Where two meet, their
   edges round into each other (`ArtLibrary.smoothMax` over each road's own depth, `roadFillet` 1.4; each spot knows its `road`). Every path's edge is
@@ -383,7 +390,8 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
 - `tools/place_hamlets.py`: hamlets along the wild lands' roads (the user, 2026-11-22: "The world needs to feel alive
   and no empty boring areas"): each land filled to about 8 to 16 buildings by its size, in hamlets of up to five a few
   cells either side of its roads, each spot held to `world_layout.py`'s rules for what's set down by hand (on the land,
-  clear of rivers, apart from what's there), the land's own mix of buildings in each (`POOLS`, no one-offs: `UNIQUE`).
+  clear of rivers, apart from what's there), the land's own mix of buildings in each (`POOLS`, no one-offs: `UNIQUE`). Nothing in the way (a boulder, a tree) is set down within two cells of
+  any building, in town or out (`WorldMap.nearBuilding`, `LandPlanner`: a boulder stood before a hamlet's tent, the user, 2026-11-26).
   What it adds carries `"hamlet": true` and a rerun redoes them: rerun it after adding a land's buildings to its pool,
   then `world_layout.py --check` and `check_content.py`.
 - `tools/crystal_art.py`: the Glimmerdeep's crystal scenery from the caves' own rock (its walls, floor, spires and

@@ -224,6 +224,23 @@ final class LandStage {
         step("done")
     }
 
+    /// What each chest shows now, opened or not (`showChest`).
+    private var chestShown: [String: Bool] = [:]
+
+    /// A chest closed in its land's style till it's opened, then open (`ChestLook`); with no closed
+    /// drawing for the land, faded while it's empty.
+    private func showChest(_ chest: NPCDef, _ node: Walker) {
+        let opened = session.isOpened(chest.id)
+        guard let closed = ChestLook.closed(in: def, art: art) else {
+            if opened == (node.alpha > 0.5) { node.run(.fadeAlpha(to: opened ? 0.35 : 1, duration: 0.3)) }
+            return
+        }
+        guard chestShown[chest.id] != opened else { return }
+        chestShown[chest.id] = opened
+        node.setCycle(art.walkCycle(opened ? ChestLook.open(in: def, art: art, fallback: chest.art) : closed))
+        node.alpha = 1
+    }
+
     /// Whether any of its chunks is in the scene, near the camera (`show`).
     private(set) var onScreen = false
 
@@ -266,10 +283,9 @@ final class LandStage {
         var nearest: (npc: NPCDef, distance: CGFloat)?
         for npc in npcs {
             npc.node.isNear = npc.node.position.distance(to: you) < Walker.nameRange
-            // A chest stands faded while it's empty, and comes back as something new turns up in it.
-            if npc.def.role == .chest, session.isOpened(npc.def.id) == (npc.node.alpha > 0.5) {
-                npc.node.run(.fadeAlpha(to: session.isOpened(npc.def.id) ? 0.35 : 1, duration: 0.3))
-            }
+            // A chest stands closed in its land's style (`ChestLook`) till it's opened, then open; with no
+            // closed drawing for its land, faded while it's empty, and back as something new turns up in it.
+            if npc.def.role == .chest { showChest(npc.def, npc.node) }
             // A waystone stands faded while it sleeps, and comes back once its quest wakes it.
             if npc.def.role == .waystone, session.isAwake(npc.def) == (npc.node.alpha < 0.9) {
                 npc.node.run(.fadeAlpha(to: session.isAwake(npc.def) ? 1 : 0.55, duration: 0.3))
@@ -1750,7 +1766,7 @@ final class LandStage {
     /// theirs, graded as they are there.
     private func placeProps(_ props: [Placement], seams: [Placement], pause: @escaping () async -> Void) async {
         // Its trees' and bushes' wind frames on one texture, so they draw in batches (`packWindFrames`).
-        if !Self.isOffForDebug("wind") { art.packWindFrames(props.map { $0.art }) }
+        if !Self.isOffForDebug("wind") { await art.packWindFrames(props.map { $0.art }, pause: pause) }
         for (number, prop) in props.enumerated() {
             if number % 32 == 31 { await pause() }
             plant(prop)

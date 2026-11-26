@@ -302,6 +302,24 @@
       }
     },
     {
+      "id": "tile_rich_dark_grass",
+      "kind": "tile",
+      "derive": {
+        "from": "tile_rich_grass",
+        "recolor": [
+          {
+            "hue": [
+              40,
+              140
+            ],
+            "to": 168,
+            "saturation": 0.65,
+            "value": 0.52
+          }
+        ]
+      }
+    },
+    {
       "id": "tile_dark_flowers",
       "kind": "tile",
       "request": {
@@ -11122,6 +11140,34 @@
         "height": 32,
         "remove_bg": true
       }
+    },
+    {
+      "id": "chest_coral",
+      "kind": "prop"
+    },
+    {
+      "id": "chest_candy",
+      "kind": "prop"
+    },
+    {
+      "id": "chest_crystal",
+      "kind": "prop"
+    },
+    {
+      "id": "chest_shadow",
+      "kind": "prop"
+    },
+    {
+      "id": "chest_swamp",
+      "kind": "prop"
+    },
+    {
+      "id": "chest_coral_open",
+      "kind": "prop"
+    },
+    {
+      "id": "chest_candy_open",
+      "kind": "prop"
     },
     {
       "id": "message_bottle",
