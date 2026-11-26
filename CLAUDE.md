@@ -326,7 +326,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   should have more natural curves like an actual road"): `WorldMap.carve` keeps a spot every quarter cell along each
   curve with its half width (`roadSpots`) and the cells it painted (`curvedRoad`); `GroundTiles` gives a road cell's
   layer the spots reaching it (`roadSpots`, every other one, `roadVerge` 0.2 past the painted width) and
-  `ArtLibrary.organicTile` draws the edge as their distance, swaying a little by where it lies, the strokes
+  `ArtLibrary.organicTile` draws the edge as their distance, swaying by where it lies and crumbling in clusters and single pixels (smooth, on bare ground it read as ruled, the user, 2026-11-26), the strokes
   between painted cells dropped (to a place's earth kept). Each such edge tile is its own. Footpaths too
   (`WorldMap.curveFootpath`: a footpath's cells' middles smoothed three times, `footpathHalf`). Where two meet, their
   edges round into each other (`ArtLibrary.smoothMax` over each road's own depth, `roadFillet` 1.4; each spot knows its `road`). Every path's edge is

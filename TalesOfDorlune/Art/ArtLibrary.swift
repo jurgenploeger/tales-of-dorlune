@@ -1216,8 +1216,13 @@ final class ArtLibrary {
                         for segment in segments { distance = min(distance, Self.distance(x, y, to: segment)) }
                         var deepest = radius + wobble - distance
                         if !layer.curves.isEmpty {
-                            // Its edge wanders a little along the road, by where it lies, not every tile alike.
-                            let sway = 0.5 * Self.wobble(x, y, style: .water, cell: cell)
+                            // Its edge wanders along the road, by where it lies, not every tile alike, and crumbles
+                            // pixel by pixel in clusters: smooth, a road on bare ground read as ruled (the user,
+                            // 2026-11-26, Ingothold: "too perfect and smooth").
+                            let u = Int(((Double(cell.col) + 0.5 + x) * 32).rounded(.down))
+                            let v = Int(((Double(cell.row) + 0.5 + y) * 32).rounded(.down))
+                            let crumble = 0.1 * (Self.iceNoise(u, v, every: 5) - 0.5) + 0.06 * (Self.iceHash(u, v) - 0.5)
+                            let sway = 0.9 * Self.wobble(x, y, style: .water, cell: cell) + crumble
                             // Each road's own depth the deepest of its spots; the roads' together rounded
                             // off where they meet (`smoothMax`). The spots come a road at a time.
                             var joined = -Double.infinity, own = -Double.infinity
@@ -1652,10 +1657,10 @@ final class ArtLibrary {
         for dy in -1...1 {
             for dx in -1...1 {
                 let kx = (cx + dx) & 1023, ky = (cy + dy) & 1023
-                guard hash(kx, ky, 41) < 0.3 else { continue }
+                guard hash(kx, ky, 41) < 0.38 else { continue }
                 let px = (Double(cx + dx) + 0.25 + 0.5 * hash(kx, ky, 42)) * size
                 let py = (Double(cy + dy) + 0.25 + 0.5 * hash(kx, ky, 43)) * size
-                let radius = 0.04 + 0.035 * hash(kx, ky, 44)
+                let radius = 0.05 + 0.045 * hash(kx, ky, 44)
                 let ox = (gx - px) / radius, oy = (gy - py) / (radius * 0.8)
                 let d = ox * ox + oy * oy
                 guard d < 1 else { continue }
