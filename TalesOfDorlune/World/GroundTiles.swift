@@ -117,12 +117,14 @@ final class GroundTiles {
 
     /// The spots along the land's carved roads (`WorldMap.roadSpots`) whose drawn edge reaches into
     /// each cell, worked out once.
-    private lazy var roadSpots: [GridPoint: [(x: Double, y: Double, half: Double)]] = {
-        var near: [GridPoint: [(x: Double, y: Double, half: Double)]] = [:]
+    private lazy var roadSpots: [GridPoint: [(x: Double, y: Double, half: Double, road: Int)]] = {
+        var near: [GridPoint: [(x: Double, y: Double, half: Double, road: Int)]] = [:]
         // Every other spot, half a cell apart at most: closer, a tile's every pixel measured to twice
         // as many for an edge no smoother.
         for (index, spot) in map.roadSpots.enumerated() where index % 2 == 0 {
-            let reach = spot.half + Self.roadVerge + 0.1
+            // As far again as where two roads' edges round into each other (`ArtLibrary.roadFillet`):
+            // every cell near a junction knows both, or the rounding stopped at a cell's edge.
+            let reach = spot.half + Self.roadVerge + 0.1 + ArtLibrary.roadFillet / 4
             for col in Int((spot.x - reach - 1).rounded(.down))...Int((spot.x + reach + 1).rounded(.down)) {
                 for row in Int((spot.y - reach - 1).rounded(.down))...Int((spot.y + reach + 1).rounded(.down)) {
                     // Its nearest point to the cell's square within reach (with the edge's sway).
@@ -497,7 +499,7 @@ final class GroundTiles {
             var layer = ArtLibrary.GroundLayer(tile: theme.path, mask: road, style: .road, fade: fade, cobbled: cobbled)
             if !cobbled, let spots = roadSpots[cell] {
                 layer.curves = spots.map {
-                    ArtLibrary.RoadSpot(x: $0.x - Double(col) - 0.5, y: $0.y - Double(row) - 0.5, half: $0.half + Self.roadVerge)
+                    ArtLibrary.RoadSpot(x: $0.x - Double(col) - 0.5, y: $0.y - Double(row) - 0.5, half: $0.half + Self.roadVerge, road: $0.road)
                 }
                 layer.curved = curvedMask(cell)
             }

@@ -45,7 +45,9 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   (`WorldMap.shore`, drawn sunk by `HillArt`, darker the lower it lies; the sea paler in the shallows, `ContinentScene.shallows`:
   a distance field, after SpriteCook's shoreline article, each chunk's distances from the land worked out once,
   `shallowField`, 4 spots a cell, and drawn by `shallowShader` on the sea's own pixels, bands that round every bay and
-  point and broken crests rolling in; `tools/shore_art.py` mirrors it, before and after or `--gif`). `TalesOfDorlune/World/Region.swift` is a land's shape; `Continent.swift` reads
+  point and broken crests rolling in; `tools/shore_art.py` mirrors it, before and after or `--gif`; up a river's mouth too,
+  `mouthReach` 3 cells, its river cells taken for sea, `World.isRiver`, while the river's water dissolves into the sea's
+  over its last cells in clusters, `ArtLibrary.opensToSea`, no bank under it: the user, 2026-11-25). `TalesOfDorlune/World/Region.swift` is a land's shape; `Continent.swift` reads
   them: neighbours where shapes touch, open and walled borders (a border opens along its length once a road you can
   take joins the two lands, so none skips a quest), and the sea all round, each cell drawn by the nearest land
   (`BorderArt` draws the fences, rocks and city walls along the cell edges). Boxes overlap: a land lays out and
@@ -168,7 +170,10 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   parts of the world's drawing out (`GameSettings.devParts`, the debug flag `off=`'s names: `LandStage.isOffForDebug`
   reads both): trees in the wind (`WindField.tick`), shade, tall grass, water motion, footprints, ambience,
   lighting. Wind, shade and footprints change at once, the rest in lands built after. Frame timing (`FrameTiming`, end of
-  `ContinentScene.swift`): each part of the continent's frame laps it (`lap`), shown once a second over the joystick.
+  `ContinentScene.swift`): each part of the continent's frame laps it (`lap`), shown once a second over the joystick;
+  the land work on the main thread between frames is charged by step (`charge`, from `ContinentScene.breathe`: a land's
+  `build plan`/`hills`/`stage`/`ground`, `hills`, `banks`), with what the worst frame went to and the land being built;
+  "other" is what's left: SpriteKit drawing, SwiftUI and the rest.
 - A town's market traders (bots under a sign, `Crowd.placeTraders`) are closed for now (`Crowd.marketOpen`, the user,
   2026-11-25: a busy town ran at a few frames a second): as many adventurers walk about instead. Set it back to bring them back.
 - Monsters turn up 30% less often on a land's main roads (`WorldMap.mainRoads`, the roads out through its exits,
@@ -321,7 +326,12 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   curve with its half width (`roadSpots`) and the cells it painted (`curvedRoad`); `GroundTiles` gives a road cell's
   layer the spots reaching it (`roadSpots`, every other one, `roadVerge` 0.2 past the painted width) and
   `ArtLibrary.organicTile` draws the edge as their distance, swaying a little by where it lies, the strokes
-  between painted cells dropped (to a footpath's or a place's cells kept). Each such edge tile is its own.
+  between painted cells dropped (to a place's earth kept). Each such edge tile is its own. Footpaths too
+  (`WorldMap.curveFootpath`: a footpath's cells' middles smoothed three times, `footpathHalf`). Where two meet, their
+  edges round into each other (`ArtLibrary.smoothMax` over each road's own depth, `roadFillet` 1.4; each spot knows its `road`). Every path's edge is
+  natural (the user, 2026-11-25: "like pieces of grass or stones covering the edges"): the grass beside growing over it
+  in blades (`bladeReach`) and pebbles along it half on and half off (`ArtLibrary.edgePebble`); a town street's edge
+  sways in a four-cell pattern (its tiles still made for 16 places, `cobblePhase`), its pebbles in the same pattern.
 - Town roads (the user's pick from `tools/road_preview.py`, 2026-11-17): in a town's square (`GroundTiles.inTown`,
   `WorldMap.townSquare`) every road cell is drawn by `ArtLibrary.townRoad` (`GroundLayer.cobbled`): cobbles about half a
   cell across down its middle in the colour of the land's `tile_town` (graded), their edge ragged stone by stone, sand

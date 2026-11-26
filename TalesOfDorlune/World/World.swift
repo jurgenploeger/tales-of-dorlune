@@ -37,6 +37,9 @@ nonisolated final class World: @unchecked Sendable {
     /// and lakes (its shape's, `Region.isRiver`), so a land's layout never keeps you off it (it comes
     /// in round you, `ContinentScene.build`); then as its layout has it (`add`).
     private var walkable: [Bool]
+    /// Whether each cell is a river or lake as its land's shape paints it (`Region.isRiver`): where one
+    /// runs into the sea, the coast's shallows reach up into its mouth (`ContinentScene.shallowField`).
+    private var river: [Bool]
     /// The lands laid out so far (`add`), by index.
     private var laidOut: Set<Int> = []
     /// The harbors' piers, out over the sea (`Region.Road.pierCells`), walked on as the land
@@ -57,6 +60,7 @@ nonisolated final class World: @unchecked Sendable {
         owner = [UInt8](repeating: 0, count: columns * rows)
         grounds = [UInt8](repeating: 0, count: columns * rows)
         walkable = [Bool](repeating: false, count: columns * rows)
+        river = [Bool](repeating: false, count: columns * rows)
         for (number, item) in lands.enumerated() {
             let land = item.land
             for row in 0..<land.rows {
@@ -67,6 +71,7 @@ nonisolated final class World: @unchecked Sendable {
                     if owner[index] == 0 {
                         owner[index] = UInt8(number + 1)
                         walkable[index] = !item.region.isRiver(cell)
+                        river[index] = item.region.isRiver(cell)
                     } else {
                         conflicts += 1
                     }
@@ -181,6 +186,12 @@ nonisolated final class World: @unchecked Sendable {
     func ground(at cell: GridPoint) -> Ground? {
         guard let index = index(cell), grounds[index] > 0 else { return nil }
         return Ground(rawValue: grounds[index] - 1)
+    }
+
+    /// Whether a world cell is a river or lake, as its land's shape paints it (`river`).
+    func isRiver(_ cell: GridPoint) -> Bool {
+        guard let index = index(cell) else { return false }
+        return river[index]
     }
 
     /// Whether you can walk on a world cell: as its land's laid out, or till then anywhere on it but

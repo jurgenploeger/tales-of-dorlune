@@ -412,6 +412,22 @@ final class ArtLibrary {
         let x: Double
         let y: Double
         let half: Double
+        /// Which road or footpath it's on: where two meet, their edges round into each other.
+        let road: Int
+    }
+
+    /// How far round two roads' edges flare into each other where they meet (`organicTile`), in cells:
+    /// joined as a plain union, a road met another at a hard corner (the user, 2026-11-25: "should curve
+    /// more naturally to the other sides when it connects here").
+    nonisolated static let roadFillet = 1.4
+
+    /// The greater of two depths, rounded off where they're within `k` of each other (a polynomial
+    /// smooth maximum).
+    nonisolated static func smoothMax(_ a: Double, _ b: Double, _ k: Double) -> Double {
+        guard a > -.infinity else { return b }
+        guard b > -.infinity else { return a }
+        let h = max(k - abs(a - b), 0) / k
+        return max(a, b) + h * h * k / 4
     }
 
     /// A land next door, for its tiles (`GroundLayer.from`).
@@ -466,6 +482,9 @@ final class ArtLibrary {
                 Self.paintPond(&out, (py * size + px) * 4, texels: texels, tone: tone(x, y), palette: palette, shade: 1, sea: sea,
                                other: across?(x, y))
                 if let ice { Self.freeze(&out, (py * size + px) * 4, x: x, y: y, size: size, tones: palette.tones, ice: ice) }
+                if let share = sea?.share, Self.opensToSea(x, y, share: share) {
+                    for c in 0..<4 { out[(py * size + px) * 4 + c] = 0 }
+                }
             }
         }
         let texture = makeTexture(out, size: size)
@@ -581,6 +600,18 @@ final class ArtLibrary {
         out[index] = UInt8(max(0, min(255, (colour.0 * 255).rounded())))
         out[index + 1] = UInt8(max(0, min(255, (colour.1 * 255).rounded())))
         out[index + 2] = UInt8(max(0, min(255, (colour.2 * 255).rounded())))
+    }
+
+    /// Whether a river's water at (x, y), in cells, has dissolved into the sea's (clear, the sea and its
+    /// shallows showing through, `ContinentScene.shallowField`): by how near the sea it lies along the
+    /// river (`share`, 1 at the sea, `GroundTiles.seaShare`), in clusters, all of it a cell from the sea
+    /// and none three up. Its last tiles stopped dead at the cells' edge (the user, 2026-11-25).
+    nonisolated static func opensToSea(_ x: Double, _ y: Double, share: Double) -> Bool {
+        let fade = min(1, max(0, (share - 0.74) / 0.26))
+        guard fade > 0 else { return false }
+        let u = Int((x * 32).rounded(.down)), v = Int((y * 32).rounded(.down))
+        let noise = 0.6 * iceNoise(u, v, every: 6) + 0.25 * iceNoise(u + 917, v + 331, every: 2) + 0.15 * iceHash(u, v)
+        return noise < fade
     }
 
     /// A pixel's own fixed number, 0..<1 (ice and snow).
@@ -1173,7 +1204,13 @@ final class ArtLibrary {
                         for bit in 0..<9 where layer.mask & (1 << bit) == 0 {
                             nearest = min(nearest, Self.gap(x, y, to: (x: Double(bit % 3 - 1), y: Double(1 - bit / 3))))
                         }
-                        depth = nearest + wobble
+                        // Its edge sways a little, in a pattern that repeats every four cells as its cobbles do,
+                        // so its tiles still serve 16 places: along the cells' edges it ran dead straight (the
+                        // user, 2026-11-25: streets "natural" too).
+                        let phase = Self.cobblePhase(cell)
+                        let wx = Double(phase / 4) + x + 0.5, wy = Double(phase % 4) + y + 0.5
+                        let sway = 0.07 * sin(Double.pi / 2 * (wx + 2 * wy)) + 0.045 * sin(Double.pi / 2 * (3 * wx - wy) + 1.1)
+                        depth = layer.mask == (1 << 9) - 1 ? nearest + wobble : nearest + wobble + sway
                     } else {
                         var distance = Double.infinity
                         for segment in segments { distance = min(distance, Self.distance(x, y, to: segment)) }
@@ -1181,16 +1218,53 @@ final class ArtLibrary {
                         if !layer.curves.isEmpty {
                             // Its edge wanders a little along the road, by where it lies, not every tile alike.
                             let sway = 0.5 * Self.wobble(x, y, style: .water, cell: cell)
+                            // Each road's own depth the deepest of its spots; the roads' together rounded
+                            // off where they meet (`smoothMax`). The spots come a road at a time.
+                            var joined = -Double.infinity, own = -Double.infinity
+                            var road = layer.curves[0].road
                             for spot in layer.curves {
+                                if spot.road != road {
+                                    joined = Self.smoothMax(joined, own, Self.roadFillet)
+                                    own = -.infinity
+                                    road = spot.road
+                                }
                                 let dx = x - spot.x, dy = y - spot.y
-                                deepest = max(deepest, spot.half + sway - (dx * dx + dy * dy).squareRoot())
+                                own = max(own, spot.half + sway - (dx * dx + dy * dy).squareRoot())
                             }
+                            deepest = max(deepest, Self.smoothMax(joined, own, Self.roadFillet))
                         }
                         depth = deepest
                     }
                     let index = (py * size + px) * 4
                     switch layer.style {
                     case .road, .patch, .ground:
+                        // A path's edge, natural (the user, 2026-11-25: "like pieces of grass or stones covering
+                        // the edges of the paths"): the grass beside it growing over it in blades, and pebbles
+                        // lying along it, half on the path and half off.
+                        if layer.style == .road, depth > -0.08, depth < 0.12, texels.count == out.count {
+                            let grassy = Int(out[index + 1]) > Int(out[index]) + 8 && Int(out[index + 1]) > Int(out[index + 2]) + 8
+                            let reach = grassy && !layer.cobbled ? 0.7 * Self.bladeReach(Double(cell.col) + x - Double(cell.row) - y) : -1
+                            if depth > 0, depth < reach {
+                                let shade = depth > reach - 0.03 ? 1.12 : 0.9
+                                for c in 0..<3 { out[index + c] = UInt8(max(0, min(255, Double(out[index + c]) * shade))) }
+                                out[index + 3] = 255
+                                continue
+                            }
+                            // The cobbled streets' pebbles where their pattern repeats (`cobblePhase`), so their
+                            // tiles still serve 16 places; out in the lands, where the tile lies.
+                            let phase = Self.cobblePhase(cell)
+                            let at = layer.cobbled ? (x: Double(phase / 4) + x, y: Double(phase % 4) + y)
+                                : (x: Double(cell.col) + x, y: Double(cell.row) + y)
+                            if depth > -0.06, depth < 0.08, let tone = Self.edgePebble(at.x, at.y) {
+                                let r = Double(texels[index]), g = Double(texels[index + 1]), b = Double(texels[index + 2])
+                                let grey = (r + g + b) / 3
+                                for (c, v) in [r, g, b].enumerated() {
+                                    out[index + c] = UInt8(max(0, min(255, (v * 0.45 + grey * 0.55) * 0.9 * tone)))
+                                }
+                                out[index + 3] = 255
+                                continue
+                            }
+                        }
                         guard depth > 0 else { continue }
                         if layer.cobbled, sand.count == out.count {
                             Self.townRoad(&out, index, x: x, y: y, depth: depth, rim: rim, cell: cell,
@@ -1245,6 +1319,9 @@ final class ArtLibrary {
                                             tones: palette.tones, ice: ice)
                             }
                             out[index + 3] = 255
+                            if let share = sea?.share, Self.opensToSea(Double(cell.col) + 0.5 + x, Double(cell.row) + 0.5 + y, share: share) {
+                                for c in 0..<4 { out[index + c] = 0 }
+                            }
                         } else if depth > 0 {
                             // Foam along the edge, broken here and there, with a few flecks out past it.
                             let foam = depth < 0.05 ? (speck < 0.75 ? 0.35 : 0.12) : (depth < 0.1 && speck < 0.12 ? 0.22 : 0)
@@ -1560,6 +1637,29 @@ final class ArtLibrary {
         let grey = 0.3 * mean.0 + 0.59 * mean.1 + 0.11 * mean.2
         func mix(_ c: Double) -> Double { (grey + (c - grey) * 0.45) * 0.92 }
         return (mix(mean.0), mix(mean.1), mix(mean.2) + 4)
+    }
+
+    /// A pebble along a path's edge (`organicTile`) where `(gx, gy)`, in cells, falls on one: how it's
+    /// lit there (from the top left, a dark rim at its lower right), else nil. A few to a cell, on a
+    /// jittered grid, each its own size.
+    nonisolated static func edgePebble(_ gx: Double, _ gy: Double) -> Double? {
+        let size = 0.24
+        let cx = Int((gx / size).rounded(.down)), cy = Int((gy / size).rounded(.down))
+        for dy in -1...1 {
+            for dx in -1...1 {
+                let kx = (cx + dx) & 1023, ky = (cy + dy) & 1023
+                guard hash(kx, ky, 41) < 0.3 else { continue }
+                let px = (Double(cx + dx) + 0.25 + 0.5 * hash(kx, ky, 42)) * size
+                let py = (Double(cy + dy) + 0.25 + 0.5 * hash(kx, ky, 43)) * size
+                let radius = 0.04 + 0.035 * hash(kx, ky, 44)
+                let ox = (gx - px) / radius, oy = (gy - py) / (radius * 0.8)
+                let d = ox * ox + oy * oy
+                guard d < 1 else { continue }
+                if d > 0.6, ox - oy > 0.2 { return 0.55 }
+                return ox - oy < -0.35 ? 1.2 : 0.92
+            }
+        }
+        return nil
     }
 
     nonisolated private static func hash(_ a: Int, _ b: Int, _ c: Int) -> Double {
