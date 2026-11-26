@@ -25,6 +25,9 @@ PICKED = {
     "chest_crystal": "chest_crystal.png",
     "chest_shadow": "chest_shadow.png",
     "chest_swamp": "chest_swamp.png",
+    # Opened, in the same style (`ChestLook.open`); a style without one shows RD's `treasure_chest`.
+    "chest_coral_open": "chest_coral_open.png",
+    "chest_candy_open": "chest_candy_open.png",
 }
 
 

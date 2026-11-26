@@ -237,7 +237,7 @@ final class LandStage {
         }
         guard chestShown[chest.id] != opened else { return }
         chestShown[chest.id] = opened
-        node.setCycle(art.walkCycle(opened ? chest.art : closed))
+        node.setCycle(art.walkCycle(opened ? ChestLook.open(in: def, art: art, fallback: chest.art) : closed))
         node.alpha = 1
     }
 

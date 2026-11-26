@@ -70,6 +70,7 @@ Each copied from `art-variants/chests/` (a `PICKED` table, snapped to the grid i
   and the Glimmerdeep, Candy Mountain and the Water Temple show them (theme `chest`). Then `chest_shadow` (near-black, a purple gem lock;
   22 colours) for Twilight Woods, Wolf's Lair, Valley of Fear, Puppet Hill and Sleepy Town, and `chest_swamp` (mossy dark wood,
   vines) for Frog Swamp and Lotus Land; the crystal one's own 1× matched the cut exactly. Desert, beach and wood drawn but
-  not received as files yet; frost to come. Their lands keep the open chest, faded once emptied, till then.
+  not received as files yet; frost to come. Each style's open chest too (`<id>_open`, `ChestLook.open`): coral's and candy's
+  in; crystal, shadow, swamp and frost open drawn, not received as files yet. Their lands keep the open chest, faded once emptied, till then.
 - Earlier the same day: Meanwhile the chests are already off the minimap and the world map, with no "!"
   over them, and `treasure_chest` no longer stands as sand decoration on the three beaches.

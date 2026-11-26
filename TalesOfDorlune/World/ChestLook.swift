@@ -10,4 +10,11 @@ enum ChestLook {
         guard let id = def.theme.chest, art.asset(id) != nil else { return nil }
         return id
     }
+
+    /// The land's chest opened: its style's open drawing (`<closed>_open`) where there is one, else `fallback`
+    /// (the chest's NPC art, RD's open `treasure_chest`).
+    @MainActor static func open(in def: MapDef, art: ArtLibrary, fallback: String) -> String {
+        guard let closed = closed(in: def, art: art), art.asset(closed + "_open") != nil else { return fallback }
+        return closed + "_open"
+    }
 }

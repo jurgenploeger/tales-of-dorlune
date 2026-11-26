@@ -11162,6 +11162,14 @@
       "kind": "prop"
     },
     {
+      "id": "chest_coral_open",
+      "kind": "prop"
+    },
+    {
+      "id": "chest_candy_open",
+      "kind": "prop"
+    },
+    {
       "id": "message_bottle",
       "kind": "prop",
       "request": {

@@ -254,7 +254,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
 - Chests (NPC role `chest`) are found, not pointed to (the user, 2026-11-26): no "!" over them (`GameSession.notice`), nothing on the
   minimap or world map (`minimapKind`), and `treasure_chest` (RD's open one) isn't set down as decoration. Closed ones in each
   area's style (maps.json theme `chest`, `ChestLook`, `tools/chest_art.py` copies ChatGPT's from `art-variants/chests/`; three of
-  nine so far, docs/ai-sprite-test/chests) stand closed till opened, then show `treasure_chest`; a land with none drawn yet fades it.
+  nine so far, docs/ai-sprite-test/chests) stand closed till opened, then their style's open one (`<id>_open`, `ChestLook.open`) or else `treasure_chest`; a land with none drawn yet fades it.
 - `tools/prop_art.py`: the same for the few props a generated sprite got wrong (`candy_cane`, whose hook came out
   as a two-sided arch) or none was made for (the harbors' `ship`, built in 3D and projected as the game's view is,
   then lit and finished as the buildings are and held to their bands, `form_relief` too;
