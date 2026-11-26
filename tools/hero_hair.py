@@ -194,7 +194,9 @@ def ear_through(diff, f, worn, reach=5):
     head, from a row above it down (a walk frame's ear hangs down along the head), over the hair only up to `reach`
     pixels in from its outside edge. Long hair covering the ear's root ended it in a straight line along the hair's
     edge, and walking, where the ear stands out only a pixel or two past the head, covered most of it (the user,
-    2026-11-26); taken all the way through the hair, the ear grew out of the cheek."""
+    2026-11-26); taken all the way through the hair, the ear grew out of the cheek. Seen from the side (right, left)
+    the ear lies on the near side of the head, over the hair: 8 pixels in (at 5 the hair hid most of it attacking).
+    """
     far = ~ndimage.binary_dilation(f[..., 3] > 0, np.ones((3, 3), bool))
     seed = diff & far
     if not seed.any():
@@ -326,7 +328,7 @@ def wear_style(style, anim, race="human"):
                 e = elf[sl]
                 diff = (e[..., 3] > 0) & ((e != f).any(2))
                 worn = wear_hair(f, hair, sh, ref)
-                ear = tidy_ear(real_ear(diff, f, e[..., :3].max(2) < 110) | ear_through(diff, f, worn), (worn != f).any(2))
+                ear = tidy_ear(real_ear(diff, f, e[..., :3].max(2) < 110) | ear_through(diff, f, worn, 8 if d in ("right", "left") else 5), (worn != f).any(2))
                 top = ear_top(d)
                 # from behind (up, up-right, up-left) the ears layer lies over the back of the head: there the hair
                 # goes over it and only what stands out past the head shows (2026-11-25)
