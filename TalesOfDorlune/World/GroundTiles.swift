@@ -564,8 +564,11 @@ final class GroundTiles {
             }
         }
         // Across a border with a land that isn't snow, its plain ground comes in pixel by pixel, not in
-        // patches (`seamBlend`); a road, pond, shore or patch there keeps the patches it had.
-        if !map.seams.isEmpty, road == 0, pond == 0, coast == 0, lush == 0, patch == 0, map.ground[row][col] == .ground,
+        // patches (`seamBlend`); a road, pond, shore or patch there keeps the patches it had. A town's
+        // countryside round its wall is `.border`, not `.ground`: left out, its side of every border
+        // stayed a hard line while the land next door blended its own (the user, 2026-11-26, Ingothold).
+        let plainKind = map.ground[row][col] == .ground || (map.ground[row][col] == .border && map.isCountryside(cell))
+        if !map.seams.isEmpty, road == 0, pond == 0, coast == 0, lush == 0, patch == 0, plainKind,
            let blended = seamBlend(cell, base: base, variant: variant) {
             return (blended, near != 0)
         }
