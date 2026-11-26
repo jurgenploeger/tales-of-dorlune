@@ -2,7 +2,7 @@ import SwiftUI
 import UIKit
 
 /// Battle HUD: what just happened in a slim line top centre, the time left to choose in a ring round
-/// your face bottom left (on a phone on its side in a pill by the line), and the commands in a row
+/// your face bottom left (upright and on its side alike), and the commands in a row
 /// along the bottom, all one size, your skills among them. How fast the fight plays and Auto wait
 /// behind More. Results at the end. Names, levels, HP and MP sit on the fighters themselves. No chat in a fight: it's back on the map once the fight is over.
 struct BattleView: View {
@@ -44,11 +44,12 @@ struct BattleView: View {
         .animation(.spring(response: 0.35, dampingFraction: 0.75), value: controller.isAuto)
     }
 
-    /// Upright, with a turn clock: the time to choose runs as a ring round your own face in the
-    /// party's row bottom left (`TurnRing`), not in a pill at the top (the user, 2026-11-25: the top
-    /// of the screen is the monsters' room).
+    /// With a turn clock: the time to choose runs as a ring round your own face in the party's row
+    /// bottom left (`TurnRing`), not in a pill at the top (the user, 2026-11-25: the top of the screen
+    /// is the monsters' room). On a phone on its side too since 2026-11-26 (the user: "The landscape
+    /// still show the old battle stuff, like the timer and characters in the top left corner").
     private var ringed: Bool {
-        verticalSizeClass != .compact && BattleController.turnSeconds != nil
+        BattleController.turnSeconds != nil
     }
 
     /// The party's faces while you choose: with the commands, and upright with a turn clock in every
@@ -62,32 +63,18 @@ struct BattleView: View {
     }
 
     /// Along the top: what just happened in the middle, and under it, in a boss fight, how far
-    /// through its waves you are. On its side, your party's HP and MP at the left (`PartyPlate`)
-    /// and the time to choose's pill in a row with the line, as the fighters' heads come up close
-    /// under the top row there (`BattleScene.layout`). Upright, no plate and no pill (the user,
-    /// 2026-11-25, a boss fight's monsters covering each other: "In portrait mode, the hero and
-    /// companion stats at the top can be removed"): your HP and MP are under your feet and the time
-    /// runs round your face bottom left (`TurnRing`). No boss bar either: the boss's HP is on its
+    /// through its waves you are. No party plate and no time pill (the user, 2026-11-25, a boss
+    /// fight's monsters covering each other: "In portrait mode, the hero and companion stats at the
+    /// top can be removed"; on its side too, 2026-11-26): your HP and MP are under your feet and the
+    /// time runs round your face bottom left (`TurnRing`). No boss bar either: the boss's HP is on its
     /// own plate under its feet, as everyone's is (the user, the same day).
     private var topBar: some View {
         VStack(spacing: 6) {
-            if verticalSizeClass == .compact {
-                HStack(alignment: .top, spacing: 8) {
-                    PartyPlate(controller: controller, beside: true)
-                    HStack(spacing: 8) {
-                        clockPill
-                        // As tall as the top row at least, so the field below doesn't shift with the message.
-                        logLine
-                            .frame(minHeight: Self.topRowHeight)
-                    }
-                    .frame(maxWidth: 520)
-                    .frame(maxWidth: .infinity)
-                }
-            } else {
-                logLine
-                    .frame(minHeight: Self.topRowHeight)
-                    .frame(maxWidth: 360)
-            }
+            // As tall as the top row at least, so the field below doesn't shift with the message; on
+            // its side the line can run wider.
+            logLine
+                .frame(minHeight: Self.topRowHeight)
+                .frame(maxWidth: verticalSizeClass == .compact ? 520 : 360)
             if controller.waveCount > 1 {
                 WaveTracker(wave: controller.wave, total: controller.waveCount)
             }
@@ -102,15 +89,6 @@ struct BattleView: View {
     /// One slim line of what just happened, or two when it's long: a toast, as on the map.
     private var logLine: some View {
         ToastLabel(text: controller.message)
-    }
-
-    /// The time left to choose, with a turn clock on (Settings' Time to choose). Its place is kept
-    /// while a round plays, so the line beside it doesn't jump from turn to turn.
-    @ViewBuilder
-    private var clockPill: some View {
-        if BattleController.turnSeconds != nil {
-            TurnClockPill(deadline: controller.turnDeadline, window: BattleController.turnSeconds ?? 10)
-        }
     }
 
     @ViewBuilder
