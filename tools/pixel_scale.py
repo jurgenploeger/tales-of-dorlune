@@ -35,7 +35,7 @@ ASSETS = json.load(open(os.path.join(ROOT, "art", "assets.json")))["assets"]
 BY_ID = {a["id"]: a for a in ASSETS}
 # `WorldMap.tileSize` (TalesOfDorlune/World/WorldMap.swift) over a ground tile's 32 pixels.
 CELL_POINTS = 44
-TILE_PIXELS = 32
+TILE_PIXELS = 44  # since 0.9.247 (32 before, 1.375 points a pixel)
 # The kinds drawn on the map, beside each other.
 MAP_KINDS = ("walk_sheet", "monster", "prop", "building", "tile")
 # How far from a point to a pixel still counts as the same size: a tenth either way.

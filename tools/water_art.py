@@ -5,10 +5,11 @@ each tile, so the sea was one small square over and over, and its shifted versio
 (`ArtLibrary.tileVariant`) came out the same as itself.
 
 Writes:
-- art/sprites/sea.png: the sea, 16 × 16 cells of 32 pixels that tile seamlessly as a whole; each
+- art/sprites/sea.png: the sea, 16 × 16 cells of 44 pixels (`CELL`, the ground tiles' size since 0.9.247: one
+  pixel a point, the walkers' size; 32 till then, stretched to 1.375 points) that tile seamlessly as a whole; each
   world cell takes the one at its place in it (`ContinentScene.seaGroups`), so the sea repeats only
   every 16 cells, more than a screen across.
-- art/sprites/tile_water.png: a land's water, one 32-pixel cell in the same style that tiles with
+- art/sprites/tile_water.png: a land's water, one 44-pixel cell in the same style that tiles with
   itself, its shifted versions now each different.
 
 The ripples run level on screen: the ground is turned 45° and squashed to half height
@@ -37,6 +38,14 @@ LIGHT = [hexc("7ccffd"), hexc("aee3ff")]
 GLINT = hexc("eefaff")
 # The sea's cells a side (`ContinentScene.seaCells` reads the picture's size).
 SEA_CELLS = 16
+# A cell's pixels (`WorldMap.tilePixels`).
+CELL = 44
+
+
+def fit(period, want):
+    """The largest size no bigger than `want` that divides `period`, so the noise still repeats with the
+    picture (a 44-pixel cell isn't a power of two: 16 and 128 don't divide it)."""
+    return max(d for d in range(1, max(1, want) + 1) if period % d == 0)
 
 
 class Lattice:
@@ -45,6 +54,7 @@ class Lattice:
     pixels long and `across` wide (both dividing `period`)."""
 
     def __init__(self, period, along, across, seed):
+        along, across = fit(period, along), fit(period, across)
         self.na, self.nb = period // along, period // across
         self.along, self.across = along, across
         self.period = period
@@ -121,7 +131,7 @@ def preview(sea, lake, path):
     """The sea and a lake of the old tile and the new, turned and squashed as the game draws them."""
     from PIL import Image  # only for the preview
 
-    def tiled(rows, cells, cell=32):
+    def tiled(rows, cells, cell=CELL):
         n = len(rows)
         img = Image.new("RGB", (cells * cell, cells * cell))
         px = img.load()
@@ -131,14 +141,15 @@ def preview(sea, lake, path):
         return img
 
     def onscreen(img):
-        big = img.resize((img.width * 44 // 32, img.height * 44 // 32), Image.NEAREST)
+        big = img.resize((img.width * 44 // CELL, img.height * 44 // CELL), Image.NEAREST)
         turned = big.rotate(45, resample=Image.NEAREST, expand=True)
         return turned.resize((turned.width, turned.height // 2), Image.NEAREST)
 
-    def versions(rows, cells, cell=32):
+    def versions(rows, cells, cell=CELL):
         """A land's water as GroundTiles lays it: each cell one of the tile's four versions
         (`ArtLibrary.variantPixels`: shifted and mirrored inside a soft frame of the tile)."""
-        shifts = [(0, 0, False, False), (16, 16, False, False), (8, 20, True, False), (20, 8, False, True)]
+        shifts = [(0, 0, False, False), (cell // 2, cell // 2, False, False), (cell // 4, cell * 5 // 8, True, False),
+                  (cell * 5 // 8, cell // 4, False, True)]
         img = Image.new("RGB", (cells * cell, cells * cell))
         px = img.load()
         band = cell / 5
@@ -162,7 +173,7 @@ def preview(sea, lake, path):
 
     old = Image.open(SPRITES / "tile_water.png").convert("RGB")
     old_rows = [[old.getpixel((x, y)) for x in range(old.width)] for y in range(old.height)]
-    shots = [onscreen(tiled(old_rows, 16)), onscreen(tiled(sea, 16)), onscreen(versions(lake, 16))]
+    shots = [onscreen(tiled(old_rows, 16, cell=old.width)), onscreen(tiled(sea, 16)), onscreen(versions(lake, 16))]
     w = sum(s.width for s in shots) + 20 * (len(shots) - 1)
     out = Image.new("RGB", (w, max(s.height for s in shots)), (20, 20, 20))
     x = 0
@@ -174,15 +185,15 @@ def preview(sea, lake, path):
 
 def main():
     args = sys.argv[1:]
-    sea = draw(SEA_CELLS * 32, 11)
-    lake = draw(32, 23, swells=0.5, ripples=0.94)
+    sea = draw(SEA_CELLS * CELL, 11)
+    lake = draw(CELL, 23, swells=0.5, ripples=0.94)
     if "--preview" in args:
         preview(sea, lake, args[args.index("--preview") + 1])
     (SPRITES / "sea.png").write_bytes(png(sea))
     (SPRITES / "tile_water.png").write_bytes(png(lake))
-    side = SEA_CELLS * 32
+    side = SEA_CELLS * CELL
     mean = [sum(c[i] for row in sea for c in row) / (side * side) for i in range(3)]
-    print(f"sea.png {side}×{side}, tile_water.png 32×32; the sea's mean #%02x%02x%02x" % tuple(round(v) for v in mean))
+    print(f"sea.png {side}×{side}, tile_water.png {CELL}×{CELL}; the sea's mean #%02x%02x%02x" % tuple(round(v) for v in mean))
 
 
 if __name__ == "__main__":

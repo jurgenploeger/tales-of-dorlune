@@ -31,6 +31,10 @@ nonisolated extension GridPoint {
 nonisolated final class WorldMap: @unchecked Sendable {
     /// Size of a grid cell before projection (on screen a cell is a ~62×31 diamond).
     static let tileSize: CGFloat = 44
+    /// A ground tile's art pixels across a cell: one a point, the walkers' size, since 0.9.247 (ChatGPT's tiles,
+    /// docs/ai-sprite-test/ground-tiles; at 32 each pixel was 1.375 points, uneven on a phone and soft). What lines
+    /// up with the ground's pixels (the sea's shallows, a road's crumbling edge, a river's mouth) counts in them.
+    static let tilePixels = 44
 
     static func project(_ grid: CGPoint) -> CGPoint {
         let c = CGFloat(0.5).squareRoot()

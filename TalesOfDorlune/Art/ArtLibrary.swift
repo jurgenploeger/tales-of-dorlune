@@ -649,7 +649,8 @@ final class ArtLibrary {
     nonisolated static func opensToSea(_ x: Double, _ y: Double, share: Double) -> Bool {
         let fade = min(1, max(0, (share - 0.74) / 0.26))
         guard fade > 0 else { return false }
-        let u = Int((x * 32).rounded(.down)), v = Int((y * 32).rounded(.down))
+        let pixels = Double(WorldMap.tilePixels)
+        let u = Int((x * pixels).rounded(.down)), v = Int((y * pixels).rounded(.down))
         let noise = 0.6 * iceNoise(u, v, every: 6) + 0.25 * iceNoise(u + 917, v + 331, every: 2) + 0.15 * iceHash(u, v)
         return noise < fade
     }
@@ -1269,8 +1270,8 @@ final class ArtLibrary {
                             // Its edge wanders along the road, by where it lies, not every tile alike, and crumbles
                             // pixel by pixel in clusters: smooth, a road on bare ground read as ruled (the user,
                             // 2026-11-26, Ingothold: "too perfect and smooth").
-                            let u = Int(((Double(cell.col) + 0.5 + x) * 32).rounded(.down))
-                            let v = Int(((Double(cell.row) + 0.5 + y) * 32).rounded(.down))
+                            let u = Int(((Double(cell.col) + 0.5 + x) * Double(size)).rounded(.down))
+                            let v = Int(((Double(cell.row) + 0.5 + y) * Double(size)).rounded(.down))
                             let crumble = 0.1 * (Self.iceNoise(u, v, every: 5) - 0.5) + 0.06 * (Self.iceHash(u, v) - 0.5)
                             let sway = 0.9 * Self.wobble(x, y, style: .water, cell: cell) + crumble
                             // Each road's own depth the deepest of its spots; the roads' together rounded

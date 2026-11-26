@@ -842,7 +842,7 @@ enum HillArt {
             if (u_cliff.y > 0.5 && steep > u_cliff.x + 6.0) {
                 paint = vec4(texture2D(u_rock, fract(onScreen)).rgb * paint.a, paint.a);
             } else if (u_cliff.w > 0.5 && steep > u_cliff.z && paint.a > 0.99) {
-                vec2 grid = mod(floor(onScreen * 32.0), 4.0);
+                vec2 grid = mod(floor(onScreen * 44.0), 4.0);
                 vec2 fineBits = mod(grid, 2.0);
                 vec2 coarseBits = mod(floor(grid * 0.5), 2.0);
                 float turn = 4.0 * mod(2.0 * fineBits.x + 3.0 * fineBits.y, 4.0) + mod(2.0 * coarseBits.x + 3.0 * coarseBits.y, 4.0);
