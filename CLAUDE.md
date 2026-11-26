@@ -464,7 +464,9 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   The pieces are drawn with no edge smoothing (smoothed, a seam a pixel wide showed between every two). `--sheet out.png` previews them.
 - Gates have depth (`TownFence.gate`, the user, 2026-11-25: "too flat"): a town's and a quest's border gate go back
   `gateThickness` (0.35 of a cell) into the screen, the pillars and beam only (`solidParts`, not what hangs between),
-  in flat tones of the arch's own colour, tops lit and ends a shade darker, the arch's face over them.
+  in flat tones of the arch's own colour, tops lit and ends a shade darker, the arch's face over them; where ChatGPT drew a
+  gate's depth (`<gate>_top` 70 × 10, `<gate>_side` 10 × 51, docs/ai-sprite-test/gate-depth, `tools/gate_art.py` `DEPTH`), those are
+  laid over the flat tones: the top back from the front's top edge, widened as the front is (`widenedTop`), the side at the end that shows.
 - `tools/gate_art.py`: each town's own gate over its roads (maps.json town `gate`: Meadowbrook's thatched
   lychgate, Prismhaven's crystal keystone, Ingothold's gold and red cloth, Larkspur's bluebird); quests'
   gates across borders keep RD's `town_gate`. Each is laid out as `town_gate` is (`TownFence.widened` spans a

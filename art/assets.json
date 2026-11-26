@@ -2506,6 +2506,18 @@
       "kind": "building"
     },
     {
+      "id": "gate_ingothold_top",
+      "kind": "prop"
+    },
+    {
+      "id": "gate_ingothold_side",
+      "kind": "prop"
+    },
+    {
+      "id": "gate_larkspur_side",
+      "kind": "prop"
+    },
+    {
       "id": "adobe_house",
       "scale": 1.35,
       "kind": "building",

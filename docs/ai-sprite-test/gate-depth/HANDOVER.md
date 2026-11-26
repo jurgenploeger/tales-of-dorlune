@@ -82,4 +82,7 @@ stacked copies. A gate with no pieces drawn keeps today's depth.
 
 ## Results
 
-- **2026-11-26**: asked for.
+- **2026-11-26**: asked for. Back the same day: `gate_ingothold_top` (70 × 10, its stretch repeating cleanly, 11 colours),
+  `gate_ingothold_side` and `gate_larkspur_side` (10 × 51, 11 and 7 colours), with previews put together (kept in
+  `art-variants/gate_depth/`). In (`tools/gate_art.py` `DEPTH`, `depth_fitted`; `TownFence.gate` draws them over the flat
+  tones). Larkspur's top, and Meadowbrook's, Prismhaven's and the quests' gate's pieces, still to come.
