@@ -11154,6 +11154,14 @@
       "kind": "prop"
     },
     {
+      "id": "chest_shadow",
+      "kind": "prop"
+    },
+    {
+      "id": "chest_swamp",
+      "kind": "prop"
+    },
+    {
       "id": "message_bottle",
       "kind": "prop",
       "request": {

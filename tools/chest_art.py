@@ -23,6 +23,8 @@ PICKED = {
     "chest_coral": "chest_coral.png",
     "chest_candy": "chest_candy.png",
     "chest_crystal": "chest_crystal.png",
+    "chest_shadow": "chest_shadow.png",
+    "chest_swamp": "chest_swamp.png",
 }
 
 

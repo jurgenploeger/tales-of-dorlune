@@ -67,7 +67,9 @@ Each copied from `art-variants/chests/` (a `PICKED` table, snapped to the grid i
 - **2026-11-26**: three back as asked (32 × 32, alpha 0 or 255, 24 colours each): `chest_coral` (a teal shell, a pearl
   lock), `chest_candy` (gingerbread, candy-cane bands, a green gem lock) and `chest_crystal` (grey stone, pink and blue
   crystals; sent at 8× only, cut back to 1×). Copied as delivered (`tools/chest_art.py` `PICKED`), and Crystal Mountain
-  and the Glimmerdeep, Candy Mountain and the Water Temple show them (theme `chest`). Six to come; their lands keep the
-  open chest, faded once emptied, till then.
+  and the Glimmerdeep, Candy Mountain and the Water Temple show them (theme `chest`). Then `chest_shadow` (near-black, a purple gem lock;
+  22 colours) for Twilight Woods, Wolf's Lair, Valley of Fear, Puppet Hill and Sleepy Town, and `chest_swamp` (mossy dark wood,
+  vines) for Frog Swamp and Lotus Land; the crystal one's own 1× matched the cut exactly. Desert, beach and wood drawn but
+  not received as files yet; frost to come. Their lands keep the open chest, faded once emptied, till then.
 - Earlier the same day: Meanwhile the chests are already off the minimap and the world map, with no "!"
   over them, and `treasure_chest` no longer stands as sand decoration on the three beaches.
