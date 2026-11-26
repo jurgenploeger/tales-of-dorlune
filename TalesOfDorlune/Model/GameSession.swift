@@ -2409,9 +2409,8 @@ final class GameSession {
     func notice(for giver: String) -> QuestNotice? {
         // Someone waiting on a favour you're carrying to them.
         if !errands(for: giver).isEmpty { return .ready }
-        if let npc = content.npc(giver), npc.role == .chest {
-            return canOpen(npc) ? .available : nil
-        }
+        // A chest has no "!": it's found by stumbling on it (the user, 2026-11-26).
+        if content.npc(giver)?.role == .chest { return nil }
         // The weaver, with a cape you've earned to weave.
         if content.npc(giver)?.role == .weaver {
             return capeReady ? .available : nil
@@ -2526,7 +2525,9 @@ final class GameSession {
         case .guild: return .guild
         case .boss: return nil
         case .stairs: return Content.shared.leadsDown(npc) ? .stairsDown : .stairsUp
-        case .chest: return isOpened(npc.id) ? nil : .chest
+        // Nor is it on the minimap or the world map: "people need to find them and stumble upon them"
+        // (the user, 2026-11-26).
+        case .chest: return nil
         case .waystone: return .waystone
         case .quests:
             switch notice(for: npc.id) {

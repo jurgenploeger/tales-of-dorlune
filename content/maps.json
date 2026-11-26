@@ -2435,15 +2435,6 @@
             "blocking": true
           },
           {
-            "art": "treasure_chest",
-            "count": 10,
-            "blocking": true,
-            "size": [
-              0.9,
-              1.1
-            ]
-          },
-          {
             "art": "message_bottle",
             "count": 14,
             "blocking": false,
@@ -17128,15 +17119,6 @@
             "blocking": true
           },
           {
-            "art": "treasure_chest",
-            "count": 5,
-            "blocking": true,
-            "size": [
-              0.9,
-              1.1
-            ]
-          },
-          {
             "art": "message_bottle",
             "count": 8,
             "blocking": false,
@@ -19159,15 +19141,6 @@
             "art": "signpost",
             "count": 4,
             "blocking": true
-          },
-          {
-            "art": "treasure_chest",
-            "count": 6,
-            "blocking": true,
-            "size": [
-              0.9,
-              1.1
-            ]
           },
           {
             "art": "message_bottle",

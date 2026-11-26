@@ -251,6 +251,9 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   and its wall as high as the picture (`WorldMap.mouthTop`), so the plateau's edge runs level with the opening's top. Its floor runs into the road in front:
   the picture sunk 6 points onto it, its bottom 8 rows dithered out across the opening (`LandStage.fadeFloor`). It casts a hard
   shadow on the face behind, down and right in two steps, so its rocks stand off the rock (`placeMouth`).
+- Chests (NPC role `chest`) are found, not pointed to (the user, 2026-11-26): no "!" over them (`GameSession.notice`), nothing on the
+  minimap or world map (`minimapKind`), and `treasure_chest` (RD's open one) isn't set down as decoration. Closed ones in each
+  area's style are with ChatGPT (docs/ai-sprite-test/chests: nine styles and which lands); open, they'll keep `treasure_chest`.
 - `tools/prop_art.py`: the same for the few props a generated sprite got wrong (`candy_cane`, whose hook came out
   as a two-sided arch) or none was made for (the harbors' `ship`, built in 3D and projected as the game's view is,
   then lit and finished as the buildings are and held to their bands, `form_relief` too;
