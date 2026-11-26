@@ -268,6 +268,9 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   gnarled dark tree, an autumn oak, a maple, a birch, a frosted bare tree, a willow, a jacaranda, candy trees,
   and ten bushes (a fir sapling, a tumbleweed, a bramble...), and the fir under snow for the snow lands. Each writes its own PNG, which wins over the
   asset's `derive`; its `big_` twin, derived from it, follows. `--sheet out.png` previews them.
+  Since 2026-11-26 every tree and bush is ChatGPT's redraw, copied as drawn (`PICKED_DIR`, `art-variants/trees/`,
+  docs/ai-sprite-test/trees-bushes: same canvas and foot row, hard alpha); the code still draws the shallows' rocks and
+  the shore's grass and stones. Rerun `wind_art.py` after.
 - `tools/wind_art.py`: trees and bushes in the wind (`art/wind.json`, `TalesOfDorlune/Art/Wind.swift`), after
   SpriteCook's wind article: the trunk stays put and the crown moves in leaf clumps (cut by colour, then
   flooded out from each bright spot to the dark crevices), a whole pixel at a time, over a darker copy of the

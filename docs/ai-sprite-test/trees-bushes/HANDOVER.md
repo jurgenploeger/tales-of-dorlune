@@ -100,4 +100,6 @@ crowns (`check_content.py` checks every rig fits), and `tools/pixel_style.py che
 
 ## Results
 
-- **2026-11-26**: asked for.
+- **2026-11-26**: asked for. Back the same day, all 21 (`art-variants/trees/`): every one its canvas, foot row and hard alpha;
+  in, rigged for the wind. `pixel_style.py` passes 12; nine miss the outline rule (`outline_rel`, an outline paler
+  against what it rounds than RD's, most round snow), kept as drawn as the buildings were.

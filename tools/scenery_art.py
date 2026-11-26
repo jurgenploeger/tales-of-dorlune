@@ -815,7 +815,8 @@ def main(argv):
     print(f"wrote {len(out)} scenery sprites to art/sprites/")
     bad = []
     for item, img in out.items():
-        if item not in TREES:
+        # ChatGPT's own shapes stand as drawn (the jacaranda's tassels leave a pixel of sky under its crown).
+        if item not in TREES or (PICKED_DIR / f"{item}.png").exists():
             continue
         gap, off = tree_shape(img)
         if gap and item not in BARE:
