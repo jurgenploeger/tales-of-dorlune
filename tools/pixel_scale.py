@@ -13,9 +13,9 @@ point to a pixel; the world's pixels are measured against them.
   pixel_scale.py --sheet OUT.png a hero, a monster, a tree, a house and the ground side by side, at
                                  their sizes in the game, three screen pixels to a point (a phone)
 
-On top of that, the map sizes its scenery at random as it plants it: a theme prop's `size` range in
-content/maps.json (`LandPlan`), a lair's natural ring 0.85 to 1.1, rocks 0.7 to 1.1, reeds 0.75 to 1.
-The report lists the maps.json ranges; the ones in Swift are noted.
+On top of that, the map can set a prop down at a size of its own: a theme prop's `size` in
+content/maps.json (`LandPlan`): one fixed size each since 0.9.242, not a range; everything else at its own.
+The report lists them.
 
 Battle scales every fighter alike (`BattleScene.fieldScale`), so it keeps them in step with each other.
 Item icons and UI art are shown at the HUD's sizes and smoothed over 64 pixels (`IconTile`), not on the
@@ -120,7 +120,7 @@ def report(show_all):
               f"{sum(planted.values())} props, so two of one kind side by side differ in pixel size.")
         for (lo, hi), n in planted.most_common(8):
             print(f"  {lo:g} to {hi:g} pt/px: {n}")
-        print("  Also in Swift (LandPlan): a lair's natural ring 0.85 to 1.1, rocks 0.7 to 1.1, reeds 0.75 to 1.")
+        print("  (Swift's LandPlan sets everything else down at its own size since 0.9.242.)")
     return 0
 
 
