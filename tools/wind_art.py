@@ -95,6 +95,19 @@ RIGS = {
     "candy_tree_lemon": dict(kind="tree"),
     "candy_tree_peach": dict(kind="tree"),
     "candy_tree_sky": dict(kind="tree"),
+    # Their big twins at their own size, not 1.7 times theirs (docs/ai-sprite-test/big-trees, 2026-11-26;
+    # the frost tree's bare, as its small one is), and the fairy tree houses, no longer the hollow tree
+    # scaled up and recoloured.
+    "big_blossom_tree": dict(kind="tree"),
+    "big_dark_tree": dict(kind="tree", hue=(0.72, 0.8, 0.5)),
+    "big_golden_tree": dict(kind="tree"),
+    "big_lilac_tree": dict(kind="tree"),
+    "big_red_maple": dict(kind="tree"),
+    "big_swamp_tree": dict(kind="tree"),
+    "fairy_tree_house": dict(kind="tree"),
+    "fairy_tree_house_moon": dict(kind="tree", crown=48, hue=(0.5, 0.65, 0.05)),   # its pale blue door below
+    "fairy_tree_house_rose": dict(kind="tree", hue=(0.86, 1.0, 0.25)),
+    "fairy_great_tree": dict(kind="tree"),
     "bush": dict(kind="bush"),
     "flowering_bush": dict(kind="bush"),
     "autumn_bush": dict(kind="bush"),
@@ -151,7 +164,21 @@ def crown_mask(px, cfg):
         d = ((colours[:, None, :] - ref[None, :, :]) ** 2).sum(axis=2)
         return d.min(axis=1).reshape(px.shape[:2])
 
-    is_leaf = nearest(leaf) <= nearest(wood)
+    if "hue" in cfg:
+        # Its leaves told by their hue and how strong their colour is (`hue`: lowest, highest, least
+        # saturation, 0...1), where the nearest colour can't: big_dark_tree's violet crown and its
+        # pinker violet trunk.
+        lo, hi, least = cfg["hue"]
+        rgb = px[..., :3].astype(np.float64) / 255
+        high, low_ = rgb.max(axis=2), rgb.min(axis=2)
+        chroma = high - low_
+        sat = np.where(high > 0, chroma / np.maximum(high, 1e-9), 0)
+        r, g, b = rgb[..., 0], rgb[..., 1], rgb[..., 2]
+        safe = np.maximum(chroma, 1e-9)
+        hue = np.where(high == r, ((g - b) / safe) % 6, np.where(high == g, (b - r) / safe + 2, (r - g) / safe + 4)) / 6
+        is_leaf = (chroma > 0) & (hue >= lo) & (hue <= hi) & (sat >= least)
+    else:
+        is_leaf = nearest(leaf) <= nearest(wood)
     mask &= is_leaf
     if cfg["kind"] == "bush":
         return mask

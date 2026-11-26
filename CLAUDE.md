@@ -267,7 +267,10 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   each where every tree had been a recolour of RD's `tree` and every bush of its `berry_bush`: a cherry, a
   gnarled dark tree, an autumn oak, a maple, a birch, a frosted bare tree, a willow, a jacaranda, candy trees,
   and ten bushes (a fir sapling, a tumbleweed, a bramble...), and the fir under snow for the snow lands. Each writes its own PNG, which wins over the
-  asset's `derive`; its `big_` twin, derived from it, follows. `--sheet out.png` previews them.
+  asset's `derive`; its `big_` twin, derived from it, follows, but for the seven ChatGPT drew at their own size
+  (`big_blossom_tree`, `_dark_`, `_frost_`, `_golden_`, `_lilac_`, `_red_maple`, `_swamp_`, 108 pixels, at scale 1, not
+  the small one at 1.7; and the fairy tree houses, 102 and 134, once the hollow tree recoloured at 1.6 and 2.1:
+  docs/ai-sprite-test/big-trees, `art-variants/big_trees/`, the user, 2026-11-26). `--sheet out.png` previews them.
   Since 2026-11-26 every tree and bush is ChatGPT's redraw, copied as drawn (`PICKED_DIR`, `art-variants/trees/`,
   docs/ai-sprite-test/trees-bushes: same canvas and foot row, hard alpha); the code still draws the shallows' rocks and
   the shore's grass and stones. Rerun `wind_art.py` after.
@@ -407,7 +410,14 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   brought to the look (`pixelled`: no glow, a few flat tones, a one-pixel deep outline). `IconImage` shows them
   crisp from 22 pt up, smoothed from 18 to 21 (battle buttons, the HUD's buttons, the menu's tabs), and keeps
   Iconaut's vector icons for small inline glyphs. `--sheet out.png` previews them on the game's button colours.
-- `tools/water_art.py`: the same for the water: `sea.png` (16 × 16 cells that tile as a whole; the continent gives each
+- Ground tiles at 44 pixels, one a point, the walkers' size (0.9.247; the user, 2026-11-26: "Still a bit blurry on some
+  parts of lands"): at 32 stretched over a 44-point cell each pixel was 1.375 points, 4 or 5 screen pixels on a phone,
+  uneven and soft. Every drawn ground tile is ChatGPT's redraw (docs/ai-sprite-test/ground-tiles, `art-variants/ground_tiles/`,
+  RD's 32-pixel ones kept in `rd/`); recolours follow their base. A land draws its tiles together, each resized to its
+  ground's size (`ArtLibrary.variantPixels`), so they're all one size: a new one is 44 too. `WorldMap.tilePixels` is that
+  size, for what lines up with the ground's pixels (the shallows' `u_pixels`, a road edge's crumble, a river's mouth,
+  `ContinentScene.seaCells`). The town terraces' flagstones (`terrace_flag*`) are still 32.
+- `tools/water_art.py`: the same for the water: `sea.png` (16 × 16 cells of 44 pixels that tile as a whole; the continent gives each
   world cell its own, `ContinentScene.seaGroups`) and `tile_water.png` (a land's lakes and rivers, calm so its versions
   don't make a grid), ripples level on screen. Round a land's own water (`tile_water` or `tile_chocolate`, `ArtLibrary.isPondWater`; chocolate in warm tones, `pondTones`; not ice)
   `ArtLibrary.organicTile` adds depth and a bank: paler shallows by the shore, deeper water out from it (two
@@ -546,10 +556,13 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   till they've picked; `score` tallies. The goal and its stages: the sprite-creation skill, *Drawing as
   well as Retro Diffusion*.
 - `tools/pixel_scale.py`: how big each sprite's art pixels are on the map, in points (its PNG times its
-  `scale`; a ground tile 44 points over 32 pixels), against a walker's 1, and the props planted at a
+  `scale`; a ground tile 44 points over its 44 pixels since 0.9.247, 32 before), against a walker's 1, and the props planted at a
   random size (maps.json theme props' `size`); `--sheet out.png` lines them up at game size. Its rule:
-  docs/sprite-acceptance.md *One art pixel, one size*. Flowers are planted at 0.55 to 0.7, their pixels
-  smaller than their neighbours' by the user's choice (2026-11-19: "a flower shouldn't be just as tall as a tree").
+  docs/sprite-acceptance.md *One art pixel, one size*. Nothing's planted at a random size since 0.9.242 (the user,
+  2026-11-26, "stop the random scaling of props": two bushes side by side had different pixels): a prop is at its
+  own size, or one fixed size (maps.json `size` [s, s]); the planner still draws the sizes it used to, so the
+  rest of a land stays where it was. Flowers are planted at 0.62, their pixels smaller than their neighbours' by
+  the user's choice (2026-11-19: "a flower shouldn't be just as tall as a tree"), and lollipops at 1.7.
 - `tools/deslab.py`: cuts the raised slab of ground some generated buildings came with (`inn`, `magic_tower`) out
   of their sprites, so they stand on the map's ground; rerun it after regenerating one of them.
 - `tools/rd_fixes.py`: exact pixel fixes to RD sprites for what RD got wrong and the user asked to have fixed

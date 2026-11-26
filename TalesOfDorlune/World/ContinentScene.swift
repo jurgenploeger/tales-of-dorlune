@@ -167,7 +167,7 @@ final class ContinentScene: SKScene {
         }
         return groups
     }()
-    private lazy var seaCells = max(1, Int((art.tileTexture(seaSheet).size().width / 32).rounded()))
+    private lazy var seaCells = max(1, Int((art.tileTexture(seaSheet).size().width / CGFloat(WorldMap.tilePixels)).rounded()))
     private lazy var seaTiles = SKTileSet(tileGroups: seaGroups)
     /// Squares of hills and shore waiting to be drawn (nearest first), and whether they're being drawn;
     /// and a chunk's bank along the sea (`bankJob` for its painter).
@@ -2446,7 +2446,7 @@ final class ContinentScene: SKScene {
         }
         """)
         shader.uniforms = [
-            SKUniform(name: "u_pixels", float: size * 32),
+            SKUniform(name: "u_pixels", float: size * Float(WorldMap.tilePixels)),
             SKUniform(name: "u_samples", float: size * Float(ContinentScene.shallowSamples)),
             SKUniform(name: "u_span", float: Float(Double(ContinentScene.shallowReach) + ContinentScene.shallowUnder)),
             SKUniform(name: "u_under", float: Float(ContinentScene.shallowUnder)),

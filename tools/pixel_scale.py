@@ -13,9 +13,9 @@ point to a pixel; the world's pixels are measured against them.
   pixel_scale.py --sheet OUT.png a hero, a monster, a tree, a house and the ground side by side, at
                                  their sizes in the game, three screen pixels to a point (a phone)
 
-On top of that, the map sizes its scenery at random as it plants it: a theme prop's `size` range in
-content/maps.json (`LandPlan`), a lair's natural ring 0.85 to 1.1, rocks 0.7 to 1.1, reeds 0.75 to 1.
-The report lists the maps.json ranges; the ones in Swift are noted.
+On top of that, the map can set a prop down at a size of its own: a theme prop's `size` in
+content/maps.json (`LandPlan`): one fixed size each since 0.9.242, not a range; everything else at its own.
+The report lists them.
 
 Battle scales every fighter alike (`BattleScene.fieldScale`), so it keeps them in step with each other.
 Item icons and UI art are shown at the HUD's sizes and smoothed over 64 pixels (`IconTile`), not on the
@@ -35,7 +35,7 @@ ASSETS = json.load(open(os.path.join(ROOT, "art", "assets.json")))["assets"]
 BY_ID = {a["id"]: a for a in ASSETS}
 # `WorldMap.tileSize` (TalesOfDorlune/World/WorldMap.swift) over a ground tile's 32 pixels.
 CELL_POINTS = 44
-TILE_PIXELS = 32
+TILE_PIXELS = 44  # since 0.9.247 (32 before, 1.375 points a pixel)
 # The kinds drawn on the map, beside each other.
 MAP_KINDS = ("walk_sheet", "monster", "prop", "building", "tile")
 # How far from a point to a pixel still counts as the same size: a tenth either way.
@@ -120,7 +120,7 @@ def report(show_all):
               f"{sum(planted.values())} props, so two of one kind side by side differ in pixel size.")
         for (lo, hi), n in planted.most_common(8):
             print(f"  {lo:g} to {hi:g} pt/px: {n}")
-        print("  Also in Swift (LandPlan): a lair's natural ring 0.85 to 1.1, rocks 0.7 to 1.1, reeds 0.75 to 1.")
+        print("  (Swift's LandPlan sets everything else down at its own size since 0.9.242.)")
     return 0
 
 

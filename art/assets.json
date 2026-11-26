@@ -3814,6 +3814,22 @@
       "kind": "prop"
     },
     {
+      "id": "windows_fairy_great_tree",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_fairy_tree_house",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_fairy_tree_house_moon",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_fairy_tree_house_rose",
+      "kind": "prop"
+    },
+    {
       "id": "windows_fallen_star",
       "kind": "prop"
     },
@@ -6639,30 +6655,15 @@
     },
     {
       "id": "big_red_maple",
-      "kind": "prop",
-      "scale": 1.7,
-      "derive": {
-        "from": "red_maple",
-        "recolor": []
-      }
+      "kind": "prop"
     },
     {
       "id": "big_golden_tree",
-      "kind": "prop",
-      "scale": 1.7,
-      "derive": {
-        "from": "golden_tree",
-        "recolor": []
-      }
+      "kind": "prop"
     },
     {
       "id": "big_blossom_tree",
-      "kind": "prop",
-      "scale": 1.7,
-      "derive": {
-        "from": "blossom_tree",
-        "recolor": []
-      }
+      "kind": "prop"
     },
     {
       "id": "big_hollow_tree",
@@ -6675,21 +6676,11 @@
     },
     {
       "id": "big_dark_tree",
-      "kind": "prop",
-      "scale": 1.7,
-      "derive": {
-        "from": "dark_tree",
-        "recolor": []
-      }
+      "kind": "prop"
     },
     {
       "id": "big_lilac_tree",
-      "kind": "prop",
-      "scale": 1.7,
-      "derive": {
-        "from": "lilac_tree",
-        "recolor": []
-      }
+      "kind": "prop"
     },
     {
       "id": "big_snow_tree",
@@ -6720,21 +6711,11 @@
     },
     {
       "id": "big_frost_tree",
-      "kind": "prop",
-      "scale": 1.7,
-      "derive": {
-        "from": "frost_tree",
-        "recolor": []
-      }
+      "kind": "prop"
     },
     {
       "id": "big_swamp_tree",
-      "kind": "prop",
-      "scale": 1.7,
-      "derive": {
-        "from": "swamp_tree",
-        "recolor": []
-      }
+      "kind": "prop"
     },
     {
       "id": "big_dead_tree",
@@ -12348,115 +12329,19 @@
     },
     {
       "id": "fairy_tree_house",
-      "kind": "building",
-      "scale": 1.6,
-      "derive": {
-        "from": "hollow_tree",
-        "recolor": [
-          {
-            "hue": [
-              60,
-              175
-            ],
-            "minSaturation": 0.2,
-            "to": 272,
-            "spread": 1.0,
-            "saturation": 0.75,
-            "value": 1.1
-          }
-        ]
-      },
-      "request": {
-        "prompt": "whimsical fairy tree house, a big old hollow tree with a round door, tiny glowing windows and lilac leaves",
-        "prompt_style": "rd_tile__tile_object",
-        "width": 64,
-        "height": 64,
-        "remove_bg": true
-      }
+      "kind": "building"
     },
     {
       "id": "fairy_tree_house_rose",
-      "kind": "building",
-      "scale": 1.6,
-      "derive": {
-        "from": "hollow_tree",
-        "recolor": [
-          {
-            "hue": [
-              60,
-              175
-            ],
-            "minSaturation": 0.2,
-            "to": 328,
-            "spread": 1.0,
-            "saturation": 0.7,
-            "value": 1.15
-          }
-        ]
-      },
-      "request": {
-        "prompt": "whimsical fairy tree house, a big old hollow tree with a round door, tiny glowing windows and rose pink leaves",
-        "prompt_style": "rd_tile__tile_object",
-        "width": 64,
-        "height": 64,
-        "remove_bg": true
-      }
+      "kind": "building"
     },
     {
       "id": "fairy_tree_house_moon",
-      "kind": "building",
-      "scale": 1.6,
-      "derive": {
-        "from": "hollow_tree",
-        "recolor": [
-          {
-            "hue": [
-              60,
-              175
-            ],
-            "minSaturation": 0.2,
-            "to": 200,
-            "spread": 0.6,
-            "saturation": 0.3,
-            "value": 1.3
-          }
-        ]
-      },
-      "request": {
-        "prompt": "whimsical fairy tree house, a big old hollow tree with a round door, tiny glowing windows and silvery moonlit leaves",
-        "prompt_style": "rd_tile__tile_object",
-        "width": 64,
-        "height": 64,
-        "remove_bg": true
-      }
+      "kind": "building"
     },
     {
       "id": "fairy_great_tree",
-      "kind": "building",
-      "scale": 2.1,
-      "derive": {
-        "from": "hollow_tree",
-        "recolor": [
-          {
-            "hue": [
-              60,
-              175
-            ],
-            "minSaturation": 0.2,
-            "to": 285,
-            "spread": 0.6,
-            "saturation": 0.35,
-            "value": 1.3
-          }
-        ]
-      },
-      "request": {
-        "prompt": "whimsical fairy tree house, a big old hollow tree with a round door, tiny glowing windows and pale silver lilac leaves",
-        "prompt_style": "rd_tile__tile_object",
-        "width": 64,
-        "height": 64,
-        "remove_bg": true
-      }
+      "kind": "building"
     },
 {
       "id": "monster_yellow_butterfly_star",

@@ -35,7 +35,12 @@ SKIP = {"fence", "town_gate", "market_tent", "market_stall", "pavilion_tent", "d
 # elsewhere would pass for panes too: the thatched cottage's straw, the book shop's hanging sign, a yellow
 # cloth in the tailor's window, the dome house's sandstone along its wall top (the pictures ChatGPT drew,
 # 2026-11-21). Only pixels in a box count.
+FAIRY_HOUSE = [(39, 48, 46, 55), (51, 60, 34, 43), (59, 68, 50, 59)]
 BOXES = {"thatched_cottage": [(60, 96, 0, 96)],
+         # ChatGPT's fairy tree houses (2026-11-26, docs/ai-sprite-test/big-trees): a cross through each little round
+         # window cuts its pane into specks too small to count unboxed; the balcony, ladder and lantern stay dark.
+         "fairy_tree_house": FAIRY_HOUSE, "fairy_tree_house_moon": FAIRY_HOUSE, "fairy_tree_house_rose": FAIRY_HOUSE,
+         "fairy_great_tree": [(52, 61, 66, 75), (61, 70, 41, 50), (61, 70, 82, 91), (69, 78, 60, 69), (84, 93, 45, 54)],
          "book_shop": [(55, 66, 40, 52)],
          "tailor_shop": [(50, 64, 0, 96)],
          "dome_house": [(52, 60, 32, 40), (55, 72, 52, 60)],

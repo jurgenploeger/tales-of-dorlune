@@ -70,7 +70,10 @@ enum BridgeArt {
         // (The sill went the same day: in the game it read as flaps on a flat slab, and stone and
         // red lacquer became bow bridges, `bowSprite`. One of them out over a sunk lake keeps a
         // plain whole end.)
-        let worn = !style.sill
+        // A harbor's pier ends whole on the land: worn through to what's under it there, its boards
+        // showed the shore's shallows and grass, a patch of land on the deck (the user, 2026-11-26: "There
+        // is a bit of land covering the bridge here").
+        let worn = !style.sill && bridge.kind != .jetty
         let sillDeep = 0
         let lead = bridge.landsAtStart ? sillDeep : 0, tail = bridge.landsAtEnd ? sillDeep : 0
         let shadow = max(2, pixels / 8), beamWidth = max(2, pixels / 10)

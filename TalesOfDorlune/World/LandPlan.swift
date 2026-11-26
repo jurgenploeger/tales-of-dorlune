@@ -213,7 +213,10 @@ final class LandPlanner {
                     map.occupy(land, blocking: false)
                     let pick = Double.random(in: 0..<1, using: &reedRNG)
                     let art = pick < 0.35 ? "reeds" : pick < 0.82 ? "shore_grass" : "shore_stones"
-                    let scale = CGFloat.random(in: 0.75...1, using: &reedRNG)
+                    // Its own size: every art pixel the size of its neighbours' (the user, 2026-11-26, "stop the random
+                    // scaling"). The size once drawn here is still drawn, so the plan's other draws stay as they were.
+                    _ = CGFloat.random(in: 0.75...1, using: &reedRNG)
+                    let scale: CGFloat = 1
                     // Nudged as before (the plan's own random numbers drawn as they were, so nothing else
                     // in the land moves), then set toward the water.
                     var placement = scenery(art, at: land, nudge: true, scale: scale)
@@ -246,7 +249,10 @@ final class LandPlanner {
                 guard let bank = banks.first, Double.random(in: 0..<1, using: &rockRNG) < 0.07 else { continue }
                 // Of a few shapes (the user, 2026-11-25: "I also like the rocks in different shapes").
                 let shape = ["water_rock", "water_rock_2", "water_rock_3", "water_rock_4"][Int.random(in: 0..<4, using: &rockRNG)]
-                var placement = Placement(art: shape, cell: cell, scale: CGFloat.random(in: 0.85...1.25, using: &rockRNG))
+                // Its own size: every art pixel the size of its neighbours' (the user, 2026-11-26, "stop the random
+                // scaling"). The size once drawn here is still drawn, so the plan's other draws stay as they were.
+                _ = CGFloat.random(in: 0.85...1.25, using: &rockRNG)
+                var placement = Placement(art: shape, cell: cell)
                 // Toward the shore it's off, a little, so it stands in the shallows.
                 let reach = WorldMap.tileSize * 0.18
                 let toward = WorldMap.project(CGPoint(x: CGFloat(bank.0) * reach, y: CGFloat(bank.1) * reach))
@@ -494,7 +500,7 @@ final class LandPlanner {
             if piece.natural {
                 // A ring of trees or rocks grown, not built: nudged off the grid and in its sizes.
                 placement.nudge = CGVector(dx: CGFloat.random(in: -5...5, using: &random), dy: CGFloat.random(in: -3...3, using: &random))
-                placement.scale = CGFloat.random(in: 0.85...1.1, using: &random)
+                _ = CGFloat.random(in: 0.85...1.1, using: &random)   // its size, drawn as before; set down at its own
             }
             plan.localProps.append(placement)
         }
@@ -752,18 +758,25 @@ final class LandPlanner {
             }
             guard let art = kind.art, let prop = def.theme.props.first(where: { $0.art == art }),
                   cells.allSatisfy({ map.isFreeForScenery($0) }) else { return false }
-            plan.roadsides.append(RoadsideLine(kind: .row, cells: cells))
             let every = max(1, kind.every ?? 1)
             // One size down the row, as if planted together: the middle of the prop's sizes.
             let sizes = prop.size.flatMap { $0.count == 2 && $0[0] <= $0[1] ? $0 : nil } ?? [1, 1]
             let size = (sizes[0] + sizes[1]) / 2
+            // An avenue of trees only where they don't stand over the road: on its far side.
+            for (index, cell) in cells.enumerated() where index % every == 0 {
+                if hidesRoad(art, at: cell, scale: CGFloat(size)) { return false }
+            }
+            plan.roadsides.append(RoadsideLine(kind: .row, cells: cells))
             for (index, cell) in cells.enumerated() {
                 guard index % every == 0 else {
                     map.occupy(cell, blocking: false)
                     continue
                 }
                 map.occupy(cell, blocking: prop.blocking)
-                var planted = Placement(art: art, cell: cell, scale: CGFloat(size * Double.random(in: 0.95...1.05, using: &random)))
+                // One size down the row, its own unless the prop has a fixed one (the size once drawn
+                // round it still drawn, so the row's other draws stay as they were).
+                _ = Double.random(in: 0.95...1.05, using: &random)
+                var planted = Placement(art: art, cell: cell, scale: CGFloat(size))
                 planted.prop = prop
                 if prop.sway == true {
                     let duration = TimeInterval.random(in: 1.8...2.8, using: &random)
@@ -864,8 +877,8 @@ final class LandPlanner {
                       Double.random(in: 0..<1, using: &rocks) < 0.08 * rocky else { continue }
                 let kind = kinds[Int.random(in: 0..<kinds.count, using: &rocks)]
                 map.occupy(cell, blocking: true)
-                let scale = CGFloat.random(in: 0.7...1.1, using: &rocks)
-                plan.outcrops.append(scenery(kind, at: cell, nudge: true, scale: scale))
+                _ = CGFloat.random(in: 0.7...1.1, using: &rocks)   // its size, drawn as before; set down at its own
+                plan.outcrops.append(scenery(kind, at: cell, nudge: true))
             }
         }
     }
@@ -896,7 +909,8 @@ final class LandPlanner {
                 let kind = kinds[Int.random(in: 0..<kinds.count, using: &draw)]
                 // None in tall grass (`WorldMap.tallGrass`): ferns stood up out of it.
                 guard !map.tallGrass.contains(cell) else { continue }
-                var placement = Placement(art: kind, cell: cell, scale: CGFloat.random(in: 0.75...1.05, using: &draw))
+                _ = CGFloat.random(in: 0.75...1.05, using: &draw)   // its size, drawn as before; set down at its own
+                var placement = Placement(art: kind, cell: cell)
                 placement.nudge = CGVector(dx: CGFloat.random(in: -7...7, using: &draw), dy: CGFloat.random(in: -5...5, using: &draw))
                 plan.outcrops.append(placement)
             }
@@ -948,7 +962,8 @@ final class LandPlanner {
                 let ring = own["ring"] ?? "standing_stone"
                 for (dc, dr) in [(0, 3), (2, 2), (3, 0), (2, -2), (0, -3), (-2, -2), (-3, 0), (-2, 2)] {
                     guard Double.random(in: 0..<1, using: &draw) < 0.85 else { continue }
-                    put(ring, at(dc, dr), blocking: true, scale: CGFloat.random(in: 0.85...1.05, using: &draw))
+                    _ = CGFloat.random(in: 0.85...1.05, using: &draw)   // its size, drawn as before; set down at its own
+                    put(ring, at(dc, dr), blocking: true)
                 }
                 put(own["centre"] ?? "broken_pillar", m, blocking: true, nudged: false)
             case "graveyard":
@@ -958,7 +973,8 @@ final class LandPlanner {
                 let stone = own["stone"] ?? "tombstone"
                 for (dc, dr) in [(-2, 2), (-1, 2), (0, 2), (1, 2), (2, 2), (-3, 1), (3, 1), (-2, -2), (-1, -2), (1, -2), (2, -2), (-3, -1), (3, -1)] {
                     guard Double.random(in: 0..<1, using: &draw) < (dr > 0 ? 0.9 : 0.55) else { continue }
-                    put(stone, at(dc, dr), blocking: true, scale: CGFloat.random(in: 0.9...1.05, using: &draw))
+                    _ = CGFloat.random(in: 0.9...1.05, using: &draw)   // its size, drawn as before; set down at its own
+                    put(stone, at(dc, dr), blocking: true)
                 }
                 put(own["light"] ?? "spooky_lantern", at(4, 0), blocking: true, nudged: false)
                 put(own["tree"] ?? "dead_tree", at(-4, 2), blocking: true)
@@ -1106,8 +1122,11 @@ final class LandPlanner {
             var placed = 0
             defer { plan.propCounts.append(placed) }
             var attempts = 0
-            // In a land with groves a group that doesn't suit where it fell is tried again elsewhere.
-            let tries = def.theme.groves == true ? 6 : 3
+            // In a land with groves a group that doesn't suit where it fell is tried again elsewhere. In a
+            // town's square (`within`), crowded with streets and buildings, a few tries left a statue, a
+            // well or the daisies out altogether when the draws before them changed (LandPlanTests,
+            // 2026-11-26): it's tried till it fits.
+            let tries = placement.within != nil ? 20 : def.theme.groves == true ? 6 : 3
             while placed < placement.count, attempts < placement.count * tries {
                 attempts += 1
                 await pause()
@@ -1146,6 +1165,9 @@ final class LandPlanner {
                     if let range = placement.size, range.count == 2, range[0] <= range[1] {
                         scale = CGFloat(Double.random(in: range[0]...range[1], using: &rng))
                     }
+                    // Not over a road (what keeps near something chose to: a milestone by the road; and a town
+                    // square's well, statue or tree stands by its streets).
+                    guard placement.near != nil || placement.within != nil || !hidesRoad(placement.art, at: cell, scale: scale) else { continue }
                     plan.props.append(plant(placement, at: cell, scale: scale))
                     remember(placement, at: cell)
                     inGroup += 1
@@ -1163,6 +1185,40 @@ final class LandPlanner {
         let width = art.sprite(placement.art).size.width * CGFloat(placement.size?.last ?? 1)
         return max(0, Int(((width / WorldMap.tileSize - 1) / 2).rounded()))
     }
+
+    /// Whether something tall (a tree) set down at `cell` at `scale` would stand over the land's roads:
+    /// its crown, as drawn up the screen from its foot, over the middle of a road cell. The view looks
+    /// down the land at a slant, so a tree on the near side of a road (lower on the screen) rises over
+    /// two or three of its cells, while one on the far side rises away from it (the user, 2026-11-26:
+    /// "These trees are covering too much of the road"). What's under `tallEnough` is let be.
+    private func hidesRoad(_ id: String, at cell: GridPoint, scale: CGFloat) -> Bool {
+        let size = art.sprite(id).size
+        let width = size.width * scale, height = size.height * scale
+        guard height >= Self.tallEnough else { return false }
+        let foot = map.base(of: cell)
+        // The crown: the middle of its width (its edges are leaves thinning out), from a little above
+        // its foot (the trunk at the road's edge is fine) to near its top.
+        let left = foot.x - width * 0.38, right = foot.x + width * 0.38
+        let bottom = foot.y + 10, top = foot.y + height * 0.92
+        // A road cell's middle, its painted part (a cell's diamond is 62 by 31 points).
+        let halfWidth: CGFloat = 19, halfHeight: CGFloat = 9
+        let reach = Int((max(width, height) / (WorldMap.tileSize * 0.7)).rounded(.up)) + 1
+        for dr in -reach...reach {
+            for dc in -reach...reach {
+                let other = GridPoint(col: cell.col + dc, row: cell.row + dr)
+                guard map.owns(other), map.ground[other.row][other.col] == .path else { continue }
+                let middle = map.center(of: other)
+                if middle.x + halfWidth > left, middle.x - halfWidth < right, middle.y + halfHeight > bottom, middle.y - halfHeight < top {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
+    /// How tall, in points, something must be before it's kept from standing over a road (`hidesRoad`):
+    /// a tree, not a bush, a lamp's post or a flower.
+    private static let tallEnough: CGFloat = 40
 
     /// Whether a road or path of the land's own runs within `reach` cells of `cell`.
     private func nearPath(_ cell: GridPoint, within reach: Int) -> Bool {
@@ -1195,6 +1251,7 @@ final class LandPlanner {
                 if let range = placement.size, range.count == 2, range[0] <= range[1] {
                     scale = CGFloat(Double.random(in: range[0]...range[1], using: &random))
                 }
+                guard placement.near != nil || !hidesRoad(placement.art, at: cell, scale: scale) else { break }
                 var planted = plant(placement, at: cell, scale: scale)
                 planted.land = land
                 plan.seamProps.append(planted)
