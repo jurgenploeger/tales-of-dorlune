@@ -44,13 +44,24 @@ enum TownFence {
         if stone, let tower = art.gradedTile("city_tower", palette: palette) {
             let texture = SKTexture(cgImage: tower)
             texture.filteringMode = .nearest
-            var spots: [GridPoint] = []
+            // Either side of each gate first (always), then the corners, then along the stretches, each of
+            // those only where no tower stands within 3 cells: a corner beside a gate stood a second tower
+            // right next to the gate's (the user, 2026-11-26: "There shouldn't be two round towers so close
+            // to each other").
+            var candidates: [(rank: Int, cell: GridPoint)] = []
             for cell in cells.sorted(by: WorldMap.inOrder) {
                 let east = has(1, 0, cell) || has(-1, 0, cell), north = has(0, 1, cell) || has(0, -1, cell)
                 let ends = [(1, 0), (0, 1), (-1, 0), (0, -1)].filter { has($0.0, $0.1, cell) }.count < 2
                 let along = east && !north ? cell.col : !east && north ? cell.row : 0
-                guard (east && north) || ends || along % towerEvery == 0 else { continue }
-                guard spots.allSatisfy({ max(abs($0.col - cell.col), abs($0.row - cell.row)) > 3 }) || east && north || ends else { continue }
+                if ends { candidates.append((0, cell)) }
+                else if east && north { candidates.append((1, cell)) }
+                else if along % towerEvery == 0 { candidates.append((2, cell)) }
+            }
+            var spots: [GridPoint] = []
+            for candidate in candidates.sorted(by: { $0.rank != $1.rank ? $0.rank < $1.rank : WorldMap.inOrder($0.cell, $1.cell) }) {
+                let cell = candidate.cell
+                let room = candidate.rank == 0 ? 1 : 3   // a gate's two ends may be 2 apart, across a narrow road
+                guard spots.allSatisfy({ max(abs($0.col - cell.col), abs($0.row - cell.row)) > room }) else { continue }
                 spots.append(cell)
             }
             for cell in spots {

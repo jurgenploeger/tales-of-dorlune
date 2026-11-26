@@ -456,7 +456,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   hills, lakes or trees (`WorldMap.reserveLair`, `isFreeForLair`). Bosses stand at a land's edge or coast at a
   trail's end, on a summit, or in a cave; `check_content.py` keeps the way in clear.
 - `tools/city_wall_art.py`: a city's stone wall and round towers (`city_wall`, `city_tower`, placed by
-  `TownFence.place` for town `walls: "stone"`), drawn as the town gate's rubble is, graded with the map's palette.
+  `TownFence.place` for town `walls: "stone"`: either side of each gate, then the corners and along the stretches, none within 3 cells of another, 2026-11-26), drawn as the town gate's rubble is, graded with the map's palette.
   The wall is one cell's stretch that tiles side to side, 37 points to its merlons, its stretches along x a step darker (`pieces`' `shaded`);
   its walk (`city_wall_top`) is drawn by `TownFence.pieces` as a strip of its own back into the screen from the parapet's top
   (`BorderArt.wallTopLevel`, `wallThickness`): face on it looked flat, and the walk drawn on its face still read as thin (the user, 2026-11-18).
