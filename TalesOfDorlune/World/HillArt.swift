@@ -774,8 +774,11 @@ enum HillArt {
     /// A terraced range's faces (`u_cliff`: how steep one is, and whether it has any) show the rock's
     /// tile (`u_rock`) on the screen's own pixels: across by where the ground lies across the screen
     /// (three quarters of a tile a cell, so it joins from one square of 16 cells to the next), up by
-    /// its height, a tile every 44 points. So a sheer face shows the tile whole, not the few pixels
-    /// of the picture that lie under it, stretched.
+    /// where it stands up the screen (its ground's place, three eighths of a tile a cell, and its
+    /// height), a tile every 44 points either way. So a sheer face shows the tile whole, not the few
+    /// pixels of the picture that lie under it, stretched. Up by its height alone, a tile's rows
+    /// followed a face winding across the screen and sheared into slanted smears (the user's
+    /// screenshots, 2026-11-26).
     ///
     /// All in small numbers, from the strip's box (`drawSquare` works out its corner in the heights'
     /// picture, `a_box.xy`; in the square's, `a_area.xy`; the band from it, `a_band.xy`; and the
@@ -835,11 +838,10 @@ enum HillArt {
             float hx = ((east.r - west.r) * 255.0 + (east.g - west.g)) * rise;
             float hy = ((north.r - south.r) * 255.0 + (north.g - south.g)) * rise;
             float steep = sqrt(hx * hx + hy * hy) * 38.105;
+            vec2 onScreen = vec2((uv.x - uv.y) * a_area.z * 0.75, (uv.x + uv.y) * a_area.z * 0.375 + lift / 44.0);
             if (u_cliff.y > 0.5 && steep > u_cliff.x + 6.0) {
-                vec2 stone = vec2(fract((uv.x - uv.y) * a_area.z * 0.75), fract(lift / 44.0));
-                paint = vec4(texture2D(u_rock, stone).rgb * paint.a, paint.a);
+                paint = vec4(texture2D(u_rock, fract(onScreen)).rgb * paint.a, paint.a);
             } else if (u_cliff.w > 0.5 && steep > u_cliff.z && paint.a > 0.99) {
-                vec2 onScreen = vec2((uv.x - uv.y) * a_area.z * 0.75, (uv.x + uv.y) * a_area.z * 0.375 + lift / 44.0);
                 vec2 grid = mod(floor(onScreen * 32.0), 4.0);
                 vec2 fineBits = mod(grid, 2.0);
                 vec2 coarseBits = mod(floor(grid * 0.5), 2.0);
