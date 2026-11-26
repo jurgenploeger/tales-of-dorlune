@@ -452,7 +452,9 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
 - `tools/lair_art.py`: the pieces of the bosses' lairs no sprite had (a standing stone, a brazier, a gold hoard, a
   warning post, the Rat King's junk throne, a heap of bones, a hunter's torn tent, a broken pillar), drawn with
   `pixel_kit` and scored as scenery (the brazier and gold hoard redrawn by ChatGPT and copied, `PICKED`, the user's pick, 2026-11-21, and the torn tent, 48 pixels, 2026-11-25, docs/ai-sprite-test/tents; ChatGPT's
-  blossom tree lost to ours). A boss's lair is maps.json `lair` on the boss: pieces round it, its way in to
+  blossom tree lost to ours). Since 2026-11-26 every piece is ChatGPT's (docs/ai-sprite-test/lair-props: the standing stone,
+  warning post, throne, pillar, bones and the cave's wall torch, four frames, its flame's glow cut from rows 0 to 16, `window_art.py` `TORCH`),
+  as are `prop_art.py`'s waystone, lost pile, candy cane, cave ladder and rope, and the ship (`PICKED`). A boss's lair is maps.json `lair` on the boss: pieces round it, its way in to
   the south, turned by `LandPlanner.planLair` to face the way up its trail (else the land's middle); `lairRing`, a
   ring of the land's own tall scenery behind it and low in front, open toward the way in; `lairApproach`, pairs
   lining the way in; `lairSign`, a warning by its trail near where it starts. Its ground is kept for it before

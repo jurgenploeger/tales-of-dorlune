@@ -89,4 +89,6 @@ reruns for the torches' flames, and `pixel_style.py check --kind scenery` scores
 
 ## Results
 
-- **2026-11-26**: asked for.
+- **2026-11-26**: asked for. Back the same day, all 15 (`art-variants/<id>/chatgpt_1.png`): each its canvas and foot row,
+  hard alpha; the torch's frames differ only in rows 0 to 15; the ship on the same footprint. In, the torch's glow
+  kept to its flame (`window_art.py` `TORCH`: the first cut caught its brass bracket).

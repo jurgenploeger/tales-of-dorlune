@@ -261,7 +261,12 @@ PROPS = {"standing_stone": standing_stone, "brazier": brazier, "wall_torch": wal
 # beside the lair's other pieces ours read as a small heap.
 PICKED = {"brazier": "art-variants/brazier/chatgpt_1.png",
           "gold_hoard": "art-variants/gold_hoard/chatgpt_1_fixed.png",
-          "torn_tent": "art-variants/tents/torn_tent.png"}
+          "torn_tent": "art-variants/tents/torn_tent.png",
+          # The rest (docs/ai-sprite-test/lair-props, the user, 2026-11-26), as delivered: each its canvas and foot row,
+          # the torch's four frames its plate, bracket and torch alike, only the flame moving.
+          **{name: f"art-variants/{name}/chatgpt_1.png" for name in
+             ["standing_stone", "warning_post", "junk_throne", "broken_pillar", "bone_pile",
+              "wall_torch", "wall_torch_2", "wall_torch_3", "wall_torch_4"]}}
 
 
 def main(argv):

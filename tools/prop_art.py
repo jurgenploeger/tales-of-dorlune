@@ -762,6 +762,14 @@ PICKED = {
     "merchant_cart": "art-variants/merchant_cart/chatgpt_1.png",                 # Emerald Road
     "fallen_star": "art-variants/fallen_star/chatgpt_1_fixed.png",               # Starfall Isle
     "telescope_stand": "art-variants/telescope_stand/chatgpt_1.png",             # Starfall Isle
+    # The odd props (docs/ai-sprite-test/lair-props, the user, 2026-11-26), as delivered: each its canvas and foot
+    # row, the ship's waterline still the picture's middle, the waystone's blue its only blue.
+    "waystone": "art-variants/waystone/chatgpt_1.png",
+    "lost_pile": "art-variants/lost_pile/chatgpt_1.png",
+    "candy_cane": "art-variants/candy_cane/chatgpt_1.png",
+    "cave_ladder": "art-variants/cave_ladder/chatgpt_1.png",
+    "cave_rope": "art-variants/cave_rope/chatgpt_1.png",
+    "ship": "art-variants/ship/chatgpt_1.png",
 }
 
 
