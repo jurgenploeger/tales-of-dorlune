@@ -120,3 +120,32 @@ to match), then each tile's `_now_8x.png` and `_now_tiled_4x.png` in the list's 
 ## Batch 3: the caves (after batch 2)
 
 `tile_cave_floor`, `tile_cave_rock`, `tile_crystal_floor`, `tile_crystal_rock`, the same way, with their `_now_` pictures.
+
+## Batch 2's result (2026-11-26)
+
+All ten 44 × 44, opaque, 16 to 24 colours, seamless (`batch2_phone_compare.png`, today's left, ChatGPT's right, at a
+phone's scale). The cliff rock is good now (stones, dark joints, moss), the grasses, desert, swamp, snow and town even
+and crisp; the forest floor's leaves fainter than today's. The scree came back a fine pale grain with no stones: asked
+again in batch 3. In `art-variants/ground_tiles/` (the pilot's cliff rock in `pilot/`).
+
+## Batch 3: the caves, and the scree again
+
+Attach, in this order: `style_reference_rd_4x.png`, `tile_grass_new_8x.png`, `tile_path_new_8x.png`,
+`tile_cliff_rock_new_8x.png` (the good ones so far), then each tile's `_now_8x.png` and `_now_tiled_4x.png` (scree, cave
+floor, cave rock, crystal floor, crystal rock), and `tile_scree_new_8x.png` (last time's, what not to do).
+
+> Five more ground tiles, the same way as the last ten (44 × 44, don't measure from the pictures; seamless on all four
+> sides with the 3 × 3 preview; fully opaque; a flat texture, no light from one side, no objects, no border, no text; no
+> long streaks; small clusters evenly scattered; 12 to 24 colours, hue-shifted; natural colours close to today's). The
+> first picture is our style sheet, the next three tiles you drew that came out well, to match in look and pixel size.
+>
+> 1. `tile_scree` (again): loose grey gravel and small stones from above, **as stony as today's**: distinct stones of 2
+>    to 5 pixels, each with a lit top-left pixel and a dark bottom-right one, darker gaps between them, mid to light
+>    grey. Not a fine even grain (the last picture is last time's: too pale and flat).
+> 2. `tile_cave_floor`: a cave's floor from above: dark grey packed earth and stone, a few pebbles, damp darker patches.
+> 3. `tile_cave_rock`: a cave's rock wall from the front: dark grey rounded stones and boulders packed together, deep
+>    shadow between them, lit top-left edges (repeated over whole walls, so even all over).
+> 4. `tile_crystal_floor`: a crystal cave's floor from above: deep blue-violet stone with tiny sparkling crystal specks
+>    (1 to 2 pixels, pale cyan and white), a few faint lighter seams in short clusters.
+> 5. `tile_crystal_rock`: a crystal cave's rock wall from the front: deep blue-violet rounded stones like the cave rock,
+>    their lit edges brighter blue, a few small pale crystal glints.
