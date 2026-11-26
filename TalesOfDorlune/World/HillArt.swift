@@ -624,6 +624,14 @@ enum HillArt {
             texture.filteringMode = .nearest
             rockTile = texture
         }
+        // A terraced range's own ground, for its slopes drawn on the screen's pixels (`lifting`), and its
+        // average colour, which the picture's colour there is set against.
+        var flatTile: (texture: SKTexture, mean: SIMD4<Float>)?
+        if look.cliff != nil, let mean = Self.meanColour(sample) {
+            let texture = SKTexture(cgImage: sample)
+            texture.filteringMode = .nearest
+            flatTile = (texture, mean)
+        }
         shader.uniforms = [
             SKUniform(name: "u_heights", texture: heights),
             SKUniform(name: "u_samples", vectorFloat4: SIMD4(Float(low.col), Float(low.row), Float(samples), Float(peak))),
@@ -637,7 +645,12 @@ enum HillArt {
             // (points a cell), 1 if it has faces at all. Any texture where it has none: every
             // strip's shader is the one source.
             SKUniform(name: "u_rock", texture: rockTile ?? heights),
-            SKUniform(name: "u_cliff", vectorFloat4: SIMD4(Float(look.cliff ?? 0), rockTile == nil ? 0 : 1, 0, 0)),
+            // `z`: how steep a slope, in points a cell, starts showing its ground on the screen's pixels
+            // (`rampGround`); `w`, whether it has that ground (`u_flat`, its average `u_flatMean`).
+            SKUniform(name: "u_cliff", vectorFloat4: SIMD4(Float(look.cliff ?? 0), rockTile == nil ? 0 : 1,
+                                                           Float(Self.rampGround), flatTile == nil ? 0 : 1)),
+            SKUniform(name: "u_flat", texture: flatTile?.texture ?? heights),
+            SKUniform(name: "u_flatMean", vectorFloat4: flatTile?.mean ?? SIMD4(1, 1, 1, 1)),
         ]
         shader.attributes = [
             SKAttribute(name: "a_box", type: .vectorFloat4),
@@ -751,6 +764,13 @@ enum HillArt {
     /// picture, the shade leaning toward the map's shadow colour (`u_lean`). Flat ground stays as it
     /// is. Everything inline: SpriteKit's shaders can't count on helper functions seeing uniforms.
     ///
+    /// Its slopes that aren't faces (the faces turned away, laid back into long ramps, the way up its
+    /// back) show its own ground the same way (`u_flat`, a tile every 44 points either way), coloured
+    /// as the picture is there, smoothed over a few of its pixels, against the tile's own average
+    /// (`u_flatMean`): coming in by an ordered dither from `u_cliff.z` points a cell to 8 more
+    /// (`rampGround`). From the picture, a ramp's few rows of ground were stretched into streaks up
+    /// the screen (the user, 2026-11-26: "We use a lot of stretched pixel art").
+    ///
     /// A terraced range's faces (`u_cliff`: how steep one is, and whether it has any) show the rock's
     /// tile (`u_rock`) on the screen's own pixels: across by where the ground lies across the screen
     /// (three quarters of a tile a cell, so it joins from one square of 16 cells to the next), up by
@@ -761,6 +781,23 @@ enum HillArt {
     /// picture, `a_box.xy`; in the square's, `a_area.xy`; the band from it, `a_band.xy`; and the
     /// square's corner in the heights with their samples a cell, `a_light`), never the land's own
     /// points: a phone's GPU may work in half precision, where those thousands dropped whole rows.
+    /// How steep a terraced range's slope (points a cell) starts to show its ground on the screen's
+    /// pixels (`lifting`): its levels' tops are a few, the ramps `unfold()` lays its back faces into
+    /// about 20, its faces 45 (`WorldMap.faceSlope`).
+    static let rampGround: Double = 8
+
+    /// A tile's average colour, 0...1 (premultiplied pixels' sum over their alpha's), nil if it's clear.
+    private static func meanColour(_ image: CGImage) -> SIMD4<Float>? {
+        let width = image.width, height = image.height
+        guard width > 0, height > 0, let pixels = PixelImage.pixels(of: image, width: width, height: height) else { return nil }
+        var sum = SIMD4<Float>(0, 0, 0, 0)
+        for index in stride(from: 0, to: pixels.count - 3, by: 4) {
+            sum += SIMD4(Float(pixels[index]), Float(pixels[index + 1]), Float(pixels[index + 2]), Float(pixels[index + 3]))
+        }
+        guard sum.w > 0 else { return nil }
+        return SIMD4(sum.x / sum.w, sum.y / sum.w, sum.z / sum.w, 1)
+    }
+
     private static let lifting = """
     void main() {
         vec2 spot = v_tex_coord * a_box.zw;
@@ -797,9 +834,24 @@ enum HillArt {
             float rise = u_samples.w / 255.0 * u_samples.z / (44.0 * 0.8660254);
             float hx = ((east.r - west.r) * 255.0 + (east.g - west.g)) * rise;
             float hy = ((north.r - south.r) * 255.0 + (north.g - south.g)) * rise;
-            if (u_cliff.y > 0.5 && sqrt(hx * hx + hy * hy) * 38.105 > u_cliff.x + 6.0) {
+            float steep = sqrt(hx * hx + hy * hy) * 38.105;
+            if (u_cliff.y > 0.5 && steep > u_cliff.x + 6.0) {
                 vec2 stone = vec2(fract((uv.x - uv.y) * a_area.z * 0.75), fract(lift / 44.0));
                 paint = vec4(texture2D(u_rock, stone).rgb * paint.a, paint.a);
+            } else if (u_cliff.w > 0.5 && steep > u_cliff.z && paint.a > 0.99) {
+                vec2 onScreen = vec2((uv.x - uv.y) * a_area.z * 0.75, (uv.x + uv.y) * a_area.z * 0.375 + lift / 44.0);
+                vec2 grid = mod(floor(onScreen * 32.0), 4.0);
+                vec2 fineBits = mod(grid, 2.0);
+                vec2 coarseBits = mod(floor(grid * 0.5), 2.0);
+                float turn = 4.0 * mod(2.0 * fineBits.x + 3.0 * fineBits.y, 4.0) + mod(2.0 * coarseBits.x + 3.0 * coarseBits.y, 4.0);
+                if ((turn + 0.5) / 16.0 < clamp((steep - u_cliff.z) / 8.0, 0.0, 1.0)) {
+                    float reach = 2.0 / (a_area.z * u_look.w);
+                    vec4 around = paint + texture2D(u_texture, uv + vec2(reach, 0.0)) + texture2D(u_texture, uv - vec2(reach, 0.0))
+                        + texture2D(u_texture, uv + vec2(0.0, reach)) + texture2D(u_texture, uv - vec2(0.0, reach));
+                    vec3 colour = around.rgb / max(around.a, 0.01);
+                    vec3 grain = texture2D(u_flat, fract(onScreen)).rgb;
+                    paint.rgb = min(vec3(1.0), grain * colour / max(u_flatMean.rgb, vec3(0.02)));
+                }
             }
             float facing = (u_sun.z - hx * u_sun.x - hy * u_sun.y) / sqrt(hx * hx + hy * hy + 1.0);
             float lit = u_look.x + (1.0 - u_look.x) * max(0.0, facing) / u_sun.z;
