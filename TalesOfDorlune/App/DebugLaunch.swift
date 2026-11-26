@@ -12,7 +12,8 @@ import SpriteKit
 ///   map=<id>       start on a map from content/maps.json
 ///   at=x_y         start at this offset from the map's centre (e.g. at=0_14); at=terrace (or
 ///                  terrace_side) at the foot of the first terrace's front (or side) stairs; at=place (place1…)
-///                  in front of the land's first (nth) place to find
+///                  in front of the land's first (nth) place to find; at=gate (gate1…) in front of the town's
+///                  first (nth) gate
 ///   ring=0         beside the land's first fairy ring (debug builds)
 ///   hill=n         start at the foot of the first trail up the map's nth range of hills (0 first);
 ///                  `hill=tallest` the range with the highest top, up its highest trail; `trail=k`
@@ -739,6 +740,25 @@ enum DebugLaunch {
                 if grid.places.indices.contains(index) {
                     let middle = grid.places[index].middle
                     session.playerPosition = grid.center(of: GridPoint(col: middle.col, row: middle.row - 3))
+                }
+            } else if at.hasPrefix("gate") {
+                // `at=gate` (or `gate1`, `gate2`…): just in front of the town's first (or nth) gate, the
+                // middle of a gap in its fence or wall where a road runs through (as `TownFence.place` finds it).
+                let grid = WorldMap(def: def)
+                let index = Int(at.dropFirst(4)) ?? 0
+                let fence = Set(grid.fenceCells)
+                var gaps: [GridPoint] = []
+                for cell in grid.fenceCells.sorted(by: WorldMap.inOrder) {
+                    let links = [(1, 0), (0, 1), (-1, 0), (0, -1)].filter { fence.contains(GridPoint(col: cell.col + $0.0, row: cell.row + $0.1)) }
+                    guard links.count == 1 else { continue }
+                    let step = (-links[0].0, -links[0].1)
+                    guard let distance = (2...6).first(where: { fence.contains(GridPoint(col: cell.col + step.0 * $0, row: cell.row + step.1 * $0)) }) else { continue }
+                    let middle = GridPoint(col: cell.col + step.0 * distance / 2, row: cell.row + step.1 * distance / 2)
+                    if !gaps.contains(where: { abs($0.col - middle.col) + abs($0.row - middle.row) < 3 }) { gaps.append(middle) }
+                }
+                if gaps.indices.contains(index) {
+                    let spot = GridPoint(col: gaps[index].col - 2, row: gaps[index].row - 2)
+                    session.playerPosition = grid.center(of: grid.nearestWalkable(to: spot) ?? spot)
                 }
             } else if at.hasPrefix("grass") {
                 // `at=grass` (or `grass1`, `grass2`…): in the middle of the land's first (or nth) patch of
