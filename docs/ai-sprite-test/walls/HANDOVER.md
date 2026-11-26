@@ -91,5 +91,4 @@ Paste the prompt, then send "next" after each piece. Bring the PNGs back named b
 ## Results
 
 - **2026-11-26**: asked for. Back the same day: `city_wall_top`, `city_tower`, `low_wall`, `low_wall_top` and
-  `low_wall_end`, at their sizes, hard alpha (in, `tools/city_wall_art.py` `PICKED`). `city_wall`'s face came only as
-  its 8× preview; still to bring back as a file.
+  `low_wall_end`, at their sizes, hard alpha (in, `tools/city_wall_art.py` `PICKED`), then `city_wall`'s face. All in.
