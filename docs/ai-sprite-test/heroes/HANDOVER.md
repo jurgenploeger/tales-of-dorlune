@@ -469,6 +469,10 @@ One doll, end to end (it was the Human Male pilot until 2026-11-24).
     frame by frame (`hero_hair.py lift-row`) to `hero64_hair_long_<anim>_<direction>.png`, which `wear_style`
     uses over the standing view's where it's there (`row_hair`). Under a helmet (later, with the wearables) the
     hair above its rim is hidden and the rest shows, as today's `nape_` layers do.
+    Walk down: ChatGPT's repaint (`tries/hair_long_walk_down_try1*`), the body pixel for pixel the walk's, its hair
+    in the toned-down colours it was shown (lifted untoned): `hero64_hair_long_walk_down.png`. The elf's own head
+    outline stood a pixel out round the crown and showed as dark specks on long hair: only the ear's own rows go
+    over the hair now (`real_ear`).
     Spiky up: ChatGPT sent its own 64-pixel files this time (`tries/hair_spiky_up_try1{a,b}{,_8x}.png`), the body
     pixel for pixel the doll's; the user picked a (`hero64_hair_spiky_up.png`), lifted untoned. **Spiky is done in all
     eight directions** (five drawn, three mirrored), on idle, walk, run and attack, human and elf.

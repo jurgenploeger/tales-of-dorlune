@@ -185,7 +185,9 @@ def real_ear(diff, f, dark=None):
     # the row above and below only for the ear's dark outline: its skin there was ChatGPT's head showing
     # through the hair as patches above the ear
     edge = ndimage.binary_dilation(diff & far, np.ones((3, 15), bool)) & dark
-    return (diff & (zone | edge)) | (diff & (f[..., 3] == 0))
+    # (not every pixel past the doll: the elf painting's own head outline stood a pixel out round the crown, and
+    # laid over long hair it showed as dark specks at its top, the user, 2026-11-26)
+    return diff & (zone | edge)
 
 def lone_specks(img):
     """Opaque pixels with no opaque neighbour, cleared."""
