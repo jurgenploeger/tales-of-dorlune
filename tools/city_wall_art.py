@@ -403,6 +403,27 @@ def city_tower():
 
 DRAWINGS = {"city_wall": city_wall, "city_wall_top": city_wall_top, "city_tower": city_tower}
 
+# ChatGPT's redraws (docs/ai-sprite-test/walls, the user, 2026-11-26: "Now lets have chatgpt create other walls
+# as well"), copied as drawn over the drawings above, at their sizes: the walk, the tower, and the low wall
+# along the roads (its face, capstones and end, which `TownFence.placeRoadsides` takes over
+# `BorderArt.lowWallPicture`'s and `lowWallTop`'s and the flat end).
+PICKED = {name: ROOT / "art-variants" / "walls" / f"{name}.png"
+          for name in ["city_wall", "city_wall_top", "city_tower", "low_wall", "low_wall_top", "low_wall_end"]}
+SIZES = {"city_wall": (WALL_W, 37), "city_wall_top": (WALL_W, 10), "city_tower": (TOWER_W, TOWER_H),
+         "low_wall": (32, 14), "low_wall_top": (32, 8), "low_wall_end": (10, 14)}
+
+
+def picked(name):
+    """ChatGPT's drawing of `name`, if it's there, checked for its size and hard alpha."""
+    path = PICKED.get(name)
+    if not path or not path.exists():
+        return None
+    img = Image.open(path).convert("RGBA")
+    assert img.size == SIZES[name], f"{name}: {img.size}, wants {SIZES[name]}"
+    arr = np.array(img)
+    assert set(np.unique(arr[..., 3])) <= {0, 255}, f"{name}: soft alpha"
+    return img
+
 
 def main(argv):
     sheet = None
@@ -411,9 +432,12 @@ def main(argv):
         sheet = pathlib.Path(argv[i + 1])
         argv = argv[:i] + argv[i + 2:]
     out = {}
-    for name in argv or list(DRAWINGS):
-        arr = DRAWINGS[name]()
-        img = Image.fromarray(arr, "RGBA")
+    for name in argv or list(dict.fromkeys([*DRAWINGS, *PICKED])):
+        img = picked(name)
+        if img is None:
+            if name not in DRAWINGS:
+                continue
+            img = Image.fromarray(DRAWINGS[name](), "RGBA")
         img.save(SPRITES / f"{name}.png")
         out[name] = img
     print(f"wrote {', '.join(out)} to art/sprites/")

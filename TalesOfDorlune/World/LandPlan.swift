@@ -974,9 +974,9 @@ final class LandPlanner {
             default:
                 // Its fire in the middle of the trodden ground, the tent behind, stores and seats round it.
                 put(own["fire"] ?? "brazier", m, blocking: true, nudged: false)
-                // The torn tent drawn at 48 pixels since 2026-11-25 (ChatGPT's), set down as it is; a land's
-                // own tent (a beach umbrella) at 1.3, as before.
-                put(own["tent"] ?? "torn_tent", at(0, 3), blocking: true, scale: own["tent"] == nil ? 1 : 1.3, nudged: false)
+                // A traveller's tent, whole and lived in (ChatGPT's `camp_tent`, 48 pixels, 2026-11-26; the torn
+                // one is for the lairs), set down as it is; a land's own tent (a beach umbrella) at 1.3, as before.
+                put(own["tent"] ?? "camp_tent", at(0, 3), blocking: true, scale: own["tent"] == nil ? 1 : 1.3, nudged: false)
                 let stores = own["stores"] ?? "barrels"
                 put(stores, at(-2, 2), blocking: true)
                 put(own["seat"] ?? "tree_stump", at(2, -2), blocking: true)
@@ -1118,7 +1118,12 @@ final class LandPlanner {
                 } else {
                     map.randomFreeCell(blocking: placement.blocking, using: &rng)
                 }
-                guard let middle = found else { break }
+                // What keeps near something tries again while it has tries left: its spots are few and
+                // crowded, and stopping at the first miss left some lands with none (LandPlanTests, 2026-11-26).
+                guard let middle = found else {
+                    if placement.near != nil { continue }
+                    break
+                }
                 guard suits(placement, middle) else { continue }
                 let wanted = min(groupSize, placement.count - placed)
                 var inGroup = 0

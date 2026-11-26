@@ -95,7 +95,9 @@ GLASS = {"house": "dark", "inn": "warm"}
 # evening/night should be lit up"): what glows of each, cut as a window is and laid above the night's shade with a
 # soft glow round it (`LandStage.addWindows`). A lit pixel is bright (value from `v`) and coloured (saturation from
 # `s`), or a white-hot core beside one; `boxes` keeps it to the light (a torch's flame, not its pole).
-LIGHTS = {"street_lamp": {}, "wall_torch": {}, "wall_torch_2": {}, "wall_torch_3": {}, "wall_torch_4": {},
+# ChatGPT's wall torches (2026-11-26): the flame in rows 0 to 16, its brass bracket below it kept dark.
+TORCH = {"boxes": [(0, 17, 0, 32)]}
+LIGHTS = {"street_lamp": {}, "wall_torch": TORCH, "wall_torch_2": TORCH, "wall_torch_3": TORCH, "wall_torch_4": TORCH,
           "tiki_torch": {"boxes": [(0, 13, 8, 24)]}, "moon_lantern_post": {}, "spooky_lantern": {}, "wisp_lantern": {},
           "stone_lantern": {}, "mine_lantern_post": {"boxes": [(25, 36, 18, 28)]},
           "firefly_jar_post": {"boxes": [(20, 36, 16, 28)]}, "magic_lamp": {"boxes": [(0, 13, 0, 32)]},

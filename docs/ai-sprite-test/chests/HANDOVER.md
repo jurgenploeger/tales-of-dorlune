@@ -74,3 +74,9 @@ Each copied from `art-variants/chests/` (a `PICKED` table, snapped to the grid i
   in; crystal, shadow, swamp and frost open drawn, not received as files yet. Their lands keep the open chest, faded once emptied, till then.
 - Earlier the same day: Meanwhile the chests are already off the minimap and the world map, with no "!"
   over them, and `treasure_chest` no longer stands as sand decoration on the three beaches.
+- **2026-11-26, later**: the closed desert, beach, wood and frost chests in, as files (the five before came back the same,
+  byte for byte). Wood for the green lands, the Emerald Road, Starfall Isle and the three plain caves; beach for the
+  three shores; desert for Genie Desert and the Hidden Steppe; frost for Snow White Forest, Briarmere and Moonglow.
+  Still to come as files: the open crystal, shadow, swamp, frost, desert, beach and wood chests.
+- **2026-11-26, last**: the open crystal, shadow, swamp, frost, desert, beach and wood chests in (coral's and candy's
+  came back the same). Every style has both now.

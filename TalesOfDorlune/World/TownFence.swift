@@ -44,13 +44,24 @@ enum TownFence {
         if stone, let tower = art.gradedTile("city_tower", palette: palette) {
             let texture = SKTexture(cgImage: tower)
             texture.filteringMode = .nearest
-            var spots: [GridPoint] = []
+            // Either side of each gate first (always), then the corners, then along the stretches, each of
+            // those only where no tower stands within 3 cells: a corner beside a gate stood a second tower
+            // right next to the gate's (the user, 2026-11-26: "There shouldn't be two round towers so close
+            // to each other").
+            var candidates: [(rank: Int, cell: GridPoint)] = []
             for cell in cells.sorted(by: WorldMap.inOrder) {
                 let east = has(1, 0, cell) || has(-1, 0, cell), north = has(0, 1, cell) || has(0, -1, cell)
                 let ends = [(1, 0), (0, 1), (-1, 0), (0, -1)].filter { has($0.0, $0.1, cell) }.count < 2
                 let along = east && !north ? cell.col : !east && north ? cell.row : 0
-                guard (east && north) || ends || along % towerEvery == 0 else { continue }
-                guard spots.allSatisfy({ max(abs($0.col - cell.col), abs($0.row - cell.row)) > 3 }) || east && north || ends else { continue }
+                if ends { candidates.append((0, cell)) }
+                else if east && north { candidates.append((1, cell)) }
+                else if along % towerEvery == 0 { candidates.append((2, cell)) }
+            }
+            var spots: [GridPoint] = []
+            for candidate in candidates.sorted(by: { $0.rank != $1.rank ? $0.rank < $1.rank : WorldMap.inOrder($0.cell, $1.cell) }) {
+                let cell = candidate.cell
+                let room = candidate.rank == 0 ? 1 : 3   // a gate's two ends may be 2 apart, across a narrow road
+                guard spots.allSatisfy({ max(abs($0.col - cell.col), abs($0.row - cell.row)) > room }) else { continue }
                 spots.append(cell)
             }
             for cell in spots {
@@ -64,7 +75,8 @@ enum TownFence {
         }
 
         // Gates: the two ends of each gap where a road runs through, joined by its arch (the town's own).
-        guard let arch = cropped(art.sprite(map.def.town?.gate ?? "town_gate").texture.cgImage()) else { return placed }
+        let gateArt = map.def.town?.gate ?? "town_gate"
+        guard let arch = cropped(art.sprite(gateArt).texture.cgImage()) else { return placed }
         var done: Set<GridPoint> = []
         for cell in cells where !done.contains(cell) {
             let links = [(1, 0), (0, 1), (-1, 0), (0, -1)].filter { has($0.0, $0.1, cell) }
@@ -81,7 +93,8 @@ enum TownFence {
             done.insert(other)
             // Draw from the west/north end to the east/south end.
             let (from, to) = step.0 + step.1 * -1 > 0 ? (cell, other) : (other, cell)
-            let node = gate(arch, from: map.center(of: from), to: map.center(of: to))
+            let node = gate(arch, from: map.center(of: from), to: map.center(of: to),
+                            top: depthPiece(gateArt + "_top", art: art), side: depthPiece(gateArt + "_side", art: art))
             world.addChild(node)
             placed.gates.append(node)
         }
@@ -98,8 +111,11 @@ enum TownFence {
     static func placeRoadsides(_ lines: [RoadsideLine], map: WorldMap, art: ArtLibrary, put: (SKSpriteNode) -> Void) {
         guard lines.contains(where: { $0.kind != .row }) else { return }
         let pickets = art.picture(of: art.sprite("fence").texture)
-        let stones = BorderArt.lowWallPicture(palette: map.def.theme.palette)
-        let capstones = BorderArt.lowWallTop(palette: map.def.theme.palette)
+        // ChatGPT's drawings (`tools/city_wall_art.py` `PICKED`), else the ones drawn in Swift.
+        let palette = map.def.theme.palette
+        let stones = art.gradedTile("low_wall", palette: palette) ?? BorderArt.lowWallPicture(palette: palette)
+        let capstones = art.gradedTile("low_wall_top", palette: palette) ?? BorderArt.lowWallTop(palette: palette)
+        let wallEnd = art.gradedTile("low_wall_end", palette: palette)
         for line in lines where line.kind != .row {
             let wall = line.kind == .wall
             guard let picture = wall ? stones : pickets else { continue }
@@ -107,7 +123,7 @@ enum TownFence {
             // 2026-11-18: "These little walls are also very thin").
             let made = wall
                 ? pieces(cells: line.cells, picture: picture, height: BorderArt.lowWallHeight, top: capstones,
-                         topLevel: BorderArt.lowWallHeight, thickness: BorderArt.lowWallThickness)
+                         topLevel: BorderArt.lowWallHeight, thickness: BorderArt.lowWallThickness, endPicture: wallEnd)
                 : pieces(cells: line.cells, picture: picture, height: roadsideHeight)
             for piece in made {
                 let node = SKSpriteNode(texture: piece.texture, size: piece.size)
@@ -130,7 +146,8 @@ enum TownFence {
     /// city wall's walk, or a low wall's capstones (`BorderArt.lowWallTop`).
     static func pieces(cells: [GridPoint], picture source: CGImage, height: CGFloat,
                        shaded: CGFloat = 1, top: CGImage? = nil, topLevel: CGFloat = BorderArt.wallTopLevel,
-                       thickness: CGFloat = BorderArt.wallThickness) -> [(cell: GridPoint, texture: SKTexture, size: CGSize, anchor: CGPoint)] {
+                       thickness: CGFloat = BorderArt.wallThickness,
+                       endPicture: CGImage? = nil) -> [(cell: GridPoint, texture: SKTexture, size: CGSize, anchor: CGPoint)] {
         let fence = Set(cells)
         guard !fence.isEmpty, let pickets = cropped(source) else { return [] }
         // `shaded`: how much darker the stretches along x are drawn (their south face, from the light).
@@ -162,8 +179,15 @@ enum TownFence {
         // parts, so now it shows a hole").
         let side = top == nil ? nil : averageColour(pickets, shade: 0.78)
         let sideLip = top == nil ? nil : averageColour(pickets, shade: 1.05)
+        // `endPicture`: the end drawn (a low wall's, `low_wall_end`), its column 0 at the near edge, standing
+        // from the foot back as deep as the top goes, a shade darker where it turns its side to the right.
         func end(at foot: CGPoint, back: CGVector, in context: CGContext) {
-            guard let side, let sideLip, deep > 0 else { return }
+            guard deep > 0 else { return }
+            if let endPicture {
+                draw(back.dx < 0 ? endPicture : dimmed(endPicture, by: 0.88), in: context, from: foot, along: back, part: nil, height: topLevel)
+                return
+            }
+            guard let side, let sideLip else { return }
             let corners = [foot, foot + back, foot + back + lift, foot + lift]
             context.setFillColor(side)
             context.beginPath()
@@ -233,7 +257,10 @@ enum TownFence {
 
     /// The stone arch over a road through a fence, from `a` to `b` on screen (the west or north
     /// end first), standing on the line between them. `picture`: the arch, cropped (`cropped`).
-    static func gate(_ picture: CGImage, from a: CGPoint, to b: CGPoint) -> SKSpriteNode {
+    /// `top` and `side`: its depth drawn (ChatGPT's, docs/ai-sprite-test/gate-depth): the top seen from above, laid
+    /// back from the front's top edge and widened as the front is, and a pillar's side at the end that shows, over the
+    /// flat tones (which still fill the pillars' inner sides).
+    static func gate(_ picture: CGImage, from a: CGPoint, to b: CGPoint, top: CGImage? = nil, side: CGImage? = nil) -> SKSpriteNode {
         let pad: CGFloat = 2
         let span = CGVector(dx: b.x - a.x, dy: b.y - a.y)
         // Its depth (the user, 2026-11-25: "The gates should also be thicker because now it's too
@@ -266,6 +293,16 @@ enum TownFence {
                 draw(sides, in: context, from: at, along: span, part: nil, height: gateHeight)
             }
             context.setBlendMode(.normal)
+            if let top {
+                let wide = widenedTop(top, to: arch.width)
+                drawTop(wide, in: context, from: start + CGVector(dx: 0, dy: gateHeight), along: span, back: back, part: nil)
+            }
+            if let side {
+                // At the end that shows: the west end of a gate along x (its depth going back up the left), the
+                // south end of one along y (up the right), turned from the light there, a step darker.
+                let end = back.dx < 0 ? start : start + span
+                draw(back.dx < 0 ? side : dimmed(side, by: 0.82), in: context, from: end, along: back, part: nil, height: gateHeight)
+            }
             draw(arch, in: context, from: start, along: span, part: nil, height: gateHeight)
         }
         let node = SKSpriteNode(texture: texture, size: gateSize)
@@ -313,6 +350,33 @@ enum TownFence {
         return context.makeImage() ?? picture
     }
 
+    /// A gate's top piece (70 × 10, `gate`) widened to `width` pixels as the front is (`widened`): its pillars' caps
+    /// at either end as they are, the stretch over x 14 to 25 repeated between, and its middle centred.
+    private static func widenedTop(_ top: CGImage, to width: Int) -> CGImage {
+        let w = top.width, h = top.height
+        guard width > w else { return top }
+        let side = Int((Double(w) * pillar).rounded())
+        let from = Int((Double(w) * stones.lowerBound).rounded()), to = Int((Double(w) * stones.upperBound).rounded())
+        guard side > 0, side * 2 < w, to > from,
+              let left = top.cropping(to: CGRect(x: 0, y: 0, width: side, height: h)),
+              let right = top.cropping(to: CGRect(x: w - side, y: 0, width: side, height: h)),
+              let middle = top.cropping(to: CGRect(x: side, y: 0, width: w - 2 * side, height: h)),
+              let block = top.cropping(to: CGRect(x: from, y: 0, width: to - from, height: h)),
+              let context = CGContext(data: nil, width: width, height: h, bitsPerComponent: 8, bytesPerRow: 0,
+                                      space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)
+        else { return top }
+        context.interpolationQuality = .none
+        var x = side - 2
+        while x < width - side + 2 {
+            context.draw(block, in: CGRect(x: x, y: 0, width: block.width, height: h))
+            x += block.width
+        }
+        context.draw(middle, in: CGRect(x: (width - middle.width) / 2, y: 0, width: middle.width, height: h))
+        context.draw(left, in: CGRect(x: 0, y: 0, width: side, height: h))
+        context.draw(right, in: CGRect(x: width - side, y: 0, width: side, height: h))
+        return context.makeImage() ?? top
+    }
+
     /// `image`'s shape filled with one colour.
     private static func filled(_ image: CGImage, _ colour: CGColor) -> CGImage {
         let w = image.width, h = image.height
@@ -325,6 +389,12 @@ enum TownFence {
         context.setFillColor(colour)
         context.fill(rect)
         return context.makeImage() ?? image
+    }
+
+    /// A gate's depth piece (`gate`), where one's drawn.
+    static func depthPiece(_ id: String, art: ArtLibrary) -> CGImage? {
+        guard art.asset(id) != nil else { return nil }
+        return art.sprite(id).texture.cgImage()
     }
 
     /// How far a gate goes back into the screen (`gate`), in cells.

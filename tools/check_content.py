@@ -558,7 +558,10 @@ for map_def in maps.values():
               f"{where} → chain must be [fewest, most] summits a range, 1 to 6")
         if "mountains" in hills:
             mountains = hills["mountains"]
-            check(isinstance(mountains, dict) and set(mountains) == {"count", "height"}, f"{where} → mountains must be {{count, height}}")
+            check(isinstance(mountains, dict) and {"count", "height"} <= set(mountains) <= {"count", "height", "levels"},
+                  f"{where} → mountains must be {{count, height}} (and levels)")
+            if isinstance(mountains, dict) and "levels" in mountains:
+                check(mountains["levels"] in (3, 4, 5), f"{where} → mountains levels must be 3, 4 or 5")
             if isinstance(mountains, dict):
                 check(isinstance(mountains.get("count"), int) and 1 <= mountains.get("count", 0) <= 4, f"{where} → mountains count must be 1 to 4")
                 height = mountains.get("height")

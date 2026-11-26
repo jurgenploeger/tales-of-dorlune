@@ -71,7 +71,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   `GameCoordinator.mapScene` is whichever you're in.
 - Terraced hills (maps.json theme `hills.terraces`, a step in points, with `bank` the faces' rock; Sunny Meadow
   since 0.9.105, after `tools/cliff_preview.py`, every wild land's since 0.9.110; a mountain too since 0.9.189, in five levels, `WorldMap.mountainLevels`, its face
-  nearly as deep as its back (where one that tall doesn't fit, four, then three, steeper: `terracedMountainShapes`, `Hill.levels`; a
+  nearly as deep as its back (where one that tall doesn't fit, four, then three, steeper: `terracedMountainShapes`, `Hill.levels`, at most theme `hills.mountains.levels`: Hachoo Island's 3, so its camp fits; a
   summit's chest or NPC on the nearest walkable cell of its top, `nearestOnTop`; in five every time ten lands lost room, 2026-11-26), stairs cut across each face as ledges zig-zagging up it (not drawn as a path: messy, the user), `carveStairs`,
   the user's pick from `tools/mountain_preview.py`, 2026-11-25): `Hill.terrace` steps each range's height into flat levels with a
   sheer face, only where its slopes face you (`Hill.stepped`: stepped all round, the faces turned away were laid
@@ -253,8 +253,8 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   shadow on the face behind, down and right in two steps, so its rocks stand off the rock (`placeMouth`).
 - Chests (NPC role `chest`) are found, not pointed to (the user, 2026-11-26): no "!" over them (`GameSession.notice`), nothing on the
   minimap or world map (`minimapKind`), and `treasure_chest` (RD's open one) isn't set down as decoration. Closed ones in each
-  area's style (maps.json theme `chest`, `ChestLook`, `tools/chest_art.py` copies ChatGPT's from `art-variants/chests/`; three of
-  nine so far, docs/ai-sprite-test/chests) stand closed till opened, then their style's open one (`<id>_open`, `ChestLook.open`) or else `treasure_chest`; a land with none drawn yet fades it.
+  area's style (maps.json theme `chest`, `ChestLook`, `tools/chest_art.py` copies ChatGPT's from `art-variants/chests/`; all nine
+  closed and open, every wild land and cave one, docs/ai-sprite-test/chests) stand closed till opened, then their style's open one (`<id>_open`, `ChestLook.open`); a land with none (the towns) keeps `treasure_chest`.
 - `tools/prop_art.py`: the same for the few props a generated sprite got wrong (`candy_cane`, whose hook came out
   as a two-sided arch) or none was made for (the harbors' `ship`, built in 3D and projected as the game's view is,
   then lit and finished as the buildings are and held to their bands, `form_relief` too;
@@ -268,6 +268,9 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   gnarled dark tree, an autumn oak, a maple, a birch, a frosted bare tree, a willow, a jacaranda, candy trees,
   and ten bushes (a fir sapling, a tumbleweed, a bramble...), and the fir under snow for the snow lands. Each writes its own PNG, which wins over the
   asset's `derive`; its `big_` twin, derived from it, follows. `--sheet out.png` previews them.
+  Since 2026-11-26 every tree and bush is ChatGPT's redraw, copied as drawn (`PICKED_DIR`, `art-variants/trees/`,
+  docs/ai-sprite-test/trees-bushes: same canvas and foot row, hard alpha); the code still draws the shallows' rocks and
+  the shore's grass and stones. Rerun `wind_art.py` after.
 - `tools/wind_art.py`: trees and bushes in the wind (`art/wind.json`, `TalesOfDorlune/Art/Wind.swift`), after
   SpriteCook's wind article: the trunk stays put and the crown moves in leaf clumps (cut by colour, then
   flooded out from each bright spot to the dark crevices), a whole pixel at a time, over a darker copy of the
@@ -448,23 +451,30 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   the coins are. `--sheet out.png` previews them.
 - `tools/lair_art.py`: the pieces of the bosses' lairs no sprite had (a standing stone, a brazier, a gold hoard, a
   warning post, the Rat King's junk throne, a heap of bones, a hunter's torn tent, a broken pillar), drawn with
-  `pixel_kit` and scored as scenery (the brazier and gold hoard redrawn by ChatGPT and copied, `PICKED`, the user's pick, 2026-11-21, and the torn tent, 48 pixels, 2026-11-25, docs/ai-sprite-test/tents; ChatGPT's
-  blossom tree lost to ours). A boss's lair is maps.json `lair` on the boss: pieces round it, its way in to
+  `pixel_kit` and scored as scenery (the brazier and gold hoard redrawn by ChatGPT and copied, `PICKED`, the user's pick, 2026-11-21, and the torn tent, 48 pixels, 2026-11-25, docs/ai-sprite-test/tents, for the lairs, and the camps' whole `camp_tent`, 2026-11-26, snapped from its painting; ChatGPT's
+  blossom tree lost to ours). Since 2026-11-26 every piece is ChatGPT's (docs/ai-sprite-test/lair-props: the standing stone,
+  warning post, throne, pillar, bones and the cave's wall torch, four frames, its flame's glow cut from rows 0 to 16, `window_art.py` `TORCH`),
+  as are `prop_art.py`'s waystone, lost pile, candy cane, cave ladder and rope, and the ship (`PICKED`). A boss's lair is maps.json `lair` on the boss: pieces round it, its way in to
   the south, turned by `LandPlanner.planLair` to face the way up its trail (else the land's middle); `lairRing`, a
   ring of the land's own tall scenery behind it and low in front, open toward the way in; `lairApproach`, pairs
   lining the way in; `lairSign`, a warning by its trail near where it starts. Its ground is kept for it before
   hills, lakes or trees (`WorldMap.reserveLair`, `isFreeForLair`). Bosses stand at a land's edge or coast at a
   trail's end, on a summit, or in a cave; `check_content.py` keeps the way in clear.
 - `tools/city_wall_art.py`: a city's stone wall and round towers (`city_wall`, `city_tower`, placed by
-  `TownFence.place` for town `walls: "stone"`), drawn as the town gate's rubble is, graded with the map's palette.
+  `TownFence.place` for town `walls: "stone"`: either side of each gate, then the corners and along the stretches, none within 3 cells of another, 2026-11-26), drawn as the town gate's rubble is, graded with the map's palette.
   The wall is one cell's stretch that tiles side to side, 37 points to its merlons, its stretches along x a step darker (`pieces`' `shaded`);
   its walk (`city_wall_top`) is drawn by `TownFence.pieces` as a strip of its own back into the screen from the parapet's top
   (`BorderArt.wallTopLevel`, `wallThickness`): face on it looked flat, and the walk drawn on its face still read as thin (the user, 2026-11-18).
   Along the walk's far edge stands a parapet too, the face's own merlons above the walk's level (the user, 2026-11-18: "The walls miss the ridge on the outer edge").
   The pieces are drawn with no edge smoothing (smoothed, a seam a pixel wide showed between every two). `--sheet out.png` previews them.
+  ChatGPT's redraws are copied over them (`PICKED`, from `art-variants/walls/`, docs/ai-sprite-test/walls, 2026-11-26): the walk
+  and the tower and the face, and the low wall along the roads (`low_wall`, `_top`, `_end`), which
+  `TownFence.placeRoadsides` takes over `BorderArt.lowWallPicture`, `lowWallTop` and the flat end (`pieces`' `endPicture`).
 - Gates have depth (`TownFence.gate`, the user, 2026-11-25: "too flat"): a town's and a quest's border gate go back
   `gateThickness` (0.35 of a cell) into the screen, the pillars and beam only (`solidParts`, not what hangs between),
-  in flat tones of the arch's own colour, tops lit and ends a shade darker, the arch's face over them.
+  in flat tones of the arch's own colour, tops lit and ends a shade darker, the arch's face over them; where ChatGPT drew a
+  gate's depth (`<gate>_top` 70 × 10, `<gate>_side` 10 × 51, docs/ai-sprite-test/gate-depth, `tools/gate_art.py` `DEPTH`), those are
+  laid over the flat tones: the top back from the front's top edge, widened as the front is (`widenedTop`), the side at the end that shows. Every gate has both since 2026-11-26, the quests' `town_gate` too.
 - `tools/gate_art.py`: each town's own gate over its roads (maps.json town `gate`: Meadowbrook's thatched
   lychgate, Prismhaven's crystal keystone, Ingothold's gold and red cloth, Larkspur's bluebird); quests'
   gates across borders keep RD's `town_gate`. Each is laid out as `town_gate` is (`TownFence.widened` spans a

@@ -768,6 +768,28 @@ def tree_shape(img):
     return gap, off
 
 
+# ChatGPT's redraws (docs/ai-sprite-test/trees-bushes, the user, 2026-11-26: "Oke lets do trees and bushes now"),
+# copied as drawn over the drawings above wherever one is in art-variants/trees/: same canvas, its foot on the
+# same row (59 a tree's, 28 a bush's), hard alpha.
+PICKED_DIR = ROOT / "art-variants" / "trees"
+FOOT_ROW = {64: 59, 32: 28}
+
+
+def picked(item):
+    """ChatGPT's drawing of `item`, if it's there, checked for its canvas, foot row and hard alpha."""
+    path = PICKED_DIR / f"{item}.png"
+    if not path.exists():
+        return None
+    img = Image.open(path).convert("RGBA")
+    size = 64 if item in TREES else 32
+    assert img.size == (size, size), f"{item}: {img.size}, wants {size} × {size}"
+    a = np.asarray(img)[..., 3]
+    assert set(np.unique(a)) <= {0, 255}, f"{item}: soft alpha"
+    foot = np.nonzero(a.any(axis=1))[0].max()
+    assert foot == FOOT_ROW[size], f"{item}: its foot on row {foot}, wants {FOOT_ROW[size]}"
+    return img
+
+
 def main(argv):
     sheet = None
     if "--sheet" in argv:
@@ -779,6 +801,11 @@ def main(argv):
     out = {}
     global PAD
     for item in ids:
+        chosen = picked(item)
+        if chosen is not None:
+            chosen.save(SPRITES / f"{item}.png")
+            out[item] = chosen
+            continue
         PAD = 16
         drawn = framed(drawings[item]())
         PAD = 0
@@ -788,7 +815,8 @@ def main(argv):
     print(f"wrote {len(out)} scenery sprites to art/sprites/")
     bad = []
     for item, img in out.items():
-        if item not in TREES:
+        # ChatGPT's own shapes stand as drawn (the jacaranda's tassels leave a pixel of sky under its crown).
+        if item not in TREES or (PICKED_DIR / f"{item}.png").exists():
             continue
         gap, off = tree_shape(img)
         if gap and item not in BARE:

@@ -341,7 +341,40 @@ def ingrained(name):
     return Image.fromarray(a, "RGBA")
 
 
+# Each gate's depth, ChatGPT's (docs/ai-sprite-test/gate-depth, 2026-11-26): its top seen from above (70 × 10, its
+# columns lined up with the front's, the stretch x 14 to 25 repeating so it widens as the front does) and a pillar's
+# side (10 × 51), copied as delivered and checked (`depth_fitted`). `TownFence.gate` lays them back behind the front.
+DEPTH = {
+    "gate_ingothold_top": "art-variants/gate_depth/gate_ingothold_top.png",
+    "gate_ingothold_side": "art-variants/gate_depth/gate_ingothold_side.png",
+    "gate_larkspur_side": "art-variants/gate_depth/gate_larkspur_side.png",
+    "gate_larkspur_top": "art-variants/gate_depth/gate_larkspur_top.png",
+    "gate_meadowbrook_top": "art-variants/gate_depth/gate_meadowbrook_top.png",
+    "gate_meadowbrook_side": "art-variants/gate_depth/gate_meadowbrook_side.png",
+    "gate_prismhaven_top": "art-variants/gate_depth/gate_prismhaven_top.png",
+    "gate_prismhaven_side": "art-variants/gate_depth/gate_prismhaven_side.png",
+    "town_gate_top": "art-variants/gate_depth/town_gate_top.png",
+    "town_gate_side": "art-variants/gate_depth/town_gate_side.png",
+}
+
+
+def depth_fitted(name, img):
+    """A depth piece as laid out: a top 70 × 10 whose column 26 is its column 14 in every row, a side 10 × 51."""
+    a = np.array(img.convert("RGBA"))
+    a[..., 3] = np.where(a[..., 3] > 127, 255, 0)
+    a[a[..., 3] == 0] = 0
+    if name.endswith("_top"):
+        assert a.shape[:2] == (10, W), f"{name}: {a.shape[1]} × {a.shape[0]}, not {W} × 10"
+        assert (a[:, STONES[1]] == a[:, STONES[0]]).all(), f"{name}: column {STONES[1]} isn't column {STONES[0]}"
+    else:
+        assert a.shape[:2] == (H, 10), f"{name}: {a.shape[1]} × {a.shape[0]}, not 10 × {H}"
+    return Image.fromarray(a, "RGBA")
+
+
 def main(argv):
+    for name, source in DEPTH.items():
+        depth_fitted(name, Image.open(ROOT / source)).save(SPRITES / f"{name}.png")
+    print(f"wrote {', '.join(DEPTH)} to art/sprites/")
     sheet = None
     if "--sheet" in argv:
         i = argv.index("--sheet")

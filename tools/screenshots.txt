@@ -176,11 +176,11 @@ border_built | newgame,map=wolf_lair,edge=east,landscape,weather=clear,hour=12 |
 # barred at the border.
 city_wall    | newgame,map=rainbow_city,at=10_-39,landscape,weather=clear,hour=12 | 6
 village_fence | newgame,map=bluebird,at=8_-33,landscape,weather=clear,hour=12 | 6
-# Each town's own gate (tools/gate_art.py) where its west road runs through its wall or fence.
-gate_meadowbrook | newgame,map=meadowbrook,at=-45_-3,landscape,weather=clear,hour=12 | 6
-gate_ingothold   | newgame,map=goldburg,at=-45_-3,landscape,weather=clear,hour=12 | 6
-gate_ingothold_morning | newgame,map=goldburg,at=-45_-3,landscape,weather=clear,hour=8 | 6
-gate_larkspur    | newgame,map=bluebird,at=-40_-3,landscape,weather=clear,hour=12 | 6
+# Each town's own gate (tools/gate_art.py), from just in front of its first gate (`at=gate`).
+gate_meadowbrook | newgame,map=meadowbrook,at=gate,landscape,weather=clear,hour=12 | 6
+gate_ingothold   | newgame,map=goldburg,at=gate,landscape,weather=clear,hour=12 | 6
+gate_ingothold_morning | newgame,map=goldburg,at=gate,landscape,weather=clear,hour=8 | 6
+gate_larkspur    | newgame,map=bluebird,at=gate,landscape,weather=clear,hour=12 | 6
 city_gate    | newgame,map=goldburg,border=valley_of_fear,landscape,weather=clear,hour=12 | 6
 battle       | newgame,map=sunny_meadow,battle   | 15
 battle_night | newgame,map=sunny_meadow,battle,hour=23,weather=clear | 15
@@ -1115,3 +1115,12 @@ sand_trail_desert | newgame,level=163,map=genie_desert,at=5_5,zoom=1.8,walk=1_0,
 sand_trail_beach | newgame,level=163,map=pineapple_shore,at=-5_5,zoom=1.8,walk=1_0,weather=clear,hour=12 | 10
 # The townsfolk's own prints: the hero standing still in Goldburg's sandy square while its people stroll.
 sand_trail_npcs | newgame,level=163,map=goldburg,zoom=1.3,weather=clear,hour=12 | 20
+gate_ingothold_2 | newgame,map=goldburg,at=gate1,landscape,weather=clear,hour=12 | 6
+gate_larkspur_2  | newgame,map=bluebird,at=gate1,landscape,weather=clear,hour=12 | 6
+city_wall_gate | newgame,map=rainbow_city,at=gate,landscape,weather=clear,hour=12 | 6
+roadside_wall_land | newgame,level=60,map=genie_desert,roadside=wall,landscape,weather=clear,hour=12 | 8
+# ChatGPT's trees and bushes (docs/ai-sprite-test/trees-bushes) in a few lands.
+trees_snow   | newgame,level=163,map=snow_white_forest,landscape,weather=clear,hour=12 | 8
+trees_swamp  | newgame,level=60,map=frog_swamp,landscape,weather=clear,hour=12 | 8
+trees_candy  | newgame,level=60,map=candy_mountain,landscape,weather=clear,hour=12 | 8
+trees_twilight | newgame,level=30,map=twilight_woods,landscape,weather=clear,hour=12 | 8

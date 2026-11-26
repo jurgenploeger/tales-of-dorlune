@@ -2478,7 +2478,10 @@ nonisolated final class WorldMap: @unchecked Sendable {
             // five every time, in ten lands they came out short or not at all, took the room for their
             // places, and left what stood on top where you couldn't climb (2026-11-26). And a level
             // fewer every 20 tries that find no spot for it.
-            let choices = terraced ? Self.terracedMountainShapes : [(levels: Self.mountainLevels, face: Self.mountainFace)]
+            let most = hills.mountains?.levels ?? Self.mountainLevels
+            let allowed = Self.terracedMountainShapes.filter { $0.levels <= most }
+            let choices = terraced ? (allowed.isEmpty ? [Self.terracedMountainShapes[Self.terracedMountainShapes.count - 1]] : allowed)
+                : [(levels: Self.mountainLevels, face: Self.mountainFace)]
             let fitting = mountain.flatMap { asked in
                 choices.firstIndex { ((widest - 1) / reachRound($0.face) - 1) * Self.mountainTop * mountainSteep / 1.5 >= asked * 0.92 }
             } ?? choices.count - 1
@@ -3229,8 +3232,14 @@ nonisolated final class WorldMap: @unchecked Sendable {
         }
         for place in wanted {
             var made = 0, attempts = 0
-            while made < place.count, attempts < 1500 {
+            // A second, looser pass where the first found no room (a small island, a crowded land): water a
+            // cell off its earth's edge rather than three, a road up to 16 cells off rather than 12. Hachoo
+            // Island's camp and ruin and Emerald Road's rest found none, and the people living there had
+            // nowhere to stand (2026-11-26).
+            while made < place.count, attempts < 3000 {
                 attempts += 1
+                let loose = attempts > 1500
+                let margin = loose ? 1 : 3, scanReach = loose ? 16 : 12
                 let middle = GridPoint(col: Int.random(in: 8..<max(9, columns - 8), using: &draw),
                                        row: Int.random(in: 8..<max(9, rows - 8), using: &draw))
                 guard !places.contains(where: { max(abs($0.middle.col - middle.col), abs($0.middle.row - middle.row)) < 14 }) else { continue }
@@ -3248,13 +3257,13 @@ nonisolated final class WorldMap: @unchecked Sendable {
                 var road: GridPoint?
                 var nearest = Int.max
                 var dry = true
-                scan: for dr in -12...12 {
-                    for dc in -12...12 {
+                scan: for dr in -scanReach...scanReach {
+                    for dc in -scanReach...scanReach {
                         let cell = GridPoint(col: middle.col + dc, row: middle.row + dr)
                         guard contains(cell) else { continue }
                         let kind = ground[cell.row][cell.col]
                         let far = max(abs(dc), abs(dr))
-                        if far <= reach + 3, kind == .water || kind == .sea || kind == .away {
+                        if far <= reach + margin, kind == .water || kind == .sea || kind == .away {
                             dry = false
                             break scan
                         }

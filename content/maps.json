@@ -1381,6 +1381,7 @@
       "music": "meadow",
       "theme": {
         "ground": "tile_grass",
+        "chest": "chest_wood",
         "path": "tile_path",
         "accent": "tile_flowers",
         "accentPatches": 60,
@@ -2282,6 +2283,7 @@
       "music": "shore",
       "theme": {
         "ground": "tile_sand",
+        "chest": "chest_beach",
         "path": "tile_path",
         "accent": "tile_shells",
         "accentPatches": 36,
@@ -3634,6 +3636,7 @@
       ],
       "theme": {
         "ground": "tile_forest_floor",
+        "chest": "chest_wood",
         "path": "tile_path",
         "accent": "tile_flowers",
         "accentPatches": 45,
@@ -5721,6 +5724,7 @@
       ],
       "theme": {
         "ground": "tile_snow",
+        "chest": "chest_frost",
         "blend": 5,
         "path": "tile_snow_path",
         "accent": "tile_grass",
@@ -7851,6 +7855,7 @@
       ],
       "theme": {
         "ground": "tile_cave_floor",
+        "chest": "chest_wood",
         "path": "tile_scree",
         "accent": "tile_cave_rock",
         "accentPatches": 40,
@@ -9224,6 +9229,7 @@
       ],
       "theme": {
         "ground": "tile_desert",
+        "chest": "chest_desert",
         "path": "tile_path",
         "accent": "tile_sand",
         "accentPatches": 30,
@@ -10650,6 +10656,7 @@
       ],
       "theme": {
         "ground": "tile_scree",
+        "chest": "chest_frost",
         "path": "tile_snow_path",
         "accent": "tile_snow",
         "accentPatches": 36,
@@ -11352,6 +11359,7 @@
       "music": "meadow",
       "theme": {
         "ground": "tile_grass",
+        "chest": "chest_wood",
         "path": "tile_path",
         "accent": "tile_flowers",
         "accentPatches": 28,
@@ -12100,6 +12108,7 @@
       ],
       "theme": {
         "ground": "tile_cave_floor",
+        "chest": "chest_wood",
         "path": "tile_scree",
         "accent": "tile_cave_rock",
         "accentPatches": 40,
@@ -14842,6 +14851,7 @@
       "music": "shore",
       "theme": {
         "ground": "tile_grass",
+        "chest": "chest_wood",
         "path": "tile_path",
         "accent": "tile_flowers",
         "accentPatches": 28,
@@ -14862,8 +14872,8 @@
         "hills": {
           "count": 2,
           "size": [
-            5,
-            9
+            6,
+            11
           ],
           "chain": [
             2,
@@ -16966,6 +16976,7 @@
       "music": "shore",
       "theme": {
         "ground": "tile_sand",
+        "chest": "chest_beach",
         "path": "tile_path",
         "accent": "tile_shells",
         "accentPatches": 16,
@@ -18295,6 +18306,7 @@
       ],
       "theme": {
         "ground": "tile_desert",
+        "chest": "chest_desert",
         "path": "tile_path",
         "accent": "tile_sand",
         "accentPatches": 12,
@@ -18995,6 +19007,7 @@
       "music": "shore",
       "theme": {
         "ground": "tile_sand",
+        "chest": "chest_beach",
         "path": "tile_path",
         "accent": "tile_shells",
         "accentPatches": 16,
@@ -19013,7 +19026,8 @@
           "height": 96,
           "mountains": {
             "count": 1,
-            "height": 160
+            "height": 160,
+            "levels": 3
           },
           "terraces": 44,
           "bank": "tile_cliff_rock"
@@ -19578,6 +19592,7 @@
       ],
       "theme": {
         "ground": "tile_snow",
+        "chest": "chest_frost",
         "blend": 5,
         "path": "tile_snow_path",
         "accent": "tile_grass",
@@ -20731,6 +20746,7 @@
       ],
       "theme": {
         "ground": "tile_cave_floor",
+        "chest": "chest_wood",
         "path": "tile_scree",
         "accent": "tile_cave_rock",
         "accentPatches": 40,
@@ -21182,6 +21198,7 @@
       ],
       "theme": {
         "ground": "tile_forest_floor",
+        "chest": "chest_wood",
         "path": "tile_path",
         "accent": "tile_flowers",
         "accentPatches": 20,
@@ -21303,6 +21320,28 @@
               0.75,
               1.25
             ],
+            "shadow": true
+          },
+          {
+            "art": "hollow_tree",
+            "count": 5,
+            "blocking": true,
+            "size": [
+              0.7,
+              1.3
+            ],
+            "shadow": true
+          },
+          {
+            "art": "apple_tree",
+            "count": 20,
+            "blocking": true,
+            "cluster": 2,
+            "size": [
+              0.8,
+              1.2
+            ],
+            "sway": true,
             "shadow": true
           },
           {
@@ -21514,16 +21553,6 @@
             ]
           },
           {
-            "art": "hollow_tree",
-            "count": 5,
-            "blocking": true,
-            "size": [
-              0.7,
-              1.3
-            ],
-            "shadow": true
-          },
-          {
             "art": "clover_patch",
             "count": 260,
             "blocking": false,
@@ -21549,18 +21578,6 @@
             "cluster": 6,
             "size": [0.55, 0.7],
             "sway": true
-          },
-          {
-            "art": "apple_tree",
-            "count": 20,
-            "blocking": true,
-            "cluster": 2,
-            "size": [
-              0.8,
-              1.2
-            ],
-            "sway": true,
-            "shadow": true
           },
           {
             "art": "emerald_milestone",
@@ -22049,6 +22066,7 @@
       "music": "starfall",
       "theme": {
         "ground": "tile_grass",
+        "chest": "chest_wood",
         "path": "tile_path",
         "accent": "tile_flowers",
         "accentPatches": 16,
