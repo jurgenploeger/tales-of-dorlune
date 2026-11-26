@@ -47,10 +47,6 @@
             "blocking": true,
             "cluster": 5,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -59,30 +55,18 @@
             "blocking": true,
             "cluster": 8,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
             "art": "mushroom",
             "count": 60,
-            "blocking": false,
-            "size": [
-              0.75,
-              1.25
-            ]
+            "blocking": false
           },
           {
             "art": "bush",
             "count": 240,
             "blocking": true,
             "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -90,10 +74,6 @@
             "count": 160,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -101,33 +81,21 @@
             "count": 150,
             "blocking": false,
             "cluster": 6,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "daisy_yellow",
             "count": 150,
             "blocking": false,
             "cluster": 6,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "daisy_blue",
             "count": 80,
             "blocking": false,
             "cluster": 5,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "water_well",
@@ -146,10 +114,6 @@
             "art": "garden_gnome",
             "count": 3,
             "blocking": true,
-            "size": [
-              0.9,
-              1.1
-            ],
             "within": 16
           },
           {
@@ -158,10 +122,6 @@
             "blocking": false,
             "cluster": 3,
             "within": 10,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -170,10 +130,6 @@
             "blocking": false,
             "cluster": 3,
             "within": 10,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -182,7 +138,7 @@
             "blocking": false,
             "cluster": 2,
             "within": 10,
-            "size": [0.55, 0.7]
+            "size": [0.62, 0.62]
           },
           {
             "art": "sunflower",
@@ -191,7 +147,7 @@
             "cluster": 2,
             "sway": true,
             "within": 10,
-            "size": [0.55, 0.7]
+            "size": [0.62, 0.62]
           },
           {
             "art": "daisy",
@@ -199,11 +155,7 @@
             "blocking": false,
             "cluster": 5,
             "sway": true,
-            "within": 10,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "within": 10
           },
           {
             "art": "daisy_yellow",
@@ -211,32 +163,20 @@
             "blocking": false,
             "cluster": 5,
             "sway": true,
-            "within": 10,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "within": 10
           },
           {
             "art": "lilac_bush",
             "count": 80,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
             "art": "pebbles",
             "count": 60,
             "blocking": false,
-            "cluster": 2,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "cluster": 2
           },
           {
             "art": "haystack",
@@ -261,10 +201,6 @@
             "within": 38,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.8,
-              1.15
-            ],
             "sway": true,
             "shadow": true
           },
@@ -274,10 +210,6 @@
             "within": 38,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.8,
-              1.15
-            ],
             "sway": true,
             "shadow": true
           },
@@ -286,10 +218,6 @@
             "count": 8,
             "within": 38,
             "blocking": true,
-            "size": [
-              0.9,
-              1.1
-            ],
             "sway": true,
             "shadow": true
           },
@@ -302,7 +230,7 @@
           },
           {
             "art": "tulip_patch",
-            "size": [0.55, 0.7],
+            "size": [0.62, 0.62],
             "count": 60,
             "blocking": false,
             "within": 38,
@@ -324,7 +252,7 @@
           },
           {
             "art": "sunflower",
-            "size": [0.55, 0.7],
+            "size": [0.62, 0.62],
             "count": 40,
             "blocking": false,
             "within": 38,
@@ -332,7 +260,7 @@
           },
           {
             "art": "clover_patch",
-            "size": [0.55, 0.7],
+            "size": [0.62, 0.62],
             "count": 40,
             "blocking": false,
             "within": 38,
@@ -345,10 +273,6 @@
             "cluster": 4,
             "sway": true,
             "spread": 3,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
@@ -357,10 +281,6 @@
             "blocking": true,
             "cluster": 5,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -368,10 +288,6 @@
             "count": 60,
             "blocking": true,
             "cluster": 4,
-            "size": [
-              0.8,
-              1.2
-            ],
             "sway": true,
             "shadow": true
           },
@@ -380,30 +296,18 @@
             "count": 80,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
             "art": "pumpkin_patch",
             "count": 60,
             "blocking": false,
-            "cluster": 4,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "cluster": 4
           },
           {
             "art": "scarecrow",
             "count": 12,
             "blocking": true,
-            "size": [
-              0.9,
-              1.1
-            ],
             "shadow": true
           },
           {
@@ -411,10 +315,6 @@
             "count": 12,
             "blocking": true,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -422,10 +322,6 @@
             "count": 40,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -433,20 +329,12 @@
             "count": 40,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
             "art": "tree_stump",
             "count": 30,
             "blocking": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -454,7 +342,7 @@
             "count": 60,
             "blocking": false,
             "cluster": 4,
-            "size": [0.55, 0.7]
+            "size": [0.62, 0.62]
           },
           {
             "art": "sunflower",
@@ -462,7 +350,7 @@
             "blocking": false,
             "cluster": 4,
             "sway": true,
-            "size": [0.55, 0.7]
+            "size": [0.62, 0.62]
           }
         ],
         "accent": "tile_scree",
@@ -1421,10 +1309,6 @@
             "cluster": 10,
             "sway": true,
             "spread": 3,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
@@ -1433,10 +1317,6 @@
             "blocking": true,
             "cluster": 3,
             "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
@@ -1445,10 +1325,6 @@
             "blocking": true,
             "cluster": 16,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -1457,10 +1333,6 @@
             "blocking": true,
             "cluster": 5,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -1469,10 +1341,6 @@
             "blocking": true,
             "cluster": 6,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -1480,10 +1348,6 @@
             "count": 124,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -1492,7 +1356,7 @@
             "blocking": true,
             "cluster": 4,
             "sway": true,
-            "size": [0.55, 0.7]
+            "size": [0.62, 0.62]
           },
           {
             "art": "mushroom",
@@ -1501,21 +1365,13 @@
             "near": {
               "tree": 2
             },
-            "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ]
+            "cluster": 3
           },
           {
             "art": "bush",
             "count": 495,
             "blocking": true,
             "cluster": 6,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -1523,10 +1379,6 @@
             "count": 135,
             "blocking": true,
             "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -1534,33 +1386,21 @@
             "count": 202,
             "blocking": false,
             "cluster": 5,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "daisy_yellow",
             "count": 202,
             "blocking": false,
             "cluster": 5,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "daisy_blue",
             "count": 101,
             "blocking": false,
             "cluster": 4,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "golden_tree",
@@ -1568,10 +1408,6 @@
             "blocking": true,
             "cluster": 5,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -1580,10 +1416,6 @@
             "blocking": true,
             "cluster": 4,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -1591,11 +1423,7 @@
             "count": 112,
             "blocking": true,
             "cluster": 3,
-            "sway": true,
-            "size": [
-              0.7,
-              1.15
-            ]
+            "sway": true
           },
           {
             "art": "pebbles",
@@ -1604,21 +1432,13 @@
             "near": {
               "path": 2
             },
-            "cluster": 3,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "cluster": 3
           },
           {
             "art": "small_boulder",
             "count": 56,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -1628,11 +1448,7 @@
             "near": {
               "tree": 2
             },
-            "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ]
+            "cluster": 3
           },
           {
             "art": "toadstool",
@@ -1641,11 +1457,7 @@
             "near": {
               "tree": 2
             },
-            "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ]
+            "cluster": 3
           },
           {
             "art": "tree_stump",
@@ -1654,10 +1466,6 @@
             "near": {
               "tree": 3
             },
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -1665,10 +1473,6 @@
             "count": 27,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -1677,21 +1481,21 @@
             "blocking": false,
             "cluster": 3,
             "sway": true,
-            "size": [0.55, 0.7]
+            "size": [0.62, 0.62]
           },
           {
             "art": "tulip_patch",
             "count": 27,
             "blocking": false,
             "cluster": 3,
-            "size": [0.55, 0.7]
+            "size": [0.62, 0.62]
           },
           {
             "art": "clover_patch",
             "count": 36,
             "blocking": false,
             "cluster": 4,
-            "size": [0.55, 0.7]
+            "size": [0.62, 0.62]
           },
           {
             "art": "haystack",
@@ -1704,21 +1508,13 @@
             "art": "pumpkin_patch",
             "count": 4,
             "blocking": false,
-            "cluster": 3,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "cluster": 3
           },
           {
             "art": "beehive_tree",
             "count": 9,
             "blocking": true,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -1729,30 +1525,18 @@
           {
             "art": "garden_gnome",
             "count": 20,
-            "blocking": true,
-            "size": [
-              0.9,
-              1.1
-            ]
+            "blocking": true
           },
           {
             "art": "scarecrow",
             "count": 0,
             "blocking": true,
-            "size": [
-              0.9,
-              1.1
-            ],
             "shadow": true
           },
           {
             "art": "bird_bath",
             "count": 8,
-            "blocking": true,
-            "size": [
-              0.9,
-              1.1
-            ]
+            "blocking": true
           },
           {
             "art": "thicket",
@@ -1760,10 +1544,6 @@
             "blocking": true,
             "cluster": 4,
             "sway": true,
-            "size": [
-              0.8,
-              1.15
-            ],
             "shadow": true
           },
           {
@@ -1774,28 +1554,20 @@
               "tree": 2
             },
             "cluster": 5,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "flower_patch",
             "count": 120,
             "blocking": false,
             "cluster": 4,
-            "size": [0.55, 0.7]
+            "size": [0.62, 0.62]
           },
           {
             "art": "mossy_boulder",
             "count": 40,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.1
-            ],
             "shadow": true
           },
           {
@@ -1803,20 +1575,12 @@
             "count": 24,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.8,
-              1.1
-            ],
             "shadow": true
           },
           {
             "art": "rock_formation_large",
             "count": 10,
             "blocking": true,
-            "size": [
-              0.85,
-              1.1
-            ],
             "shadow": true
           },
           {
@@ -1827,10 +1591,6 @@
               "building": 5,
               "path": 3
             },
-            "size": [
-              0.9,
-              1.1
-            ],
             "shadow": true
           },
           {
@@ -1841,10 +1601,6 @@
               "building": 6
             },
             "cluster": 2,
-            "size": [
-              0.9,
-              1.1
-            ],
             "shadow": true
           }
         ],
@@ -2310,10 +2066,6 @@
             "blocking": true,
             "cluster": 7,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -2321,10 +2073,6 @@
             "count": 135,
             "blocking": true,
             "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -2337,10 +2085,6 @@
             "count": 248,
             "blocking": true,
             "cluster": 5,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -2348,22 +2092,14 @@
             "count": 135,
             "blocking": false,
             "cluster": 5,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "palm_sapling",
             "count": 202,
             "blocking": true,
             "cluster": 4,
-            "sway": true,
-            "size": [
-              0.7,
-              1.15
-            ]
+            "sway": true
           },
           {
             "art": "pebbles",
@@ -2372,21 +2108,13 @@
             "near": {
               "path": 2
             },
-            "cluster": 3,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "cluster": 3
           },
           {
             "art": "small_boulder",
             "count": 45,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -2397,11 +2125,7 @@
               "sea": 3,
               "water": 2
             },
-            "cluster": 3,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "cluster": 3
           },
           {
             "art": "driftwood",
@@ -2410,11 +2134,7 @@
             "near": {
               "sea": 3,
               "water": 2
-            },
-            "size": [
-              0.8,
-              1.2
-            ]
+            }
           },
           {
             "art": "beach_umbrella",
@@ -2425,11 +2145,7 @@
             "art": "coral",
             "count": 22,
             "blocking": true,
-            "cluster": 3,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "cluster": 3
           },
           {
             "art": "signpost",
@@ -2443,11 +2159,7 @@
             "near": {
               "sea": 3,
               "water": 2
-            },
-            "size": [
-              0.8,
-              1.0
-            ]
+            }
           },
           {
             "art": "pineapple_cart",
@@ -2466,10 +2178,6 @@
               "path": 3,
               "sea": 3
             },
-            "size": [
-              0.9,
-              1.1
-            ],
             "glow": "#FFB060"
           }
         ],
@@ -2867,10 +2575,6 @@
             "cluster": 6,
             "sway": true,
             "spread": 3,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
@@ -2879,20 +2583,12 @@
             "blocking": true,
             "cluster": 5,
             "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
             "art": "big_hollow_tree",
             "count": 8,
             "blocking": true,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
@@ -2900,10 +2596,6 @@
             "count": 51,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
@@ -2913,10 +2605,6 @@
             "cluster": 24,
             "sway": true,
             "spread": 4,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -2924,10 +2612,6 @@
             "count": 76,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#9FE8FF"
           },
           {
@@ -2938,10 +2622,6 @@
               "tree": 2
             },
             "cluster": 6,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#8FE8FF"
           },
           {
@@ -2950,10 +2630,6 @@
             "blocking": true,
             "cluster": 8,
             "spread": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -2961,10 +2637,6 @@
             "count": 42,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#C9A0FF"
           },
           {
@@ -2972,10 +2644,6 @@
             "count": 152,
             "blocking": false,
             "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#FF9FD8"
           },
           {
@@ -2985,11 +2653,7 @@
             "near": {
               "tree": 2
             },
-            "cluster": 5,
-            "size": [
-              0.75,
-              1.25
-            ]
+            "cluster": 5
           },
           {
             "art": "blue_mushroom",
@@ -2998,11 +2662,7 @@
             "near": {
               "tree": 2
             },
-            "cluster": 5,
-            "size": [
-              0.75,
-              1.25
-            ]
+            "cluster": 5
           },
           {
             "art": "lilac_tree",
@@ -3010,10 +2670,6 @@
             "blocking": true,
             "cluster": 4,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -3021,10 +2677,6 @@
             "count": 202,
             "blocking": true,
             "cluster": 5,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -3048,20 +2700,12 @@
               "tree": 2
             },
             "cluster": 8,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "hollow_tree",
             "count": 7,
             "blocking": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -3078,10 +2722,6 @@
             "blocking": true,
             "cluster": 4,
             "sway": true,
-            "size": [
-              0.8,
-              1.15
-            ],
             "shadow": true
           },
           {
@@ -3092,28 +2732,20 @@
               "tree": 2
             },
             "cluster": 5,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "flower_patch",
             "count": 76,
             "blocking": false,
             "cluster": 4,
-            "size": [0.55, 0.7]
+            "size": [0.62, 0.62]
           },
           {
             "art": "mossy_boulder",
             "count": 25,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.1
-            ],
             "shadow": true
           },
           {
@@ -3121,20 +2753,12 @@
             "count": 15,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.8,
-              1.1
-            ],
             "shadow": true
           },
           {
             "art": "rock_formation_large",
             "count": 6,
             "blocking": true,
-            "size": [
-              0.85,
-              1.1
-            ],
             "shadow": true
           },
           {
@@ -3144,10 +2768,6 @@
             "near": {
               "path": 3
             },
-            "size": [
-              0.9,
-              1.1
-            ],
             "glow": "#C8FF8A"
           },
           {
@@ -3668,10 +3288,6 @@
             "cluster": 6,
             "sway": true,
             "spread": 3,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
@@ -3680,10 +3296,6 @@
             "blocking": true,
             "cluster": 6,
             "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
@@ -3692,10 +3304,6 @@
             "blocking": true,
             "cluster": 6,
             "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
@@ -3704,20 +3312,12 @@
             "blocking": true,
             "cluster": 4,
             "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
             "art": "big_hollow_tree",
             "count": 8,
             "blocking": true,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
@@ -3727,10 +3327,6 @@
             "cluster": 24,
             "sway": true,
             "spread": 4,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -3739,10 +3335,6 @@
             "blocking": true,
             "cluster": 4,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -3750,10 +3342,6 @@
             "count": 71,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -3763,11 +3351,7 @@
             "near": {
               "tree": 2
             },
-            "cluster": 6,
-            "size": [
-              0.75,
-              1.25
-            ]
+            "cluster": 6
           },
           {
             "art": "bush",
@@ -3775,10 +3359,6 @@
             "blocking": true,
             "cluster": 8,
             "spread": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -3786,10 +3366,6 @@
             "count": 77,
             "blocking": true,
             "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -3797,33 +3373,21 @@
             "count": 193,
             "blocking": false,
             "cluster": 6,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "daisy_yellow",
             "count": 193,
             "blocking": false,
             "cluster": 6,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "daisy_blue",
             "count": 116,
             "blocking": false,
             "cluster": 5,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "red_maple",
@@ -3831,10 +3395,6 @@
             "blocking": true,
             "cluster": 5,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -3843,10 +3403,6 @@
             "blocking": true,
             "cluster": 5,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -3854,10 +3410,6 @@
             "count": 77,
             "blocking": true,
             "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -3867,21 +3419,13 @@
             "near": {
               "tree": 2
             },
-            "cluster": 5,
-            "size": [
-              0.75,
-              1.25
-            ]
+            "cluster": 5
           },
           {
             "art": "blue_giant_mushroom",
             "count": 19,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -3889,11 +3433,7 @@
             "count": 193,
             "blocking": true,
             "cluster": 5,
-            "sway": true,
-            "size": [
-              0.7,
-              1.15
-            ]
+            "sway": true
           },
           {
             "art": "pebbles",
@@ -3902,11 +3442,7 @@
             "near": {
               "path": 2
             },
-            "cluster": 4,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "cluster": 4
           },
           {
             "art": "tree_stump",
@@ -3915,10 +3451,6 @@
             "near": {
               "tree": 3
             },
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -3937,41 +3469,25 @@
               "tree": 2
             },
             "cluster": 8,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "berry_bush",
             "count": 77,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
             "art": "pumpkin_patch",
             "count": 8,
             "blocking": false,
-            "cluster": 2,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "cluster": 2
           },
           {
             "art": "hollow_tree",
             "count": 6,
             "blocking": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -3979,14 +3495,14 @@
             "count": 334,
             "blocking": false,
             "cluster": 6,
-            "size": [0.55, 0.7]
+            "size": [0.62, 0.62]
           },
           {
             "art": "tulip_patch",
             "count": 77,
             "blocking": false,
             "cluster": 4,
-            "size": [0.55, 0.7]
+            "size": [0.62, 0.62]
           },
           {
             "art": "signpost",
@@ -3998,10 +3514,6 @@
             "count": 30,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.8,
-              1.2
-            ],
             "sway": true,
             "shadow": true
           },
@@ -4011,10 +3523,6 @@
             "blocking": true,
             "cluster": 4,
             "sway": true,
-            "size": [
-              0.8,
-              1.15
-            ],
             "shadow": true
           },
           {
@@ -4025,28 +3533,20 @@
               "tree": 2
             },
             "cluster": 5,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "flower_patch",
             "count": 98,
             "blocking": false,
             "cluster": 4,
-            "size": [0.55, 0.7]
+            "size": [0.62, 0.62]
           },
           {
             "art": "mossy_boulder",
             "count": 33,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.1
-            ],
             "shadow": true
           },
           {
@@ -4054,20 +3554,12 @@
             "count": 20,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.8,
-              1.1
-            ],
             "shadow": true
           },
           {
             "art": "rock_formation_large",
             "count": 8,
             "blocking": true,
-            "size": [
-              0.85,
-              1.1
-            ],
             "shadow": true
           }
         ],
@@ -4538,10 +4030,6 @@
             "blocking": true,
             "cluster": 6,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -4550,10 +4038,6 @@
             "blocking": true,
             "cluster": 6,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -4561,10 +4045,6 @@
             "count": 220,
             "blocking": true,
             "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -4572,10 +4052,6 @@
             "count": 180,
             "blocking": true,
             "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -4583,33 +4059,21 @@
             "count": 160,
             "blocking": false,
             "cluster": 6,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "daisy_yellow",
             "count": 160,
             "blocking": false,
             "cluster": 6,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "daisy_blue",
             "count": 100,
             "blocking": false,
             "cluster": 5,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "water_well",
@@ -4631,10 +4095,6 @@
             "blocking": false,
             "cluster": 3,
             "within": 11,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -4643,10 +4103,6 @@
             "blocking": false,
             "cluster": 3,
             "within": 11,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -4655,7 +4111,7 @@
             "blocking": false,
             "cluster": 3,
             "within": 12,
-            "size": [0.55, 0.7]
+            "size": [0.62, 0.62]
           },
           {
             "art": "sunflower",
@@ -4664,7 +4120,7 @@
             "cluster": 2,
             "sway": true,
             "within": 12,
-            "size": [0.55, 0.7]
+            "size": [0.62, 0.62]
           },
           {
             "art": "daisy",
@@ -4672,11 +4128,7 @@
             "blocking": false,
             "cluster": 5,
             "sway": true,
-            "within": 11,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "within": 11
           },
           {
             "art": "daisy_yellow",
@@ -4684,11 +4136,7 @@
             "blocking": false,
             "cluster": 5,
             "sway": true,
-            "within": 11,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "within": 11
           },
           {
             "art": "daisy_blue",
@@ -4696,11 +4144,7 @@
             "blocking": false,
             "cluster": 4,
             "sway": true,
-            "within": 11,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "within": 11
           },
           {
             "art": "lilac_tree",
@@ -4708,10 +4152,6 @@
             "blocking": true,
             "cluster": 5,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -4719,10 +4159,6 @@
             "count": 120,
             "blocking": true,
             "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -4741,10 +4177,6 @@
             "within": 40,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.8,
-              1.15
-            ],
             "sway": true,
             "shadow": true
           },
@@ -4754,10 +4186,6 @@
             "within": 40,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.8,
-              1.15
-            ],
             "sway": true,
             "shadow": true
           },
@@ -4766,10 +4194,6 @@
             "count": 8,
             "within": 40,
             "blocking": true,
-            "size": [
-              0.9,
-              1.1
-            ],
             "sway": true,
             "shadow": true
           },
@@ -4789,7 +4213,7 @@
           },
           {
             "art": "tulip_patch",
-            "size": [0.55, 0.7],
+            "size": [0.62, 0.62],
             "count": 72,
             "blocking": false,
             "within": 40,
@@ -4811,7 +4235,7 @@
           },
           {
             "art": "sunflower",
-            "size": [0.55, 0.7],
+            "size": [0.62, 0.62],
             "count": 48,
             "blocking": false,
             "within": 40,
@@ -4823,10 +4247,6 @@
             "blocking": true,
             "cluster": 3,
             "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
@@ -4835,10 +4255,6 @@
             "blocking": true,
             "cluster": 3,
             "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
@@ -4846,10 +4262,6 @@
             "count": 40,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -4857,20 +4269,12 @@
             "count": 30,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
             "art": "tree_stump",
             "count": 20,
             "blocking": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -4878,14 +4282,14 @@
             "count": 60,
             "blocking": false,
             "cluster": 4,
-            "size": [0.55, 0.7]
+            "size": [0.62, 0.62]
           },
           {
             "art": "clover_patch",
             "count": 60,
             "blocking": false,
             "cluster": 4,
-            "size": [0.55, 0.7]
+            "size": [0.62, 0.62]
           },
           {
             "art": "giant_flower",
@@ -4893,7 +4297,7 @@
             "blocking": true,
             "cluster": 3,
             "sway": true,
-            "size": [0.55, 0.7]
+            "size": [0.62, 0.62]
           },
           {
             "art": "street_lamp",
@@ -5758,10 +5162,6 @@
             "cluster": 4,
             "sway": true,
             "spread": 3,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
@@ -5770,10 +5170,6 @@
             "blocking": true,
             "cluster": 6,
             "spread": 3,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
@@ -5782,10 +5178,6 @@
             "blocking": true,
             "cluster": 6,
             "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
@@ -5794,10 +5186,6 @@
             "blocking": true,
             "cluster": 5,
             "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
@@ -5807,10 +5195,6 @@
             "cluster": 20,
             "sway": true,
             "spread": 4,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -5819,10 +5203,6 @@
             "blocking": true,
             "cluster": 20,
             "spread": 4,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -5830,10 +5210,6 @@
             "count": 57,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -5842,10 +5218,6 @@
             "blocking": true,
             "cluster": 8,
             "spread": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -5854,10 +5226,6 @@
             "blocking": true,
             "cluster": 6,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -5865,11 +5233,7 @@
             "count": 471,
             "blocking": true,
             "cluster": 6,
-            "sway": true,
-            "size": [
-              0.7,
-              1.15
-            ]
+            "sway": true
           },
           {
             "art": "frost_tree",
@@ -5877,10 +5241,6 @@
             "blocking": true,
             "cluster": 5,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -5888,31 +5248,19 @@
             "count": 57,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
             "art": "ice_rock",
             "count": 75,
             "blocking": true,
-            "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ]
+            "cluster": 3
           },
           {
             "art": "frozen_bush",
             "count": 113,
             "blocking": true,
             "cluster": 5,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -5928,21 +5276,13 @@
               "tree": 2
             },
             "cluster": 8,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "ice_cluster",
             "count": 50,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -5950,10 +5290,6 @@
             "count": 16,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.85,
-              1.15
-            ],
             "shadow": true
           },
           {
@@ -5961,10 +5297,6 @@
             "count": 30,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -5972,10 +5304,6 @@
             "count": 40,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.8,
-              1.2
-            ],
             "sway": true,
             "shadow": true
           },
@@ -5986,11 +5314,7 @@
             "near": {
               "tree": 3,
               "building": 5
-            },
-            "size": [
-              0.9,
-              1.1
-            ]
+            }
           },
           {
             "art": "mine_lantern_post",
@@ -5999,10 +5323,6 @@
             "near": {
               "path": 3
             },
-            "size": [
-              0.9,
-              1.1
-            ],
             "glow": "#FFD58A",
             "shadow": true
           }
@@ -6589,10 +5909,6 @@
             "cluster": 6,
             "sway": true,
             "spread": 3,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
@@ -6600,10 +5916,6 @@
             "count": 131,
             "blocking": true,
             "cluster": 4,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
@@ -6611,21 +5923,13 @@
             "count": 1532,
             "blocking": false,
             "cluster": 10,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "dead_tree",
             "count": 525,
             "blocking": true,
             "cluster": 6,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -6636,10 +5940,6 @@
               "tree": 2
             },
             "cluster": 5,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#8FE8FF"
           },
           {
@@ -6647,10 +5947,6 @@
             "count": 700,
             "blocking": true,
             "cluster": 8,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -6658,11 +5954,7 @@
             "count": 263,
             "blocking": false,
             "cluster": 5,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "swamp_tree",
@@ -6671,10 +5963,6 @@
             "cluster": 12,
             "sway": true,
             "spread": 3,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -6682,10 +5970,6 @@
             "count": 175,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -6695,11 +5979,7 @@
             "near": {
               "tree": 2
             },
-            "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ]
+            "cluster": 3
           },
           {
             "art": "toadstool",
@@ -6708,11 +5988,7 @@
             "near": {
               "tree": 2
             },
-            "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ]
+            "cluster": 3
           },
           {
             "art": "lotus",
@@ -6721,21 +5997,13 @@
             "near": {
               "water": 3
             },
-            "cluster": 4,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "cluster": 4
           },
           {
             "art": "swamp_stump",
             "count": 22,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -6754,11 +6022,7 @@
               "tree": 2
             },
             "cluster": 8,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "frog_statue",
@@ -6767,10 +6031,6 @@
             "near": {
               "water": 3
             },
-            "size": [
-              0.9,
-              1.1
-            ],
             "shadow": true
           },
           {
@@ -7201,10 +6461,6 @@
             "count": 945,
             "blocking": true,
             "cluster": 12,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -7213,10 +6469,6 @@
             "blocking": true,
             "cluster": 14,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -7224,10 +6476,6 @@
             "count": 135,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -7243,10 +6491,6 @@
               "tree": 2
             },
             "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#8FE8FF"
           },
           {
@@ -7254,10 +6498,6 @@
             "count": 338,
             "blocking": true,
             "cluster": 5,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -7265,10 +6505,6 @@
             "count": 270,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -7281,10 +6517,6 @@
             "count": 34,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#C9A0FF"
           },
           {
@@ -7292,10 +6524,6 @@
             "count": 90,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -7303,10 +6531,6 @@
             "count": 68,
             "blocking": false,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -7327,10 +6551,6 @@
             "count": 32,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -7340,20 +6560,12 @@
             "near": {
               "building": 5
             },
-            "size": [
-              0.9,
-              1.1
-            ],
             "glow": "#9CFF7A"
           },
           {
             "art": "crow_post",
             "count": 10,
             "blocking": true,
-            "size": [
-              0.9,
-              1.1
-            ],
             "shadow": true
           }
         ],
@@ -7883,10 +7095,6 @@
             "count": 4,
             "blocking": true,
             "cluster": 6,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -7894,10 +7102,6 @@
             "count": 25,
             "blocking": false,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#9FE8FF"
           },
           {
@@ -7910,10 +7114,6 @@
             "count": 90,
             "blocking": false,
             "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -7921,10 +7121,6 @@
             "count": 15,
             "blocking": false,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#FFC870"
           },
           {
@@ -7932,31 +7128,19 @@
             "count": 40,
             "blocking": false,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#9FE8FF"
           },
           {
             "art": "pebbles",
             "count": 40,
             "blocking": false,
-            "cluster": 3,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "cluster": 3
           },
           {
             "art": "ore_vein",
             "count": 6,
             "blocking": false,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#FFD27A"
           },
           {
@@ -7964,10 +7148,6 @@
             "count": 5,
             "blocking": false,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#90FFB8"
           }
         ],
@@ -8239,10 +7419,6 @@
             "count": 200,
             "blocking": true,
             "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -8255,10 +7431,6 @@
             "count": 200,
             "blocking": true,
             "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -8266,10 +7438,6 @@
             "count": 120,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -8277,31 +7445,19 @@
             "count": 160,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
             "art": "ore_vein",
             "count": 30,
             "blocking": true,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#FFD27A",
             "cluster": 2
           },
           {
             "art": "tumbleweed",
             "count": 60,
-            "blocking": false,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "blocking": false
           },
           {
             "art": "wooden_crates",
@@ -8335,10 +7491,6 @@
             "within": 38,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.8,
-              1.1
-            ],
             "sway": true,
             "shadow": true
           },
@@ -8348,10 +7500,6 @@
             "within": 38,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.8,
-              1.1
-            ],
             "sway": true,
             "shadow": true
           },
@@ -8361,10 +7509,6 @@
             "within": 38,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.8,
-              1.1
-            ],
             "sway": true,
             "shadow": true
           },
@@ -8397,7 +7541,7 @@
           },
           {
             "art": "sunflower",
-            "size": [0.55, 0.7],
+            "size": [0.62, 0.62],
             "count": 28,
             "blocking": false,
             "within": 38,
@@ -8412,7 +7556,7 @@
           },
           {
             "art": "tulip_patch",
-            "size": [0.55, 0.7],
+            "size": [0.62, 0.62],
             "count": 30,
             "blocking": false,
             "cluster": 3,
@@ -8430,10 +7574,6 @@
             "count": 120,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -8441,10 +7581,6 @@
             "count": 80,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -8452,10 +7588,6 @@
             "count": 60,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -8463,10 +7595,6 @@
             "count": 40,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -8474,10 +7602,6 @@
             "count": 40,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -8485,10 +7609,6 @@
             "count": 40,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -8500,11 +7620,7 @@
             "art": "pebbles",
             "count": 80,
             "blocking": false,
-            "cluster": 2,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "cluster": 2
           },
           {
             "art": "street_lamp",
@@ -9255,10 +8371,6 @@
             "count": 495,
             "blocking": true,
             "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -9267,10 +8379,6 @@
             "blocking": true,
             "cluster": 5,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -9278,10 +8386,6 @@
             "count": 135,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -9294,10 +8398,6 @@
             "count": 248,
             "blocking": true,
             "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -9305,10 +8405,6 @@
             "count": 270,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -9316,10 +8412,6 @@
             "count": 135,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -9327,10 +8419,6 @@
             "count": 112,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -9338,10 +8426,6 @@
             "count": 180,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -9349,10 +8433,6 @@
             "count": 112,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -9365,11 +8445,7 @@
             "count": 90,
             "blocking": true,
             "cluster": 3,
-            "sway": true,
-            "size": [
-              0.7,
-              1.15
-            ]
+            "sway": true
           },
           {
             "art": "desert_pot",
@@ -9387,20 +8463,12 @@
             "count": 9,
             "blocking": true,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
             "art": "tumbleweed",
             "count": 22,
-            "blocking": false,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "blocking": false
           },
           {
             "art": "signpost",
@@ -9411,10 +8479,6 @@
             "art": "flying_carpet",
             "count": 16,
             "blocking": false,
-            "size": [
-              1.0,
-              1.4
-            ],
             "bob": true,
             "shadow": true
           },
@@ -9422,10 +8486,6 @@
             "art": "magic_lamp",
             "count": 20,
             "blocking": false,
-            "size": [
-              0.8,
-              1.1
-            ],
             "glow": "#7FE7FF"
           },
           {
@@ -9433,20 +8493,12 @@
             "count": 27,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.8,
-              1.1
-            ],
             "shadow": true
           },
           {
             "art": "rock_formation_large",
             "count": 11,
             "blocking": true,
-            "size": [
-              0.85,
-              1.1
-            ],
             "shadow": true
           },
           {
@@ -9466,11 +8518,7 @@
             "near": {
               "building": 5
             },
-            "cluster": 2,
-            "size": [
-              0.9,
-              1.1
-            ]
+            "cluster": 2
           }
         ],
         "palette": {
@@ -10053,10 +9101,6 @@
             "count": 495,
             "blocking": true,
             "cluster": 8,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -10064,10 +9108,6 @@
             "count": 360,
             "blocking": true,
             "cluster": 5,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#9FE8FF"
           },
           {
@@ -10075,10 +9115,6 @@
             "count": 180,
             "blocking": true,
             "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -10091,10 +9127,6 @@
             "count": 180,
             "blocking": true,
             "cluster": 5,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -10102,10 +9134,6 @@
             "count": 135,
             "blocking": true,
             "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -10113,10 +9141,6 @@
             "count": 135,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#FF9FD8"
           },
           {
@@ -10124,10 +9148,6 @@
             "count": 90,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#FFC870"
           },
           {
@@ -10135,10 +9155,6 @@
             "count": 180,
             "blocking": false,
             "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#9FE8FF"
           },
           {
@@ -10146,10 +9162,6 @@
             "count": 180,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -10157,21 +9169,13 @@
             "count": 112,
             "blocking": true,
             "cluster": 3,
-            "sway": true,
-            "size": [
-              0.7,
-              1.15
-            ]
+            "sway": true
           },
           {
             "art": "ore_vein",
             "count": 18,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#FFD27A"
           },
           {
@@ -10179,10 +9183,6 @@
             "count": 68,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#FFF3A0",
             "bob": true
           },
@@ -10191,10 +9191,6 @@
             "count": 50,
             "blocking": true,
             "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -10202,10 +9198,6 @@
             "count": 14,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.85,
-              1.15
-            ],
             "shadow": true
           },
           {
@@ -10213,20 +9205,12 @@
             "count": 20,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
             "art": "pick_in_rock",
             "count": 8,
             "blocking": true,
-            "size": [
-              0.9,
-              1.1
-            ],
             "shadow": true
           },
           {
@@ -10236,11 +9220,7 @@
             "near": {
               "building": 5,
               "path": 3
-            },
-            "size": [
-              0.9,
-              1.1
-            ]
+            }
           }
         ],
         "palette": {
@@ -10684,10 +9664,6 @@
             "count": 450,
             "blocking": true,
             "cluster": 6,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#9FE8FF"
           },
           {
@@ -10695,10 +9671,6 @@
             "count": 225,
             "blocking": true,
             "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -10706,10 +9678,6 @@
             "count": 360,
             "blocking": true,
             "cluster": 5,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -10717,10 +9685,6 @@
             "count": 112,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -10728,10 +9692,6 @@
             "count": 180,
             "blocking": true,
             "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -10739,10 +9699,6 @@
             "count": 158,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#C9A0FF"
           },
           {
@@ -10750,10 +9706,6 @@
             "count": 135,
             "blocking": false,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#FF9FD8"
           },
           {
@@ -10762,10 +9714,6 @@
             "blocking": true,
             "cluster": 4,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -10774,10 +9722,6 @@
             "blocking": true,
             "cluster": 4,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -10785,21 +9729,13 @@
             "count": 90,
             "blocking": false,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#9FE8FF"
           },
           {
             "art": "ice_rock",
             "count": 14,
             "blocking": true,
-            "cluster": 2,
-            "size": [
-              0.75,
-              1.25
-            ]
+            "cluster": 2
           },
           {
             "art": "moon_flower",
@@ -10807,7 +9743,7 @@
             "blocking": false,
             "cluster": 5,
             "sway": true,
-            "size": [0.55, 0.7],
+            "size": [0.62, 0.62],
             "glow": "#D8D8FF"
           },
           {
@@ -10815,10 +9751,6 @@
             "count": 68,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#FFF3A0",
             "bob": true
           },
@@ -10827,10 +9759,6 @@
             "count": 40,
             "blocking": true,
             "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#CFEFFF"
           },
           {
@@ -10838,10 +9766,6 @@
             "count": 10,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.85,
-              1.15
-            ],
             "glow": "#CFEFFF"
           },
           {
@@ -10849,21 +9773,13 @@
             "count": 40,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.9,
-              1.2
-            ],
             "glow": "#FFC870"
           },
           {
             "art": "mochi_stack",
             "count": 24,
             "blocking": true,
-            "cluster": 2,
-            "size": [
-              0.8,
-              1.1
-            ]
+            "cluster": 2
           },
           {
             "art": "moon_rabbit_statue",
@@ -10872,10 +9788,6 @@
             "near": {
               "path": 3
             },
-            "size": [
-              0.9,
-              1.1
-            ],
             "shadow": true
           },
           {
@@ -11392,10 +10304,6 @@
             "cluster": 10,
             "sway": true,
             "spread": 3,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
@@ -11404,10 +10312,6 @@
             "blocking": true,
             "cluster": 3,
             "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
@@ -11416,10 +10320,6 @@
             "blocking": true,
             "cluster": 16,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -11428,10 +10328,6 @@
             "blocking": true,
             "cluster": 5,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -11440,10 +10336,6 @@
             "blocking": true,
             "cluster": 6,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -11451,10 +10343,6 @@
             "count": 55,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -11463,7 +10351,7 @@
             "blocking": true,
             "cluster": 4,
             "sway": true,
-            "size": [0.55, 0.7]
+            "size": [0.62, 0.62]
           },
           {
             "art": "mushroom",
@@ -11472,21 +10360,13 @@
             "near": {
               "tree": 2
             },
-            "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ]
+            "cluster": 3
           },
           {
             "art": "bush",
             "count": 220,
             "blocking": true,
             "cluster": 6,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -11494,10 +10374,6 @@
             "count": 60,
             "blocking": true,
             "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -11505,33 +10381,21 @@
             "count": 90,
             "blocking": false,
             "cluster": 5,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "daisy_yellow",
             "count": 90,
             "blocking": false,
             "cluster": 5,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "daisy_blue",
             "count": 45,
             "blocking": false,
             "cluster": 4,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "golden_tree",
@@ -11539,10 +10403,6 @@
             "blocking": true,
             "cluster": 5,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -11551,10 +10411,6 @@
             "blocking": true,
             "cluster": 4,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -11562,11 +10418,7 @@
             "count": 50,
             "blocking": true,
             "cluster": 3,
-            "sway": true,
-            "size": [
-              0.7,
-              1.15
-            ]
+            "sway": true
           },
           {
             "art": "pebbles",
@@ -11575,21 +10427,13 @@
             "near": {
               "path": 2
             },
-            "cluster": 3,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "cluster": 3
           },
           {
             "art": "small_boulder",
             "count": 25,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -11599,11 +10443,7 @@
             "near": {
               "tree": 2
             },
-            "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ]
+            "cluster": 3
           },
           {
             "art": "toadstool",
@@ -11612,11 +10452,7 @@
             "near": {
               "tree": 2
             },
-            "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ]
+            "cluster": 3
           },
           {
             "art": "tree_stump",
@@ -11625,10 +10461,6 @@
             "near": {
               "tree": 3
             },
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -11636,10 +10468,6 @@
             "count": 12,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -11648,21 +10476,21 @@
             "blocking": false,
             "cluster": 3,
             "sway": true,
-            "size": [0.55, 0.7]
+            "size": [0.62, 0.62]
           },
           {
             "art": "tulip_patch",
             "count": 12,
             "blocking": false,
             "cluster": 3,
-            "size": [0.55, 0.7]
+            "size": [0.62, 0.62]
           },
           {
             "art": "clover_patch",
             "count": 16,
             "blocking": false,
             "cluster": 4,
-            "size": [0.55, 0.7]
+            "size": [0.62, 0.62]
           },
           {
             "art": "haystack",
@@ -11675,21 +10503,13 @@
             "art": "pumpkin_patch",
             "count": 8,
             "blocking": false,
-            "cluster": 3,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "cluster": 3
           },
           {
             "art": "beehive_tree",
             "count": 4,
             "blocking": true,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -11700,30 +10520,18 @@
           {
             "art": "garden_gnome",
             "count": 10,
-            "blocking": true,
-            "size": [
-              0.9,
-              1.1
-            ]
+            "blocking": true
           },
           {
             "art": "scarecrow",
             "count": 10,
             "blocking": true,
-            "size": [
-              0.9,
-              1.1
-            ],
             "shadow": true
           },
           {
             "art": "bird_bath",
             "count": 4,
-            "blocking": true,
-            "size": [
-              0.9,
-              1.1
-            ]
+            "blocking": true
           },
           {
             "art": "thicket",
@@ -11731,10 +10539,6 @@
             "blocking": true,
             "cluster": 4,
             "sway": true,
-            "size": [
-              0.8,
-              1.15
-            ],
             "shadow": true
           },
           {
@@ -11745,28 +10549,20 @@
               "tree": 2
             },
             "cluster": 5,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "flower_patch",
             "count": 56,
             "blocking": false,
             "cluster": 4,
-            "size": [0.55, 0.7]
+            "size": [0.62, 0.62]
           },
           {
             "art": "mossy_boulder",
             "count": 19,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.1
-            ],
             "shadow": true
           },
           {
@@ -11774,30 +10570,18 @@
             "count": 11,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.8,
-              1.1
-            ],
             "shadow": true
           },
           {
             "art": "rock_formation_large",
             "count": 5,
             "blocking": true,
-            "size": [
-              0.85,
-              1.1
-            ],
             "shadow": true
           },
           {
             "art": "stone_cairn",
             "count": 14,
             "blocking": true,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
@@ -12120,10 +10904,6 @@
             "count": 2,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -12141,10 +10921,6 @@
             "count": 4,
             "blocking": true,
             "cluster": 6,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -12152,10 +10928,6 @@
             "count": 25,
             "blocking": false,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#9FE8FF"
           },
           {
@@ -12168,10 +10940,6 @@
             "count": 150,
             "blocking": false,
             "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -12179,10 +10947,6 @@
             "count": 15,
             "blocking": false,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#FFC870"
           },
           {
@@ -12190,31 +10954,19 @@
             "count": 40,
             "blocking": false,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#9FE8FF"
           },
           {
             "art": "pebbles",
             "count": 60,
             "blocking": false,
-            "cluster": 3,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "cluster": 3
           },
           {
             "art": "ore_vein",
             "count": 6,
             "blocking": false,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#FFD27A"
           },
           {
@@ -12222,10 +10974,6 @@
             "count": 5,
             "blocking": false,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#90FFB8"
           }
         ],
@@ -12578,10 +11326,6 @@
             "cluster": 10,
             "sway": true,
             "spread": 3,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
@@ -12590,10 +11334,6 @@
             "blocking": true,
             "cluster": 16,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -12602,7 +11342,7 @@
             "blocking": true,
             "cluster": 4,
             "sway": true,
-            "size": [0.55, 0.7]
+            "size": [0.62, 0.62]
           },
           {
             "art": "candy_tree_lemon",
@@ -12610,10 +11350,6 @@
             "blocking": true,
             "cluster": 10,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -12622,10 +11358,6 @@
             "blocking": true,
             "cluster": 8,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -12634,10 +11366,6 @@
             "blocking": true,
             "cluster": 8,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -12645,10 +11373,7 @@
             "count": 27,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              1.3,
-              2.1
-            ],
+            "size": [1.7, 1.7],
             "shadow": true
           },
           {
@@ -12656,10 +11381,7 @@
             "count": 27,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              1.3,
-              2.1
-            ],
+            "size": [1.7, 1.7],
             "shadow": true
           },
           {
@@ -12667,10 +11389,7 @@
             "count": 27,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              1.3,
-              2.1
-            ],
+            "size": [1.7, 1.7],
             "shadow": true
           },
           {
@@ -12678,10 +11397,7 @@
             "count": 27,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              1.3,
-              2.1
-            ],
+            "size": [1.7, 1.7],
             "shadow": true
           },
           {
@@ -12689,51 +11405,32 @@
             "count": 27,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              1.3,
-              2.1
-            ],
+            "size": [1.7, 1.7],
             "shadow": true
           },
           {
             "art": "gift_box",
             "count": 21,
             "blocking": false,
-            "cluster": 2,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "cluster": 2
           },
           {
             "art": "gift_box_blue",
             "count": 21,
             "blocking": false,
-            "cluster": 2,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "cluster": 2
           },
           {
             "art": "gift_box_purple",
             "count": 21,
             "blocking": false,
-            "cluster": 2,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "cluster": 2
           },
           {
             "art": "gift_box_gold",
             "count": 21,
             "blocking": false,
-            "cluster": 2,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "cluster": 2
           },
           {
             "art": "mushroom",
@@ -12742,21 +11439,13 @@
             "near": {
               "tree": 2
             },
-            "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ]
+            "cluster": 3
           },
           {
             "art": "flowering_bush",
             "count": 225,
             "blocking": true,
             "cluster": 6,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -12764,33 +11453,21 @@
             "count": 135,
             "blocking": false,
             "cluster": 5,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "daisy_yellow",
             "count": 135,
             "blocking": false,
             "cluster": 5,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "daisy_blue",
             "count": 68,
             "blocking": false,
             "cluster": 4,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "lilac_tree",
@@ -12798,10 +11475,6 @@
             "blocking": true,
             "cluster": 5,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -12810,10 +11483,6 @@
             "blocking": true,
             "cluster": 4,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -12823,11 +11492,7 @@
             "near": {
               "tree": 2
             },
-            "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ]
+            "cluster": 3
           },
           {
             "art": "toadstool",
@@ -12836,21 +11501,13 @@
             "near": {
               "tree": 2
             },
-            "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ]
+            "cluster": 3
           },
           {
             "art": "berry_bush",
             "count": 18,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -12859,21 +11516,21 @@
             "blocking": false,
             "cluster": 3,
             "sway": true,
-            "size": [0.55, 0.7]
+            "size": [0.62, 0.62]
           },
           {
             "art": "tulip_patch",
             "count": 18,
             "blocking": false,
             "cluster": 3,
-            "size": [0.55, 0.7]
+            "size": [0.62, 0.62]
           },
           {
             "art": "clover_patch",
             "count": 24,
             "blocking": false,
             "cluster": 4,
-            "size": [0.55, 0.7]
+            "size": [0.62, 0.62]
           },
           {
             "art": "signpost",
@@ -12885,41 +11542,25 @@
             "count": 60,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              1.0,
-              1.6
-            ],
             "shadow": true
           },
           {
             "art": "gumdrops",
             "count": 90,
             "blocking": false,
-            "cluster": 3,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "cluster": 3
           },
           {
             "art": "giant_cupcake",
             "count": 45,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              1.0,
-              1.5
-            ],
             "shadow": true
           },
           {
             "art": "gingerbread_house",
             "count": 12,
             "blocking": true,
-            "size": [
-              0.9,
-              1.1
-            ],
             "shadow": true
           },
           {
@@ -12927,21 +11568,13 @@
             "count": 10,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
             "art": "marshmallow_stack",
             "count": 10,
             "blocking": true,
-            "cluster": 2,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "cluster": 2
           }
         ],
         "palette": {
@@ -13387,10 +12020,6 @@
             "cluster": 6,
             "sway": true,
             "spread": 3,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
@@ -13399,20 +12028,12 @@
             "blocking": true,
             "cluster": 5,
             "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
             "art": "big_hollow_tree",
             "count": 5,
             "blocking": true,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
@@ -13420,10 +12041,6 @@
             "count": 30,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
@@ -13433,10 +12050,6 @@
             "cluster": 24,
             "sway": true,
             "spread": 4,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -13444,10 +12057,6 @@
             "count": 45,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#9FE8FF"
           },
           {
@@ -13458,10 +12067,6 @@
               "tree": 2
             },
             "cluster": 6,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#8FE8FF"
           },
           {
@@ -13470,10 +12075,6 @@
             "blocking": true,
             "cluster": 8,
             "spread": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -13481,10 +12082,6 @@
             "count": 25,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#C9A0FF"
           },
           {
@@ -13492,10 +12089,6 @@
             "count": 90,
             "blocking": false,
             "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#FF9FD8"
           },
           {
@@ -13505,11 +12098,7 @@
             "near": {
               "tree": 2
             },
-            "cluster": 5,
-            "size": [
-              0.75,
-              1.25
-            ]
+            "cluster": 5
           },
           {
             "art": "blue_mushroom",
@@ -13518,11 +12107,7 @@
             "near": {
               "tree": 2
             },
-            "cluster": 5,
-            "size": [
-              0.75,
-              1.25
-            ]
+            "cluster": 5
           },
           {
             "art": "lilac_tree",
@@ -13530,10 +12115,6 @@
             "blocking": true,
             "cluster": 4,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -13541,10 +12122,6 @@
             "count": 120,
             "blocking": true,
             "cluster": 5,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -13568,11 +12145,7 @@
               "tree": 2
             },
             "cluster": 8,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "fallen_log",
@@ -13589,11 +12162,7 @@
             "near": {
               "path": 3,
               "tree": 3
-            },
-            "size": [
-              0.9,
-              1.1
-            ]
+            }
           },
           {
             "art": "chopped_woodpile",
@@ -13603,10 +12172,6 @@
               "building": 5,
               "tree": 3
             },
-            "size": [
-              0.9,
-              1.1
-            ],
             "shadow": true
           }
         ],
@@ -13972,10 +12537,6 @@
             "blocking": true,
             "cluster": 6,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -13984,10 +12545,6 @@
             "blocking": true,
             "cluster": 7,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -13995,10 +12552,6 @@
             "count": 200,
             "blocking": true,
             "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -14006,10 +12559,6 @@
             "count": 170,
             "blocking": true,
             "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -14017,33 +12566,21 @@
             "count": 140,
             "blocking": false,
             "cluster": 6,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "daisy_yellow",
             "count": 140,
             "blocking": false,
             "cluster": 6,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "daisy_blue",
             "count": 90,
             "blocking": false,
             "cluster": 5,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "lilac_tree",
@@ -14051,10 +12588,6 @@
             "blocking": true,
             "cluster": 5,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -14062,10 +12595,6 @@
             "count": 100,
             "blocking": true,
             "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -14074,7 +12603,7 @@
             "blocking": false,
             "cluster": 3,
             "within": 12,
-            "size": [0.55, 0.7]
+            "size": [0.62, 0.62]
           },
           {
             "art": "sunflower",
@@ -14083,7 +12612,7 @@
             "cluster": 2,
             "sway": true,
             "within": 12,
-            "size": [0.55, 0.7]
+            "size": [0.62, 0.62]
           },
           {
             "art": "wooden_crates",
@@ -14115,10 +12644,6 @@
             "within": 32,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.8,
-              1.15
-            ],
             "sway": true,
             "shadow": true
           },
@@ -14128,10 +12653,6 @@
             "within": 32,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.8,
-              1.15
-            ],
             "sway": true,
             "shadow": true
           },
@@ -14151,7 +12672,7 @@
           },
           {
             "art": "tulip_patch",
-            "size": [0.55, 0.7],
+            "size": [0.62, 0.62],
             "count": 40,
             "blocking": false,
             "within": 32,
@@ -14173,7 +12694,7 @@
           },
           {
             "art": "poppy_patch",
-            "size": [0.55, 0.7],
+            "size": [0.62, 0.62],
             "count": 20,
             "blocking": false,
             "within": 32,
@@ -14181,7 +12702,7 @@
           },
           {
             "art": "clover_patch",
-            "size": [0.55, 0.7],
+            "size": [0.62, 0.62],
             "count": 30,
             "blocking": false,
             "within": 32,
@@ -14189,7 +12710,7 @@
           },
           {
             "art": "sunflower",
-            "size": [0.55, 0.7],
+            "size": [0.62, 0.62],
             "count": 14,
             "blocking": false,
             "within": 32,
@@ -14205,10 +12726,6 @@
             "art": "garden_gnome",
             "count": 3,
             "blocking": true,
-            "size": [
-              0.9,
-              1.1
-            ],
             "within": 32
           },
           {
@@ -14216,10 +12733,6 @@
             "count": 60,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -14227,10 +12740,6 @@
             "count": 30,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -14238,20 +12747,12 @@
             "count": 30,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
             "art": "tree_stump",
             "count": 20,
             "blocking": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -14265,25 +12766,21 @@
             "art": "pumpkin_patch",
             "count": 40,
             "blocking": false,
-            "cluster": 4,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "cluster": 4
           },
           {
             "art": "clover_patch",
             "count": 50,
             "blocking": false,
             "cluster": 4,
-            "size": [0.55, 0.7]
+            "size": [0.62, 0.62]
           },
           {
             "art": "poppy_patch",
             "count": 40,
             "blocking": false,
             "cluster": 5,
-            "size": [0.55, 0.7],
+            "size": [0.62, 0.62],
             "sway": true
           },
           {
@@ -14892,10 +13389,6 @@
             "cluster": 10,
             "sway": true,
             "spread": 3,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
@@ -14904,10 +13397,6 @@
             "blocking": true,
             "cluster": 3,
             "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
@@ -14916,10 +13405,6 @@
             "blocking": true,
             "cluster": 16,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -14928,10 +13413,6 @@
             "blocking": true,
             "cluster": 5,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -14940,10 +13421,6 @@
             "blocking": true,
             "cluster": 6,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -14951,10 +13428,6 @@
             "count": 55,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -14963,7 +13436,7 @@
             "blocking": true,
             "cluster": 4,
             "sway": true,
-            "size": [0.55, 0.7]
+            "size": [0.62, 0.62]
           },
           {
             "art": "mushroom",
@@ -14972,21 +13445,13 @@
             "near": {
               "tree": 2
             },
-            "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ]
+            "cluster": 3
           },
           {
             "art": "bush",
             "count": 220,
             "blocking": true,
             "cluster": 6,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -14994,10 +13459,6 @@
             "count": 60,
             "blocking": true,
             "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -15005,33 +13466,21 @@
             "count": 90,
             "blocking": false,
             "cluster": 5,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "daisy_yellow",
             "count": 90,
             "blocking": false,
             "cluster": 5,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "daisy_blue",
             "count": 45,
             "blocking": false,
             "cluster": 4,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "golden_tree",
@@ -15039,10 +13488,6 @@
             "blocking": true,
             "cluster": 5,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -15051,10 +13496,6 @@
             "blocking": true,
             "cluster": 4,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -15062,11 +13503,7 @@
             "count": 50,
             "blocking": true,
             "cluster": 3,
-            "sway": true,
-            "size": [
-              0.7,
-              1.15
-            ]
+            "sway": true
           },
           {
             "art": "pebbles",
@@ -15075,21 +13512,13 @@
             "near": {
               "path": 2
             },
-            "cluster": 3,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "cluster": 3
           },
           {
             "art": "small_boulder",
             "count": 25,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -15099,11 +13528,7 @@
             "near": {
               "tree": 2
             },
-            "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ]
+            "cluster": 3
           },
           {
             "art": "toadstool",
@@ -15112,11 +13537,7 @@
             "near": {
               "tree": 2
             },
-            "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ]
+            "cluster": 3
           },
           {
             "art": "tree_stump",
@@ -15125,10 +13546,6 @@
             "near": {
               "tree": 3
             },
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -15136,10 +13553,6 @@
             "count": 12,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -15148,21 +13561,21 @@
             "blocking": false,
             "cluster": 3,
             "sway": true,
-            "size": [0.55, 0.7]
+            "size": [0.62, 0.62]
           },
           {
             "art": "tulip_patch",
             "count": 12,
             "blocking": false,
             "cluster": 3,
-            "size": [0.55, 0.7]
+            "size": [0.62, 0.62]
           },
           {
             "art": "clover_patch",
             "count": 16,
             "blocking": false,
             "cluster": 4,
-            "size": [0.55, 0.7]
+            "size": [0.62, 0.62]
           },
           {
             "art": "haystack",
@@ -15175,21 +13588,13 @@
             "art": "pumpkin_patch",
             "count": 8,
             "blocking": false,
-            "cluster": 3,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "cluster": 3
           },
           {
             "art": "beehive_tree",
             "count": 4,
             "blocking": true,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -15200,20 +13605,12 @@
           {
             "art": "garden_gnome",
             "count": 8,
-            "blocking": true,
-            "size": [
-              0.9,
-              1.1
-            ]
+            "blocking": true
           },
           {
             "art": "bird_bath",
             "count": 6,
-            "blocking": true,
-            "size": [
-              0.9,
-              1.1
-            ]
+            "blocking": true
           },
           {
             "art": "thicket",
@@ -15221,10 +13618,6 @@
             "blocking": true,
             "cluster": 4,
             "sway": true,
-            "size": [
-              0.8,
-              1.15
-            ],
             "shadow": true
           },
           {
@@ -15235,28 +13628,20 @@
               "tree": 2
             },
             "cluster": 5,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "flower_patch",
             "count": 96,
             "blocking": false,
             "cluster": 4,
-            "size": [0.55, 0.7]
+            "size": [0.62, 0.62]
           },
           {
             "art": "mossy_boulder",
             "count": 32,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.1
-            ],
             "shadow": true
           },
           {
@@ -15264,20 +13649,12 @@
             "count": 19,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.8,
-              1.1
-            ],
             "shadow": true
           },
           {
             "art": "rock_formation_large",
             "count": 8,
             "blocking": true,
-            "size": [
-              0.85,
-              1.1
-            ],
             "shadow": true
           },
           {
@@ -15288,10 +13665,6 @@
               "building": 5,
               "path": 3
             },
-            "size": [
-              0.9,
-              1.1
-            ],
             "shadow": true
           },
           {
@@ -15750,10 +14123,6 @@
             "cluster": 6,
             "sway": true,
             "spread": 3,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
@@ -15761,10 +14130,6 @@
             "count": 60,
             "blocking": true,
             "cluster": 4,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
@@ -15772,21 +14137,13 @@
             "count": 700,
             "blocking": false,
             "cluster": 10,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "dead_tree",
             "count": 240,
             "blocking": true,
             "cluster": 6,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -15797,10 +14154,6 @@
               "tree": 2
             },
             "cluster": 5,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#8FE8FF"
           },
           {
@@ -15808,10 +14161,6 @@
             "count": 320,
             "blocking": true,
             "cluster": 8,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -15819,11 +14168,7 @@
             "count": 120,
             "blocking": false,
             "cluster": 5,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "swamp_tree",
@@ -15832,10 +14177,6 @@
             "cluster": 12,
             "sway": true,
             "spread": 3,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -15843,10 +14184,6 @@
             "count": 80,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -15856,11 +14193,7 @@
             "near": {
               "tree": 2
             },
-            "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ]
+            "cluster": 3
           },
           {
             "art": "toadstool",
@@ -15869,11 +14202,7 @@
             "near": {
               "tree": 2
             },
-            "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ]
+            "cluster": 3
           },
           {
             "art": "lotus",
@@ -15882,21 +14211,13 @@
             "near": {
               "water": 3
             },
-            "cluster": 4,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "cluster": 4
           },
           {
             "art": "swamp_stump",
             "count": 10,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -15915,20 +14236,12 @@
               "tree": 2
             },
             "cluster": 8,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "giant_ladybug",
             "count": 16,
-            "blocking": true,
-            "size": [
-              0.9,
-              1.3
-            ]
+            "blocking": true
           },
           {
             "art": "stone_lantern",
@@ -15938,10 +14251,6 @@
               "path": 3,
               "water": 3
             },
-            "size": [
-              0.9,
-              1.1
-            ],
             "glow": "#FFD58A",
             "shadow": true
           },
@@ -15950,10 +14259,6 @@
             "count": 24,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           }
         ],
@@ -16341,10 +14646,6 @@
             "count": 420,
             "blocking": true,
             "cluster": 12,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -16353,10 +14654,6 @@
             "blocking": true,
             "cluster": 14,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -16364,10 +14661,6 @@
             "count": 60,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -16383,10 +14676,6 @@
               "tree": 2
             },
             "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#8FE8FF"
           },
           {
@@ -16394,10 +14683,6 @@
             "count": 150,
             "blocking": true,
             "cluster": 5,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -16405,10 +14690,6 @@
             "count": 120,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -16421,10 +14702,6 @@
             "count": 15,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#C9A0FF"
           },
           {
@@ -16432,10 +14709,6 @@
             "count": 40,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -16443,10 +14716,6 @@
             "count": 30,
             "blocking": false,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -16467,10 +14736,6 @@
             "count": 14,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -16478,30 +14743,18 @@
             "count": 20,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.9,
-              1.2
-            ],
             "sway": true
           },
           {
             "art": "toy_blocks",
             "count": 30,
             "blocking": true,
-            "cluster": 3,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "cluster": 3
           },
           {
             "art": "jack_in_the_box",
             "count": 16,
-            "blocking": true,
-            "size": [
-              0.9,
-              1.1
-            ]
+            "blocking": true
           },
           {
             "art": "rocking_horse",
@@ -16510,11 +14763,7 @@
             "near": {
               "building": 5,
               "path": 3
-            },
-            "size": [
-              0.9,
-              1.1
-            ]
+            }
           },
           {
             "art": "tin_soldier",
@@ -16523,10 +14772,6 @@
             "near": {
               "path": 3
             },
-            "size": [
-              0.9,
-              1.1
-            ],
             "shadow": true
           }
         ],
@@ -17011,10 +15256,6 @@
             "blocking": true,
             "cluster": 7,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -17022,10 +15263,6 @@
             "count": 60,
             "blocking": true,
             "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -17038,10 +15275,6 @@
             "count": 110,
             "blocking": true,
             "cluster": 5,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -17049,22 +15282,14 @@
             "count": 60,
             "blocking": false,
             "cluster": 5,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "palm_sapling",
             "count": 90,
             "blocking": true,
             "cluster": 4,
-            "sway": true,
-            "size": [
-              0.7,
-              1.15
-            ]
+            "sway": true
           },
           {
             "art": "pebbles",
@@ -17073,21 +15298,13 @@
             "near": {
               "path": 2
             },
-            "cluster": 3,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "cluster": 3
           },
           {
             "art": "small_boulder",
             "count": 20,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -17098,11 +15315,7 @@
               "sea": 3,
               "water": 2
             },
-            "cluster": 3,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "cluster": 3
           },
           {
             "art": "driftwood",
@@ -17111,11 +15324,7 @@
             "near": {
               "sea": 3,
               "water": 2
-            },
-            "size": [
-              0.8,
-              1.2
-            ]
+            }
           },
           {
             "art": "beach_umbrella",
@@ -17126,11 +15335,7 @@
             "art": "coral",
             "count": 10,
             "blocking": true,
-            "cluster": 3,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "cluster": 3
           },
           {
             "art": "signpost",
@@ -17144,31 +15349,19 @@
             "near": {
               "sea": 3,
               "water": 2
-            },
-            "size": [
-              0.8,
-              1.0
-            ]
+            }
           },
           {
             "art": "rock_formation_small",
             "count": 19,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.8,
-              1.1
-            ],
             "shadow": true
           },
           {
             "art": "rock_formation_large",
             "count": 8,
             "blocking": true,
-            "size": [
-              0.85,
-              1.1
-            ],
             "shadow": true
           },
           {
@@ -17189,11 +15382,7 @@
               "water": 2,
               "sea": 2
             },
-            "cluster": 2,
-            "size": [
-              0.9,
-              1.1
-            ]
+            "cluster": 2
           }
         ],
         "palette": {
@@ -17605,10 +15794,6 @@
             "cluster": 6,
             "sway": true,
             "spread": 3,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
@@ -17617,20 +15802,12 @@
             "blocking": true,
             "cluster": 5,
             "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
             "art": "big_hollow_tree",
             "count": 5,
             "blocking": true,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
@@ -17638,10 +15815,6 @@
             "count": 30,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
@@ -17651,10 +15824,6 @@
             "cluster": 24,
             "sway": true,
             "spread": 4,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -17662,10 +15831,6 @@
             "count": 45,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#9FE8FF"
           },
           {
@@ -17676,10 +15841,6 @@
               "tree": 2
             },
             "cluster": 6,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#8FE8FF"
           },
           {
@@ -17688,10 +15849,6 @@
             "blocking": true,
             "cluster": 8,
             "spread": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -17699,10 +15856,6 @@
             "count": 25,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#C9A0FF"
           },
           {
@@ -17710,10 +15863,6 @@
             "count": 90,
             "blocking": false,
             "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#FF9FD8"
           },
           {
@@ -17723,11 +15872,7 @@
             "near": {
               "tree": 2
             },
-            "cluster": 5,
-            "size": [
-              0.75,
-              1.25
-            ]
+            "cluster": 5
           },
           {
             "art": "blue_mushroom",
@@ -17736,11 +15881,7 @@
             "near": {
               "tree": 2
             },
-            "cluster": 5,
-            "size": [
-              0.75,
-              1.25
-            ]
+            "cluster": 5
           },
           {
             "art": "lilac_tree",
@@ -17748,10 +15889,6 @@
             "blocking": true,
             "cluster": 4,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -17759,10 +15896,6 @@
             "count": 120,
             "blocking": true,
             "cluster": 5,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -17786,20 +15919,12 @@
               "tree": 2
             },
             "cluster": 8,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "hollow_tree",
             "count": 4,
             "blocking": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -17813,21 +15938,13 @@
           {
             "art": "sleeping_cat",
             "count": 14,
-            "blocking": true,
-            "size": [
-              0.9,
-              1.1
-            ]
+            "blocking": true
           },
           {
             "art": "giant_pillow",
             "count": 30,
             "blocking": false,
-            "cluster": 2,
-            "size": [
-              0.9,
-              1.3
-            ]
+            "cluster": 2
           },
           {
             "art": "sheep_fence",
@@ -17845,11 +15962,7 @@
             "near": {
               "building": 5,
               "path": 3
-            },
-            "size": [
-              0.9,
-              1.1
-            ]
+            }
           }
         ],
         "palette": {
@@ -18332,10 +16445,6 @@
             "count": 220,
             "blocking": true,
             "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -18344,10 +16453,6 @@
             "blocking": true,
             "cluster": 5,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -18355,10 +16460,6 @@
             "count": 60,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -18371,10 +16472,6 @@
             "count": 110,
             "blocking": true,
             "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -18382,10 +16479,6 @@
             "count": 120,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -18393,10 +16486,6 @@
             "count": 60,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -18404,10 +16493,6 @@
             "count": 50,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -18415,10 +16500,6 @@
             "count": 80,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -18426,10 +16507,6 @@
             "count": 50,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -18442,11 +16519,7 @@
             "count": 40,
             "blocking": true,
             "cluster": 3,
-            "sway": true,
-            "size": [
-              0.7,
-              1.15
-            ]
+            "sway": true
           },
           {
             "art": "desert_pot",
@@ -18464,20 +16537,12 @@
             "count": 4,
             "blocking": true,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
             "art": "tumbleweed",
             "count": 10,
-            "blocking": false,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "blocking": false
           },
           {
             "art": "signpost",
@@ -18488,10 +16553,6 @@
             "art": "flying_carpet",
             "count": 8,
             "blocking": false,
-            "size": [
-              1.0,
-              1.4
-            ],
             "bob": true,
             "shadow": true
           },
@@ -18499,20 +16560,12 @@
             "art": "magic_lamp",
             "count": 10,
             "blocking": false,
-            "size": [
-              0.8,
-              1.1
-            ],
             "glow": "#7FE7FF"
           },
           {
             "art": "scarf_cairn",
             "count": 8,
             "blocking": true,
-            "size": [
-              0.9,
-              1.1
-            ],
             "shadow": true
           },
           {
@@ -18521,11 +16574,7 @@
             "blocking": true,
             "near": {
               "path": 4
-            },
-            "size": [
-              0.9,
-              1.1
-            ]
+            }
           }
         ],
         "palette": {
@@ -19039,10 +17088,6 @@
             "blocking": true,
             "cluster": 7,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -19050,10 +17095,6 @@
             "count": 60,
             "blocking": true,
             "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -19066,10 +17107,6 @@
             "count": 110,
             "blocking": true,
             "cluster": 5,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -19077,22 +17114,14 @@
             "count": 60,
             "blocking": false,
             "cluster": 5,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "palm_sapling",
             "count": 90,
             "blocking": true,
             "cluster": 4,
-            "sway": true,
-            "size": [
-              0.7,
-              1.15
-            ]
+            "sway": true
           },
           {
             "art": "pebbles",
@@ -19101,21 +17130,13 @@
             "near": {
               "path": 2
             },
-            "cluster": 3,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "cluster": 3
           },
           {
             "art": "small_boulder",
             "count": 20,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -19126,11 +17147,7 @@
               "sea": 3,
               "water": 2
             },
-            "cluster": 3,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "cluster": 3
           },
           {
             "art": "driftwood",
@@ -19139,11 +17156,7 @@
             "near": {
               "sea": 3,
               "water": 2
-            },
-            "size": [
-              0.8,
-              1.2
-            ]
+            }
           },
           {
             "art": "beach_umbrella",
@@ -19154,11 +17167,7 @@
             "art": "coral",
             "count": 10,
             "blocking": true,
-            "cluster": 3,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "cluster": 3
           },
           {
             "art": "signpost",
@@ -19172,31 +17181,19 @@
             "near": {
               "sea": 3,
               "water": 2
-            },
-            "size": [
-              0.8,
-              1.0
-            ]
+            }
           },
           {
             "art": "giant_dandelion",
             "count": 20,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
             "art": "pepper_shaker",
             "count": 6,
             "blocking": true,
-            "size": [
-              0.9,
-              1.1
-            ],
             "shadow": true
           }
         ],
@@ -19630,10 +17627,6 @@
             "cluster": 4,
             "sway": true,
             "spread": 3,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
@@ -19642,10 +17635,6 @@
             "blocking": true,
             "cluster": 6,
             "spread": 3,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
@@ -19654,10 +17643,6 @@
             "blocking": true,
             "cluster": 6,
             "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
@@ -19666,10 +17651,6 @@
             "blocking": true,
             "cluster": 5,
             "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
@@ -19679,10 +17660,6 @@
             "cluster": 20,
             "sway": true,
             "spread": 4,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -19691,10 +17668,6 @@
             "blocking": true,
             "cluster": 20,
             "spread": 4,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -19702,10 +17675,6 @@
             "count": 30,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -19714,10 +17683,6 @@
             "blocking": true,
             "cluster": 8,
             "spread": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -19726,10 +17691,6 @@
             "blocking": true,
             "cluster": 6,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -19737,11 +17698,7 @@
             "count": 250,
             "blocking": true,
             "cluster": 6,
-            "sway": true,
-            "size": [
-              0.7,
-              1.15
-            ]
+            "sway": true
           },
           {
             "art": "frost_tree",
@@ -19749,10 +17706,6 @@
             "blocking": true,
             "cluster": 5,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -19760,31 +17713,19 @@
             "count": 30,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
             "art": "ice_rock",
             "count": 40,
             "blocking": true,
-            "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ]
+            "cluster": 3
           },
           {
             "art": "frozen_bush",
             "count": 60,
             "blocking": true,
             "cluster": 5,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -19800,31 +17741,19 @@
               "tree": 2
             },
             "cluster": 8,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "rock_formation_small",
             "count": 20,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.8,
-              1.1
-            ],
             "shadow": true
           },
           {
             "art": "rock_formation_large",
             "count": 8,
             "blocking": true,
-            "size": [
-              0.85,
-              1.1
-            ],
             "shadow": true
           },
           {
@@ -19832,10 +17761,6 @@
             "count": 14,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.85,
-              1.15
-            ],
             "shadow": true
           },
           {
@@ -19845,11 +17770,7 @@
             "near": {
               "building": 5,
               "path": 3
-            },
-            "size": [
-              0.9,
-              1.1
-            ]
+            }
           }
         ],
         "palette": {
@@ -20242,10 +18163,6 @@
             "count": 220,
             "blocking": true,
             "cluster": 8,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -20253,10 +18170,6 @@
             "count": 160,
             "blocking": true,
             "cluster": 5,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#9FE8FF"
           },
           {
@@ -20264,10 +18177,6 @@
             "count": 80,
             "blocking": true,
             "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -20280,10 +18189,6 @@
             "count": 120,
             "blocking": true,
             "cluster": 5,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -20291,10 +18196,6 @@
             "count": 60,
             "blocking": true,
             "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -20302,10 +18203,6 @@
             "count": 60,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#FF9FD8"
           },
           {
@@ -20313,10 +18210,6 @@
             "count": 40,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#FFC870"
           },
           {
@@ -20324,10 +18217,6 @@
             "count": 80,
             "blocking": false,
             "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#9FE8FF"
           },
           {
@@ -20335,10 +18224,6 @@
             "count": 80,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -20346,21 +18231,13 @@
             "count": 50,
             "blocking": true,
             "cluster": 3,
-            "sway": true,
-            "size": [
-              0.7,
-              1.15
-            ]
+            "sway": true
           },
           {
             "art": "ore_vein",
             "count": 8,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#FFD27A"
           },
           {
@@ -20368,10 +18245,6 @@
             "count": 30,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#FFF3A0",
             "bob": true
           },
@@ -20383,20 +18256,12 @@
               "water": 3,
               "sea": 3
             },
-            "cluster": 2,
-            "size": [
-              0.9,
-              1.1
-            ]
+            "cluster": 2
           },
           {
             "art": "tide_pillar",
             "count": 8,
             "blocking": true,
-            "size": [
-              0.9,
-              1.1
-            ],
             "shadow": true
           }
         ],
@@ -20758,10 +18623,6 @@
             "count": 4,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -20779,10 +18640,6 @@
             "count": 6,
             "blocking": true,
             "cluster": 6,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -20790,10 +18647,6 @@
             "count": 25,
             "blocking": false,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#9FE8FF"
           },
           {
@@ -20806,10 +18659,6 @@
             "count": 150,
             "blocking": false,
             "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -20817,10 +18666,6 @@
             "count": 15,
             "blocking": false,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#FFC870"
           },
           {
@@ -20828,31 +18673,19 @@
             "count": 40,
             "blocking": false,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#9FE8FF"
           },
           {
             "art": "pebbles",
             "count": 60,
             "blocking": false,
-            "cluster": 3,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "cluster": 3
           },
           {
             "art": "ore_vein",
             "count": 6,
             "blocking": false,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#FFD27A"
           },
           {
@@ -20860,10 +18693,6 @@
             "count": 5,
             "blocking": false,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#90FFB8"
           }
         ],
@@ -21234,10 +19063,6 @@
             "cluster": 6,
             "sway": true,
             "spread": 3,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
@@ -21246,10 +19071,6 @@
             "blocking": true,
             "cluster": 6,
             "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
@@ -21258,10 +19079,6 @@
             "blocking": true,
             "cluster": 6,
             "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
@@ -21270,20 +19087,12 @@
             "blocking": true,
             "cluster": 4,
             "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
             "art": "big_hollow_tree",
             "count": 6,
             "blocking": true,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
@@ -21293,10 +19102,6 @@
             "cluster": 24,
             "sway": true,
             "spread": 4,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -21305,10 +19110,6 @@
             "blocking": true,
             "cluster": 4,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -21316,20 +19117,12 @@
             "count": 55,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
             "art": "hollow_tree",
             "count": 5,
             "blocking": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -21337,10 +19130,6 @@
             "count": 20,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.8,
-              1.2
-            ],
             "sway": true,
             "shadow": true
           },
@@ -21351,11 +19140,7 @@
             "near": {
               "tree": 2
             },
-            "cluster": 6,
-            "size": [
-              0.75,
-              1.25
-            ]
+            "cluster": 6
           },
           {
             "art": "bush",
@@ -21363,10 +19148,6 @@
             "blocking": true,
             "cluster": 8,
             "spread": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -21374,10 +19155,6 @@
             "count": 60,
             "blocking": true,
             "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -21385,33 +19162,21 @@
             "count": 150,
             "blocking": false,
             "cluster": 6,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "daisy_yellow",
             "count": 150,
             "blocking": false,
             "cluster": 6,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "daisy_blue",
             "count": 90,
             "blocking": false,
             "cluster": 5,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "red_maple",
@@ -21419,10 +19184,6 @@
             "blocking": true,
             "cluster": 5,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -21431,10 +19192,6 @@
             "blocking": true,
             "cluster": 5,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -21442,10 +19199,6 @@
             "count": 60,
             "blocking": true,
             "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -21455,21 +19208,13 @@
             "near": {
               "tree": 2
             },
-            "cluster": 5,
-            "size": [
-              0.75,
-              1.25
-            ]
+            "cluster": 5
           },
           {
             "art": "blue_giant_mushroom",
             "count": 15,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -21477,11 +19222,7 @@
             "count": 150,
             "blocking": true,
             "cluster": 5,
-            "sway": true,
-            "size": [
-              0.7,
-              1.15
-            ]
+            "sway": true
           },
           {
             "art": "pebbles",
@@ -21490,11 +19231,7 @@
             "near": {
               "path": 3
             },
-            "cluster": 4,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "cluster": 4
           },
           {
             "art": "tree_stump",
@@ -21503,10 +19240,6 @@
             "near": {
               "tree": 3
             },
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -21525,46 +19258,34 @@
               "tree": 2
             },
             "cluster": 8,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "berry_bush",
             "count": 60,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
             "art": "pumpkin_patch",
             "count": 6,
             "blocking": false,
-            "cluster": 2,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "cluster": 2
           },
           {
             "art": "clover_patch",
             "count": 260,
             "blocking": false,
             "cluster": 6,
-            "size": [0.55, 0.7]
+            "size": [0.62, 0.62]
           },
           {
             "art": "tulip_patch",
             "count": 60,
             "blocking": false,
             "cluster": 4,
-            "size": [0.55, 0.7]
+            "size": [0.62, 0.62]
           },
           {
             "art": "signpost",
@@ -21576,7 +19297,7 @@
             "count": 90,
             "blocking": false,
             "cluster": 6,
-            "size": [0.55, 0.7],
+            "size": [0.62, 0.62],
             "sway": true
           },
           {
@@ -21585,11 +19306,7 @@
             "blocking": true,
             "near": {
               "path": 2
-            },
-            "size": [
-              0.9,
-              1.1
-            ]
+            }
           },
           {
             "art": "merchant_cart",
@@ -22132,7 +19849,7 @@
             "blocking": false,
             "cluster": 5,
             "sway": true,
-            "size": [0.55, 0.7],
+            "size": [0.62, 0.62],
             "glow": "#D8D8FF"
           },
           {
@@ -22141,10 +19858,6 @@
             "blocking": true,
             "cluster": 4,
             "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ],
             "shadow": true
           },
           {
@@ -22153,10 +19866,6 @@
             "blocking": true,
             "cluster": 5,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -22165,10 +19874,6 @@
             "blocking": true,
             "cluster": 4,
             "sway": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -22176,10 +19881,6 @@
             "count": 50,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#FFF3A0",
             "bob": true
           },
@@ -22188,10 +19889,6 @@
             "count": 50,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#9FE8FF"
           },
           {
@@ -22199,10 +19896,6 @@
             "count": 30,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#C9A0FF"
           },
           {
@@ -22210,10 +19903,6 @@
             "count": 90,
             "blocking": false,
             "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#FF9FD8"
           },
           {
@@ -22222,7 +19911,7 @@
             "blocking": false,
             "cluster": 5,
             "sway": true,
-            "size": [0.55, 0.7],
+            "size": [0.62, 0.62],
             "glow": "#D8D8FF"
           },
           {
@@ -22233,10 +19922,6 @@
               "tree": 2
             },
             "cluster": 6,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#8FE8FF"
           },
           {
@@ -22246,21 +19931,13 @@
             "near": {
               "tree": 2
             },
-            "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ]
+            "cluster": 4
           },
           {
             "art": "blue_giant_mushroom",
             "count": 12,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
@@ -22268,10 +19945,6 @@
             "count": 24,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#90FFB8"
           },
           {
@@ -22289,31 +19962,19 @@
               "tree": 2
             },
             "cluster": 8,
-            "sway": true,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "sway": true
           },
           {
             "art": "lilac_bush",
             "count": 90,
             "blocking": true,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "shadow": true
           },
           {
             "art": "hollow_tree",
             "count": 5,
             "blocking": true,
-            "size": [
-              0.7,
-              1.3
-            ],
             "shadow": true
           },
           {
@@ -22324,11 +19985,7 @@
               "sea": 3,
               "water": 2
             },
-            "cluster": 3,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "cluster": 3
           },
           {
             "art": "driftwood",
@@ -22337,20 +19994,12 @@
             "near": {
               "sea": 3,
               "water": 2
-            },
-            "size": [
-              0.8,
-              1.2
-            ]
+            }
           },
           {
             "art": "fallen_star",
             "count": 8,
             "blocking": true,
-            "size": [
-              0.9,
-              1.1
-            ],
             "glow": "#FFE58A"
           },
           {
@@ -22360,10 +20009,6 @@
             "near": {
               "building": 6
             },
-            "size": [
-              0.9,
-              1.1
-            ],
             "shadow": true
           }
         ],
@@ -22796,10 +20441,6 @@
             "count": 12,
             "blocking": true,
             "cluster": 4,
-            "size": [
-              0.8,
-              1.4
-            ],
             "glow": "#9FE8FF"
           },
           {
@@ -22807,10 +20448,6 @@
             "count": 10,
             "blocking": true,
             "cluster": 4,
-            "size": [
-              0.8,
-              1.4
-            ],
             "glow": "#C9A0FF"
           },
           {
@@ -22818,10 +20455,6 @@
             "count": 6,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.2
-            ],
             "shadow": true,
             "glow": "#C9A0FF"
           },
@@ -22830,10 +20463,6 @@
             "count": 80,
             "blocking": false,
             "cluster": 4,
-            "size": [
-              0.9,
-              1.6
-            ],
             "glow": "#9FE8FF"
           },
           {
@@ -22841,10 +20470,6 @@
             "count": 45,
             "blocking": false,
             "cluster": 3,
-            "size": [
-              0.9,
-              1.6
-            ],
             "glow": "#C9A0FF"
           },
           {
@@ -22852,10 +20477,6 @@
             "count": 20,
             "blocking": false,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.2
-            ],
             "glow": "#FFF3A0"
           },
           {
@@ -22863,10 +20484,6 @@
             "count": 120,
             "blocking": false,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.2
-            ],
             "glow": "#FF9FD8"
           },
           {
@@ -22874,21 +20491,13 @@
             "count": 140,
             "blocking": false,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#9FE8FF"
           },
           {
             "art": "small_crystal_spire",
             "count": 90,
             "blocking": false,
-            "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ]
+            "cluster": 4
           },
           {
             "art": "glow_mushroom",
@@ -22902,21 +20511,13 @@
             "count": 10,
             "blocking": false,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#90FFB8"
           },
           {
             "art": "pebbles",
             "count": 20,
             "blocking": false,
-            "cluster": 3,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "cluster": 3
           }
         ],
         "palette": {
@@ -23050,10 +20651,6 @@
             "count": 12,
             "blocking": true,
             "cluster": 4,
-            "size": [
-              0.8,
-              1.4
-            ],
             "glow": "#9FE8FF"
           },
           {
@@ -23061,10 +20658,6 @@
             "count": 10,
             "blocking": true,
             "cluster": 4,
-            "size": [
-              0.8,
-              1.4
-            ],
             "glow": "#C9A0FF"
           },
           {
@@ -23072,10 +20665,6 @@
             "count": 6,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.2
-            ],
             "shadow": true,
             "glow": "#C9A0FF"
           },
@@ -23084,10 +20673,6 @@
             "count": 80,
             "blocking": false,
             "cluster": 4,
-            "size": [
-              0.9,
-              1.6
-            ],
             "glow": "#9FE8FF"
           },
           {
@@ -23095,10 +20680,6 @@
             "count": 45,
             "blocking": false,
             "cluster": 3,
-            "size": [
-              0.9,
-              1.6
-            ],
             "glow": "#C9A0FF"
           },
           {
@@ -23106,10 +20687,6 @@
             "count": 20,
             "blocking": false,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.2
-            ],
             "glow": "#FFF3A0"
           },
           {
@@ -23117,10 +20694,6 @@
             "count": 120,
             "blocking": false,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.2
-            ],
             "glow": "#FF9FD8"
           },
           {
@@ -23128,21 +20701,13 @@
             "count": 140,
             "blocking": false,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#9FE8FF"
           },
           {
             "art": "small_crystal_spire",
             "count": 90,
             "blocking": false,
-            "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ]
+            "cluster": 4
           },
           {
             "art": "glow_mushroom",
@@ -23156,21 +20721,13 @@
             "count": 10,
             "blocking": false,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#90FFB8"
           },
           {
             "art": "pebbles",
             "count": 20,
             "blocking": false,
-            "cluster": 3,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "cluster": 3
           }
         ],
         "palette": {
@@ -23337,10 +20894,6 @@
             "count": 12,
             "blocking": true,
             "cluster": 4,
-            "size": [
-              0.8,
-              1.4
-            ],
             "glow": "#9FE8FF"
           },
           {
@@ -23348,10 +20901,6 @@
             "count": 10,
             "blocking": true,
             "cluster": 4,
-            "size": [
-              0.8,
-              1.4
-            ],
             "glow": "#C9A0FF"
           },
           {
@@ -23359,10 +20908,6 @@
             "count": 6,
             "blocking": true,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.2
-            ],
             "shadow": true,
             "glow": "#C9A0FF"
           },
@@ -23371,10 +20916,6 @@
             "count": 80,
             "blocking": false,
             "cluster": 4,
-            "size": [
-              0.9,
-              1.6
-            ],
             "glow": "#9FE8FF"
           },
           {
@@ -23382,10 +20923,6 @@
             "count": 45,
             "blocking": false,
             "cluster": 3,
-            "size": [
-              0.9,
-              1.6
-            ],
             "glow": "#C9A0FF"
           },
           {
@@ -23393,10 +20930,6 @@
             "count": 20,
             "blocking": false,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.2
-            ],
             "glow": "#FFF3A0"
           },
           {
@@ -23404,10 +20937,6 @@
             "count": 120,
             "blocking": false,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.2
-            ],
             "glow": "#FF9FD8"
           },
           {
@@ -23415,21 +20944,13 @@
             "count": 140,
             "blocking": false,
             "cluster": 3,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#9FE8FF"
           },
           {
             "art": "small_crystal_spire",
             "count": 90,
             "blocking": false,
-            "cluster": 4,
-            "size": [
-              0.75,
-              1.25
-            ]
+            "cluster": 4
           },
           {
             "art": "glow_mushroom",
@@ -23443,21 +20964,13 @@
             "count": 10,
             "blocking": false,
             "cluster": 2,
-            "size": [
-              0.75,
-              1.25
-            ],
             "glow": "#90FFB8"
           },
           {
             "art": "pebbles",
             "count": 20,
             "blocking": false,
-            "cluster": 3,
-            "size": [
-              0.8,
-              1.2
-            ]
+            "cluster": 3
           }
         ],
         "palette": {

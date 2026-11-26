@@ -123,8 +123,10 @@ enum BorderArt {
                 let world = segment.grid(0.5)
                 var random = SeededRandom(text: "border \(Int(world.x * 2) + origin.col * 2),\(Int(world.y * 2) + origin.row * 2)")
                 let kind = kinds[Int.random(in: 0..<kinds.count, using: &random)]
-                let scale = CGFloat.random(in: 0.9...1.1, using: &random)
-                let node = SKSpriteNode(texture: kind.texture, size: kind.size * scale)
+                // At its own size (its art pixels its neighbours'); the size once drawn still is, so the
+                // nudge after it stays as it was.
+                _ = CGFloat.random(in: 0.9...1.1, using: &random)
+                let node = SKSpriteNode(texture: kind.texture, size: kind.size)
                 node.anchorPoint = CGPoint(x: 0.5, y: 0.15)
                 node.position = screen(segment.grid(0.5 + CGFloat.random(in: -0.15...0.15, using: &random)))
                 put(node)
