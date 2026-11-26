@@ -189,17 +189,18 @@ def real_ear(diff, f, dark=None):
     # laid over long hair it showed as dark specks at its top, the user, 2026-11-26)
     return diff & (zone | edge)
 
-def ear_through(diff, f, worn, reach=3):
+def ear_through(diff, f, worn, reach=5):
     """The ear where it lies over the hair's outer pixels: the elf's pixels joined to what stands past the doll's
-    head, over the hair only up to `reach` pixels in from its outside edge. Long hair covering the ear's root ended
-    it in a straight line along the hair's edge (the user, 2026-11-26); taken all the way through the hair, the ear
-    grew out of the cheek."""
+    head, from a row above it down (a walk frame's ear hangs down along the head), over the hair only up to `reach`
+    pixels in from its outside edge. Long hair covering the ear's root ended it in a straight line along the hair's
+    edge, and walking, where the ear stands out only a pixel or two past the head, covered most of it (the user,
+    2026-11-26); taken all the way through the hair, the ear grew out of the cheek."""
     far = ~ndimage.binary_dilation(f[..., 3] > 0, np.ones((3, 3), bool))
     seed = diff & far
     if not seed.any():
         return np.zeros_like(diff)
     rows = np.nonzero(seed.any(1))[0]
-    band = np.zeros_like(diff); band[max(rows.min() - 1, 0):rows.max() + 2] = True
+    band = np.zeros_like(diff); band[max(rows.min() - 1, 0):] = True
     lab, _ = ndimage.label(diff & band)
     ear = np.isin(lab, [i for i in np.unique(lab[seed]) if i])
     hair = (worn != f).any(2)
