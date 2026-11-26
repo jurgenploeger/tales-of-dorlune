@@ -348,20 +348,30 @@ final class GroundTiles {
     }
 
     /// How a road cell takes on the road of the land next door across the band between them: its
-    /// road tile, graded as it is there, mixed in by that land's share of the ground at the cell
-    /// (`Seam.share`, half on the border), in eighths. The ground there comes in patches; a road
-    /// changing in patches looked torn, and changing at the border it was cut straight across
-    /// (playtesting 2026-10-15). Nil where no band reaches.
+    /// road tile, graded as it is there, laid over this land's pixel by pixel as the plain ground's is
+    /// (`seamBlend`, `pixelShare`, half on the border), coming in smoothly between the cells' middles
+    /// (`ArtLibrary.Fade`); with that land's ground under its edges, but across a snow border, which
+    /// keeps its patches. A road changing in patches looked torn, at the border it was cut straight
+    /// across (playtesting 2026-10-15), and mixed a cell at a time in eighths it showed in bands (the
+    /// user, 2026-11-26). Nil where no band reaches.
     private func roadFade(_ cell: GridPoint) -> ArtLibrary.Fade? {
         var best: (seam: Int, share: Double)?
         for index in map.seams.indices {
-            guard let share = map.seams[index].share(cell), share > (best?.share ?? 0) else { continue }
+            guard let share = pixelShare(map.seams[index], cell), share > (best?.share ?? 0.005) else { continue }
             best = (index, share)
         }
         guard let best, let other = foreignLand(map.seams[best.seam].neighbour) else { return nil }
-        let eighths = (best.share * 8).rounded()
-        guard eighths > 0 else { return nil }
-        return ArtLibrary.Fade(tile: other.land.theme.path, from: other.from, share: eighths / 8)
+        let seam = map.seams[best.seam]
+        var corners: [Double] = []
+        for row in 0..<3 {
+            for col in 0..<3 {
+                corners.append(pixelShare(seam, GridPoint(col: cell.col + col - 1, row: cell.row + 1 - row)) ?? best.share)
+            }
+        }
+        var fade = ArtLibrary.Fade(tile: other.land.theme.path, from: other.from, corners: corners, first: seam.sign > 0,
+                                   origin: origin, cell: cell)
+        if Self.snowy(other.land) == Self.snowy(map.def) { fade.ground = other.land.theme.ground }
+        return fade
     }
 
     /// The grounds the 3×3 round `cell` shows across the band (`look`), this land's and the lands
@@ -486,13 +496,14 @@ final class GroundTiles {
         let base = baseTile(cell, kind)
         var layers: [ArtLibrary.GroundLayer] = []
         // The grounds across the band first, under everything of this land's.
-        let band = map.seams.isEmpty ? nil : grounds(cell, base: base)
+        let fade = road == 0 || map.seams.isEmpty ? nil : roadFade(cell)
+        // Under a road whose ground comes in pixel by pixel (`Fade.ground`), not the band's patches too.
+        let band = map.seams.isEmpty || fade?.ground != nil ? nil : grounds(cell, base: base)
         if let band { layers += band }
         // The land's richer ground in its broad patches, under its accent's.
         let lush = lushMask(cell)
         if lush != 0, let rich = theme.lush { layers.append(.init(tile: rich, mask: lush, style: .patch)) }
         if patch != 0, let accent = theme.accent { layers.append(.init(tile: accent, mask: patch, style: .patch)) }
-        let fade = road == 0 || map.seams.isEmpty ? nil : roadFade(cell)
         // In a town's square its roads are cobbled (`ArtLibrary.GroundLayer.cobbled`); out in the wild, sand.
         let cobbled = road != 0 && fade == nil && inTown(cell)
         if road != 0 {

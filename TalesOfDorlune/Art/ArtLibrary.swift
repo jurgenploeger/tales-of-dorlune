@@ -437,15 +437,55 @@ final class ArtLibrary {
     }
 
     /// A road across the band between two lands (`Seam`): the land next door's road tile, graded as
-    /// it is there, mixed into this land's by `share` (0...1), so the road changes look a little at
-    /// a time instead of all at once at the border.
+    /// it is there, laid over this land's pixel by pixel in the clusters the ground between them comes
+    /// in (`blendedIn`, `seamTakes`), as much as that land's share of the ground at each pixel (`cover`),
+    /// so the road changes look a little at a time. Mixed a whole cell at a time, in eighths, each cell
+    /// showed as a band of its own across the road (the user, 2026-11-26: "you can kinda see the
+    /// different layers still"). `ground`: the land next door's ground, laid under the road's edges
+    /// the same way, as the plain ground beside it is (`GroundTiles.seamBlend`); nil across a snow border.
     nonisolated struct Fade: Sendable {
         let tile: String
         let from: Foreign
-        let share: Double
+        /// The land next door's share of the ground at the middles of the 3×3 cells round this one
+        /// (bit order as `GroundLayer.mask`: row 0 north, col 0 west).
+        let corners: [Double]
+        /// Which of the two lands comes first by id (`blendedIn`'s `first`).
+        let first: Bool
+        /// The land's place on the continent and the cell's in the land.
+        let origin: GridPoint
+        let cell: GridPoint
+        var ground: String? = nil
 
-        /// What tells one fade from another in a texture's key.
-        var key: String { "\(from.land)~\(tile)~\(share)" }
+        /// What tells one fade from another in a texture's key: each cell's is its own.
+        var key: String { "\(from.land)~\(tile)~\(ground ?? "")@\(origin.col + cell.col),\(origin.row + cell.row)" }
+
+        /// The land next door's share at a point of the cell (x east, y north, -0.5...0.5 from its
+        /// middle), between the 3×3 cells' middles.
+        func cover(_ x: Double, _ y: Double) -> Double {
+            guard corners.count == 9 else { return 0 }
+            let cx = x < 0 ? -1 : 0, cy = y < 0 ? -1 : 0
+            let tx = x - Double(cx), ty = y - Double(cy)
+            func at(_ dc: Int, _ dn: Int) -> Double { corners[(1 - dn) * 3 + dc + 1] }
+            return (at(cx, cy) * (1 - tx) + at(cx + 1, cy) * tx) * (1 - ty) + (at(cx, cy + 1) * (1 - tx) + at(cx + 1, cy + 1) * tx) * ty
+        }
+
+        /// Whether pixel (`px`, `py`, from the top left) of a `size`-pixel tile shows the land next door's.
+        func takes(_ px: Int, _ py: Int, size: Int) -> Bool {
+            let x = (Double(px) + 0.5) / Double(size) - 0.5, y = 0.5 - (Double(py) + 0.5) / Double(size)
+            return ArtLibrary.seamTakes(px, py, size: size, cell: cell, origin: origin, first: first, cover: cover(x, y))
+        }
+    }
+
+    /// Whether a pixel of a cell's tile across a border shows the land next door's (`blendedIn`,
+    /// `Fade`): its place in the order the land next door comes in (clusters, from noise over the
+    /// continent, so they run on from tile to tile and match from either side, the first land by id
+    /// taking it turned over), under how much of it there is there (`cover`, 0 to 1).
+    nonisolated static func seamTakes(_ px: Int, _ py: Int, size: Int, cell: GridPoint, origin: GridPoint, first: Bool,
+                                      cover: Double) -> Bool {
+        guard cover > 0 else { return false }
+        let u = (origin.col + cell.col) * size + px, v = (origin.row + cell.row) * size + (size - 1 - py)
+        let raw = 0.6 * iceNoise(u, v, every: 6) + 0.25 * iceNoise(u + 917, v + 331, every: 2) + 0.15 * iceHash(u, v)
+        return (first ? 1 - raw : raw) < cover
     }
 
     /// One of four versions of a tile (0 is the tile itself). The others show the texture shifted
@@ -677,12 +717,7 @@ final class ArtLibrary {
                 guard theirs[index + 3] > 0 else { continue }
                 let x = Double(cell.col) + (Double(px) + 0.5) / Double(size)
                 let y = Double(cell.row) + 1 - (Double(py) + 0.5) / Double(size)
-                let cover = front(x, y)
-                guard cover > 0 else { continue }
-                let u = (origin.col + cell.col) * size + px, v = (origin.row + cell.row) * size + (size - 1 - py)
-                let raw = 0.6 * Self.iceNoise(u, v, every: 6) + 0.25 * Self.iceNoise(u + 917, v + 331, every: 2)
-                    + 0.15 * Self.iceHash(u, v)
-                guard (first ? 1 - raw : raw) < cover else { continue }
+                guard Self.seamTakes(px, py, size: size, cell: cell, origin: origin, first: first, cover: front(x, y)) else { continue }
                 for k in 0..<4 { out[index + k] = theirs[index + k] }
             }
         }
@@ -1061,16 +1096,17 @@ final class ArtLibrary {
         return texture
     }
 
-    /// This land's tile `id` and the land next door's (`fade`) mixed, pixel by pixel.
+    /// This land's tile `id` with the land next door's (`fade`) laid over it pixel by pixel.
     private func fadedPixels(_ id: String, fade: Fade, variant: Int, size: Int) -> [UInt8] {
         let own = variantPixels(id, variant, size: size)
         let theirs = foreignPixels(fade.tile, palette: fade.from.palette, from: fade.from.land, variant: variant, size: size)
-        guard own.count == theirs.count else { return own }
-        let share = min(1, max(0, fade.share))
+        guard own.count == theirs.count, own.count == size * size * 4 else { return own }
         var out = own
-        for index in out.indices {
-            let mixed: Double = Double(own[index]) * (1 - share) + Double(theirs[index]) * share
-            out[index] = UInt8(min(255, mixed.rounded()))
+        for py in 0..<size {
+            for px in 0..<size where fade.takes(px, py, size: size) {
+                let index = (py * size + px) * 4
+                for k in 0..<4 { out[index + k] = theirs[index + k] }
+            }
         }
         return out
     }
@@ -1153,6 +1189,20 @@ final class ArtLibrary {
                     guard let ground = shown, texels[ground].count == out.count else { continue }
                     for c in 0..<3 { out[index + c] = texels[ground][index + c] }
                     out[index + 3] = 255
+                }
+            }
+        }
+        // Under a road across a border, the land next door's ground comes in pixel by pixel as it does on
+        // the plain ground beside it (`Fade.ground`): left as this land's, it stopped dead along the road.
+        if let fade = layers.lazy.compactMap(\.fade).first, let ground = fade.ground {
+            let theirs = foreignPixels(ground, palette: fade.from.palette, from: fade.from.land, variant: pick, size: size)
+            if theirs.count == out.count, out.count == size * size * 4 {
+                for py in 0..<size {
+                    for px in 0..<size where fade.takes(px, py, size: size) {
+                        let index = (py * size + px) * 4
+                        for c in 0..<3 { out[index + c] = theirs[index + c] }
+                        out[index + 3] = 255
+                    }
                 }
             }
         }
