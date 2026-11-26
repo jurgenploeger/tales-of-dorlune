@@ -128,6 +128,9 @@ final class LandStage {
     /// `step`: says which step it's at (Settings → Developer's frame timing, `ContinentScene.breathe`). The
     /// frame's given back after every step (`pause`): between a dozen of them at once, one frame took 720 ms
     /// (the user's gauges, 2026-11-26).
+    /// `pause` is cheap till the frame's slice of time is spent (`ContinentScene.breathe`), so the loops
+    /// call it after every piece: every 32 or 40, a swamp's props, each by the water with a reflection
+    /// painted, held one frame for 640 ms, frame after frame (the user's gauges, 2026-11-26, Frog Swamp).
     func build(pause: @escaping () async -> Void, step: @escaping (String) -> Void = { _ in }) async {
         func next(_ name: String) async {
             await pause()
@@ -140,8 +143,8 @@ final class LandStage {
         placeBridges()
         placeHarbors()
         await next("reeds")
-        for (index, reed) in plan.reeds.enumerated() {
-            if index % 40 == 39 { await pause() }
+        for reed in plan.reeds {
+            await pause()
             let node = addScenery(reed)
             // The rocks cast one where the shade can't fall (the user, 2026-11-16: "The rocks in the water
             // should also have the shadows"): a lake and its shore lie sunk.
@@ -173,15 +176,15 @@ final class LandStage {
         await next("npcs")
         placeNPCs(plan.npcs)
         await next("local props")
-        for (index, prop) in plan.localProps.enumerated() {
-            if index % 40 == 39 { await pause() }
+        for prop in plan.localProps {
+            await pause()
             addScenery(prop)
         }
         await next("fairy rings")
         placeFairyRings(plan.fairyRings)
         await next("outcrops")
-        for (index, rock) in plan.outcrops.enumerated() {
-            if index % 40 == 39 { await pause() }
+        for rock in plan.outcrops {
+            await pause()
             addScenery(rock)
         }
         await next("props")
@@ -1767,13 +1770,13 @@ final class LandStage {
     private func placeProps(_ props: [Placement], seams: [Placement], pause: @escaping () async -> Void) async {
         // Its trees' and bushes' wind frames on one texture, so they draw in batches (`packWindFrames`).
         if !Self.isOffForDebug("wind") { await art.packWindFrames(props.map { $0.art }, pause: pause) }
-        for (number, prop) in props.enumerated() {
-            if number % 32 == 31 { await pause() }
+        for prop in props {
+            await pause()
             plant(prop)
         }
         var sprites: [String: SpriteArt] = [:]
-        for (number, prop) in seams.enumerated() {
-            if number % 32 == 31 { await pause() }
+        for prop in seams {
+            await pause()
             guard let land = prop.land else { continue }
             let key = land.id + "|" + prop.art
             let sprite: SpriteArt
