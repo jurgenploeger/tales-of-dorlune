@@ -1122,8 +1122,11 @@ final class LandPlanner {
             var placed = 0
             defer { plan.propCounts.append(placed) }
             var attempts = 0
-            // In a land with groves a group that doesn't suit where it fell is tried again elsewhere.
-            let tries = def.theme.groves == true ? 6 : 3
+            // In a land with groves a group that doesn't suit where it fell is tried again elsewhere. In a
+            // town's square (`within`), crowded with streets and buildings, a few tries left a statue, a
+            // well or the daisies out altogether when the draws before them changed (LandPlanTests,
+            // 2026-11-26): it's tried till it fits.
+            let tries = placement.within != nil ? 20 : def.theme.groves == true ? 6 : 3
             while placed < placement.count, attempts < placement.count * tries {
                 attempts += 1
                 await pause()
@@ -1162,8 +1165,9 @@ final class LandPlanner {
                     if let range = placement.size, range.count == 2, range[0] <= range[1] {
                         scale = CGFloat(Double.random(in: range[0]...range[1], using: &rng))
                     }
-                    // Not over a road (what keeps near something chose to: a milestone by the road).
-                    guard placement.near != nil || !hidesRoad(placement.art, at: cell, scale: scale) else { continue }
+                    // Not over a road (what keeps near something chose to: a milestone by the road; and a town
+                    // square's well, statue or tree stands by its streets).
+                    guard placement.near != nil || placement.within != nil || !hidesRoad(placement.art, at: cell, scale: scale) else { continue }
                     plan.props.append(plant(placement, at: cell, scale: scale))
                     remember(placement, at: cell)
                     inGroup += 1
