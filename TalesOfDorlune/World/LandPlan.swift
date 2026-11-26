@@ -752,11 +752,15 @@ final class LandPlanner {
             }
             guard let art = kind.art, let prop = def.theme.props.first(where: { $0.art == art }),
                   cells.allSatisfy({ map.isFreeForScenery($0) }) else { return false }
-            plan.roadsides.append(RoadsideLine(kind: .row, cells: cells))
             let every = max(1, kind.every ?? 1)
             // One size down the row, as if planted together: the middle of the prop's sizes.
             let sizes = prop.size.flatMap { $0.count == 2 && $0[0] <= $0[1] ? $0 : nil } ?? [1, 1]
             let size = (sizes[0] + sizes[1]) / 2
+            // An avenue of trees only where they don't stand over the road: on its far side.
+            for (index, cell) in cells.enumerated() where index % every == 0 {
+                if hidesRoad(art, at: cell, scale: CGFloat(size * 1.05)) { return false }
+            }
+            plan.roadsides.append(RoadsideLine(kind: .row, cells: cells))
             for (index, cell) in cells.enumerated() {
                 guard index % every == 0 else {
                     map.occupy(cell, blocking: false)
@@ -1146,6 +1150,8 @@ final class LandPlanner {
                     if let range = placement.size, range.count == 2, range[0] <= range[1] {
                         scale = CGFloat(Double.random(in: range[0]...range[1], using: &rng))
                     }
+                    // Not over a road (what keeps near something chose to: a milestone by the road).
+                    guard placement.near != nil || !hidesRoad(placement.art, at: cell, scale: scale) else { continue }
                     plan.props.append(plant(placement, at: cell, scale: scale))
                     remember(placement, at: cell)
                     inGroup += 1
@@ -1163,6 +1169,40 @@ final class LandPlanner {
         let width = art.sprite(placement.art).size.width * CGFloat(placement.size?.last ?? 1)
         return max(0, Int(((width / WorldMap.tileSize - 1) / 2).rounded()))
     }
+
+    /// Whether something tall (a tree) set down at `cell` at `scale` would stand over the land's roads:
+    /// its crown, as drawn up the screen from its foot, over the middle of a road cell. The view looks
+    /// down the land at a slant, so a tree on the near side of a road (lower on the screen) rises over
+    /// two or three of its cells, while one on the far side rises away from it (the user, 2026-11-26:
+    /// "These trees are covering too much of the road"). What's under `tallEnough` is let be.
+    private func hidesRoad(_ id: String, at cell: GridPoint, scale: CGFloat) -> Bool {
+        let size = art.sprite(id).size
+        let width = size.width * scale, height = size.height * scale
+        guard height >= Self.tallEnough else { return false }
+        let foot = map.base(of: cell)
+        // The crown: the middle of its width (its edges are leaves thinning out), from a little above
+        // its foot (the trunk at the road's edge is fine) to near its top.
+        let left = foot.x - width * 0.38, right = foot.x + width * 0.38
+        let bottom = foot.y + 10, top = foot.y + height * 0.92
+        // A road cell's middle, its painted part (a cell's diamond is 62 by 31 points).
+        let halfWidth: CGFloat = 19, halfHeight: CGFloat = 9
+        let reach = Int((max(width, height) / (WorldMap.tileSize * 0.7)).rounded(.up)) + 1
+        for dr in -reach...reach {
+            for dc in -reach...reach {
+                let other = GridPoint(col: cell.col + dc, row: cell.row + dr)
+                guard map.owns(other), map.ground[other.row][other.col] == .path else { continue }
+                let middle = map.center(of: other)
+                if middle.x + halfWidth > left, middle.x - halfWidth < right, middle.y + halfHeight > bottom, middle.y - halfHeight < top {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
+    /// How tall, in points, something must be before it's kept from standing over a road (`hidesRoad`):
+    /// a tree, not a bush, a lamp's post or a flower.
+    private static let tallEnough: CGFloat = 40
 
     /// Whether a road or path of the land's own runs within `reach` cells of `cell`.
     private func nearPath(_ cell: GridPoint, within reach: Int) -> Bool {
@@ -1195,6 +1235,7 @@ final class LandPlanner {
                 if let range = placement.size, range.count == 2, range[0] <= range[1] {
                     scale = CGFloat(Double.random(in: range[0]...range[1], using: &random))
                 }
+                guard placement.near != nil || !hidesRoad(placement.art, at: cell, scale: scale) else { break }
                 var planted = plant(placement, at: cell, scale: scale)
                 planted.land = land
                 plan.seamProps.append(planted)
