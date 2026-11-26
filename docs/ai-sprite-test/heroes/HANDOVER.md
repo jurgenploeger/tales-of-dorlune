@@ -475,6 +475,12 @@ One doll, end to end (it was the Human Male pilot until 2026-11-24).
     over the hair now (`real_ear`).
     Attack down the same way (`tries/hair_long_attack_down_try1*`, `hero64_hair_long_attack_down.png`): Long straight
     facing down is done in idle, walk, run and attack.
+    Down-right: ChatGPT's own 64-pixel files again, two near copies (`tries/hair_long_down-right_try1{a,b}*`), the body
+    the doll's from row 44 down, the hair falling over the shoulders above it; a picked, lifted untoned
+    (`hero64_hair_long_down-right.png`). On the elf the hair over the near ear's root ended it in a straight line along
+    the hair's edge (the user): the ear now lies over the hair's outer 3 pixels (`hero_hair.ear_through`), the hair
+    still between it and the cheek (taken right through, the ear grew out of the cheek). It moved Spiky's and Long
+    down's elf ears by a pixel or two where they meet the hair. Walk and attack down-right still to repaint.
     Spiky up: ChatGPT sent its own 64-pixel files this time (`tries/hair_spiky_up_try1{a,b}{,_8x}.png`), the body
     pixel for pixel the doll's; the user picked a (`hero64_hair_spiky_up.png`), lifted untoned. **Spiky is done in all
     eight directions** (five drawn, three mirrored), on idle, walk, run and attack, human and elf.

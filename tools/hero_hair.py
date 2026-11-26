@@ -189,6 +189,23 @@ def real_ear(diff, f, dark=None):
     # laid over long hair it showed as dark specks at its top, the user, 2026-11-26)
     return diff & (zone | edge)
 
+def ear_through(diff, f, worn, reach=3):
+    """The ear where it lies over the hair's outer pixels: the elf's pixels joined to what stands past the doll's
+    head, over the hair only up to `reach` pixels in from its outside edge. Long hair covering the ear's root ended
+    it in a straight line along the hair's edge (the user, 2026-11-26); taken all the way through the hair, the ear
+    grew out of the cheek."""
+    far = ~ndimage.binary_dilation(f[..., 3] > 0, np.ones((3, 3), bool))
+    seed = diff & far
+    if not seed.any():
+        return np.zeros_like(diff)
+    rows = np.nonzero(seed.any(1))[0]
+    band = np.zeros_like(diff); band[max(rows.min() - 1, 0):rows.max() + 2] = True
+    lab, _ = ndimage.label(diff & band)
+    ear = np.isin(lab, [i for i in np.unique(lab[seed]) if i])
+    hair = (worn != f).any(2)
+    inside = ndimage.distance_transform_cdt(worn[..., 3] > 0, metric="chessboard")
+    return ear & (~hair | (inside <= reach))
+
 def lone_specks(img):
     """Opaque pixels with no opaque neighbour, cleared."""
     a = img[..., 3] > 0
@@ -266,7 +283,8 @@ def wear_style(style, anim, race="human"):
                 # head flapped over the near ear (the user, 2026-11-25); above it the hair still covers ChatGPT's
                 # head pixels round the ears
                 e = elf[sl]
-                ear = real_ear((e[..., 3] > 0) & ((e != f).any(2)), f, e[..., :3].max(2) < 110)
+                diff = (e[..., 3] > 0) & ((e != f).any(2))
+                ear = real_ear(diff, f, e[..., :3].max(2) < 110) | ear_through(diff, f, wear_hair(f, hair, sh, ref))
                 top = ear_top(d)
                 # from behind (up, up-right, up-left) the ears layer lies over the back of the head: there the hair
                 # goes over it and only what stands out past the head shows (2026-11-25)
