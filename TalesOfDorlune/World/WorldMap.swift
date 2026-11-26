@@ -587,7 +587,28 @@ nonisolated final class WorldMap: @unchecked Sendable {
     func spot(x: Int, y: Int, summit: Int?) -> GridPoint {
         guard let summit, summits.indices.contains(summit) else { return offset(x, y) }
         let top = summits[summit]
-        return GridPoint(col: Int(top.x.rounded(.down)) + x, row: Int(top.y.rounded(.down)) + y)
+        let cell = GridPoint(col: Int(top.x.rounded(.down)) + x, row: Int(top.y.rounded(.down)) + y)
+        return isWalkable(cell) ? cell : nearestOnTop(to: cell, top: top) ?? cell
+    }
+
+    /// The walkable cell nearest `cell`, up on the top round `top` (as high as a fifth below it, at
+    /// most 6 cells off): on a terraced mountain a step off its top level was a face, and a chest or
+    /// someone set up there stood where you couldn't climb (2026-11-26).
+    private func nearestOnTop(to cell: GridPoint, top: CGPoint) -> GridPoint? {
+        let tile = Self.tileSize
+        let peak = height(atGrid: CGPoint(x: top.x * tile, y: top.y * tile))
+        var best: (cell: GridPoint, distance: Int)?
+        for dr in -6...6 {
+            for dc in -6...6 {
+                let next = GridPoint(col: cell.col + dc, row: cell.row + dr)
+                let distance = dc * dc + dr * dr
+                guard distance < best?.distance ?? .max, contains(next), isWalkable(next) else { continue }
+                let here = height(atGrid: CGPoint(x: (CGFloat(next.col) + 0.5) * tile, y: (CGFloat(next.row) + 0.5) * tile))
+                guard here >= peak * 0.8 else { continue }
+                best = (next, distance)
+            }
+        }
+        return best?.cell
     }
 
     /// Where an NPC stands (`spot(x:y:summit:)`), or by its landmark (`NPCDef.at`), on the nearest
@@ -2411,8 +2432,9 @@ nonisolated final class WorldMap: @unchecked Sendable {
     private static let mountainTop = 0.88
     private static let mountainFace = 2.4
     private static let mountainSides = 1.6
-    /// A terraced mountain's (`raiseHills`): how many times shorter its reach toward you than back.
-    private static let terracedMountainFace = 1.25
+    /// A terraced mountain's (`raiseHills`): in how many levels, and how many times shorter its reach toward
+    /// you than back, the first that fits: five as the user picked (2026-11-25), else fewer and steeper.
+    private static let terracedMountainShapes: [(levels: Int, face: Double)] = [(5, 1.25), (4, 1.7), (3, 2.4)]
 
     /// The chance a range has a trail up it, but for a land's first and those with a mountain, which
     /// always do (`shapeHill`).
@@ -2442,8 +2464,7 @@ nonisolated final class WorldMap: @unchecked Sendable {
         // A terraced mountain's face reaches out nearly as far as its back, so its five levels are
         // wide enough to walk along and take a stair (`carveStairs`); else steep toward you.
         let terraced = hills.terraces != nil
-        let face = terraced ? Self.terracedMountainFace : Self.mountainFace
-        let reachRound = max((1 + 1 / face) / 2, 1 / Self.mountainSides)
+        func reachRound(_ face: Double) -> Double { max((1 + 1 / face) / 2, 1 / Self.mountainSides) }
         let mountains = [Double?](repeating: hills.mountains?.height, count: hills.mountains?.count ?? 0)
         var claimed: Set<GridPoint> = []
         for mountain in mountains + [Double?](repeating: nil, count: hills.count) {
@@ -2452,7 +2473,18 @@ nonisolated final class WorldMap: @unchecked Sendable {
             // it at, in a random order.
             let widest = ((room.max() ?? 0) - 3.01) / 1.05
             let order = (0..<(columns * rows)).shuffled(using: &rng)
+            // A terraced mountain in five levels where one that tall fits (its face reaching nearly as
+            // far as its back), else four, else three, each with a steeper face and so less room: in
+            // five every time, in ten lands they came out short or not at all, took the room for their
+            // places, and left what stood on top where you couldn't climb (2026-11-26). And a level
+            // fewer every 20 tries that find no spot for it.
+            let choices = terraced ? Self.terracedMountainShapes : [(levels: Self.mountainLevels, face: Self.mountainFace)]
+            let fitting = mountain.flatMap { asked in
+                choices.firstIndex { ((widest - 1) / reachRound($0.face) - 1) * Self.mountainTop * mountainSteep / 1.5 >= asked * 0.92 }
+            } ?? choices.count - 1
             for attempt in 0..<60 {
+                let shape = choices[min(choices.count - 1, fitting + attempt / 20)]
+                let face = shape.face
                 // Where one doesn't fit, a shorter range might.
                 let summits = max(1, Int.random(in: fewest...most, using: &rng) - attempt / 20)
                 let tall: Int? = mountain == nil ? nil : Int.random(in: 0..<summits, using: &rng)
@@ -2468,10 +2500,10 @@ nonisolated final class WorldMap: @unchecked Sendable {
                         // As tall as asked, if anywhere has room for one that wide (it needs the
                         // reach back to climb that high gently and still have a top); else as tall
                         // as fits. It faces you (`Hill.Lobe.front`), steeper across and toward you.
-                        let fits = ((widest - 1) / reachRound - 1) * Self.mountainTop * steepness / 1.5
+                        let fits = ((widest - 1) / reachRound(face) - 1) * Self.mountainTop * steepness / 1.5
                         peak = max(tallest, min(mountain * Double.random(in: 0.92...1.08, using: &rng), fits))
                         let need = 1.5 * peak / steepness / Self.mountainTop + 1
-                        along = max(need, min((widest - 1) / reachRound, need * Double.random(in: 1...1.1, using: &rng)))
+                        along = max(need, min((widest - 1) / reachRound(face), need * Double.random(in: 1...1.1, using: &rng)))
                         across = along / Self.mountainSides
                         front = along / face
                     } else {
@@ -2518,7 +2550,8 @@ nonisolated final class WorldMap: @unchecked Sendable {
                 // five, its back a gentle slope): stairs up its face (`carveStairs`). A step a little
                 // short of a fifth, so its top level has room on it.
                 if let step = hills.terraces {
-                    hill.terrace = tall.map { lobes[$0].peak / (Double(Self.mountainLevels) + 0.7) } ?? step
+                    hill.levels = shape.levels
+                    hill.terrace = tall.map { lobes[$0].peak / (Double(shape.levels) + 0.7) } ?? step
                 }
                 // How its trails wind: from where on its front, which way round, how far and how
                 // they bend, its own.
@@ -2789,7 +2822,7 @@ nonisolated final class WorldMap: @unchecked Sendable {
             }
             return nil
         }
-        let levels = Self.mountainLevels
+        let levels = hill.levels
         var side = 1.0
         var points: [CGPoint] = []
         for k in 1...levels {

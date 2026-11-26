@@ -614,7 +614,9 @@ struct ContentTests {
             for hill in fields {
                 func height(_ point: CGPoint) -> CGFloat { map.height(atGrid: CGPoint(x: point.x * tile, y: point.y * tile)) }
                 func cell(_ point: CGPoint) -> GridPoint { GridPoint(col: Int(point.x.rounded(.down)), row: Int(point.y.rounded(.down))) }
-                #expect(!hill.hasMountain || !hill.trails.isEmpty, "map \(def.id): a mountain with no trail")
+                // A terraced mountain has stairs up its levels' faces instead (`WorldMap.carveStairs`, not
+                // worn as a trail: the user, 2026-11-25); `summitsHoldWhatsSetUpThere` walks up it.
+                #expect(!hill.hasMountain || !hill.trails.isEmpty || hill.terrace != nil, "map \(def.id): a mountain with no trail")
                 // Its first trail starts on the ground; every trail comes out on its summit's top, every
                 // step of it walkable, and you can walk from the first trail's foot to the top of each.
                 let start = hill.trails.first?.points.first

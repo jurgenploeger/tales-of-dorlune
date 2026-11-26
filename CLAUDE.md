@@ -71,7 +71,8 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   `GameCoordinator.mapScene` is whichever you're in.
 - Terraced hills (maps.json theme `hills.terraces`, a step in points, with `bank` the faces' rock; Sunny Meadow
   since 0.9.105, after `tools/cliff_preview.py`, every wild land's since 0.9.110; a mountain too since 0.9.189, in five levels, `WorldMap.mountainLevels`, its face
-  nearly as deep as its back, stairs cut across each face as ledges zig-zagging up it (not drawn as a path: messy, the user), `carveStairs`,
+  nearly as deep as its back (where one that tall doesn't fit, four, then three, steeper: `terracedMountainShapes`, `Hill.levels`; a
+  summit's chest or NPC on the nearest walkable cell of its top, `nearestOnTop`; in five every time ten lands lost room, 2026-11-26), stairs cut across each face as ledges zig-zagging up it (not drawn as a path: messy, the user), `carveStairs`,
   the user's pick from `tools/mountain_preview.py`, 2026-11-25): `Hill.terrace` steps each range's height into flat levels with a
   sheer face, only where its slopes face you (`Hill.stepped`: stepped all round, the faces turned away were laid
   back by `unfold()` into long ramps in deep shade), the faces dwindling round its sides and its back the smooth
