@@ -1,0 +1,21 @@
+Attached: the HUD kit sheet I picked (and the game's screenshot). Now draw the HUD's buttons in exactly that kit's style, carved to the same detail, with the same wood, outline and light.
+
+Each button is a round carved frame (the kit's round button) with a carved or inlaid picture on its face. Draw each one twice, normal and pressed (the pressed one sunk a step, its face a shade darker), on a plain flat white background, separate, front-on, no text, no letters:
+On the map's HUD:
+1. Chat: a speech bubble.
+2. Inventory: a satchel with a buckle.
+3. Menu: three carved bars, or a small open book.
+In the menu, one for each window it opens:
+4. Character: a hero's head and shoulders.
+5. Companions: a paw print.
+6. Friends: two small figures side by side.
+7. Quests: a scroll with a wax seal.
+8. Settings: a cog.
+9. World map: a folded map with a dotted path.
+In battle:
+10. Spells: a spell book with a glowing star.
+11. Attack: a sword.
+12. Items: a potion bottle.
+13. Run away: a winged boot.
+
+Rules: every picture reads at 22 points, so bold simple shapes, at most three colours of paint or inlay on top of the wood, a clear dark outline round the picture. The pictures sit dead centre with the same margin to the frame on every button. Draw the sheet at least 1536 px wide.

@@ -1,0 +1,25 @@
+I'm making a cute top-down fantasy RPG for iPhone (pixel-art world, chibi heroes, bright and cosy, a tribute to the 2007 MMO Fairyland Online). The attached screenshot is the game today. Top right is the minimap: a round map in a plain blue ring, with a small round compass overlapping the ring's top right.
+
+Redraw only that minimap's frame, as a game UI asset, in this style:
+
+Pale birch or light honey-coloured wood, richly carved by a master woodcarver: soft bevelled edges, a carved groove running round the ring, gentle grain, crisp carved depth with a lit edge and a shaded groove on every cut. Carved into the ring: mythical symbols, all original (no real alphabet, no religious signs, nothing from another game): crescent moons and the moon's phases, small eight-point stars, spirals and leaf runes (a leaf's veins drawn as a sigil). A few are inlaid in pale green and soft gold. At the bottom of the ring, a small tree-of-life medallion with its roots knotted into a circle. Two or three small carved leaves in light green grow from the ring, never over the window.
+
+Draw, as separate pieces with space round each:
+1. The ring: round, its window in the middle completely empty and plain (the game puts the map there). The ring is thin next to the window: about a tenth of the whole width. The carving lives in the ring, the medallion and the leaves.
+2. The compass medallion: a small round carved wooden disc with a raised rim and moon-and-star carving round its edge, its face plain and empty (the game draws the needle).
+3. Separately, its needle: a slim carved needle, the north half deep red, the south half pale wood.
+
+Rules, all of them matter:
+- Front-on and flat, no perspective, no tilt.
+- Lit from the top left, a clear 1-2 px dark brown outline round every piece and round the window's inner edge.
+- Crisp, clean edges. No blur, no glow, no drop shadow, no texture noise.
+- No text, no letters, no map inside the window.
+- Plain flat white background (or transparent if you can), the window the same plain white.
+- Big: the ring at least 1024 px across.
+
+---
+If it drifts, send one of these as a follow-up:
+- Ring too thick: "Make the ring half as thick; keep the medallion and the leaves."
+- Too busy: "Fewer symbols round the ring, spaced evenly, so it reads at 120 points across."
+- Flat or printed: "Carve it deeper: every cut needs a lit edge and a shaded groove."
+- Something drawn in the window: "Leave the window completely empty and white."

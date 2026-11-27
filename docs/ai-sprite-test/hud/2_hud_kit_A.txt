@@ -1,0 +1,24 @@
+Attached: (1) the minimap ring, compass medallion and needle you drew for my game, which I've picked, and (2) a screenshot of the game's HUD today, phone on its side. The minimap is exactly the style I want. Now draw the rest of the HUD as a matching kit: the same pale birch, the same carving depth, the same symbol set, the same inlay colours, the same outline and light. Put them side by side with the minimap and they must look like one carver made them.
+
+The game is a cute top-down fantasy RPG for iPhone (pixel-art world, chibi heroes, bright and cosy, a tribute to the 2007 MMO Fairyland Online).
+
+Style, as the minimap: pale birch or light honey wood, richly carved by a master woodcarver, soft bevelled edges, a carved groove, gentle grain, crisp carved depth with a lit edge and a shaded groove on every cut. Carved symbols, all original (no real alphabet, no religious signs, nothing from another game): crescent moons and the moon's phases, small eight-point stars, spirals, leaf runes. A few inlaid in pale green and soft gold. Now and then a small carved leaf in light green. Insets (where bars and numbers go) are sunk into the wood and plain.
+
+Draw each piece on its own transparent PNG, 1280 × 1280, the piece centred, as you did the minimap:
+1. hero_portrait_ring.png: a round portrait ring, its middle empty and transparent (the game puts the hero's face there), the ring about an eighth of its width. A small round socket on its lower left for the level number, its face plain. On screen it's about 72 points across, so its carving is the boldest of the kit: two or three symbols, one small leaf.
+2. hero_plate.png: the plate the portrait ring overlaps at its left end: a long, low carved plank, about 3 : 1, rounded ends, with three plain sunk grooves stacked on its right two-thirds for the HP, MP and XP bars (each groove about a fifth of the plate's height, rounded ends), and room above them for the hero's name. The plate's middle must stretch sideways: keep its long top and bottom edges plain apart from a narrow repeating band, the carving at its two ends. On screen about 200 × 70 points.
+3. pill_plate.png: a small pill-shaped plate for a number, about 3 : 1, with a round socket at its left end that overhangs it a little (the game puts a coin or a sun or moon picture there). Its middle plain and sunk for the figures. On screen about 26 points tall, so only a tiny carving at its right end. The game uses it twice: the gold, and the time of day.
+4. button_round.png and button_round_pressed.png: a round carved button, its face plain and empty (the picture comes later), a raised rim with a band of small symbols. Pressed: the same, sunk a step, its face a shade darker, the light on the rim's inside. On screen about 56 points across.
+5. skill_socket.png: a round socket for a spell in battle, a carved rim with a slightly richer band than the button, its middle empty and transparent. About 52 points across.
+6. joystick_base.png: a big round carved base for the thumb stick, about 140 points across: a rim with the moon's phases round it (new to full and back), four tiny carved arrowheads at north, east, south and west, its middle a plain shallow dish.
+7. joystick_knob.png: the knob that sits in it, about 56 points across: a domed round of polished birch, a single small carved eight-point star in its middle.
+
+Rules, all of them matter:
+- Match the attached minimap exactly: wood colour, carving depth, symbol shapes, inlay colours, outline.
+- Front-on and flat, no perspective, no tilt.
+- Lit from the top left. A clear dark brown outline round every piece, 3 px at this size, a little bolder than the minimap's, so pale wood holds its edge over sand.
+- Hard edges: alpha only 0 or 255, about 40 colours a piece, as the minimap. No blur, glow or drop shadow.
+- No text, no letters, no numbers, no icons, no faces or pictures in any empty part.
+- Every empty middle (portrait, skill socket) is fully transparent.
+
+Also give me a contact sheet of all of them on a mid-green background beside the minimap, and an asset_checks.json as last time: each piece's canvas, bounding box, colour count, alpha values, centre, and the inner and outer diameters of the round ones. Zip it all.
