@@ -32,7 +32,10 @@ the real HUD (the artifact https://claude.ai/artifact/BbEWKRiYCnw6yJi5iCTtyK; it
    README and prompts). At 56 points (`buttons_game_size.png`) the light ones read, their outline 5 : 1 to
    the face (chat's 2.1). **The dark ones are faint**: a dark carving on dark wood, outline 2.2 : 1, under
    the 3 : 1 an icon needs. Tried (`buttons_dark_inlay_try.png`, bottom row): the light picture inlaid in
-   the dark button, pale birch in walnut; the user to pick.
+   the dark button, pale birch in walnut. The user, 2026-11-27: "The visuals inside the buttons are a bit hard to
+   recognise, because they look very similar and there's not much contrast": `4b_buttons_colour_A.txt` asks
+   ChatGPT to redraw only the pictures, each an enamel inlay in its own colours, bigger (60% of the face),
+   with a 6 px dark outline, keeping their colours in the dark twins.
 
 `follow_ups_if_it_drifts.txt` has the nudges.
 
