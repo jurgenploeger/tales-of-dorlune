@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""The logo (Logo.png): since 2026-11-23 the user's own drawing (`PICKED`, art-variants/logo/picked.png),
+"""The logo (Logo.png): the user's own drawing (`PICKED`, art-variants/logo/picked.png): since 2026-11-27 "Tales of"
+over DORLUNE carved in pale birch with a brown outline, green leaves and two carved stars, as the carved-wood HUD
+(docs/ai-sprite-test/hud); from 2026-11-23 the gold one with the plum outline (`picked_2026-11-23.png`),
 copied as it is: its faint halo (alpha under `HAZE`) cleared, its near-opaque pixels made opaque, cropped to
 the lettering with `PAD` round it and scaled to `WIDTH`. `--drawn` writes the logo drawn in code instead,
 the one before it, described below.
@@ -37,8 +39,8 @@ FONT = ROOT / "tools/fonts/LuckiestGuy-Regular.ttf"
 # SOLID made whole, PAD pixels of the picture's own scale kept round the lettering, then WIDTH pixels wide.
 PICKED = ROOT / "art-variants/logo/picked.png"
 HAZE, SOLID, PAD, WIDTH = 16, 240, 8, 1904
-# Its outline's ink, measured.
-INK_PICKED = (59, 29, 57)
+# Its outline's ink, measured (the gold logo's was 59, 29, 57).
+INK_PICKED = (86, 42, 5)
 
 # The lines, top to bottom: the words and their size as a share of the world's name's (`PX`, in Logo.png's
 # pixels). Then, as shares of `PX`: the space between letters (less than none: they touch), how far each

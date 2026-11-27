@@ -203,8 +203,9 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   snow on the leaves' lit clusters, and hats and props drawn with `pixel_kit`, a hat's band on the head's widest row;
   each light, dark (its night, lit by the season's lights, `at_night`) and tinted, as the app icon is.
   The game switches to Halloween's all October, Christmas's all December and Easter's while its season runs (`SeasonalIcon.icon`; rewards.json `seasons` for Easter; never in tests or debug launches).
-- `tools/logo_art.py`: the logo (`Logo.png`): since 2026-11-23 the user's own drawing (`PICKED`,
-  `art-variants/logo/picked.png`), TALES OF over DORLUNE in gold with a dark plum outline, copied as drawn: its
+- `tools/logo_art.py`: the logo (`Logo.png`): the user's own drawing (`PICKED`, `art-variants/logo/picked.png`):
+  since 0.9.264 (2026-11-27) "Tales of" over DORLUNE carved in pale birch, a brown outline, green leaves and two carved
+  stars, as the carved-wood HUD; before it TALES OF over DORLUNE in gold with a dark plum outline (`picked_2026-11-23.png`). Copied as drawn: its
   faint halo cleared, the small letter holes its background removal left half see-through filled with its ink,
   cropped and scaled to 1904 pixels wide. `--drawn` writes the one before it (Luckiest Guy capitals, styled on
   Neopets' "Tales of Dacardia"), which the store slides' captions still follow. The sky's light sits behind
