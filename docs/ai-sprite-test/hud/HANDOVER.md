@@ -35,7 +35,12 @@ the real HUD (the artifact https://claude.ai/artifact/BbEWKRiYCnw6yJi5iCTtyK; it
    the dark button, pale birch in walnut. The user, 2026-11-27: "The visuals inside the buttons are a bit hard to
    recognise, because they look very similar and there's not much contrast": `4b_buttons_colour_A.txt` asks
    ChatGPT to redraw only the pictures, each an enamel inlay in its own colours, bigger (60% of the face),
-   with a 6 px dark outline, keeping their colours in the dark twins.
+   with a 6 px dark outline, keeping their colours in the dark twins. **Done**, picked:
+   `art-variants/hud/buttons/` (the carved-only first set kept in `art-variants/hud/buttons_carved/`). Every
+   pixel outside a picture is the picked base's; light and dark pictures pixel-identical, only the wood
+   changes. At 56 points (`buttons_colour_game_size.png`, `hud_with_buttons.png`) each reads at a glance by
+   its colour. ChatGPT flagged that no outline reaches 3 : 1 on the dark pressed face (black would be
+   2.62 : 1); the pictures' own colours carry them there (the bag's brown on walnut the weakest, 1.35).
 
 `follow_ups_if_it_drifts.txt` has the nudges.
 
