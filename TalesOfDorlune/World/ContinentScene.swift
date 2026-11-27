@@ -2354,8 +2354,8 @@ final class ContinentScene: SKScene {
     /// How far each spot of a chunk lies from the land, in cells (under the land, how far in, as less
     /// than none): at `shallowSamples` spots a cell, from the chunk's south-west corner to its far
     /// edge, so two chunks share the spots along their seam and the bands run on across it. Each spot
-    /// as near as it is to the nearest cell of land (of sea, under the land), a square, so the bands
-    /// round its corners. Its red, from `shallowUnder` in to `shallowReach` out.
+    /// as near as it is to the coastline as drawn (under the land, how far in from it). Its red, from
+    /// `shallowUnder` in to `shallowReach` out.
     private func shallowField(of chunk: GridPoint) -> SKTexture? {
         let size = World.chunkSize, reach = Self.shallowReach, per = Self.shallowSamples
         // Which cells are land, over the chunk and `reach` round it.
@@ -2380,26 +2380,42 @@ final class ContinentScene: SKScene {
         guard land.contains(true), land.contains(false) else { return nil }
         let spots = size * per + 1
         let span = Double(reach) + Self.shallowUnder
+        // The coastline as it's drawn, not round the land's square cells: a land cell beside the sea is cut
+        // where the sea cells' soft rounds add up to its threshold (`ArtLibrary.waterDepth`, `GroundTiles`'
+        // shore), so each spot of the window, `per` a cell, is water or land by that rule. Measured from the
+        // cells' squares the foam ran in steps out at sea, open water between it and the shore (the user,
+        // 2026-11-27: "the foam doesn't correctly align with the edge of the shore").
+        let fine = side * per + 1
+        var wet = [Bool](repeating: false, count: fine * fine)
+        for j in 0..<fine {
+            for i in 0..<fine {
+                let x = Double(i) / Double(per), y = Double(j) / Double(per)
+                let col = min(side - 1, Int(x)), row = min(side - 1, Int(y))
+                guard land[row * side + col] else {
+                    wet[j * fine + i] = true
+                    continue
+                }
+                var rounds = 0.0
+                for r in max(0, row - 2)...min(side - 1, row + 2) {
+                    for c in max(0, col - 2)...min(side - 1, col + 2) where !land[r * side + c] {
+                        let dx = x - (Double(c) + 0.5), dy = y - (Double(r) + 0.5)
+                        rounds += exp(-(dx * dx + dy * dy) / 0.49)
+                    }
+                }
+                wet[j * fine + i] = rounds >= Self.coastThreshold
+            }
+        }
+        // How far each spot is from the nearest of the other kind, the line between them half a spot off.
+        let toLand = Self.squaredDistances(side: fine) { !wet[$0] }
+        let toWater = Self.squaredDistances(side: fine) { wet[$0] }
+        let half = 0.5 / Double(per)
         var bytes = [UInt8](repeating: 255, count: spots * spots * 4)
         for j in 0..<spots {
             for i in 0..<spots {
-                // The spot, in cells from the margin's corner.
-                let x = Double(i) / Double(per) + Double(reach), y = Double(j) / Double(per) + Double(reach)
-                let col = min(side - 1, Int(x)), row = min(side - 1, Int(y))
-                let inside = land[row * side + col]
-                // Under the land only the first stretch in counts; out at sea, all `reach`.
-                let around = inside ? 1 : reach
-                var nearest = inside ? Self.shallowUnder : Double(reach)
-                for r in max(0, row - around)...min(side - 1, row + around) {
-                    let dy = max(0, Double(r) - y, y - Double(r + 1))
-                    guard dy < nearest else { continue }
-                    for c in max(0, col - around)...min(side - 1, col + around) where land[r * side + c] != inside {
-                        let dx = max(0, Double(c) - x, x - Double(c + 1))
-                        nearest = min(nearest, (dx * dx + dy * dy).squareRoot())
-                    }
-                }
-                let out = inside ? -nearest : nearest
-                let value = UInt8(max(0, min(255, ((out + Self.shallowUnder) / span * 255).rounded())))
+                let k = (j + reach * per) * fine + (i + reach * per)
+                let out = wet[k] ? toLand[k].squareRoot() / Double(per) - half : half - toWater[k].squareRoot() / Double(per)
+                let clamped = max(-Self.shallowUnder, min(Double(reach), out))
+                let value = UInt8(max(0, min(255, ((clamped + Self.shallowUnder) / span * 255).rounded())))
                 // Image rows run north to south; the spots count up from the south.
                 let index = ((spots - 1 - j) * spots + i) * 4
                 bytes[index] = value
@@ -2417,7 +2433,57 @@ final class ContinentScene: SKScene {
         return texture
     }
 
-    /// The coast's water from its distances (`shallowField`), on the sea's own pixels (32 a cell,
+    /// Where the sea cells' soft rounds add up to the shore (`ArtLibrary.waterDepth`: its field less 0.55).
+    private static let coastThreshold = 0.55
+
+    /// The squared distance (in grid steps) from every point of a `side` by `side` grid to the nearest
+    /// point that's `feature`, exactly (Felzenszwalb and Huttenlocher's transform, down the columns and
+    /// then along the rows).
+    private static func squaredDistances(side n: Int, feature: (Int) -> Bool) -> [Double] {
+        let far = 1e10
+        var grid = [Double](repeating: far, count: n * n)
+        for k in 0..<(n * n) where feature(k) { grid[k] = 0 }
+        var f = [Double](repeating: 0, count: n), d = [Double](repeating: 0, count: n)
+        var v = [Int](repeating: 0, count: n), z = [Double](repeating: 0, count: n + 1)
+        func line() {
+            var k = 0
+            v[0] = 0
+            z[0] = -far
+            z[1] = far
+            if n > 1 {
+                for q in 1..<n {
+                    var s = ((f[q] + Double(q * q)) - (f[v[k]] + Double(v[k] * v[k]))) / Double(2 * q - 2 * v[k])
+                    while s <= z[k], k > 0 {
+                        k -= 1
+                        s = ((f[q] + Double(q * q)) - (f[v[k]] + Double(v[k] * v[k]))) / Double(2 * q - 2 * v[k])
+                    }
+                    k += 1
+                    v[k] = q
+                    z[k] = s
+                    z[k + 1] = far
+                }
+            }
+            k = 0
+            for q in 0..<n {
+                while z[k + 1] < Double(q) { k += 1 }
+                let step = Double(q - v[k])
+                d[q] = step * step + f[v[k]]
+            }
+        }
+        for x in 0..<n {
+            for y in 0..<n { f[y] = grid[y * n + x] }
+            line()
+            for y in 0..<n { grid[y * n + x] = d[y] }
+        }
+        for y in 0..<n {
+            for x in 0..<n { f[x] = grid[y * n + x] }
+            line()
+            for x in 0..<n { grid[y * n + x] = d[x] }
+        }
+        return grid
+    }
+
+    /// The coast's water from its distances (`shallowField`), on the sea's own pixels (44 a cell,
     /// `tools/water_art.py`), so its bands step as the sea's art does: a pale sea green, less of it in
     /// six steps out to 3.4 cells; and crests a pixel or two wide every 0.95 cells, rolling in at a
     /// fifth of a cell a second, broken up a different way for each wave, fading in 2.8 cells out and

@@ -54,29 +54,44 @@ def world_land():
 
 def field(land, x0, y0, cols, rows):
     """`shallowField`'s distances over cells x0.. and y0.. (in `land`'s indices, row = y), SAMPLES a cell,
-    out from the land (under it, less than none), as the game stores them (one byte, eased between)."""
-    nx, ny = cols * SAMPLES + 1, rows * SAMPLES + 1
-    out = np.zeros((ny, nx))
+    out from the coastline as it's drawn (under the land, less than none), as the game stores them (one byte,
+    eased between). Each spot is water or land by the cut a land cell beside the sea is drawn with (the sea
+    cells' soft rounds, `ArtLibrary.waterDepth`: their sum past 0.55 is water), not round the cells' squares,
+    whose foam ran in steps out at sea (the user, 2026-11-27); then each spot's distance to the nearest of the
+    other kind (`ContinentScene.squaredDistances`), the line between them half a spot off."""
+    from scipy import ndimage
     h, w = land.shape
+    side_x, side_y = cols + 2 * REACH, rows + 2 * REACH
+    nx, ny = side_x * SAMPLES + 1, side_y * SAMPLES + 1
+    cx0, cy0 = x0 - REACH, y0 - REACH
+    wet = np.zeros((ny, nx), bool)
     for j in range(ny):
-        y = y0 + j / SAMPLES
+        y = j / SAMPLES
+        row = min(side_y - 1, int(y))
         for i in range(nx):
-            x = x0 + i / SAMPLES
-            col, row = min(w - 1, int(x)), min(h - 1, int(y))
-            inside = land[row, col]
-            around = 1 if inside else REACH
-            nearest = UNDER if inside else float(REACH)
-            for r in range(max(0, row - around), min(h - 1, row + around) + 1):
-                dy = max(0.0, r - y, y - (r + 1))
-                if dy >= nearest:
-                    continue
-                for c in range(max(0, col - around), min(w - 1, col + around) + 1):
-                    if land[r, c] != inside:
-                        dx = max(0.0, c - x, x - (c + 1))
-                        nearest = min(nearest, math.hypot(dx, dy))
-            d = -nearest if inside else nearest
-            out[j, i] = round(max(0, min(255, (d + UNDER) / (REACH + UNDER) * 255)))
-    return out
+            x = i / SAMPLES
+            col = min(side_x - 1, int(x))
+
+            def is_land(c, r):
+                gc, gr = cx0 + c, cy0 + r
+                return 0 <= gr < h and 0 <= gc < w and land[gr, gc]
+            if not is_land(col, row):
+                wet[j, i] = True
+                continue
+            rounds = 0.0
+            for r in range(max(0, row - 2), min(side_y - 1, row + 2) + 1):
+                for c in range(max(0, col - 2), min(side_x - 1, col + 2) + 1):
+                    if not is_land(c, r):
+                        rounds += math.exp(-((x - (c + 0.5)) ** 2 + (y - (r + 0.5)) ** 2) / 0.49)
+            wet[j, i] = rounds >= 0.55
+    half = 0.5 / SAMPLES
+    to_land = ndimage.distance_transform_edt(wet) / SAMPLES
+    to_water = ndimage.distance_transform_edt(~wet) / SAMPLES
+    d = np.where(wet, to_land - half, half - to_water)
+    d = np.clip(d, -UNDER, REACH)
+    k = REACH * SAMPLES
+    d = d[k:k + rows * SAMPLES + 1, k:k + cols * SAMPLES + 1]
+    return np.round(np.clip((d + UNDER) / (REACH + UNDER) * 255, 0, 255))
 
 
 def sample(f, px, py):
