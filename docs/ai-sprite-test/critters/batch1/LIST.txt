@@ -1,0 +1,12 @@
+1. critter_chick: a fluffy yellow chick, orange beak and feet. Canvas 11 × 11 pixels. Frames: hop, peck, sit.
+2. critter_bunny_brown: a round bunny, warm brown fur, cream belly and tail, long ears. Canvas 17 × 15 pixels. Frames: hop, sit.
+3. critter_bunny_cream: the same bunny in pale cream. Canvas 17 × 15 pixels. Frames: hop, sit.
+4. critter_bunny_grey: the same bunny in soft grey. Canvas 17 × 15 pixels. Frames: hop, sit.
+5. critter_bunny_white: the same bunny in white, pink inner ears. Canvas 17 × 15 pixels. Frames: hop, sit.
+6. critter_squirrel: a red squirrel with a big curled bushy tail. Canvas 17 × 15 pixels. Frames: hop, sit.
+7. critter_frog: a round green frog, big eyes on top. Canvas 15 × 12 pixels. Frames: hop, sit.
+8. critter_mouse: a tiny grey mouse, pink ears and tail. Canvas 14 × 9 pixels. Frames: a, b (two steps of a scurry).
+9. critter_sheep: a fluffy white sheep, dark face and legs. Canvas 24 × 18 pixels. Frames: graze, stand, step.
+10. critter_cow: a black-and-white spotted cow. Canvas 31 × 23 pixels. Frames: graze, stand, step.
+11. critter_cow_brown: the same cow, brown and white. Canvas 31 × 23 pixels. Frames: graze, stand, step.
+12. critter_crab: a little red beach crab, claws raised. Canvas 17 × 12 pixels. Frames: down, up (claws).

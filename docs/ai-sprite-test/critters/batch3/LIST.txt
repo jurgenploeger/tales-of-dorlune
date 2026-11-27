@@ -1,0 +1,5 @@
+1. critter_lizard: a little green lizard, seen from above, long tail. Canvas 19 × 11 pixels. Frames: a, b (two steps).
+2. critter_rat: a brown cave rat, long pink tail. Canvas 19 × 10 pixels. Frames: a, b.
+3. critter_spider: a small dark spider with a purple sheen. Canvas 18 × 14 pixels. Frames: a, b.
+4. critter_scorpion: a sandy desert scorpion, tail curled up. Canvas 18 × 13 pixels. Frames: a, b.
+5. critter_wisp: a glowing pale-blue will-o'-wisp, a small flame with a face (soft glow drawn as hard pixels). Canvas 13 × 15 pixels. Frames: a, b (flicker).

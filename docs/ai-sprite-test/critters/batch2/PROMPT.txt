@@ -1,0 +1,23 @@
+Redraw the little ambient critters of my game, Tales of Dorlune: a cute top-down fantasy RPG for iPhone (pixel-art world, chibi characters, bright and cosy). They wander, hop and fly about the lands for life; you don't fight them. The attached _8x pictures are each critter as it is now, every frame, at 8×. Today they're simple and stiff. Make them adorable: the look of the best tiny pixel-art pets, chunky round bodies, big heads, big shiny eyes with a white catchlight, a hint of blush, a clear silhouette, a soft personality in the pose.
+
+Style rules, all of them matter:
+- Real pixel art on the exact canvas listed for each critter (width × height, the same as today, so the game places them as before), transparent, alpha 0 or 255 only, no anti-aliasing, no blur.
+- A one-pixel outline in a deep shade of each part's own colour (dark brown round a brown bunny, deep green round a frog), never pure black; lit from the top left, three or four tones a colour, warm hue-shifted shadows; 8 to 20 colours a critter.
+- Seen from slightly above and to the side, as the game's world is; facing right (the game flips them to walk left).
+- Every frame of a critter on the same canvas with its feet on the same bottom row and its body in the same place, only what moves moving (legs, wings, ears, a head going down to graze or peck), so the frames loop without the critter jumping. A colour variant (a cream bunny, a blue butterfly) is the same drawing as its first, only recoloured.
+- Original drawings only: nothing copied from another game or asset pack.
+
+1. critter_songbird_robin: a robin: brown back, orange breast. Canvas 13 × 12 pixels. Frames: fly, hop, peck, sit.
+2. critter_songbird_bluebird: a bluebird: blue back, warm orange breast. Canvas 13 × 12 pixels. Frames: fly, hop, peck, sit.
+3. critter_songbird_finch: a finch: yellow and olive. Canvas 13 × 12 pixels. Frames: fly, hop, peck, sit.
+4. critter_crow: a glossy black crow, a bit bigger than the songbirds. Canvas 13 × 12 pixels. Frames: fly, hop, peck, sit.
+5. critter_butterfly_pink: a pink butterfly, seen from above. Canvas 15 × 12 pixels. Frames: closed, half, open (wingbeat).
+6. critter_butterfly_yellow: the same butterfly in yellow. Canvas 15 × 12 pixels. Frames: closed, half, open.
+7. critter_butterfly_blue: the same in sky blue. Canvas 15 × 12 pixels. Frames: closed, half, open.
+8. critter_butterfly_lilac: the same in lilac. Canvas 15 × 12 pixels. Frames: closed, half, open.
+9. critter_butterfly_orange: the same in orange. Canvas 15 × 12 pixels. Frames: closed, half, open.
+10. critter_flock_songbirds: a tiny far-off bird crossing the sky, a silhouette with a little colour. Canvas 11 × 7 pixels. Frames: down, up (wingbeat).
+11. critter_flock_gulls: a far-off white seagull. Canvas 17 × 8 pixels. Frames: down, up.
+12. critter_flock_bats: a far-off dark purple bat. Canvas 15 × 8 pixels. Frames: down, up.
+
+For each critter: its frames as 1× PNGs named exactly as listed with the frame added (critter_bunny_brown_hop.png, critter_bunny_brown_sit.png) and an exact 8× nearest-neighbour preview of each (…_8x.png). At the end: a contact sheet of every critter's frames side by side on mid-grey, and at 1× on a grass green, and a zip of it all.
