@@ -526,6 +526,8 @@ One doll, end to end (it was the Human Male pilot until 2026-11-24).
     hue). The tunic is painted in a green ramp of its own (hue 112 to 128), so `dye` recolours it and nothing else;
     belt, trousers and boots stay. Down: `hero64_outfit_down.png` (`tries/outfit_down_try1*`), the doll's head and
     hands untouched, 13 pixels past its outline. It moves with the limbs, so every walk and attack row is a repaint.
+    Down-right: two near copies (`tries/outfit_down-right_try1*`), both clean; the user took a, shaded evenly like
+    down (b had a light band down the front) (`hero64_outfit_down-right.png`).
     Spiky up: ChatGPT sent its own 64-pixel files this time (`tries/hair_spiky_up_try1{a,b}{,_8x}.png`), the body
     pixel for pixel the doll's; the user picked a (`hero64_hair_spiky_up.png`), lifted untoned. **Spiky is done in all
     eight directions** (five drawn, three mirrored), on idle, walk, run and attack, human and elf.
