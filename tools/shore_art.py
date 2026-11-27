@@ -31,6 +31,7 @@ SAMPLES = 4        # ContinentScene.shallowSamples
 REACH = 5          # ContinentScene.shallowReach
 UNDER = 0.75       # ContinentScene.shallowUnder
 PALE = np.array([0.8, 0.96, 0.95])
+SHEET = np.array([0.52, 0.8, 0.96])  # the swash's water, the sea's blue
 
 
 def world_land():
@@ -161,15 +162,15 @@ def swash(f, cols, rows, t, origin=(0, 0)):
     fine = np.mod(np.sin(np.floor(pix_x / 2) * 39.346 + np.floor(pix_y / 2) * 11.135 + k * 7.1) * 43758.5453, 1)
     on = (run > 0) & (run < UNDER - 0.03)
     wet = on & (run < r)
-    sheet = wet * 0.26
+    sheet = wet * 0.34
     front = wet & (run >= r - 0.07) & (speck >= 0.12)
     fade = np.where(rising, 1.0, np.clip(1 - v / 0.55, 0, 1))
     foam = front * np.floor(fade * 4) / 4 * 0.85
     lace = wet & (fine >= 0.86) & (run < r - 0.1)
     foam = np.maximum(foam, lace * 0.45 * np.floor(fade * 4) / 4)
     damp = on & ~wet & (run < peak) & ~rising
-    dark = damp * np.floor((1 - v) * 3) / 3 * 0.18
-    rgb = PALE[None, None, :] * sheet[..., None] * (1 - foam[..., None]) + foam[..., None]
+    dark = damp * np.floor((1 - v) * 3) / 3 * 0.12
+    rgb = SHEET[None, None, :] * sheet[..., None] * (1 - foam[..., None]) + foam[..., None]
     a = sheet * (1 - foam) + foam
     # the wet sand: black over it
     a = a + dark * (1 - a)

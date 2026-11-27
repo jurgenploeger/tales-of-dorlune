@@ -2717,12 +2717,12 @@ final class ContinentScene: SKScene {
             float speck = fract(sin(dot(floor(pixel / 3.0), vec2(12.9898, 78.233))) * 43758.5453);
             float fine = fract(sin(dot(floor(pixel / 2.0), vec2(39.346, 11.135)) + k * 7.1) * 43758.5453);
             float wet = step(run, r - 0.0001);
-            float sheet = wet * 0.26;
+            float sheet = wet * 0.34;
             float fade = floor(mix(clamp(1.0 - back / 0.55, 0.0, 1.0), 1.0, rising) * 4.0) / 4.0;
             float foam = wet * step(r - 0.07, run) * step(0.12, speck) * fade * 0.85;
             foam = max(foam, wet * step(0.86, fine) * step(run, r - 0.1) * 0.45 * fade);
-            float dark = (1.0 - wet) * step(run, peak) * (1.0 - rising) * floor((1.0 - back) * 3.0) / 3.0 * 0.18;
-            vec3 rgb = vec3(0.8, 0.96, 0.95) * sheet * (1.0 - foam) + foam;
+            float dark = (1.0 - wet) * step(run, peak) * (1.0 - rising) * floor((1.0 - back) * 3.0) / 3.0 * 0.12;
+            vec3 rgb = vec3(0.52, 0.8, 0.96) * sheet * (1.0 - foam) + foam;
             float a = sheet * (1.0 - foam) + foam;
             a = a + dark * (1.0 - a);
             gl_FragColor = vec4(rgb, a) * keep;
