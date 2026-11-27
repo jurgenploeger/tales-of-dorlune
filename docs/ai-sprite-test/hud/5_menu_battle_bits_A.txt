@@ -1,0 +1,21 @@
+Attached: the kits I picked (the HUD kit, the window kit and the coloured buttons) and screenshots of the game's windows today. Now draw the last small pieces the menus and battles use, in exactly the same style: the same pale birch and dusky walnut, the same carving, symbols, outline and light. Same deliverable as before: each piece on its own transparent 1280 × 1280 PNG, hard edges (alpha 0 or 255, about 40 colours a piece), a _dark twin of each (the same drawing pixel for pixel, only the wood recoloured as in the kits), a contact sheet (light on mid-green, dark on deep navy) and an asset_checks.json with every piece's bounds, centre, the content or inset rectangle and, for anything that stretches, its caps. No text, numbers or pictures in any piece. Zip it all.
+
+Menus:
+1. item_slot.png: a square sunk wooden slot for an item in the Bag and the shop, about 56 points across on screen: a carved rim, its inset plain and a step lower (the game puts the item's picture there). Also item_slot_selected.png (the rim lit in soft gold inlay, the same size and shape) and item_slot_empty.png (the same slot, its inset a touch darker and flatter, for an empty space).
+2. equip_slot.png: a round sunk slot for a worn item on the Character page (weapon, armour, hat, boots...), about 48 points, plain inset.
+3. switch_off.png and switch_on.png: a carved wooden toggle for Settings, about 52 × 30 points: a sunk track with a round birch knob; off, the knob at the left and the track plain wood; on, the knob at the right and the track inlaid in sage green. The knob as a separate piece too (switch_knob.png).
+4. slider_track.png and slider_knob.png: a long sunk groove for a volume slider (stretches sideways: plain middle, carved ends; give its caps) and a round birch knob with a tiny eight-point star.
+5. icon_button_square.png and _pressed: a small square carved button with rounded corners, about 40 points, face plain and empty, for small icon buttons in windows.
+6. progress_groove.png: a long thin sunk groove for progress bars in windows (a quest's progress, EXP), stretches sideways, plain middle, rounded ends; give its inset rectangle and caps.
+7. count_badge.png: a small round carved disc, about 18 points, plain face, for a count over an item (the game writes the number); and notice_dot.png: a tiny round gold-inlaid dot, about 10 points, for "something waiting" on a tab or button.
+8. page_dot_off.png and page_dot_on.png: tiny round dots, about 7 points, for page dots under a speech line: off a small sunk wooden dot, on gold inlay.
+
+Battle:
+9. battle_nameplate.png: a small low carved plate under each fighter, about 90 × 26 points, stretches sideways (plain middle, carved ends, give its caps), with one plain sunk groove along its lower half for the HP bar and room above it for the name.
+10. turn_timer_ring.png: a round carved ring, about 44 points, its middle empty and transparent (the game draws the countdown in it), a band of small moon phases round it.
+
+Rules, all of them matter:
+- Match the attached kits exactly: wood colour, carving depth, symbol shapes, inlay colours, outline.
+- Front-on and flat, no perspective. Lit from the top left. A clear dark brown outline round every piece.
+- Small pieces stay simple: at 7 to 18 points only a rim and a lit edge, no carved symbols.
+- Every empty middle (the timer ring) fully transparent.
