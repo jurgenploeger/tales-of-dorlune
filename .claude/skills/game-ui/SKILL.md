@@ -149,7 +149,7 @@ menu window is fine: the menu is a backdrop.
 **The world map is a map first** (2026-11-11, the user: "a bit messy now", then where each goes): its
 canvas clear, no band or blur along its edges; your coordinates at the top left, in a pill like the
 gold's (`ArtPill`: a map pin; tools/hud_icon_art.py; the time of day moved to the HUD, right of the gold,
-`GameTimePill`, 0.9.263: the user, 2026-11-27), no name over it (the pulsing gold ring on the map says where you are, as map apps do); the compass small at the
+`GameTimePill`, 0.9.265: the user, 2026-11-27), no name over it (the pulsing gold ring on the map says where you are, as map apps do); the compass small at the
 top right; the filter dropdown (`filterMenu`) at the bottom left; Where you are, zoom out and zoom in in
 a row at the bottom right, in that order; all of it 16 points in from every edge (the bottom row
 `ignoresSafeArea()`, or the safe area's inset lifts it). All the map's buttons gold, as the filter is,

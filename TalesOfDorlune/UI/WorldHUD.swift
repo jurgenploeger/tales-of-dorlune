@@ -67,7 +67,7 @@ struct WorldHUD: View {
                         .coachTarget(.status)
                     // The gold you carry under your face, as Pixel Heroes shows it (playtesting 2026-10-26;
                     // by the minimap till 2026-10-30); a tap opens the Bag, where the coins are. The time
-                    // of day right of it (on the world map till 0.9.263; the user, 2026-11-27).
+                    // of day right of it (on the world map till 0.9.265; the user, 2026-11-27).
                     HStack(spacing: 8) {
                         Button {
                             menuOpen = false

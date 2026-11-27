@@ -78,7 +78,7 @@ struct MapOverlay: View {
     }
 
     /// Your coordinates on a dark pill (playtesting 2026-10-26: "The coordinates should also show in a
-    /// dark blue pill"). The time of day was beside it till 0.9.263; it's on the HUD now, by the gold
+    /// dark blue pill"). The time of day was beside it till 0.9.265; it's on the HUD now, by the gold
     /// (the user, 2026-11-27: "The world map can drop its time pill").
     private var pills: some View {
         let x = session.mapCell.col, y = rows - 1 - session.mapCell.row
