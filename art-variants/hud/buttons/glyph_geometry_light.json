@@ -1,0 +1,654 @@
+{
+  "attack": {
+    "source_filename": "attack_source.png",
+    "source_canvas": [
+      1254,
+      1254
+    ],
+    "source_bbox": [
+      261,
+      207,
+      994,
+      1048
+    ],
+    "source_sha256": "6475f0b2e2444a1df8aeadd80043dfc29ab0e2b5ff0243b8b73cbc5b3fcfb154",
+    "removed_dust_components": 0,
+    "resampling": "nearest neighbour; no smoothing or dithering",
+    "maximum_radius_px": 248.169,
+    "minimum_radial_margin_to_plain_face_px": 129.831,
+    "centre_px": [
+      640,
+      640
+    ],
+    "bbox": [
+      476,
+      451,
+      805,
+      830
+    ],
+    "bbox_dimensions_px": [
+      329,
+      379
+    ],
+    "shared_envelope_radius_px": 248.0,
+    "inlay_rgb": [
+      [
+        146,
+        155,
+        68
+      ],
+      [
+        187,
+        183,
+        92
+      ],
+      [
+        222,
+        197,
+        125
+      ]
+    ],
+    "inlay_rgb_count": 3,
+    "glyph_mask_sha256": "d6c2a72b58487f0897c359aca4e3c1bc4899f69ef99fbe92ed7309087a144729",
+    "glyph_opaque_pixels": 47642
+  },
+  "inventory": {
+    "source_filename": "inventory_source.png",
+    "source_canvas": [
+      1254,
+      1254
+    ],
+    "source_bbox": [
+      175,
+      141,
+      1072,
+      1138
+    ],
+    "source_sha256": "814430382a4853e326b9aea2412ef2fb2b2b4476b183fd99f38b42636a44c35d",
+    "removed_dust_components": 0,
+    "resampling": "nearest neighbour; no smoothing or dithering",
+    "maximum_radius_px": 248.018,
+    "minimum_radial_margin_to_plain_face_px": 129.982,
+    "centre_px": [
+      640,
+      640
+    ],
+    "bbox": [
+      434,
+      411,
+      847,
+      870
+    ],
+    "bbox_dimensions_px": [
+      413,
+      459
+    ],
+    "shared_envelope_radius_px": 248.0,
+    "inlay_rgb": [
+      [
+        146,
+        155,
+        68
+      ],
+      [
+        187,
+        183,
+        92
+      ],
+      [
+        222,
+        197,
+        125
+      ]
+    ],
+    "inlay_rgb_count": 3,
+    "glyph_mask_sha256": "ccbb9dca3acfce58ab908cc5f16c4b424aba7757521651323b198d8e7f585a70",
+    "glyph_opaque_pixels": 142172
+  },
+  "items": {
+    "source_filename": "items_source.png",
+    "source_canvas": [
+      1254,
+      1254
+    ],
+    "source_bbox": [
+      290,
+      155,
+      944,
+      1112
+    ],
+    "source_sha256": "c52b03609ac7fe4135c2168d7315706e2358d0738461d3cf2f7dc2f4d76f54fb",
+    "removed_dust_components": 0,
+    "resampling": "nearest neighbour; no smoothing or dithering",
+    "maximum_radius_px": 247.935,
+    "minimum_radial_margin_to_plain_face_px": 130.065,
+    "centre_px": [
+      640,
+      640
+    ],
+    "bbox": [
+      471,
+      393,
+      810,
+      888
+    ],
+    "bbox_dimensions_px": [
+      339,
+      495
+    ],
+    "shared_envelope_radius_px": 248.0,
+    "inlay_rgb": [
+      [
+        146,
+        155,
+        68
+      ],
+      [
+        187,
+        183,
+        92
+      ],
+      [
+        222,
+        197,
+        125
+      ]
+    ],
+    "inlay_rgb_count": 3,
+    "glyph_mask_sha256": "4be8d1c03a178c757edba07f942cfb2e559a502bbc02714fdbc4339cbefe8899",
+    "glyph_opaque_pixels": 115818
+  },
+  "settings": {
+    "source_filename": "settings_source.png",
+    "source_canvas": [
+      1254,
+      1254
+    ],
+    "source_bbox": [
+      153,
+      179,
+      1098,
+      1087
+    ],
+    "source_sha256": "65b63acf9b28fe3ff37123a59b9c0dbf5d0ce456adff358193b87c6443b2b4ce",
+    "removed_dust_components": 0,
+    "resampling": "nearest neighbour; no smoothing or dithering",
+    "maximum_radius_px": 247.703,
+    "minimum_radial_margin_to_plain_face_px": 130.297,
+    "centre_px": [
+      640,
+      640
+    ],
+    "bbox": [
+      393,
+      403,
+      888,
+      878
+    ],
+    "bbox_dimensions_px": [
+      495,
+      475
+    ],
+    "shared_envelope_radius_px": 248.0,
+    "inlay_rgb": [
+      [
+        146,
+        155,
+        68
+      ],
+      [
+        187,
+        183,
+        92
+      ],
+      [
+        222,
+        197,
+        125
+      ]
+    ],
+    "inlay_rgb_count": 3,
+    "glyph_mask_sha256": "cc8ee1641fa0ee632a9dffcc3a375bd3de9c63bc3966339f5dd15d07953a23cd",
+    "glyph_opaque_pixels": 107318
+  },
+  "companions": {
+    "source_filename": "companions_source.png",
+    "source_canvas": [
+      1254,
+      1254
+    ],
+    "source_bbox": [
+      155,
+      235,
+      1097,
+      1048
+    ],
+    "source_sha256": "47548dd254ac430dca9d3030e05d00a2314447f1fb6fefc40027c734224cee15",
+    "removed_dust_components": 0,
+    "resampling": "nearest neighbour; no smoothing or dithering",
+    "maximum_radius_px": 248.477,
+    "minimum_radial_margin_to_plain_face_px": 129.523,
+    "centre_px": [
+      640,
+      640
+    ],
+    "bbox": [
+      393,
+      427,
+      888,
+      854
+    ],
+    "bbox_dimensions_px": [
+      495,
+      427
+    ],
+    "shared_envelope_radius_px": 248.0,
+    "inlay_rgb": [
+      [
+        146,
+        155,
+        68
+      ],
+      [
+        187,
+        183,
+        92
+      ],
+      [
+        222,
+        197,
+        125
+      ]
+    ],
+    "inlay_rgb_count": 3,
+    "glyph_mask_sha256": "502ffbd5883884a0a26b63e56cc25b71779e8dfafaa2ee419934e81b7e684c6a",
+    "glyph_opaque_pixels": 135251
+  },
+  "world_map": {
+    "source_filename": "world_map_source.png",
+    "source_canvas": [
+      1254,
+      1254
+    ],
+    "source_bbox": [
+      215,
+      308,
+      1039,
+      969
+    ],
+    "source_sha256": "b4cbe3adbcf563d40b6b51bc590b99db79f918ee6a2302d5f6a7c154d36dffb2",
+    "removed_dust_components": 0,
+    "resampling": "nearest neighbour; no smoothing or dithering",
+    "maximum_radius_px": 248.073,
+    "minimum_radial_margin_to_plain_face_px": 129.927,
+    "centre_px": [
+      640,
+      640
+    ],
+    "bbox": [
+      431,
+      472,
+      850,
+      809
+    ],
+    "bbox_dimensions_px": [
+      419,
+      337
+    ],
+    "shared_envelope_radius_px": 248.0,
+    "inlay_rgb": [
+      [
+        146,
+        155,
+        68
+      ],
+      [
+        187,
+        183,
+        92
+      ],
+      [
+        222,
+        197,
+        125
+      ]
+    ],
+    "inlay_rgb_count": 3,
+    "glyph_mask_sha256": "a4e3016e3afeca18e1d15349bf08f17e50aea491ec28db2c9a9f6e6c5ee805e5",
+    "glyph_opaque_pixels": 122969
+  },
+  "spells": {
+    "source_filename": "spells_source.png",
+    "source_canvas": [
+      1254,
+      1254
+    ],
+    "source_bbox": [
+      265,
+      240,
+      948,
+      1039
+    ],
+    "source_sha256": "8834c489bdde427fc5ccc24d1883bbeae96bdfd6ce9c2e335c21939a4b5914d9",
+    "removed_dust_components": 0,
+    "resampling": "nearest neighbour; no smoothing or dithering",
+    "maximum_radius_px": 248.316,
+    "minimum_radial_margin_to_plain_face_px": 129.684,
+    "centre_px": [
+      640,
+      640
+    ],
+    "bbox": [
+      466,
+      436,
+      815,
+      845
+    ],
+    "bbox_dimensions_px": [
+      349,
+      409
+    ],
+    "shared_envelope_radius_px": 248.0,
+    "inlay_rgb": [
+      [
+        146,
+        155,
+        68
+      ],
+      [
+        187,
+        183,
+        92
+      ],
+      [
+        222,
+        197,
+        125
+      ]
+    ],
+    "inlay_rgb_count": 3,
+    "glyph_mask_sha256": "304b4cd3a2018104a06c30247db700b13680dce9b480bb82cbbbcd1ab30ec2f7",
+    "glyph_opaque_pixels": 137639
+  },
+  "chat": {
+    "source_filename": "chat_source.png",
+    "source_canvas": [
+      1254,
+      1254
+    ],
+    "source_bbox": [
+      214,
+      256,
+      1028,
+      1014
+    ],
+    "source_sha256": "0adf7485c21b347924b66faf8f9e7e7b6d0845b672e9a4aa98a7b9c1c3930f65",
+    "removed_dust_components": 0,
+    "resampling": "nearest neighbour; no smoothing or dithering",
+    "maximum_radius_px": 247.633,
+    "minimum_radial_margin_to_plain_face_px": 130.367,
+    "centre_px": [
+      640,
+      640
+    ],
+    "bbox": [
+      448,
+      461,
+      833,
+      820
+    ],
+    "bbox_dimensions_px": [
+      385,
+      359
+    ],
+    "shared_envelope_radius_px": 248.0,
+    "inlay_rgb": [],
+    "inlay_rgb_count": 0,
+    "glyph_mask_sha256": "f4de17c16bfe1c9af7949d8e7beaf057b4917da2aa6f4d89000be84a27b923b0",
+    "glyph_opaque_pixels": 109607
+  },
+  "friends": {
+    "source_filename": "friends_source.png",
+    "source_canvas": [
+      1254,
+      1254
+    ],
+    "source_bbox": [
+      181,
+      345,
+      1068,
+      916
+    ],
+    "source_sha256": "14b56f901bc968222c394d4e7cd089b546c02f79a698232bffd83a1b547a0b11",
+    "removed_dust_components": 0,
+    "resampling": "nearest neighbour; no smoothing or dithering",
+    "maximum_radius_px": 247.97,
+    "minimum_radial_margin_to_plain_face_px": 130.03,
+    "centre_px": [
+      640,
+      640
+    ],
+    "bbox": [
+      420,
+      498,
+      861,
+      783
+    ],
+    "bbox_dimensions_px": [
+      441,
+      285
+    ],
+    "shared_envelope_radius_px": 248.0,
+    "inlay_rgb": [
+      [
+        146,
+        155,
+        68
+      ],
+      [
+        187,
+        183,
+        92
+      ],
+      [
+        222,
+        197,
+        125
+      ]
+    ],
+    "inlay_rgb_count": 3,
+    "glyph_mask_sha256": "fea691c49f3a9ddbff945a619e605c5d9fe4bf9da5a4af2418b9fce8ed9cb924",
+    "glyph_opaque_pixels": 92980
+  },
+  "menu": {
+    "source_filename": "menu_source.png",
+    "source_canvas": [
+      1254,
+      1254
+    ],
+    "source_bbox": [
+      254,
+      390,
+      1000,
+      964
+    ],
+    "source_sha256": "859ccfdac386e899fee9226fd41cc9ae67813c286967f25c83bddb4792c0e389",
+    "removed_dust_components": 0,
+    "resampling": "nearest neighbour; no smoothing or dithering",
+    "maximum_radius_px": 248.073,
+    "minimum_radial_margin_to_plain_face_px": 129.927,
+    "centre_px": [
+      640,
+      640
+    ],
+    "bbox": [
+      430,
+      479,
+      851,
+      802
+    ],
+    "bbox_dimensions_px": [
+      421,
+      323
+    ],
+    "shared_envelope_radius_px": 248.0,
+    "inlay_rgb": [],
+    "inlay_rgb_count": 0,
+    "glyph_mask_sha256": "ec1204074f0f7e6fd311e01de6584c0942a8c25e05b0e78b0471d18cd2940f51",
+    "glyph_opaque_pixels": 105065
+  },
+  "character": {
+    "source_filename": "character_source.png",
+    "source_canvas": [
+      1254,
+      1254
+    ],
+    "source_bbox": [
+      227,
+      159,
+      1018,
+      1107
+    ],
+    "source_sha256": "d7af97f9d3e2df1e1b0ac15f6cb6da68a1e6a28ffd34a5e7188e79360ab2ac27",
+    "removed_dust_components": 0,
+    "resampling": "nearest neighbour; no smoothing or dithering",
+    "maximum_radius_px": 248.359,
+    "minimum_radial_margin_to_plain_face_px": 129.641,
+    "centre_px": [
+      640,
+      640
+    ],
+    "bbox": [
+      448,
+      410,
+      833,
+      871
+    ],
+    "bbox_dimensions_px": [
+      385,
+      461
+    ],
+    "shared_envelope_radius_px": 248.0,
+    "inlay_rgb": [
+      [
+        146,
+        155,
+        68
+      ],
+      [
+        187,
+        183,
+        92
+      ]
+    ],
+    "inlay_rgb_count": 2,
+    "glyph_mask_sha256": "067a184761fe487a357fa3cb3157eb7b63e80615109b218a18fa84330ebd332f",
+    "glyph_opaque_pixels": 116578
+  },
+  "quests": {
+    "source_filename": "quests_source.png",
+    "source_canvas": [
+      1254,
+      1254
+    ],
+    "source_bbox": [
+      207,
+      158,
+      1037,
+      1095
+    ],
+    "source_sha256": "8462f5489ef66d441f2fd2941b025210058a645a5e7f4917ed745813d1b279ca",
+    "removed_dust_components": 0,
+    "resampling": "nearest neighbour; no smoothing or dithering",
+    "maximum_radius_px": 247.859,
+    "minimum_radial_margin_to_plain_face_px": 130.141,
+    "centre_px": [
+      640,
+      640
+    ],
+    "bbox": [
+      459,
+      436,
+      822,
+      845
+    ],
+    "bbox_dimensions_px": [
+      363,
+      409
+    ],
+    "shared_envelope_radius_px": 248.0,
+    "inlay_rgb": [
+      [
+        146,
+        155,
+        68
+      ],
+      [
+        187,
+        183,
+        92
+      ],
+      [
+        222,
+        197,
+        125
+      ]
+    ],
+    "inlay_rgb_count": 3,
+    "glyph_mask_sha256": "e543f0aebdbec2868a0c27ebb299e3b36b4e467c98804b33a7fda20d3594173a",
+    "glyph_opaque_pixels": 117665
+  },
+  "run_away": {
+    "source_filename": "run_away_source.png",
+    "source_canvas": [
+      1254,
+      1254
+    ],
+    "source_bbox": [
+      202,
+      280,
+      976,
+      934
+    ],
+    "source_sha256": "818af7bbf9d5a18abd2ce445d35d28e8207a5a20506e504b2812bae66728c199",
+    "removed_dust_components": 0,
+    "resampling": "nearest neighbour; no smoothing or dithering",
+    "maximum_radius_px": 247.693,
+    "minimum_radial_margin_to_plain_face_px": 130.307,
+    "centre_px": [
+      640,
+      640
+    ],
+    "bbox": [
+      440,
+      471,
+      841,
+      810
+    ],
+    "bbox_dimensions_px": [
+      401,
+      339
+    ],
+    "shared_envelope_radius_px": 248.0,
+    "inlay_rgb": [
+      [
+        146,
+        155,
+        68
+      ],
+      [
+        187,
+        183,
+        92
+      ],
+      [
+        222,
+        197,
+        125
+      ]
+    ],
+    "inlay_rgb_count": 3,
+    "glyph_mask_sha256": "0aafd515edbc234ce5cecb4f6e1e8be06d79d2efed4ed55560b6b1338f4d8ee2",
+    "glyph_opaque_pixels": 77420
+  }
+}

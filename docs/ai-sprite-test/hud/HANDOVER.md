@@ -26,7 +26,13 @@ the real HUD (the artifact https://claude.ai/artifact/BbEWKRiYCnw6yJi5iCTtyK; it
    a point**, the frame's rails 5.7 points, its corners 21; edge motifs tile whole, 216 px along, 152 down,
    leftovers spread as one-pixel neutral columns). Checked: every dark twin has its light one's alpha
    and one dark colour per light one. `windows_contact_sheet.png`.
-4. `4_buttons_A.txt`: the buttons' pictures.
+4. `4_buttons_A.txt`: the buttons' pictures. **Done**: `art-variants/hud/buttons/` (13 designs, normal and
+   pressed, light and dark: 52 PNGs on the picked `button_round` bases, every pixel outside the picture
+   the base's own; each dark twin one dark colour per light one; ChatGPT's JSON for light and dark, its
+   README and prompts). At 56 points (`buttons_game_size.png`) the light ones read, their outline 5 : 1 to
+   the face (chat's 2.1). **The dark ones are faint**: a dark carving on dark wood, outline 2.2 : 1, under
+   the 3 : 1 an icon needs. Tried (`buttons_dark_inlay_try.png`, bottom row): the light picture inlaid in
+   the dark button, pale birch in walnut; the user to pick.
 
 `follow_ups_if_it_drifts.txt` has the nudges.
 
