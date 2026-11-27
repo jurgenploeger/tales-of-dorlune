@@ -77,19 +77,16 @@ struct MapOverlay: View {
         }
     }
 
-    /// The time of day and your coordinates, each on a dark pill (playtesting 2026-10-26: "The
-    /// year/date/time bar should only become a in-game time with sun/moon icon, just showing in a
-    /// dark blue pill. The coordinates should also show in a dark blue pill").
+    /// Your coordinates on a dark pill (playtesting 2026-10-26: "The coordinates should also show in a
+    /// dark blue pill"). The time of day was beside it till 0.9.248; it's on the HUD now, by the gold
+    /// (the user, 2026-11-27: "The world map can drop its time pill").
     private var pills: some View {
         let x = session.mapCell.col, y = rows - 1 - session.mapCell.row
-        // As the gold's pill (`ArtPill`): a pixel-art sun or moon, and a map pin by your coordinates.
-        return HStack(spacing: 8) {
-            GameTimePill(session: session)
-            // Close together: a thin space either side of the colon.
-            ArtPill(art: "pill_pin", text: "\(x)\u{2009}:\u{2009}\(y)", size: 12, fallback: .map)
-                .accessibilityElement(children: .ignore)
-                .accessibilityLabel(L("Coordinates {x}, {y}", ["x": x, "y": y]))
-        }
+        // As the gold's pill (`ArtPill`): a map pin by your coordinates.
+        // Close together: a thin space either side of the colon.
+        return ArtPill(art: "pill_pin", text: "\(x)\u{2009}:\u{2009}\(y)", size: 12, fallback: .map)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(L("Coordinates {x}, {y}", ["x": x, "y": y]))
     }
 
     /// One chip a level, gold for the one shown.
@@ -214,10 +211,13 @@ struct CaveMap: View {
 }
 
 /// The time of day on the game's clock (`GameClock`) with a sun by day and a moon by night, on a
-/// dark pill: on the map, where the HUD's calendar plate went. Only the hour, in the player's own
-/// way of writing it ("8 PM", "20 Uhr"; playtesting 2026-10-26: "Don't show the minutes").
-private struct GameTimePill: View {
+/// dark pill: on the HUD, right of the gold (the user, 2026-11-27; on the world map before). Only the
+/// hour, in the player's own way of writing it ("8 PM", "20 Uhr"; playtesting 2026-10-26: "Don't show
+/// the minutes").
+struct GameTimePill: View {
     let session: GameSession
+    /// The figures' point size, as the gold's pill beside it.
+    var size: CGFloat = 12
     /// With night and day switched off in Settings, the sun shines on the pill around the clock.
     @AppStorage(GameSettings.dayAndNightKey) private var dayAndNight = true
 
@@ -228,7 +228,7 @@ private struct GameTimePill: View {
             let hour = Int(hours) % 24
             let daytime = (6..<18).contains(hour) || !dayAndNight
             // A pixel-art sun by day and moon by night (tools/hud_icon_art.py), as the gold's coin.
-            ArtPill(art: daytime ? "pill_sun" : "pill_moon", text: Self.text(hour: hour), size: 12,
+            ArtPill(art: daytime ? "pill_sun" : "pill_moon", text: Self.text(hour: hour), size: size,
                     fallback: daytime ? .sun : .moon)
         }
     }
