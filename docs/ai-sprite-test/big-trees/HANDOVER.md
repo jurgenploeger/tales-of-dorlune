@@ -156,3 +156,11 @@ Attach `style_reference_rd_4x.png`, then the seven `_now_8x.png` in the table's 
 >    blue crystals of different heights, faceted, lit top left, white glints.
 > 7. `lollipop` (from the swirled lollipop): canvas 54 × 54, 37 wide, 41 tall, foot on row 44. A giant round candy
 >    lollipop, a red and cream spiral swirl, a little shine top left, on a thin pale stick standing upright.
+
+## Batch 2's result (2026-11-27)
+
+All seven at their canvas, width and foot row as asked, hard alpha, 27 to 46 colours. In `art-variants/big_trees/` and
+`art/sprites/`, scale 1, no `derive`: `big_frost_pine` is `big_snow_pine` by `frost_pine`'s recolour, the four
+lollipops `lollipop` by theirs (maps.json `size` [1, 1], was [1.7, 1.7]). Wind rigs for the four leafy ones
+(`wind_art.py`; the dead tree bare, as its small one), the ice cluster lit at night as itself (`window_art.py` `LIGHTS`).
+`pixel_scale.py`: no prop drawn at 1.7 any more.

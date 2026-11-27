@@ -6646,12 +6646,7 @@
     },
     {
       "id": "big_tree",
-      "kind": "prop",
-      "scale": 1.7,
-      "derive": {
-        "from": "tree",
-        "recolor": []
-      }
+      "kind": "prop"
     },
     {
       "id": "big_red_maple",
@@ -6667,12 +6662,7 @@
     },
     {
       "id": "big_hollow_tree",
-      "kind": "prop",
-      "scale": 1.7,
-      "derive": {
-        "from": "hollow_tree",
-        "recolor": []
-      }
+      "kind": "prop"
     },
     {
       "id": "big_dark_tree",
@@ -6684,29 +6674,29 @@
     },
     {
       "id": "big_snow_tree",
-      "kind": "prop",
-      "scale": 1.7,
-      "derive": {
-        "from": "snow_tree",
-        "recolor": []
-      }
+      "kind": "prop"
     },
     {
       "id": "big_snow_pine",
-      "kind": "prop",
-      "scale": 1.7,
-      "derive": {
-        "from": "snow_pine",
-        "recolor": []
-      }
+      "kind": "prop"
     },
     {
       "id": "big_frost_pine",
       "kind": "prop",
-      "scale": 1.7,
       "derive": {
-        "from": "frost_pine",
-        "recolor": []
+        "from": "big_snow_pine",
+        "recolor": [
+          {
+            "hue": [
+              85,
+              170
+            ],
+            "to": 191.3,
+            "spread": 0.7,
+            "saturation": 0.55,
+            "value": 1.12
+          }
+        ]
       }
     },
     {
@@ -6719,12 +6709,7 @@
     },
     {
       "id": "big_dead_tree",
-      "kind": "prop",
-      "scale": 1.7,
-      "derive": {
-        "from": "dead_tree",
-        "recolor": []
-      }
+      "kind": "prop"
     },
     {
       "id": "frost_fern",
@@ -6781,23 +6766,7 @@
     },
     {
       "id": "big_ice_cluster",
-      "kind": "prop",
-      "scale": 1.6,
-      "derive": {
-        "from": "crystal",
-        "recolor": [
-          {
-            "hue": [
-              140,
-              215
-            ],
-            "to": 196.3,
-            "spread": 1.0,
-            "saturation": 0.5,
-            "value": 1.25
-          }
-        ]
-      }
+      "kind": "prop"
     },
     {
       "id": "ice_boulder",
@@ -10515,17 +10484,13 @@
     },
     {
       "id": "lollipop",
-      "kind": "prop",
-      "derive": {
-        "from": "beach_umbrella",
-        "recolor": []
-      }
+      "kind": "prop"
     },
     {
       "id": "lollipop_pink",
       "kind": "prop",
       "derive": {
-        "from": "beach_umbrella",
+        "from": "lollipop",
         "recolor": [
           {
             "hue": [
@@ -10543,7 +10508,7 @@
       "id": "lollipop_lemon",
       "kind": "prop",
       "derive": {
-        "from": "beach_umbrella",
+        "from": "lollipop",
         "recolor": [
           {
             "hue": [
@@ -10561,7 +10526,7 @@
       "id": "lollipop_berry",
       "kind": "prop",
       "derive": {
-        "from": "beach_umbrella",
+        "from": "lollipop",
         "recolor": [
           {
             "hue": [
@@ -10579,7 +10544,7 @@
       "id": "lollipop_sky",
       "kind": "prop",
       "derive": {
-        "from": "beach_umbrella",
+        "from": "lollipop",
         "recolor": [
           {
             "hue": [

@@ -11373,7 +11373,7 @@
             "count": 27,
             "blocking": true,
             "cluster": 3,
-            "size": [1.7, 1.7],
+            "size": [1, 1],
             "shadow": true
           },
           {
@@ -11381,7 +11381,7 @@
             "count": 27,
             "blocking": true,
             "cluster": 3,
-            "size": [1.7, 1.7],
+            "size": [1, 1],
             "shadow": true
           },
           {
@@ -11389,7 +11389,7 @@
             "count": 27,
             "blocking": true,
             "cluster": 3,
-            "size": [1.7, 1.7],
+            "size": [1, 1],
             "shadow": true
           },
           {
@@ -11397,7 +11397,7 @@
             "count": 27,
             "blocking": true,
             "cluster": 3,
-            "size": [1.7, 1.7],
+            "size": [1, 1],
             "shadow": true
           },
           {
@@ -11405,7 +11405,7 @@
             "count": 27,
             "blocking": true,
             "cluster": 3,
-            "size": [1.7, 1.7],
+            "size": [1, 1],
             "shadow": true
           },
           {

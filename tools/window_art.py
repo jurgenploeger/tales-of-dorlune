@@ -106,7 +106,7 @@ LIGHTS = {"street_lamp": {}, "wall_torch": TORCH, "wall_torch_2": TORCH, "wall_t
           "tiki_torch": {"boxes": [(0, 13, 8, 24)]}, "moon_lantern_post": {}, "spooky_lantern": {}, "wisp_lantern": {},
           "stone_lantern": {}, "mine_lantern_post": {"boxes": [(25, 36, 18, 28)]},
           "firefly_jar_post": {"boxes": [(20, 36, 16, 28)]}, "magic_lamp": {"boxes": [(0, 13, 0, 32)]},
-          "bubbling_cauldron": {}, "fallen_star": {}, "crystal": {}, "star_crystal": {}, "crystal_spire": {},
+          "bubbling_cauldron": {}, "fallen_star": {}, "crystal": {}, "big_ice_cluster": {}, "star_crystal": {}, "crystal_spire": {},
           "amethyst_spire": {}, "crystal_geode": {}, "glow_moss_rock": {}, "moon_flower": {"s": 0.1}, "fairy_ring": {}}
 
 
@@ -197,7 +197,7 @@ def derived():
 # Recolours that are lights, though their bases aren't (a glowing mushroom from a plain one): their base's bright
 # pixels cut as a light's would be, then recoloured.
 LIGHTS_DERIVED = {"glow_mushroom", "pink_crystal", "violet_crystal", "amber_crystal", "crystal_shard", "pink_shard",
-                  "ice_cluster", "big_ice_cluster"}
+                  "ice_cluster"}
 
 
 def cut(name):

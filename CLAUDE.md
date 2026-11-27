@@ -270,7 +270,9 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   asset's `derive`; its `big_` twin, derived from it, follows, but for the seven ChatGPT drew at their own size
   (`big_blossom_tree`, `_dark_`, `_frost_`, `_golden_`, `_lilac_`, `_red_maple`, `_swamp_`, 108 pixels, at scale 1, not
   the small one at 1.7; and the fairy tree houses, 102 and 134, once the hollow tree recoloured at 1.6 and 2.1:
-  docs/ai-sprite-test/big-trees, `art-variants/big_trees/`, the user, 2026-11-26). `--sheet out.png` previews them.
+  docs/ai-sprite-test/big-trees, `art-variants/big_trees/`, the user, 2026-11-26); and RD's own trees' big twins since 2026-11-27
+  (`big_tree`, `_dead_`, `_hollow_`, `_snow_tree`, `_snow_pine`, `big_frost_pine` its recolour), `big_ice_cluster` at 52 and the
+  `lollipop` at 54 (its four colours recolours of it), once RD's art at 1.7 and 1.6. `--sheet out.png` previews them.
   Since 2026-11-26 every tree and bush is ChatGPT's redraw, copied as drawn (`PICKED_DIR`, `art-variants/trees/`,
   docs/ai-sprite-test/trees-bushes: same canvas and foot row, hard alpha); the code still draws the shallows' rocks and
   the shore's grass and stones. Rerun `wind_art.py` after.
@@ -563,7 +565,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   2026-11-26, "stop the random scaling of props": two bushes side by side had different pixels): a prop is at its
   own size, or one fixed size (maps.json `size` [s, s]); the planner still draws the sizes it used to, so the
   rest of a land stays where it was. Flowers are planted at 0.62, their pixels smaller than their neighbours' by
-  the user's choice (2026-11-19: "a flower shouldn't be just as tall as a tree"), and lollipops at 1.7.
+  the user's choice (2026-11-19: "a flower shouldn't be just as tall as a tree").
 - `tools/deslab.py`: cuts the raised slab of ground some generated buildings came with (`inn`, `magic_tower`) out
   of their sprites, so they stand on the map's ground; rerun it after regenerating one of them.
 - `tools/rd_fixes.py`: exact pixel fixes to RD sprites for what RD got wrong and the user asked to have fixed
