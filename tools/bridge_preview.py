@@ -5,7 +5,7 @@ import math, sys
 import numpy as np
 from PIL import Image, ImageDraw
 
-PX = 32
+PX = 44   # a ground tile's pixels a cell (`WorldMap.tilePixels`; 32 till 0.9.247)
 LOOKS = {
  'wood':    dict(plank=(164,116,70), gap=(78,52,34), beam=(112,76,46), edge=(84,56,34), nail=(60,52,48), cap=(164,116,70), light=(164,116,70), dark=(112,76,46), slabs=False),
  'stone':   dict(plank=(156,152,144), gap=(92,90,90), beam=(124,120,114), edge=(78,76,78), nail=(92,90,90), cap=(160,156,148), light=(132,128,122), dark=(96,92,90), slabs=True),

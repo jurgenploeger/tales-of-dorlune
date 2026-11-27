@@ -416,7 +416,8 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   RD's 32-pixel ones kept in `rd/`); recolours follow their base. A land draws its tiles together, each resized to its
   ground's size (`ArtLibrary.variantPixels`), so they're all one size: a new one is 44 too. `WorldMap.tilePixels` is that
   size, for what lines up with the ground's pixels (the shallows' `u_pixels`, a road edge's crumble, a river's mouth,
-  `ContinentScene.seaCells`). The town terraces' flagstones (`terrace_flag*`) are still 32.
+  `ContinentScene.seaCells`), the town terraces' flagstones (`terrace_art.py` `TILE`, 0.9.248) and the mirrors
+  (`palette_preview.py` `_S`, `bridge_preview.py` `PX`, `shore_art.py` `CELL`).
 - `tools/water_art.py`: the same for the water: `sea.png` (16 × 16 cells of 44 pixels that tile as a whole; the continent gives each
   world cell its own, `ContinentScene.seaGroups`) and `tile_water.png` (a land's lakes and rivers, calm so its versions
   don't make a grid), ripples level on screen. Round a land's own water (`tile_water` or `tile_chocolate`, `ArtLibrary.isPondWater`; chocolate in warm tones, `pondTones`; not ice)

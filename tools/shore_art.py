@@ -5,7 +5,7 @@ After SpriteCook's "2D water shorelines with a distance field" (2025-11): one nu
 it lies from the land, gives the shallows in bands that follow every bay and round every point (where the
 game had flat bands a whole cell at a time, stepping along the grid), and waves that roll in toward the
 shore. This mirrors `shallowField` (the distances, `SAMPLES` a cell, out from each land cell taken as a
-square) and `shallowShader` (bands and crests on the sea's own 32 pixels a cell); keep the two in step.
+square) and `shallowShader` (bands and crests on the sea's own 44 pixels a cell); keep the two in step.
 
     python3 tools/shore_art.py out.png [land] [--at X,Y]   # before and after, turned as the game shows it
     python3 tools/shore_art.py --gif out.gif [land]        # the waves rolling in
@@ -24,7 +24,7 @@ from PIL import Image
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "tools"))
 
-CELL = 32          # the sea's pixels a cell (tools/water_art.py)
+CELL = 44          # the sea's pixels a cell (tools/water_art.py, `WorldMap.tilePixels`; 32 till 0.9.247)
 CHUNK = 32         # cells a side of a chunk (World.chunkSize)
 SAMPLES = 4        # ContinentScene.shallowSamples
 REACH = 5          # ContinentScene.shallowReach

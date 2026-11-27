@@ -36,6 +36,7 @@ EDGE_X, EDGE_Y = 31, 16          # one cell's edge on screen, in pixels (31.11 b
 RISE = 34                        # the wall's height (WorldMap.terraceHeight)
 RAIL = 14                        # the balustrade's height
 CELL = 44.0                      # a cell's edge in the ground's points
+TILE = 44                        # the flagstones' pixels a cell, the ground tiles' (`WorldMap.tilePixels`)
 
 SAND = np.array([206.0, 170, 118])
 MORTAR = np.array([96.0, 70, 48])
@@ -131,19 +132,21 @@ def post():
 
 
 def flag(seed):
-    """32 by 32, flagstones of 16, every other row shifted 8: it tiles."""
-    ys, xs = np.mgrid[0:32, 0:32]
-    row = ys // 16
-    sx = np.mod(xs + (row % 2) * 8, 32)
-    fx = sx // 16
-    u, v = sx % 16, ys % 16
+    """`TILE` by `TILE`, flagstones half a cell across, every other row shifted half a stone: it tiles. 44 since
+    0.9.247, a pixel a point as the ground's tiles are (`WorldMap.tilePixels`); at 32 it was stretched."""
+    n, stone = TILE, TILE // 2
+    ys, xs = np.mgrid[0:n, 0:n]
+    row = ys // stone
+    sx = np.mod(xs + (row % 2) * (stone // 2), n)
+    fx = sx // stone
+    u, v = sx % stone, ys % stone
     tone = 0.88 + 0.18 * h(fx, row, seed)
     col = SAND[None, None, :] * 1.04 * tone[..., None]
     col = col + ((h(xs // 3, ys // 2, seed + 7) - 0.5) * 10)[..., None]
-    col = np.where(((u == 15) | (v == 15))[..., None], col * 0.82, col)            # each stone's shaded edge
+    col = np.where(((u == stone - 1) | (v == stone - 1))[..., None], col * 0.82, col)  # each stone's shaded edge
     col = np.where(((u == 1) | (v == 1))[..., None], np.minimum(255, col * 1.1), col)
     col = np.where(((u == 0) | (v == 0))[..., None], MORTAR, col)
-    return rgba(col, np.ones((32, 32), bool))
+    return rgba(col, np.ones((n, n), bool))
 
 
 def rgba(col, on):
