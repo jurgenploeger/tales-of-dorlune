@@ -528,6 +528,8 @@ One doll, end to end (it was the Human Male pilot until 2026-11-24).
     hands untouched, 13 pixels past its outline. It moves with the limbs, so every walk and attack row is a repaint.
     Down-right: two near copies (`tries/outfit_down-right_try1*`), both clean; the user took a, shaded evenly like
     down (b had a light band down the front) (`hero64_outfit_down-right.png`).
+    Right: two near copies (`tries/outfit_right_try1*`); the user took b, its hem hanging straighter at the back
+    (a kicked out behind) (`hero64_outfit_right.png`).
     Spiky up: ChatGPT sent its own 64-pixel files this time (`tries/hair_spiky_up_try1{a,b}{,_8x}.png`), the body
     pixel for pixel the doll's; the user picked a (`hero64_hair_spiky_up.png`), lifted untoned. **Spiky is done in all
     eight directions** (five drawn, three mirrored), on idle, walk, run and attack, human and elf.
