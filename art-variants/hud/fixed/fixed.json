@@ -1,0 +1,141 @@
+{
+  "inset_panel_dark": {
+    "from": "art-variants/hud/windows/inset_panel_dark.png",
+    "darkened_colours": [
+      [
+        39,
+        24,
+        19
+      ],
+      [
+        42,
+        25,
+        20
+      ],
+      [
+        44,
+        27,
+        22
+      ],
+      [
+        48,
+        31,
+        25
+      ],
+      [
+        53,
+        33,
+        25
+      ]
+    ],
+    "factor": 0.55,
+    "fill_before": [
+      48,
+      31,
+      25
+    ],
+    "fill_after": [
+      26,
+      17,
+      14
+    ],
+    "contrast_to_pane_before": 1.18,
+    "contrast_to_pane_after": 1.39,
+    "light_panel_contrast_to_its_pane": 1.39,
+    "slices": "as art-variants/hud/windows/geometry.json inset_panel (80 px corners)"
+  },
+  "item_slot_selected": {
+    "from": "art-variants/hud/bits/item_slot_selected.png",
+    "recoloured": {
+      "[225, 181, 79]": [
+        206,
+        128,
+        12
+      ],
+      "[246, 212, 127]": [
+        255,
+        198,
+        64
+      ],
+      "[196, 145, 54]": [
+        138,
+        78,
+        8
+      ]
+    }
+  },
+  "speech_window": {
+    "from": "art-variants/hud/windows/speech_window.png, rows 448 to 832",
+    "size_px": [
+      1280,
+      675
+    ],
+    "height_pt": 150,
+    "px_per_pt": 4.5,
+    "repeated_row_in_source": 672,
+    "rows_added": 291,
+    "vertical_stretch_rows": [
+      224,
+      516
+    ],
+    "horizontal_cap_insets_px": [
+      216,
+      124
+    ],
+    "stretch_cols": [
+      280,
+      1092
+    ],
+    "bounding_box_x": [
+      64,
+      1216
+    ],
+    "content_rect": [
+      290,
+      26,
+      942,
+      649
+    ],
+    "speaker_overlay_cols": [
+      990,
+      1216
+    ]
+  },
+  "speech_window_dark": {
+    "from": "art-variants/hud/windows/speech_window_dark.png, rows 448 to 832",
+    "size_px": [
+      1280,
+      675
+    ],
+    "height_pt": 150,
+    "px_per_pt": 4.5,
+    "repeated_row_in_source": 672,
+    "rows_added": 291,
+    "vertical_stretch_rows": [
+      224,
+      516
+    ],
+    "horizontal_cap_insets_px": [
+      216,
+      124
+    ],
+    "stretch_cols": [
+      280,
+      1092
+    ],
+    "bounding_box_x": [
+      64,
+      1216
+    ],
+    "content_rect": [
+      290,
+      26,
+      942,
+      649
+    ],
+    "speaker_overlay_cols": [
+      990,
+      1216
+    ]
+  }
+}

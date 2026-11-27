@@ -1,0 +1,10 @@
+1. `portrait_stardust`: Stardust. gives quests, in Moonwhisper. Says: "Neigh... the stars are restless tonight." Quests: Stardust's Night Flight.
+2. `portrait_festival_keeper_selene`: Festival-Keeper Selene. gives quests, in Moonwhisper. Says: "Welcome to Silvermoon Steps. On a full moon, the whole village climbs up to watch it rise." Quests: Apes in the Rice, The Moon-Viewing Night.
+3. `portrait_old_stargazer_bellamy`: Old Stargazer Bellamy. gives quests, in Moonwhisper. Says: "Lune taught me half of what I know about the stars. I taught her the other half." Quests: Rattling on the Steps.
+4. `portrait_washerwoman_wenna`: Washerwoman Wenna. gives quests, in Windswept Downs. Says: "Hold on to your hat, dear. In Thistledown the wind takes anything that isn't tied down." Quests: Socks on the Hedgehogs.
+5. `portrait_kitewright_bryn`: Kitewright Bryn. gives quests, in Windswept Downs. Says: "A kite's only a wish with a string on it. Want to see mine?" Quests: A Hamster for Kite Day, Kite Day.
+6. `portrait_foreman_dobbs`: Foreman Dobbs. gives quests, in Gooey Grotto. Says: "Watch your step. That puddle's not a puddle. It's a Mud Slime having a nap." Quests: Gold in the Goo, Lights Out.
+7. `portrait_confectioner_clementine`: Confectioner Clementine. gives quests, in Gumdrop Peaks. Says: "Welcome to Peppermint Row! Please don't lick the houses. We've had complaints." Quests: Sticky Fingers, The Gingerbread Gala.
+8. `portrait_toffee_puller_tibbs`: Toffee-Puller Tibbs. gives quests, in Gumdrop Peaks. Says: "Pull, fold, pull, fold. Toffee's all in the elbows." Quests: Toffee Too Hot.
+9. `portrait_little_red`: Little Red. gives quests, in Big Bad Wolf's Lair. Says: "Grandmother's cottage is just past the trees. Everyone says don't stray from the path. I don't. Mostly." Quests: Little Red's Basket, The Long Howl.
+10. `portrait_grandmother_hazel`: Grandmother Hazel. gives quests, in Big Bad Wolf's Lair. Says: "Come in, come in! Don't mind the wolf-shaped dent in the door." Quests: Wolves at the Window.

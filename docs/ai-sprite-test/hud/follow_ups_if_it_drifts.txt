@@ -1,0 +1,8 @@
+If it drifts, send one of these as a follow-up:
+- Frames too thick: "Make every frame edge half as thick; keep the corners."
+- Too busy at phone size: "Keep the corner carvings, but make the band along each edge smaller and quieter."
+- Carving too flat or printed-looking: "Carve it deeper: every cut needs a lit edge and a shaded groove, like real woodcarving."
+- Symbols look like real letters or religious signs: "Replace those with original symbols: moons, stars, spirals, leaves."
+- Perspective or 3D: "Draw every piece flat and front-on, no perspective."
+- Pieces touching or text added: "Separate every piece with space round it, and remove all text and icons."
+- Want it pixel art instead of painted: "Redraw it as clean pixel art, each pixel a hard square, matching the screenshot's sprites."

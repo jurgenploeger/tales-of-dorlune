@@ -1,0 +1,418 @@
+{
+  "native_canvas": [
+    64,
+    64
+  ],
+  "preview_scale": 8,
+  "icons": [
+    {
+      "id": "bash",
+      "file": "skill_bash.png",
+      "preview": "skill_bash_8x.png",
+      "canvas": [
+        64,
+        64
+      ],
+      "bounds_xyxy_exclusive": [
+        12,
+        11,
+        52,
+        53
+      ],
+      "subject_size": [
+        40,
+        42
+      ],
+      "opaque_pixels": 776,
+      "color_count": 35,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "max_pixel_centre_radius": 26.3154,
+      "max_pixel_corner_radius": 27.0185,
+      "socket_diameter": 56,
+      "preview_exact_nearest_8x": true,
+      "file_sha256": "2e70f7eb987faa1f91e50e86eb10c9ea187e7a4617313f3619f3296f70e010b4",
+      "preview_sha256": "246daabceb8387df41523ed11e15f1305f0f66f914de60fdb4a0a7a0f5d3ea3a"
+    },
+    {
+      "id": "power_strike",
+      "file": "skill_power_strike.png",
+      "preview": "skill_power_strike_8x.png",
+      "canvas": [
+        64,
+        64
+      ],
+      "bounds_xyxy_exclusive": [
+        13,
+        10,
+        51,
+        54
+      ],
+      "subject_size": [
+        38,
+        44
+      ],
+      "opaque_pixels": 751,
+      "color_count": 34,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "max_pixel_centre_radius": 26.5047,
+      "max_pixel_corner_radius": 27.2029,
+      "socket_diameter": 56,
+      "preview_exact_nearest_8x": true,
+      "file_sha256": "67b1319f9f61052d5fd1c64ba8869d6a3b4564d33fbffd8f81f7dd89ef9ae01f",
+      "preview_sha256": "58eb552cfe6a79f36a5e910f09bae640dfcec2a8e0ca42c424b51ea13ce7dd0f"
+    },
+    {
+      "id": "whirlwind",
+      "file": "skill_whirlwind.png",
+      "preview": "skill_whirlwind_8x.png",
+      "canvas": [
+        64,
+        64
+      ],
+      "bounds_xyxy_exclusive": [
+        7,
+        6,
+        57,
+        58
+      ],
+      "subject_size": [
+        50,
+        52
+      ],
+      "opaque_pixels": 1207,
+      "color_count": 35,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "max_pixel_centre_radius": 26.6552,
+      "max_pixel_corner_radius": 27.313,
+      "socket_diameter": 56,
+      "preview_exact_nearest_8x": true,
+      "file_sha256": "ab1008d692ed8936c7dbf7a1c5d9a5a8c999f6f4cd016dea9ab62df8a294cc81",
+      "preview_sha256": "d41a8417b879e47820423ca73ec3a1e9914bb3da50b409ec467e24dd5b91a546"
+    },
+    {
+      "id": "charge",
+      "file": "skill_charge.png",
+      "preview": "skill_charge_8x.png",
+      "canvas": [
+        64,
+        64
+      ],
+      "bounds_xyxy_exclusive": [
+        7,
+        14,
+        57,
+        50
+      ],
+      "subject_size": [
+        50,
+        36
+      ],
+      "opaque_pixels": 1057,
+      "color_count": 35,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "max_pixel_centre_radius": 26.5047,
+      "max_pixel_corner_radius": 27.2029,
+      "socket_diameter": 56,
+      "preview_exact_nearest_8x": true,
+      "file_sha256": "c5d2a10467680f4a67de80bd85fc864b8bfe98f9115351301b8a604a6c1349ee",
+      "preview_sha256": "209f093fb40343666b7972bec83c24324cb6259d5659566df5e764c358d94139"
+    },
+    {
+      "id": "rush",
+      "file": "skill_rush.png",
+      "preview": "skill_rush_8x.png",
+      "canvas": [
+        64,
+        64
+      ],
+      "bounds_xyxy_exclusive": [
+        9,
+        9,
+        55,
+        55
+      ],
+      "subject_size": [
+        46,
+        46
+      ],
+      "opaque_pixels": 764,
+      "color_count": 36,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "max_pixel_centre_radius": 26.7675,
+      "max_pixel_corner_radius": 27.4591,
+      "socket_diameter": 56,
+      "preview_exact_nearest_8x": true,
+      "file_sha256": "1e89aefee98bedebafb66541d1de724cbc6cb7ab7598a6182b532e497267bd62",
+      "preview_sha256": "98582b723c2eba84c638b8728452ed2117965f46c918c00b7c2d229ca7306943"
+    },
+    {
+      "id": "impact",
+      "file": "skill_impact.png",
+      "preview": "skill_impact_8x.png",
+      "canvas": [
+        64,
+        64
+      ],
+      "bounds_xyxy_exclusive": [
+        7,
+        7,
+        57,
+        57
+      ],
+      "subject_size": [
+        50,
+        50
+      ],
+      "opaque_pixels": 1563,
+      "color_count": 36,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "max_pixel_centre_radius": 26.7675,
+      "max_pixel_corner_radius": 27.4591,
+      "socket_diameter": 56,
+      "preview_exact_nearest_8x": true,
+      "file_sha256": "512246e2b5a67b5a2612de4b9fe0051729fa82ca0189d9b862fd8dc1f5d24e20",
+      "preview_sha256": "039624a75f6fd98f128038186901a9d729e00e34b439cc124e282b094a80d8f2"
+    },
+    {
+      "id": "double_combo",
+      "file": "skill_double_combo.png",
+      "preview": "skill_double_combo_8x.png",
+      "canvas": [
+        64,
+        64
+      ],
+      "bounds_xyxy_exclusive": [
+        13,
+        12,
+        51,
+        52
+      ],
+      "subject_size": [
+        38,
+        40
+      ],
+      "opaque_pixels": 619,
+      "color_count": 36,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "max_pixel_centre_radius": 26.8794,
+      "max_pixel_corner_radius": 27.5862,
+      "socket_diameter": 56,
+      "preview_exact_nearest_8x": true,
+      "file_sha256": "4de7caf8f36bea18353959d9e77703c3d50e208dc9bb87a9ae05f450a09dc90f",
+      "preview_sha256": "da9c786b6707eb6f0fabe764c99703383fe9b9bbfcf8e63f57c4e1f005358816"
+    },
+    {
+      "id": "dodge_whip",
+      "file": "skill_dodge_whip.png",
+      "preview": "skill_dodge_whip_8x.png",
+      "canvas": [
+        64,
+        64
+      ],
+      "bounds_xyxy_exclusive": [
+        15,
+        10,
+        49,
+        54
+      ],
+      "subject_size": [
+        34,
+        44
+      ],
+      "opaque_pixels": 482,
+      "color_count": 34,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "max_pixel_centre_radius": 26.3154,
+      "max_pixel_corner_radius": 27.0185,
+      "socket_diameter": 56,
+      "preview_exact_nearest_8x": true,
+      "file_sha256": "365af4e34f911be6fa18c30bf326332e6641df30e61a1526ee3d2eb02ffaaac5",
+      "preview_sha256": "c47f0bcc15b0e89a2e3e4c3654561740add6d44c57688c0d7894408524efab5f"
+    },
+    {
+      "id": "wild_call",
+      "file": "skill_wild_call.png",
+      "preview": "skill_wild_call_8x.png",
+      "canvas": [
+        64,
+        64
+      ],
+      "bounds_xyxy_exclusive": [
+        11,
+        10,
+        53,
+        54
+      ],
+      "subject_size": [
+        42,
+        44
+      ],
+      "opaque_pixels": 1014,
+      "color_count": 36,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "max_pixel_centre_radius": 26.2011,
+      "max_pixel_corner_radius": 26.9072,
+      "socket_diameter": 56,
+      "preview_exact_nearest_8x": true,
+      "file_sha256": "a320496447315ce100a9376937b3f544bd919cd8b3d3275ad3b7febf13aa4333",
+      "preview_sha256": "c3b92c14df6c0eba816a37c4a07d6b6a7a3948389784116b729182382af0ec27"
+    },
+    {
+      "id": "beast_impact",
+      "file": "skill_beast_impact.png",
+      "preview": "skill_beast_impact_8x.png",
+      "canvas": [
+        64,
+        64
+      ],
+      "bounds_xyxy_exclusive": [
+        9,
+        10,
+        55,
+        54
+      ],
+      "subject_size": [
+        46,
+        44
+      ],
+      "opaque_pixels": 1299,
+      "color_count": 34,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "max_pixel_centre_radius": 26.8794,
+      "max_pixel_corner_radius": 27.5862,
+      "socket_diameter": 56,
+      "preview_exact_nearest_8x": true,
+      "file_sha256": "930ce31d874676e15c009ba048dd0e69455d1cd616bac073e803ba40547463e0",
+      "preview_sha256": "5e63496072755145195c75a085d663a18b3f105ef8a33f6eb0c972caf5d70535"
+    },
+    {
+      "id": "roar",
+      "file": "skill_roar.png",
+      "preview": "skill_roar_8x.png",
+      "canvas": [
+        64,
+        64
+      ],
+      "bounds_xyxy_exclusive": [
+        6,
+        10,
+        58,
+        54
+      ],
+      "subject_size": [
+        52,
+        44
+      ],
+      "opaque_pixels": 1360,
+      "color_count": 36,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "max_pixel_centre_radius": 26.3154,
+      "max_pixel_corner_radius": 27.0185,
+      "socket_diameter": 56,
+      "preview_exact_nearest_8x": true,
+      "file_sha256": "e7790dd474f5cfa35fa3d1a89c2b431171bb5698714fe7e9e88bd68b899ef308",
+      "preview_sha256": "0b19c805562114f7ded66058ac2f2856a6a92deaaee9de3f0f1356b3b87c4a87"
+    },
+    {
+      "id": "gust",
+      "file": "skill_gust.png",
+      "preview": "skill_gust_8x.png",
+      "canvas": [
+        64,
+        64
+      ],
+      "bounds_xyxy_exclusive": [
+        9,
+        12,
+        55,
+        52
+      ],
+      "subject_size": [
+        46,
+        40
+      ],
+      "opaque_pixels": 989,
+      "color_count": 35,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "max_pixel_centre_radius": 26.5047,
+      "max_pixel_corner_radius": 27.2029,
+      "socket_diameter": 56,
+      "preview_exact_nearest_8x": true,
+      "file_sha256": "36f39a5c0a6c4a112b82a7360147b5c494f4df6c7575bc90bdca4fcae95bd148",
+      "preview_sha256": "25866e63ae434ad9d2b1714df6b92a8708c3716523924385314c0415bc556aef"
+    },
+    {
+      "id": "rock_throw",
+      "file": "skill_rock_throw.png",
+      "preview": "skill_rock_throw_8x.png",
+      "canvas": [
+        64,
+        64
+      ],
+      "bounds_xyxy_exclusive": [
+        12,
+        13,
+        52,
+        51
+      ],
+      "subject_size": [
+        40,
+        38
+      ],
+      "opaque_pixels": 777,
+      "color_count": 36,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "max_pixel_centre_radius": 26.2011,
+      "max_pixel_corner_radius": 26.9072,
+      "socket_diameter": 56,
+      "preview_exact_nearest_8x": true,
+      "file_sha256": "3ce49e1950980ff4af72a4803b720247c21dc9dcf10a2e1795d63da59c2c9d6a",
+      "preview_sha256": "3ea18a8018d3552a502d15474f071bdf59ee96ea206a34f1bb76ca2df4805d21"
+    }
+  ],
+  "socket_center": [
+    31.5,
+    31.5
+  ],
+  "bounds_convention": "[left,top,right,bottom], right/bottom exclusive",
+  "color_count_convention": "Distinct RGB colours among fully opaque pixels; transparent RGB excluded"
+}

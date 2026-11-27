@@ -1,0 +1,10 @@
+1. `portrait_mayor_poppy`: Mayor Poppy. gives quests, in Prismhaven. Says: "Oh! You came all the way through the Smiling Forest? Splendid!" Quests: Sheep Shearing, Who's Afraid of the Big Bad Wolf?, The Missing Moon-Mochi.
+2. `portrait_tilly_the_toymaker`: Tilly the Toymaker. gives quests, in Prismhaven. Says: "Oh, hello! I make a toy of every monster I've seen a card of. Found any cards on your travels?" Quests: Models Wanted, A Shelf of Monsters, The Toy Parade, Rare and Wonderful.
+3. `portrait_mister_frost`: Mister Frost. gives quests, in Snow White Forest. Says: "Brrr-illiant to see you!" Quests: Bear Hugs.
+4. `portrait_foreman_barrowby`: Foreman Barrowby. gives quests, in Snow White Forest. Says: "Seven dwarfs, seven hearths, one very small kitchen." Quests: Bears at the Woodpile.
+5. `portrait_housekeeper_blanche`: Housekeeper Blanche. gives quests, in Snow White Forest. Says: "Seven dwarfs, seven pairs of muddy boots, and one of me. Wipe your feet!" Quests: Frost Apples, The Seven Hearths Feast.
+6. `portrait_frog_prince`: Frog Prince. gives quests, in Frog Swamp. Says: "Ribbit. I am a prince, you know. Truly." Quests: The Frog Prince.
+7. `portrait_ugly_duckling`: Ugly Duckling. gives quests, in Frog Swamp. Says: "Oh... hello. You don't think I'm ugly, do you?" Quests: The Ugly Duckling.
+8. `portrait_eel_catcher_ida`: Eel-Catcher Ida. gives quests, in Frog Swamp. Says: "Eels? No eels today. Only frogs. It's always frogs." Quests: Croaking Under the Boardwalk, Slime on the Stilts.
+9. `portrait_herbalist_mungo`: Herbalist Mungo. gives quests, in Frog Swamp. Says: "Mind where you step. Half of Bogbottom is medicine and the other half is mud." Quests: Mud for the Poultice.
+10. `portrait_brave_mouse`: Brave Mouse. gives quests, in Shiverdell. Says: "Squeak! Small, but brave!" Quests: The Lion and the Mouse.

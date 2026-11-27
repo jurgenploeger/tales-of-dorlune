@@ -1,0 +1,10 @@
+1. `portrait_beekeeper_barnaby`: Beekeeper Barnaby. gives quests, in Sunny Meadow. Says: "Shh. Slow movements, please. The bees are watching, and so am I." Quests: The Clover Thieves, Honey for Tilly.
+2. `portrait_old_shelly`: Old Shelly. gives quests, in Pineapple Shore. Says: "Click-clack! Mind the tide pools, youngster." Quests: Shell Snatchers, A Flute for Shelly.
+3. `portrait_fishwife_marla`: Fishwife Marla. gives quests, in Pineapple Shore. Says: "Fresh fish! Well, it was fresh this morning, before the Mud Eagles got to it." Quests: The Stolen Catch, A Light on the Point.
+4. `portrait_net_mender_oskar`: Net-Mender Oskar. gives quests, in Pineapple Shore. Says: "Every knot I tie, a crab snips. Every knot!" Quests: Crabs in the Nets.
+5. `portrait_willow_the_wisp`: Willow the Wisp. gives quests, in Twilight Woods. Says: "Shh... the woods are listening." Quests: Moonlight Thieves.
+6. `portrait_lampwright_fenwick`: Lampwright Fenwick. gives quests, in Twilight Woods. Says: "In Duskhollow it's always nearly night. Good for lanterns. Bad for reading." Quests: Shells for the Lanterns, The Night Market, Wake the Dusk Waystone, Oil for the Candles.
+7. `portrait_charcoal_burner_hettie`: Charcoal-Burner Hettie. gives quests, in Twilight Woods. Says: "Soot on your boots? Then you've found Duskhollow." Quests: Werewolves at the Woodpile, The Werewolf Pack.
+8. `portrait_little_pig`: Little Pig. gives quests, in Smiling Forest. Says: "Oink! Have you seen a wolf around here?" Quests: Straw, Sticks and Bricks.
+9. `portrait_orchard_keeper_moss`: Orchard-Keeper Moss. gives quests, in Smiling Forest. Says: "Hollyhock's apples are the sweetest in the forest. Ask the monkeys. They'd know." Quests: Monkeys in the Orchard, The Apple Fair.
+10. `portrait_cooper_beatrix`: Cooper Beatrix. gives quests, in Smiling Forest. Says: "Barrels! Kegs! Tubs! If it holds cider, I made it." Quests: Hog Wild.

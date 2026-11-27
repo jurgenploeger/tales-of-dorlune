@@ -1,0 +1,10 @@
+1. `portrait_smelter_bruna`: Smelter Bruna. gives quests, in Ingothold Lake. Says: "The ore comes down the lake on rafts, and I melt it. The crabs come too. I don't melt those." Quests: Lizard-Licked Ore, Golems on the Rafts.
+2. `portrait_harbourmaster_fitch`: Harbourmaster Fitch. gives quests, in Ingothold Lake. Says: "Rafts in, rafts out, and not one of them on time." Quests: Hot Crabs.
+3. `portrait_jory`: Jory. gives quests, in Dozywick. Says: "Rosalind fell asleep a year ago and never woke up. The whole town did." Quests: Sleeping Rosalind, The Craghulk, No More Nightmares.
+4. `portrait_night_owl_nettie`: Night-Owl Nettie. gives quests, in Dozywick. Says: "Can't sleep? Neither can we. Welcome to Wakewell, where nobody has yawned in a year." Quests: Bad Bedtime Stories, A Lullaby for Wakewell, A Waystone That Won't Wake.
+5. `portrait_coffee_roaster_bastian`: Coffee-Roaster Bastian. gives quests, in Dozywick. Says: "Coffee? Tea? A second coffee? We've got all night. We always have all night." Quests: Beans for the Roaster, Coffee for the Dwarfs.
+6. `portrait_old_ox`: Old Ox. gives quests, in Hidden Steppe. Says: "Moo... there were four of us once, and no lion dared come near." Quests: Four Oxen and a Lion, Thunder on the Steppe, The Waterhole.
+7. `portrait_drum_maker_saba`: Drum-Maker Saba. gives quests, in Hidden Steppe. Says: "On the steppe, you hear a drum before you see the village. Welcome to Tallgrass." Quests: Manes for the Drums, The Great Drum.
+8. `portrait_steppe_elder_kestrel`: Steppe Elder Kestrel. gives quests, in Hidden Steppe. Says: "The grass grows taller than a man here, and the stories grow taller than the grass." Quests: Fire in the Grass, The Waystone in the Tall Grass.
+9. `portrait_little_crab`: Little Crab. gives quests, in Sneezle Sands. Says: "Oh! Mind the persimmons, they fall hard around here." Quests: The Monkey and the Crab, Persimmons for Everyone.
+10. `portrait_captain_brine`: Captain Brine. gives quests, in Sneezle Sands. Says: "Ahoy! The Gull's the only ship that knows the way to Starfall Isle, and she's not ready to sail." Quests: A Spare Sail, A Figurehead for the Gull, The Star Chart.

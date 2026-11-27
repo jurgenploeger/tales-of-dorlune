@@ -1,0 +1,1376 @@
+{
+  "item_slot": {
+    "category": "menus",
+    "screen_size_points": [
+      56,
+      56
+    ],
+    "content_rect": [
+      315,
+      325,
+      965,
+      965
+    ],
+    "inset_rect": [
+      241,
+      249,
+      1038,
+      1042
+    ],
+    "caps": null,
+    "geometry_extras": {
+      "inset_shape": "rounded_rectangle",
+      "inset_corner_radius_px": 111,
+      "plain_content_test_rect": [
+        315,
+        325,
+        965,
+        965
+      ],
+      "outer_size_px": [
+        1040,
+        1040
+      ]
+    },
+    "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/slots/sources/item_slot_source.png",
+    "outline_width_px": 3,
+    "bounding_box": [
+      120,
+      120,
+      1160,
+      1160
+    ],
+    "canvas": [
+      1280,
+      1280
+    ],
+    "centre": [
+      640,
+      640
+    ],
+    "content_rect_bbox_local": [
+      195,
+      205,
+      845,
+      845
+    ],
+    "inset_rect_bbox_local": [
+      121,
+      129,
+      918,
+      922
+    ],
+    "point_size_applies_to": "visible_bounds"
+  },
+  "item_slot_selected": {
+    "category": "menus",
+    "screen_size_points": [
+      56,
+      56
+    ],
+    "content_rect": [
+      315,
+      325,
+      965,
+      965
+    ],
+    "inset_rect": [
+      241,
+      249,
+      1038,
+      1042
+    ],
+    "caps": null,
+    "geometry_extras": {
+      "inset_shape": "rounded_rectangle",
+      "inset_corner_radius_px": 111,
+      "plain_content_test_rect": [
+        315,
+        325,
+        965,
+        965
+      ],
+      "outer_size_px": [
+        1040,
+        1040
+      ],
+      "only_rim_inlay_changes": true
+    },
+    "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/slots/sources/item_slot_source.png",
+    "outline_width_px": 3,
+    "state": "selected",
+    "state_base": "item_slot",
+    "bounding_box": [
+      120,
+      120,
+      1160,
+      1160
+    ],
+    "canvas": [
+      1280,
+      1280
+    ],
+    "centre": [
+      640,
+      640
+    ],
+    "content_rect_bbox_local": [
+      195,
+      205,
+      845,
+      845
+    ],
+    "inset_rect_bbox_local": [
+      121,
+      129,
+      918,
+      922
+    ],
+    "point_size_applies_to": "visible_bounds"
+  },
+  "item_slot_empty": {
+    "category": "menus",
+    "screen_size_points": [
+      56,
+      56
+    ],
+    "content_rect": [
+      315,
+      325,
+      965,
+      965
+    ],
+    "inset_rect": [
+      241,
+      249,
+      1038,
+      1042
+    ],
+    "caps": null,
+    "geometry_extras": {
+      "inset_shape": "rounded_rectangle",
+      "inset_corner_radius_px": 111,
+      "plain_content_test_rect": [
+        315,
+        325,
+        965,
+        965
+      ],
+      "outer_size_px": [
+        1040,
+        1040
+      ],
+      "frame_pixel_identical": true
+    },
+    "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/slots/sources/item_slot_source.png",
+    "outline_width_px": 3,
+    "state": "empty",
+    "state_base": "item_slot",
+    "bounding_box": [
+      120,
+      120,
+      1160,
+      1160
+    ],
+    "canvas": [
+      1280,
+      1280
+    ],
+    "centre": [
+      640,
+      640
+    ],
+    "content_rect_bbox_local": [
+      195,
+      205,
+      845,
+      845
+    ],
+    "inset_rect_bbox_local": [
+      121,
+      129,
+      918,
+      922
+    ],
+    "point_size_applies_to": "visible_bounds"
+  },
+  "equip_slot": {
+    "category": "menus",
+    "screen_size_points": [
+      48,
+      48
+    ],
+    "content_rect": [
+      380,
+      380,
+      900,
+      900
+    ],
+    "inset_rect": [
+      265,
+      265,
+      1016,
+      1016
+    ],
+    "caps": null,
+    "outer_diameter_px": 1040,
+    "inner_diameter_px": 751,
+    "geometry_extras": {
+      "inset_shape": "circle",
+      "inset_centre": [
+        640,
+        640
+      ],
+      "inset_radius_px": 375,
+      "plain_content_test_rect": [
+        380,
+        380,
+        900,
+        900
+      ]
+    },
+    "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/slots/sources/equip_slot_source.png",
+    "outline_width_px": 3,
+    "bounding_box": [
+      120,
+      120,
+      1160,
+      1160
+    ],
+    "canvas": [
+      1280,
+      1280
+    ],
+    "centre": [
+      640,
+      640
+    ],
+    "content_rect_bbox_local": [
+      260,
+      260,
+      780,
+      780
+    ],
+    "inset_rect_bbox_local": [
+      145,
+      145,
+      896,
+      896
+    ],
+    "point_size_applies_to": "visible_bounds"
+  },
+  "switch_off": {
+    "category": "Menus / Settings",
+    "screen_size_points": [
+      52,
+      30
+    ],
+    "content_rect": [
+      180,
+      400,
+      1100,
+      880
+    ],
+    "inset_rect": [
+      180,
+      400,
+      1100,
+      880
+    ],
+    "caps": null,
+    "geometry_extras": {
+      "track_bbox": [
+        120,
+        340,
+        1160,
+        940
+      ],
+      "track_inset_corner_radius_px": 240,
+      "knob_centre": [
+        420,
+        640
+      ],
+      "knob_diameter_px": 480,
+      "knob_bbox": [
+        180,
+        400,
+        660,
+        880
+      ],
+      "knob_translation_between_states_px": [
+        440,
+        0
+      ],
+      "knob_shape_and_colours_identical_between_states": true,
+      "track_same_silhouette_between_states": true,
+      "track_inlay_material": "wood",
+      "separate_knob_asset": "switch_knob.png",
+      "separate_knob_crop": [
+        120,
+        120,
+        1160,
+        1160
+      ],
+      "separate_knob_scaled_size": [
+        480,
+        480
+      ],
+      "resampling": "nearest-neighbour; 3 px outer outline restored"
+    },
+    "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/controls/sources/switch_track_source.png",
+    "bounding_box": [
+      120,
+      340,
+      1160,
+      940
+    ],
+    "canvas": [
+      1280,
+      1280
+    ],
+    "centre": [
+      640,
+      640
+    ],
+    "content_rect_bbox_local": [
+      60,
+      60,
+      980,
+      540
+    ],
+    "inset_rect_bbox_local": [
+      60,
+      60,
+      980,
+      540
+    ],
+    "point_size_applies_to": "visible_bounds"
+  },
+  "switch_on": {
+    "category": "Menus / Settings",
+    "screen_size_points": [
+      52,
+      30
+    ],
+    "content_rect": [
+      180,
+      400,
+      1100,
+      880
+    ],
+    "inset_rect": [
+      180,
+      400,
+      1100,
+      880
+    ],
+    "caps": null,
+    "geometry_extras": {
+      "track_bbox": [
+        120,
+        340,
+        1160,
+        940
+      ],
+      "track_inset_corner_radius_px": 240,
+      "knob_centre": [
+        860,
+        640
+      ],
+      "knob_diameter_px": 480,
+      "knob_bbox": [
+        620,
+        400,
+        1100,
+        880
+      ],
+      "knob_translation_between_states_px": [
+        440,
+        0
+      ],
+      "knob_shape_and_colours_identical_between_states": true,
+      "track_same_silhouette_between_states": true,
+      "track_inlay_material": "sage",
+      "separate_knob_asset": "switch_knob.png",
+      "separate_knob_crop": [
+        120,
+        120,
+        1160,
+        1160
+      ],
+      "separate_knob_scaled_size": [
+        480,
+        480
+      ],
+      "resampling": "nearest-neighbour; 3 px outer outline restored"
+    },
+    "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/controls/sources/switch_track_source.png",
+    "bounding_box": [
+      120,
+      340,
+      1160,
+      940
+    ],
+    "canvas": [
+      1280,
+      1280
+    ],
+    "centre": [
+      640,
+      640
+    ],
+    "content_rect_bbox_local": [
+      60,
+      60,
+      980,
+      540
+    ],
+    "inset_rect_bbox_local": [
+      60,
+      60,
+      980,
+      540
+    ],
+    "point_size_applies_to": "visible_bounds"
+  },
+  "switch_knob": {
+    "category": "Menus / Settings",
+    "screen_size_points": [
+      24,
+      24
+    ],
+    "content_rect": [
+      265,
+      265,
+      1015,
+      1015
+    ],
+    "inset_rect": null,
+    "caps": null,
+    "geometry_extras": {
+      "outer_diameter_px": 1040,
+      "component_is_plain": true,
+      "switch_composition_size_px": [
+        480,
+        480
+      ],
+      "switch_composition_resampling": "nearest-neighbour",
+      "switch_composition_source_crop": [
+        120,
+        120,
+        1160,
+        1160
+      ]
+    },
+    "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/controls/sources/switch_knob_source.png",
+    "bounding_box": [
+      120,
+      120,
+      1160,
+      1160
+    ],
+    "canvas": [
+      1280,
+      1280
+    ],
+    "centre": [
+      640,
+      640
+    ],
+    "content_rect_bbox_local": [
+      145,
+      145,
+      895,
+      895
+    ],
+    "inset_rect_bbox_local": null,
+    "point_size_applies_to": "visible_bounds"
+  },
+  "slider_track": {
+    "category": "Menus / Settings",
+    "screen_size_points": [
+      156,
+      26
+    ],
+    "content_rect": [
+      238,
+      622,
+      1042,
+      659
+    ],
+    "inset_rect": [
+      199,
+      615,
+      1081,
+      665
+    ],
+    "caps": {
+      "axis": "x",
+      "left_px": 140,
+      "right_px": 140,
+      "cap_width_origin": "visible bounding box",
+      "coordinate_space": "bbox_local",
+      "stretch_rect_canvas": [
+        260,
+        553,
+        1020,
+        727
+      ],
+      "stretch_rect_bbox_local": [
+        140,
+        0,
+        900,
+        174
+      ],
+      "slice_boundaries_canvas_x": [
+        260,
+        1020
+      ],
+      "slice_boundaries_bbox_local_x": [
+        140,
+        900
+      ],
+      "canvas_cap_insets_px": {
+        "left": 260,
+        "right": 260,
+        "top": 0,
+        "bottom": 0
+      },
+      "cropped_cap_insets_px": {
+        "left": 140,
+        "right": 140,
+        "top": 0,
+        "bottom": 0
+      },
+      "minimum_visible_width_px": 281,
+      "centre_columns_pixel_identical": true,
+      "both_cap_join_columns_pixel_identical": true
+    },
+    "geometry_extras": {
+      "stretch_middle_columns_pixel_identical": true,
+      "stretch_region_width_px": 760,
+      "minimum_width_px": 280,
+      "authored_end_leaf_sigils": 2,
+      "recommended_slider_knob_visible_size_points": [
+        26,
+        26
+      ],
+      "cap_join_columns_pixel_identical": true,
+      "centre_plateau_canvas_x": [
+        248,
+        1032
+      ],
+      "centre_plateau_overlap_into_each_cap_px": 12
+    },
+    "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/controls/sources/slider_track_source.png",
+    "bounding_box": [
+      120,
+      553,
+      1160,
+      727
+    ],
+    "canvas": [
+      1280,
+      1280
+    ],
+    "centre": [
+      640,
+      640
+    ],
+    "content_rect_bbox_local": [
+      118,
+      69,
+      922,
+      106
+    ],
+    "inset_rect_bbox_local": [
+      79,
+      62,
+      961,
+      112
+    ],
+    "point_size_applies_to": "visible_bounds"
+  },
+  "slider_knob": {
+    "category": "Menus / Settings",
+    "screen_size_points": [
+      26,
+      26
+    ],
+    "content_rect": [
+      265,
+      265,
+      1015,
+      1015
+    ],
+    "inset_rect": null,
+    "caps": null,
+    "geometry_extras": {
+      "outer_diameter_px": 1040,
+      "centre_star_point_count": 8
+    },
+    "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/controls/sources/slider_knob_source.png",
+    "bounding_box": [
+      120,
+      120,
+      1160,
+      1160
+    ],
+    "canvas": [
+      1280,
+      1280
+    ],
+    "centre": [
+      640,
+      640
+    ],
+    "content_rect_bbox_local": [
+      145,
+      145,
+      895,
+      895
+    ],
+    "inset_rect_bbox_local": null,
+    "point_size_applies_to": "visible_bounds"
+  },
+  "icon_button_square": {
+    "category": "menus",
+    "screen_size_points": [
+      40,
+      40
+    ],
+    "content_rect": [
+      300,
+      305,
+      980,
+      980
+    ],
+    "inset_rect": [
+      205,
+      214,
+      1074,
+      1075
+    ],
+    "caps": null,
+    "geometry_extras": {
+      "inset_shape": "rounded_rectangle",
+      "inset_corner_radius_px": 132,
+      "plain_content_test_rect": [
+        300,
+        305,
+        980,
+        980
+      ],
+      "outer_size_px": [
+        1040,
+        1040
+      ]
+    },
+    "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/slots/sources/icon_button_square_source.png",
+    "outline_width_px": 3,
+    "bounding_box": [
+      120,
+      120,
+      1160,
+      1160
+    ],
+    "canvas": [
+      1280,
+      1280
+    ],
+    "centre": [
+      640,
+      640
+    ],
+    "content_rect_bbox_local": [
+      180,
+      185,
+      860,
+      860
+    ],
+    "inset_rect_bbox_local": [
+      85,
+      94,
+      954,
+      955
+    ],
+    "point_size_applies_to": "visible_bounds"
+  },
+  "icon_button_square_pressed": {
+    "category": "menus",
+    "screen_size_points": [
+      40,
+      40
+    ],
+    "content_rect": [
+      300,
+      305,
+      980,
+      980
+    ],
+    "inset_rect": [
+      205,
+      214,
+      1074,
+      1075
+    ],
+    "caps": null,
+    "geometry_extras": {
+      "inset_shape": "rounded_rectangle",
+      "inset_corner_radius_px": 132,
+      "plain_content_test_rect": [
+        300,
+        305,
+        980,
+        980
+      ],
+      "outer_size_px": [
+        1040,
+        1040
+      ],
+      "frame_pixel_identical": true,
+      "pressed_face_deeper": true
+    },
+    "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/slots/sources/icon_button_square_source.png",
+    "outline_width_px": 3,
+    "state": "pressed",
+    "state_base": "icon_button_square",
+    "bounding_box": [
+      120,
+      120,
+      1160,
+      1160
+    ],
+    "canvas": [
+      1280,
+      1280
+    ],
+    "centre": [
+      640,
+      640
+    ],
+    "content_rect_bbox_local": [
+      180,
+      185,
+      860,
+      860
+    ],
+    "inset_rect_bbox_local": [
+      85,
+      94,
+      954,
+      955
+    ],
+    "point_size_applies_to": "visible_bounds"
+  },
+  "progress_groove": {
+    "category": "Menus",
+    "screen_size_points": [
+      120,
+      12
+    ],
+    "screen_size_is_suggested": true,
+    "content_rect": [
+      179,
+      619,
+      1101,
+      666
+    ],
+    "inset_rect": [
+      149,
+      615,
+      1131,
+      670
+    ],
+    "inset_corner_radius_px": 27,
+    "flat_regions": [
+      {
+        "name": "progress_fill",
+        "rect": [
+          179,
+          619,
+          1101,
+          666
+        ],
+        "role": "face_pressed"
+      }
+    ],
+    "geometry_extras": {
+      "rounded_ends": true,
+      "symbols": 0
+    },
+    "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/plates/sources/progress_groove_source.png",
+    "caps": {
+      "axis": "x",
+      "left_px": 100,
+      "right_px": 100,
+      "cap_width_origin": "visible bounding box",
+      "coordinate_space": "bbox_local",
+      "stretch_rect_canvas": [
+        220,
+        588,
+        1060,
+        691
+      ],
+      "stretch_rect_bbox_local": [
+        100,
+        0,
+        940,
+        103
+      ],
+      "slice_boundaries_canvas_x": [
+        220,
+        1060
+      ],
+      "slice_boundaries_bbox_local_x": [
+        100,
+        940
+      ],
+      "canvas_cap_insets_px": {
+        "left": 220,
+        "right": 220,
+        "top": 0,
+        "bottom": 0
+      },
+      "cropped_cap_insets_px": {
+        "left": 100,
+        "right": 100,
+        "top": 0,
+        "bottom": 0
+      },
+      "minimum_visible_width_px": 201,
+      "centre_columns_pixel_identical": true,
+      "both_cap_join_columns_pixel_identical": true
+    },
+    "outline_width_px": 3,
+    "point_size_applies_to": "visible_bounds",
+    "bounding_box": [
+      120,
+      588,
+      1160,
+      691
+    ],
+    "canvas": [
+      1280,
+      1280
+    ],
+    "centre": [
+      640,
+      640
+    ],
+    "content_rect_bbox_local": [
+      59,
+      31,
+      981,
+      78
+    ],
+    "inset_rect_bbox_local": [
+      29,
+      27,
+      1011,
+      82
+    ]
+  },
+  "count_badge": {
+    "category": "menus",
+    "screen_size_points": [
+      18,
+      18
+    ],
+    "content_rect": [
+      344,
+      344,
+      936,
+      936
+    ],
+    "inset_rect": [
+      220,
+      220,
+      1060,
+      1060
+    ],
+    "caps": null,
+    "outer_diameter_px": 1040,
+    "inner_diameter_px": 840,
+    "geometry_extras": {
+      "circle_centre": [
+        639.5,
+        639.5
+      ],
+      "circle_bounds": [
+        120,
+        120,
+        1160,
+        1160
+      ],
+      "plain_face_circle": {
+        "centre": [
+          639.5,
+          639.5
+        ],
+        "radius": 420
+      },
+      "symbols": 0
+    },
+    "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/rounds/sources/count_badge.png",
+    "bounding_box": [
+      120,
+      120,
+      1160,
+      1160
+    ],
+    "canvas": [
+      1280,
+      1280
+    ],
+    "centre": [
+      640,
+      640
+    ],
+    "content_rect_bbox_local": [
+      224,
+      224,
+      816,
+      816
+    ],
+    "inset_rect_bbox_local": [
+      100,
+      100,
+      940,
+      940
+    ],
+    "point_size_applies_to": "visible_bounds"
+  },
+  "notice_dot": {
+    "category": "menus",
+    "screen_size_points": [
+      10,
+      10
+    ],
+    "content_rect": [
+      370,
+      370,
+      910,
+      910
+    ],
+    "inset_rect": [
+      190,
+      190,
+      1090,
+      1090
+    ],
+    "caps": null,
+    "outer_diameter_px": 1040,
+    "inner_diameter_px": 900,
+    "geometry_extras": {
+      "circle_centre": [
+        639.5,
+        639.5
+      ],
+      "circle_bounds": [
+        120,
+        120,
+        1160,
+        1160
+      ],
+      "plain_face_circle": {
+        "centre": [
+          639.5,
+          639.5
+        ],
+        "radius": 382
+      },
+      "symbols": 0,
+      "inlay_material": "gold"
+    },
+    "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/rounds/sources/notice_dot.png",
+    "bounding_box": [
+      120,
+      120,
+      1160,
+      1160
+    ],
+    "canvas": [
+      1280,
+      1280
+    ],
+    "centre": [
+      640,
+      640
+    ],
+    "content_rect_bbox_local": [
+      250,
+      250,
+      790,
+      790
+    ],
+    "inset_rect_bbox_local": [
+      70,
+      70,
+      970,
+      970
+    ],
+    "point_size_applies_to": "visible_bounds"
+  },
+  "page_dot_off": {
+    "category": "menus",
+    "screen_size_points": [
+      7,
+      7
+    ],
+    "content_rect": [
+      368,
+      368,
+      912,
+      912
+    ],
+    "inset_rect": [
+      216,
+      216,
+      1064,
+      1064
+    ],
+    "caps": null,
+    "outer_diameter_px": 1040,
+    "inner_diameter_px": 848,
+    "geometry_extras": {
+      "circle_centre": [
+        639.5,
+        639.5
+      ],
+      "circle_bounds": [
+        120,
+        120,
+        1160,
+        1160
+      ],
+      "plain_face_circle": {
+        "centre": [
+          639.5,
+          639.5
+        ],
+        "radius": 385
+      },
+      "symbols": 0,
+      "same_silhouette_as": "page_dot_on.png"
+    },
+    "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/rounds/sources/page_dot_off.png",
+    "bounding_box": [
+      120,
+      120,
+      1160,
+      1160
+    ],
+    "canvas": [
+      1280,
+      1280
+    ],
+    "centre": [
+      640,
+      640
+    ],
+    "content_rect_bbox_local": [
+      248,
+      248,
+      792,
+      792
+    ],
+    "inset_rect_bbox_local": [
+      96,
+      96,
+      944,
+      944
+    ],
+    "point_size_applies_to": "visible_bounds"
+  },
+  "page_dot_on": {
+    "category": "menus",
+    "screen_size_points": [
+      7,
+      7
+    ],
+    "content_rect": [
+      368,
+      368,
+      912,
+      912
+    ],
+    "inset_rect": [
+      216,
+      216,
+      1064,
+      1064
+    ],
+    "caps": null,
+    "outer_diameter_px": 1040,
+    "inner_diameter_px": 848,
+    "geometry_extras": {
+      "circle_centre": [
+        639.5,
+        639.5
+      ],
+      "circle_bounds": [
+        120,
+        120,
+        1160,
+        1160
+      ],
+      "plain_face_circle": {
+        "centre": [
+          639.5,
+          639.5
+        ],
+        "radius": 385
+      },
+      "symbols": 0,
+      "same_silhouette_as": "page_dot_off.png",
+      "inlay_material": "gold"
+    },
+    "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/rounds/sources/page_dot_off.png",
+    "bounding_box": [
+      120,
+      120,
+      1160,
+      1160
+    ],
+    "canvas": [
+      1280,
+      1280
+    ],
+    "centre": [
+      640,
+      640
+    ],
+    "content_rect_bbox_local": [
+      248,
+      248,
+      792,
+      792
+    ],
+    "inset_rect_bbox_local": [
+      96,
+      96,
+      944,
+      944
+    ],
+    "point_size_applies_to": "visible_bounds"
+  },
+  "battle_nameplate": {
+    "category": "Battle",
+    "screen_size_points": [
+      90,
+      26
+    ],
+    "content_rect": [
+      290,
+      535,
+      990,
+      640
+    ],
+    "inset_rect": [
+      261,
+      679,
+      1019,
+      729
+    ],
+    "inset_corner_radius_px": 23,
+    "content_regions": {
+      "name": [
+        290,
+        535,
+        990,
+        640
+      ],
+      "hp_bar": [
+        288,
+        683,
+        992,
+        725
+      ]
+    },
+    "flat_regions": [
+      {
+        "name": "name",
+        "rect": [
+          290,
+          535,
+          990,
+          640
+        ],
+        "role": "hud_241_195_135"
+      },
+      {
+        "name": "hp_bar",
+        "rect": [
+          288,
+          683,
+          992,
+          725
+        ],
+        "role": "face_pressed"
+      }
+    ],
+    "geometry_extras": {
+      "hp_groove_count": 1
+    },
+    "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/plates/sources/battle_nameplate_source.png",
+    "caps": {
+      "axis": "x",
+      "left_px": 230,
+      "right_px": 230,
+      "cap_width_origin": "visible bounding box",
+      "coordinate_space": "bbox_local",
+      "stretch_rect_canvas": [
+        350,
+        490,
+        930,
+        790
+      ],
+      "stretch_rect_bbox_local": [
+        230,
+        0,
+        810,
+        300
+      ],
+      "slice_boundaries_canvas_x": [
+        350,
+        930
+      ],
+      "slice_boundaries_bbox_local_x": [
+        230,
+        810
+      ],
+      "canvas_cap_insets_px": {
+        "left": 350,
+        "right": 350,
+        "top": 0,
+        "bottom": 0
+      },
+      "cropped_cap_insets_px": {
+        "left": 230,
+        "right": 230,
+        "top": 0,
+        "bottom": 0
+      },
+      "minimum_visible_width_px": 461,
+      "centre_columns_pixel_identical": true,
+      "both_cap_join_columns_pixel_identical": true
+    },
+    "outline_width_px": 3,
+    "point_size_applies_to": "visible_bounds",
+    "bounding_box": [
+      120,
+      490,
+      1160,
+      790
+    ],
+    "canvas": [
+      1280,
+      1280
+    ],
+    "centre": [
+      640,
+      640
+    ],
+    "content_rect_bbox_local": [
+      170,
+      45,
+      870,
+      150
+    ],
+    "inset_rect_bbox_local": [
+      141,
+      189,
+      899,
+      239
+    ]
+  },
+  "turn_timer_ring": {
+    "category": "battle",
+    "screen_size_points": [
+      44,
+      44
+    ],
+    "content_rect": [
+      358,
+      358,
+      922,
+      922
+    ],
+    "inset_rect": [
+      240,
+      240,
+      1040,
+      1040
+    ],
+    "caps": null,
+    "outer_diameter_px": 1040,
+    "inner_diameter_px": 800,
+    "geometry_extras": {
+      "circle_centre": [
+        639.5,
+        639.5
+      ],
+      "circle_bounds": [
+        120,
+        120,
+        1160,
+        1160
+      ],
+      "transparent_hole": {
+        "centre": [
+          639.5,
+          639.5
+        ],
+        "radius": 400,
+        "diameter": 800,
+        "bounds": [
+          240,
+          240,
+          1040,
+          1040
+        ]
+      },
+      "moon_phase_count": 8,
+      "moon_phase_clockwise_order": [
+        "new",
+        "waxing_crescent",
+        "first_quarter",
+        "waxing_gibbous",
+        "full",
+        "waning_gibbous",
+        "last_quarter",
+        "waning_crescent"
+      ],
+      "moon_phase_start_clock_position": "12 oclock"
+    },
+    "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/rounds/sources/turn_timer_ring.png",
+    "bounding_box": [
+      120,
+      120,
+      1160,
+      1160
+    ],
+    "canvas": [
+      1280,
+      1280
+    ],
+    "centre": [
+      640,
+      640
+    ],
+    "content_rect_bbox_local": [
+      238,
+      238,
+      802,
+      802
+    ],
+    "inset_rect_bbox_local": [
+      120,
+      120,
+      920,
+      920
+    ],
+    "point_size_applies_to": "visible_bounds"
+  }
+}

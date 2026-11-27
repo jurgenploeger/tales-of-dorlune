@@ -1,0 +1,1727 @@
+{
+  "attack": {
+    "source": "attack_source.png",
+    "source_canvas": [
+      1254,
+      1254
+    ],
+    "source_bbox": [
+      248,
+      206,
+      998,
+      1063
+    ],
+    "source_sha256": "28a916142bf9072fa0325e979c399537e6c4abfe28c194f8f86f72c634c833bd",
+    "removed_dust_components": 0,
+    "resampling": "nearest neighbour, no interpolation or dithering",
+    "centre_normal": [
+      640,
+      640
+    ],
+    "centre_pressed": [
+      640,
+      642
+    ],
+    "bbox_normal": [
+      431,
+      402,
+      850,
+      879
+    ],
+    "bbox_pressed": [
+      431,
+      404,
+      850,
+      881
+    ],
+    "picture_pixel_count": 80913,
+    "envelope_diameter_target_px": 625,
+    "envelope_diameter_actual_px": 623.897,
+    "envelope_fraction_of_visible_button": 0.59933,
+    "envelope_fraction_of_inset_face": 0.82526,
+    "nominal_outline_width_px": 6,
+    "pale_separator_width_px": 2,
+    "pressed_translation_px": [
+      0,
+      2
+    ],
+    "normal_palette_rgb": [
+      [
+        24,
+        12,
+        8
+      ],
+      [
+        251,
+        248,
+        236
+      ],
+      [
+        187,
+        208,
+        223
+      ],
+      [
+        234,
+        245,
+        252
+      ],
+      [
+        110,
+        145,
+        174
+      ],
+      [
+        239,
+        183,
+        44
+      ],
+      [
+        255,
+        219,
+        99
+      ],
+      [
+        177,
+        106,
+        21
+      ]
+    ],
+    "pressed_palette_rgb": [
+      [
+        24,
+        12,
+        8
+      ],
+      [
+        251,
+        248,
+        236
+      ],
+      [
+        168,
+        187,
+        201
+      ],
+      [
+        211,
+        220,
+        227
+      ],
+      [
+        99,
+        130,
+        157
+      ],
+      [
+        215,
+        165,
+        40
+      ],
+      [
+        230,
+        197,
+        89
+      ],
+      [
+        159,
+        95,
+        19
+      ]
+    ],
+    "theme_changes_picture_colours": false,
+    "outline_pixels": 9647,
+    "separator_pixels": 2934,
+    "glyph_mask_sha256": "cee99c7ab4d451e43c4320aa6427db9648a6a6e678c4257f96b2ceb8ac29363f"
+  },
+  "inventory": {
+    "source": "inventory_source.png",
+    "source_canvas": [
+      1254,
+      1254
+    ],
+    "source_bbox": [
+      200,
+      186,
+      1045,
+      1097
+    ],
+    "source_sha256": "111c6cd895c8526877456c6997ea972adcd664c965d0691fad881fc27abc3e2e",
+    "removed_dust_components": 0,
+    "resampling": "nearest neighbour, no interpolation or dithering",
+    "centre_normal": [
+      640,
+      640
+    ],
+    "centre_pressed": [
+      640,
+      642
+    ],
+    "bbox_normal": [
+      388,
+      368,
+      893,
+      913
+    ],
+    "bbox_pressed": [
+      388,
+      370,
+      893,
+      915
+    ],
+    "picture_pixel_count": 214144,
+    "envelope_diameter_target_px": 625,
+    "envelope_diameter_actual_px": 623.513,
+    "envelope_fraction_of_visible_button": 0.59896,
+    "envelope_fraction_of_inset_face": 0.82475,
+    "nominal_outline_width_px": 6,
+    "pale_separator_width_px": 2,
+    "pressed_translation_px": [
+      0,
+      2
+    ],
+    "normal_palette_rgb": [
+      [
+        24,
+        12,
+        8
+      ],
+      [
+        251,
+        248,
+        236
+      ],
+      [
+        169,
+        89,
+        45
+      ],
+      [
+        244,
+        189,
+        139
+      ],
+      [
+        112,
+        55,
+        28
+      ],
+      [
+        245,
+        191,
+        48
+      ],
+      [
+        192,
+        116,
+        24
+      ],
+      [
+        255,
+        224,
+        113
+      ]
+    ],
+    "pressed_palette_rgb": [
+      [
+        24,
+        12,
+        8
+      ],
+      [
+        251,
+        248,
+        236
+      ],
+      [
+        152,
+        80,
+        40
+      ],
+      [
+        220,
+        170,
+        125
+      ],
+      [
+        101,
+        50,
+        25
+      ],
+      [
+        220,
+        172,
+        43
+      ],
+      [
+        173,
+        104,
+        22
+      ],
+      [
+        230,
+        202,
+        102
+      ]
+    ],
+    "theme_changes_picture_colours": false,
+    "outline_pixels": 12317,
+    "separator_pixels": 3939,
+    "glyph_mask_sha256": "e4b99f3d132705a8cd1275ffeabdcd8ab747b0d644c14b0239b3ee3047443d93"
+  },
+  "items": {
+    "source": "items_source.png",
+    "source_canvas": [
+      1254,
+      1254
+    ],
+    "source_bbox": [
+      287,
+      148,
+      950,
+      1116
+    ],
+    "source_sha256": "0bef4b1ff5a9b9c66c1d9ece92b3ba21f59e14d56891f9533ffee77c1f2386f3",
+    "removed_dust_components": 0,
+    "resampling": "nearest neighbour, no interpolation or dithering",
+    "centre_normal": [
+      640,
+      640
+    ],
+    "centre_pressed": [
+      640,
+      642
+    ],
+    "bbox_normal": [
+      427,
+      329,
+      854,
+      952
+    ],
+    "bbox_pressed": [
+      427,
+      331,
+      854,
+      954
+    ],
+    "picture_pixel_count": 184998,
+    "envelope_diameter_target_px": 625,
+    "envelope_diameter_actual_px": 625.236,
+    "envelope_fraction_of_visible_button": 0.60061,
+    "envelope_fraction_of_inset_face": 0.82703,
+    "nominal_outline_width_px": 6,
+    "pale_separator_width_px": 2,
+    "pressed_translation_px": [
+      0,
+      2
+    ],
+    "normal_palette_rgb": [
+      [
+        24,
+        12,
+        8
+      ],
+      [
+        251,
+        248,
+        236
+      ],
+      [
+        172,
+        224,
+        242
+      ],
+      [
+        94,
+        163,
+        190
+      ],
+      [
+        229,
+        55,
+        69
+      ],
+      [
+        152,
+        31,
+        52
+      ],
+      [
+        188,
+        125,
+        67
+      ],
+      [
+        126,
+        76,
+        39
+      ]
+    ],
+    "pressed_palette_rgb": [
+      [
+        24,
+        12,
+        8
+      ],
+      [
+        251,
+        248,
+        236
+      ],
+      [
+        155,
+        202,
+        218
+      ],
+      [
+        85,
+        147,
+        171
+      ],
+      [
+        206,
+        50,
+        62
+      ],
+      [
+        137,
+        28,
+        47
+      ],
+      [
+        169,
+        112,
+        60
+      ],
+      [
+        113,
+        68,
+        35
+      ]
+    ],
+    "theme_changes_picture_colours": false,
+    "outline_pixels": 10485,
+    "separator_pixels": 3282,
+    "glyph_mask_sha256": "393f6dc80b762d95e4523ea58797ac9be0c19d753e09b2726aeb044a0f56886a"
+  },
+  "settings": {
+    "source": "settings_source.png",
+    "source_canvas": [
+      1254,
+      1254
+    ],
+    "source_bbox": [
+      108,
+      135,
+      1143,
+      1148
+    ],
+    "source_sha256": "660e352cc61dc1192bcf7f990fa53b8e0f3e282eaa3c56052deccd0db5e8522d",
+    "removed_dust_components": 0,
+    "resampling": "nearest neighbour, no interpolation or dithering",
+    "centre_normal": [
+      640,
+      640
+    ],
+    "centre_pressed": [
+      640,
+      642
+    ],
+    "bbox_normal": [
+      330,
+      337,
+      951,
+      944
+    ],
+    "bbox_pressed": [
+      330,
+      339,
+      951,
+      946
+    ],
+    "picture_pixel_count": 259309,
+    "envelope_diameter_target_px": 625,
+    "envelope_diameter_actual_px": 625.936,
+    "envelope_fraction_of_visible_button": 0.60128,
+    "envelope_fraction_of_inset_face": 0.82796,
+    "nominal_outline_width_px": 6,
+    "pale_separator_width_px": 2,
+    "pressed_translation_px": [
+      0,
+      2
+    ],
+    "normal_palette_rgb": [
+      [
+        24,
+        12,
+        8
+      ],
+      [
+        251,
+        248,
+        236
+      ],
+      [
+        160,
+        180,
+        196
+      ],
+      [
+        217,
+        231,
+        238
+      ],
+      [
+        98,
+        121,
+        146
+      ],
+      [
+        56,
+        49,
+        47
+      ],
+      [
+        123,
+        148,
+        167
+      ],
+      [
+        77,
+        91,
+        109
+      ]
+    ],
+    "pressed_palette_rgb": [
+      [
+        24,
+        12,
+        8
+      ],
+      [
+        251,
+        248,
+        236
+      ],
+      [
+        144,
+        162,
+        176
+      ],
+      [
+        195,
+        208,
+        214
+      ],
+      [
+        88,
+        109,
+        131
+      ],
+      [
+        50,
+        44,
+        42
+      ],
+      [
+        111,
+        133,
+        150
+      ],
+      [
+        69,
+        82,
+        98
+      ]
+    ],
+    "theme_changes_picture_colours": false,
+    "outline_pixels": 13807,
+    "separator_pixels": 4298,
+    "glyph_mask_sha256": "36cb6b94ba9c058c638ddf7a692667853fad9d1c0d7631f6a73e885d8d004da1"
+  },
+  "companions": {
+    "source": "companions_source.png",
+    "source_canvas": [
+      1254,
+      1254
+    ],
+    "source_bbox": [
+      153,
+      245,
+      1098,
+      1051
+    ],
+    "source_sha256": "52ef6948b7157efe7ed1a68a5c824b12eafa974f021a73359ed926170f347fd8",
+    "removed_dust_components": 0,
+    "resampling": "nearest neighbour, no interpolation or dithering",
+    "centre_normal": [
+      640,
+      640
+    ],
+    "centre_pressed": [
+      640,
+      642
+    ],
+    "bbox_normal": [
+      331,
+      376,
+      950,
+      905
+    ],
+    "bbox_pressed": [
+      331,
+      378,
+      950,
+      907
+    ],
+    "picture_pixel_count": 208852,
+    "envelope_diameter_target_px": 625,
+    "envelope_diameter_actual_px": 625.396,
+    "envelope_fraction_of_visible_button": 0.60076,
+    "envelope_fraction_of_inset_face": 0.82724,
+    "nominal_outline_width_px": 6,
+    "pale_separator_width_px": 2,
+    "pressed_translation_px": [
+      0,
+      2
+    ],
+    "normal_palette_rgb": [
+      [
+        24,
+        12,
+        8
+      ],
+      [
+        251,
+        248,
+        236
+      ],
+      [
+        239,
+        112,
+        161
+      ],
+      [
+        255,
+        177,
+        205
+      ],
+      [
+        194,
+        56,
+        115
+      ],
+      [
+        135,
+        34,
+        78
+      ]
+    ],
+    "pressed_palette_rgb": [
+      [
+        24,
+        12,
+        8
+      ],
+      [
+        251,
+        248,
+        236
+      ],
+      [
+        215,
+        101,
+        145
+      ],
+      [
+        230,
+        159,
+        184
+      ],
+      [
+        175,
+        50,
+        104
+      ],
+      [
+        122,
+        31,
+        70
+      ]
+    ],
+    "theme_changes_picture_colours": false,
+    "outline_pixels": 20450,
+    "separator_pixels": 6542,
+    "glyph_mask_sha256": "e555d88c385903584448dc16ede4ff821b541c4604337c583a98bdda2c60a79a"
+  },
+  "world_map": {
+    "source": "world_map_source.png",
+    "source_canvas": [
+      1254,
+      1254
+    ],
+    "source_bbox": [
+      118,
+      252,
+      1128,
+      1051
+    ],
+    "source_sha256": "9f2baf07dc0ac1ee0e48b436b269fc2750a42c7afc359ba2170b0574126826e1",
+    "removed_dust_components": 0,
+    "resampling": "nearest neighbour, no interpolation or dithering",
+    "centre_normal": [
+      640,
+      640
+    ],
+    "centre_pressed": [
+      640,
+      642
+    ],
+    "bbox_normal": [
+      383,
+      436,
+      898,
+      845
+    ],
+    "bbox_pressed": [
+      383,
+      438,
+      898,
+      847
+    ],
+    "picture_pixel_count": 175554,
+    "envelope_diameter_target_px": 625,
+    "envelope_diameter_actual_px": 624.003,
+    "envelope_fraction_of_visible_button": 0.59943,
+    "envelope_fraction_of_inset_face": 0.8254,
+    "nominal_outline_width_px": 6,
+    "pale_separator_width_px": 2,
+    "pressed_translation_px": [
+      0,
+      2
+    ],
+    "normal_palette_rgb": [
+      [
+        24,
+        12,
+        8
+      ],
+      [
+        251,
+        248,
+        236
+      ],
+      [
+        231,
+        193,
+        119
+      ],
+      [
+        183,
+        139,
+        79
+      ],
+      [
+        254,
+        224,
+        164
+      ],
+      [
+        219,
+        58,
+        48
+      ],
+      [
+        255,
+        131,
+        101
+      ],
+      [
+        144,
+        36,
+        35
+      ]
+    ],
+    "pressed_palette_rgb": [
+      [
+        24,
+        12,
+        8
+      ],
+      [
+        251,
+        248,
+        236
+      ],
+      [
+        208,
+        174,
+        107
+      ],
+      [
+        165,
+        125,
+        71
+      ],
+      [
+        229,
+        202,
+        148
+      ],
+      [
+        197,
+        52,
+        43
+      ],
+      [
+        230,
+        118,
+        91
+      ],
+      [
+        130,
+        32,
+        32
+      ]
+    ],
+    "theme_changes_picture_colours": false,
+    "outline_pixels": 9802,
+    "separator_pixels": 3201,
+    "glyph_mask_sha256": "24fcd614bf87ee11df73b3193fe88ee051a692b95c1723742ac5656dcafb6d40"
+  },
+  "spells": {
+    "source": "spells_source.png",
+    "source_canvas": [
+      1254,
+      1254
+    ],
+    "source_bbox": [
+      224,
+      184,
+      999,
+      1098
+    ],
+    "source_sha256": "04206ee40b007f748f8f1f89fa449df5bac5e2665368976ea91cc51281261516",
+    "removed_dust_components": 0,
+    "resampling": "nearest neighbour, no interpolation or dithering",
+    "centre_normal": [
+      640,
+      640
+    ],
+    "centre_pressed": [
+      640,
+      642
+    ],
+    "bbox_normal": [
+      420,
+      381,
+      861,
+      900
+    ],
+    "bbox_pressed": [
+      420,
+      383,
+      861,
+      902
+    ],
+    "picture_pixel_count": 219732,
+    "envelope_diameter_target_px": 625,
+    "envelope_diameter_actual_px": 623.622,
+    "envelope_fraction_of_visible_button": 0.59906,
+    "envelope_fraction_of_inset_face": 0.8249,
+    "nominal_outline_width_px": 6,
+    "pale_separator_width_px": 2,
+    "pressed_translation_px": [
+      0,
+      2
+    ],
+    "normal_palette_rgb": [
+      [
+        24,
+        12,
+        8
+      ],
+      [
+        251,
+        248,
+        236
+      ],
+      [
+        138,
+        81,
+        196
+      ],
+      [
+        188,
+        135,
+        231
+      ],
+      [
+        83,
+        44,
+        139
+      ],
+      [
+        246,
+        190,
+        51
+      ],
+      [
+        255,
+        222,
+        113
+      ],
+      [
+        181,
+        108,
+        26
+      ]
+    ],
+    "pressed_palette_rgb": [
+      [
+        24,
+        12,
+        8
+      ],
+      [
+        251,
+        248,
+        236
+      ],
+      [
+        124,
+        73,
+        176
+      ],
+      [
+        169,
+        122,
+        208
+      ],
+      [
+        75,
+        40,
+        125
+      ],
+      [
+        221,
+        171,
+        46
+      ],
+      [
+        230,
+        200,
+        102
+      ],
+      [
+        163,
+        97,
+        23
+      ]
+    ],
+    "theme_changes_picture_colours": false,
+    "outline_pixels": 10491,
+    "separator_pixels": 3482,
+    "glyph_mask_sha256": "4066316f62c9ff7bbf76bd57d2984157b804bff7a2590c9ff11bd0c76434a070"
+  },
+  "chat": {
+    "source": "chat_source.png",
+    "source_canvas": [
+      1254,
+      1254
+    ],
+    "source_bbox": [
+      271,
+      269,
+      973,
+      983
+    ],
+    "source_sha256": "7dc96204abf7caf672d635cc9acc48d782b227c02e72380b12955fa4b654e92e",
+    "removed_dust_components": 0,
+    "resampling": "nearest neighbour, no interpolation or dithering",
+    "centre_normal": [
+      640,
+      640
+    ],
+    "centre_pressed": [
+      640,
+      642
+    ],
+    "bbox_normal": [
+      398,
+      394,
+      883,
+      887
+    ],
+    "bbox_pressed": [
+      398,
+      396,
+      883,
+      889
+    ],
+    "picture_pixel_count": 190311,
+    "envelope_diameter_target_px": 625,
+    "envelope_diameter_actual_px": 623.811,
+    "envelope_fraction_of_visible_button": 0.59924,
+    "envelope_fraction_of_inset_face": 0.82515,
+    "nominal_outline_width_px": 6,
+    "pale_separator_width_px": 2,
+    "pressed_translation_px": [
+      0,
+      2
+    ],
+    "normal_palette_rgb": [
+      [
+        24,
+        12,
+        8
+      ],
+      [
+        251,
+        248,
+        236
+      ],
+      [
+        239,
+        248,
+        255
+      ],
+      [
+        202,
+        222,
+        233
+      ],
+      [
+        68,
+        173,
+        235
+      ],
+      [
+        32,
+        106,
+        180
+      ],
+      [
+        25,
+        73,
+        120
+      ],
+      [
+        133,
+        215,
+        253
+      ]
+    ],
+    "pressed_palette_rgb": [
+      [
+        24,
+        12,
+        8
+      ],
+      [
+        251,
+        248,
+        236
+      ],
+      [
+        215,
+        223,
+        230
+      ],
+      [
+        182,
+        200,
+        210
+      ],
+      [
+        61,
+        156,
+        212
+      ],
+      [
+        29,
+        95,
+        162
+      ],
+      [
+        22,
+        66,
+        108
+      ],
+      [
+        120,
+        194,
+        228
+      ]
+    ],
+    "theme_changes_picture_colours": false,
+    "outline_pixels": 9324,
+    "separator_pixels": 2961,
+    "glyph_mask_sha256": "ae0dd264e2ad4db3dd1a75bd6c9271d5188cce4d0eedb67f14d7e22627b6c3aa"
+  },
+  "friends": {
+    "source": "friends_source.png",
+    "source_canvas": [
+      1254,
+      1254
+    ],
+    "source_bbox": [
+      150,
+      327,
+      1094,
+      968
+    ],
+    "source_sha256": "0d4cbec1d30efeffe908ab9ccc65d6a4e8fb6b86b4c83308b25991bc426fbb60",
+    "removed_dust_components": 0,
+    "resampling": "nearest neighbour, no interpolation or dithering",
+    "centre_normal": [
+      640,
+      640
+    ],
+    "centre_pressed": [
+      640,
+      642
+    ],
+    "bbox_normal": [
+      366,
+      453,
+      915,
+      828
+    ],
+    "bbox_pressed": [
+      366,
+      455,
+      915,
+      830
+    ],
+    "picture_pixel_count": 157608,
+    "envelope_diameter_target_px": 625,
+    "envelope_diameter_actual_px": 624.256,
+    "envelope_fraction_of_visible_button": 0.59967,
+    "envelope_fraction_of_inset_face": 0.82574,
+    "nominal_outline_width_px": 6,
+    "pale_separator_width_px": 2,
+    "pressed_translation_px": [
+      0,
+      2
+    ],
+    "normal_palette_rgb": [
+      [
+        24,
+        12,
+        8
+      ],
+      [
+        251,
+        248,
+        236
+      ],
+      [
+        57,
+        151,
+        226
+      ],
+      [
+        119,
+        203,
+        252
+      ],
+      [
+        29,
+        93,
+        173
+      ],
+      [
+        72,
+        172,
+        104
+      ],
+      [
+        145,
+        217,
+        121
+      ],
+      [
+        32,
+        108,
+        66
+      ]
+    ],
+    "pressed_palette_rgb": [
+      [
+        24,
+        12,
+        8
+      ],
+      [
+        251,
+        248,
+        236
+      ],
+      [
+        51,
+        136,
+        203
+      ],
+      [
+        107,
+        183,
+        227
+      ],
+      [
+        26,
+        84,
+        156
+      ],
+      [
+        65,
+        155,
+        94
+      ],
+      [
+        130,
+        195,
+        109
+      ],
+      [
+        29,
+        97,
+        59
+      ]
+    ],
+    "theme_changes_picture_colours": false,
+    "outline_pixels": 12767,
+    "separator_pixels": 4003,
+    "glyph_mask_sha256": "b5e50a2b5da837020f075ad6df6b725b380e3a7e0186e17484d621c18f8ea6a8"
+  },
+  "menu": {
+    "source": "menu_source.png",
+    "source_canvas": [
+      1254,
+      1254
+    ],
+    "source_bbox": [
+      237,
+      356,
+      1016,
+      943
+    ],
+    "source_sha256": "2b7e4170a4efa56583b8db3b477f08d4f58278a85e39cb08778a7c570ba9a928",
+    "removed_dust_components": 0,
+    "resampling": "nearest neighbour, no interpolation or dithering",
+    "centre_normal": [
+      640,
+      640
+    ],
+    "centre_pressed": [
+      640,
+      642
+    ],
+    "bbox_normal": [
+      373,
+      439,
+      908,
+      842
+    ],
+    "bbox_pressed": [
+      373,
+      441,
+      908,
+      844
+    ],
+    "picture_pixel_count": 179617,
+    "envelope_diameter_target_px": 625,
+    "envelope_diameter_actual_px": 624.109,
+    "envelope_fraction_of_visible_button": 0.59953,
+    "envelope_fraction_of_inset_face": 0.82554,
+    "nominal_outline_width_px": 6,
+    "pale_separator_width_px": 2,
+    "pressed_translation_px": [
+      0,
+      2
+    ],
+    "normal_palette_rgb": [
+      [
+        24,
+        12,
+        8
+      ],
+      [
+        251,
+        248,
+        236
+      ],
+      [
+        243,
+        180,
+        35
+      ],
+      [
+        255,
+        217,
+        92
+      ],
+      [
+        180,
+        103,
+        22
+      ],
+      [
+        219,
+        139,
+        20
+      ],
+      [
+        134,
+        69,
+        15
+      ]
+    ],
+    "pressed_palette_rgb": [
+      [
+        24,
+        12,
+        8
+      ],
+      [
+        251,
+        248,
+        236
+      ],
+      [
+        219,
+        162,
+        32
+      ],
+      [
+        230,
+        195,
+        83
+      ],
+      [
+        162,
+        93,
+        20
+      ],
+      [
+        197,
+        125,
+        18
+      ],
+      [
+        121,
+        62,
+        14
+      ]
+    ],
+    "theme_changes_picture_colours": false,
+    "outline_pixels": 20987,
+    "separator_pixels": 6982,
+    "glyph_mask_sha256": "574158f0d66d1686af6766498c4c1adb7a53c49978aed6d3bd53a8de50d32ff2"
+  },
+  "character": {
+    "source": "character_source.png",
+    "source_canvas": [
+      1254,
+      1254
+    ],
+    "source_bbox": [
+      226,
+      157,
+      1023,
+      1112
+    ],
+    "source_sha256": "369a90b957a5fc7c45375d08d35090c035079ee14d5761e87905daf610c86674",
+    "removed_dust_components": 0,
+    "resampling": "nearest neighbour, no interpolation or dithering",
+    "centre_normal": [
+      640,
+      640
+    ],
+    "centre_pressed": [
+      640,
+      642
+    ],
+    "bbox_normal": [
+      399,
+      350,
+      882,
+      931
+    ],
+    "bbox_pressed": [
+      399,
+      352,
+      882,
+      933
+    ],
+    "picture_pixel_count": 184987,
+    "envelope_diameter_target_px": 625,
+    "envelope_diameter_actual_px": 624.256,
+    "envelope_fraction_of_visible_button": 0.59967,
+    "envelope_fraction_of_inset_face": 0.82574,
+    "nominal_outline_width_px": 6,
+    "pale_separator_width_px": 2,
+    "pressed_translation_px": [
+      0,
+      2
+    ],
+    "normal_palette_rgb": [
+      [
+        24,
+        12,
+        8
+      ],
+      [
+        251,
+        248,
+        236
+      ],
+      [
+        239,
+        130,
+        36
+      ],
+      [
+        179,
+        74,
+        21
+      ],
+      [
+        247,
+        185,
+        137
+      ],
+      [
+        215,
+        130,
+        92
+      ],
+      [
+        62,
+        165,
+        91
+      ],
+      [
+        31,
+        108,
+        57
+      ]
+    ],
+    "pressed_palette_rgb": [
+      [
+        24,
+        12,
+        8
+      ],
+      [
+        251,
+        248,
+        236
+      ],
+      [
+        215,
+        117,
+        32
+      ],
+      [
+        161,
+        67,
+        19
+      ],
+      [
+        222,
+        166,
+        123
+      ],
+      [
+        194,
+        117,
+        83
+      ],
+      [
+        56,
+        148,
+        82
+      ],
+      [
+        28,
+        97,
+        51
+      ]
+    ],
+    "theme_changes_picture_colours": false,
+    "outline_pixels": 12456,
+    "separator_pixels": 3927,
+    "glyph_mask_sha256": "734310592f5f5ca95ae56dff0210112a92f4c32fbb721d35887d57a237af1f62"
+  },
+  "quests": {
+    "source": "quests_source.png",
+    "source_canvas": [
+      1254,
+      1254
+    ],
+    "source_bbox": [
+      225,
+      189,
+      1018,
+      1091
+    ],
+    "source_sha256": "1ace5db586e6ab6c245f396438f05027fcf0eb38a95aa9345038898c568e399b",
+    "removed_dust_components": 0,
+    "resampling": "nearest neighbour, no interpolation or dithering",
+    "centre_normal": [
+      640,
+      640
+    ],
+    "centre_pressed": [
+      640,
+      642
+    ],
+    "bbox_normal": [
+      415,
+      384,
+      866,
+      897
+    ],
+    "bbox_pressed": [
+      415,
+      386,
+      866,
+      899
+    ],
+    "picture_pixel_count": 187685,
+    "envelope_diameter_target_px": 625,
+    "envelope_diameter_actual_px": 623.541,
+    "envelope_fraction_of_visible_button": 0.59898,
+    "envelope_fraction_of_inset_face": 0.82479,
+    "nominal_outline_width_px": 6,
+    "pale_separator_width_px": 2,
+    "pressed_translation_px": [
+      0,
+      2
+    ],
+    "normal_palette_rgb": [
+      [
+        24,
+        12,
+        8
+      ],
+      [
+        251,
+        248,
+        236
+      ],
+      [
+        246,
+        222,
+        166
+      ],
+      [
+        202,
+        164,
+        103
+      ],
+      [
+        255,
+        237,
+        193
+      ],
+      [
+        216,
+        55,
+        55
+      ],
+      [
+        255,
+        112,
+        90
+      ],
+      [
+        145,
+        33,
+        43
+      ]
+    ],
+    "pressed_palette_rgb": [
+      [
+        24,
+        12,
+        8
+      ],
+      [
+        251,
+        248,
+        236
+      ],
+      [
+        221,
+        200,
+        149
+      ],
+      [
+        182,
+        148,
+        93
+      ],
+      [
+        230,
+        213,
+        174
+      ],
+      [
+        194,
+        50,
+        50
+      ],
+      [
+        230,
+        101,
+        81
+      ],
+      [
+        130,
+        30,
+        39
+      ]
+    ],
+    "theme_changes_picture_colours": false,
+    "outline_pixels": 10789,
+    "separator_pixels": 3531,
+    "glyph_mask_sha256": "f153c002db1df1cf4de77ac91d9cb8d79c1751672cba0ba1d1b94384662e4f3a"
+  },
+  "run_away": {
+    "source": "run_away_source.png",
+    "source_canvas": [
+      1254,
+      1254
+    ],
+    "source_bbox": [
+      187,
+      271,
+      987,
+      974
+    ],
+    "source_sha256": "2b9381ec846f958a25f74fb3022eac45941f6e58f4203694f3f7e1ee09b99287",
+    "removed_dust_components": 0,
+    "resampling": "nearest neighbour, no interpolation or dithering",
+    "centre_normal": [
+      640,
+      640
+    ],
+    "centre_pressed": [
+      640,
+      642
+    ],
+    "bbox_normal": [
+      390,
+      421,
+      891,
+      860
+    ],
+    "bbox_pressed": [
+      390,
+      423,
+      891,
+      862
+    ],
+    "picture_pixel_count": 133168,
+    "envelope_diameter_target_px": 625,
+    "envelope_diameter_actual_px": 624.333,
+    "envelope_fraction_of_visible_button": 0.59974,
+    "envelope_fraction_of_inset_face": 0.82584,
+    "nominal_outline_width_px": 6,
+    "pale_separator_width_px": 2,
+    "pressed_translation_px": [
+      0,
+      2
+    ],
+    "normal_palette_rgb": [
+      [
+        24,
+        12,
+        8
+      ],
+      [
+        251,
+        248,
+        236
+      ],
+      [
+        239,
+        245,
+        251
+      ],
+      [
+        174,
+        197,
+        215
+      ],
+      [
+        75,
+        171,
+        231
+      ],
+      [
+        153,
+        215,
+        248
+      ],
+      [
+        38,
+        110,
+        183
+      ],
+      [
+        116,
+        143,
+        165
+      ]
+    ],
+    "pressed_palette_rgb": [
+      [
+        24,
+        12,
+        8
+      ],
+      [
+        251,
+        248,
+        236
+      ],
+      [
+        215,
+        220,
+        226
+      ],
+      [
+        157,
+        177,
+        194
+      ],
+      [
+        68,
+        154,
+        208
+      ],
+      [
+        138,
+        194,
+        223
+      ],
+      [
+        34,
+        99,
+        165
+      ],
+      [
+        104,
+        129,
+        148
+      ]
+    ],
+    "theme_changes_picture_colours": false,
+    "outline_pixels": 9974,
+    "separator_pixels": 3183,
+    "glyph_mask_sha256": "b679fe8041dca90814e0cb09e874fb63c64aa804d8420223be96758903a56bf1"
+  }
+}

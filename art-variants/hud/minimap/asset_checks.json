@@ -1,0 +1,89 @@
+[
+  {
+    "filename": "minimap_frame.png",
+    "canvas_px": [
+      1280,
+      1280
+    ],
+    "object_bbox": [
+      77,
+      77,
+      1204,
+      1257
+    ],
+    "opaque_colors": 40,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "circle_center": [
+      640,
+      640
+    ],
+    "outer_circle_diameter_px": 1127,
+    "window_diameter_px": 900,
+    "radial_band_px": 113,
+    "band_percent_of_outer_diameter": 10.03,
+    "window_alpha_nonzero_pixels": 0,
+    "preview_canvas_px": [
+      10240,
+      10240
+    ],
+    "preview_exact_nearest_neighbour": true
+  },
+  {
+    "filename": "compass_medallion.png",
+    "canvas_px": [
+      1280,
+      1280
+    ],
+    "object_bbox": [
+      124,
+      124,
+      1157,
+      1157
+    ],
+    "opaque_colors": 38,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "circle_center": [
+      640,
+      640
+    ],
+    "circle_diameter_px": 1033,
+    "preview_canvas_px": [
+      10240,
+      10240
+    ],
+    "preview_exact_nearest_neighbour": true
+  },
+  {
+    "filename": "compass_needle.png",
+    "canvas_px": [
+      1280,
+      1280
+    ],
+    "object_bbox": [
+      568,
+      29,
+      713,
+      1251
+    ],
+    "opaque_colors": 40,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "rotation_center_approx": [
+      640,
+      640
+    ],
+    "preview_canvas_px": [
+      10240,
+      10240
+    ],
+    "preview_exact_nearest_neighbour": true
+  }
+]

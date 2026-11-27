@@ -1,0 +1,22 @@
+Attached: the HUD kit I picked (its contact sheet, and the minimap) (and screenshots of the game's windows today). Now draw the kit for the game's windows in exactly that kit's style: the same wood, carving, symbols, outline and light.
+
+The game opens every menu, shop and conversation in one kind of window. Draw these pieces, separate, front-on, no text, every inside empty:
+1. Window frame (9-slice): four ornate carved corners whole, joined by edges that carry the kit's narrow band of symbols, repeating seamlessly so they tile. The pane inside is plain and darker or lighter than the frame (parchment or the kit's glass), even, with no pattern, so text reads on it.
+2. Title bar: a carved strip along the window's top, inside the frame, with room for a title. Its middle stretches; its two ends are drawn whole.
+3. Tabs that stand on that title bar, like folder tabs: the open tab (joined to the pane below it, the same colour as the pane, its foot flaring out into the bar) and a closed tab (only a small carved divider between two names, no fill). Rounded top corners.
+4. A close button: round, carved, with an orange enamel face and a carved cross. It hangs over the window's top-right corner. Normal and pressed.
+5. A sunk panel for a group of rows: set into the pane a step deeper, shaded along its top, lit along its foot, with a thin carved line to split rows. Plain and stretchable.
+6. A section heading ornament: a short carved rule with a small symbol at its left end, to sit after a heading.
+7. Two capsule buttons, plain and gold (gold for the action that moves you on), each normal and pressed, empty face.
+8. The speech window for talking to people: a wide plate running nearly the screen's width along its foot (the speaker stands big in the bottom-right corner over it, cut off by the screen's edge, so leave its right end plain), a carved name plaque on its top-left edge, and a small carved "next" arrow at its bottom right.
+9. A chat bubble for the chat log and for people's lines over their heads: a small rounded plate with a short tail, stretchable.
+
+Rules, all of them matter:
+- The pane is quiet: no carving, grain or symbols inside it, only on the frame. Text sits on it.
+- Thin frames: at most 6 points thick on a phone; the big carving in the corners.
+- Edges between the corners repeat seamlessly so they can be tiled to any length.
+- The symbols are original: no real alphabets, no religious signs, nothing from another game.
+- Lit from the top left, a clear 1-2 px dark outline round every piece. Crisp; no blur, no glow.
+- Deliver as the minimap and the HUD kit: each piece on its own transparent PNG, 1280 × 1280, centred, hard edges (alpha only 0 or 255, about 40 colours a piece), plus a contact sheet (light row on mid-green, dark row on deep navy) and an asset_checks.json (canvas, bounding box, colour count, alpha values, centre; for a 9-slice piece, the corner size in px). Zip it all.
+
+Dark Mode, at the same time: for every piece also give a dark twin (<name>_dark.png): the very same drawing, same silhouette and alpha pixel for pixel, only recoloured as in the HUD kit's dark pieces (dusky walnut wood, softly brighter inlays). The pane: light parchment in the light one, a deep warm brown in the dark one, so cream text reads on it. The close button's orange stays orange.

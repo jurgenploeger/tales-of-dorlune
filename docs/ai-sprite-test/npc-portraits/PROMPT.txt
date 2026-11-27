@@ -1,0 +1,20 @@
+Draw dialogue portraits for the NPCs of my game, Tales of Dorlune: a cute top-down fantasy RPG for iPhone (pixel-art world, chibi characters, bright and cosy). When you talk to someone, their portrait stands big in the bottom-right corner of the screen over the speech window, and its face changes with the conversation.
+
+Match the attached app icon's style exactly: chunky pixel art where every art pixel is a hard square block; a dark outline round everything; bold cel shading in three or four tones per colour, lit from the top left; warm, saturated colours; a chibi head with big expressive eyes and a catchlight, like the hero in the icon.
+
+Each character is the attached game sprite of the same number, drawn bigger and more detailed: keep exactly who they are. Same species and race (pointed ears where the sprite has them, a sheep stays a sheep), same hair colour and style, same beard, same skin tone, same clothes and their colours, same accessories. Add detail that fits their job and what they say (a healer's satchel, a smith's apron, flour on a miller), but don't change their look. Original characters only: nothing copied from another game.
+
+Every portrait:
+- A bust: head, shoulders and chest, cut off straight at the bottom edge (the speech window covers it there). Turned three-quarters to the left, toward the text, eyes looking left.
+- A 128 x 160 pixel canvas (width x height), transparent background, alpha 0 or 255 only, no anti-aliasing, no soft shadow, about 32 to 48 colours. The head fills about the top half; the character fills the canvas width with a few pixels to spare.
+- Nothing else: no background, frame, name, text or speech bubble.
+
+Four emotions per character, each its own PNG on the same canvas, in exactly the same pose and position: body, clothes, hair, outline and every pixel outside the face identical, so the game can swap them without the character jumping. Only the eyes, eyebrows and mouth change (a blush, a sweat drop or a sparkle on the face is fine):
+- neutral: friendly, attentive, the everyday face.
+- happy: a big smile, eyes bright or closed in a grin.
+- worried: brows up and together, a small frown, a little nervous.
+- surprised: eyes wide, eyebrows high, mouth a small round "o".
+
+[LIST]
+
+For each character: draw the neutral one first and show it, then the other three. Deliver each as a 1x PNG named <portrait id>_<emotion>.png (for example portrait_elder_neutral.png) and an exact 8x nearest-neighbour preview (<portrait id>_<emotion>_8x.png). At the end of the batch: a contact sheet (every character's four faces in a row, on mid-grey), an asset_checks.json (each file's size, colour count, alpha values, and a check that a character's four emotions match outside the face), and a zip of it all.

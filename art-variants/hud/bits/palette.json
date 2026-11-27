@@ -1,0 +1,759 @@
+{
+  "schema_version": 1,
+  "maximum_opaque_colours": 40,
+  "canvas": [
+    1280,
+    1280
+  ],
+  "groups": {
+    "wood": [
+      "hud_61_39_10",
+      "outline",
+      "hud_89_36_6",
+      "hud_95_95_30",
+      "hud_112_56_12",
+      "hud_145_128_56",
+      "hud_146_155_68",
+      "hud_148_87_32",
+      "hud_166_97_33",
+      "hud_170_109_51",
+      "hud_182_114_45",
+      "hud_187_183_92",
+      "hud_195_131_62",
+      "hud_202_140_75",
+      "hud_207_149_86",
+      "hud_216_153_80",
+      "hud_221_162_93",
+      "hud_222_197_125",
+      "hud_227_169_96",
+      "hud_229_174_109",
+      "hud_233_179_114",
+      "hud_239_185_108",
+      "hud_241_195_135",
+      "hud_243_201_145",
+      "hud_248_208_139",
+      "hud_248_212_161",
+      "hud_248_225_166",
+      "hud_251_239_202"
+    ],
+    "parchment": [
+      "parchment",
+      "parchment_dim",
+      "inset",
+      "inset_deep"
+    ],
+    "gold": [
+      "gold_shadow",
+      "gold_base",
+      "gold_light",
+      "gold_highlight"
+    ],
+    "face": [
+      "face_deep",
+      "face_shadow",
+      "face_pressed",
+      "face_normal"
+    ],
+    "sage": [
+      "hud_95_95_30",
+      "hud_145_128_56",
+      "hud_146_155_68",
+      "hud_187_183_92"
+    ],
+    "wood_and_face": [
+      "hud_61_39_10",
+      "outline",
+      "hud_89_36_6",
+      "hud_95_95_30",
+      "hud_112_56_12",
+      "hud_145_128_56",
+      "hud_146_155_68",
+      "hud_148_87_32",
+      "hud_166_97_33",
+      "hud_170_109_51",
+      "hud_182_114_45",
+      "hud_187_183_92",
+      "hud_195_131_62",
+      "hud_202_140_75",
+      "hud_207_149_86",
+      "hud_216_153_80",
+      "hud_221_162_93",
+      "hud_222_197_125",
+      "hud_227_169_96",
+      "hud_229_174_109",
+      "hud_233_179_114",
+      "hud_239_185_108",
+      "hud_241_195_135",
+      "hud_243_201_145",
+      "hud_248_208_139",
+      "hud_248_212_161",
+      "hud_248_225_166",
+      "hud_251_239_202",
+      "face_deep",
+      "face_shadow",
+      "face_pressed",
+      "face_normal"
+    ]
+  },
+  "outline_light_rgb": [
+    78,
+    44,
+    23
+  ],
+  "outline_dark_rgb": [
+    44,
+    27,
+    22
+  ],
+  "orange_identity_rgb": [],
+  "entries": [
+    {
+      "name": "hud_61_39_10",
+      "material": "wood",
+      "light": [
+        61,
+        39,
+        10
+      ],
+      "dark": [
+        39,
+        24,
+        19
+      ],
+      "provenance": "Exact RGB pair from picked HUD button_round.png / button_round_dark.png"
+    },
+    {
+      "name": "outline",
+      "material": "wood",
+      "light": [
+        78,
+        44,
+        23
+      ],
+      "dark": [
+        44,
+        27,
+        22
+      ],
+      "provenance": "Exact RGB pair from picked HUD button_round.png / button_round_dark.png"
+    },
+    {
+      "name": "hud_89_36_6",
+      "material": "wood",
+      "light": [
+        89,
+        36,
+        6
+      ],
+      "dark": [
+        42,
+        25,
+        20
+      ],
+      "provenance": "Exact RGB pair from picked HUD button_round.png / button_round_dark.png"
+    },
+    {
+      "name": "hud_95_95_30",
+      "material": "wood",
+      "light": [
+        95,
+        95,
+        30
+      ],
+      "dark": [
+        106,
+        109,
+        41
+      ],
+      "provenance": "Exact RGB pair from picked HUD button_round.png / button_round_dark.png"
+    },
+    {
+      "name": "hud_112_56_12",
+      "material": "wood",
+      "light": [
+        112,
+        56,
+        12
+      ],
+      "dark": [
+        53,
+        33,
+        25
+      ],
+      "provenance": "Exact RGB pair from picked HUD button_round.png / button_round_dark.png"
+    },
+    {
+      "name": "hud_145_128_56",
+      "material": "wood",
+      "light": [
+        145,
+        128,
+        56
+      ],
+      "dark": [
+        163,
+        150,
+        72
+      ],
+      "provenance": "Exact RGB pair from picked HUD button_round.png / button_round_dark.png"
+    },
+    {
+      "name": "hud_146_155_68",
+      "material": "wood",
+      "light": [
+        146,
+        155,
+        68
+      ],
+      "dark": [
+        160,
+        174,
+        85
+      ],
+      "provenance": "Exact RGB pair from picked HUD button_round.png / button_round_dark.png"
+    },
+    {
+      "name": "hud_148_87_32",
+      "material": "wood",
+      "light": [
+        148,
+        87,
+        32
+      ],
+      "dark": [
+        74,
+        47,
+        35
+      ],
+      "provenance": "Exact RGB pair from picked HUD button_round.png / button_round_dark.png"
+    },
+    {
+      "name": "hud_166_97_33",
+      "material": "wood",
+      "light": [
+        166,
+        97,
+        33
+      ],
+      "dark": [
+        81,
+        52,
+        39
+      ],
+      "provenance": "Exact RGB pair from picked HUD button_round.png / button_round_dark.png"
+    },
+    {
+      "name": "hud_170_109_51",
+      "material": "wood",
+      "light": [
+        170,
+        109,
+        51
+      ],
+      "dark": [
+        87,
+        58,
+        44
+      ],
+      "provenance": "Exact RGB pair from picked HUD button_round.png / button_round_dark.png"
+    },
+    {
+      "name": "hud_182_114_45",
+      "material": "wood",
+      "light": [
+        182,
+        114,
+        45
+      ],
+      "dark": [
+        90,
+        60,
+        46
+      ],
+      "provenance": "Exact RGB pair from picked HUD button_round.png / button_round_dark.png"
+    },
+    {
+      "name": "hud_187_183_92",
+      "material": "wood",
+      "light": [
+        187,
+        183,
+        92
+      ],
+      "dark": [
+        208,
+        208,
+        112
+      ],
+      "provenance": "Exact RGB pair from picked HUD button_round.png / button_round_dark.png"
+    },
+    {
+      "name": "hud_195_131_62",
+      "material": "wood",
+      "light": [
+        195,
+        131,
+        62
+      ],
+      "dark": [
+        101,
+        69,
+        53
+      ],
+      "provenance": "Exact RGB pair from picked HUD button_round.png / button_round_dark.png"
+    },
+    {
+      "name": "hud_202_140_75",
+      "material": "wood",
+      "light": [
+        202,
+        140,
+        75
+      ],
+      "dark": [
+        107,
+        75,
+        57
+      ],
+      "provenance": "Exact RGB pair from picked HUD button_round.png / button_round_dark.png"
+    },
+    {
+      "name": "hud_207_149_86",
+      "material": "wood",
+      "light": [
+        207,
+        149,
+        86
+      ],
+      "dark": [
+        113,
+        80,
+        61
+      ],
+      "provenance": "Exact RGB pair from picked HUD button_round.png / button_round_dark.png"
+    },
+    {
+      "name": "hud_216_153_80",
+      "material": "wood",
+      "light": [
+        216,
+        153,
+        80
+      ],
+      "dark": [
+        116,
+        83,
+        63
+      ],
+      "provenance": "Exact RGB pair from picked HUD button_round.png / button_round_dark.png"
+    },
+    {
+      "name": "hud_221_162_93",
+      "material": "wood",
+      "light": [
+        221,
+        162,
+        93
+      ],
+      "dark": [
+        121,
+        88,
+        67
+      ],
+      "provenance": "Exact RGB pair from picked HUD button_round.png / button_round_dark.png"
+    },
+    {
+      "name": "hud_222_197_125",
+      "material": "wood",
+      "light": [
+        222,
+        197,
+        125
+      ],
+      "dark": [
+        240,
+        216,
+        145
+      ],
+      "provenance": "Exact RGB pair from picked HUD button_round.png / button_round_dark.png"
+    },
+    {
+      "name": "hud_227_169_96",
+      "material": "wood",
+      "light": [
+        227,
+        169,
+        96
+      ],
+      "dark": [
+        126,
+        93,
+        71
+      ],
+      "provenance": "Exact RGB pair from picked HUD button_round.png / button_round_dark.png"
+    },
+    {
+      "name": "hud_229_174_109",
+      "material": "wood",
+      "light": [
+        229,
+        174,
+        109
+      ],
+      "dark": [
+        129,
+        96,
+        74
+      ],
+      "provenance": "Exact RGB pair from picked HUD button_round.png / button_round_dark.png"
+    },
+    {
+      "name": "hud_233_179_114",
+      "material": "wood",
+      "light": [
+        233,
+        179,
+        114
+      ],
+      "dark": [
+        133,
+        100,
+        76
+      ],
+      "provenance": "Exact RGB pair from picked HUD button_round.png / button_round_dark.png"
+    },
+    {
+      "name": "hud_239_185_108",
+      "material": "wood",
+      "light": [
+        239,
+        185,
+        108
+      ],
+      "dark": [
+        136,
+        103,
+        79
+      ],
+      "provenance": "Exact RGB pair from picked HUD button_round.png / button_round_dark.png"
+    },
+    {
+      "name": "hud_241_195_135",
+      "material": "wood",
+      "light": [
+        241,
+        195,
+        135
+      ],
+      "dark": [
+        143,
+        111,
+        85
+      ],
+      "provenance": "Exact RGB pair from picked HUD button_round.png / button_round_dark.png"
+    },
+    {
+      "name": "hud_243_201_145",
+      "material": "wood",
+      "light": [
+        243,
+        201,
+        145
+      ],
+      "dark": [
+        147,
+        115,
+        88
+      ],
+      "provenance": "Exact RGB pair from picked HUD button_round.png / button_round_dark.png"
+    },
+    {
+      "name": "hud_248_208_139",
+      "material": "wood",
+      "light": [
+        248,
+        208,
+        139
+      ],
+      "dark": [
+        152,
+        119,
+        91
+      ],
+      "provenance": "Exact RGB pair from picked HUD button_round.png / button_round_dark.png"
+    },
+    {
+      "name": "hud_248_212_161",
+      "material": "wood",
+      "light": [
+        248,
+        212,
+        161
+      ],
+      "dark": [
+        155,
+        123,
+        95
+      ],
+      "provenance": "Exact RGB pair from picked HUD button_round.png / button_round_dark.png"
+    },
+    {
+      "name": "hud_248_225_166",
+      "material": "wood",
+      "light": [
+        248,
+        225,
+        166
+      ],
+      "dark": [
+        163,
+        132,
+        101
+      ],
+      "provenance": "Exact RGB pair from picked HUD button_round.png / button_round_dark.png"
+    },
+    {
+      "name": "hud_251_239_202",
+      "material": "wood",
+      "light": [
+        251,
+        239,
+        202
+      ],
+      "dark": [
+        176,
+        145,
+        110
+      ],
+      "provenance": "Exact RGB pair from picked HUD button_round.png / button_round_dark.png"
+    },
+    {
+      "name": "parchment",
+      "material": "parchment",
+      "light": [
+        242,
+        226,
+        194
+      ],
+      "dark": [
+        62,
+        43,
+        35
+      ]
+    },
+    {
+      "name": "parchment_dim",
+      "material": "parchment",
+      "light": [
+        230,
+        211,
+        175
+      ],
+      "dark": [
+        52,
+        35,
+        29
+      ]
+    },
+    {
+      "name": "inset",
+      "material": "parchment",
+      "light": [
+        221,
+        190,
+        140
+      ],
+      "dark": [
+        26,
+        17,
+        14
+      ],
+      "provenance": "Exact plain inset colour pair from attached fixed inset_panel_dark.png"
+    },
+    {
+      "name": "inset_deep",
+      "material": "parchment",
+      "light": [
+        194,
+        151,
+        96
+      ],
+      "dark": [
+        40,
+        26,
+        22
+      ]
+    },
+    {
+      "name": "gold_shadow",
+      "material": "gold",
+      "light": [
+        153,
+        106,
+        35
+      ],
+      "dark": [
+        173,
+        126,
+        52
+      ]
+    },
+    {
+      "name": "gold_base",
+      "material": "gold",
+      "light": [
+        196,
+        145,
+        54
+      ],
+      "dark": [
+        214,
+        166,
+        75
+      ]
+    },
+    {
+      "name": "gold_light",
+      "material": "gold",
+      "light": [
+        225,
+        181,
+        79
+      ],
+      "dark": [
+        240,
+        199,
+        103
+      ]
+    },
+    {
+      "name": "gold_highlight",
+      "material": "gold",
+      "light": [
+        246,
+        212,
+        127
+      ],
+      "dark": [
+        255,
+        226,
+        151
+      ]
+    },
+    {
+      "name": "face_deep",
+      "material": "face",
+      "light": [
+        181,
+        117,
+        53
+      ],
+      "dark": [
+        77,
+        51,
+        40
+      ],
+      "provenance": "Exact RGB pair in attached picked button_round light/dark"
+    },
+    {
+      "name": "face_shadow",
+      "material": "face",
+      "light": [
+        202,
+        142,
+        78
+      ],
+      "dark": [
+        91,
+        63,
+        50
+      ],
+      "provenance": "Exact RGB pair in attached picked button_round light/dark"
+    },
+    {
+      "name": "face_pressed",
+      "material": "face",
+      "light": [
+        220,
+        164,
+        101
+      ],
+      "dark": [
+        103,
+        74,
+        59
+      ],
+      "provenance": "Exact RGB pair in attached picked button_round light/dark"
+    },
+    {
+      "name": "face_normal",
+      "material": "face",
+      "light": [
+        233,
+        182,
+        119
+      ],
+      "dark": [
+        113,
+        84,
+        67
+      ],
+      "provenance": "Exact RGB pair in attached picked button_round light/dark"
+    }
+  ],
+  "reference_wood_removed_to_reserve_materials": [
+    [
+      225,
+      171,
+      109
+    ],
+    [
+      230,
+      178,
+      115
+    ],
+    [
+      234,
+      182,
+      120
+    ],
+    [
+      234,
+      186,
+      125
+    ],
+    [
+      237,
+      188,
+      129
+    ],
+    [
+      237,
+      191,
+      132
+    ],
+    [
+      240,
+      192,
+      132
+    ],
+    [
+      241,
+      197,
+      141
+    ]
+  ],
+  "notes": [
+    "40 exact palette roles; wood/inlay and face RGB pairs matched to attached picked HUD kit.",
+    "Parchment/deep insets and gold roles match the picked window kit.",
+    "One light RGB maps to one dark RGB, preserving every colour boundary and alpha pixel.",
+    "No orange used by these pieces. Tiny simple pieces may intentionally use fewer colours.",
+    "The inset dark face uses the attached fixed deeper colour (26,17,14), superseding the earlier window export."
+  ],
+  "reference_files": [
+    "references/prompt5/2_reference_pieces/button_round.png",
+    "references/prompt5/2_reference_pieces/button_round_dark.png",
+    "references/prompt5/2_reference_pieces/inset_panel.png",
+    "references/prompt5/2_reference_pieces/inset_panel_dark.png"
+  ]
+}

@@ -1,0 +1,28 @@
+These buttons are beautifully carved, but in the game they're hard to tell apart: at 56 points on a phone every picture is the same wood colour as the button, about the same size and weight, so the cog, the map, the friends and the scroll all read as similar brown shapes, and in the dark twins the carving almost disappears into the dark wood.
+
+Redraw only the pictures, keeping everything else exactly as it is: the same 13 buttons, the same picked button_round bases (normal, pressed, light and dark), every pixel outside the picture unchanged, the same file names and deliverable as last time.
+
+Make each picture an enamel or painted inlay set into the wood, in its own colours, like a little badge:
+1. Chat: a white speech bubble with a sky-blue rim and three small dots.
+2. Inventory: a warm brown leather satchel with a bright gold buckle.
+3. Menu: three bold gold bars.
+4. Character: a hero's head and shoulders, orange hair, peach face, green tunic.
+5. Companions: a pink paw print.
+6. Friends: two figures side by side, one blue, one green.
+7. Quests: a cream parchment scroll with a red wax seal.
+8. Settings: a silver-grey cog with a dark hole in its middle.
+9. World map: a folded parchment map, a red dotted path with a red X.
+10. Spells: a purple spell book with a gold eight-point star on its cover.
+11. Attack: a silver sword with a gold hilt.
+12. Items: a red potion in a round glass bottle with a cork.
+13. Run away: a white boot with a sky-blue wing.
+
+Rules, all of them matter:
+- Every picture has its own main colour, so no two buttons look alike at a glance.
+- Bigger and bolder: the picture fills about 60% of the button's face (it was about 48%), with simple shapes and little inner detail.
+- A thick dark brown outline round every picture, 6 px at this size, so it reads on the light birch and on the dark walnut.
+- The pictures keep their colours in the dark twins (only the wood changes), so they stand out even more there. Lift their highlights a touch on the dark ones if needed.
+- Lit from the top left, a lit edge and a shade on each picture, as on the rest of the kit. Hard edges: alpha 0 or 255, at most about 48 colours a button.
+- Pressed: the picture moves down 1 to 2 px with the face and gets a shade darker; it doesn't change shape.
+
+Check each one at 22 and 56 points on the contact sheet before you send it, and say in asset_checks.json, for each picture, its outline's contrast to the face (target at least 3 : 1, light and dark). Zip it all as before.

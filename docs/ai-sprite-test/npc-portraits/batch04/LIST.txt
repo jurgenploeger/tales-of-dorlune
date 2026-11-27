@@ -1,0 +1,10 @@
+1. `portrait_chandler_mabbott`: Chandler Mabbott. gives quests, in Shiverdell. Says: "Candles! Tall ones, short ones, and ones that don't blow out when a Wisp says boo." Quests: Horn Lanterns, The Amber Werewolf.
+2. `portrait_bell_ringer_prue`: Bell-Ringer Prue. gives quests, in Shiverdell. Says: "Every hour I ring the bell, so the whole valley knows it isn't alone." Quests: Lions at the Lantern Fence, The Silent Bell, The Waystone in the Mist.
+3. `portrait_ratcatcher_bodkin`: Ratcatcher Bodkin. gives quests, in Rat Cavern. Says: "Rats! Rats everywhere! Good for business, bad for my nerves." Quests: Too Many Rats, Rat-Proof Boots.
+4. `portrait_chief_brom`: Chief Brom. gives quests, in Ingothold. Says: "You cleared the cavern? Then Ingothold owes you one, friend." Quests: Dragon Hangover, Crystal Hearts.
+5. `portrait_puss_in_boots`: Puss in Boots. gives quests, in Genie Desert. Says: "Good day! A fine pair of boots you have." Quests: Puss in Boots.
+6. `portrait_lamp_seller_kasim`: Lamp-Seller Kasim. gives quests, in Genie Desert. Says: "Lamps! Old lamps, new lamps, lamps with a genie in, lamps without. Mostly without." Quests: Wicks of Light, The Genie's Lamp, Violet in the Dunes.
+7. `portrait_well_keeper_samira`: Well-Keeper Samira. gives quests, in Genie Desert. Says: "In the desert, a well is worth more than gold. Ask anyone who's been thirsty." Quests: Lizards in the Well, Sand in the Waystone, A Cure for the Camels.
+8. `portrait_pebble`: Pebble. gives quests, in Crystal Mountain. Says: "...rumble. Oh! Sorry, I was napping." Quests: Stormy Crystals.
+9. `portrait_gemcutter_iolanthe`: Gemcutter Iolanthe. gives quests, in Crystal Mountain. Says: "Every crystal has a shape hiding inside it. I just let it out." Quests: Crawler Gems, The Prism Lamp.
+10. `portrait_prospector_flint`: Prospector Flint. gives quests, in Crystal Mountain. Says: "Mind the Floating Stones. They float until they don't." Quests: Stones That Float.

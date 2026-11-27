@@ -1,0 +1,4800 @@
+{
+  "kit": "Tales of Dorlune small menu and battle pieces",
+  "schema_version": 1,
+  "design_and_state_count": 18,
+  "primary_png_count": 36,
+  "preview_count": 36,
+  "maximum_opaque_colours": 40,
+  "alpha_requirement": [
+    0,
+    255
+  ],
+  "coordinate_convention": "Half-open x0,y0,x1,y1 rectangles in 1280px canvas unless labelled bbox_local",
+  "point_size_applies_to": "Visible bounding box, excluding transparent canvas padding",
+  "assets": [
+    {
+      "category": "menus",
+      "screen_size_points": [
+        56,
+        56
+      ],
+      "content_rect": [
+        315,
+        325,
+        965,
+        965
+      ],
+      "inset_rect": [
+        241,
+        249,
+        1038,
+        1042
+      ],
+      "geometry_extras": {
+        "inset_shape": "rounded_rectangle",
+        "inset_corner_radius_px": 111,
+        "plain_content_test_rect": [
+          315,
+          325,
+          965,
+          965
+        ],
+        "outer_size_px": [
+          1040,
+          1040
+        ]
+      },
+      "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/slots/sources/item_slot_source.png",
+      "outline_width_px": 3,
+      "filename": "item_slot.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1160,
+        1160
+      ],
+      "visible_size_px": [
+        1040,
+        1040
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "canvas_centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "centre_coordinate_convention": "Half-open rectangle edge coordinates",
+      "content_rect_bbox_local": [
+        195,
+        205,
+        845,
+        845
+      ],
+      "inset_rect_bbox_local": [
+        121,
+        129,
+        918,
+        922
+      ],
+      "colour_count": 29,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "alpha_sha256": "2dc5f0b9945d69d0054d18fff954978ce2cb7a2c9bf1e2dba39ce7831fcd1216",
+      "sha256": "34a5fa430748356605464be83af06cc9f5d8cebf6438887123039aa4a1260b43",
+      "point_size_applies_to": "visible_bounds",
+      "mode": "light",
+      "flat_region_checks": [
+        {
+          "name": "plain_content",
+          "rect": [
+            315,
+            325,
+            965,
+            965
+          ],
+          "opaque": true,
+          "colour_count": 1,
+          "rgb": [
+            220,
+            164,
+            101
+          ],
+          "uniform": true
+        }
+      ],
+      "caps": null,
+      "preview_8x": {
+        "filename": "previews_8x/item_slot_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "7b7a773bbdab07bc04f08906bdb0ca291873dc187aebac188a899dfc73e67d9d"
+      }
+    },
+    {
+      "category": "menus",
+      "screen_size_points": [
+        56,
+        56
+      ],
+      "content_rect": [
+        315,
+        325,
+        965,
+        965
+      ],
+      "inset_rect": [
+        241,
+        249,
+        1038,
+        1042
+      ],
+      "geometry_extras": {
+        "inset_shape": "rounded_rectangle",
+        "inset_corner_radius_px": 111,
+        "plain_content_test_rect": [
+          315,
+          325,
+          965,
+          965
+        ],
+        "outer_size_px": [
+          1040,
+          1040
+        ]
+      },
+      "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/slots/sources/item_slot_source.png",
+      "outline_width_px": 3,
+      "filename": "item_slot_dark.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1160,
+        1160
+      ],
+      "visible_size_px": [
+        1040,
+        1040
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "canvas_centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "centre_coordinate_convention": "Half-open rectangle edge coordinates",
+      "content_rect_bbox_local": [
+        195,
+        205,
+        845,
+        845
+      ],
+      "inset_rect_bbox_local": [
+        121,
+        129,
+        918,
+        922
+      ],
+      "colour_count": 29,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "alpha_sha256": "2dc5f0b9945d69d0054d18fff954978ce2cb7a2c9bf1e2dba39ce7831fcd1216",
+      "sha256": "493853f6c4bb50771aec136c05388513739ecde5f3812aa2e9a16615290f4323",
+      "point_size_applies_to": "visible_bounds",
+      "mode": "dark",
+      "flat_region_checks": [
+        {
+          "name": "plain_content",
+          "rect": [
+            315,
+            325,
+            965,
+            965
+          ],
+          "opaque": true,
+          "colour_count": 1,
+          "rgb": [
+            103,
+            74,
+            59
+          ],
+          "uniform": true
+        }
+      ],
+      "caps": null,
+      "preview_8x": {
+        "filename": "previews_8x/item_slot_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "15931304dae7ca3d506c8c95e433f9949be206d05966ba78e988ad31eb369d31"
+      }
+    },
+    {
+      "category": "menus",
+      "screen_size_points": [
+        56,
+        56
+      ],
+      "content_rect": [
+        315,
+        325,
+        965,
+        965
+      ],
+      "inset_rect": [
+        241,
+        249,
+        1038,
+        1042
+      ],
+      "geometry_extras": {
+        "inset_shape": "rounded_rectangle",
+        "inset_corner_radius_px": 111,
+        "plain_content_test_rect": [
+          315,
+          325,
+          965,
+          965
+        ],
+        "outer_size_px": [
+          1040,
+          1040
+        ],
+        "only_rim_inlay_changes": true
+      },
+      "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/slots/sources/item_slot_source.png",
+      "outline_width_px": 3,
+      "state": "selected",
+      "state_base": "item_slot",
+      "filename": "item_slot_selected.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1160,
+        1160
+      ],
+      "visible_size_px": [
+        1040,
+        1040
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "canvas_centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "centre_coordinate_convention": "Half-open rectangle edge coordinates",
+      "content_rect_bbox_local": [
+        195,
+        205,
+        845,
+        845
+      ],
+      "inset_rect_bbox_local": [
+        121,
+        129,
+        918,
+        922
+      ],
+      "colour_count": 32,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "alpha_sha256": "2dc5f0b9945d69d0054d18fff954978ce2cb7a2c9bf1e2dba39ce7831fcd1216",
+      "sha256": "b86a38c7f5e7ec927895164c4ba246ed9fe130366cf1d84b03403dbfd48a7841",
+      "point_size_applies_to": "visible_bounds",
+      "mode": "light",
+      "flat_region_checks": [
+        {
+          "name": "plain_content",
+          "rect": [
+            315,
+            325,
+            965,
+            965
+          ],
+          "opaque": true,
+          "colour_count": 1,
+          "rgb": [
+            220,
+            164,
+            101
+          ],
+          "uniform": true
+        }
+      ],
+      "caps": null,
+      "preview_8x": {
+        "filename": "previews_8x/item_slot_selected_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "793f5bc8fcf4967d81cdd708b464a571c668d013fe0c2e980d92ebbf7274f162"
+      }
+    },
+    {
+      "category": "menus",
+      "screen_size_points": [
+        56,
+        56
+      ],
+      "content_rect": [
+        315,
+        325,
+        965,
+        965
+      ],
+      "inset_rect": [
+        241,
+        249,
+        1038,
+        1042
+      ],
+      "geometry_extras": {
+        "inset_shape": "rounded_rectangle",
+        "inset_corner_radius_px": 111,
+        "plain_content_test_rect": [
+          315,
+          325,
+          965,
+          965
+        ],
+        "outer_size_px": [
+          1040,
+          1040
+        ],
+        "only_rim_inlay_changes": true
+      },
+      "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/slots/sources/item_slot_source.png",
+      "outline_width_px": 3,
+      "state": "selected",
+      "state_base": "item_slot",
+      "filename": "item_slot_selected_dark.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1160,
+        1160
+      ],
+      "visible_size_px": [
+        1040,
+        1040
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "canvas_centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "centre_coordinate_convention": "Half-open rectangle edge coordinates",
+      "content_rect_bbox_local": [
+        195,
+        205,
+        845,
+        845
+      ],
+      "inset_rect_bbox_local": [
+        121,
+        129,
+        918,
+        922
+      ],
+      "colour_count": 32,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "alpha_sha256": "2dc5f0b9945d69d0054d18fff954978ce2cb7a2c9bf1e2dba39ce7831fcd1216",
+      "sha256": "ad49f2e954b2e8da0b070333b6de7ebcf8da6baa19b6162c36eaa30912d93555",
+      "point_size_applies_to": "visible_bounds",
+      "mode": "dark",
+      "flat_region_checks": [
+        {
+          "name": "plain_content",
+          "rect": [
+            315,
+            325,
+            965,
+            965
+          ],
+          "opaque": true,
+          "colour_count": 1,
+          "rgb": [
+            103,
+            74,
+            59
+          ],
+          "uniform": true
+        }
+      ],
+      "caps": null,
+      "preview_8x": {
+        "filename": "previews_8x/item_slot_selected_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "db3f967ef5f5530b31ef93ecd72b6b9b4d5ad8eddfa99f2f5d5345906f2415b4"
+      }
+    },
+    {
+      "category": "menus",
+      "screen_size_points": [
+        56,
+        56
+      ],
+      "content_rect": [
+        315,
+        325,
+        965,
+        965
+      ],
+      "inset_rect": [
+        241,
+        249,
+        1038,
+        1042
+      ],
+      "geometry_extras": {
+        "inset_shape": "rounded_rectangle",
+        "inset_corner_radius_px": 111,
+        "plain_content_test_rect": [
+          315,
+          325,
+          965,
+          965
+        ],
+        "outer_size_px": [
+          1040,
+          1040
+        ],
+        "frame_pixel_identical": true
+      },
+      "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/slots/sources/item_slot_source.png",
+      "outline_width_px": 3,
+      "state": "empty",
+      "state_base": "item_slot",
+      "filename": "item_slot_empty.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1160,
+        1160
+      ],
+      "visible_size_px": [
+        1040,
+        1040
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "canvas_centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "centre_coordinate_convention": "Half-open rectangle edge coordinates",
+      "content_rect_bbox_local": [
+        195,
+        205,
+        845,
+        845
+      ],
+      "inset_rect_bbox_local": [
+        121,
+        129,
+        918,
+        922
+      ],
+      "colour_count": 29,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "alpha_sha256": "2dc5f0b9945d69d0054d18fff954978ce2cb7a2c9bf1e2dba39ce7831fcd1216",
+      "sha256": "98d7d18d97336e88e991ae9848cd2f0bdbff744ac324b32d66a39423af489fe5",
+      "point_size_applies_to": "visible_bounds",
+      "mode": "light",
+      "flat_region_checks": [
+        {
+          "name": "plain_content",
+          "rect": [
+            315,
+            325,
+            965,
+            965
+          ],
+          "opaque": true,
+          "colour_count": 1,
+          "rgb": [
+            202,
+            142,
+            78
+          ],
+          "uniform": true
+        }
+      ],
+      "caps": null,
+      "preview_8x": {
+        "filename": "previews_8x/item_slot_empty_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "abe9656dcce7068973389f9275eb64dc56e9946e1d4884fa606bff91c7326aea"
+      }
+    },
+    {
+      "category": "menus",
+      "screen_size_points": [
+        56,
+        56
+      ],
+      "content_rect": [
+        315,
+        325,
+        965,
+        965
+      ],
+      "inset_rect": [
+        241,
+        249,
+        1038,
+        1042
+      ],
+      "geometry_extras": {
+        "inset_shape": "rounded_rectangle",
+        "inset_corner_radius_px": 111,
+        "plain_content_test_rect": [
+          315,
+          325,
+          965,
+          965
+        ],
+        "outer_size_px": [
+          1040,
+          1040
+        ],
+        "frame_pixel_identical": true
+      },
+      "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/slots/sources/item_slot_source.png",
+      "outline_width_px": 3,
+      "state": "empty",
+      "state_base": "item_slot",
+      "filename": "item_slot_empty_dark.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1160,
+        1160
+      ],
+      "visible_size_px": [
+        1040,
+        1040
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "canvas_centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "centre_coordinate_convention": "Half-open rectangle edge coordinates",
+      "content_rect_bbox_local": [
+        195,
+        205,
+        845,
+        845
+      ],
+      "inset_rect_bbox_local": [
+        121,
+        129,
+        918,
+        922
+      ],
+      "colour_count": 29,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "alpha_sha256": "2dc5f0b9945d69d0054d18fff954978ce2cb7a2c9bf1e2dba39ce7831fcd1216",
+      "sha256": "23a542ba4625fa135968575ec79c52f29cdcebc8e76e96117239d97e0c8fa88e",
+      "point_size_applies_to": "visible_bounds",
+      "mode": "dark",
+      "flat_region_checks": [
+        {
+          "name": "plain_content",
+          "rect": [
+            315,
+            325,
+            965,
+            965
+          ],
+          "opaque": true,
+          "colour_count": 1,
+          "rgb": [
+            91,
+            63,
+            50
+          ],
+          "uniform": true
+        }
+      ],
+      "caps": null,
+      "preview_8x": {
+        "filename": "previews_8x/item_slot_empty_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "9dbbb57bbfe68f878bc53fea5ecd1091154df8cdfa363d1f5f3a089eaeea56f7"
+      }
+    },
+    {
+      "category": "menus",
+      "screen_size_points": [
+        48,
+        48
+      ],
+      "content_rect": [
+        380,
+        380,
+        900,
+        900
+      ],
+      "inset_rect": [
+        265,
+        265,
+        1016,
+        1016
+      ],
+      "outer_diameter_px": 1040,
+      "inner_diameter_px": 751,
+      "geometry_extras": {
+        "inset_shape": "circle",
+        "inset_centre": [
+          640,
+          640
+        ],
+        "inset_radius_px": 375,
+        "plain_content_test_rect": [
+          380,
+          380,
+          900,
+          900
+        ]
+      },
+      "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/slots/sources/equip_slot_source.png",
+      "outline_width_px": 3,
+      "filename": "equip_slot.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1160,
+        1160
+      ],
+      "visible_size_px": [
+        1040,
+        1040
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "canvas_centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "centre_coordinate_convention": "Half-open rectangle edge coordinates",
+      "content_rect_bbox_local": [
+        260,
+        260,
+        780,
+        780
+      ],
+      "inset_rect_bbox_local": [
+        145,
+        145,
+        896,
+        896
+      ],
+      "colour_count": 29,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "alpha_sha256": "a812779019b6e896d8367a9eb529e511ef9d606a726a323bff8bbc17d63d1832",
+      "sha256": "20da067e7bef3fa72b852ce152caccd33ae41a162b833be521fda107fe1a89ad",
+      "point_size_applies_to": "visible_bounds",
+      "mode": "light",
+      "flat_region_checks": [
+        {
+          "name": "plain_content",
+          "rect": [
+            380,
+            380,
+            900,
+            900
+          ],
+          "opaque": true,
+          "colour_count": 1,
+          "rgb": [
+            220,
+            164,
+            101
+          ],
+          "uniform": true
+        }
+      ],
+      "caps": null,
+      "preview_8x": {
+        "filename": "previews_8x/equip_slot_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "68a1908926d2bc2a6348790c101eceae73311e4588ea3ce80e6b1ce41192d05e"
+      }
+    },
+    {
+      "category": "menus",
+      "screen_size_points": [
+        48,
+        48
+      ],
+      "content_rect": [
+        380,
+        380,
+        900,
+        900
+      ],
+      "inset_rect": [
+        265,
+        265,
+        1016,
+        1016
+      ],
+      "outer_diameter_px": 1040,
+      "inner_diameter_px": 751,
+      "geometry_extras": {
+        "inset_shape": "circle",
+        "inset_centre": [
+          640,
+          640
+        ],
+        "inset_radius_px": 375,
+        "plain_content_test_rect": [
+          380,
+          380,
+          900,
+          900
+        ]
+      },
+      "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/slots/sources/equip_slot_source.png",
+      "outline_width_px": 3,
+      "filename": "equip_slot_dark.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1160,
+        1160
+      ],
+      "visible_size_px": [
+        1040,
+        1040
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "canvas_centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "centre_coordinate_convention": "Half-open rectangle edge coordinates",
+      "content_rect_bbox_local": [
+        260,
+        260,
+        780,
+        780
+      ],
+      "inset_rect_bbox_local": [
+        145,
+        145,
+        896,
+        896
+      ],
+      "colour_count": 29,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "alpha_sha256": "a812779019b6e896d8367a9eb529e511ef9d606a726a323bff8bbc17d63d1832",
+      "sha256": "45880a10cf22808a6a561901d792a288d46e05c86b1c7de6ded74bfe3ddc859f",
+      "point_size_applies_to": "visible_bounds",
+      "mode": "dark",
+      "flat_region_checks": [
+        {
+          "name": "plain_content",
+          "rect": [
+            380,
+            380,
+            900,
+            900
+          ],
+          "opaque": true,
+          "colour_count": 1,
+          "rgb": [
+            103,
+            74,
+            59
+          ],
+          "uniform": true
+        }
+      ],
+      "caps": null,
+      "preview_8x": {
+        "filename": "previews_8x/equip_slot_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "ddba25c8ea487602890fdd2403d46c66d35fabc2c27f4ce2f85c43ccc31465e0"
+      }
+    },
+    {
+      "category": "Menus / Settings",
+      "screen_size_points": [
+        52,
+        30
+      ],
+      "content_rect": [
+        180,
+        400,
+        1100,
+        880
+      ],
+      "inset_rect": [
+        180,
+        400,
+        1100,
+        880
+      ],
+      "geometry_extras": {
+        "track_bbox": [
+          120,
+          340,
+          1160,
+          940
+        ],
+        "track_inset_corner_radius_px": 240,
+        "knob_centre": [
+          420,
+          640
+        ],
+        "knob_diameter_px": 480,
+        "knob_bbox": [
+          180,
+          400,
+          660,
+          880
+        ],
+        "knob_translation_between_states_px": [
+          440,
+          0
+        ],
+        "knob_shape_and_colours_identical_between_states": true,
+        "track_same_silhouette_between_states": true,
+        "track_inlay_material": "wood",
+        "separate_knob_asset": "switch_knob.png",
+        "separate_knob_crop": [
+          120,
+          120,
+          1160,
+          1160
+        ],
+        "separate_knob_scaled_size": [
+          480,
+          480
+        ],
+        "resampling": "nearest-neighbour; 3 px outer outline restored"
+      },
+      "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/controls/sources/switch_track_source.png",
+      "filename": "switch_off.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        340,
+        1160,
+        940
+      ],
+      "visible_size_px": [
+        1040,
+        600
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "canvas_centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "centre_coordinate_convention": "Half-open rectangle edge coordinates",
+      "content_rect_bbox_local": [
+        60,
+        60,
+        980,
+        540
+      ],
+      "inset_rect_bbox_local": [
+        60,
+        60,
+        980,
+        540
+      ],
+      "colour_count": 30,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "alpha_sha256": "cd0a62a82ee7166ec141bf1386c5a1c949d0438457eb70faad75cdb84b0f32aa",
+      "sha256": "1c7742e77b91a927d41dec10e5730647d8fdce864c5e4c8a3ea2f46b405a6644",
+      "point_size_applies_to": "visible_bounds",
+      "mode": "light",
+      "flat_region_checks": [],
+      "caps": null,
+      "preview_8x": {
+        "filename": "previews_8x/switch_off_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "4c6ef419d7a2caaa3f57cd3fafb0a2d17bfc22006ce4c2b92575fa35b1223f5f"
+      }
+    },
+    {
+      "category": "Menus / Settings",
+      "screen_size_points": [
+        52,
+        30
+      ],
+      "content_rect": [
+        180,
+        400,
+        1100,
+        880
+      ],
+      "inset_rect": [
+        180,
+        400,
+        1100,
+        880
+      ],
+      "geometry_extras": {
+        "track_bbox": [
+          120,
+          340,
+          1160,
+          940
+        ],
+        "track_inset_corner_radius_px": 240,
+        "knob_centre": [
+          420,
+          640
+        ],
+        "knob_diameter_px": 480,
+        "knob_bbox": [
+          180,
+          400,
+          660,
+          880
+        ],
+        "knob_translation_between_states_px": [
+          440,
+          0
+        ],
+        "knob_shape_and_colours_identical_between_states": true,
+        "track_same_silhouette_between_states": true,
+        "track_inlay_material": "wood",
+        "separate_knob_asset": "switch_knob.png",
+        "separate_knob_crop": [
+          120,
+          120,
+          1160,
+          1160
+        ],
+        "separate_knob_scaled_size": [
+          480,
+          480
+        ],
+        "resampling": "nearest-neighbour; 3 px outer outline restored"
+      },
+      "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/controls/sources/switch_track_source.png",
+      "filename": "switch_off_dark.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        340,
+        1160,
+        940
+      ],
+      "visible_size_px": [
+        1040,
+        600
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "canvas_centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "centre_coordinate_convention": "Half-open rectangle edge coordinates",
+      "content_rect_bbox_local": [
+        60,
+        60,
+        980,
+        540
+      ],
+      "inset_rect_bbox_local": [
+        60,
+        60,
+        980,
+        540
+      ],
+      "colour_count": 30,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "alpha_sha256": "cd0a62a82ee7166ec141bf1386c5a1c949d0438457eb70faad75cdb84b0f32aa",
+      "sha256": "c33c9aebc5986868d37c8fd9138f5f0be6e2bb14588c6970a45be115471b59a2",
+      "point_size_applies_to": "visible_bounds",
+      "mode": "dark",
+      "flat_region_checks": [],
+      "caps": null,
+      "preview_8x": {
+        "filename": "previews_8x/switch_off_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "f716031ed0cfa1fd4e41b1d9ddd95c2cf0517ccd3418b1dc837f058e895a911c"
+      }
+    },
+    {
+      "category": "Menus / Settings",
+      "screen_size_points": [
+        52,
+        30
+      ],
+      "content_rect": [
+        180,
+        400,
+        1100,
+        880
+      ],
+      "inset_rect": [
+        180,
+        400,
+        1100,
+        880
+      ],
+      "geometry_extras": {
+        "track_bbox": [
+          120,
+          340,
+          1160,
+          940
+        ],
+        "track_inset_corner_radius_px": 240,
+        "knob_centre": [
+          860,
+          640
+        ],
+        "knob_diameter_px": 480,
+        "knob_bbox": [
+          620,
+          400,
+          1100,
+          880
+        ],
+        "knob_translation_between_states_px": [
+          440,
+          0
+        ],
+        "knob_shape_and_colours_identical_between_states": true,
+        "track_same_silhouette_between_states": true,
+        "track_inlay_material": "sage",
+        "separate_knob_asset": "switch_knob.png",
+        "separate_knob_crop": [
+          120,
+          120,
+          1160,
+          1160
+        ],
+        "separate_knob_scaled_size": [
+          480,
+          480
+        ],
+        "resampling": "nearest-neighbour; 3 px outer outline restored"
+      },
+      "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/controls/sources/switch_track_source.png",
+      "filename": "switch_on.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        340,
+        1160,
+        940
+      ],
+      "visible_size_px": [
+        1040,
+        600
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "canvas_centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "centre_coordinate_convention": "Half-open rectangle edge coordinates",
+      "content_rect_bbox_local": [
+        60,
+        60,
+        980,
+        540
+      ],
+      "inset_rect_bbox_local": [
+        60,
+        60,
+        980,
+        540
+      ],
+      "colour_count": 32,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "alpha_sha256": "cd0a62a82ee7166ec141bf1386c5a1c949d0438457eb70faad75cdb84b0f32aa",
+      "sha256": "de03db0e205fa074f9ee3137f921cb29c0e25c152c2a629a62b5ba19e809adc6",
+      "point_size_applies_to": "visible_bounds",
+      "mode": "light",
+      "flat_region_checks": [],
+      "caps": null,
+      "preview_8x": {
+        "filename": "previews_8x/switch_on_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "525649607eb619b46b01a8f64ed8bf36a966fd7a97300c2b6d5f9373952f9457"
+      }
+    },
+    {
+      "category": "Menus / Settings",
+      "screen_size_points": [
+        52,
+        30
+      ],
+      "content_rect": [
+        180,
+        400,
+        1100,
+        880
+      ],
+      "inset_rect": [
+        180,
+        400,
+        1100,
+        880
+      ],
+      "geometry_extras": {
+        "track_bbox": [
+          120,
+          340,
+          1160,
+          940
+        ],
+        "track_inset_corner_radius_px": 240,
+        "knob_centre": [
+          860,
+          640
+        ],
+        "knob_diameter_px": 480,
+        "knob_bbox": [
+          620,
+          400,
+          1100,
+          880
+        ],
+        "knob_translation_between_states_px": [
+          440,
+          0
+        ],
+        "knob_shape_and_colours_identical_between_states": true,
+        "track_same_silhouette_between_states": true,
+        "track_inlay_material": "sage",
+        "separate_knob_asset": "switch_knob.png",
+        "separate_knob_crop": [
+          120,
+          120,
+          1160,
+          1160
+        ],
+        "separate_knob_scaled_size": [
+          480,
+          480
+        ],
+        "resampling": "nearest-neighbour; 3 px outer outline restored"
+      },
+      "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/controls/sources/switch_track_source.png",
+      "filename": "switch_on_dark.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        340,
+        1160,
+        940
+      ],
+      "visible_size_px": [
+        1040,
+        600
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "canvas_centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "centre_coordinate_convention": "Half-open rectangle edge coordinates",
+      "content_rect_bbox_local": [
+        60,
+        60,
+        980,
+        540
+      ],
+      "inset_rect_bbox_local": [
+        60,
+        60,
+        980,
+        540
+      ],
+      "colour_count": 32,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "alpha_sha256": "cd0a62a82ee7166ec141bf1386c5a1c949d0438457eb70faad75cdb84b0f32aa",
+      "sha256": "f0e44ff8ee74041c375d9c98cd74782d2c5dda25d9f733c2d038901d493eb45a",
+      "point_size_applies_to": "visible_bounds",
+      "mode": "dark",
+      "flat_region_checks": [],
+      "caps": null,
+      "preview_8x": {
+        "filename": "previews_8x/switch_on_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "3cfda5745ff6ad5d608c9e7c21842308a49d4101700bdf8f8c3f78905fb4a06a"
+      }
+    },
+    {
+      "category": "Menus / Settings",
+      "screen_size_points": [
+        24,
+        24
+      ],
+      "content_rect": [
+        265,
+        265,
+        1015,
+        1015
+      ],
+      "inset_rect": null,
+      "geometry_extras": {
+        "outer_diameter_px": 1040,
+        "component_is_plain": true,
+        "switch_composition_size_px": [
+          480,
+          480
+        ],
+        "switch_composition_resampling": "nearest-neighbour",
+        "switch_composition_source_crop": [
+          120,
+          120,
+          1160,
+          1160
+        ]
+      },
+      "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/controls/sources/switch_knob_source.png",
+      "filename": "switch_knob.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1160,
+        1160
+      ],
+      "visible_size_px": [
+        1040,
+        1040
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "canvas_centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "centre_coordinate_convention": "Half-open rectangle edge coordinates",
+      "content_rect_bbox_local": [
+        145,
+        145,
+        895,
+        895
+      ],
+      "inset_rect_bbox_local": null,
+      "colour_count": 28,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "alpha_sha256": "89acb18d2edbc8702fbd7eb362ebca86fd97ce3991fdba20d8b5ac91f4fe583f",
+      "sha256": "11410f7f734e8d35bb2c9a5330e37b8a3b8e6879ed0cfe342fb856ee068ca409",
+      "point_size_applies_to": "visible_bounds",
+      "mode": "light",
+      "flat_region_checks": [],
+      "caps": null,
+      "preview_8x": {
+        "filename": "previews_8x/switch_knob_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "2ba50ceb321a7d46840d88aa03ad66cac90f8536a26ea4a238b3e2b93968ae99"
+      }
+    },
+    {
+      "category": "Menus / Settings",
+      "screen_size_points": [
+        24,
+        24
+      ],
+      "content_rect": [
+        265,
+        265,
+        1015,
+        1015
+      ],
+      "inset_rect": null,
+      "geometry_extras": {
+        "outer_diameter_px": 1040,
+        "component_is_plain": true,
+        "switch_composition_size_px": [
+          480,
+          480
+        ],
+        "switch_composition_resampling": "nearest-neighbour",
+        "switch_composition_source_crop": [
+          120,
+          120,
+          1160,
+          1160
+        ]
+      },
+      "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/controls/sources/switch_knob_source.png",
+      "filename": "switch_knob_dark.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1160,
+        1160
+      ],
+      "visible_size_px": [
+        1040,
+        1040
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "canvas_centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "centre_coordinate_convention": "Half-open rectangle edge coordinates",
+      "content_rect_bbox_local": [
+        145,
+        145,
+        895,
+        895
+      ],
+      "inset_rect_bbox_local": null,
+      "colour_count": 28,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "alpha_sha256": "89acb18d2edbc8702fbd7eb362ebca86fd97ce3991fdba20d8b5ac91f4fe583f",
+      "sha256": "e6f8f831927fbc169a76866a50d44d03329d246324e6c2f0ba31f779291354e1",
+      "point_size_applies_to": "visible_bounds",
+      "mode": "dark",
+      "flat_region_checks": [],
+      "caps": null,
+      "preview_8x": {
+        "filename": "previews_8x/switch_knob_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "8ac2435864761a412277c51d30aa54cfbf5e971bc8c9d20e8a55556891164374"
+      }
+    },
+    {
+      "category": "Menus / Settings",
+      "screen_size_points": [
+        156,
+        26
+      ],
+      "content_rect": [
+        238,
+        622,
+        1042,
+        659
+      ],
+      "inset_rect": [
+        199,
+        615,
+        1081,
+        665
+      ],
+      "geometry_extras": {
+        "stretch_middle_columns_pixel_identical": true,
+        "stretch_region_width_px": 760,
+        "minimum_width_px": 280,
+        "authored_end_leaf_sigils": 2,
+        "recommended_slider_knob_visible_size_points": [
+          26,
+          26
+        ],
+        "cap_join_columns_pixel_identical": true,
+        "centre_plateau_canvas_x": [
+          248,
+          1032
+        ],
+        "centre_plateau_overlap_into_each_cap_px": 12
+      },
+      "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/controls/sources/slider_track_source.png",
+      "filename": "slider_track.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        553,
+        1160,
+        727
+      ],
+      "visible_size_px": [
+        1040,
+        174
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "canvas_centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "centre_coordinate_convention": "Half-open rectangle edge coordinates",
+      "content_rect_bbox_local": [
+        118,
+        69,
+        922,
+        106
+      ],
+      "inset_rect_bbox_local": [
+        79,
+        62,
+        961,
+        112
+      ],
+      "colour_count": 27,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "alpha_sha256": "db5e8d239cd5c374f110e0d6ecc2b5a82194b78866b87c6f993003664747cd69",
+      "sha256": "7ba85552b37f4739dc91c74ab7c08c954add97589e8a51a6e8260e2fd9630a16",
+      "point_size_applies_to": "visible_bounds",
+      "mode": "light",
+      "flat_region_checks": [
+        {
+          "name": "slider_groove",
+          "rect": [
+            238,
+            622,
+            1042,
+            659
+          ],
+          "opaque": true,
+          "colour_count": 1,
+          "rgb": [
+            220,
+            164,
+            101
+          ],
+          "uniform": true
+        }
+      ],
+      "caps": {
+        "axis": "x",
+        "left_px": 140,
+        "right_px": 140,
+        "cap_width_origin": "visible bounding box",
+        "coordinate_space": "bbox_local",
+        "stretch_rect_canvas": [
+          260,
+          553,
+          1020,
+          727
+        ],
+        "stretch_rect_bbox_local": [
+          140,
+          0,
+          900,
+          174
+        ],
+        "slice_boundaries_canvas_x": [
+          260,
+          1020
+        ],
+        "slice_boundaries_bbox_local_x": [
+          140,
+          900
+        ],
+        "canvas_cap_insets_px": {
+          "left": 260,
+          "right": 260,
+          "top": 0,
+          "bottom": 0
+        },
+        "cropped_cap_insets_px": {
+          "left": 140,
+          "right": 140,
+          "top": 0,
+          "bottom": 0
+        },
+        "minimum_visible_width_px": 281,
+        "centre_columns_pixel_identical": true,
+        "both_cap_join_columns_pixel_identical": true
+      },
+      "preview_8x": {
+        "filename": "previews_8x/slider_track_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "b53d27b5e44c74d8ac3317aa71e79fd54beff2b58fa753395053aa82d02fa42d"
+      }
+    },
+    {
+      "category": "Menus / Settings",
+      "screen_size_points": [
+        156,
+        26
+      ],
+      "content_rect": [
+        238,
+        622,
+        1042,
+        659
+      ],
+      "inset_rect": [
+        199,
+        615,
+        1081,
+        665
+      ],
+      "geometry_extras": {
+        "stretch_middle_columns_pixel_identical": true,
+        "stretch_region_width_px": 760,
+        "minimum_width_px": 280,
+        "authored_end_leaf_sigils": 2,
+        "recommended_slider_knob_visible_size_points": [
+          26,
+          26
+        ],
+        "cap_join_columns_pixel_identical": true,
+        "centre_plateau_canvas_x": [
+          248,
+          1032
+        ],
+        "centre_plateau_overlap_into_each_cap_px": 12
+      },
+      "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/controls/sources/slider_track_source.png",
+      "filename": "slider_track_dark.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        553,
+        1160,
+        727
+      ],
+      "visible_size_px": [
+        1040,
+        174
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "canvas_centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "centre_coordinate_convention": "Half-open rectangle edge coordinates",
+      "content_rect_bbox_local": [
+        118,
+        69,
+        922,
+        106
+      ],
+      "inset_rect_bbox_local": [
+        79,
+        62,
+        961,
+        112
+      ],
+      "colour_count": 27,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "alpha_sha256": "db5e8d239cd5c374f110e0d6ecc2b5a82194b78866b87c6f993003664747cd69",
+      "sha256": "2abab79d87d80c7339637bed2f0cb717e34aa2f8910c49b52330bc29cece4339",
+      "point_size_applies_to": "visible_bounds",
+      "mode": "dark",
+      "flat_region_checks": [
+        {
+          "name": "slider_groove",
+          "rect": [
+            238,
+            622,
+            1042,
+            659
+          ],
+          "opaque": true,
+          "colour_count": 1,
+          "rgb": [
+            103,
+            74,
+            59
+          ],
+          "uniform": true
+        }
+      ],
+      "caps": {
+        "axis": "x",
+        "left_px": 140,
+        "right_px": 140,
+        "cap_width_origin": "visible bounding box",
+        "coordinate_space": "bbox_local",
+        "stretch_rect_canvas": [
+          260,
+          553,
+          1020,
+          727
+        ],
+        "stretch_rect_bbox_local": [
+          140,
+          0,
+          900,
+          174
+        ],
+        "slice_boundaries_canvas_x": [
+          260,
+          1020
+        ],
+        "slice_boundaries_bbox_local_x": [
+          140,
+          900
+        ],
+        "canvas_cap_insets_px": {
+          "left": 260,
+          "right": 260,
+          "top": 0,
+          "bottom": 0
+        },
+        "cropped_cap_insets_px": {
+          "left": 140,
+          "right": 140,
+          "top": 0,
+          "bottom": 0
+        },
+        "minimum_visible_width_px": 281,
+        "centre_columns_pixel_identical": true,
+        "both_cap_join_columns_pixel_identical": true
+      },
+      "preview_8x": {
+        "filename": "previews_8x/slider_track_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "6d75f8dfa0cebf1c684d05b3381ddbb132d2fd72dc0c0c0bacb48f668593ddf9"
+      }
+    },
+    {
+      "category": "Menus / Settings",
+      "screen_size_points": [
+        26,
+        26
+      ],
+      "content_rect": [
+        265,
+        265,
+        1015,
+        1015
+      ],
+      "inset_rect": null,
+      "geometry_extras": {
+        "outer_diameter_px": 1040,
+        "centre_star_point_count": 8
+      },
+      "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/controls/sources/slider_knob_source.png",
+      "filename": "slider_knob.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1160,
+        1160
+      ],
+      "visible_size_px": [
+        1040,
+        1040
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "canvas_centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "centre_coordinate_convention": "Half-open rectangle edge coordinates",
+      "content_rect_bbox_local": [
+        145,
+        145,
+        895,
+        895
+      ],
+      "inset_rect_bbox_local": null,
+      "colour_count": 32,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "alpha_sha256": "cc59275ed024f7cc9af12c05cf76de636bffd10b0de9d003943093392658eef9",
+      "sha256": "99acdfb742d82605ab5d1804637f20b6a3617c98429c2be9edc196e1c2626c33",
+      "point_size_applies_to": "visible_bounds",
+      "mode": "light",
+      "flat_region_checks": [],
+      "caps": null,
+      "preview_8x": {
+        "filename": "previews_8x/slider_knob_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "1e93ff0dfac21f0bd0ac67678ca6e3cedbf42d33d4c96d82147cd5011282df34"
+      }
+    },
+    {
+      "category": "Menus / Settings",
+      "screen_size_points": [
+        26,
+        26
+      ],
+      "content_rect": [
+        265,
+        265,
+        1015,
+        1015
+      ],
+      "inset_rect": null,
+      "geometry_extras": {
+        "outer_diameter_px": 1040,
+        "centre_star_point_count": 8
+      },
+      "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/controls/sources/slider_knob_source.png",
+      "filename": "slider_knob_dark.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1160,
+        1160
+      ],
+      "visible_size_px": [
+        1040,
+        1040
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "canvas_centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "centre_coordinate_convention": "Half-open rectangle edge coordinates",
+      "content_rect_bbox_local": [
+        145,
+        145,
+        895,
+        895
+      ],
+      "inset_rect_bbox_local": null,
+      "colour_count": 32,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "alpha_sha256": "cc59275ed024f7cc9af12c05cf76de636bffd10b0de9d003943093392658eef9",
+      "sha256": "e98d50d9779521650da77807c2fd75eaa45622045a47e4259267cd9d51e70bc9",
+      "point_size_applies_to": "visible_bounds",
+      "mode": "dark",
+      "flat_region_checks": [],
+      "caps": null,
+      "preview_8x": {
+        "filename": "previews_8x/slider_knob_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "df414b519cdc938d1ba8085e6facbe54fbc2e4a5f04315a0ffb752ad523564eb"
+      }
+    },
+    {
+      "category": "menus",
+      "screen_size_points": [
+        40,
+        40
+      ],
+      "content_rect": [
+        300,
+        305,
+        980,
+        980
+      ],
+      "inset_rect": [
+        205,
+        214,
+        1074,
+        1075
+      ],
+      "geometry_extras": {
+        "inset_shape": "rounded_rectangle",
+        "inset_corner_radius_px": 132,
+        "plain_content_test_rect": [
+          300,
+          305,
+          980,
+          980
+        ],
+        "outer_size_px": [
+          1040,
+          1040
+        ]
+      },
+      "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/slots/sources/icon_button_square_source.png",
+      "outline_width_px": 3,
+      "filename": "icon_button_square.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1160,
+        1160
+      ],
+      "visible_size_px": [
+        1040,
+        1040
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "canvas_centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "centre_coordinate_convention": "Half-open rectangle edge coordinates",
+      "content_rect_bbox_local": [
+        180,
+        185,
+        860,
+        860
+      ],
+      "inset_rect_bbox_local": [
+        85,
+        94,
+        954,
+        955
+      ],
+      "colour_count": 29,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "alpha_sha256": "4fb46a2bc9c7382261cb6d2b5b1b25315c928c978d15ef3fa231309a89bd8430",
+      "sha256": "2d0f1ae04e8dfdb8beadf28284f28a243d997e32f1fa7a2f3adcf09f5c04a822",
+      "point_size_applies_to": "visible_bounds",
+      "mode": "light",
+      "flat_region_checks": [
+        {
+          "name": "plain_content",
+          "rect": [
+            300,
+            305,
+            980,
+            980
+          ],
+          "opaque": true,
+          "colour_count": 1,
+          "rgb": [
+            233,
+            182,
+            119
+          ],
+          "uniform": true
+        }
+      ],
+      "caps": null,
+      "preview_8x": {
+        "filename": "previews_8x/icon_button_square_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "69a9a3a740033b6cc9631648ec9a2a802cf7d2c53e6f842c414d1144171324af"
+      }
+    },
+    {
+      "category": "menus",
+      "screen_size_points": [
+        40,
+        40
+      ],
+      "content_rect": [
+        300,
+        305,
+        980,
+        980
+      ],
+      "inset_rect": [
+        205,
+        214,
+        1074,
+        1075
+      ],
+      "geometry_extras": {
+        "inset_shape": "rounded_rectangle",
+        "inset_corner_radius_px": 132,
+        "plain_content_test_rect": [
+          300,
+          305,
+          980,
+          980
+        ],
+        "outer_size_px": [
+          1040,
+          1040
+        ]
+      },
+      "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/slots/sources/icon_button_square_source.png",
+      "outline_width_px": 3,
+      "filename": "icon_button_square_dark.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1160,
+        1160
+      ],
+      "visible_size_px": [
+        1040,
+        1040
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "canvas_centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "centre_coordinate_convention": "Half-open rectangle edge coordinates",
+      "content_rect_bbox_local": [
+        180,
+        185,
+        860,
+        860
+      ],
+      "inset_rect_bbox_local": [
+        85,
+        94,
+        954,
+        955
+      ],
+      "colour_count": 29,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "alpha_sha256": "4fb46a2bc9c7382261cb6d2b5b1b25315c928c978d15ef3fa231309a89bd8430",
+      "sha256": "6b813507a2baa008192866225e7cf40587a5ae9e1d113b85c402335f778d9be3",
+      "point_size_applies_to": "visible_bounds",
+      "mode": "dark",
+      "flat_region_checks": [
+        {
+          "name": "plain_content",
+          "rect": [
+            300,
+            305,
+            980,
+            980
+          ],
+          "opaque": true,
+          "colour_count": 1,
+          "rgb": [
+            113,
+            84,
+            67
+          ],
+          "uniform": true
+        }
+      ],
+      "caps": null,
+      "preview_8x": {
+        "filename": "previews_8x/icon_button_square_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "d30bd362406624eea5d02b46c78f675831209377d1039acee11c368607b98f56"
+      }
+    },
+    {
+      "category": "menus",
+      "screen_size_points": [
+        40,
+        40
+      ],
+      "content_rect": [
+        300,
+        305,
+        980,
+        980
+      ],
+      "inset_rect": [
+        205,
+        214,
+        1074,
+        1075
+      ],
+      "geometry_extras": {
+        "inset_shape": "rounded_rectangle",
+        "inset_corner_radius_px": 132,
+        "plain_content_test_rect": [
+          300,
+          305,
+          980,
+          980
+        ],
+        "outer_size_px": [
+          1040,
+          1040
+        ],
+        "frame_pixel_identical": true,
+        "pressed_face_deeper": true
+      },
+      "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/slots/sources/icon_button_square_source.png",
+      "outline_width_px": 3,
+      "state": "pressed",
+      "state_base": "icon_button_square",
+      "filename": "icon_button_square_pressed.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1160,
+        1160
+      ],
+      "visible_size_px": [
+        1040,
+        1040
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "canvas_centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "centre_coordinate_convention": "Half-open rectangle edge coordinates",
+      "content_rect_bbox_local": [
+        180,
+        185,
+        860,
+        860
+      ],
+      "inset_rect_bbox_local": [
+        85,
+        94,
+        954,
+        955
+      ],
+      "colour_count": 31,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "alpha_sha256": "4fb46a2bc9c7382261cb6d2b5b1b25315c928c978d15ef3fa231309a89bd8430",
+      "sha256": "22ec79d27ac3530e4f186f169519d646a30e4aef1c0119b8fbffea77031a1a35",
+      "point_size_applies_to": "visible_bounds",
+      "mode": "light",
+      "flat_region_checks": [
+        {
+          "name": "plain_content",
+          "rect": [
+            300,
+            305,
+            980,
+            980
+          ],
+          "opaque": true,
+          "colour_count": 1,
+          "rgb": [
+            220,
+            164,
+            101
+          ],
+          "uniform": true
+        }
+      ],
+      "caps": null,
+      "preview_8x": {
+        "filename": "previews_8x/icon_button_square_pressed_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "cbb0093f3450567ddecd123664471be80079d58aa93a51d273b25d0b3eed588d"
+      }
+    },
+    {
+      "category": "menus",
+      "screen_size_points": [
+        40,
+        40
+      ],
+      "content_rect": [
+        300,
+        305,
+        980,
+        980
+      ],
+      "inset_rect": [
+        205,
+        214,
+        1074,
+        1075
+      ],
+      "geometry_extras": {
+        "inset_shape": "rounded_rectangle",
+        "inset_corner_radius_px": 132,
+        "plain_content_test_rect": [
+          300,
+          305,
+          980,
+          980
+        ],
+        "outer_size_px": [
+          1040,
+          1040
+        ],
+        "frame_pixel_identical": true,
+        "pressed_face_deeper": true
+      },
+      "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/slots/sources/icon_button_square_source.png",
+      "outline_width_px": 3,
+      "state": "pressed",
+      "state_base": "icon_button_square",
+      "filename": "icon_button_square_pressed_dark.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1160,
+        1160
+      ],
+      "visible_size_px": [
+        1040,
+        1040
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "canvas_centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "centre_coordinate_convention": "Half-open rectangle edge coordinates",
+      "content_rect_bbox_local": [
+        180,
+        185,
+        860,
+        860
+      ],
+      "inset_rect_bbox_local": [
+        85,
+        94,
+        954,
+        955
+      ],
+      "colour_count": 31,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "alpha_sha256": "4fb46a2bc9c7382261cb6d2b5b1b25315c928c978d15ef3fa231309a89bd8430",
+      "sha256": "f666f144f518947d261d294be1c9a76b529643bec3498cdb552aca8cd68881ba",
+      "point_size_applies_to": "visible_bounds",
+      "mode": "dark",
+      "flat_region_checks": [
+        {
+          "name": "plain_content",
+          "rect": [
+            300,
+            305,
+            980,
+            980
+          ],
+          "opaque": true,
+          "colour_count": 1,
+          "rgb": [
+            103,
+            74,
+            59
+          ],
+          "uniform": true
+        }
+      ],
+      "caps": null,
+      "preview_8x": {
+        "filename": "previews_8x/icon_button_square_pressed_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "a998617fb852b3278021771fe5e5e603d82537ec5b5e3555e9542e497fb7f8dc"
+      }
+    },
+    {
+      "category": "Menus",
+      "screen_size_points": [
+        120,
+        12
+      ],
+      "screen_size_is_suggested": true,
+      "content_rect": [
+        179,
+        619,
+        1101,
+        666
+      ],
+      "inset_rect": [
+        149,
+        615,
+        1131,
+        670
+      ],
+      "inset_corner_radius_px": 27,
+      "flat_regions": [
+        {
+          "name": "progress_fill",
+          "rect": [
+            179,
+            619,
+            1101,
+            666
+          ],
+          "role": "face_pressed"
+        }
+      ],
+      "geometry_extras": {
+        "rounded_ends": true,
+        "symbols": 0
+      },
+      "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/plates/sources/progress_groove_source.png",
+      "outline_width_px": 3,
+      "point_size_applies_to": "visible_bounds",
+      "filename": "progress_groove.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        588,
+        1160,
+        691
+      ],
+      "visible_size_px": [
+        1040,
+        103
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "canvas_centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        639.5
+      ],
+      "centre_coordinate_convention": "Half-open rectangle edge coordinates",
+      "content_rect_bbox_local": [
+        59,
+        31,
+        981,
+        78
+      ],
+      "inset_rect_bbox_local": [
+        29,
+        27,
+        1011,
+        82
+      ],
+      "colour_count": 27,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "alpha_sha256": "297719386fe5a19b7a6792f5e3bd76954b75c12652133287c03c33921614ea18",
+      "sha256": "e7aa259188a1cc471dcd3920850588ca15a6d8261698c6597f9dcf2194be97d7",
+      "mode": "light",
+      "flat_region_checks": [
+        {
+          "name": "progress_fill",
+          "rect": [
+            179,
+            619,
+            1101,
+            666
+          ],
+          "opaque": true,
+          "colour_count": 1,
+          "rgb": [
+            220,
+            164,
+            101
+          ],
+          "uniform": true
+        }
+      ],
+      "caps": {
+        "axis": "x",
+        "left_px": 100,
+        "right_px": 100,
+        "cap_width_origin": "visible bounding box",
+        "coordinate_space": "bbox_local",
+        "stretch_rect_canvas": [
+          220,
+          588,
+          1060,
+          691
+        ],
+        "stretch_rect_bbox_local": [
+          100,
+          0,
+          940,
+          103
+        ],
+        "slice_boundaries_canvas_x": [
+          220,
+          1060
+        ],
+        "slice_boundaries_bbox_local_x": [
+          100,
+          940
+        ],
+        "canvas_cap_insets_px": {
+          "left": 220,
+          "right": 220,
+          "top": 0,
+          "bottom": 0
+        },
+        "cropped_cap_insets_px": {
+          "left": 100,
+          "right": 100,
+          "top": 0,
+          "bottom": 0
+        },
+        "minimum_visible_width_px": 201,
+        "centre_columns_pixel_identical": true,
+        "both_cap_join_columns_pixel_identical": true
+      },
+      "preview_8x": {
+        "filename": "previews_8x/progress_groove_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "39932a83c69e53c1d5d36105652dad7eda19eb111a435361c6af56e4126567db"
+      }
+    },
+    {
+      "category": "Menus",
+      "screen_size_points": [
+        120,
+        12
+      ],
+      "screen_size_is_suggested": true,
+      "content_rect": [
+        179,
+        619,
+        1101,
+        666
+      ],
+      "inset_rect": [
+        149,
+        615,
+        1131,
+        670
+      ],
+      "inset_corner_radius_px": 27,
+      "flat_regions": [
+        {
+          "name": "progress_fill",
+          "rect": [
+            179,
+            619,
+            1101,
+            666
+          ],
+          "role": "face_pressed"
+        }
+      ],
+      "geometry_extras": {
+        "rounded_ends": true,
+        "symbols": 0
+      },
+      "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/plates/sources/progress_groove_source.png",
+      "outline_width_px": 3,
+      "point_size_applies_to": "visible_bounds",
+      "filename": "progress_groove_dark.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        588,
+        1160,
+        691
+      ],
+      "visible_size_px": [
+        1040,
+        103
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "canvas_centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        639.5
+      ],
+      "centre_coordinate_convention": "Half-open rectangle edge coordinates",
+      "content_rect_bbox_local": [
+        59,
+        31,
+        981,
+        78
+      ],
+      "inset_rect_bbox_local": [
+        29,
+        27,
+        1011,
+        82
+      ],
+      "colour_count": 27,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "alpha_sha256": "297719386fe5a19b7a6792f5e3bd76954b75c12652133287c03c33921614ea18",
+      "sha256": "b9a88688b0fb34b18b9d5374081881c864d832a9928e1ea7762e6e92563b3abe",
+      "mode": "dark",
+      "flat_region_checks": [
+        {
+          "name": "progress_fill",
+          "rect": [
+            179,
+            619,
+            1101,
+            666
+          ],
+          "opaque": true,
+          "colour_count": 1,
+          "rgb": [
+            103,
+            74,
+            59
+          ],
+          "uniform": true
+        }
+      ],
+      "caps": {
+        "axis": "x",
+        "left_px": 100,
+        "right_px": 100,
+        "cap_width_origin": "visible bounding box",
+        "coordinate_space": "bbox_local",
+        "stretch_rect_canvas": [
+          220,
+          588,
+          1060,
+          691
+        ],
+        "stretch_rect_bbox_local": [
+          100,
+          0,
+          940,
+          103
+        ],
+        "slice_boundaries_canvas_x": [
+          220,
+          1060
+        ],
+        "slice_boundaries_bbox_local_x": [
+          100,
+          940
+        ],
+        "canvas_cap_insets_px": {
+          "left": 220,
+          "right": 220,
+          "top": 0,
+          "bottom": 0
+        },
+        "cropped_cap_insets_px": {
+          "left": 100,
+          "right": 100,
+          "top": 0,
+          "bottom": 0
+        },
+        "minimum_visible_width_px": 201,
+        "centre_columns_pixel_identical": true,
+        "both_cap_join_columns_pixel_identical": true
+      },
+      "preview_8x": {
+        "filename": "previews_8x/progress_groove_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "7c7490c7f09fbeaeab8a06132e3c7f1e3e420094bfbd1a8e7f9d99a8cbca2661"
+      }
+    },
+    {
+      "category": "menus",
+      "screen_size_points": [
+        18,
+        18
+      ],
+      "content_rect": [
+        344,
+        344,
+        936,
+        936
+      ],
+      "inset_rect": [
+        220,
+        220,
+        1060,
+        1060
+      ],
+      "outer_diameter_px": 1040,
+      "inner_diameter_px": 840,
+      "geometry_extras": {
+        "circle_centre": [
+          639.5,
+          639.5
+        ],
+        "circle_bounds": [
+          120,
+          120,
+          1160,
+          1160
+        ],
+        "plain_face_circle": {
+          "centre": [
+            639.5,
+            639.5
+          ],
+          "radius": 420
+        },
+        "symbols": 0
+      },
+      "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/rounds/sources/count_badge.png",
+      "filename": "count_badge.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1160,
+        1160
+      ],
+      "visible_size_px": [
+        1040,
+        1040
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "canvas_centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "centre_coordinate_convention": "Half-open rectangle edge coordinates",
+      "content_rect_bbox_local": [
+        224,
+        224,
+        816,
+        816
+      ],
+      "inset_rect_bbox_local": [
+        100,
+        100,
+        940,
+        940
+      ],
+      "colour_count": 14,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "alpha_sha256": "030aff5193b5ef0129c27c74cbc04bf3a6099244e730a95bccc93a5a2f62ea46",
+      "sha256": "41d9b2fe696355890b43dac84f815bdc23d61abbff43c80e158be5d91651ef77",
+      "point_size_applies_to": "visible_bounds",
+      "mode": "light",
+      "flat_region_checks": [
+        {
+          "name": "plain_face_circle",
+          "centre": [
+            639.5,
+            639.5
+          ],
+          "radius": 420,
+          "opaque": true,
+          "colour_count": 1,
+          "rgb": [
+            233,
+            182,
+            119
+          ],
+          "uniform": true
+        }
+      ],
+      "caps": null,
+      "preview_8x": {
+        "filename": "previews_8x/count_badge_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "c846e3cb7d63e75da8571ee5f0eb8545d413cc8983ade7fc3336fe3111bfa99e"
+      }
+    },
+    {
+      "category": "menus",
+      "screen_size_points": [
+        18,
+        18
+      ],
+      "content_rect": [
+        344,
+        344,
+        936,
+        936
+      ],
+      "inset_rect": [
+        220,
+        220,
+        1060,
+        1060
+      ],
+      "outer_diameter_px": 1040,
+      "inner_diameter_px": 840,
+      "geometry_extras": {
+        "circle_centre": [
+          639.5,
+          639.5
+        ],
+        "circle_bounds": [
+          120,
+          120,
+          1160,
+          1160
+        ],
+        "plain_face_circle": {
+          "centre": [
+            639.5,
+            639.5
+          ],
+          "radius": 420
+        },
+        "symbols": 0
+      },
+      "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/rounds/sources/count_badge.png",
+      "filename": "count_badge_dark.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1160,
+        1160
+      ],
+      "visible_size_px": [
+        1040,
+        1040
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "canvas_centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "centre_coordinate_convention": "Half-open rectangle edge coordinates",
+      "content_rect_bbox_local": [
+        224,
+        224,
+        816,
+        816
+      ],
+      "inset_rect_bbox_local": [
+        100,
+        100,
+        940,
+        940
+      ],
+      "colour_count": 14,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "alpha_sha256": "030aff5193b5ef0129c27c74cbc04bf3a6099244e730a95bccc93a5a2f62ea46",
+      "sha256": "b53a616f362bffad67a522fa4f9996b41ff31e38bef608e87343c2904767b223",
+      "point_size_applies_to": "visible_bounds",
+      "mode": "dark",
+      "flat_region_checks": [
+        {
+          "name": "plain_face_circle",
+          "centre": [
+            639.5,
+            639.5
+          ],
+          "radius": 420,
+          "opaque": true,
+          "colour_count": 1,
+          "rgb": [
+            113,
+            84,
+            67
+          ],
+          "uniform": true
+        }
+      ],
+      "caps": null,
+      "preview_8x": {
+        "filename": "previews_8x/count_badge_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "2c8bf2587fc8fd5ac605717c365e8a2269c37b8462b5e3fbecab1a90ea2abf74"
+      }
+    },
+    {
+      "category": "menus",
+      "screen_size_points": [
+        10,
+        10
+      ],
+      "content_rect": [
+        370,
+        370,
+        910,
+        910
+      ],
+      "inset_rect": [
+        190,
+        190,
+        1090,
+        1090
+      ],
+      "outer_diameter_px": 1040,
+      "inner_diameter_px": 900,
+      "geometry_extras": {
+        "circle_centre": [
+          639.5,
+          639.5
+        ],
+        "circle_bounds": [
+          120,
+          120,
+          1160,
+          1160
+        ],
+        "plain_face_circle": {
+          "centre": [
+            639.5,
+            639.5
+          ],
+          "radius": 382
+        },
+        "symbols": 0,
+        "inlay_material": "gold"
+      },
+      "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/rounds/sources/notice_dot.png",
+      "filename": "notice_dot.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1160,
+        1160
+      ],
+      "visible_size_px": [
+        1040,
+        1040
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "canvas_centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "centre_coordinate_convention": "Half-open rectangle edge coordinates",
+      "content_rect_bbox_local": [
+        250,
+        250,
+        790,
+        790
+      ],
+      "inset_rect_bbox_local": [
+        70,
+        70,
+        970,
+        970
+      ],
+      "colour_count": 17,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "alpha_sha256": "030aff5193b5ef0129c27c74cbc04bf3a6099244e730a95bccc93a5a2f62ea46",
+      "sha256": "864cb7333d7f320cfc4bd58ddf20e76b3ad6787620f7cb4170c5c7426c70a77b",
+      "point_size_applies_to": "visible_bounds",
+      "mode": "light",
+      "flat_region_checks": [
+        {
+          "name": "plain_face_circle",
+          "centre": [
+            639.5,
+            639.5
+          ],
+          "radius": 382,
+          "opaque": true,
+          "colour_count": 1,
+          "rgb": [
+            225,
+            181,
+            79
+          ],
+          "uniform": true
+        }
+      ],
+      "caps": null,
+      "preview_8x": {
+        "filename": "previews_8x/notice_dot_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "a2146dd11ba1afc9e8a14e9fe2ae7029b34255e45661cbd2d63f36f9ec21e629"
+      }
+    },
+    {
+      "category": "menus",
+      "screen_size_points": [
+        10,
+        10
+      ],
+      "content_rect": [
+        370,
+        370,
+        910,
+        910
+      ],
+      "inset_rect": [
+        190,
+        190,
+        1090,
+        1090
+      ],
+      "outer_diameter_px": 1040,
+      "inner_diameter_px": 900,
+      "geometry_extras": {
+        "circle_centre": [
+          639.5,
+          639.5
+        ],
+        "circle_bounds": [
+          120,
+          120,
+          1160,
+          1160
+        ],
+        "plain_face_circle": {
+          "centre": [
+            639.5,
+            639.5
+          ],
+          "radius": 382
+        },
+        "symbols": 0,
+        "inlay_material": "gold"
+      },
+      "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/rounds/sources/notice_dot.png",
+      "filename": "notice_dot_dark.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1160,
+        1160
+      ],
+      "visible_size_px": [
+        1040,
+        1040
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "canvas_centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "centre_coordinate_convention": "Half-open rectangle edge coordinates",
+      "content_rect_bbox_local": [
+        250,
+        250,
+        790,
+        790
+      ],
+      "inset_rect_bbox_local": [
+        70,
+        70,
+        970,
+        970
+      ],
+      "colour_count": 17,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "alpha_sha256": "030aff5193b5ef0129c27c74cbc04bf3a6099244e730a95bccc93a5a2f62ea46",
+      "sha256": "6e695dfade066f7a6e154cba2d066f99fbb9df3db841c996b99829e45a6f6db2",
+      "point_size_applies_to": "visible_bounds",
+      "mode": "dark",
+      "flat_region_checks": [
+        {
+          "name": "plain_face_circle",
+          "centre": [
+            639.5,
+            639.5
+          ],
+          "radius": 382,
+          "opaque": true,
+          "colour_count": 1,
+          "rgb": [
+            240,
+            199,
+            103
+          ],
+          "uniform": true
+        }
+      ],
+      "caps": null,
+      "preview_8x": {
+        "filename": "previews_8x/notice_dot_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "fdc9e9eeb0607908fcd0937a30ee358076cac2f24b844d1044e3fcadb51f02cb"
+      }
+    },
+    {
+      "category": "menus",
+      "screen_size_points": [
+        7,
+        7
+      ],
+      "content_rect": [
+        368,
+        368,
+        912,
+        912
+      ],
+      "inset_rect": [
+        216,
+        216,
+        1064,
+        1064
+      ],
+      "outer_diameter_px": 1040,
+      "inner_diameter_px": 848,
+      "geometry_extras": {
+        "circle_centre": [
+          639.5,
+          639.5
+        ],
+        "circle_bounds": [
+          120,
+          120,
+          1160,
+          1160
+        ],
+        "plain_face_circle": {
+          "centre": [
+            639.5,
+            639.5
+          ],
+          "radius": 385
+        },
+        "symbols": 0,
+        "same_silhouette_as": "page_dot_on.png"
+      },
+      "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/rounds/sources/page_dot_off.png",
+      "filename": "page_dot_off.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1160,
+        1160
+      ],
+      "visible_size_px": [
+        1040,
+        1040
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "canvas_centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "centre_coordinate_convention": "Half-open rectangle edge coordinates",
+      "content_rect_bbox_local": [
+        248,
+        248,
+        792,
+        792
+      ],
+      "inset_rect_bbox_local": [
+        96,
+        96,
+        944,
+        944
+      ],
+      "colour_count": 14,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "alpha_sha256": "030aff5193b5ef0129c27c74cbc04bf3a6099244e730a95bccc93a5a2f62ea46",
+      "sha256": "672301dd1289de9c9f9fb11207dabaea4c55c06d928011f2d6626656f9a062d1",
+      "point_size_applies_to": "visible_bounds",
+      "mode": "light",
+      "flat_region_checks": [
+        {
+          "name": "plain_face_circle",
+          "centre": [
+            639.5,
+            639.5
+          ],
+          "radius": 385,
+          "opaque": true,
+          "colour_count": 1,
+          "rgb": [
+            202,
+            142,
+            78
+          ],
+          "uniform": true
+        }
+      ],
+      "caps": null,
+      "preview_8x": {
+        "filename": "previews_8x/page_dot_off_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "58c7b8895028ec538909c651fc25fee0a6f6f83ad43d826e789f9d0bff04b704"
+      }
+    },
+    {
+      "category": "menus",
+      "screen_size_points": [
+        7,
+        7
+      ],
+      "content_rect": [
+        368,
+        368,
+        912,
+        912
+      ],
+      "inset_rect": [
+        216,
+        216,
+        1064,
+        1064
+      ],
+      "outer_diameter_px": 1040,
+      "inner_diameter_px": 848,
+      "geometry_extras": {
+        "circle_centre": [
+          639.5,
+          639.5
+        ],
+        "circle_bounds": [
+          120,
+          120,
+          1160,
+          1160
+        ],
+        "plain_face_circle": {
+          "centre": [
+            639.5,
+            639.5
+          ],
+          "radius": 385
+        },
+        "symbols": 0,
+        "same_silhouette_as": "page_dot_on.png"
+      },
+      "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/rounds/sources/page_dot_off.png",
+      "filename": "page_dot_off_dark.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1160,
+        1160
+      ],
+      "visible_size_px": [
+        1040,
+        1040
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "canvas_centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "centre_coordinate_convention": "Half-open rectangle edge coordinates",
+      "content_rect_bbox_local": [
+        248,
+        248,
+        792,
+        792
+      ],
+      "inset_rect_bbox_local": [
+        96,
+        96,
+        944,
+        944
+      ],
+      "colour_count": 14,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "alpha_sha256": "030aff5193b5ef0129c27c74cbc04bf3a6099244e730a95bccc93a5a2f62ea46",
+      "sha256": "091cb584b768788d20b3f44660b1cfc515678f1747db71ddfaf44a1220b99ebb",
+      "point_size_applies_to": "visible_bounds",
+      "mode": "dark",
+      "flat_region_checks": [
+        {
+          "name": "plain_face_circle",
+          "centre": [
+            639.5,
+            639.5
+          ],
+          "radius": 385,
+          "opaque": true,
+          "colour_count": 1,
+          "rgb": [
+            91,
+            63,
+            50
+          ],
+          "uniform": true
+        }
+      ],
+      "caps": null,
+      "preview_8x": {
+        "filename": "previews_8x/page_dot_off_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "9c68ca4b79292d054b8745652fe573cd040aa4c7121052d975a4273a4f555216"
+      }
+    },
+    {
+      "category": "menus",
+      "screen_size_points": [
+        7,
+        7
+      ],
+      "content_rect": [
+        368,
+        368,
+        912,
+        912
+      ],
+      "inset_rect": [
+        216,
+        216,
+        1064,
+        1064
+      ],
+      "outer_diameter_px": 1040,
+      "inner_diameter_px": 848,
+      "geometry_extras": {
+        "circle_centre": [
+          639.5,
+          639.5
+        ],
+        "circle_bounds": [
+          120,
+          120,
+          1160,
+          1160
+        ],
+        "plain_face_circle": {
+          "centre": [
+            639.5,
+            639.5
+          ],
+          "radius": 385
+        },
+        "symbols": 0,
+        "same_silhouette_as": "page_dot_off.png",
+        "inlay_material": "gold"
+      },
+      "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/rounds/sources/page_dot_off.png",
+      "filename": "page_dot_on.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1160,
+        1160
+      ],
+      "visible_size_px": [
+        1040,
+        1040
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "canvas_centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "centre_coordinate_convention": "Half-open rectangle edge coordinates",
+      "content_rect_bbox_local": [
+        248,
+        248,
+        792,
+        792
+      ],
+      "inset_rect_bbox_local": [
+        96,
+        96,
+        944,
+        944
+      ],
+      "colour_count": 17,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "alpha_sha256": "030aff5193b5ef0129c27c74cbc04bf3a6099244e730a95bccc93a5a2f62ea46",
+      "sha256": "ea3439e32791131cdb5eb39a644530ae4a06872c1cbb72f4b467877e87de9e4f",
+      "point_size_applies_to": "visible_bounds",
+      "mode": "light",
+      "flat_region_checks": [
+        {
+          "name": "plain_face_circle",
+          "centre": [
+            639.5,
+            639.5
+          ],
+          "radius": 385,
+          "opaque": true,
+          "colour_count": 1,
+          "rgb": [
+            225,
+            181,
+            79
+          ],
+          "uniform": true
+        }
+      ],
+      "caps": null,
+      "preview_8x": {
+        "filename": "previews_8x/page_dot_on_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "04023a8b39c2024b7c5273356fef742f04247bc7ad8e4ebe3bbfc213463f222e"
+      }
+    },
+    {
+      "category": "menus",
+      "screen_size_points": [
+        7,
+        7
+      ],
+      "content_rect": [
+        368,
+        368,
+        912,
+        912
+      ],
+      "inset_rect": [
+        216,
+        216,
+        1064,
+        1064
+      ],
+      "outer_diameter_px": 1040,
+      "inner_diameter_px": 848,
+      "geometry_extras": {
+        "circle_centre": [
+          639.5,
+          639.5
+        ],
+        "circle_bounds": [
+          120,
+          120,
+          1160,
+          1160
+        ],
+        "plain_face_circle": {
+          "centre": [
+            639.5,
+            639.5
+          ],
+          "radius": 385
+        },
+        "symbols": 0,
+        "same_silhouette_as": "page_dot_off.png",
+        "inlay_material": "gold"
+      },
+      "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/rounds/sources/page_dot_off.png",
+      "filename": "page_dot_on_dark.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1160,
+        1160
+      ],
+      "visible_size_px": [
+        1040,
+        1040
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "canvas_centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "centre_coordinate_convention": "Half-open rectangle edge coordinates",
+      "content_rect_bbox_local": [
+        248,
+        248,
+        792,
+        792
+      ],
+      "inset_rect_bbox_local": [
+        96,
+        96,
+        944,
+        944
+      ],
+      "colour_count": 17,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "alpha_sha256": "030aff5193b5ef0129c27c74cbc04bf3a6099244e730a95bccc93a5a2f62ea46",
+      "sha256": "a49f4e3aa9d6cb4db7f7bd012aaa0467bfbf433bbea8b7eb17e503f7b90b5bf6",
+      "point_size_applies_to": "visible_bounds",
+      "mode": "dark",
+      "flat_region_checks": [
+        {
+          "name": "plain_face_circle",
+          "centre": [
+            639.5,
+            639.5
+          ],
+          "radius": 385,
+          "opaque": true,
+          "colour_count": 1,
+          "rgb": [
+            240,
+            199,
+            103
+          ],
+          "uniform": true
+        }
+      ],
+      "caps": null,
+      "preview_8x": {
+        "filename": "previews_8x/page_dot_on_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "9dae03ce697e36f47184cb5f13f9e0708070b9bcbfb538bbf53466cc894a929c"
+      }
+    },
+    {
+      "category": "Battle",
+      "screen_size_points": [
+        90,
+        26
+      ],
+      "content_rect": [
+        290,
+        535,
+        990,
+        640
+      ],
+      "inset_rect": [
+        261,
+        679,
+        1019,
+        729
+      ],
+      "inset_corner_radius_px": 23,
+      "content_regions": {
+        "name": [
+          290,
+          535,
+          990,
+          640
+        ],
+        "hp_bar": [
+          288,
+          683,
+          992,
+          725
+        ]
+      },
+      "flat_regions": [
+        {
+          "name": "name",
+          "rect": [
+            290,
+            535,
+            990,
+            640
+          ],
+          "role": "hud_241_195_135"
+        },
+        {
+          "name": "hp_bar",
+          "rect": [
+            288,
+            683,
+            992,
+            725
+          ],
+          "role": "face_pressed"
+        }
+      ],
+      "geometry_extras": {
+        "hp_groove_count": 1
+      },
+      "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/plates/sources/battle_nameplate_source.png",
+      "outline_width_px": 3,
+      "point_size_applies_to": "visible_bounds",
+      "filename": "battle_nameplate.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        490,
+        1160,
+        790
+      ],
+      "visible_size_px": [
+        1040,
+        300
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "canvas_centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "centre_coordinate_convention": "Half-open rectangle edge coordinates",
+      "content_rect_bbox_local": [
+        170,
+        45,
+        870,
+        150
+      ],
+      "inset_rect_bbox_local": [
+        141,
+        189,
+        899,
+        239
+      ],
+      "colour_count": 30,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "alpha_sha256": "b34f38c323018c8630a3d0737eee4600440fe4705e0f02d0bd36c15ff5c084af",
+      "sha256": "fd9bbbefad47b4b8e7691bbd39af5062d3dc280dc920c36b8b40a66501ba74f4",
+      "mode": "light",
+      "flat_region_checks": [
+        {
+          "name": "name",
+          "rect": [
+            290,
+            535,
+            990,
+            640
+          ],
+          "opaque": true,
+          "colour_count": 1,
+          "rgb": [
+            241,
+            195,
+            135
+          ],
+          "uniform": true
+        },
+        {
+          "name": "hp_bar",
+          "rect": [
+            288,
+            683,
+            992,
+            725
+          ],
+          "opaque": true,
+          "colour_count": 1,
+          "rgb": [
+            220,
+            164,
+            101
+          ],
+          "uniform": true
+        }
+      ],
+      "caps": {
+        "axis": "x",
+        "left_px": 230,
+        "right_px": 230,
+        "cap_width_origin": "visible bounding box",
+        "coordinate_space": "bbox_local",
+        "stretch_rect_canvas": [
+          350,
+          490,
+          930,
+          790
+        ],
+        "stretch_rect_bbox_local": [
+          230,
+          0,
+          810,
+          300
+        ],
+        "slice_boundaries_canvas_x": [
+          350,
+          930
+        ],
+        "slice_boundaries_bbox_local_x": [
+          230,
+          810
+        ],
+        "canvas_cap_insets_px": {
+          "left": 350,
+          "right": 350,
+          "top": 0,
+          "bottom": 0
+        },
+        "cropped_cap_insets_px": {
+          "left": 230,
+          "right": 230,
+          "top": 0,
+          "bottom": 0
+        },
+        "minimum_visible_width_px": 461,
+        "centre_columns_pixel_identical": true,
+        "both_cap_join_columns_pixel_identical": true
+      },
+      "preview_8x": {
+        "filename": "previews_8x/battle_nameplate_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "9ff324e91188a4c8020dda4446c77a3103615b0dee8136ac39c5b4d4aad67e26"
+      }
+    },
+    {
+      "category": "Battle",
+      "screen_size_points": [
+        90,
+        26
+      ],
+      "content_rect": [
+        290,
+        535,
+        990,
+        640
+      ],
+      "inset_rect": [
+        261,
+        679,
+        1019,
+        729
+      ],
+      "inset_corner_radius_px": 23,
+      "content_regions": {
+        "name": [
+          290,
+          535,
+          990,
+          640
+        ],
+        "hp_bar": [
+          288,
+          683,
+          992,
+          725
+        ]
+      },
+      "flat_regions": [
+        {
+          "name": "name",
+          "rect": [
+            290,
+            535,
+            990,
+            640
+          ],
+          "role": "hud_241_195_135"
+        },
+        {
+          "name": "hp_bar",
+          "rect": [
+            288,
+            683,
+            992,
+            725
+          ],
+          "role": "face_pressed"
+        }
+      ],
+      "geometry_extras": {
+        "hp_groove_count": 1
+      },
+      "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/plates/sources/battle_nameplate_source.png",
+      "outline_width_px": 3,
+      "point_size_applies_to": "visible_bounds",
+      "filename": "battle_nameplate_dark.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        490,
+        1160,
+        790
+      ],
+      "visible_size_px": [
+        1040,
+        300
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "canvas_centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "centre_coordinate_convention": "Half-open rectangle edge coordinates",
+      "content_rect_bbox_local": [
+        170,
+        45,
+        870,
+        150
+      ],
+      "inset_rect_bbox_local": [
+        141,
+        189,
+        899,
+        239
+      ],
+      "colour_count": 30,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "alpha_sha256": "b34f38c323018c8630a3d0737eee4600440fe4705e0f02d0bd36c15ff5c084af",
+      "sha256": "e75b7300fef2869784ed0cf8c843cc1615ce475be4490604fe0818ca5d902631",
+      "mode": "dark",
+      "flat_region_checks": [
+        {
+          "name": "name",
+          "rect": [
+            290,
+            535,
+            990,
+            640
+          ],
+          "opaque": true,
+          "colour_count": 1,
+          "rgb": [
+            143,
+            111,
+            85
+          ],
+          "uniform": true
+        },
+        {
+          "name": "hp_bar",
+          "rect": [
+            288,
+            683,
+            992,
+            725
+          ],
+          "opaque": true,
+          "colour_count": 1,
+          "rgb": [
+            103,
+            74,
+            59
+          ],
+          "uniform": true
+        }
+      ],
+      "caps": {
+        "axis": "x",
+        "left_px": 230,
+        "right_px": 230,
+        "cap_width_origin": "visible bounding box",
+        "coordinate_space": "bbox_local",
+        "stretch_rect_canvas": [
+          350,
+          490,
+          930,
+          790
+        ],
+        "stretch_rect_bbox_local": [
+          230,
+          0,
+          810,
+          300
+        ],
+        "slice_boundaries_canvas_x": [
+          350,
+          930
+        ],
+        "slice_boundaries_bbox_local_x": [
+          230,
+          810
+        ],
+        "canvas_cap_insets_px": {
+          "left": 350,
+          "right": 350,
+          "top": 0,
+          "bottom": 0
+        },
+        "cropped_cap_insets_px": {
+          "left": 230,
+          "right": 230,
+          "top": 0,
+          "bottom": 0
+        },
+        "minimum_visible_width_px": 461,
+        "centre_columns_pixel_identical": true,
+        "both_cap_join_columns_pixel_identical": true
+      },
+      "preview_8x": {
+        "filename": "previews_8x/battle_nameplate_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "d9819932b67b8870813a5078a855276b7fde900406866a49b2c941df8f0d13c7"
+      }
+    },
+    {
+      "category": "battle",
+      "screen_size_points": [
+        44,
+        44
+      ],
+      "content_rect": [
+        358,
+        358,
+        922,
+        922
+      ],
+      "inset_rect": [
+        240,
+        240,
+        1040,
+        1040
+      ],
+      "outer_diameter_px": 1040,
+      "inner_diameter_px": 800,
+      "geometry_extras": {
+        "circle_centre": [
+          639.5,
+          639.5
+        ],
+        "circle_bounds": [
+          120,
+          120,
+          1160,
+          1160
+        ],
+        "transparent_hole": {
+          "centre": [
+            639.5,
+            639.5
+          ],
+          "radius": 400,
+          "diameter": 800,
+          "bounds": [
+            240,
+            240,
+            1040,
+            1040
+          ]
+        },
+        "moon_phase_count": 8,
+        "moon_phase_clockwise_order": [
+          "new",
+          "waxing_crescent",
+          "first_quarter",
+          "waxing_gibbous",
+          "full",
+          "waning_gibbous",
+          "last_quarter",
+          "waning_crescent"
+        ],
+        "moon_phase_start_clock_position": "12 oclock"
+      },
+      "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/rounds/sources/turn_timer_ring.png",
+      "filename": "turn_timer_ring.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1160,
+        1160
+      ],
+      "visible_size_px": [
+        1040,
+        1040
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "canvas_centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "centre_coordinate_convention": "Half-open rectangle edge coordinates",
+      "content_rect_bbox_local": [
+        238,
+        238,
+        802,
+        802
+      ],
+      "inset_rect_bbox_local": [
+        120,
+        120,
+        920,
+        920
+      ],
+      "colour_count": 28,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "alpha_sha256": "01f814392e311d97528f29c8f3ed6360b67532e397ed702127ec2c4c37f48517",
+      "sha256": "666932929a0a695959f99ce6daed8b21997a2468f963d64075ea81b2d7b2bb7b",
+      "point_size_applies_to": "visible_bounds",
+      "mode": "light",
+      "flat_region_checks": [
+        {
+          "name": "transparent_hole",
+          "centre": [
+            639.5,
+            639.5
+          ],
+          "radius": 400,
+          "diameter": 800,
+          "bounds": [
+            240,
+            240,
+            1040,
+            1040
+          ],
+          "all_pixels_transparent": true,
+          "pixel_count": 502652
+        }
+      ],
+      "caps": null,
+      "preview_8x": {
+        "filename": "previews_8x/turn_timer_ring_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "33ccf4e08c38989c9b323fe6bfcc2a2df9417ff1247953b51b770296d2571727"
+      }
+    },
+    {
+      "category": "battle",
+      "screen_size_points": [
+        44,
+        44
+      ],
+      "content_rect": [
+        358,
+        358,
+        922,
+        922
+      ],
+      "inset_rect": [
+        240,
+        240,
+        1040,
+        1040
+      ],
+      "outer_diameter_px": 1040,
+      "inner_diameter_px": 800,
+      "geometry_extras": {
+        "circle_centre": [
+          639.5,
+          639.5
+        ],
+        "circle_bounds": [
+          120,
+          120,
+          1160,
+          1160
+        ],
+        "transparent_hole": {
+          "centre": [
+            639.5,
+            639.5
+          ],
+          "radius": 400,
+          "diameter": 800,
+          "bounds": [
+            240,
+            240,
+            1040,
+            1040
+          ]
+        },
+        "moon_phase_count": 8,
+        "moon_phase_clockwise_order": [
+          "new",
+          "waxing_crescent",
+          "first_quarter",
+          "waxing_gibbous",
+          "full",
+          "waning_gibbous",
+          "last_quarter",
+          "waning_crescent"
+        ],
+        "moon_phase_start_clock_position": "12 oclock"
+      },
+      "source_path": "/workspace/scratch/e15630456ffa/menu_battle_work/rounds/sources/turn_timer_ring.png",
+      "filename": "turn_timer_ring_dark.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1160,
+        1160
+      ],
+      "visible_size_px": [
+        1040,
+        1040
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "canvas_centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "centre_coordinate_convention": "Half-open rectangle edge coordinates",
+      "content_rect_bbox_local": [
+        238,
+        238,
+        802,
+        802
+      ],
+      "inset_rect_bbox_local": [
+        120,
+        120,
+        920,
+        920
+      ],
+      "colour_count": 28,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "alpha_sha256": "01f814392e311d97528f29c8f3ed6360b67532e397ed702127ec2c4c37f48517",
+      "sha256": "5873e9970643dbcfd41500a5751af6e9f57d4e22d2e8331c25dc205980365789",
+      "point_size_applies_to": "visible_bounds",
+      "mode": "dark",
+      "flat_region_checks": [
+        {
+          "name": "transparent_hole",
+          "centre": [
+            639.5,
+            639.5
+          ],
+          "radius": 400,
+          "diameter": 800,
+          "bounds": [
+            240,
+            240,
+            1040,
+            1040
+          ],
+          "all_pixels_transparent": true,
+          "pixel_count": 502652
+        }
+      ],
+      "caps": null,
+      "preview_8x": {
+        "filename": "previews_8x/turn_timer_ring_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "f52fb5ce1ffe9811d92f8ed0ef2ee91c930aaa1e619d8091ccfa78f410530273"
+      }
+    }
+  ],
+  "dark_pairs": [
+    {
+      "light": "item_slot.png",
+      "dark": "item_slot_dark.png",
+      "same_alpha_pixel_for_pixel": true,
+      "same_silhouette": true,
+      "same_carving_and_colour_region_boundaries": true,
+      "exact_injective_shared_palette_mapping": true
+    },
+    {
+      "light": "item_slot_selected.png",
+      "dark": "item_slot_selected_dark.png",
+      "same_alpha_pixel_for_pixel": true,
+      "same_silhouette": true,
+      "same_carving_and_colour_region_boundaries": true,
+      "exact_injective_shared_palette_mapping": true
+    },
+    {
+      "light": "item_slot_empty.png",
+      "dark": "item_slot_empty_dark.png",
+      "same_alpha_pixel_for_pixel": true,
+      "same_silhouette": true,
+      "same_carving_and_colour_region_boundaries": true,
+      "exact_injective_shared_palette_mapping": true
+    },
+    {
+      "light": "equip_slot.png",
+      "dark": "equip_slot_dark.png",
+      "same_alpha_pixel_for_pixel": true,
+      "same_silhouette": true,
+      "same_carving_and_colour_region_boundaries": true,
+      "exact_injective_shared_palette_mapping": true
+    },
+    {
+      "light": "switch_off.png",
+      "dark": "switch_off_dark.png",
+      "same_alpha_pixel_for_pixel": true,
+      "same_silhouette": true,
+      "same_carving_and_colour_region_boundaries": true,
+      "exact_injective_shared_palette_mapping": true
+    },
+    {
+      "light": "switch_on.png",
+      "dark": "switch_on_dark.png",
+      "same_alpha_pixel_for_pixel": true,
+      "same_silhouette": true,
+      "same_carving_and_colour_region_boundaries": true,
+      "exact_injective_shared_palette_mapping": true
+    },
+    {
+      "light": "switch_knob.png",
+      "dark": "switch_knob_dark.png",
+      "same_alpha_pixel_for_pixel": true,
+      "same_silhouette": true,
+      "same_carving_and_colour_region_boundaries": true,
+      "exact_injective_shared_palette_mapping": true
+    },
+    {
+      "light": "slider_track.png",
+      "dark": "slider_track_dark.png",
+      "same_alpha_pixel_for_pixel": true,
+      "same_silhouette": true,
+      "same_carving_and_colour_region_boundaries": true,
+      "exact_injective_shared_palette_mapping": true
+    },
+    {
+      "light": "slider_knob.png",
+      "dark": "slider_knob_dark.png",
+      "same_alpha_pixel_for_pixel": true,
+      "same_silhouette": true,
+      "same_carving_and_colour_region_boundaries": true,
+      "exact_injective_shared_palette_mapping": true
+    },
+    {
+      "light": "icon_button_square.png",
+      "dark": "icon_button_square_dark.png",
+      "same_alpha_pixel_for_pixel": true,
+      "same_silhouette": true,
+      "same_carving_and_colour_region_boundaries": true,
+      "exact_injective_shared_palette_mapping": true
+    },
+    {
+      "light": "icon_button_square_pressed.png",
+      "dark": "icon_button_square_pressed_dark.png",
+      "same_alpha_pixel_for_pixel": true,
+      "same_silhouette": true,
+      "same_carving_and_colour_region_boundaries": true,
+      "exact_injective_shared_palette_mapping": true
+    },
+    {
+      "light": "progress_groove.png",
+      "dark": "progress_groove_dark.png",
+      "same_alpha_pixel_for_pixel": true,
+      "same_silhouette": true,
+      "same_carving_and_colour_region_boundaries": true,
+      "exact_injective_shared_palette_mapping": true
+    },
+    {
+      "light": "count_badge.png",
+      "dark": "count_badge_dark.png",
+      "same_alpha_pixel_for_pixel": true,
+      "same_silhouette": true,
+      "same_carving_and_colour_region_boundaries": true,
+      "exact_injective_shared_palette_mapping": true
+    },
+    {
+      "light": "notice_dot.png",
+      "dark": "notice_dot_dark.png",
+      "same_alpha_pixel_for_pixel": true,
+      "same_silhouette": true,
+      "same_carving_and_colour_region_boundaries": true,
+      "exact_injective_shared_palette_mapping": true
+    },
+    {
+      "light": "page_dot_off.png",
+      "dark": "page_dot_off_dark.png",
+      "same_alpha_pixel_for_pixel": true,
+      "same_silhouette": true,
+      "same_carving_and_colour_region_boundaries": true,
+      "exact_injective_shared_palette_mapping": true
+    },
+    {
+      "light": "page_dot_on.png",
+      "dark": "page_dot_on_dark.png",
+      "same_alpha_pixel_for_pixel": true,
+      "same_silhouette": true,
+      "same_carving_and_colour_region_boundaries": true,
+      "exact_injective_shared_palette_mapping": true
+    },
+    {
+      "light": "battle_nameplate.png",
+      "dark": "battle_nameplate_dark.png",
+      "same_alpha_pixel_for_pixel": true,
+      "same_silhouette": true,
+      "same_carving_and_colour_region_boundaries": true,
+      "exact_injective_shared_palette_mapping": true
+    },
+    {
+      "light": "turn_timer_ring.png",
+      "dark": "turn_timer_ring_dark.png",
+      "same_alpha_pixel_for_pixel": true,
+      "same_silhouette": true,
+      "same_carving_and_colour_region_boundaries": true,
+      "exact_injective_shared_palette_mapping": true
+    }
+  ],
+  "stretch_checks": [
+    {
+      "filename": "slider_track.png",
+      "widths_checked_px": [
+        728,
+        1040,
+        1560
+      ],
+      "cap_pixels_preserved": true,
+      "centre_columns_identical": true,
+      "seamless_cap_joins": true
+    },
+    {
+      "filename": "slider_track_dark.png",
+      "widths_checked_px": [
+        728,
+        1040,
+        1560
+      ],
+      "cap_pixels_preserved": true,
+      "centre_columns_identical": true,
+      "seamless_cap_joins": true
+    },
+    {
+      "filename": "progress_groove.png",
+      "widths_checked_px": [
+        728,
+        1040,
+        1560
+      ],
+      "cap_pixels_preserved": true,
+      "centre_columns_identical": true,
+      "seamless_cap_joins": true
+    },
+    {
+      "filename": "progress_groove_dark.png",
+      "widths_checked_px": [
+        728,
+        1040,
+        1560
+      ],
+      "cap_pixels_preserved": true,
+      "centre_columns_identical": true,
+      "seamless_cap_joins": true
+    },
+    {
+      "filename": "battle_nameplate.png",
+      "widths_checked_px": [
+        728,
+        1040,
+        1560
+      ],
+      "cap_pixels_preserved": true,
+      "centre_columns_identical": true,
+      "seamless_cap_joins": true
+    },
+    {
+      "filename": "battle_nameplate_dark.png",
+      "widths_checked_px": [
+        728,
+        1040,
+        1560
+      ],
+      "cap_pixels_preserved": true,
+      "centre_columns_identical": true,
+      "seamless_cap_joins": true
+    }
+  ],
+  "state_checks": [
+    {
+      "family": "item_slot",
+      "mode": "light",
+      "same_silhouette_all_states": true,
+      "selected_only_gold_inlay_changes": true,
+      "empty_only_inset_changes": true
+    },
+    {
+      "family": "icon_button_square",
+      "mode": "light",
+      "same_silhouette": true,
+      "frame_pixel_identical": true,
+      "only_face_changes": true
+    },
+    {
+      "family": "page_dots",
+      "mode": "light",
+      "same_silhouette": true,
+      "only_inset_colours_change": true
+    },
+    {
+      "family": "item_slot",
+      "mode": "dark",
+      "same_silhouette_all_states": true,
+      "selected_only_gold_inlay_changes": true,
+      "empty_only_inset_changes": true
+    },
+    {
+      "family": "icon_button_square",
+      "mode": "dark",
+      "same_silhouette": true,
+      "frame_pixel_identical": true,
+      "only_face_changes": true
+    },
+    {
+      "family": "page_dots",
+      "mode": "dark",
+      "same_silhouette": true,
+      "only_inset_colours_change": true
+    },
+    {
+      "family": "switch",
+      "same_silhouette": true,
+      "same_authored_knob_pixel_identical_between_states": true,
+      "knob_translation_px": [
+        440,
+        0
+      ],
+      "wood_off_and_sage_on_track_verified": true
+    }
+  ],
+  "all_checks_pass": true,
+  "deliverable_ready": true,
+  "summary": {
+    "primary_pngs": 36,
+    "exact_8x_previews": 36,
+    "exact_light_dark_pairs": 18,
+    "binary_alpha_files": 36,
+    "colour_count_range": [
+      14,
+      32
+    ],
+    "stretchable_pairs": 3,
+    "all_content_and_inset_rectangles_recorded": true,
+    "all_stretch_caps_in_canvas_and_bbox_coordinates": true,
+    "timer_holes_fully_transparent": true
+  }
+}

@@ -1,0 +1,5449 @@
+{
+  "kit": "Tales of Dorlune carved HUD icon buttons",
+  "version": 1,
+  "design_count": 13,
+  "primary_png_count": 52,
+  "preview_count": 52,
+  "all_checks_pass": true,
+  "source_frames": "Exact four supplied button_round PNGs",
+  "coordinate_convention": "Pixel centres: x/y from0; bbox right/bottom exclusive",
+  "colour_count_limit": 40,
+  "glyph_envelope_radius_px": 248,
+  "glyph_inlay_colour_limit": 3,
+  "assets": [
+    {
+      "filename": "button_chat.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "f19c6af3473bf8a98eb9887dad000dc6aab0ebe22aaa5d09084c0caa860ea616",
+      "design": "chat",
+      "state": "normal",
+      "mode": "light",
+      "glyph": {
+        "source_filename": "chat_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          214,
+          256,
+          1028,
+          1014
+        ],
+        "source_sha256": "0adf7485c21b347924b66faf8f9e7e7b6d0845b672e9a4aa98a7b9c1c3930f65",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 247.633,
+        "minimum_radial_margin_to_plain_face_px": 130.367,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          448,
+          461,
+          833,
+          820
+        ],
+        "bbox_dimensions_px": [
+          385,
+          359
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [],
+        "inlay_rgb_count": 0,
+        "glyph_mask_sha256": "f4de17c16bfe1c9af7949d8e7beaf057b4917da2aa6f4d89000be84a27b923b0",
+        "glyph_opaque_pixels": 109607
+      },
+      "source_frame": "button_round.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 0,
+      "preview_8x": {
+        "filename": "previews_8x/button_chat_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "56970ccd9db5b8c7d90640b158ca30eea37cd9e69e6ec755859fe38a673be088"
+      }
+    },
+    {
+      "filename": "button_chat_dark.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "6b0292e4689ac99a08b8dbaaa310be59dabe8daaa5cb53af4189989e386fb1f1",
+      "design": "chat",
+      "state": "normal",
+      "mode": "dark",
+      "glyph": {
+        "source_filename": "chat_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          214,
+          256,
+          1028,
+          1014
+        ],
+        "source_sha256": "0adf7485c21b347924b66faf8f9e7e7b6d0845b672e9a4aa98a7b9c1c3930f65",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 247.633,
+        "minimum_radial_margin_to_plain_face_px": 130.367,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          448,
+          461,
+          833,
+          820
+        ],
+        "bbox_dimensions_px": [
+          385,
+          359
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [],
+        "inlay_rgb_count": 0,
+        "glyph_mask_sha256": "f4de17c16bfe1c9af7949d8e7beaf057b4917da2aa6f4d89000be84a27b923b0",
+        "glyph_opaque_pixels": 109607
+      },
+      "source_frame": "button_round_dark.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 0,
+      "preview_8x": {
+        "filename": "previews_8x/button_chat_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "58121e84c6e369ce1d7fe6ee915ab84c9d6660121f62ec10b0e5761e9002f12c"
+      }
+    },
+    {
+      "filename": "button_chat_pressed.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "905f7d01b8e4a1090b2e302ded7de6888ce3a3bfd6a29c77db47a6c9f26bf68e",
+      "design": "chat",
+      "state": "pressed",
+      "mode": "light",
+      "glyph": {
+        "source_filename": "chat_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          214,
+          256,
+          1028,
+          1014
+        ],
+        "source_sha256": "0adf7485c21b347924b66faf8f9e7e7b6d0845b672e9a4aa98a7b9c1c3930f65",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 247.633,
+        "minimum_radial_margin_to_plain_face_px": 130.367,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          448,
+          461,
+          833,
+          820
+        ],
+        "bbox_dimensions_px": [
+          385,
+          359
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [],
+        "inlay_rgb_count": 0,
+        "glyph_mask_sha256": "f4de17c16bfe1c9af7949d8e7beaf057b4917da2aa6f4d89000be84a27b923b0",
+        "glyph_opaque_pixels": 109607
+      },
+      "source_frame": "button_round_pressed.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 0,
+      "preview_8x": {
+        "filename": "previews_8x/button_chat_pressed_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "b9c160922f276064e48a4e406a03a22ea0306518ea79ef4074455316a81aa5d9"
+      }
+    },
+    {
+      "filename": "button_chat_pressed_dark.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "a44a3cf617138499637946802a4b2528f669006bd99fa5a1f42649bbc366e5fc",
+      "design": "chat",
+      "state": "pressed",
+      "mode": "dark",
+      "glyph": {
+        "source_filename": "chat_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          214,
+          256,
+          1028,
+          1014
+        ],
+        "source_sha256": "0adf7485c21b347924b66faf8f9e7e7b6d0845b672e9a4aa98a7b9c1c3930f65",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 247.633,
+        "minimum_radial_margin_to_plain_face_px": 130.367,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          448,
+          461,
+          833,
+          820
+        ],
+        "bbox_dimensions_px": [
+          385,
+          359
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [],
+        "inlay_rgb_count": 0,
+        "glyph_mask_sha256": "f4de17c16bfe1c9af7949d8e7beaf057b4917da2aa6f4d89000be84a27b923b0",
+        "glyph_opaque_pixels": 109607
+      },
+      "source_frame": "button_round_pressed_dark.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 0,
+      "preview_8x": {
+        "filename": "previews_8x/button_chat_pressed_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "2fc97bee5f15432f98f70714f05ddc1b2f72fe1580bc151bfec3e05c33a3e71e"
+      }
+    },
+    {
+      "filename": "button_inventory.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "65948b08668257ab3a9cde086155d93e8bec75a21a00444a37ddb4dad40ea091",
+      "design": "inventory",
+      "state": "normal",
+      "mode": "light",
+      "glyph": {
+        "source_filename": "inventory_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          175,
+          141,
+          1072,
+          1138
+        ],
+        "source_sha256": "814430382a4853e326b9aea2412ef2fb2b2b4476b183fd99f38b42636a44c35d",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 248.018,
+        "minimum_radial_margin_to_plain_face_px": 129.982,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          434,
+          411,
+          847,
+          870
+        ],
+        "bbox_dimensions_px": [
+          413,
+          459
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [
+          [
+            146,
+            155,
+            68
+          ],
+          [
+            187,
+            183,
+            92
+          ],
+          [
+            222,
+            197,
+            125
+          ]
+        ],
+        "inlay_rgb_count": 3,
+        "glyph_mask_sha256": "ccbb9dca3acfce58ab908cc5f16c4b424aba7757521651323b198d8e7f585a70",
+        "glyph_opaque_pixels": 142172
+      },
+      "source_frame": "button_round.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 3,
+      "preview_8x": {
+        "filename": "previews_8x/button_inventory_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "18702163336e1619376e013a4efa9ee19b61e551182e361365129197dd5489cf"
+      }
+    },
+    {
+      "filename": "button_inventory_dark.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "13822436cf8c647ba350594fd1986ff7896995079126a3e15bde260a6c23c98c",
+      "design": "inventory",
+      "state": "normal",
+      "mode": "dark",
+      "glyph": {
+        "source_filename": "inventory_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          175,
+          141,
+          1072,
+          1138
+        ],
+        "source_sha256": "814430382a4853e326b9aea2412ef2fb2b2b4476b183fd99f38b42636a44c35d",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 248.018,
+        "minimum_radial_margin_to_plain_face_px": 129.982,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          434,
+          411,
+          847,
+          870
+        ],
+        "bbox_dimensions_px": [
+          413,
+          459
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [
+          [
+            146,
+            155,
+            68
+          ],
+          [
+            187,
+            183,
+            92
+          ],
+          [
+            222,
+            197,
+            125
+          ]
+        ],
+        "inlay_rgb_count": 3,
+        "glyph_mask_sha256": "ccbb9dca3acfce58ab908cc5f16c4b424aba7757521651323b198d8e7f585a70",
+        "glyph_opaque_pixels": 142172
+      },
+      "source_frame": "button_round_dark.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 3,
+      "preview_8x": {
+        "filename": "previews_8x/button_inventory_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "ce63026a1b9a0d21bd860cf97237e52d16513503a0012a52a19380a8a4b4cce4"
+      }
+    },
+    {
+      "filename": "button_inventory_pressed.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "b9c481f783308eca6d5ac6eac6450aa3db1d67ef965faaee0a95d63a3750a3ef",
+      "design": "inventory",
+      "state": "pressed",
+      "mode": "light",
+      "glyph": {
+        "source_filename": "inventory_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          175,
+          141,
+          1072,
+          1138
+        ],
+        "source_sha256": "814430382a4853e326b9aea2412ef2fb2b2b4476b183fd99f38b42636a44c35d",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 248.018,
+        "minimum_radial_margin_to_plain_face_px": 129.982,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          434,
+          411,
+          847,
+          870
+        ],
+        "bbox_dimensions_px": [
+          413,
+          459
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [
+          [
+            146,
+            155,
+            68
+          ],
+          [
+            187,
+            183,
+            92
+          ],
+          [
+            222,
+            197,
+            125
+          ]
+        ],
+        "inlay_rgb_count": 3,
+        "glyph_mask_sha256": "ccbb9dca3acfce58ab908cc5f16c4b424aba7757521651323b198d8e7f585a70",
+        "glyph_opaque_pixels": 142172
+      },
+      "source_frame": "button_round_pressed.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 3,
+      "preview_8x": {
+        "filename": "previews_8x/button_inventory_pressed_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "06d93ab074308fd7dfe9f8e36f8bd5386d75e2b3dc0d10d29bcc36411fb5a9b3"
+      }
+    },
+    {
+      "filename": "button_inventory_pressed_dark.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "8795544575bb31ab9b19aeed5b5304c55251b6c861ef9b2e6a4f0aefabd54434",
+      "design": "inventory",
+      "state": "pressed",
+      "mode": "dark",
+      "glyph": {
+        "source_filename": "inventory_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          175,
+          141,
+          1072,
+          1138
+        ],
+        "source_sha256": "814430382a4853e326b9aea2412ef2fb2b2b4476b183fd99f38b42636a44c35d",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 248.018,
+        "minimum_radial_margin_to_plain_face_px": 129.982,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          434,
+          411,
+          847,
+          870
+        ],
+        "bbox_dimensions_px": [
+          413,
+          459
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [
+          [
+            146,
+            155,
+            68
+          ],
+          [
+            187,
+            183,
+            92
+          ],
+          [
+            222,
+            197,
+            125
+          ]
+        ],
+        "inlay_rgb_count": 3,
+        "glyph_mask_sha256": "ccbb9dca3acfce58ab908cc5f16c4b424aba7757521651323b198d8e7f585a70",
+        "glyph_opaque_pixels": 142172
+      },
+      "source_frame": "button_round_pressed_dark.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 3,
+      "preview_8x": {
+        "filename": "previews_8x/button_inventory_pressed_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "375fd0df1cd2c9991092ec7853c7660cac60085eceed76feff51cd2d982a341d"
+      }
+    },
+    {
+      "filename": "button_menu.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "cf64c071c2de7cfbc19dd5321f447172948ef8a6e11ba741ce6274c0cdf33f8e",
+      "design": "menu",
+      "state": "normal",
+      "mode": "light",
+      "glyph": {
+        "source_filename": "menu_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          254,
+          390,
+          1000,
+          964
+        ],
+        "source_sha256": "859ccfdac386e899fee9226fd41cc9ae67813c286967f25c83bddb4792c0e389",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 248.073,
+        "minimum_radial_margin_to_plain_face_px": 129.927,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          430,
+          479,
+          851,
+          802
+        ],
+        "bbox_dimensions_px": [
+          421,
+          323
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [],
+        "inlay_rgb_count": 0,
+        "glyph_mask_sha256": "ec1204074f0f7e6fd311e01de6584c0942a8c25e05b0e78b0471d18cd2940f51",
+        "glyph_opaque_pixels": 105065
+      },
+      "source_frame": "button_round.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 0,
+      "preview_8x": {
+        "filename": "previews_8x/button_menu_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "330b615bb9c0a7e6011bc834cb8dc27d46b1b2582f16f35566d23a2a8a5123af"
+      }
+    },
+    {
+      "filename": "button_menu_dark.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "c7263d2575e6adc419a5c032535caa8f8ddcbaef0b484de800af656b63742da0",
+      "design": "menu",
+      "state": "normal",
+      "mode": "dark",
+      "glyph": {
+        "source_filename": "menu_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          254,
+          390,
+          1000,
+          964
+        ],
+        "source_sha256": "859ccfdac386e899fee9226fd41cc9ae67813c286967f25c83bddb4792c0e389",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 248.073,
+        "minimum_radial_margin_to_plain_face_px": 129.927,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          430,
+          479,
+          851,
+          802
+        ],
+        "bbox_dimensions_px": [
+          421,
+          323
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [],
+        "inlay_rgb_count": 0,
+        "glyph_mask_sha256": "ec1204074f0f7e6fd311e01de6584c0942a8c25e05b0e78b0471d18cd2940f51",
+        "glyph_opaque_pixels": 105065
+      },
+      "source_frame": "button_round_dark.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 0,
+      "preview_8x": {
+        "filename": "previews_8x/button_menu_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "09e7ddc6072860defa52d663e6cb0a76175c3e07eb6f284df390abc564fac92e"
+      }
+    },
+    {
+      "filename": "button_menu_pressed.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "08dfa3177c765ea16c963563d4b15a5beeb71a618a50dabbfeee63137ee8f968",
+      "design": "menu",
+      "state": "pressed",
+      "mode": "light",
+      "glyph": {
+        "source_filename": "menu_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          254,
+          390,
+          1000,
+          964
+        ],
+        "source_sha256": "859ccfdac386e899fee9226fd41cc9ae67813c286967f25c83bddb4792c0e389",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 248.073,
+        "minimum_radial_margin_to_plain_face_px": 129.927,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          430,
+          479,
+          851,
+          802
+        ],
+        "bbox_dimensions_px": [
+          421,
+          323
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [],
+        "inlay_rgb_count": 0,
+        "glyph_mask_sha256": "ec1204074f0f7e6fd311e01de6584c0942a8c25e05b0e78b0471d18cd2940f51",
+        "glyph_opaque_pixels": 105065
+      },
+      "source_frame": "button_round_pressed.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 0,
+      "preview_8x": {
+        "filename": "previews_8x/button_menu_pressed_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "60c123756bc21676ed7c48c8f766cc3c1b47317f76e7239095c50fecf0204f0c"
+      }
+    },
+    {
+      "filename": "button_menu_pressed_dark.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "a58d35fdf8d1d72330d7fb28267d3022b6394690850b7935da7233b03e5026d0",
+      "design": "menu",
+      "state": "pressed",
+      "mode": "dark",
+      "glyph": {
+        "source_filename": "menu_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          254,
+          390,
+          1000,
+          964
+        ],
+        "source_sha256": "859ccfdac386e899fee9226fd41cc9ae67813c286967f25c83bddb4792c0e389",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 248.073,
+        "minimum_radial_margin_to_plain_face_px": 129.927,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          430,
+          479,
+          851,
+          802
+        ],
+        "bbox_dimensions_px": [
+          421,
+          323
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [],
+        "inlay_rgb_count": 0,
+        "glyph_mask_sha256": "ec1204074f0f7e6fd311e01de6584c0942a8c25e05b0e78b0471d18cd2940f51",
+        "glyph_opaque_pixels": 105065
+      },
+      "source_frame": "button_round_pressed_dark.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 0,
+      "preview_8x": {
+        "filename": "previews_8x/button_menu_pressed_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "5a406d99bef479203eed51c13b0ae17e925d225087fe8537988a71403e5d7ff6"
+      }
+    },
+    {
+      "filename": "button_character.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "9e54d8a0cd547c9050a31c9df4554204e1095e64a9743e7e7c5857b2b89af956",
+      "design": "character",
+      "state": "normal",
+      "mode": "light",
+      "glyph": {
+        "source_filename": "character_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          227,
+          159,
+          1018,
+          1107
+        ],
+        "source_sha256": "d7af97f9d3e2df1e1b0ac15f6cb6da68a1e6a28ffd34a5e7188e79360ab2ac27",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 248.359,
+        "minimum_radial_margin_to_plain_face_px": 129.641,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          448,
+          410,
+          833,
+          871
+        ],
+        "bbox_dimensions_px": [
+          385,
+          461
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [
+          [
+            146,
+            155,
+            68
+          ],
+          [
+            187,
+            183,
+            92
+          ]
+        ],
+        "inlay_rgb_count": 2,
+        "glyph_mask_sha256": "067a184761fe487a357fa3cb3157eb7b63e80615109b218a18fa84330ebd332f",
+        "glyph_opaque_pixels": 116578
+      },
+      "source_frame": "button_round.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 2,
+      "preview_8x": {
+        "filename": "previews_8x/button_character_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "7a3c6b38e995d91b61151bec7f5858b35bdec69d413ecef286ea50f4a81f206e"
+      }
+    },
+    {
+      "filename": "button_character_dark.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "c2c92da9b645d5300fe227e68448b3881ee2a9a43eceb48b65fa3ed422f98272",
+      "design": "character",
+      "state": "normal",
+      "mode": "dark",
+      "glyph": {
+        "source_filename": "character_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          227,
+          159,
+          1018,
+          1107
+        ],
+        "source_sha256": "d7af97f9d3e2df1e1b0ac15f6cb6da68a1e6a28ffd34a5e7188e79360ab2ac27",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 248.359,
+        "minimum_radial_margin_to_plain_face_px": 129.641,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          448,
+          410,
+          833,
+          871
+        ],
+        "bbox_dimensions_px": [
+          385,
+          461
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [
+          [
+            146,
+            155,
+            68
+          ],
+          [
+            187,
+            183,
+            92
+          ]
+        ],
+        "inlay_rgb_count": 2,
+        "glyph_mask_sha256": "067a184761fe487a357fa3cb3157eb7b63e80615109b218a18fa84330ebd332f",
+        "glyph_opaque_pixels": 116578
+      },
+      "source_frame": "button_round_dark.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 2,
+      "preview_8x": {
+        "filename": "previews_8x/button_character_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "acb92b476b4c4be38b5f33959388d7fd2551ea5c94e35c1ec40e461e74172901"
+      }
+    },
+    {
+      "filename": "button_character_pressed.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "a6a2bda6df1f5f27280211be507940f997c4fa3a1727031d0f527c6dac6526a1",
+      "design": "character",
+      "state": "pressed",
+      "mode": "light",
+      "glyph": {
+        "source_filename": "character_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          227,
+          159,
+          1018,
+          1107
+        ],
+        "source_sha256": "d7af97f9d3e2df1e1b0ac15f6cb6da68a1e6a28ffd34a5e7188e79360ab2ac27",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 248.359,
+        "minimum_radial_margin_to_plain_face_px": 129.641,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          448,
+          410,
+          833,
+          871
+        ],
+        "bbox_dimensions_px": [
+          385,
+          461
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [
+          [
+            146,
+            155,
+            68
+          ],
+          [
+            187,
+            183,
+            92
+          ]
+        ],
+        "inlay_rgb_count": 2,
+        "glyph_mask_sha256": "067a184761fe487a357fa3cb3157eb7b63e80615109b218a18fa84330ebd332f",
+        "glyph_opaque_pixels": 116578
+      },
+      "source_frame": "button_round_pressed.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 2,
+      "preview_8x": {
+        "filename": "previews_8x/button_character_pressed_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "d5826ff8509769f1d385f8d7c198042b8064d68a86653d40b9ab887a8f27f442"
+      }
+    },
+    {
+      "filename": "button_character_pressed_dark.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "cf9692c7e7f5627af5f0e0d30de495c44d2753dd269d4bb6854d37e392ab2d41",
+      "design": "character",
+      "state": "pressed",
+      "mode": "dark",
+      "glyph": {
+        "source_filename": "character_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          227,
+          159,
+          1018,
+          1107
+        ],
+        "source_sha256": "d7af97f9d3e2df1e1b0ac15f6cb6da68a1e6a28ffd34a5e7188e79360ab2ac27",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 248.359,
+        "minimum_radial_margin_to_plain_face_px": 129.641,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          448,
+          410,
+          833,
+          871
+        ],
+        "bbox_dimensions_px": [
+          385,
+          461
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [
+          [
+            146,
+            155,
+            68
+          ],
+          [
+            187,
+            183,
+            92
+          ]
+        ],
+        "inlay_rgb_count": 2,
+        "glyph_mask_sha256": "067a184761fe487a357fa3cb3157eb7b63e80615109b218a18fa84330ebd332f",
+        "glyph_opaque_pixels": 116578
+      },
+      "source_frame": "button_round_pressed_dark.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 2,
+      "preview_8x": {
+        "filename": "previews_8x/button_character_pressed_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "5c34981b5b1b6c346ecc7f126c07525d325f0ea6408f18a40a3b943a6d934930"
+      }
+    },
+    {
+      "filename": "button_companions.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "2e34e263c2a4179eb15193bae106a29c75515125e96005479e07de94da82dee1",
+      "design": "companions",
+      "state": "normal",
+      "mode": "light",
+      "glyph": {
+        "source_filename": "companions_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          155,
+          235,
+          1097,
+          1048
+        ],
+        "source_sha256": "47548dd254ac430dca9d3030e05d00a2314447f1fb6fefc40027c734224cee15",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 248.477,
+        "minimum_radial_margin_to_plain_face_px": 129.523,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          393,
+          427,
+          888,
+          854
+        ],
+        "bbox_dimensions_px": [
+          495,
+          427
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [
+          [
+            146,
+            155,
+            68
+          ],
+          [
+            187,
+            183,
+            92
+          ],
+          [
+            222,
+            197,
+            125
+          ]
+        ],
+        "inlay_rgb_count": 3,
+        "glyph_mask_sha256": "502ffbd5883884a0a26b63e56cc25b71779e8dfafaa2ee419934e81b7e684c6a",
+        "glyph_opaque_pixels": 135251
+      },
+      "source_frame": "button_round.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 3,
+      "preview_8x": {
+        "filename": "previews_8x/button_companions_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "9004762c9b9da72f719e0dd5219d8ea084409bf2babca463be6b7869a3500d33"
+      }
+    },
+    {
+      "filename": "button_companions_dark.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "6a8e19040453d9cfb54363c60602481260db3ebd19f60f4809cbf2e5ccb313e8",
+      "design": "companions",
+      "state": "normal",
+      "mode": "dark",
+      "glyph": {
+        "source_filename": "companions_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          155,
+          235,
+          1097,
+          1048
+        ],
+        "source_sha256": "47548dd254ac430dca9d3030e05d00a2314447f1fb6fefc40027c734224cee15",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 248.477,
+        "minimum_radial_margin_to_plain_face_px": 129.523,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          393,
+          427,
+          888,
+          854
+        ],
+        "bbox_dimensions_px": [
+          495,
+          427
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [
+          [
+            146,
+            155,
+            68
+          ],
+          [
+            187,
+            183,
+            92
+          ],
+          [
+            222,
+            197,
+            125
+          ]
+        ],
+        "inlay_rgb_count": 3,
+        "glyph_mask_sha256": "502ffbd5883884a0a26b63e56cc25b71779e8dfafaa2ee419934e81b7e684c6a",
+        "glyph_opaque_pixels": 135251
+      },
+      "source_frame": "button_round_dark.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 3,
+      "preview_8x": {
+        "filename": "previews_8x/button_companions_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "321afc54b3c3d3d558848496b7aac3b9d935093f5b34fc926920ad041ce03ab8"
+      }
+    },
+    {
+      "filename": "button_companions_pressed.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "4d5b20f120d1411edb0f9196429b5ba6ca9dfb3201edac8e87683048c50f1db6",
+      "design": "companions",
+      "state": "pressed",
+      "mode": "light",
+      "glyph": {
+        "source_filename": "companions_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          155,
+          235,
+          1097,
+          1048
+        ],
+        "source_sha256": "47548dd254ac430dca9d3030e05d00a2314447f1fb6fefc40027c734224cee15",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 248.477,
+        "minimum_radial_margin_to_plain_face_px": 129.523,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          393,
+          427,
+          888,
+          854
+        ],
+        "bbox_dimensions_px": [
+          495,
+          427
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [
+          [
+            146,
+            155,
+            68
+          ],
+          [
+            187,
+            183,
+            92
+          ],
+          [
+            222,
+            197,
+            125
+          ]
+        ],
+        "inlay_rgb_count": 3,
+        "glyph_mask_sha256": "502ffbd5883884a0a26b63e56cc25b71779e8dfafaa2ee419934e81b7e684c6a",
+        "glyph_opaque_pixels": 135251
+      },
+      "source_frame": "button_round_pressed.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 3,
+      "preview_8x": {
+        "filename": "previews_8x/button_companions_pressed_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "8861430f3cc6ec805fc7227866b44600da695a72fd41725931148c92f2505812"
+      }
+    },
+    {
+      "filename": "button_companions_pressed_dark.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "773a5a3372a44a680722ec446814d8c6e970174aafb4e7c4277c5a3557227c61",
+      "design": "companions",
+      "state": "pressed",
+      "mode": "dark",
+      "glyph": {
+        "source_filename": "companions_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          155,
+          235,
+          1097,
+          1048
+        ],
+        "source_sha256": "47548dd254ac430dca9d3030e05d00a2314447f1fb6fefc40027c734224cee15",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 248.477,
+        "minimum_radial_margin_to_plain_face_px": 129.523,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          393,
+          427,
+          888,
+          854
+        ],
+        "bbox_dimensions_px": [
+          495,
+          427
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [
+          [
+            146,
+            155,
+            68
+          ],
+          [
+            187,
+            183,
+            92
+          ],
+          [
+            222,
+            197,
+            125
+          ]
+        ],
+        "inlay_rgb_count": 3,
+        "glyph_mask_sha256": "502ffbd5883884a0a26b63e56cc25b71779e8dfafaa2ee419934e81b7e684c6a",
+        "glyph_opaque_pixels": 135251
+      },
+      "source_frame": "button_round_pressed_dark.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 3,
+      "preview_8x": {
+        "filename": "previews_8x/button_companions_pressed_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "a4cabc94a5692dfca4e132671c69a1f05c86e28a1d291fc8d4cd321beb959828"
+      }
+    },
+    {
+      "filename": "button_friends.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "124c3ccc22625713ed1fadf148ff95b5d54efb7fb23022bbd12f45b1b14cdff1",
+      "design": "friends",
+      "state": "normal",
+      "mode": "light",
+      "glyph": {
+        "source_filename": "friends_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          181,
+          345,
+          1068,
+          916
+        ],
+        "source_sha256": "14b56f901bc968222c394d4e7cd089b546c02f79a698232bffd83a1b547a0b11",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 247.97,
+        "minimum_radial_margin_to_plain_face_px": 130.03,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          420,
+          498,
+          861,
+          783
+        ],
+        "bbox_dimensions_px": [
+          441,
+          285
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [
+          [
+            146,
+            155,
+            68
+          ],
+          [
+            187,
+            183,
+            92
+          ],
+          [
+            222,
+            197,
+            125
+          ]
+        ],
+        "inlay_rgb_count": 3,
+        "glyph_mask_sha256": "fea691c49f3a9ddbff945a619e605c5d9fe4bf9da5a4af2418b9fce8ed9cb924",
+        "glyph_opaque_pixels": 92980
+      },
+      "source_frame": "button_round.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 3,
+      "preview_8x": {
+        "filename": "previews_8x/button_friends_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "57cd790d2df82345dac1e6982c0f308bc52bc8c3525465425a23159d046a0e82"
+      }
+    },
+    {
+      "filename": "button_friends_dark.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "4250eb329a05ecf84f92e09290792a7c2a7ca14eaa79e8f63c37a5ecd0e01812",
+      "design": "friends",
+      "state": "normal",
+      "mode": "dark",
+      "glyph": {
+        "source_filename": "friends_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          181,
+          345,
+          1068,
+          916
+        ],
+        "source_sha256": "14b56f901bc968222c394d4e7cd089b546c02f79a698232bffd83a1b547a0b11",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 247.97,
+        "minimum_radial_margin_to_plain_face_px": 130.03,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          420,
+          498,
+          861,
+          783
+        ],
+        "bbox_dimensions_px": [
+          441,
+          285
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [
+          [
+            146,
+            155,
+            68
+          ],
+          [
+            187,
+            183,
+            92
+          ],
+          [
+            222,
+            197,
+            125
+          ]
+        ],
+        "inlay_rgb_count": 3,
+        "glyph_mask_sha256": "fea691c49f3a9ddbff945a619e605c5d9fe4bf9da5a4af2418b9fce8ed9cb924",
+        "glyph_opaque_pixels": 92980
+      },
+      "source_frame": "button_round_dark.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 3,
+      "preview_8x": {
+        "filename": "previews_8x/button_friends_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "35bf8cfe8256a19aef353f1233db9dd0eaa65489f4a174c9f5e92da3e2a35fcd"
+      }
+    },
+    {
+      "filename": "button_friends_pressed.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "d39b48fa2e5d83cea50a4efa7e2ea2fa73f2fc179c9ce1648d20f3647637935f",
+      "design": "friends",
+      "state": "pressed",
+      "mode": "light",
+      "glyph": {
+        "source_filename": "friends_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          181,
+          345,
+          1068,
+          916
+        ],
+        "source_sha256": "14b56f901bc968222c394d4e7cd089b546c02f79a698232bffd83a1b547a0b11",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 247.97,
+        "minimum_radial_margin_to_plain_face_px": 130.03,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          420,
+          498,
+          861,
+          783
+        ],
+        "bbox_dimensions_px": [
+          441,
+          285
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [
+          [
+            146,
+            155,
+            68
+          ],
+          [
+            187,
+            183,
+            92
+          ],
+          [
+            222,
+            197,
+            125
+          ]
+        ],
+        "inlay_rgb_count": 3,
+        "glyph_mask_sha256": "fea691c49f3a9ddbff945a619e605c5d9fe4bf9da5a4af2418b9fce8ed9cb924",
+        "glyph_opaque_pixels": 92980
+      },
+      "source_frame": "button_round_pressed.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 3,
+      "preview_8x": {
+        "filename": "previews_8x/button_friends_pressed_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "5f0e347a56601695487adcb0d57dfc7e1aa9e46ed44adc0e2ddc8bea9a91877a"
+      }
+    },
+    {
+      "filename": "button_friends_pressed_dark.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "c2749a8e63c5c00e359772cb1fd8b6160d6514230c6d165a4d1803882d4fe5fc",
+      "design": "friends",
+      "state": "pressed",
+      "mode": "dark",
+      "glyph": {
+        "source_filename": "friends_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          181,
+          345,
+          1068,
+          916
+        ],
+        "source_sha256": "14b56f901bc968222c394d4e7cd089b546c02f79a698232bffd83a1b547a0b11",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 247.97,
+        "minimum_radial_margin_to_plain_face_px": 130.03,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          420,
+          498,
+          861,
+          783
+        ],
+        "bbox_dimensions_px": [
+          441,
+          285
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [
+          [
+            146,
+            155,
+            68
+          ],
+          [
+            187,
+            183,
+            92
+          ],
+          [
+            222,
+            197,
+            125
+          ]
+        ],
+        "inlay_rgb_count": 3,
+        "glyph_mask_sha256": "fea691c49f3a9ddbff945a619e605c5d9fe4bf9da5a4af2418b9fce8ed9cb924",
+        "glyph_opaque_pixels": 92980
+      },
+      "source_frame": "button_round_pressed_dark.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 3,
+      "preview_8x": {
+        "filename": "previews_8x/button_friends_pressed_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "396aac840e73f5ff4e60073dd4b58398ce5d2333561650029884a95ede4f66b9"
+      }
+    },
+    {
+      "filename": "button_quests.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "e3b7a598c3b8b4e480b78a2c7a45110792fbfcda754f73595aa9c25cfece4a50",
+      "design": "quests",
+      "state": "normal",
+      "mode": "light",
+      "glyph": {
+        "source_filename": "quests_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          207,
+          158,
+          1037,
+          1095
+        ],
+        "source_sha256": "8462f5489ef66d441f2fd2941b025210058a645a5e7f4917ed745813d1b279ca",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 247.859,
+        "minimum_radial_margin_to_plain_face_px": 130.141,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          459,
+          436,
+          822,
+          845
+        ],
+        "bbox_dimensions_px": [
+          363,
+          409
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [
+          [
+            146,
+            155,
+            68
+          ],
+          [
+            187,
+            183,
+            92
+          ],
+          [
+            222,
+            197,
+            125
+          ]
+        ],
+        "inlay_rgb_count": 3,
+        "glyph_mask_sha256": "e543f0aebdbec2868a0c27ebb299e3b36b4e467c98804b33a7fda20d3594173a",
+        "glyph_opaque_pixels": 117665
+      },
+      "source_frame": "button_round.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 3,
+      "preview_8x": {
+        "filename": "previews_8x/button_quests_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "c65713a7882f1047f88e3de8c27d1f2321eb0e5e977f316a87ed804617ee76b9"
+      }
+    },
+    {
+      "filename": "button_quests_dark.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "a1f6824f10cfcd7f2c751d37ce6bdd19c73f2a0e4478a54275b4927125cd806b",
+      "design": "quests",
+      "state": "normal",
+      "mode": "dark",
+      "glyph": {
+        "source_filename": "quests_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          207,
+          158,
+          1037,
+          1095
+        ],
+        "source_sha256": "8462f5489ef66d441f2fd2941b025210058a645a5e7f4917ed745813d1b279ca",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 247.859,
+        "minimum_radial_margin_to_plain_face_px": 130.141,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          459,
+          436,
+          822,
+          845
+        ],
+        "bbox_dimensions_px": [
+          363,
+          409
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [
+          [
+            146,
+            155,
+            68
+          ],
+          [
+            187,
+            183,
+            92
+          ],
+          [
+            222,
+            197,
+            125
+          ]
+        ],
+        "inlay_rgb_count": 3,
+        "glyph_mask_sha256": "e543f0aebdbec2868a0c27ebb299e3b36b4e467c98804b33a7fda20d3594173a",
+        "glyph_opaque_pixels": 117665
+      },
+      "source_frame": "button_round_dark.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 3,
+      "preview_8x": {
+        "filename": "previews_8x/button_quests_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "dea378f07de8e53ad3dcb5d147014ace2c43e57aaa583b6f8eb31383e25e3e60"
+      }
+    },
+    {
+      "filename": "button_quests_pressed.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "3838a423559c259da277a3ea38d7bddee301f072fb29813552d6d55c68961e78",
+      "design": "quests",
+      "state": "pressed",
+      "mode": "light",
+      "glyph": {
+        "source_filename": "quests_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          207,
+          158,
+          1037,
+          1095
+        ],
+        "source_sha256": "8462f5489ef66d441f2fd2941b025210058a645a5e7f4917ed745813d1b279ca",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 247.859,
+        "minimum_radial_margin_to_plain_face_px": 130.141,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          459,
+          436,
+          822,
+          845
+        ],
+        "bbox_dimensions_px": [
+          363,
+          409
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [
+          [
+            146,
+            155,
+            68
+          ],
+          [
+            187,
+            183,
+            92
+          ],
+          [
+            222,
+            197,
+            125
+          ]
+        ],
+        "inlay_rgb_count": 3,
+        "glyph_mask_sha256": "e543f0aebdbec2868a0c27ebb299e3b36b4e467c98804b33a7fda20d3594173a",
+        "glyph_opaque_pixels": 117665
+      },
+      "source_frame": "button_round_pressed.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 3,
+      "preview_8x": {
+        "filename": "previews_8x/button_quests_pressed_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "0fa82a5c20072a452dbc571b2146d5348adecd3a24cd9257b7c5255fbffa9c0c"
+      }
+    },
+    {
+      "filename": "button_quests_pressed_dark.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "b333b8a6b9603749e8d67a93b90fe67e58f6f2e0c8bb357c316eef85129003a6",
+      "design": "quests",
+      "state": "pressed",
+      "mode": "dark",
+      "glyph": {
+        "source_filename": "quests_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          207,
+          158,
+          1037,
+          1095
+        ],
+        "source_sha256": "8462f5489ef66d441f2fd2941b025210058a645a5e7f4917ed745813d1b279ca",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 247.859,
+        "minimum_radial_margin_to_plain_face_px": 130.141,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          459,
+          436,
+          822,
+          845
+        ],
+        "bbox_dimensions_px": [
+          363,
+          409
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [
+          [
+            146,
+            155,
+            68
+          ],
+          [
+            187,
+            183,
+            92
+          ],
+          [
+            222,
+            197,
+            125
+          ]
+        ],
+        "inlay_rgb_count": 3,
+        "glyph_mask_sha256": "e543f0aebdbec2868a0c27ebb299e3b36b4e467c98804b33a7fda20d3594173a",
+        "glyph_opaque_pixels": 117665
+      },
+      "source_frame": "button_round_pressed_dark.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 3,
+      "preview_8x": {
+        "filename": "previews_8x/button_quests_pressed_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "2d5c4f3e3b34ffd38b55e4b6faff300ebf22ee2b896745271d7d0696482e9f54"
+      }
+    },
+    {
+      "filename": "button_settings.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "f8a9c1ee5d2712e2026c24e95decd941b9485dac8c7212846109e399da70afa7",
+      "design": "settings",
+      "state": "normal",
+      "mode": "light",
+      "glyph": {
+        "source_filename": "settings_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          153,
+          179,
+          1098,
+          1087
+        ],
+        "source_sha256": "65b63acf9b28fe3ff37123a59b9c0dbf5d0ce456adff358193b87c6443b2b4ce",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 247.703,
+        "minimum_radial_margin_to_plain_face_px": 130.297,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          393,
+          403,
+          888,
+          878
+        ],
+        "bbox_dimensions_px": [
+          495,
+          475
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [
+          [
+            146,
+            155,
+            68
+          ],
+          [
+            187,
+            183,
+            92
+          ],
+          [
+            222,
+            197,
+            125
+          ]
+        ],
+        "inlay_rgb_count": 3,
+        "glyph_mask_sha256": "cc8ee1641fa0ee632a9dffcc3a375bd3de9c63bc3966339f5dd15d07953a23cd",
+        "glyph_opaque_pixels": 107318
+      },
+      "source_frame": "button_round.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 3,
+      "preview_8x": {
+        "filename": "previews_8x/button_settings_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "19fc6bf6b5e85b85e9ea0d26858953f6728a29fbc6f6b55cca6e77913b5ecb34"
+      }
+    },
+    {
+      "filename": "button_settings_dark.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "17f7c30286384d449a04918d38a38b101f262b2ae6a6cd799f4a1d0a05f4ee4e",
+      "design": "settings",
+      "state": "normal",
+      "mode": "dark",
+      "glyph": {
+        "source_filename": "settings_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          153,
+          179,
+          1098,
+          1087
+        ],
+        "source_sha256": "65b63acf9b28fe3ff37123a59b9c0dbf5d0ce456adff358193b87c6443b2b4ce",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 247.703,
+        "minimum_radial_margin_to_plain_face_px": 130.297,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          393,
+          403,
+          888,
+          878
+        ],
+        "bbox_dimensions_px": [
+          495,
+          475
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [
+          [
+            146,
+            155,
+            68
+          ],
+          [
+            187,
+            183,
+            92
+          ],
+          [
+            222,
+            197,
+            125
+          ]
+        ],
+        "inlay_rgb_count": 3,
+        "glyph_mask_sha256": "cc8ee1641fa0ee632a9dffcc3a375bd3de9c63bc3966339f5dd15d07953a23cd",
+        "glyph_opaque_pixels": 107318
+      },
+      "source_frame": "button_round_dark.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 3,
+      "preview_8x": {
+        "filename": "previews_8x/button_settings_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "727de682aa0ab0ff597b791e19754fbdca36408e7cf0e38496238dbd58994cc3"
+      }
+    },
+    {
+      "filename": "button_settings_pressed.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "5608c9729d2d59fd26885bbb3f61d2e95a2e6c1acf4b44edb47f9c9a2490428f",
+      "design": "settings",
+      "state": "pressed",
+      "mode": "light",
+      "glyph": {
+        "source_filename": "settings_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          153,
+          179,
+          1098,
+          1087
+        ],
+        "source_sha256": "65b63acf9b28fe3ff37123a59b9c0dbf5d0ce456adff358193b87c6443b2b4ce",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 247.703,
+        "minimum_radial_margin_to_plain_face_px": 130.297,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          393,
+          403,
+          888,
+          878
+        ],
+        "bbox_dimensions_px": [
+          495,
+          475
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [
+          [
+            146,
+            155,
+            68
+          ],
+          [
+            187,
+            183,
+            92
+          ],
+          [
+            222,
+            197,
+            125
+          ]
+        ],
+        "inlay_rgb_count": 3,
+        "glyph_mask_sha256": "cc8ee1641fa0ee632a9dffcc3a375bd3de9c63bc3966339f5dd15d07953a23cd",
+        "glyph_opaque_pixels": 107318
+      },
+      "source_frame": "button_round_pressed.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 3,
+      "preview_8x": {
+        "filename": "previews_8x/button_settings_pressed_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "e33352186a37914687e4e77c2cb57ea084eb438c95e1aca586040ec2ae247002"
+      }
+    },
+    {
+      "filename": "button_settings_pressed_dark.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "4564ef532e406e64d8dbcbeb87e622cffe0467b576b6799ea2b79d7a757a6db2",
+      "design": "settings",
+      "state": "pressed",
+      "mode": "dark",
+      "glyph": {
+        "source_filename": "settings_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          153,
+          179,
+          1098,
+          1087
+        ],
+        "source_sha256": "65b63acf9b28fe3ff37123a59b9c0dbf5d0ce456adff358193b87c6443b2b4ce",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 247.703,
+        "minimum_radial_margin_to_plain_face_px": 130.297,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          393,
+          403,
+          888,
+          878
+        ],
+        "bbox_dimensions_px": [
+          495,
+          475
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [
+          [
+            146,
+            155,
+            68
+          ],
+          [
+            187,
+            183,
+            92
+          ],
+          [
+            222,
+            197,
+            125
+          ]
+        ],
+        "inlay_rgb_count": 3,
+        "glyph_mask_sha256": "cc8ee1641fa0ee632a9dffcc3a375bd3de9c63bc3966339f5dd15d07953a23cd",
+        "glyph_opaque_pixels": 107318
+      },
+      "source_frame": "button_round_pressed_dark.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 3,
+      "preview_8x": {
+        "filename": "previews_8x/button_settings_pressed_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "1457e84bf24878fa5ac3f4b40bb2b2c0fae329ec4c44156f942a0004a0040d8f"
+      }
+    },
+    {
+      "filename": "button_world_map.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "844a8e271d696977a18a1d93562aa7e87b34805d5e845e94040311381d70bca9",
+      "design": "world_map",
+      "state": "normal",
+      "mode": "light",
+      "glyph": {
+        "source_filename": "world_map_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          215,
+          308,
+          1039,
+          969
+        ],
+        "source_sha256": "b4cbe3adbcf563d40b6b51bc590b99db79f918ee6a2302d5f6a7c154d36dffb2",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 248.073,
+        "minimum_radial_margin_to_plain_face_px": 129.927,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          431,
+          472,
+          850,
+          809
+        ],
+        "bbox_dimensions_px": [
+          419,
+          337
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [
+          [
+            146,
+            155,
+            68
+          ],
+          [
+            187,
+            183,
+            92
+          ],
+          [
+            222,
+            197,
+            125
+          ]
+        ],
+        "inlay_rgb_count": 3,
+        "glyph_mask_sha256": "a4e3016e3afeca18e1d15349bf08f17e50aea491ec28db2c9a9f6e6c5ee805e5",
+        "glyph_opaque_pixels": 122969
+      },
+      "source_frame": "button_round.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 3,
+      "preview_8x": {
+        "filename": "previews_8x/button_world_map_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "2a609cf06b1fbf95a7fc143e4c0cb302de862bde6f93bcea1b394e141153342d"
+      }
+    },
+    {
+      "filename": "button_world_map_dark.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "b78cab1a3587f7db4b0690ddec4db864da50f3fc893ca00926b86b03e8819dd7",
+      "design": "world_map",
+      "state": "normal",
+      "mode": "dark",
+      "glyph": {
+        "source_filename": "world_map_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          215,
+          308,
+          1039,
+          969
+        ],
+        "source_sha256": "b4cbe3adbcf563d40b6b51bc590b99db79f918ee6a2302d5f6a7c154d36dffb2",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 248.073,
+        "minimum_radial_margin_to_plain_face_px": 129.927,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          431,
+          472,
+          850,
+          809
+        ],
+        "bbox_dimensions_px": [
+          419,
+          337
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [
+          [
+            146,
+            155,
+            68
+          ],
+          [
+            187,
+            183,
+            92
+          ],
+          [
+            222,
+            197,
+            125
+          ]
+        ],
+        "inlay_rgb_count": 3,
+        "glyph_mask_sha256": "a4e3016e3afeca18e1d15349bf08f17e50aea491ec28db2c9a9f6e6c5ee805e5",
+        "glyph_opaque_pixels": 122969
+      },
+      "source_frame": "button_round_dark.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 3,
+      "preview_8x": {
+        "filename": "previews_8x/button_world_map_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "ecf9a50ee087cc54bb45d40f50a984efc47087454f6389033d1b00ef6423e131"
+      }
+    },
+    {
+      "filename": "button_world_map_pressed.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "b80f80c48a14356738f2620cd1ec0feabca1e38986515a2f09e863310a3389b2",
+      "design": "world_map",
+      "state": "pressed",
+      "mode": "light",
+      "glyph": {
+        "source_filename": "world_map_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          215,
+          308,
+          1039,
+          969
+        ],
+        "source_sha256": "b4cbe3adbcf563d40b6b51bc590b99db79f918ee6a2302d5f6a7c154d36dffb2",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 248.073,
+        "minimum_radial_margin_to_plain_face_px": 129.927,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          431,
+          472,
+          850,
+          809
+        ],
+        "bbox_dimensions_px": [
+          419,
+          337
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [
+          [
+            146,
+            155,
+            68
+          ],
+          [
+            187,
+            183,
+            92
+          ],
+          [
+            222,
+            197,
+            125
+          ]
+        ],
+        "inlay_rgb_count": 3,
+        "glyph_mask_sha256": "a4e3016e3afeca18e1d15349bf08f17e50aea491ec28db2c9a9f6e6c5ee805e5",
+        "glyph_opaque_pixels": 122969
+      },
+      "source_frame": "button_round_pressed.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 3,
+      "preview_8x": {
+        "filename": "previews_8x/button_world_map_pressed_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "2e66afbb5adb10c7a2711794fde1d59eeb3e0a8d4c1ac34bc89c2d0c1cb5cc4b"
+      }
+    },
+    {
+      "filename": "button_world_map_pressed_dark.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "cad1d01ace9d0b35224c36698a6bb4b58004f847978f11b0fbf5988f4232c257",
+      "design": "world_map",
+      "state": "pressed",
+      "mode": "dark",
+      "glyph": {
+        "source_filename": "world_map_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          215,
+          308,
+          1039,
+          969
+        ],
+        "source_sha256": "b4cbe3adbcf563d40b6b51bc590b99db79f918ee6a2302d5f6a7c154d36dffb2",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 248.073,
+        "minimum_radial_margin_to_plain_face_px": 129.927,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          431,
+          472,
+          850,
+          809
+        ],
+        "bbox_dimensions_px": [
+          419,
+          337
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [
+          [
+            146,
+            155,
+            68
+          ],
+          [
+            187,
+            183,
+            92
+          ],
+          [
+            222,
+            197,
+            125
+          ]
+        ],
+        "inlay_rgb_count": 3,
+        "glyph_mask_sha256": "a4e3016e3afeca18e1d15349bf08f17e50aea491ec28db2c9a9f6e6c5ee805e5",
+        "glyph_opaque_pixels": 122969
+      },
+      "source_frame": "button_round_pressed_dark.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 3,
+      "preview_8x": {
+        "filename": "previews_8x/button_world_map_pressed_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "396ef00ef6946c48b3e026f87c579c3f8cf7d1fea55e7065d3aa23a4350df53e"
+      }
+    },
+    {
+      "filename": "button_spells.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "167dfa2bc795c5ba26913aeaadd1fcfc0a995985336d9f7f8ba25b67d9ca97b3",
+      "design": "spells",
+      "state": "normal",
+      "mode": "light",
+      "glyph": {
+        "source_filename": "spells_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          265,
+          240,
+          948,
+          1039
+        ],
+        "source_sha256": "8834c489bdde427fc5ccc24d1883bbeae96bdfd6ce9c2e335c21939a4b5914d9",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 248.316,
+        "minimum_radial_margin_to_plain_face_px": 129.684,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          466,
+          436,
+          815,
+          845
+        ],
+        "bbox_dimensions_px": [
+          349,
+          409
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [
+          [
+            146,
+            155,
+            68
+          ],
+          [
+            187,
+            183,
+            92
+          ],
+          [
+            222,
+            197,
+            125
+          ]
+        ],
+        "inlay_rgb_count": 3,
+        "glyph_mask_sha256": "304b4cd3a2018104a06c30247db700b13680dce9b480bb82cbbbcd1ab30ec2f7",
+        "glyph_opaque_pixels": 137639
+      },
+      "source_frame": "button_round.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 3,
+      "preview_8x": {
+        "filename": "previews_8x/button_spells_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "a76a1afedbb4b5eb70cab4abc09db15ee042604631761c07fbc461933c663687"
+      }
+    },
+    {
+      "filename": "button_spells_dark.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "e58f8c5087a95864cd9a2f35189e19eb56958673a450f2e7a503ad53fb30ab36",
+      "design": "spells",
+      "state": "normal",
+      "mode": "dark",
+      "glyph": {
+        "source_filename": "spells_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          265,
+          240,
+          948,
+          1039
+        ],
+        "source_sha256": "8834c489bdde427fc5ccc24d1883bbeae96bdfd6ce9c2e335c21939a4b5914d9",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 248.316,
+        "minimum_radial_margin_to_plain_face_px": 129.684,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          466,
+          436,
+          815,
+          845
+        ],
+        "bbox_dimensions_px": [
+          349,
+          409
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [
+          [
+            146,
+            155,
+            68
+          ],
+          [
+            187,
+            183,
+            92
+          ],
+          [
+            222,
+            197,
+            125
+          ]
+        ],
+        "inlay_rgb_count": 3,
+        "glyph_mask_sha256": "304b4cd3a2018104a06c30247db700b13680dce9b480bb82cbbbcd1ab30ec2f7",
+        "glyph_opaque_pixels": 137639
+      },
+      "source_frame": "button_round_dark.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 3,
+      "preview_8x": {
+        "filename": "previews_8x/button_spells_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "d90a55a97990389e646f159caffb572e6b6fa28d24ac8a445239c35edaa70289"
+      }
+    },
+    {
+      "filename": "button_spells_pressed.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "c24e378cf3d09ad19597ade3f423d7d8620ed366e53219b87a0930b392bce315",
+      "design": "spells",
+      "state": "pressed",
+      "mode": "light",
+      "glyph": {
+        "source_filename": "spells_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          265,
+          240,
+          948,
+          1039
+        ],
+        "source_sha256": "8834c489bdde427fc5ccc24d1883bbeae96bdfd6ce9c2e335c21939a4b5914d9",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 248.316,
+        "minimum_radial_margin_to_plain_face_px": 129.684,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          466,
+          436,
+          815,
+          845
+        ],
+        "bbox_dimensions_px": [
+          349,
+          409
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [
+          [
+            146,
+            155,
+            68
+          ],
+          [
+            187,
+            183,
+            92
+          ],
+          [
+            222,
+            197,
+            125
+          ]
+        ],
+        "inlay_rgb_count": 3,
+        "glyph_mask_sha256": "304b4cd3a2018104a06c30247db700b13680dce9b480bb82cbbbcd1ab30ec2f7",
+        "glyph_opaque_pixels": 137639
+      },
+      "source_frame": "button_round_pressed.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 3,
+      "preview_8x": {
+        "filename": "previews_8x/button_spells_pressed_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "6c6fb3ee383e23c56528921618a67013c53cb5832d15c6017d0640bc26c41df8"
+      }
+    },
+    {
+      "filename": "button_spells_pressed_dark.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "c8ef55baf336ad597a9c9718d9c2b818a04b09ca980a819f0c264568bcdee48e",
+      "design": "spells",
+      "state": "pressed",
+      "mode": "dark",
+      "glyph": {
+        "source_filename": "spells_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          265,
+          240,
+          948,
+          1039
+        ],
+        "source_sha256": "8834c489bdde427fc5ccc24d1883bbeae96bdfd6ce9c2e335c21939a4b5914d9",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 248.316,
+        "minimum_radial_margin_to_plain_face_px": 129.684,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          466,
+          436,
+          815,
+          845
+        ],
+        "bbox_dimensions_px": [
+          349,
+          409
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [
+          [
+            146,
+            155,
+            68
+          ],
+          [
+            187,
+            183,
+            92
+          ],
+          [
+            222,
+            197,
+            125
+          ]
+        ],
+        "inlay_rgb_count": 3,
+        "glyph_mask_sha256": "304b4cd3a2018104a06c30247db700b13680dce9b480bb82cbbbcd1ab30ec2f7",
+        "glyph_opaque_pixels": 137639
+      },
+      "source_frame": "button_round_pressed_dark.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 3,
+      "preview_8x": {
+        "filename": "previews_8x/button_spells_pressed_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "7fa3a6d52430d52a49ed7e61cec7a2fcb9d351e98d5bd7ec4c1b274e50a7147e"
+      }
+    },
+    {
+      "filename": "button_attack.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "7fe769f0c358d3efb228d5dad737e971eb88e21ed33dff22f6ba3e11403edb1c",
+      "design": "attack",
+      "state": "normal",
+      "mode": "light",
+      "glyph": {
+        "source_filename": "attack_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          261,
+          207,
+          994,
+          1048
+        ],
+        "source_sha256": "6475f0b2e2444a1df8aeadd80043dfc29ab0e2b5ff0243b8b73cbc5b3fcfb154",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 248.169,
+        "minimum_radial_margin_to_plain_face_px": 129.831,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          476,
+          451,
+          805,
+          830
+        ],
+        "bbox_dimensions_px": [
+          329,
+          379
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [
+          [
+            146,
+            155,
+            68
+          ],
+          [
+            187,
+            183,
+            92
+          ],
+          [
+            222,
+            197,
+            125
+          ]
+        ],
+        "inlay_rgb_count": 3,
+        "glyph_mask_sha256": "d6c2a72b58487f0897c359aca4e3c1bc4899f69ef99fbe92ed7309087a144729",
+        "glyph_opaque_pixels": 47642
+      },
+      "source_frame": "button_round.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 3,
+      "preview_8x": {
+        "filename": "previews_8x/button_attack_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "0f537eb090b65f16b3a597b7e84a5363bac186f79f007a6df0030b264eb11771"
+      }
+    },
+    {
+      "filename": "button_attack_dark.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "ba2af57ec3946d583c97d76b1005955ffc6173c41c7dd859d44fda481952a5a7",
+      "design": "attack",
+      "state": "normal",
+      "mode": "dark",
+      "glyph": {
+        "source_filename": "attack_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          261,
+          207,
+          994,
+          1048
+        ],
+        "source_sha256": "6475f0b2e2444a1df8aeadd80043dfc29ab0e2b5ff0243b8b73cbc5b3fcfb154",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 248.169,
+        "minimum_radial_margin_to_plain_face_px": 129.831,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          476,
+          451,
+          805,
+          830
+        ],
+        "bbox_dimensions_px": [
+          329,
+          379
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [
+          [
+            146,
+            155,
+            68
+          ],
+          [
+            187,
+            183,
+            92
+          ],
+          [
+            222,
+            197,
+            125
+          ]
+        ],
+        "inlay_rgb_count": 3,
+        "glyph_mask_sha256": "d6c2a72b58487f0897c359aca4e3c1bc4899f69ef99fbe92ed7309087a144729",
+        "glyph_opaque_pixels": 47642
+      },
+      "source_frame": "button_round_dark.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 3,
+      "preview_8x": {
+        "filename": "previews_8x/button_attack_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "d6095161fab8b98b3db116979f0e8f2798c4cd92af6512bc9b75f1d34e6f7be7"
+      }
+    },
+    {
+      "filename": "button_attack_pressed.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "e4e9e1d9725b6d275910c51340b10a6cc043c304695cc1e7dfeb0a9509db8d6e",
+      "design": "attack",
+      "state": "pressed",
+      "mode": "light",
+      "glyph": {
+        "source_filename": "attack_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          261,
+          207,
+          994,
+          1048
+        ],
+        "source_sha256": "6475f0b2e2444a1df8aeadd80043dfc29ab0e2b5ff0243b8b73cbc5b3fcfb154",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 248.169,
+        "minimum_radial_margin_to_plain_face_px": 129.831,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          476,
+          451,
+          805,
+          830
+        ],
+        "bbox_dimensions_px": [
+          329,
+          379
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [
+          [
+            146,
+            155,
+            68
+          ],
+          [
+            187,
+            183,
+            92
+          ],
+          [
+            222,
+            197,
+            125
+          ]
+        ],
+        "inlay_rgb_count": 3,
+        "glyph_mask_sha256": "d6c2a72b58487f0897c359aca4e3c1bc4899f69ef99fbe92ed7309087a144729",
+        "glyph_opaque_pixels": 47642
+      },
+      "source_frame": "button_round_pressed.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 3,
+      "preview_8x": {
+        "filename": "previews_8x/button_attack_pressed_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "43e5e669f05f6a900f7b3f34588563b32fb250550ba3778a5ac726204753424e"
+      }
+    },
+    {
+      "filename": "button_attack_pressed_dark.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "44c5d06f43111b2030f2ab170ed3751eff24c017ba1bda41580896960016d035",
+      "design": "attack",
+      "state": "pressed",
+      "mode": "dark",
+      "glyph": {
+        "source_filename": "attack_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          261,
+          207,
+          994,
+          1048
+        ],
+        "source_sha256": "6475f0b2e2444a1df8aeadd80043dfc29ab0e2b5ff0243b8b73cbc5b3fcfb154",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 248.169,
+        "minimum_radial_margin_to_plain_face_px": 129.831,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          476,
+          451,
+          805,
+          830
+        ],
+        "bbox_dimensions_px": [
+          329,
+          379
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [
+          [
+            146,
+            155,
+            68
+          ],
+          [
+            187,
+            183,
+            92
+          ],
+          [
+            222,
+            197,
+            125
+          ]
+        ],
+        "inlay_rgb_count": 3,
+        "glyph_mask_sha256": "d6c2a72b58487f0897c359aca4e3c1bc4899f69ef99fbe92ed7309087a144729",
+        "glyph_opaque_pixels": 47642
+      },
+      "source_frame": "button_round_pressed_dark.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 3,
+      "preview_8x": {
+        "filename": "previews_8x/button_attack_pressed_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "5b4d74fd52741ddced01c101b0815da10604885bed89df0fb437297a12867fed"
+      }
+    },
+    {
+      "filename": "button_items.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "070e13d2fdc72e6c819aae9ad41af3b63e5db26382ed828085cb54455c8cf4ec",
+      "design": "items",
+      "state": "normal",
+      "mode": "light",
+      "glyph": {
+        "source_filename": "items_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          290,
+          155,
+          944,
+          1112
+        ],
+        "source_sha256": "c52b03609ac7fe4135c2168d7315706e2358d0738461d3cf2f7dc2f4d76f54fb",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 247.935,
+        "minimum_radial_margin_to_plain_face_px": 130.065,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          471,
+          393,
+          810,
+          888
+        ],
+        "bbox_dimensions_px": [
+          339,
+          495
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [
+          [
+            146,
+            155,
+            68
+          ],
+          [
+            187,
+            183,
+            92
+          ],
+          [
+            222,
+            197,
+            125
+          ]
+        ],
+        "inlay_rgb_count": 3,
+        "glyph_mask_sha256": "4be8d1c03a178c757edba07f942cfb2e559a502bbc02714fdbc4339cbefe8899",
+        "glyph_opaque_pixels": 115818
+      },
+      "source_frame": "button_round.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 3,
+      "preview_8x": {
+        "filename": "previews_8x/button_items_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "1fec04323efc45a7e3ac24a41a097a5a49f282ec230714c096e5fa1799e84bd5"
+      }
+    },
+    {
+      "filename": "button_items_dark.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "3131c58cf5646180bbb4845e42b96deb3815e9ca1b310939a58abff2668ed134",
+      "design": "items",
+      "state": "normal",
+      "mode": "dark",
+      "glyph": {
+        "source_filename": "items_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          290,
+          155,
+          944,
+          1112
+        ],
+        "source_sha256": "c52b03609ac7fe4135c2168d7315706e2358d0738461d3cf2f7dc2f4d76f54fb",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 247.935,
+        "minimum_radial_margin_to_plain_face_px": 130.065,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          471,
+          393,
+          810,
+          888
+        ],
+        "bbox_dimensions_px": [
+          339,
+          495
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [
+          [
+            146,
+            155,
+            68
+          ],
+          [
+            187,
+            183,
+            92
+          ],
+          [
+            222,
+            197,
+            125
+          ]
+        ],
+        "inlay_rgb_count": 3,
+        "glyph_mask_sha256": "4be8d1c03a178c757edba07f942cfb2e559a502bbc02714fdbc4339cbefe8899",
+        "glyph_opaque_pixels": 115818
+      },
+      "source_frame": "button_round_dark.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 3,
+      "preview_8x": {
+        "filename": "previews_8x/button_items_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "0940537bc3617a68170b8f3673251724866fe23e66c6d82a5f7bd06cc65de692"
+      }
+    },
+    {
+      "filename": "button_items_pressed.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "195045e29ebbc06d037769d4e252b7264fdfa31b367e9300eed8901b862c2cb2",
+      "design": "items",
+      "state": "pressed",
+      "mode": "light",
+      "glyph": {
+        "source_filename": "items_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          290,
+          155,
+          944,
+          1112
+        ],
+        "source_sha256": "c52b03609ac7fe4135c2168d7315706e2358d0738461d3cf2f7dc2f4d76f54fb",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 247.935,
+        "minimum_radial_margin_to_plain_face_px": 130.065,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          471,
+          393,
+          810,
+          888
+        ],
+        "bbox_dimensions_px": [
+          339,
+          495
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [
+          [
+            146,
+            155,
+            68
+          ],
+          [
+            187,
+            183,
+            92
+          ],
+          [
+            222,
+            197,
+            125
+          ]
+        ],
+        "inlay_rgb_count": 3,
+        "glyph_mask_sha256": "4be8d1c03a178c757edba07f942cfb2e559a502bbc02714fdbc4339cbefe8899",
+        "glyph_opaque_pixels": 115818
+      },
+      "source_frame": "button_round_pressed.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 3,
+      "preview_8x": {
+        "filename": "previews_8x/button_items_pressed_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "a351d91a966290493d548aaaf4c577427ed73e2258846f13f703a7f3cb2b348d"
+      }
+    },
+    {
+      "filename": "button_items_pressed_dark.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "773fbc7f0cc8896db04aa0f1bdbbc62d765fc77c345e7e2207ba3c22d52762a9",
+      "design": "items",
+      "state": "pressed",
+      "mode": "dark",
+      "glyph": {
+        "source_filename": "items_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          290,
+          155,
+          944,
+          1112
+        ],
+        "source_sha256": "c52b03609ac7fe4135c2168d7315706e2358d0738461d3cf2f7dc2f4d76f54fb",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 247.935,
+        "minimum_radial_margin_to_plain_face_px": 130.065,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          471,
+          393,
+          810,
+          888
+        ],
+        "bbox_dimensions_px": [
+          339,
+          495
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [
+          [
+            146,
+            155,
+            68
+          ],
+          [
+            187,
+            183,
+            92
+          ],
+          [
+            222,
+            197,
+            125
+          ]
+        ],
+        "inlay_rgb_count": 3,
+        "glyph_mask_sha256": "4be8d1c03a178c757edba07f942cfb2e559a502bbc02714fdbc4339cbefe8899",
+        "glyph_opaque_pixels": 115818
+      },
+      "source_frame": "button_round_pressed_dark.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 3,
+      "preview_8x": {
+        "filename": "previews_8x/button_items_pressed_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "ef00993382f1ea0508eb38022252243f1bfa18973e0196f36e02ea3098bb57f5"
+      }
+    },
+    {
+      "filename": "button_run_away.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "46c062ef130909f4414dce7528922a8d5586aaa040be1976e79f46938140782d",
+      "design": "run_away",
+      "state": "normal",
+      "mode": "light",
+      "glyph": {
+        "source_filename": "run_away_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          202,
+          280,
+          976,
+          934
+        ],
+        "source_sha256": "818af7bbf9d5a18abd2ce445d35d28e8207a5a20506e504b2812bae66728c199",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 247.693,
+        "minimum_radial_margin_to_plain_face_px": 130.307,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          440,
+          471,
+          841,
+          810
+        ],
+        "bbox_dimensions_px": [
+          401,
+          339
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [
+          [
+            146,
+            155,
+            68
+          ],
+          [
+            187,
+            183,
+            92
+          ],
+          [
+            222,
+            197,
+            125
+          ]
+        ],
+        "inlay_rgb_count": 3,
+        "glyph_mask_sha256": "0aafd515edbc234ce5cecb4f6e1e8be06d79d2efed4ed55560b6b1338f4d8ee2",
+        "glyph_opaque_pixels": 77420
+      },
+      "source_frame": "button_round.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 3,
+      "preview_8x": {
+        "filename": "previews_8x/button_run_away_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "038e54271b876fd851e190566f1a9282b189239a2b489dc07e75b0ed24bc9467"
+      }
+    },
+    {
+      "filename": "button_run_away_dark.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "43361a39212079656c714b2a82281114d6e778d7629f3f9de48d5c81d882ea15",
+      "design": "run_away",
+      "state": "normal",
+      "mode": "dark",
+      "glyph": {
+        "source_filename": "run_away_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          202,
+          280,
+          976,
+          934
+        ],
+        "source_sha256": "818af7bbf9d5a18abd2ce445d35d28e8207a5a20506e504b2812bae66728c199",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 247.693,
+        "minimum_radial_margin_to_plain_face_px": 130.307,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          440,
+          471,
+          841,
+          810
+        ],
+        "bbox_dimensions_px": [
+          401,
+          339
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [
+          [
+            146,
+            155,
+            68
+          ],
+          [
+            187,
+            183,
+            92
+          ],
+          [
+            222,
+            197,
+            125
+          ]
+        ],
+        "inlay_rgb_count": 3,
+        "glyph_mask_sha256": "0aafd515edbc234ce5cecb4f6e1e8be06d79d2efed4ed55560b6b1338f4d8ee2",
+        "glyph_opaque_pixels": 77420
+      },
+      "source_frame": "button_round_dark.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 3,
+      "preview_8x": {
+        "filename": "previews_8x/button_run_away_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "9062a4018e4eab48d68dafe1604a552434041346abab9affc3748c03de35072f"
+      }
+    },
+    {
+      "filename": "button_run_away_pressed.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "9d9eb203f9a7cf2a54d8f3b9965d5c81103c9ed3e0bdad0e4ccc9d1060bdbe8d",
+      "design": "run_away",
+      "state": "pressed",
+      "mode": "light",
+      "glyph": {
+        "source_filename": "run_away_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          202,
+          280,
+          976,
+          934
+        ],
+        "source_sha256": "818af7bbf9d5a18abd2ce445d35d28e8207a5a20506e504b2812bae66728c199",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 247.693,
+        "minimum_radial_margin_to_plain_face_px": 130.307,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          440,
+          471,
+          841,
+          810
+        ],
+        "bbox_dimensions_px": [
+          401,
+          339
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [
+          [
+            146,
+            155,
+            68
+          ],
+          [
+            187,
+            183,
+            92
+          ],
+          [
+            222,
+            197,
+            125
+          ]
+        ],
+        "inlay_rgb_count": 3,
+        "glyph_mask_sha256": "0aafd515edbc234ce5cecb4f6e1e8be06d79d2efed4ed55560b6b1338f4d8ee2",
+        "glyph_opaque_pixels": 77420
+      },
+      "source_frame": "button_round_pressed.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 3,
+      "preview_8x": {
+        "filename": "previews_8x/button_run_away_pressed_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "4bd8211ea016d2322034950a4e8b42ccae53a39bc073b51fd0343012dbbd0cbc"
+      }
+    },
+    {
+      "filename": "button_run_away_pressed_dark.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bbox_convention": "left, top, right, bottom; right/bottom exclusive",
+      "visible_width_px": 1041,
+      "visible_height_px": 1041,
+      "colour_count": 40,
+      "colour_count_excludes_transparency": true,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "outer_diameter_px": 1041,
+      "plain_face_diameter_px": 756,
+      "foot_row": 1160,
+      "sha256": "1c5af51ce6e10654ab43f62209d09498c815117f9a379d996a96557780f890c2",
+      "design": "run_away",
+      "state": "pressed",
+      "mode": "dark",
+      "glyph": {
+        "source_filename": "run_away_source.png",
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          202,
+          280,
+          976,
+          934
+        ],
+        "source_sha256": "818af7bbf9d5a18abd2ce445d35d28e8207a5a20506e504b2812bae66728c199",
+        "removed_dust_components": 0,
+        "resampling": "nearest neighbour; no smoothing or dithering",
+        "maximum_radius_px": 247.693,
+        "minimum_radial_margin_to_plain_face_px": 130.307,
+        "centre_px": [
+          640,
+          640
+        ],
+        "bbox": [
+          440,
+          471,
+          841,
+          810
+        ],
+        "bbox_dimensions_px": [
+          401,
+          339
+        ],
+        "shared_envelope_radius_px": 248.0,
+        "inlay_rgb": [
+          [
+            146,
+            155,
+            68
+          ],
+          [
+            187,
+            183,
+            92
+          ],
+          [
+            222,
+            197,
+            125
+          ]
+        ],
+        "inlay_rgb_count": 3,
+        "glyph_mask_sha256": "0aafd515edbc234ce5cecb4f6e1e8be06d79d2efed4ed55560b6b1338f4d8ee2",
+        "glyph_opaque_pixels": 77420
+      },
+      "source_frame": "button_round_pressed_dark.png",
+      "frame_and_unpainted_face_pixel_identical_to_source": true,
+      "glyph_inlay_rgb_count": 3,
+      "preview_8x": {
+        "filename": "previews_8x/button_run_away_pressed_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact_all_blocks": true,
+        "sha256": "c15e4044eae74c6a541d8668830bf813b2557b6812b98bdc05ebbb7505b1da48"
+      }
+    }
+  ],
+  "dark_pairs": [
+    {
+      "light": "button_chat.png",
+      "dark": "button_chat_dark.png",
+      "alpha_pixel_identical": true,
+      "colour_only": true,
+      "injective_palette_mapping": true,
+      "all_drawing_boundaries_preserved": true
+    },
+    {
+      "light": "button_chat_pressed.png",
+      "dark": "button_chat_pressed_dark.png",
+      "alpha_pixel_identical": true,
+      "colour_only": true,
+      "injective_palette_mapping": true,
+      "all_drawing_boundaries_preserved": true
+    },
+    {
+      "light": "button_inventory.png",
+      "dark": "button_inventory_dark.png",
+      "alpha_pixel_identical": true,
+      "colour_only": true,
+      "injective_palette_mapping": true,
+      "all_drawing_boundaries_preserved": true
+    },
+    {
+      "light": "button_inventory_pressed.png",
+      "dark": "button_inventory_pressed_dark.png",
+      "alpha_pixel_identical": true,
+      "colour_only": true,
+      "injective_palette_mapping": true,
+      "all_drawing_boundaries_preserved": true
+    },
+    {
+      "light": "button_menu.png",
+      "dark": "button_menu_dark.png",
+      "alpha_pixel_identical": true,
+      "colour_only": true,
+      "injective_palette_mapping": true,
+      "all_drawing_boundaries_preserved": true
+    },
+    {
+      "light": "button_menu_pressed.png",
+      "dark": "button_menu_pressed_dark.png",
+      "alpha_pixel_identical": true,
+      "colour_only": true,
+      "injective_palette_mapping": true,
+      "all_drawing_boundaries_preserved": true
+    },
+    {
+      "light": "button_character.png",
+      "dark": "button_character_dark.png",
+      "alpha_pixel_identical": true,
+      "colour_only": true,
+      "injective_palette_mapping": true,
+      "all_drawing_boundaries_preserved": true
+    },
+    {
+      "light": "button_character_pressed.png",
+      "dark": "button_character_pressed_dark.png",
+      "alpha_pixel_identical": true,
+      "colour_only": true,
+      "injective_palette_mapping": true,
+      "all_drawing_boundaries_preserved": true
+    },
+    {
+      "light": "button_companions.png",
+      "dark": "button_companions_dark.png",
+      "alpha_pixel_identical": true,
+      "colour_only": true,
+      "injective_palette_mapping": true,
+      "all_drawing_boundaries_preserved": true
+    },
+    {
+      "light": "button_companions_pressed.png",
+      "dark": "button_companions_pressed_dark.png",
+      "alpha_pixel_identical": true,
+      "colour_only": true,
+      "injective_palette_mapping": true,
+      "all_drawing_boundaries_preserved": true
+    },
+    {
+      "light": "button_friends.png",
+      "dark": "button_friends_dark.png",
+      "alpha_pixel_identical": true,
+      "colour_only": true,
+      "injective_palette_mapping": true,
+      "all_drawing_boundaries_preserved": true
+    },
+    {
+      "light": "button_friends_pressed.png",
+      "dark": "button_friends_pressed_dark.png",
+      "alpha_pixel_identical": true,
+      "colour_only": true,
+      "injective_palette_mapping": true,
+      "all_drawing_boundaries_preserved": true
+    },
+    {
+      "light": "button_quests.png",
+      "dark": "button_quests_dark.png",
+      "alpha_pixel_identical": true,
+      "colour_only": true,
+      "injective_palette_mapping": true,
+      "all_drawing_boundaries_preserved": true
+    },
+    {
+      "light": "button_quests_pressed.png",
+      "dark": "button_quests_pressed_dark.png",
+      "alpha_pixel_identical": true,
+      "colour_only": true,
+      "injective_palette_mapping": true,
+      "all_drawing_boundaries_preserved": true
+    },
+    {
+      "light": "button_settings.png",
+      "dark": "button_settings_dark.png",
+      "alpha_pixel_identical": true,
+      "colour_only": true,
+      "injective_palette_mapping": true,
+      "all_drawing_boundaries_preserved": true
+    },
+    {
+      "light": "button_settings_pressed.png",
+      "dark": "button_settings_pressed_dark.png",
+      "alpha_pixel_identical": true,
+      "colour_only": true,
+      "injective_palette_mapping": true,
+      "all_drawing_boundaries_preserved": true
+    },
+    {
+      "light": "button_world_map.png",
+      "dark": "button_world_map_dark.png",
+      "alpha_pixel_identical": true,
+      "colour_only": true,
+      "injective_palette_mapping": true,
+      "all_drawing_boundaries_preserved": true
+    },
+    {
+      "light": "button_world_map_pressed.png",
+      "dark": "button_world_map_pressed_dark.png",
+      "alpha_pixel_identical": true,
+      "colour_only": true,
+      "injective_palette_mapping": true,
+      "all_drawing_boundaries_preserved": true
+    },
+    {
+      "light": "button_spells.png",
+      "dark": "button_spells_dark.png",
+      "alpha_pixel_identical": true,
+      "colour_only": true,
+      "injective_palette_mapping": true,
+      "all_drawing_boundaries_preserved": true
+    },
+    {
+      "light": "button_spells_pressed.png",
+      "dark": "button_spells_pressed_dark.png",
+      "alpha_pixel_identical": true,
+      "colour_only": true,
+      "injective_palette_mapping": true,
+      "all_drawing_boundaries_preserved": true
+    },
+    {
+      "light": "button_attack.png",
+      "dark": "button_attack_dark.png",
+      "alpha_pixel_identical": true,
+      "colour_only": true,
+      "injective_palette_mapping": true,
+      "all_drawing_boundaries_preserved": true
+    },
+    {
+      "light": "button_attack_pressed.png",
+      "dark": "button_attack_pressed_dark.png",
+      "alpha_pixel_identical": true,
+      "colour_only": true,
+      "injective_palette_mapping": true,
+      "all_drawing_boundaries_preserved": true
+    },
+    {
+      "light": "button_items.png",
+      "dark": "button_items_dark.png",
+      "alpha_pixel_identical": true,
+      "colour_only": true,
+      "injective_palette_mapping": true,
+      "all_drawing_boundaries_preserved": true
+    },
+    {
+      "light": "button_items_pressed.png",
+      "dark": "button_items_pressed_dark.png",
+      "alpha_pixel_identical": true,
+      "colour_only": true,
+      "injective_palette_mapping": true,
+      "all_drawing_boundaries_preserved": true
+    },
+    {
+      "light": "button_run_away.png",
+      "dark": "button_run_away_dark.png",
+      "alpha_pixel_identical": true,
+      "colour_only": true,
+      "injective_palette_mapping": true,
+      "all_drawing_boundaries_preserved": true
+    },
+    {
+      "light": "button_run_away_pressed.png",
+      "dark": "button_run_away_pressed_dark.png",
+      "alpha_pixel_identical": true,
+      "colour_only": true,
+      "injective_palette_mapping": true,
+      "all_drawing_boundaries_preserved": true
+    }
+  ],
+  "state_pairs": [
+    {
+      "normal": "button_chat.png",
+      "pressed": "button_chat_pressed.png",
+      "identical_alpha": true,
+      "identical_glyph_silhouette_and_position": true,
+      "outer_rim_preserved": true,
+      "recessed_face_and_darker_picture": true
+    },
+    {
+      "normal": "button_chat_dark.png",
+      "pressed": "button_chat_pressed_dark.png",
+      "identical_alpha": true,
+      "identical_glyph_silhouette_and_position": true,
+      "outer_rim_preserved": true,
+      "recessed_face_and_darker_picture": true
+    },
+    {
+      "normal": "button_inventory.png",
+      "pressed": "button_inventory_pressed.png",
+      "identical_alpha": true,
+      "identical_glyph_silhouette_and_position": true,
+      "outer_rim_preserved": true,
+      "recessed_face_and_darker_picture": true
+    },
+    {
+      "normal": "button_inventory_dark.png",
+      "pressed": "button_inventory_pressed_dark.png",
+      "identical_alpha": true,
+      "identical_glyph_silhouette_and_position": true,
+      "outer_rim_preserved": true,
+      "recessed_face_and_darker_picture": true
+    },
+    {
+      "normal": "button_menu.png",
+      "pressed": "button_menu_pressed.png",
+      "identical_alpha": true,
+      "identical_glyph_silhouette_and_position": true,
+      "outer_rim_preserved": true,
+      "recessed_face_and_darker_picture": true
+    },
+    {
+      "normal": "button_menu_dark.png",
+      "pressed": "button_menu_pressed_dark.png",
+      "identical_alpha": true,
+      "identical_glyph_silhouette_and_position": true,
+      "outer_rim_preserved": true,
+      "recessed_face_and_darker_picture": true
+    },
+    {
+      "normal": "button_character.png",
+      "pressed": "button_character_pressed.png",
+      "identical_alpha": true,
+      "identical_glyph_silhouette_and_position": true,
+      "outer_rim_preserved": true,
+      "recessed_face_and_darker_picture": true
+    },
+    {
+      "normal": "button_character_dark.png",
+      "pressed": "button_character_pressed_dark.png",
+      "identical_alpha": true,
+      "identical_glyph_silhouette_and_position": true,
+      "outer_rim_preserved": true,
+      "recessed_face_and_darker_picture": true
+    },
+    {
+      "normal": "button_companions.png",
+      "pressed": "button_companions_pressed.png",
+      "identical_alpha": true,
+      "identical_glyph_silhouette_and_position": true,
+      "outer_rim_preserved": true,
+      "recessed_face_and_darker_picture": true
+    },
+    {
+      "normal": "button_companions_dark.png",
+      "pressed": "button_companions_pressed_dark.png",
+      "identical_alpha": true,
+      "identical_glyph_silhouette_and_position": true,
+      "outer_rim_preserved": true,
+      "recessed_face_and_darker_picture": true
+    },
+    {
+      "normal": "button_friends.png",
+      "pressed": "button_friends_pressed.png",
+      "identical_alpha": true,
+      "identical_glyph_silhouette_and_position": true,
+      "outer_rim_preserved": true,
+      "recessed_face_and_darker_picture": true
+    },
+    {
+      "normal": "button_friends_dark.png",
+      "pressed": "button_friends_pressed_dark.png",
+      "identical_alpha": true,
+      "identical_glyph_silhouette_and_position": true,
+      "outer_rim_preserved": true,
+      "recessed_face_and_darker_picture": true
+    },
+    {
+      "normal": "button_quests.png",
+      "pressed": "button_quests_pressed.png",
+      "identical_alpha": true,
+      "identical_glyph_silhouette_and_position": true,
+      "outer_rim_preserved": true,
+      "recessed_face_and_darker_picture": true
+    },
+    {
+      "normal": "button_quests_dark.png",
+      "pressed": "button_quests_pressed_dark.png",
+      "identical_alpha": true,
+      "identical_glyph_silhouette_and_position": true,
+      "outer_rim_preserved": true,
+      "recessed_face_and_darker_picture": true
+    },
+    {
+      "normal": "button_settings.png",
+      "pressed": "button_settings_pressed.png",
+      "identical_alpha": true,
+      "identical_glyph_silhouette_and_position": true,
+      "outer_rim_preserved": true,
+      "recessed_face_and_darker_picture": true
+    },
+    {
+      "normal": "button_settings_dark.png",
+      "pressed": "button_settings_pressed_dark.png",
+      "identical_alpha": true,
+      "identical_glyph_silhouette_and_position": true,
+      "outer_rim_preserved": true,
+      "recessed_face_and_darker_picture": true
+    },
+    {
+      "normal": "button_world_map.png",
+      "pressed": "button_world_map_pressed.png",
+      "identical_alpha": true,
+      "identical_glyph_silhouette_and_position": true,
+      "outer_rim_preserved": true,
+      "recessed_face_and_darker_picture": true
+    },
+    {
+      "normal": "button_world_map_dark.png",
+      "pressed": "button_world_map_pressed_dark.png",
+      "identical_alpha": true,
+      "identical_glyph_silhouette_and_position": true,
+      "outer_rim_preserved": true,
+      "recessed_face_and_darker_picture": true
+    },
+    {
+      "normal": "button_spells.png",
+      "pressed": "button_spells_pressed.png",
+      "identical_alpha": true,
+      "identical_glyph_silhouette_and_position": true,
+      "outer_rim_preserved": true,
+      "recessed_face_and_darker_picture": true
+    },
+    {
+      "normal": "button_spells_dark.png",
+      "pressed": "button_spells_pressed_dark.png",
+      "identical_alpha": true,
+      "identical_glyph_silhouette_and_position": true,
+      "outer_rim_preserved": true,
+      "recessed_face_and_darker_picture": true
+    },
+    {
+      "normal": "button_attack.png",
+      "pressed": "button_attack_pressed.png",
+      "identical_alpha": true,
+      "identical_glyph_silhouette_and_position": true,
+      "outer_rim_preserved": true,
+      "recessed_face_and_darker_picture": true
+    },
+    {
+      "normal": "button_attack_dark.png",
+      "pressed": "button_attack_pressed_dark.png",
+      "identical_alpha": true,
+      "identical_glyph_silhouette_and_position": true,
+      "outer_rim_preserved": true,
+      "recessed_face_and_darker_picture": true
+    },
+    {
+      "normal": "button_items.png",
+      "pressed": "button_items_pressed.png",
+      "identical_alpha": true,
+      "identical_glyph_silhouette_and_position": true,
+      "outer_rim_preserved": true,
+      "recessed_face_and_darker_picture": true
+    },
+    {
+      "normal": "button_items_dark.png",
+      "pressed": "button_items_pressed_dark.png",
+      "identical_alpha": true,
+      "identical_glyph_silhouette_and_position": true,
+      "outer_rim_preserved": true,
+      "recessed_face_and_darker_picture": true
+    },
+    {
+      "normal": "button_run_away.png",
+      "pressed": "button_run_away_pressed.png",
+      "identical_alpha": true,
+      "identical_glyph_silhouette_and_position": true,
+      "outer_rim_preserved": true,
+      "recessed_face_and_darker_picture": true
+    },
+    {
+      "normal": "button_run_away_dark.png",
+      "pressed": "button_run_away_pressed_dark.png",
+      "identical_alpha": true,
+      "identical_glyph_silhouette_and_position": true,
+      "outer_rim_preserved": true,
+      "recessed_face_and_darker_picture": true
+    }
+  ],
+  "summary": {
+    "canvases_1280_square": 52,
+    "binary_alpha_files": 52,
+    "files_at_or_below_40_colours": 52,
+    "exact_source_frames": 52,
+    "exact_dark_pairs": 26,
+    "normal_pressed_pairs": 26,
+    "glyphs_with_at_most_3_inlay_rgb_values": 13,
+    "exact_8x_previews": 52,
+    "glyph_radial_margin_range_px": [
+      129.523,
+      130.367
+    ]
+  }
+}

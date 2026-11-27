@@ -66,16 +66,22 @@ struct WorldHUD: View {
                     StatusCluster(session: session, beside: onItsSide, onInspect: { coordinator.open(.profile($0)) })
                         .coachTarget(.status)
                     // The gold you carry under your face, as Pixel Heroes shows it (playtesting 2026-10-26;
-                    // by the minimap till 2026-10-30); a tap opens the Bag, where the coins are.
-                    Button {
-                        menuOpen = false
-                        coordinator.open(.menu(.bag))
-                    } label: {
-                        GoldPill(amount: session.data.gold, size: 13, short: true)
+                    // by the minimap till 2026-10-30); a tap opens the Bag, where the coins are. The time
+                    // of day right of it (on the world map till 0.9.265; the user, 2026-11-27).
+                    HStack(spacing: 8) {
+                        Button {
+                            menuOpen = false
+                            coordinator.open(.menu(.bag))
+                        } label: {
+                            GoldPill(amount: session.data.gold, size: 13, short: true)
+                                .frame(minHeight: 30)
+                                .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                        GameTimePill(session: session, size: 13)
                             .frame(minHeight: 30)
-                            .contentShape(Rectangle())
+                            .allowsHitTesting(false)
                     }
-                    .buttonStyle(.plain)
                     // The party you've joined: whose it is, and a way out of it.
                     if let joined = session.joinedParty, let leader = joined.leader {
                         JoinedPartyPlate(leader: leader, count: joined.members.count) { coordinator.leaveJoinedParty() }
