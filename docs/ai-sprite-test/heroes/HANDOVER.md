@@ -512,6 +512,11 @@ One doll, end to end (it was the Human Male pilot until 2026-11-24).
     took b (`hero64_hair_long_up.png`), its lower edge even on both sides, both elf ear tips over the hair. **Long
     straight stands in all eight directions.** Walk up repainted with the hair, over the arms, both ear tips
     showing (`tries/hair_long_walk_up_try1*`, `hero64_hair_long_walk_up.png`). Attack up still to repaint.
+55. **Cape physics, a prototype** (2026-11-27, after SpriteCook's Verlet cape article): `tools/cape_sim.py`, the
+    article's 8-point chain pinned at the back of the shoulders (drag halved: at 2.2 the cape stood out flat at a
+    walk), the status cape's side view bent along it row by row (rotated, its 20-pixel rows came apart), on the
+    doll facing right: walking, running, stopping, turning, a gust. For capes, cloaks, scarf tails and long hair,
+    not body clothes (they follow the limbs drawn in each frame). Not in the game; front and back views not tried.
     Spiky up: ChatGPT sent its own 64-pixel files this time (`tries/hair_spiky_up_try1{a,b}{,_8x}.png`), the body
     pixel for pixel the doll's; the user picked a (`hero64_hair_spiky_up.png`), lifted untoned. **Spiky is done in all
     eight directions** (five drawn, three mirrored), on idle, walk, run and attack, human and elf.
