@@ -123,3 +123,7 @@ smoothed). Every skill keeps its own animation in battle; only the icon changes.
   `charge`'s spear reads as a fish. By `pixel_style.py --kind item` each fails one to three hard bands: `fill` (they
   keep to the 56-pixel circle the prompt asked for, items fill the tile), `outline_double` and `rim_lit` (a doubled,
   lit outline in places); by eye they sit well beside the item icons.
+  Redone (`batch1_redo.png`): `rock_throw` now a grey cracked boulder, picked (the first kept as `_try1`);
+  `charge` came back a thin spear on a long line, barely there at 24 points (`_try2`; the first, `_try1`,
+  stays meanwhile), asked again bolder.
+
