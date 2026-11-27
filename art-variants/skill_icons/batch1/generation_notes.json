@@ -1,0 +1,61 @@
+{
+  "common_prompt": "Use case: style-transfer. Create ONE finished Tales of Dorlune skill icon. Image 1 is today's soft-light skill reference for its motion and main named colors only. Image 2 is the authoritative Retro Diffusion item style: chunky sculptural objects with rich broad shade clusters. Image 3 is a completed 64x64 icon enlarged 8x, showing the required coarse pixel scale; copy its PIXEL SCALE, not its club subject. Draw on ONLY 64x64 logical pixels. Keep every mark on that coarse uniform square grid, with no finer detail: 1 logical pixel outline, clear 3-6 pixel shade clusters, at least five hue-shifted shades for primary materials. Make the image look like native 64x64 art at nearest-neighbor magnification. Fully transparent background; no background, circle, tile, socket, text, border, grid or ground shadow. Fit all pixels and effects in an invisible circle about 56 pixels across centered in the canvas, filling that circle well. Light from upper left, bright compact highlights, deep colored shadows, own-material deep colored outline NEVER BLACK. Only 30-40 flat solid colors overall. Neutral 6000K white balance. No glow, blur, antialiasing, translucency, dithering, grain, gradient or noisy texture. Effects are solid chunky pixel shapes touching the main subject. Avoid fine lines; preserve a distinct readable silhouette.",
+  "notes": [
+    "Built-in image generation supplied the artwork. Each native export has a restricted opaque palette on the 64×64 grid. The 512×512 preview is exactly 8× nearest-neighbour.",
+    "Bash was redrawn with coarser pixels before export. Dodge Whip was corrected to an open S curve before delivery."
+  ],
+  "subjects": [
+    [
+      "bash",
+      "A wooden club mid-swing, with a short white-orange impact burst at its head."
+    ],
+    [
+      "power_strike",
+      "A descending silver sword with gold hilt and a bright star-shaped landing crack."
+    ],
+    [
+      "whirlwind",
+      "A sword arc curled into a full orange-white spinning ring, with transparent centre."
+    ],
+    [
+      "charge",
+      "A silver spear tip driving forward through a small breaking bronze shield, with trailing speed lines."
+    ],
+    [
+      "rush",
+      "Three distinct parallel short curved slashes, white-orange."
+    ],
+    [
+      "impact",
+      "A clenched fist striking a cracking gold breastplate, with angular fragments."
+    ],
+    [
+      "double_combo",
+      "Two crossing coral-white slash strokes, one darker behind the brighter follow-up."
+    ],
+    [
+      "dodge_whip",
+      "A golden-brown leather whip with an open S lash and a crisp blue speed streak."
+    ],
+    [
+      "wild_call",
+      "Three green-gold fanned claw marks with an emerald paw print."
+    ],
+    [
+      "beast_impact",
+      "A human fist and a golden beast paw striking together above a central gold burst."
+    ],
+    [
+      "roar",
+      "A golden-orange beast head in profile, mouth open with three orange sound arcs."
+    ],
+    [
+      "gust",
+      "An open curling white-blue wind swirl carrying a feather."
+    ],
+    [
+      "rock_throw",
+      "A brown-ochre boulder flying diagonally with two motion streaks and three trailing pebbles."
+    ]
+  ]
+}

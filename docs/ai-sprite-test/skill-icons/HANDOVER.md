@@ -113,3 +113,13 @@ and its 8× preview (or the zip).
 game's sizes (24 points on the battle buttons, about 40 in the socket). Then `tools/skill_art.py` learns to
 copy the picked ones (as `item_art.py CHATGPT`), and the game shows them crisp (they're 64 pixels, not 128
 smoothed). Every skill keeps its own animation in battle; only the icon changes.
+
+## Results
+
+- **Batch 1** (2026-11-27): all 13 delivered clean (64 × 64, hard alpha, 34 to 36 colours, each 8× preview its 1×
+  exactly), kept in `art-variants/skill_icons/batch1/`; `batch1_results.png` (today's above, new below) and
+  `batch1_in_game.png` (in the carved skill socket at 44 points and alone at 24, light and dark). Readable and
+  distinct at both sizes, but two miss: `rock_throw` came out a brown club like `bash` (a grey boulder wanted), and
+  `charge`'s spear reads as a fish. By `pixel_style.py --kind item` each fails one to three hard bands: `fill` (they
+  keep to the 56-pixel circle the prompt asked for, items fill the tile), `outline_double` and `rim_lit` (a doubled,
+  lit outline in places); by eye they sit well beside the item icons.
