@@ -20,7 +20,7 @@ borders, a whole pixel at a time.
 
 Every rig is its sprite's pixels moved, never redrawn, so it's the same for RD's art and ours, and for
 every recolour and land palette of it (the game cuts the frames out of the sprite as it's graded).
-A palette swap with no PNG of its own (`big_tree`, `frost_pine`) moves as its base does.
+A palette swap with no PNG of its own (`big_frost_pine`, `frost_pine`) moves as its base does.
 
     python3 tools/wind_art.py                     # writes art/wind.json
     python3 tools/wind_art.py check               # each rig still fits its sprite (check_content.py runs it)
@@ -108,6 +108,12 @@ RIGS = {
     "fairy_tree_house_moon": dict(kind="tree", crown=48, hue=(0.5, 0.65, 0.05)),   # its pale blue door below
     "fairy_tree_house_rose": dict(kind="tree", hue=(0.86, 1.0, 0.25)),
     "fairy_great_tree": dict(kind="tree"),
+    # RD's own trees' big twins, redrawn at their own size (batch 2, 2026-11-27; the dead tree's bare, as its
+    # small one is; big_frost_pine is big_snow_pine recoloured and moves as it does).
+    "big_tree": dict(kind="tree"),
+    "big_hollow_tree": dict(kind="tree"),
+    "big_snow_tree": dict(kind="tree"),
+    "big_snow_pine": dict(kind="pine"),
     "bush": dict(kind="bush"),
     "flowering_bush": dict(kind="bush"),
     "autumn_bush": dict(kind="bush"),

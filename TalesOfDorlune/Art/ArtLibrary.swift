@@ -1476,13 +1476,42 @@ final class ArtLibrary {
         if let known = windStrips[key], known.texture === texture { return known.frames }
         var frames: [SKTexture]?
         if let book = WindBook.shared, let rig = windRig(id), let strip = book.strip(picture(of: texture), rig: rig) {
-            let sheet = SKTexture(cgImage: strip)
-            sheet.filteringMode = .nearest
             let count = rig.frames.count
-            frames = (0..<count).map { f in
-                let frame = SKTexture(rect: CGRect(x: CGFloat(f) / CGFloat(count), y: 0, width: 1 / CGFloat(count), height: 1), in: sheet)
-                frame.filteringMode = .nearest
-                return frame
+            // A strip wider than a texture may be (a 216-pixel guild hall's 48 frames, 10368 pixels: the simulator
+            // takes 8192 and crashed, 2026-11-27) is laid out in rows of frames instead.
+            let frameWidth = strip.width / count, frameHeight = strip.height
+            let across = max(1, min(count, Self.longestTexture / max(1, frameWidth)))
+            let rows = (count + across - 1) / across
+            var sheetImage: CGImage? = strip
+            if across < count {
+                sheetImage = nil
+                if let context = CGContext(data: nil, width: frameWidth * across, height: frameHeight * rows, bitsPerComponent: 8,
+                                           bytesPerRow: 0, space: CGColorSpaceCreateDeviceRGB(),
+                                           bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue) {
+                    context.interpolationQuality = .none
+                    for f in 0..<count {
+                        guard let piece = strip.cropping(to: CGRect(x: f * frameWidth, y: 0, width: frameWidth, height: frameHeight))
+                        else { continue }
+                        // The context's rows run up from the bottom: the first row of frames at the top.
+                        let row = f / across, column = f % across
+                        context.draw(piece, in: CGRect(x: column * frameWidth, y: (rows - 1 - row) * frameHeight,
+                                                       width: frameWidth, height: frameHeight))
+                    }
+                    sheetImage = context.makeImage()
+                }
+            }
+            if let sheetImage {
+                let sheet = SKTexture(cgImage: sheetImage)
+                sheet.filteringMode = .nearest
+                let columns = CGFloat(across < count ? across : count), lines = CGFloat(across < count ? rows : 1)
+                frames = (0..<count).map { f in
+                    let column = across < count ? f % across : f, row = across < count ? f / across : 0
+                    // Texture rects run up from the bottom too.
+                    let frame = SKTexture(rect: CGRect(x: CGFloat(column) / columns, y: (lines - 1 - CGFloat(row)) / lines,
+                                                       width: 1 / columns, height: 1 / lines), in: sheet)
+                    frame.filteringMode = .nearest
+                    return frame
+                }
             }
         }
         if windStrips.count > 256 { windStrips = windStrips.filter { $0.value.texture != nil } }
@@ -1568,6 +1597,8 @@ final class ArtLibrary {
     /// How wide (and at most how tall) a land's packed wind texture is, in pixels: well inside what
     /// every iPhone's GPU takes (8192 since the A9).
     private static let atlasSide = 4096
+    /// The widest texture made in one piece: the simulator's Metal takes 8192 (a phone's 16384).
+    private static let longestTexture = 8192
 
     private func remember(_ image: CGImage, for texture: SKTexture) {
         sources[ObjectIdentifier(texture)] = Source(texture: texture, image: image)

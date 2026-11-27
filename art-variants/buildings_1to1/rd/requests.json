@@ -1,0 +1,191 @@
+{
+  "adobe_house": {
+    "prompt": "fairytale desert house of sandstone adobe with a small round dome, a blue arched door and a striped cloth awning",
+    "prompt_style": "rd_tile__tile_object",
+    "width": 96,
+    "height": 96,
+    "remove_bg": true
+  },
+  "adobe_house_tall": {
+    "prompt": "two storey fairytale desert house of pale sandstone adobe with a flat roof terrace, wooden roof beams poking out of the walls, a green wooden door, hanging clay pots with plants",
+    "prompt_style": "rd_tile__tile_object",
+    "width": 96,
+    "height": 96,
+    "remove_bg": true
+  },
+  "bakery": {
+    "prompt": "fairytale bakery with a bread sign and a yellow striped awning",
+    "prompt_style": "rd_tile__tile_object",
+    "width": 96,
+    "height": 96,
+    "remove_bg": true
+  },
+  "beach_hut": {
+    "prompt": "cute thatched beach hut on short wooden stilts with a palm leaf roof and a little porch",
+    "prompt_style": "rd_tile__tile_object",
+    "width": 96,
+    "height": 96,
+    "remove_bg": true
+  },
+  "blacksmith": {
+    "prompt": "fairytale blacksmith with an anvil sign, chimney smoke and grey stone walls",
+    "prompt_style": "rd_tile__tile_object",
+    "width": 96,
+    "height": 96,
+    "remove_bg": true
+  },
+  "candy_cottage": {
+    "prompt": "fairytale candy cottage with a gingerbread roof dripping white icing, candy cane posts and a chocolate door",
+    "prompt_style": "rd_tile__tile_object",
+    "width": 96,
+    "height": 96,
+    "remove_bg": true
+  },
+  "crooked_house": {
+    "prompt": "spooky crooked fairytale cottage leaning sideways with a patched purple roof and glowing green windows",
+    "prompt_style": "rd_tile__tile_object",
+    "width": 96,
+    "height": 96,
+    "remove_bg": true
+  },
+  "desert_tent": {
+    "prompt": "colorful striped nomad tent with tassels and a rug at its open flap, arabian nights",
+    "prompt_style": "rd_tile__tile_object",
+    "width": 96,
+    "height": 96,
+    "remove_bg": true
+  },
+  "dwarf_cottage": {
+    "prompt": "tiny fairytale dwarves' cottage with a steep snowy roof, seven little windows and a carved wooden door",
+    "prompt_style": "rd_tile__tile_object",
+    "width": 96,
+    "height": 96,
+    "remove_bg": true
+  },
+  "fisher_shack": {
+    "prompt": "small wooden fisherman's shack with a fishing net and a rowing oar leaning on it, blue door",
+    "prompt_style": "rd_tile__tile_object",
+    "width": 96,
+    "height": 96,
+    "remove_bg": true
+  },
+  "forest_lodge": {
+    "prompt": "cozy forest log lodge with a mossy green roof, mushrooms by the steps and a carved deer sign",
+    "prompt_style": "rd_tile__tile_object",
+    "width": 96,
+    "height": 96,
+    "remove_bg": true
+  },
+  "house": {
+    "prompt": "cozy fairytale cottage with a red tiled roof and round wooden door",
+    "prompt_style": "rd_tile__tile_object",
+    "width": 96,
+    "height": 96,
+    "remove_bg": true
+  },
+  "igloo": {
+    "prompt": "round snow igloo made of ice blocks with a little arched entrance tunnel",
+    "prompt_style": "rd_tile__tile_object",
+    "width": 96,
+    "height": 96,
+    "remove_bg": true
+  },
+  "inn": {
+    "prompt": "fairytale inn with a bed sign, warm windows and a purple roof",
+    "prompt_style": "rd_tile__tile_object",
+    "width": 96,
+    "height": 96,
+    "remove_bg": true
+  },
+  "item_shop": {
+    "prompt": "cozy fairytale item shop with a potion sign and green roof",
+    "prompt_style": "rd_tile__tile_object",
+    "width": 96,
+    "height": 96,
+    "remove_bg": true
+  },
+  "lily_cottage": {
+    "prompt": "whimsical cottage shaped like a pink water lily bud with a round green door, thumbelina",
+    "prompt_style": "rd_tile__tile_object",
+    "width": 96,
+    "height": 96,
+    "remove_bg": true
+  },
+  "magic_tower": {
+    "prompt": "tall whimsical wizard tower with a pointy blue roof and stars",
+    "prompt_style": "rd_tile__tile_object",
+    "width": 96,
+    "height": 96,
+    "remove_bg": true
+  },
+  "moon_pagoda": {
+    "prompt": "small two-tiered pagoda house with a curved blue roof, paper lanterns and a round moon window",
+    "prompt_style": "rd_tile__tile_object",
+    "width": 96,
+    "height": 96,
+    "remove_bg": true
+  },
+  "puppet_theater": {
+    "prompt": "small wooden puppet theater booth with red velvet curtains and a painted star sign",
+    "prompt_style": "rd_tile__tile_object",
+    "width": 96,
+    "height": 96,
+    "remove_bg": true
+  },
+  "sleepy_cottage": {
+    "prompt": "sleepy little cottage with a droopy nightcap shaped blue roof, a crescent moon sign and dim window",
+    "prompt_style": "rd_tile__tile_object",
+    "width": 96,
+    "height": 96,
+    "remove_bg": true
+  },
+  "snow_cabin": {
+    "prompt": "cozy log cabin with a thick snow-covered roof, icicles, a smoking chimney and warm yellow windows",
+    "prompt_style": "rd_tile__tile_object",
+    "width": 96,
+    "height": 96,
+    "remove_bg": true
+  },
+  "stone_hut": {
+    "prompt": "sturdy mountain hut of grey fieldstone with a slate roof and a lantern by the door",
+    "prompt_style": "rd_tile__tile_object",
+    "width": 96,
+    "height": 96,
+    "remove_bg": true
+  },
+  "swamp_stilt_hut": {
+    "prompt": "wooden swamp hut on tall stilts with a reed thatched roof, a rope ladder and a hanging lantern",
+    "prompt_style": "rd_tile__tile_object",
+    "width": 96,
+    "height": 96,
+    "remove_bg": true
+  },
+  "water_shrine": {
+    "prompt": "small white marble water shrine with blue tiled roof, pillars and a little waterfall basin",
+    "prompt_style": "rd_tile__tile_object",
+    "width": 96,
+    "height": 96,
+    "remove_bg": true
+  },
+  "windmill": {
+    "prompt": "cute fairytale windmill with white sails",
+    "prompt_style": "rd_tile__tile_object",
+    "width": 96,
+    "height": 96,
+    "remove_bg": true
+  },
+  "witch_hut": {
+    "prompt": "creepy witch's hut with a twisted chimney, a cauldron by the door and hanging bones",
+    "prompt_style": "rd_tile__tile_object",
+    "width": 96,
+    "height": 96,
+    "remove_bg": true
+  },
+  "guild_hall": {
+    "prompt": "grand fairytale guild hall with a blue roof and three banners",
+    "prompt_style": "rd_tile__tile_object",
+    "width": 96,
+    "height": 96,
+    "remove_bg": true
+  }
+}

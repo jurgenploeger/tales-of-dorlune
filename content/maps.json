@@ -8036,8 +8036,8 @@
         },
         {
           "art": "stone_hut",
-          "x": 7,
-          "y": 6
+          "x": 9,
+          "y": 9
         },
         {
           "art": "blacksmith",
@@ -8141,13 +8141,13 @@
         },
         {
           "art": "adobe_house",
-          "x": 11,
-          "y": -7
+          "x": 14,
+          "y": -9
         },
         {
           "art": "stone_hut",
-          "x": -15,
-          "y": -24
+          "x": -18,
+          "y": -23
         },
         {
           "art": "spice_shop",
@@ -8191,8 +8191,8 @@
         },
         {
           "art": "adobe_house",
-          "x": -15,
-          "y": -7
+          "x": -17,
+          "y": -9
         },
         {
           "art": "stone_hut",
@@ -11373,7 +11373,7 @@
             "count": 27,
             "blocking": true,
             "cluster": 3,
-            "size": [1.7, 1.7],
+            "size": [1, 1],
             "shadow": true
           },
           {
@@ -11381,7 +11381,7 @@
             "count": 27,
             "blocking": true,
             "cluster": 3,
-            "size": [1.7, 1.7],
+            "size": [1, 1],
             "shadow": true
           },
           {
@@ -11389,7 +11389,7 @@
             "count": 27,
             "blocking": true,
             "cluster": 3,
-            "size": [1.7, 1.7],
+            "size": [1, 1],
             "shadow": true
           },
           {
@@ -11397,7 +11397,7 @@
             "count": 27,
             "blocking": true,
             "cluster": 3,
-            "size": [1.7, 1.7],
+            "size": [1, 1],
             "shadow": true
           },
           {
@@ -11405,7 +11405,7 @@
             "count": 27,
             "blocking": true,
             "cluster": 3,
-            "size": [1.7, 1.7],
+            "size": [1, 1],
             "shadow": true
           },
           {

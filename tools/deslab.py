@@ -28,10 +28,8 @@ def soil(hue, s, v):
 
 # Per sprite: which colours are slab, and from which row down to start filling.
 SLABS = {
-    # A square of grass with dark green sides.
-    "inn": {"slab": lambda h, s, v: grass(h, s, v, 0.2), "from": 70},
-    # A grassy island with soil underneath; its stone is a grey green, so only strong greens.
-    "magic_tower": {"slab": lambda h, s, v: grass(h, s, v, 0.4) or soil(h, s, v), "from": 70},
+    # None now: the inn and magic tower, the two RD drew on a slab, are ChatGPT's redraws standing on the ground
+    # (2026-11-27, docs/ai-sprite-test/buildings-1to1). Add a sprite here if a new one comes with one.
 }
 
 
