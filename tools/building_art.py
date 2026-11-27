@@ -1976,26 +1976,26 @@ for _name in HAND_DRAWN:
 # (drawn darker overall than the cottage, its outline didn't stand apart from the body).
 # flower_shop, book_shop, tailor_shop, dome_house: ChatGPT's, drawn four at once in one chat and picked
 # blind (2026-11-21, docs/ai-sprite-test/building/batch1), each as delivered.
-PICKED = {"thatched_cottage": ("art-variants/thatched_cottage/chatgpt_5.png", 1.08),
-          "stone_townhouse": ("art-variants/stone_townhouse/chatgpt_2.png", 0.85),
+PICKED = {"thatched_cottage": ("art-variants/buildings_1to1/thatched_cottage.png", 1.0),
+          "stone_townhouse": ("art-variants/buildings_1to1/stone_townhouse.png", 1.0),
           "flower_shop": ("art-variants/buildings_1to1/flower_shop.png", 1.0),
           "book_shop": ("art-variants/buildings_1to1/book_shop.png", 1.0),
-          "tailor_shop": ("art-variants/tailor_shop/chatgpt_2.png", 1.0),
+          "tailor_shop": ("art-variants/buildings_1to1/tailor_shop.png", 1.0),
           "dome_house": ("art-variants/buildings_1to1/dome_house.png", 1.0),
           # Batches 2 and 3 (docs/ai-sprite-test/building/batch2, batch3): the user judged every ChatGPT
           # redraw better than ours and stopped the blind picks (2026-11-21). The timber house's outline 10%
           # darker; the weapon shop's second try, re-shaded after its first was a hair flat.
           "market_tent": ("art-variants/market_tent/chatgpt_3.png", 1.0),
           "pavilion_tent": ("art-variants/buildings_1to1/pavilion_tent.png", 1.0),
-          "tree_house": ("art-variants/tree_house/chatgpt_2.png", 1.0),
+          "tree_house": ("art-variants/buildings_1to1/tree_house.png", 1.0),
           "bluebell_house": ("art-variants/buildings_1to1/bluebell_house.png", 1.0),
           "bank": ("art-variants/buildings_1to1/bank.png", 1.0),
-          "timber_house": ("art-variants/timber_house/chatgpt_2.png", 0.9),
-          "round_cottage": ("art-variants/round_cottage/chatgpt_1.png", 1.0),
-          "weapon_shop": ("art-variants/weapon_shop/chatgpt_2.png", 1.0),
+          "timber_house": ("art-variants/buildings_1to1/timber_house.png", 1.0),
+          "round_cottage": ("art-variants/buildings_1to1/round_cottage.png", 1.0),
+          "weapon_shop": ("art-variants/buildings_1to1/weapon_shop.png", 1.0),
           # Batch 4 (docs/ai-sprite-test/building/batch4), each passing as delivered.
-          "tea_house": ("art-variants/tea_house/chatgpt_1.png", 1.0),
-          "teapot_house": ("art-variants/teapot_house/chatgpt_1_nosmoke.png", 1.0),
+          "tea_house": ("art-variants/buildings_1to1/tea_house.png", 1.0),
+          "teapot_house": ("art-variants/buildings_1to1/teapot_house.png", 1.0),
           # garden_cottage: ChatGPT sent only its big picture (chatgpt_2_big.png); chatgpt_2_fixed.png is it
           # snapped to 78 x 50 (tools/ai_sprite_eval.py, 32 colours) and each outline pixel moved to the
           # sprite's own colour nearest 20% lighter, so it passes outline_rel without new colours.
@@ -2004,7 +2004,7 @@ PICKED = {"thatched_cottage": ("art-variants/thatched_cottage/chatgpt_5.png", 1.
           "armour_shop": ("art-variants/buildings_1to1/armour_shop.png", 1.0),
           # yurt: ChatGPT's (batch 5) with its drawn smoke cut out (rows 0 to 25's grey and white), as the
           # game puffs moving smoke from its smoke hole instead (LandStage.smokeHoles).
-          "yurt": ("art-variants/yurt/chatgpt_1_nosmoke.png", 1.0),
+          "yurt": ("art-variants/buildings_1to1/yurt.png", 1.0),
           # crystal_cottage: ChatGPT's second try (chatgpt_2.png), each outline pixel moved to the sprite's own
           # colour nearest 24% lighter (chatgpt_2_fixed.png), as the garden cottage's: its outline had overshot.
           "crystal_cottage": ("art-variants/buildings_1to1/crystal_cottage.png", 1.0),
@@ -2028,7 +2028,7 @@ PICKED = {"thatched_cottage": ("art-variants/thatched_cottage/chatgpt_5.png", 1.
           "gem_workshop": ("art-variants/buildings_1to1/gem_workshop.png", 1.0),
           # New buildings, drawn by ChatGPT for a land of their own (docs/ai-sprite-test/new-buildings), never drawn
           # here: an outline too dark beside its inside snapped to the sprite's own colours 8% lighter (*_fixed.png).
-          "post_office": ("art-variants/post_office/chatgpt_1_fixed.png", 1.0),                 # Meadowbrook
+          "post_office": ("art-variants/buildings_1to1/post_office.png", 1.0),                 # Meadowbrook
           "dairy_shop": ("art-variants/buildings_1to1/dairy_shop.png", 1.0),                         # Meadowbrook
           "glass_lantern_shop": ("art-variants/buildings_1to1/glass_lantern_shop.png", 1.0),   # Prismhaven
           "painter_studio": ("art-variants/buildings_1to1/painter_studio.png", 1.0),                 # Prismhaven
@@ -2039,33 +2039,33 @@ PICKED = {"thatched_cottage": ("art-variants/thatched_cottage/chatgpt_5.png", 1.
           # washed out, the user, 2026-11-21).
           "assay_office": ("art-variants/buildings_1to1/assay_office.png", 1.0),                     # Ingothold
           "miners_lodge": ("art-variants/buildings_1to1/miners_lodge.png", 1.0),                     # Ingothold
-          "sandstone_house": ("art-variants/sandstone_house/chatgpt_1.png", 1.0),               # Ingothold
-          "spice_shop": ("art-variants/spice_shop/chatgpt_1.png", 1.0),                         # Ingothold
+          "sandstone_house": ("art-variants/buildings_1to1/sandstone_house.png", 1.0),               # Ingothold
+          "spice_shop": ("art-variants/buildings_1to1/spice_shop.png", 1.0),                         # Ingothold
           "beekeeper_cottage": ("art-variants/buildings_1to1/beekeeper_cottage.png", 1.0),           # Sunny Meadow
           # Delivered only as its 8× preview, every 8 × 8 block one colour: taken back to 96 exactly.
           "chime_cottage": ("art-variants/buildings_1to1/chime_cottage.png", 1.0),                   # Windswept Downs
           "lantern_cottage": ("art-variants/buildings_1to1/lantern_cottage.png", 1.0),               # Twilight Woods
           "owl_tower": ("art-variants/buildings_1to1/owl_tower.png", 1.0),                           # Twilight Woods
-          "woodcutter_cabin": ("art-variants/woodcutter_cabin/chatgpt_1.png", 1.0),             # Smiling Forest
-          "stump_house": ("art-variants/stump_house/chatgpt_1.png", 1.0),                       # Smiling Forest
+          "woodcutter_cabin": ("art-variants/buildings_1to1/woodcutter_cabin.png", 1.0),             # Smiling Forest
+          "stump_house": ("art-variants/buildings_1to1/stump_house.png", 1.0),                       # Smiling Forest
           "apple_cellar": ("art-variants/buildings_1to1/apple_cellar.png", 1.0),               # Snow White Forest
           "carved_chalet": ("art-variants/buildings_1to1/carved_chalet.png", 1.0),             # Snow White Forest
           "ice_fishing_hut": ("art-variants/buildings_1to1/ice_fishing_hut.png", 1.0),               # Briarmere
           "briar_cottage": ("art-variants/buildings_1to1/briar_cottage.png", 1.0),                   # Briarmere
-          "reed_boathouse": ("art-variants/reed_boathouse/chatgpt_1_fixed.png", 1.0),           # Frog Swamp
+          "reed_boathouse": ("art-variants/buildings_1to1/reed_boathouse.png", 1.0),           # Frog Swamp
           "lotus_pagoda": ("art-variants/buildings_1to1/lotus_pagoda.png", 1.0),               # Lotus Land
           "frog_hut": ("art-variants/buildings_1to1/frog_hut.png", 1.0),                       # Frog Swamp
-          "raft_teahouse": ("art-variants/raft_teahouse/chatgpt_2.png", 1.0),                   # Lotus Land
+          "raft_teahouse": ("art-variants/buildings_1to1/raft_teahouse.png", 1.0),                   # Lotus Land
           # Three of these delivered only as 8× previews, every 8 × 8 block one colour: taken back to 96 exactly.
-          "swan_boathouse": ("art-variants/swan_boathouse/chatgpt_1_fixed.png", 1.0),           # Swan Lake
+          "swan_boathouse": ("art-variants/buildings_1to1/swan_boathouse.png", 1.0),           # Swan Lake
           "lake_pavilion": ("art-variants/buildings_1to1/lake_pavilion.png", 1.0),                   # Swan Lake
           "dwarf_boathouse": ("art-variants/buildings_1to1/dwarf_boathouse.png", 1.0),         # Ingothold Lake
-          "smokehouse": ("art-variants/smokehouse/chatgpt_1_nosmoke.png", 1.0),                 # Ingothold Lake
-          "pineapple_hut": ("art-variants/pineapple_hut/chatgpt_1.png", 1.0),                   # Pineapple Shore
+          "smokehouse": ("art-variants/buildings_1to1/smokehouse.png", 1.0),                 # Ingothold Lake
+          "pineapple_hut": ("art-variants/buildings_1to1/pineapple_hut.png", 1.0),                   # Pineapple Shore
           "juice_shack": ("art-variants/buildings_1to1/juice_shack.png", 1.0),                       # Pineapple Shore
-          "shell_house": ("art-variants/shell_house/chatgpt_1.png", 1.0),                       # Sneezle Sands
+          "shell_house": ("art-variants/buildings_1to1/shell_house.png", 1.0),                       # Sneezle Sands
           "lighthouse": ("art-variants/buildings_1to1/lighthouse.png", 1.0),                         # Sneezle Sands
-          "well_house": ("art-variants/well_house/chatgpt_1_fixed.png", 1.0),                   # Genie Desert
+          "well_house": ("art-variants/buildings_1to1/well_house.png", 1.0),                   # Genie Desert
           "flag_tower": ("art-variants/buildings_1to1/flag_tower.png", 1.0),                         # Hidden Steppe
           # Its second try, its colours merged to 18 (a thin shape: 31 were too many for its pixels).
           "lamp_house": ("art-variants/buildings_1to1/lamp_house.png", 1.0),       # Genie Desert
@@ -2073,26 +2073,26 @@ PICKED = {"thatched_cottage": ("art-variants/thatched_cottage/chatgpt_5.png", 1.
           "horse_stable": ("art-variants/buildings_1to1/horse_stable.png", 1.0),                     # Hidden Steppe
           "crystal_lodge": ("art-variants/buildings_1to1/crystal_lodge.png", 1.0),                   # Crystal Mountain
           "moon_teahouse": ("art-variants/buildings_1to1/moon_teahouse.png", 1.0),                   # Moonwhisper
-          "star_dome": ("art-variants/star_dome/chatgpt_1.png", 1.0),                           # Moonwhisper
+          "star_dome": ("art-variants/buildings_1to1/star_dome.png", 1.0),                           # Moonwhisper
           "lookout_hut": ("art-variants/buildings_1to1/lookout_hut.png", 1.0),                       # Crystal Mountain
           "apothecary": ("art-variants/buildings_1to1/apothecary.png", 1.0),                         # Shiverdell
           "creaky_mill": ("art-variants/buildings_1to1/creaky_mill.png", 1.0),                       # Shiverdell
-          "straw_house": ("art-variants/straw_house/chatgpt_1.png", 1.0),                       # Big Bad Wolf's Lair
-          "stick_house": ("art-variants/stick_house/chatgpt_1.png", 1.0),                       # Big Bad Wolf's Lair
+          "straw_house": ("art-variants/buildings_1to1/straw_house.png", 1.0),                       # Big Bad Wolf's Lair
+          "stick_house": ("art-variants/buildings_1to1/stick_house.png", 1.0),                       # Big Bad Wolf's Lair
           "brick_house": ("art-variants/buildings_1to1/brick_house.png", 1.0),                       # Big Bad Wolf's Lair
           "cupcake_house": ("art-variants/buildings_1to1/cupcake_house.png", 1.0),                   # Gumdrop Peaks
           "ice_cream_parlour": ("art-variants/buildings_1to1/ice_cream_parlour.png", 1.0),           # Gumdrop Peaks
-          "toymaker_workshop": ("art-variants/toymaker_workshop/chatgpt_1.png", 1.0),           # Marionette Rise
+          "toymaker_workshop": ("art-variants/buildings_1to1/toymaker_workshop.png", 1.0),           # Marionette Rise
           "music_box_house": ("art-variants/buildings_1to1/music_box_house.png", 1.0),               # Marionette Rise
-          "pillow_cottage": ("art-variants/pillow_cottage/chatgpt_1.png", 1.0),                 # Dozywick
+          "pillow_cottage": ("art-variants/buildings_1to1/pillow_cottage.png", 1.0),                 # Dozywick
           "nightcap_tower": ("art-variants/buildings_1to1/nightcap_tower.png", 1.0),                 # Dozywick
-          "toll_house": ("art-variants/toll_house/chatgpt_1.png", 1.0),                         # Emerald Road
+          "toll_house": ("art-variants/buildings_1to1/toll_house.png", 1.0),                         # Emerald Road
           "emerald_shop": ("art-variants/buildings_1to1/emerald_shop.png", 1.0),                     # Emerald Road
           "flower_cup_house": ("art-variants/buildings_1to1/flower_cup_house.png", 1.0),             # Starfall Isle
           "firefly_house": ("art-variants/buildings_1to1/firefly_house.png", 1.0),                   # Starfall Isle
           "coral_house": ("art-variants/buildings_1to1/coral_house.png", 1.0),                       # Tidewater Shrine
-          "pearl_diver_hut": ("art-variants/pearl_diver_hut/chatgpt_1.png", 1.0),              # Tidewater Shrine
-          # Batches 2 and 3 (the five landmarks, acorn_cottage to pavilion_tent) point at its 1:1 redraws too, the 96-pixel
+          "pearl_diver_hut": ("art-variants/buildings_1to1/pearl_diver_hut.png", 1.0),              # Tidewater Shrine
+          # Batches 2 to 4 (the five landmarks and every other building) point at its 1:1 redraws too, the 96-pixel
           # drawings above kept in art-variants/<id>/.
           # Retro Diffusion's 26 buildings redrawn by ChatGPT in the corner view at their size in the game (1:1, no
           # scale; docs/ai-sprite-test/buildings-1to1, batch 1, 2026-11-27); RD's in art-variants/buildings_1to1/rd/.

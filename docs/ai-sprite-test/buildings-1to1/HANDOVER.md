@@ -270,6 +270,13 @@ Attach `batch3/0_style_reference_corner_4x.png` first, then `batch3/sheet_1.png`
 
 ### Batch 4: town buildings, part 3 (29)
 
+**Brought in 2026-11-27 (0.9.262).** All 29 at their box and foot row exactly, hard alpha, no smoke drawn. Windows
+recut (`BOXES` for four whose thatch, stone or rings lit up; `PAINT` for five whose panes are too dim or barred for the
+warm rule, boxed round their yellow by colour, as reading boxes off a gridded zoom by eye put them a few pixels off),
+the weapon, tailor and tea shops' signs and the tea house's cups re-rigged (the weapon shop's by colour, its grey wall
+staying put), ten smoke points moved. Every building is now 1:1 at scale 1; the mushroom house and market tent, never
+in these batches, stay RD's 96-pixel drawings, also at 1.
+
 Attach `batch4/0_style_reference_corner_4x.png` first, then `batch4/sheet_1.png` to `sheet_8.png` in order. The prompt, then this list:
 
 > 1. `pearl_diver_hut`: canvas 130 × 130, 95 wide, 99 tall, foot row 121

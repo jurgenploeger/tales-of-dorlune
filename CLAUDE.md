@@ -396,8 +396,8 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   `tools/ai_sprite_eval.py`). After eight blind picks all went to ChatGPT, the user dropped them (2026-11-21).
   Since 2026-11-27 RD's own buildings are being redrawn by ChatGPT in one corner view (door wall facing down-left, the
   right side in shade), drawn 1:1 at their size in the game (130, 216 or 259 pixels at scale 1, not 96 at 1.35;
-  docs/ai-sprite-test/buildings-1to1, `art-variants/buildings_1to1/`, RD's in `rd/` with their prompts): batches 1 (RD's
-  26), 2 (the landmarks and 23 more) and 3 are in; 4 (the last 29) to come. A recolour follows its base at scale 1.
+  docs/ai-sprite-test/buildings-1to1, `art-variants/buildings_1to1/`, RD's in `rd/` with their prompts): all four
+  batches are in (2026-11-27): every building but RD's mushroom house and market tent, at 96 and scale 1 as drawn. A recolour follows its base at scale 1.
   Each gets Retro Diffusion's grain over its broad flat patches (`tools/grain.py`, also on ChatGPT's gates: beside
   RD's buildings they read smooth and plasticky, the user, 2026-11-22; RD's patches of one colour are about 3
   pixels with 17% single specks, ChatGPT's were 6 and 6%, now 3.1 and 17%).

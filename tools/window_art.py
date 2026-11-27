@@ -36,24 +36,11 @@ SKIP = {"fence", "town_gate", "market_tent", "market_stall", "pavilion_tent", "d
 # cloth in the tailor's window, the dome house's sandstone along its wall top (the pictures ChatGPT drew,
 # 2026-11-21). Only pixels in a box count.
 FAIRY_HOUSE = [(39, 48, 46, 55), (51, 60, 34, 43), (59, 68, 50, 59)]
-BOXES = {"thatched_cottage": [(60, 96, 0, 96)],
+BOXES = {
          # ChatGPT's fairy tree houses (2026-11-26, docs/ai-sprite-test/big-trees): a cross through each little round
          # window cuts its pane into specks too small to count unboxed; the balcony, ladder and lantern stay dark.
          "fairy_tree_house": FAIRY_HOUSE, "fairy_tree_house_moon": FAIRY_HOUSE, "fairy_tree_house_rose": FAIRY_HOUSE,
          "fairy_great_tree": [(52, 61, 66, 75), (61, 70, 41, 50), (61, 70, 82, 91), (69, 78, 60, 69), (84, 93, 45, 54)],
-         "tailor_shop": [(50, 64, 0, 96)],
-         "tree_house": [(40, 52, 0, 96)],
-         "round_cottage": [(40, 96, 0, 96)],
-         "sandstone_house": [(39, 55, 25, 37), (66, 82, 25, 37)],
-         "spice_shop": [(63, 77, 18, 29)],
-         "stump_house": [(55, 70, 20, 75)],
-         "reed_boathouse": [(58, 72, 26, 38), (58, 72, 55, 67)],
-         "raft_teahouse": [(63, 74, 28, 70)],
-         "pineapple_hut": [(56, 70, 22, 33), (56, 70, 61, 72)],
-         "well_house": [(48, 56, 35, 46), (60, 78, 22, 33)],
-         "pillow_cottage": [(71, 80, 27, 37), (71, 80, 58, 68)],
-         "toll_house": [(63, 72, 23, 29), (63, 72, 52, 58)],
-         "pearl_diver_hut": [(57, 64, 28, 35), (57, 64, 61, 68)],
          # ChatGPT's redraws of RD's buildings (2026-11-27, docs/ai-sprite-test/buildings-1to1): their roofs' warm specks
          # left out. The adobe house, candy cottage and fisher's shack have no windows (SKIP).
          "house": [(76, 98, 28, 42), (76, 98, 74, 92)],
@@ -75,14 +62,22 @@ BOXES = {"thatched_cottage": [(60, 96, 0, 96)],
          "miners_lodge": [(81, 100, 26, 40), (81, 94, 65, 73)],
          "ice_fishing_hut": [(82, 96, 36, 49)],
          "music_box_house": [(87, 101, 24, 34), (87, 101, 62, 74)],
-         "toymaker_workshop": [(63, 80, 30, 44), (64, 76, 69, 77)]}   # its windows, not the clock's face
+         # Batch 4's: thatch, straw, sticks, stone, spices and a stump's rings left out.
+         "sandstone_house": [(56, 73, 32, 46), (90, 107, 32, 46)],
+         "smokehouse": [(97, 110, 32, 43), (97, 110, 76, 87)],
+         "stump_house": [(77, 93, 28, 40), (80, 93, 79, 90)],
+         "thatched_cottage": [(88, 101, 24, 34), (88, 101, 59, 73)]}
 
 
 # Windows the warm rule can't find (Retro Diffusion drew their glass dim, orange or dark, and a few of ChatGPT's
 # panes carry mullions that split them): every pixel in each box is lit, laid on a lamplight ramp by how light it
 # is in the box (`paint`), so the frames and mullions stay darker. Rows y0 to y1, columns x0 to x1.
-PAINT = {"sandstone_house": [(44, 56, 27, 36), (66, 78, 27, 36)],
-         "spice_shop": [(64, 76, 25, 35)]}
+PAINT = {  # Batch 4's whose panes are too dim or barred for the warm rule (2026-11-27), boxed round their yellow.
+         "reed_boathouse": [(85, 94, 39, 47), (85, 94, 80, 87)],
+         "spice_shop": [(90, 102, 34, 45)],
+         "stick_house": [(60, 69, 55, 65), (92, 103, 39, 48), (93, 103, 80, 84)],
+         "straw_house": [(94, 104, 40, 50)],
+         "well_house": [(62, 73, 48, 59), (91, 99, 29, 37)]}
 DEEP, PALE = np.array([205, 105, 40]), np.array([255, 238, 160])
 # Which pixels of a `PAINT` box are the glass (the user, 2026-11-25: lit as whole boxes, the inn's slanted
 # windows lit the plaster round them and the round house's lit its wall above them): the house's dark holes,

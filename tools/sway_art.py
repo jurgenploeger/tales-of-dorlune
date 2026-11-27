@@ -51,13 +51,13 @@ def flutter(box, pole, reach=1, wall=False):
 # Each building's moving pieces: `box` is (x0, y0, x1, y1), inclusive, in its PNG's pixels; every opaque pixel
 # in it (below `hook`) moves.
 PIECES = {
-    "weapon_shop": [swing((75, 58, 87, 72), hook=58)],
+    "weapon_shop": [swing((99, 85, 116, 101), hook=84, wall=True, hues=(0, 360), sat=0.2)],  # not the grey stone
     "armour_shop": [swing((104, 77, 117, 90), hook=76)],
-    "tailor_shop": [swing((70, 53, 83, 66), hook=53)],
+    "tailor_shop": [swing((101, 76, 117, 91), hook=75, wall=True)],
     "book_shop": [swing((104, 79, 117, 93), hook=78)],
     "flower_shop": [swing((100, 86, 116, 103), hook=85)],
     "gem_workshop": [swing((102, 86, 118, 104), hook=85)],
-    "tea_house": [swing((78, 57, 86, 68), hook=57), swing((10, 59, 22, 65), hook=59, reach=1)],
+    "tea_house": [swing((104, 85, 117, 99), hook=84, wall=True), swing((13, 87, 29, 94), hook=86, reach=1)],
     "apothecary": [swing((19, 82, 33, 99), hook=81)],
     "emerald_shop": [swing((100, 77, 113, 97), hook=76)],
     # Its lanterns' own colours (red, blue, green, purple: anything but the browns of the timber and plaster).

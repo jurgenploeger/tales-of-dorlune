@@ -2576,12 +2576,12 @@
     },
     {
       "id": "thatched_cottage",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "post_office",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2621,12 +2621,12 @@
     },
     {
       "id": "sandstone_house",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "spice_shop",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2651,12 +2651,12 @@
     },
     {
       "id": "woodcutter_cabin",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "stump_house",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2681,7 +2681,7 @@
     },
     {
       "id": "reed_boathouse",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2696,12 +2696,12 @@
     },
     {
       "id": "raft_teahouse",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "swan_boathouse",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2716,12 +2716,12 @@
     },
     {
       "id": "smokehouse",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "pineapple_hut",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2731,7 +2731,7 @@
     },
     {
       "id": "shell_house",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2741,7 +2741,7 @@
     },
     {
       "id": "well_house",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2771,7 +2771,7 @@
     },
     {
       "id": "star_dome",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2781,7 +2781,7 @@
     },
     {
       "id": "pillow_cottage",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2791,7 +2791,7 @@
     },
     {
       "id": "toll_house",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2816,7 +2816,7 @@
     },
     {
       "id": "pearl_diver_hut",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2831,12 +2831,12 @@
     },
     {
       "id": "straw_house",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "stick_house",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2856,7 +2856,7 @@
     },
     {
       "id": "toymaker_workshop",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2950,22 +2950,22 @@
     },
     {
       "id": "timber_house",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "stone_townhouse",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "round_cottage",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "teapot_house",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2975,7 +2975,7 @@
     },
     {
       "id": "weapon_shop",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2985,7 +2985,7 @@
     },
     {
       "id": "tailor_shop",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2995,7 +2995,7 @@
     },
     {
       "id": "tea_house",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -3010,7 +3010,7 @@
     },
     {
       "id": "yurt",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -3024,7 +3024,7 @@
     },
     {
       "id": "tree_house",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
