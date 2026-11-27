@@ -21,4 +21,11 @@ Rules, all of them matter:
 - No text, no letters, no numbers, no icons, no faces or pictures in any empty part.
 - Every empty middle (portrait, skill socket) is fully transparent.
 
+Dark Mode, at the same time: the game follows the phone's light or dark look, so every piece needs a dark twin. For each PNG above, and for the three minimap pieces I picked (minimap_frame, compass_medallion, compass_needle), also give <name>_dark.png:
+- The very same drawing: same canvas, same silhouette and alpha pixel for pixel, same carving and symbols in the same places, so the game can swap one for the other.
+- Only the colours change: the birch stained to a dusky walnut, about 40% darker and a little cooler, still clearly wood with its grain and carving readable; lit edges a soft warm tan, not white. The outline stays dark brown, a step deeper.
+- The green and gold inlays a little brighter than in the light ones, so they glow softly against the dark wood (no actual glow effect). The needle's red stays red.
+- Sunk insets darker still, so light text and coloured bars read in them.
+Put the dark twins on the contact sheet too, in a second row on a deep navy background, and in asset_checks.json.
+
 Also give me a contact sheet of all of them on a mid-green background beside the minimap, and an asset_checks.json as last time: each piece's canvas, bounding box, colour count, alpha values, centre, and the inner and outer diameters of the round ones. Zip it all.

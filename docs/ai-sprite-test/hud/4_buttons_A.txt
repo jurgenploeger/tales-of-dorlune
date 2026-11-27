@@ -1,6 +1,6 @@
-Attached: the HUD kit sheet I picked (and the game's screenshot). Now draw the HUD's buttons in exactly that kit's style, carved to the same detail, with the same wood, outline and light.
+Attached: the HUD kit I picked (its contact sheet, with button_round.png and its dark twin) and the game's screenshot. Now draw the HUD's buttons in exactly that kit's style, carved to the same detail, with the same wood, outline and light.
 
-Each button is a round carved frame (the kit's round button) with a carved or inlaid picture on its face. Draw each one twice, normal and pressed (the pressed one sunk a step, its face a shade darker), on a plain flat white background, separate, front-on, no text, no letters:
+Each button is a round carved frame (the kit's round button) with a carved or inlaid picture on its face. Draw each one twice, normal and pressed (the pressed one sunk a step, its face a shade darker), separate, front-on, no text, no letters:
 On the map's HUD:
 1. Chat: a speech bubble.
 2. Inventory: a satchel with a buckle.
@@ -18,4 +18,6 @@ In battle:
 12. Items: a potion bottle.
 13. Run away: a winged boot.
 
-Rules: every picture reads at 22 points, so bold simple shapes, at most three colours of paint or inlay on top of the wood, a clear dark outline round the picture. The pictures sit dead centre with the same margin to the frame on every button. Draw the sheet at least 1536 px wide.
+Rules: every picture reads at 22 points, so bold simple shapes, at most three colours of paint or inlay on top of the wood, a clear dark outline round the picture. The pictures sit dead centre with the same margin to the frame on every button. Deliver as the minimap and the HUD kit: each piece on its own transparent PNG, 1280 × 1280, centred, hard edges (alpha only 0 or 255, about 40 colours a piece), plus a contact sheet (light row on mid-green, dark row on deep navy) and an asset_checks.json (canvas, bounding box, colour count, alpha values, centre). Zip it all.
+
+Dark Mode, at the same time: for every piece also give a dark twin (<name>_dark.png): the very same drawing, same silhouette and alpha pixel for pixel, only recoloured as in the HUD kit's dark pieces (dusky walnut wood, softly brighter inlays). The close button's orange stays orange.

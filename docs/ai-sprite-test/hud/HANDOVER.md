@@ -19,6 +19,11 @@ the real HUD (the artifact https://claude.ai/artifact/BbEWKRiYCnw6yJi5iCTtyK; it
 
 `follow_ups_if_it_drifts.txt` has the nudges.
 
+**Dark Mode at the same time** (the user, 2026-11-27): prompts 2 to 4 ask for a `_dark` twin of every
+piece, the minimap's three too: the same drawing pixel for pixel (so the game swaps one for the other,
+as `Color.adaptive` swaps colours), the birch stained a dusky walnut about 40% darker and cooler, the
+inlays a touch brighter, the insets darker still; in the windows a deep warm brown pane for cream text.
+
 ## Checked in the game's size (`minimap_in_game.png`)
 
 On today's screenshot (`hud_today_landscape.png`, Sunny Meadow, 2026-11-27), ring at 136 points: the
@@ -32,5 +37,5 @@ over the sand road (the kit prompt asks for a bolder outline). Decisions:
 ## Still to do
 
 Wire the pieces into `WorldHUD` / `HUDStyle` once the kit is in (the game-ui skill: mock-up first,
-Screenshots in portrait and landscape, light and dark), with a darker twin for Dark Mode; then update
+Screenshots in portrait and landscape, light and dark), with the dark twins for Dark Mode; then update
 the skill's opening (it still describes FO's look as glossy blue) and Figma's 07 Game UI.
