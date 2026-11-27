@@ -519,6 +519,13 @@ One doll, end to end (it was the Human Male pilot until 2026-11-24).
     walk), the status cape's side view bent along it row by row (rotated, its 20-pixel rows came apart), on the
     doll facing right: walking, running, stopping, turning, a gust. For capes, cloaks, scarf tails and long hair,
     not body clothes (they follow the limbs drawn in each frame). Not in the game; front and back views not tried.
+56. **The default outfit** (2026-11-27): what the hero wears with nothing equipped, not a wearable slot, under every
+    one: today's green tunic redrawn at 64 (short sleeves, to mid-thigh), a brown belt with a gold buckle, cream
+    trousers, brown boots. The layer order: doll, outfit, elf ears, hair, wearables. ChatGPT paints the doll wearing
+    it and `tools/hero_outfit.py` lifts it as every pixel that differs from the doll (it's many colours, so not by
+    hue). The tunic is painted in a green ramp of its own (hue 112 to 128), so `dye` recolours it and nothing else;
+    belt, trousers and boots stay. Down: `hero64_outfit_down.png` (`tries/outfit_down_try1*`), the doll's head and
+    hands untouched, 13 pixels past its outline. It moves with the limbs, so every walk and attack row is a repaint.
     Spiky up: ChatGPT sent its own 64-pixel files this time (`tries/hair_spiky_up_try1{a,b}{,_8x}.png`), the body
     pixel for pixel the doll's; the user picked a (`hero64_hair_spiky_up.png`), lifted untoned. **Spiky is done in all
     eight directions** (five drawn, three mirrored), on idle, walk, run and attack, human and elf.
