@@ -511,7 +511,9 @@ One doll, end to end (it was the Human Male pilot until 2026-11-24).
     Up: ChatGPT's own 64-pixel files, two near copies (`tries/hair_long_up_try1*`), the body untouched; the user
     took b (`hero64_hair_long_up.png`), its lower edge even on both sides, both elf ear tips over the hair. **Long
     straight stands in all eight directions.** Walk up repainted with the hair, over the arms, both ear tips
-    showing (`tries/hair_long_walk_up_try1*`, `hero64_hair_long_walk_up.png`). Attack up still to repaint.
+    showing (`tries/hair_long_walk_up_try1*`, `hero64_hair_long_walk_up.png`). Attack up the same way
+    (`tries/hair_long_attack_up_try1*`, `hero64_hair_long_attack_up.png`): **Long straight is done in every direction
+    and animation** (idle, walk, run, attack; human and elf), every walk and attack row ChatGPT's own repaint.
 55. **Cape physics, a prototype** (2026-11-27, after SpriteCook's Verlet cape article): `tools/cape_sim.py`, the
     article's 8-point chain pinned at the back of the shoulders (drag halved: at 2.2 the cape stood out flat at a
     walk), the status cape's side view bent along it row by row (rotated, its 20-pixel rows came apart), on the
