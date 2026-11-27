@@ -1,0 +1,3172 @@
+{
+  "metadata": {
+    "project": "Tales of Dorlune",
+    "kit": "Carved birch window kit",
+    "order": [
+      "window_frame",
+      "window_title_bar",
+      "tab_open",
+      "tab_closed",
+      "close_button",
+      "close_button_pressed",
+      "inset_panel",
+      "row_divider",
+      "section_heading_ornament",
+      "button_capsule",
+      "button_capsule_pressed",
+      "button_capsule_gold",
+      "button_capsule_gold_pressed",
+      "speech_window",
+      "speech_name_plaque",
+      "speech_next_arrow",
+      "chat_bubble"
+    ],
+    "light_asset_count": 17,
+    "dark_asset_count": 17,
+    "native_canvas": [
+      1280,
+      1280
+    ],
+    "outline_width_px": 2,
+    "light_pane_rgb": [
+      242,
+      226,
+      194
+    ],
+    "dark_pane_rgb": [
+      62,
+      43,
+      35
+    ],
+    "reference": "Picked birch and walnut HUD kit, exact existing wood RGB entries and dark mappings reused.",
+    "notes": [
+      "Use the 1280 x 1280 primary PNGs in the game; previews_8x are exact inspection enlargements.",
+      "The 40-entry shared material palette yields 17-32 used opaque colours per piece. Simple lines intentionally use fewer shades; no dithering or filler pixels are added.",
+      "The frame has four whole 192 x 192 px corners. At 9 source px per point, its 51-52 px straight rails measure 5.67-5.78 points.",
+      "Repeat complete carved edge tiles. For non-multiple lengths, use the supplied neutral profiles for the remainder, so no moon, star or leaf is cut at a corner.",
+      "The open tab has a borderless parchment foot; overlap it with the pane at its recorded bottom_join_y. tab_closed is a transparent-backed divider only.",
+      "The speech plaque, next arrow and row divider are separate so their symbols and positions stay fixed when their parent panels resize.",
+      "The exterior canvas is transparent. Text panes are deliberately opaque, flat parchment in light mode and deep warm brown in dark mode."
+    ],
+    "additional_files": [
+      "palette.json",
+      "geometry.json",
+      "frame_seam_checks.json"
+    ],
+    "frame_rendering": {
+      "native_source_pixels_per_point": 9,
+      "corner_size_pixels": [
+        192,
+        192
+      ],
+      "straight_rails_pixels": {
+        "top": 52,
+        "bottom": 51,
+        "left": 51,
+        "right": 51
+      }
+    },
+    "state_identity_checks": {
+      "button_capsule": {
+        "complete_outer_rim_pixel_identical": true,
+        "outer_rim_pixel_count": 153367,
+        "outer_rim_mask_sha256": "9ce31df42f12e7b7c60eada37b8af980a15b2719e195a2d2a2901f1cdc98bd3b"
+      },
+      "close_button": {
+        "complete_outer_rim_pixel_identical": true,
+        "outer_rim_pixel_count": 391156,
+        "outer_rim_mask_sha256": "3401578e56d4d3ab88c723f27acd11d4f5973f4f61a2b72e2e2a4acc1a3be942",
+        "complete_carved_cross_pixel_identical": true,
+        "cross_pixel_count": 90136
+      }
+    }
+  },
+  "assets": {
+    "window_frame": {
+      "filename": "window_frame.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        16,
+        220,
+        1264,
+        1060
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "visible_bbox_centre": [
+        639.5,
+        639.5
+      ],
+      "slice_rect": [
+        16,
+        220,
+        1264,
+        1060
+      ],
+      "cap_insets_px": [
+        192,
+        192,
+        192,
+        192
+      ],
+      "corner_size_px": [
+        192,
+        192
+      ],
+      "export_slices": true,
+      "proof_sizes_px": [
+        [
+          1032,
+          688
+        ],
+        [
+          1680,
+          992
+        ]
+      ],
+      "flat_regions": [
+        {
+          "name": "plain parchment text-safe rectangle",
+          "rect": [
+            144,
+            348,
+            1136,
+            932
+          ],
+          "light_rgb": [
+            242,
+            226,
+            194
+          ],
+          "dark_rgb": [
+            62,
+            43,
+            35
+          ]
+        }
+      ],
+      "flat_pane_rectangle": [
+        208,
+        412,
+        1072,
+        868
+      ],
+      "text_safe_rect": [
+        144,
+        348,
+        1136,
+        932
+      ],
+      "pane_mask_bbox": [
+        88,
+        298,
+        1192,
+        991
+      ],
+      "pane_pixel_count": 748141,
+      "pane_all_pixels_uniform": true,
+      "pane_rgb_light": [
+        242,
+        226,
+        194
+      ],
+      "pane_rgb_dark": [
+        62,
+        43,
+        35
+      ],
+      "tile_regions": [
+        {
+          "name": "top repeating carved rail",
+          "rect": [
+            208,
+            220,
+            1072,
+            412
+          ],
+          "axis": "x",
+          "period_px": 216,
+          "matching_end_profiles": true
+        },
+        {
+          "name": "bottom repeating carved rail",
+          "rect": [
+            208,
+            868,
+            1072,
+            1060
+          ],
+          "axis": "x",
+          "period_px": 216,
+          "matching_end_profiles": true
+        },
+        {
+          "name": "left repeating carved rail",
+          "rect": [
+            16,
+            412,
+            208,
+            868
+          ],
+          "axis": "y",
+          "period_px": 152,
+          "matching_end_profiles": true
+        },
+        {
+          "name": "right repeating carved rail",
+          "rect": [
+            1072,
+            412,
+            1264,
+            868
+          ],
+          "axis": "y",
+          "period_px": 152,
+          "matching_end_profiles": true
+        }
+      ],
+      "edge_tile_period_px": {
+        "horizontal": 216,
+        "vertical": 152
+      },
+      "neutral_join_width_px": 8,
+      "eight_corner_edge_joins_exact": true,
+      "native_pixels_per_point": 9,
+      "straight_rail_thickness_px": {
+        "top": 52,
+        "bottom": 51,
+        "left": 51,
+        "right": 51
+      },
+      "straight_rail_thickness_pt": {
+        "top": 5.777777777777778,
+        "bottom": 5.666666666666667,
+        "left": 5.666666666666667,
+        "right": 5.666666666666667
+      },
+      "corner_size_pt": [
+        21.333333333333332,
+        21.333333333333332
+      ],
+      "minimum_slice_size_px": [
+        385,
+        385
+      ],
+      "edge_mode": "repeat whole canonical units; neutral end profiles fill residual space",
+      "residual_space_policy": "Distribute residual neutral pixels across n+1 gaps between n complete motif units; never crop a motif at a corner.",
+      "source_file": "/workspace/scratch/e15630456ffa/generated_images/exec-83f3351e-f404-409d-b768-63f3e238ff92.png",
+      "source_sha256": "1f2060d060877ea7f0f9d6df4578f673f3fa46683a54bc260214eb3c394cfea0",
+      "source_alpha_bbox": [
+        29,
+        231,
+        1225,
+        1006
+      ],
+      "source_corner_and_tile_rects": {
+        "top_left": [
+          29,
+          231,
+          221,
+          423
+        ],
+        "top_right": [
+          1033,
+          231,
+          1225,
+          423
+        ],
+        "bottom_left": [
+          29,
+          814,
+          221,
+          1006
+        ],
+        "bottom_right": [
+          1033,
+          814,
+          1225,
+          1006
+        ],
+        "top_tile": [
+          441,
+          231,
+          657,
+          423
+        ],
+        "bottom_tile": [
+          441,
+          814,
+          657,
+          1006
+        ],
+        "left_tile": [
+          29,
+          420,
+          221,
+          572
+        ],
+        "right_tile": [
+          1033,
+          420,
+          1225,
+          572
+        ]
+      },
+      "preservation": "Four original ornate corner crops; only their neutral 8 px joining strips are normalized. No motif is rotated, stretched or replaced.",
+      "neutral_profile_source": {
+        "top": {
+          "x": 449,
+          "y_range": [
+            231,
+            423
+          ]
+        },
+        "bottom": {
+          "x": 449,
+          "y_range": [
+            814,
+            1006
+          ]
+        },
+        "left": {
+          "y": 466,
+          "x_range": [
+            29,
+            221
+          ]
+        },
+        "right": {
+          "y": 466,
+          "x_range": [
+            1033,
+            1225
+          ]
+        }
+      },
+      "directional_lighting_preserved": true
+    },
+    "window_title_bar": {
+      "filename": "window_title_bar.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        80,
+        548,
+        1200,
+        732
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "visible_bbox_centre": [
+        639.5,
+        639.5
+      ],
+      "slice_rect": [
+        80,
+        548,
+        1200,
+        732
+      ],
+      "stretch_mode": "horizontal_three_slice",
+      "horizontal_cap_insets_px": [
+        168,
+        168
+      ],
+      "native_height_px": 184,
+      "stretch_rect": [
+        248,
+        548,
+        1032,
+        732
+      ],
+      "stretch_axis": "x",
+      "stretch_period_px": 1,
+      "preserved_end_rects": [
+        [
+          80,
+          548,
+          248,
+          732
+        ],
+        [
+          1032,
+          548,
+          1200,
+          732
+        ]
+      ],
+      "flat_regions": [
+        {
+          "name": "plain title face",
+          "rect": [
+            248,
+            578,
+            1032,
+            703
+          ],
+          "light_rgb": [
+            241,
+            195,
+            135
+          ],
+          "dark_rgb": [
+            143,
+            111,
+            85
+          ]
+        }
+      ],
+      "text_safe_rect": [
+        264,
+        588,
+        1016,
+        693
+      ],
+      "tile_regions": [
+        {
+          "name": "exact title centre profile",
+          "rect": [
+            248,
+            548,
+            1032,
+            732
+          ],
+          "axis": "x",
+          "period_px": 1,
+          "matching_end_profiles": true
+        }
+      ],
+      "native_pixels_per_point": 9,
+      "native_height_pt": 20.444444444444443,
+      "outline_width_px": 2,
+      "source_normalized": "/workspace/scratch/e15630456ffa/window_kit_work/root_export/window_title_bar_normalized.png",
+      "resize_instructions": "Preserve both 168 px end caps; repeat the central 1 px profile horizontally at the original height."
+    },
+    "tab_open": {
+      "filename": "tab_open.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        128,
+        494,
+        1152,
+        785
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "visible_bbox_centre": [
+        639.5,
+        639
+      ],
+      "slice_rect": [
+        128,
+        494,
+        1152,
+        785
+      ],
+      "stretch_mode": "horizontal_three_slice",
+      "horizontal_cap_insets_px": [
+        224,
+        224
+      ],
+      "native_height_px": 291,
+      "stretch_rect": [
+        352,
+        494,
+        928,
+        785
+      ],
+      "stretch_axis": "x",
+      "stretch_period_px": 1,
+      "preserved_end_rects": [
+        [
+          128,
+          494,
+          352,
+          785
+        ],
+        [
+          928,
+          494,
+          1152,
+          785
+        ]
+      ],
+      "flat_regions": [
+        {
+          "name": "plain tab label and open bottom",
+          "rect": [
+            352,
+            524,
+            928,
+            785
+          ],
+          "light_rgb": [
+            242,
+            226,
+            194
+          ],
+          "dark_rgb": [
+            62,
+            43,
+            35
+          ]
+        },
+        {
+          "name": "borderless pane connection",
+          "rect": [
+            165,
+            783,
+            1116,
+            785
+          ],
+          "light_rgb": [
+            242,
+            226,
+            194
+          ],
+          "dark_rgb": [
+            62,
+            43,
+            35
+          ]
+        }
+      ],
+      "text_safe_rect": [
+        368,
+        548,
+        912,
+        757
+      ],
+      "pane_mask_bbox": [
+        165,
+        524,
+        1117,
+        785
+      ],
+      "pane_pixel_count": 215174,
+      "pane_all_pixels_uniform": true,
+      "pane_rgb_light": [
+        242,
+        226,
+        194
+      ],
+      "pane_rgb_dark": [
+        62,
+        43,
+        35
+      ],
+      "tile_regions": [
+        {
+          "name": "exact tab centre profile",
+          "rect": [
+            352,
+            494,
+            928,
+            785
+          ],
+          "axis": "x",
+          "period_px": 1,
+          "matching_end_profiles": true
+        }
+      ],
+      "connection": {
+        "edge": "bottom",
+        "canvas_y": 785,
+        "last_opaque_row": 784,
+        "open_span_x": [
+          165,
+          1116
+        ],
+        "open_span_relative_to_bbox": [
+          37,
+          988
+        ],
+        "borderless_rect": [
+          165,
+          783,
+          1116,
+          785
+        ],
+        "join_material": "same parchment as window_frame pane",
+        "light_rgb": [
+          242,
+          226,
+          194
+        ],
+        "dark_rgb": [
+          62,
+          43,
+          35
+        ],
+        "assembly": "Place the pane immediately below row 784; extend the same parchment under the full open span. Keep any underlying bar outline behind the tab."
+      },
+      "native_pixels_per_point": 9,
+      "native_height_pt": 32.333333333333336,
+      "outline_width_px": 2,
+      "outline_exception": "Open bottom parchment span has no border",
+      "source_normalized": "/workspace/scratch/e15630456ffa/window_kit_work/root_export/tab_open_normalized.png",
+      "resize_instructions": "Preserve the two 224 px caps with their full corner leaves and flared feet; repeat only the 1 px centre profile horizontally."
+    },
+    "tab_closed": {
+      "filename": "tab_closed.png",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        618,
+        440,
+        662,
+        840
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "visible_bbox_centre": [
+        639.5,
+        639.5
+      ],
+      "role": "Unselected-tab divider only; no filled tab background",
+      "slice_rect": [
+        618,
+        440,
+        662,
+        840
+      ],
+      "resize_mode": "preserve aspect ratio",
+      "recommended_height_pt": 28,
+      "recommended_width_pt": 3.08,
+      "transparent_regions": [
+        {
+          "name": "no left tab fill",
+          "rect": [
+            0,
+            440,
+            618,
+            840
+          ]
+        },
+        {
+          "name": "no right tab fill",
+          "rect": [
+            662,
+            440,
+            1280,
+            840
+          ]
+        }
+      ],
+      "outline_width_px": 2,
+      "source_normalized": "/workspace/scratch/e15630456ffa/window_kit_work/root_export/tab_closed_normalized.png"
+    },
+    "close_button": {
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1160,
+        1160
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "colour_count": 31,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "alpha_sha256": "030aff5193b5ef0129c27c74cbc04bf3a6099244e730a95bccc93a5a2f62ea46",
+      "opaque_rgb_sha256": "cd09be5f3246e8930f20c368af86cf85ac421ab6abe6b16b152477a803c6831c",
+      "palette_rgb": [
+        [
+          61,
+          39,
+          10
+        ],
+        [
+          78,
+          44,
+          23
+        ],
+        [
+          89,
+          36,
+          6
+        ],
+        [
+          95,
+          95,
+          30
+        ],
+        [
+          112,
+          56,
+          12
+        ],
+        [
+          145,
+          128,
+          56
+        ],
+        [
+          146,
+          155,
+          68
+        ],
+        [
+          148,
+          87,
+          32
+        ],
+        [
+          166,
+          97,
+          33
+        ],
+        [
+          170,
+          109,
+          51
+        ],
+        [
+          182,
+          114,
+          45
+        ],
+        [
+          187,
+          183,
+          92
+        ],
+        [
+          195,
+          131,
+          62
+        ],
+        [
+          202,
+          140,
+          75
+        ],
+        [
+          207,
+          149,
+          86
+        ],
+        [
+          211,
+          100,
+          34
+        ],
+        [
+          216,
+          153,
+          80
+        ],
+        [
+          221,
+          162,
+          93
+        ],
+        [
+          222,
+          197,
+          125
+        ],
+        [
+          227,
+          169,
+          96
+        ],
+        [
+          229,
+          174,
+          109
+        ],
+        [
+          233,
+          179,
+          114
+        ],
+        [
+          238,
+          135,
+          53
+        ],
+        [
+          239,
+          185,
+          108
+        ],
+        [
+          241,
+          195,
+          135
+        ],
+        [
+          243,
+          201,
+          145
+        ],
+        [
+          248,
+          208,
+          139
+        ],
+        [
+          248,
+          212,
+          161
+        ],
+        [
+          248,
+          225,
+          166
+        ],
+        [
+          251,
+          239,
+          202
+        ],
+        [
+          255,
+          172,
+          81
+        ]
+      ],
+      "shape": "circle",
+      "outer_diameter_px": 1040,
+      "inner_diameter_px": null,
+      "solid_face_diameter_px": 729,
+      "outline_px": 2,
+      "button_state": "normal",
+      "source_path": "/workspace/scratch/e15630456ffa/generated_images/exec-2d9f1ddd-a037-49e0-b442-610e3c846ac5.png",
+      "pressed_inner_source_path": null,
+      "source_transform": {
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_centre": [
+          626,
+          627.5
+        ],
+        "source_outer_radius": 510.5,
+        "target_centre": [
+          640,
+          640
+        ],
+        "target_radius": 520,
+        "sampling": "nearest-neighbour"
+      },
+      "pixel_centre_convention": "Pixel (x,y) occupies [x,x+1] \u00d7 [y,y+1]; its centre is (x+0.5,y+0.5).",
+      "orange_identity_rgb": [
+        [
+          154,
+          67,
+          23
+        ],
+        [
+          211,
+          100,
+          34
+        ],
+        [
+          238,
+          135,
+          53
+        ],
+        [
+          255,
+          172,
+          81
+        ]
+      ],
+      "orange_identity_mask": "/workspace/scratch/e15630456ffa/window_kit_work/close/orange_enamel_mask.png",
+      "carved_cross_mask": "/workspace/scratch/e15630456ffa/window_kit_work/close/carved_cross_mask.png",
+      "cross_bounding_box": [
+        407,
+        408,
+        861,
+        867
+      ],
+      "outer_rim_reused_from_normal": true,
+      "cross_drawing_reused_from_normal": true,
+      "filename": "close_button.png",
+      "outline_width_px": 2,
+      "shared_palette_path": "/workspace/scratch/e15630456ffa/window_kit_work/palette/palette.json",
+      "flat_fill_checks": [],
+      "colour_identity_rgb": [
+        [
+          154,
+          67,
+          23
+        ],
+        [
+          211,
+          100,
+          34
+        ],
+        [
+          238,
+          135,
+          53
+        ],
+        [
+          255,
+          172,
+          81
+        ]
+      ]
+    },
+    "close_button_pressed": {
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1160,
+        1160
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "colour_count": 32,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "alpha_sha256": "030aff5193b5ef0129c27c74cbc04bf3a6099244e730a95bccc93a5a2f62ea46",
+      "opaque_rgb_sha256": "2e8af0e098ea08633ea9206132f507beea72663f7e2c2650b3e27c6696ef5450",
+      "palette_rgb": [
+        [
+          61,
+          39,
+          10
+        ],
+        [
+          78,
+          44,
+          23
+        ],
+        [
+          89,
+          36,
+          6
+        ],
+        [
+          95,
+          95,
+          30
+        ],
+        [
+          112,
+          56,
+          12
+        ],
+        [
+          145,
+          128,
+          56
+        ],
+        [
+          146,
+          155,
+          68
+        ],
+        [
+          148,
+          87,
+          32
+        ],
+        [
+          154,
+          67,
+          23
+        ],
+        [
+          166,
+          97,
+          33
+        ],
+        [
+          170,
+          109,
+          51
+        ],
+        [
+          182,
+          114,
+          45
+        ],
+        [
+          187,
+          183,
+          92
+        ],
+        [
+          195,
+          131,
+          62
+        ],
+        [
+          202,
+          140,
+          75
+        ],
+        [
+          207,
+          149,
+          86
+        ],
+        [
+          211,
+          100,
+          34
+        ],
+        [
+          216,
+          153,
+          80
+        ],
+        [
+          221,
+          162,
+          93
+        ],
+        [
+          222,
+          197,
+          125
+        ],
+        [
+          227,
+          169,
+          96
+        ],
+        [
+          229,
+          174,
+          109
+        ],
+        [
+          233,
+          179,
+          114
+        ],
+        [
+          238,
+          135,
+          53
+        ],
+        [
+          239,
+          185,
+          108
+        ],
+        [
+          241,
+          195,
+          135
+        ],
+        [
+          243,
+          201,
+          145
+        ],
+        [
+          248,
+          208,
+          139
+        ],
+        [
+          248,
+          212,
+          161
+        ],
+        [
+          248,
+          225,
+          166
+        ],
+        [
+          251,
+          239,
+          202
+        ],
+        [
+          255,
+          172,
+          81
+        ]
+      ],
+      "shape": "circle",
+      "outer_diameter_px": 1040,
+      "inner_diameter_px": null,
+      "solid_face_diameter_px": 729,
+      "outline_px": 2,
+      "button_state": "pressed",
+      "source_path": "/workspace/scratch/e15630456ffa/generated_images/exec-2d9f1ddd-a037-49e0-b442-610e3c846ac5.png",
+      "pressed_inner_source_path": "/workspace/scratch/e15630456ffa/generated_images/exec-cd1415b9-84c0-4318-97bf-506e27ad85c3.png",
+      "source_transform": {
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_centre": [
+          626,
+          627.5
+        ],
+        "source_outer_radius": 510.5,
+        "target_centre": [
+          640,
+          640
+        ],
+        "target_radius": 520,
+        "sampling": "nearest-neighbour"
+      },
+      "pixel_centre_convention": "Pixel (x,y) occupies [x,x+1] \u00d7 [y,y+1]; its centre is (x+0.5,y+0.5).",
+      "orange_identity_rgb": [
+        [
+          154,
+          67,
+          23
+        ],
+        [
+          211,
+          100,
+          34
+        ],
+        [
+          238,
+          135,
+          53
+        ],
+        [
+          255,
+          172,
+          81
+        ]
+      ],
+      "orange_identity_mask": "/workspace/scratch/e15630456ffa/window_kit_work/close/orange_enamel_mask.png",
+      "carved_cross_mask": "/workspace/scratch/e15630456ffa/window_kit_work/close/carved_cross_mask.png",
+      "cross_bounding_box": [
+        407,
+        408,
+        861,
+        867
+      ],
+      "outer_rim_reused_from_normal": true,
+      "cross_drawing_reused_from_normal": true,
+      "filename": "close_button_pressed.png",
+      "outline_width_px": 2,
+      "shared_palette_path": "/workspace/scratch/e15630456ffa/window_kit_work/palette/palette.json",
+      "flat_fill_checks": [],
+      "colour_identity_rgb": [
+        [
+          154,
+          67,
+          23
+        ],
+        [
+          211,
+          100,
+          34
+        ],
+        [
+          238,
+          135,
+          53
+        ],
+        [
+          255,
+          172,
+          81
+        ]
+      ],
+      "normal_state": "close_button",
+      "preserve_regions": [
+        {
+          "name": "top rim",
+          "rect": [
+            120,
+            120,
+            1160,
+            250
+          ]
+        },
+        {
+          "name": "bottom rim",
+          "rect": [
+            120,
+            1040,
+            1160,
+            1160
+          ]
+        },
+        {
+          "name": "left rim",
+          "rect": [
+            120,
+            250,
+            250,
+            1040
+          ]
+        },
+        {
+          "name": "right rim",
+          "rect": [
+            1040,
+            250,
+            1160,
+            1040
+          ]
+        }
+      ],
+      "verified_full_mask_state_checks": {
+        "complete_outer_rim_pixel_identical": true,
+        "outer_rim_pixel_count": 391156,
+        "outer_rim_mask_sha256": "3401578e56d4d3ab88c723f27acd11d4f5973f4f61a2b72e2e2a4acc1a3be942",
+        "complete_carved_cross_pixel_identical": true,
+        "cross_pixel_count": 90136
+      }
+    },
+    "inset_panel": {
+      "centre": [
+        640,
+        640
+      ],
+      "outline_width_px": 2,
+      "source_art": "/workspace/scratch/e15630456ffa/generated_images/exec-bb3fa9ad-2e1f-4f8a-9d96-bead23072907.png",
+      "native_canvas": [
+        1280,
+        1280
+      ],
+      "source_normalization": {
+        "source_canvas": [
+          1983,
+          793
+        ],
+        "source_bbox": [
+          62,
+          87,
+          1919,
+          703
+        ],
+        "target_canvas": [
+          1280,
+          1280
+        ],
+        "target_bbox": [
+          80,
+          454,
+          1200,
+          826
+        ],
+        "scale_x": 0.6031233171782445,
+        "scale_y": 0.6038961038961039,
+        "raw": "exec-bb3fa9ad-2e1f-4f8a-9d96-bead23072907.png"
+      },
+      "slice_rect": [
+        80,
+        454,
+        1200,
+        826
+      ],
+      "corner_size_px": [
+        80,
+        80
+      ],
+      "cap_insets_px": [
+        80,
+        80,
+        80,
+        80
+      ],
+      "export_slices": true,
+      "content_rect": [
+        160,
+        510,
+        1120,
+        772
+      ],
+      "flat_regions": [
+        {
+          "name": "blank_rows_field",
+          "rect": [
+            160,
+            510,
+            1120,
+            772
+          ],
+          "light_rgb": [
+            221,
+            190,
+            140
+          ],
+          "dark_rgb": [
+            48,
+            31,
+            25
+          ]
+        }
+      ],
+      "tile_regions": [
+        {
+          "name": "top",
+          "rect": [
+            160,
+            454,
+            1120,
+            534
+          ],
+          "axis": "x",
+          "period_px": 1
+        },
+        {
+          "name": "bottom",
+          "rect": [
+            160,
+            746,
+            1120,
+            826
+          ],
+          "axis": "x",
+          "period_px": 1
+        },
+        {
+          "name": "left",
+          "rect": [
+            80,
+            534,
+            160,
+            746
+          ],
+          "axis": "y",
+          "period_px": 1
+        },
+        {
+          "name": "right",
+          "rect": [
+            1120,
+            534,
+            1200,
+            746
+          ],
+          "axis": "y",
+          "period_px": 1
+        }
+      ],
+      "native_pixels_per_point": 6,
+      "straight_rail_thickness_px": 32,
+      "row_dividers_are_separate": true,
+      "proof_sizes_px": [
+        [
+          1440,
+          560
+        ],
+        [
+          920,
+          720
+        ]
+      ],
+      "notes": "Repeat the separate row_divider at the desired row positions. Pane is one solid colour."
+    },
+    "row_divider": {
+      "centre": [
+        640,
+        640
+      ],
+      "outline_width_px": 2,
+      "source_art": "/workspace/scratch/e15630456ffa/generated_images/exec-de0f495a-c6b8-400f-a546-f99bd6bb9241.png",
+      "native_canvas": [
+        1280,
+        1280
+      ],
+      "source_normalization": {
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          91,
+          617,
+          1163,
+          637
+        ],
+        "target_canvas": [
+          1280,
+          1280
+        ],
+        "target_bbox": [
+          104,
+          630,
+          1176,
+          650
+        ],
+        "scale_x": 1.0,
+        "scale_y": 1.0,
+        "raw": "exec-de0f495a-c6b8-400f-a546-f99bd6bb9241.png"
+      },
+      "slice_rect": [
+        104,
+        630,
+        1176,
+        650
+      ],
+      "horizontal_cap_insets_px": [
+        20,
+        20
+      ],
+      "stretch_rect": [
+        124,
+        630,
+        1156,
+        650
+      ],
+      "tile_regions": [
+        {
+          "name": "plain_cut",
+          "rect": [
+            124,
+            630,
+            1156,
+            650
+          ],
+          "axis": "x",
+          "period_px": 1,
+          "matching_end_profiles": true
+        }
+      ],
+      "notes": "A separate recessed line: shadow at top, lit lip at foot. No baked row count."
+    },
+    "section_heading_ornament": {
+      "centre": [
+        640,
+        640
+      ],
+      "outline_width_px": 2,
+      "source_art": "/workspace/scratch/e15630456ffa/generated_images/exec-4f0bf1f8-94ac-42fd-9704-892b02575754.png",
+      "native_canvas": [
+        1280,
+        1280
+      ],
+      "source_normalization": {
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "source_bbox": [
+          27,
+          561,
+          1227,
+          698
+        ],
+        "target_canvas": [
+          1280,
+          1280
+        ],
+        "target_bbox": [
+          80,
+          576,
+          1200,
+          704
+        ],
+        "scale_x": 0.9333333333333333,
+        "scale_y": 0.9343065693430657,
+        "raw": "exec-4f0bf1f8-94ac-42fd-9704-892b02575754.png"
+      },
+      "slice_rect": [
+        80,
+        576,
+        1200,
+        704
+      ],
+      "horizontal_cap_insets_px": [
+        200,
+        30
+      ],
+      "stretch_rect": [
+        280,
+        576,
+        1170,
+        704
+      ],
+      "tile_regions": [
+        {
+          "name": "plain_rule",
+          "rect": [
+            280,
+            576,
+            1170,
+            704
+          ],
+          "axis": "x",
+          "period_px": 1,
+          "matching_end_profiles": true
+        }
+      ],
+      "notes": "Keep the left star and leaf curl whole; stretch only the plain rule."
+    },
+    "button_capsule": {
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        80,
+        460,
+        1200,
+        820
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "colour_count": 29,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "alpha_sha256": "6ee155f7370e4bbee2020cb3f054a3e14f302a33b33415c83ab7d1622522b129",
+      "opaque_rgb_sha256": "5fd2879423942baf7be39b02f4a5bacac689fc9aaba3b4681ead7bf682a10aa9",
+      "palette_rgb": [
+        [
+          61,
+          39,
+          10
+        ],
+        [
+          78,
+          44,
+          23
+        ],
+        [
+          89,
+          36,
+          6
+        ],
+        [
+          95,
+          95,
+          30
+        ],
+        [
+          112,
+          56,
+          12
+        ],
+        [
+          145,
+          128,
+          56
+        ],
+        [
+          146,
+          155,
+          68
+        ],
+        [
+          148,
+          87,
+          32
+        ],
+        [
+          166,
+          97,
+          33
+        ],
+        [
+          170,
+          109,
+          51
+        ],
+        [
+          182,
+          114,
+          45
+        ],
+        [
+          187,
+          183,
+          92
+        ],
+        [
+          195,
+          131,
+          62
+        ],
+        [
+          202,
+          140,
+          75
+        ],
+        [
+          207,
+          149,
+          86
+        ],
+        [
+          216,
+          153,
+          80
+        ],
+        [
+          221,
+          162,
+          93
+        ],
+        [
+          222,
+          197,
+          125
+        ],
+        [
+          227,
+          169,
+          96
+        ],
+        [
+          229,
+          174,
+          109
+        ],
+        [
+          233,
+          179,
+          114
+        ],
+        [
+          239,
+          185,
+          108
+        ],
+        [
+          241,
+          195,
+          135
+        ],
+        [
+          242,
+          226,
+          194
+        ],
+        [
+          243,
+          201,
+          145
+        ],
+        [
+          248,
+          208,
+          139
+        ],
+        [
+          248,
+          212,
+          161
+        ],
+        [
+          248,
+          225,
+          166
+        ],
+        [
+          251,
+          239,
+          202
+        ]
+      ],
+      "shape": "capsule",
+      "target_bounding_box": [
+        80,
+        460,
+        1200,
+        820
+      ],
+      "outline_px": 2,
+      "button_state": "normal",
+      "face_material": "parchment",
+      "flat_face_mask": "/workspace/scratch/e15630456ffa/window_kit_work/capsules/normal_face_mask.png",
+      "flat_face_bounding_box": [
+        235,
+        528,
+        1039,
+        771
+      ],
+      "text_safe_rect": [
+        400,
+        562,
+        880,
+        736
+      ],
+      "horizontal_stretch_rect": [
+        520,
+        460,
+        760,
+        820
+      ],
+      "source_path": "/workspace/scratch/e15630456ffa/generated_images/exec-bb25ea6f-bcc8-4b3e-ad75-d14825fdd2cb.png",
+      "pressed_inner_source_path": null,
+      "outer_rim_reused_from_normal": true,
+      "source_transform": {
+        "source_canvas": [
+          2172,
+          724
+        ],
+        "source_bbox": [
+          129,
+          113,
+          2041,
+          611
+        ],
+        "intermediate_size": [
+          1382,
+          360
+        ],
+        "fixed_end_width_px": 300,
+        "target_bbox": [
+          80,
+          460,
+          1200,
+          820
+        ],
+        "sampling": "nearest-neighbour",
+        "method": "isometric end pieces; undecorated centre shortened horizontally"
+      },
+      "filename": "button_capsule.png",
+      "outline_width_px": 2,
+      "shared_palette_path": "/workspace/scratch/e15630456ffa/window_kit_work/palette/palette.json",
+      "orange_identity_rgb": [
+        [
+          154,
+          67,
+          23
+        ],
+        [
+          211,
+          100,
+          34
+        ],
+        [
+          238,
+          135,
+          53
+        ],
+        [
+          255,
+          172,
+          81
+        ]
+      ],
+      "flat_fill_checks": [
+        {
+          "name": "empty button face",
+          "colour_name": "parchment",
+          "rgb": [
+            242,
+            226,
+            194
+          ],
+          "pixels": 182533,
+          "colour_count": 1,
+          "uniform": true,
+          "mask_bbox": [
+            235,
+            528,
+            1039,
+            771
+          ]
+        }
+      ],
+      "content_rect": [
+        400,
+        562,
+        880,
+        736
+      ],
+      "resize_mode": "horizontal_three_slice",
+      "slice_rect": [
+        80,
+        460,
+        1200,
+        820
+      ],
+      "horizontal_cap_insets_px": [
+        440,
+        440
+      ],
+      "stretch_rect": [
+        520,
+        460,
+        760,
+        820
+      ],
+      "flat_regions": [
+        {
+          "name": "empty capsule face",
+          "rect": [
+            400,
+            562,
+            880,
+            736
+          ],
+          "light_rgb": [
+            242,
+            226,
+            194
+          ],
+          "dark_rgb": [
+            62,
+            43,
+            35
+          ]
+        }
+      ]
+    },
+    "button_capsule_pressed": {
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        80,
+        460,
+        1200,
+        820
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "colour_count": 29,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "alpha_sha256": "6ee155f7370e4bbee2020cb3f054a3e14f302a33b33415c83ab7d1622522b129",
+      "opaque_rgb_sha256": "a5d6f6818911d4ce8b352fd911601f4c85b11ceefbc94801e7258d1b138d902e",
+      "palette_rgb": [
+        [
+          61,
+          39,
+          10
+        ],
+        [
+          78,
+          44,
+          23
+        ],
+        [
+          89,
+          36,
+          6
+        ],
+        [
+          95,
+          95,
+          30
+        ],
+        [
+          112,
+          56,
+          12
+        ],
+        [
+          145,
+          128,
+          56
+        ],
+        [
+          146,
+          155,
+          68
+        ],
+        [
+          148,
+          87,
+          32
+        ],
+        [
+          166,
+          97,
+          33
+        ],
+        [
+          170,
+          109,
+          51
+        ],
+        [
+          182,
+          114,
+          45
+        ],
+        [
+          187,
+          183,
+          92
+        ],
+        [
+          195,
+          131,
+          62
+        ],
+        [
+          202,
+          140,
+          75
+        ],
+        [
+          207,
+          149,
+          86
+        ],
+        [
+          216,
+          153,
+          80
+        ],
+        [
+          221,
+          162,
+          93
+        ],
+        [
+          222,
+          197,
+          125
+        ],
+        [
+          227,
+          169,
+          96
+        ],
+        [
+          229,
+          174,
+          109
+        ],
+        [
+          230,
+          211,
+          175
+        ],
+        [
+          233,
+          179,
+          114
+        ],
+        [
+          239,
+          185,
+          108
+        ],
+        [
+          241,
+          195,
+          135
+        ],
+        [
+          243,
+          201,
+          145
+        ],
+        [
+          248,
+          208,
+          139
+        ],
+        [
+          248,
+          212,
+          161
+        ],
+        [
+          248,
+          225,
+          166
+        ],
+        [
+          251,
+          239,
+          202
+        ]
+      ],
+      "shape": "capsule",
+      "target_bounding_box": [
+        80,
+        460,
+        1200,
+        820
+      ],
+      "outline_px": 2,
+      "button_state": "pressed",
+      "face_material": "parchment_dim",
+      "flat_face_mask": "/workspace/scratch/e15630456ffa/window_kit_work/capsules/pressed_face_mask.png",
+      "flat_face_bounding_box": [
+        253,
+        547,
+        1021,
+        768
+      ],
+      "text_safe_rect": [
+        410,
+        571,
+        870,
+        729
+      ],
+      "horizontal_stretch_rect": [
+        520,
+        460,
+        760,
+        820
+      ],
+      "source_path": "/workspace/scratch/e15630456ffa/generated_images/exec-bb25ea6f-bcc8-4b3e-ad75-d14825fdd2cb.png",
+      "pressed_inner_source_path": "/workspace/scratch/e15630456ffa/generated_images/exec-4788cc60-6dc1-4f19-bfa6-9746c86b5fd8.png",
+      "outer_rim_reused_from_normal": true,
+      "source_transform": {
+        "source_canvas": [
+          2172,
+          724
+        ],
+        "source_bbox": [
+          129,
+          113,
+          2041,
+          611
+        ],
+        "intermediate_size": [
+          1382,
+          360
+        ],
+        "fixed_end_width_px": 300,
+        "target_bbox": [
+          80,
+          460,
+          1200,
+          820
+        ],
+        "sampling": "nearest-neighbour",
+        "method": "isometric end pieces; undecorated centre shortened horizontally"
+      },
+      "filename": "button_capsule_pressed.png",
+      "outline_width_px": 2,
+      "shared_palette_path": "/workspace/scratch/e15630456ffa/window_kit_work/palette/palette.json",
+      "orange_identity_rgb": [
+        [
+          154,
+          67,
+          23
+        ],
+        [
+          211,
+          100,
+          34
+        ],
+        [
+          238,
+          135,
+          53
+        ],
+        [
+          255,
+          172,
+          81
+        ]
+      ],
+      "flat_fill_checks": [
+        {
+          "name": "empty button face",
+          "colour_name": "parchment_dim",
+          "rgb": [
+            230,
+            211,
+            175
+          ],
+          "pixels": 159254,
+          "colour_count": 1,
+          "uniform": true,
+          "mask_bbox": [
+            253,
+            547,
+            1021,
+            768
+          ]
+        }
+      ],
+      "content_rect": [
+        410,
+        571,
+        870,
+        729
+      ],
+      "resize_mode": "horizontal_three_slice",
+      "slice_rect": [
+        80,
+        460,
+        1200,
+        820
+      ],
+      "horizontal_cap_insets_px": [
+        440,
+        440
+      ],
+      "stretch_rect": [
+        520,
+        460,
+        760,
+        820
+      ],
+      "flat_regions": [
+        {
+          "name": "empty capsule face",
+          "rect": [
+            410,
+            571,
+            870,
+            729
+          ],
+          "light_rgb": [
+            230,
+            211,
+            175
+          ],
+          "dark_rgb": [
+            52,
+            35,
+            29
+          ]
+        }
+      ],
+      "normal_state": "button_capsule",
+      "preserve_regions": [
+        {
+          "name": "left carved end",
+          "rect": [
+            80,
+            460,
+            212,
+            820
+          ]
+        },
+        {
+          "name": "right carved end",
+          "rect": [
+            1060,
+            460,
+            1200,
+            820
+          ]
+        },
+        {
+          "name": "outer top rim",
+          "rect": [
+            220,
+            460,
+            1060,
+            500
+          ]
+        },
+        {
+          "name": "outer bottom rim",
+          "rect": [
+            220,
+            798,
+            1060,
+            820
+          ]
+        }
+      ],
+      "verified_full_mask_state_checks": {
+        "complete_outer_rim_pixel_identical": true,
+        "outer_rim_pixel_count": 153367,
+        "outer_rim_mask_sha256": "9ce31df42f12e7b7c60eada37b8af980a15b2719e195a2d2a2901f1cdc98bd3b"
+      }
+    },
+    "button_capsule_gold": {
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        80,
+        460,
+        1200,
+        820
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "colour_count": 29,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "alpha_sha256": "6ee155f7370e4bbee2020cb3f054a3e14f302a33b33415c83ab7d1622522b129",
+      "opaque_rgb_sha256": "58487131cd9d9e559ba66e714a1e7c7201f807556a2313fa26d8d28ced814d73",
+      "palette_rgb": [
+        [
+          61,
+          39,
+          10
+        ],
+        [
+          78,
+          44,
+          23
+        ],
+        [
+          89,
+          36,
+          6
+        ],
+        [
+          95,
+          95,
+          30
+        ],
+        [
+          112,
+          56,
+          12
+        ],
+        [
+          145,
+          128,
+          56
+        ],
+        [
+          146,
+          155,
+          68
+        ],
+        [
+          148,
+          87,
+          32
+        ],
+        [
+          166,
+          97,
+          33
+        ],
+        [
+          170,
+          109,
+          51
+        ],
+        [
+          182,
+          114,
+          45
+        ],
+        [
+          187,
+          183,
+          92
+        ],
+        [
+          195,
+          131,
+          62
+        ],
+        [
+          196,
+          145,
+          54
+        ],
+        [
+          202,
+          140,
+          75
+        ],
+        [
+          207,
+          149,
+          86
+        ],
+        [
+          216,
+          153,
+          80
+        ],
+        [
+          221,
+          162,
+          93
+        ],
+        [
+          222,
+          197,
+          125
+        ],
+        [
+          227,
+          169,
+          96
+        ],
+        [
+          229,
+          174,
+          109
+        ],
+        [
+          233,
+          179,
+          114
+        ],
+        [
+          239,
+          185,
+          108
+        ],
+        [
+          241,
+          195,
+          135
+        ],
+        [
+          243,
+          201,
+          145
+        ],
+        [
+          248,
+          208,
+          139
+        ],
+        [
+          248,
+          212,
+          161
+        ],
+        [
+          248,
+          225,
+          166
+        ],
+        [
+          251,
+          239,
+          202
+        ]
+      ],
+      "shape": "capsule",
+      "target_bounding_box": [
+        80,
+        460,
+        1200,
+        820
+      ],
+      "outline_px": 2,
+      "button_state": "normal",
+      "face_material": "gold_base",
+      "flat_face_mask": "/workspace/scratch/e15630456ffa/window_kit_work/capsules/normal_face_mask.png",
+      "flat_face_bounding_box": [
+        235,
+        528,
+        1039,
+        771
+      ],
+      "text_safe_rect": [
+        400,
+        562,
+        880,
+        736
+      ],
+      "horizontal_stretch_rect": [
+        520,
+        460,
+        760,
+        820
+      ],
+      "source_path": "/workspace/scratch/e15630456ffa/generated_images/exec-bb25ea6f-bcc8-4b3e-ad75-d14825fdd2cb.png",
+      "pressed_inner_source_path": null,
+      "outer_rim_reused_from_normal": true,
+      "source_transform": {
+        "source_canvas": [
+          2172,
+          724
+        ],
+        "source_bbox": [
+          129,
+          113,
+          2041,
+          611
+        ],
+        "intermediate_size": [
+          1382,
+          360
+        ],
+        "fixed_end_width_px": 300,
+        "target_bbox": [
+          80,
+          460,
+          1200,
+          820
+        ],
+        "sampling": "nearest-neighbour",
+        "method": "isometric end pieces; undecorated centre shortened horizontally"
+      },
+      "filename": "button_capsule_gold.png",
+      "outline_width_px": 2,
+      "shared_palette_path": "/workspace/scratch/e15630456ffa/window_kit_work/palette/palette.json",
+      "orange_identity_rgb": [
+        [
+          154,
+          67,
+          23
+        ],
+        [
+          211,
+          100,
+          34
+        ],
+        [
+          238,
+          135,
+          53
+        ],
+        [
+          255,
+          172,
+          81
+        ]
+      ],
+      "flat_fill_checks": [
+        {
+          "name": "empty button face",
+          "colour_name": "gold_base",
+          "rgb": [
+            196,
+            145,
+            54
+          ],
+          "pixels": 182533,
+          "colour_count": 1,
+          "uniform": true,
+          "mask_bbox": [
+            235,
+            528,
+            1039,
+            771
+          ]
+        }
+      ],
+      "content_rect": [
+        400,
+        562,
+        880,
+        736
+      ],
+      "resize_mode": "horizontal_three_slice",
+      "slice_rect": [
+        80,
+        460,
+        1200,
+        820
+      ],
+      "horizontal_cap_insets_px": [
+        440,
+        440
+      ],
+      "stretch_rect": [
+        520,
+        460,
+        760,
+        820
+      ],
+      "flat_regions": [
+        {
+          "name": "empty capsule face",
+          "rect": [
+            400,
+            562,
+            880,
+            736
+          ],
+          "light_rgb": [
+            196,
+            145,
+            54
+          ],
+          "dark_rgb": [
+            214,
+            166,
+            75
+          ]
+        }
+      ]
+    },
+    "button_capsule_gold_pressed": {
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        80,
+        460,
+        1200,
+        820
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "colour_count": 29,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "alpha_sha256": "6ee155f7370e4bbee2020cb3f054a3e14f302a33b33415c83ab7d1622522b129",
+      "opaque_rgb_sha256": "fcef9340ce5f7fc90b6fb18ee97551dae1a0c83c7c3e1544f754b985490440ec",
+      "palette_rgb": [
+        [
+          61,
+          39,
+          10
+        ],
+        [
+          78,
+          44,
+          23
+        ],
+        [
+          89,
+          36,
+          6
+        ],
+        [
+          95,
+          95,
+          30
+        ],
+        [
+          112,
+          56,
+          12
+        ],
+        [
+          145,
+          128,
+          56
+        ],
+        [
+          146,
+          155,
+          68
+        ],
+        [
+          148,
+          87,
+          32
+        ],
+        [
+          153,
+          106,
+          35
+        ],
+        [
+          166,
+          97,
+          33
+        ],
+        [
+          170,
+          109,
+          51
+        ],
+        [
+          182,
+          114,
+          45
+        ],
+        [
+          187,
+          183,
+          92
+        ],
+        [
+          195,
+          131,
+          62
+        ],
+        [
+          202,
+          140,
+          75
+        ],
+        [
+          207,
+          149,
+          86
+        ],
+        [
+          216,
+          153,
+          80
+        ],
+        [
+          221,
+          162,
+          93
+        ],
+        [
+          222,
+          197,
+          125
+        ],
+        [
+          227,
+          169,
+          96
+        ],
+        [
+          229,
+          174,
+          109
+        ],
+        [
+          233,
+          179,
+          114
+        ],
+        [
+          239,
+          185,
+          108
+        ],
+        [
+          241,
+          195,
+          135
+        ],
+        [
+          243,
+          201,
+          145
+        ],
+        [
+          248,
+          208,
+          139
+        ],
+        [
+          248,
+          212,
+          161
+        ],
+        [
+          248,
+          225,
+          166
+        ],
+        [
+          251,
+          239,
+          202
+        ]
+      ],
+      "shape": "capsule",
+      "target_bounding_box": [
+        80,
+        460,
+        1200,
+        820
+      ],
+      "outline_px": 2,
+      "button_state": "pressed",
+      "face_material": "gold_shadow",
+      "flat_face_mask": "/workspace/scratch/e15630456ffa/window_kit_work/capsules/pressed_face_mask.png",
+      "flat_face_bounding_box": [
+        253,
+        547,
+        1021,
+        768
+      ],
+      "text_safe_rect": [
+        410,
+        571,
+        870,
+        729
+      ],
+      "horizontal_stretch_rect": [
+        520,
+        460,
+        760,
+        820
+      ],
+      "source_path": "/workspace/scratch/e15630456ffa/generated_images/exec-bb25ea6f-bcc8-4b3e-ad75-d14825fdd2cb.png",
+      "pressed_inner_source_path": "/workspace/scratch/e15630456ffa/generated_images/exec-4788cc60-6dc1-4f19-bfa6-9746c86b5fd8.png",
+      "outer_rim_reused_from_normal": true,
+      "source_transform": {
+        "source_canvas": [
+          2172,
+          724
+        ],
+        "source_bbox": [
+          129,
+          113,
+          2041,
+          611
+        ],
+        "intermediate_size": [
+          1382,
+          360
+        ],
+        "fixed_end_width_px": 300,
+        "target_bbox": [
+          80,
+          460,
+          1200,
+          820
+        ],
+        "sampling": "nearest-neighbour",
+        "method": "isometric end pieces; undecorated centre shortened horizontally"
+      },
+      "filename": "button_capsule_gold_pressed.png",
+      "outline_width_px": 2,
+      "shared_palette_path": "/workspace/scratch/e15630456ffa/window_kit_work/palette/palette.json",
+      "orange_identity_rgb": [
+        [
+          154,
+          67,
+          23
+        ],
+        [
+          211,
+          100,
+          34
+        ],
+        [
+          238,
+          135,
+          53
+        ],
+        [
+          255,
+          172,
+          81
+        ]
+      ],
+      "flat_fill_checks": [
+        {
+          "name": "empty button face",
+          "colour_name": "gold_shadow",
+          "rgb": [
+            153,
+            106,
+            35
+          ],
+          "pixels": 159254,
+          "colour_count": 1,
+          "uniform": true,
+          "mask_bbox": [
+            253,
+            547,
+            1021,
+            768
+          ]
+        }
+      ],
+      "content_rect": [
+        410,
+        571,
+        870,
+        729
+      ],
+      "resize_mode": "horizontal_three_slice",
+      "slice_rect": [
+        80,
+        460,
+        1200,
+        820
+      ],
+      "horizontal_cap_insets_px": [
+        440,
+        440
+      ],
+      "stretch_rect": [
+        520,
+        460,
+        760,
+        820
+      ],
+      "flat_regions": [
+        {
+          "name": "empty capsule face",
+          "rect": [
+            410,
+            571,
+            870,
+            729
+          ],
+          "light_rgb": [
+            153,
+            106,
+            35
+          ],
+          "dark_rgb": [
+            173,
+            126,
+            52
+          ]
+        }
+      ],
+      "normal_state": "button_capsule_gold",
+      "preserve_regions": [
+        {
+          "name": "left carved end",
+          "rect": [
+            80,
+            460,
+            212,
+            820
+          ]
+        },
+        {
+          "name": "right carved end",
+          "rect": [
+            1060,
+            460,
+            1200,
+            820
+          ]
+        },
+        {
+          "name": "outer top rim",
+          "rect": [
+            220,
+            460,
+            1060,
+            500
+          ]
+        },
+        {
+          "name": "outer bottom rim",
+          "rect": [
+            220,
+            798,
+            1060,
+            820
+          ]
+        }
+      ]
+    },
+    "speech_window": {
+      "centre": [
+        640,
+        640
+      ],
+      "outline_width_px": 2,
+      "resize_mode": "horizontal_three_slice",
+      "horizontal_cap_insets_px": [
+        216,
+        124
+      ],
+      "stretch_rect": [
+        280,
+        448,
+        1092,
+        832
+      ],
+      "tile_regions": [
+        {
+          "name": "plain horizontal speech middle",
+          "rect": [
+            280,
+            448,
+            1092,
+            832
+          ],
+          "axis": "x",
+          "period_px": 1,
+          "matching_end_profiles": true
+        }
+      ],
+      "content_rect": [
+        290,
+        474,
+        942,
+        806
+      ],
+      "speaker_overlay_zone": [
+        990,
+        448,
+        1216,
+        832
+      ],
+      "right_end_plain": true,
+      "straight_frame_width_px": 9,
+      "recommended_width_points": 690,
+      "straight_frame_at_recommended_width_points": 5.390625,
+      "flat_regions": [
+        {
+          "name": "speech text",
+          "rect": [
+            290,
+            474,
+            1058,
+            806
+          ],
+          "light_rgb": [
+            242,
+            226,
+            194
+          ],
+          "dark_rgb": [
+            62,
+            43,
+            35
+          ]
+        }
+      ],
+      "separate_name_plaque": "speech_name_plaque.png",
+      "separate_next_arrow": "speech_next_arrow.png",
+      "plain_rim_wood_palette_only": true,
+      "protected_carved_inlay_rect": [
+        64,
+        448,
+        280,
+        832
+      ],
+      "plain_rim_palette_refinement": "Only plain wood uses wood entries; carved left inlays remain unchanged.",
+      "bounding_box": [
+        64,
+        448,
+        1216,
+        832
+      ],
+      "source": {
+        "raw_source": "/workspace/scratch/e15630456ffa/generated_images/exec-0403da25-e91b-4937-bd35-605a7b3d5122.png",
+        "raw_source_bbox": [
+          90,
+          114,
+          2081,
+          610
+        ]
+      },
+      "pane_mask_path": "/workspace/scratch/e15630456ffa/window_kit_work/speech_export/speech_window_pane_mask.png"
+    },
+    "speech_name_plaque": {
+      "centre": [
+        640,
+        640
+      ],
+      "outline_width_px": 2,
+      "resize_mode": "horizontal_three_slice",
+      "horizontal_cap_insets_px": [
+        108,
+        108
+      ],
+      "stretch_rect": [
+        398,
+        552,
+        882,
+        728
+      ],
+      "tile_regions": [
+        {
+          "name": "plain horizontal name middle",
+          "rect": [
+            398,
+            552,
+            882,
+            728
+          ],
+          "axis": "x",
+          "period_px": 1,
+          "matching_end_profiles": true
+        }
+      ],
+      "content_rect": [
+        410,
+        580,
+        905,
+        701
+      ],
+      "flat_regions": [
+        {
+          "name": "speaker name",
+          "rect": [
+            410,
+            580,
+            905,
+            701
+          ],
+          "light_rgb": [
+            242,
+            226,
+            194
+          ],
+          "dark_rgb": [
+            62,
+            43,
+            35
+          ]
+        }
+      ],
+      "attachment": "overlap speech window top-left edge",
+      "bounding_box": [
+        290,
+        552,
+        990,
+        728
+      ],
+      "source": {
+        "raw_source": "/workspace/scratch/e15630456ffa/generated_images/exec-6995befa-f6e8-48af-a987-a2858a461afd.png",
+        "raw_source_bbox": [
+          140,
+          148,
+          2027,
+          573
+        ]
+      },
+      "pane_mask_path": "/workspace/scratch/e15630456ffa/window_kit_work/speech_export/speech_name_plaque_pane_mask.png"
+    },
+    "speech_next_arrow": {
+      "centre": [
+        640,
+        640
+      ],
+      "outline_width_px": 2,
+      "resize_mode": "uniform_scale_only",
+      "direction": "right",
+      "symbol": "single carved triangular next arrow",
+      "recommended_height_points": 16,
+      "bounding_box": [
+        540,
+        520,
+        740,
+        759
+      ],
+      "source": {
+        "raw_source": "/workspace/scratch/e15630456ffa/generated_images/exec-937c6b42-cf06-46d7-af15-f6a062cb6f60.png",
+        "raw_source_bbox": [
+          455,
+          446,
+          787,
+          843
+        ]
+      },
+      "pane_mask_path": null
+    },
+    "chat_bubble": {
+      "centre": [
+        640,
+        640
+      ],
+      "outline_width_px": 2,
+      "resize_mode": "horizontal_three_slice",
+      "horizontal_cap_insets_px": [
+        160,
+        132
+      ],
+      "stretch_rect": [
+        300,
+        471,
+        1008,
+        808
+      ],
+      "tile_regions": [
+        {
+          "name": "plain horizontal chat middle",
+          "rect": [
+            300,
+            471,
+            1008,
+            808
+          ],
+          "axis": "x",
+          "period_px": 1,
+          "matching_end_profiles": true
+        }
+      ],
+      "content_rect": [
+        300,
+        506,
+        1000,
+        722
+      ],
+      "flat_regions": [
+        {
+          "name": "chat text",
+          "rect": [
+            300,
+            506,
+            1000,
+            722
+          ],
+          "light_rgb": [
+            242,
+            226,
+            194
+          ],
+          "dark_rgb": [
+            62,
+            43,
+            35
+          ]
+        }
+      ],
+      "tail": "short lower-left; included in fixed left cap",
+      "tail_fixed_cap_rect": [
+        140,
+        471,
+        300,
+        808
+      ],
+      "recommended_width_points": 240,
+      "straight_frame_width_px_approx": 22,
+      "straight_frame_at_recommended_width_points_approx": 5.28,
+      "plain_rim_wood_palette_only": true,
+      "protected_carved_inlay_rect": [
+        140,
+        471,
+        300,
+        580
+      ],
+      "plain_rim_palette_refinement": "Only plain wood uses wood entries; carved left inlays remain unchanged.",
+      "bounding_box": [
+        140,
+        471,
+        1140,
+        808
+      ],
+      "source": {
+        "raw_source": "/workspace/scratch/e15630456ffa/generated_images/exec-dce7acb8-587f-474d-8460-33bba083183f.png",
+        "raw_source_bbox": [
+          45,
+          456,
+          1209,
+          848
+        ]
+      },
+      "pane_mask_path": "/workspace/scratch/e15630456ffa/window_kit_work/speech_export/chat_bubble_pane_mask.png"
+    }
+  }
+}

@@ -18,7 +18,14 @@ the real HUD (the artifact https://claude.ai/artifact/BbEWKRiYCnw6yJi5iCTtyK; it
    plates' stretch rectangles and cap insets, the bar grooves' and name strip's rectangles, the level
    socket, and every light-to-dark colour mapping). Checked: every dark twin has its light piece's alpha
    pixel for pixel and one dark colour per light one, 31 to 48% darker. `kit_contact_sheet.png`.
-3. `3_windows_tabs_speech_A.txt`: windows, tabs, close button, rows, speech window, chat bubble.
+3. `3_windows_tabs_speech_A.txt`: the windows. **Done**, picked: `art-variants/hud/windows/` (17 pieces and
+   their 17 `_dark` twins: window frame, title bar, open tab, closed-tab divider, close button and pressed,
+   inset panel, row divider, section rule, capsule buttons plain and gold with pressed, speech window,
+   name plaque, next arrow, chat bubble; `slices/` the frame's, tab's, bar's and panel's cut pieces;
+   `geometry.json` every piece's slice and content rectangles, cap insets and the scale: **9 source pixels
+   a point**, the frame's rails 5.7 points, its corners 21; edge motifs tile whole, 216 px along, 152 down,
+   leftovers spread as one-pixel neutral columns). Checked: every dark twin has its light one's alpha
+   and one dark colour per light one. `windows_contact_sheet.png`.
 4. `4_buttons_A.txt`: the buttons' pictures.
 
 `follow_ups_if_it_drifts.txt` has the nudges.
@@ -50,6 +57,16 @@ joystick 142 and knob 58; names and figures in Allo Dorlune, the face and map fr
   goes inside the bar ("HP 60/60").
 - Dark: dark wood under cream lettering and the same bars; heavier on a bright day's world, as the dark
   glass is today.
+
+## The windows at game size (`windows_in_game_light_dark.png`)
+
+Quests with its tabs and NPC speech, light and dark, over the kit's HUD (assembled as `README.txt` says).
+- The frame, title bar, folder tab, chips (the capsule three-sliced), sunk rows and close button read
+  as one with the HUD; cream text on the dark pane, ink on the parchment.
+- **The speech plate is drawn too short:** at 9 pixels a point it's 43 points tall, the speech window
+  150. Scaled up, its left cap's moon grows to 90 points. Use the window frame for the speech window
+  (one window for everything, as today), with the name plaque, arrow and speaker over it: the bottom row
+  of the check image. `speech_window.png` is then unused.
 
 ## Still to do
 

@@ -1,0 +1,1060 @@
+{
+  "light": {
+    "canvas": [
+      1280,
+      1280
+    ],
+    "bounding_box": [
+      16,
+      220,
+      1264,
+      1060
+    ],
+    "centre": [
+      640,
+      640
+    ],
+    "colour_count": 29,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "alpha_sha256": "ae2279921e23ac7e03c1575ae6f1aa675e521d7a11e9abc778155d93a9c3bc7d",
+    "opaque_rgb_sha256": "dda840eed28dcf01c77dc80098a48c9f8f0aaa243382d0cff4833b00ae9acee7",
+    "palette_rgb": [
+      [
+        61,
+        39,
+        10
+      ],
+      [
+        78,
+        44,
+        23
+      ],
+      [
+        89,
+        36,
+        6
+      ],
+      [
+        95,
+        95,
+        30
+      ],
+      [
+        112,
+        56,
+        12
+      ],
+      [
+        145,
+        128,
+        56
+      ],
+      [
+        146,
+        155,
+        68
+      ],
+      [
+        148,
+        87,
+        32
+      ],
+      [
+        166,
+        97,
+        33
+      ],
+      [
+        170,
+        109,
+        51
+      ],
+      [
+        182,
+        114,
+        45
+      ],
+      [
+        187,
+        183,
+        92
+      ],
+      [
+        195,
+        131,
+        62
+      ],
+      [
+        202,
+        140,
+        75
+      ],
+      [
+        207,
+        149,
+        86
+      ],
+      [
+        216,
+        153,
+        80
+      ],
+      [
+        221,
+        162,
+        93
+      ],
+      [
+        222,
+        197,
+        125
+      ],
+      [
+        227,
+        169,
+        96
+      ],
+      [
+        229,
+        174,
+        109
+      ],
+      [
+        233,
+        179,
+        114
+      ],
+      [
+        239,
+        185,
+        108
+      ],
+      [
+        241,
+        195,
+        135
+      ],
+      [
+        242,
+        226,
+        194
+      ],
+      [
+        243,
+        201,
+        145
+      ],
+      [
+        248,
+        208,
+        139
+      ],
+      [
+        248,
+        212,
+        161
+      ],
+      [
+        248,
+        225,
+        166
+      ],
+      [
+        251,
+        239,
+        202
+      ]
+    ],
+    "filename": "window_frame.png",
+    "outline_width_px": 2,
+    "shared_palette_path": "/workspace/scratch/e15630456ffa/window_kit_work/palette/palette.json",
+    "orange_identity_rgb": [
+      [
+        154,
+        67,
+        23
+      ],
+      [
+        211,
+        100,
+        34
+      ],
+      [
+        238,
+        135,
+        53
+      ],
+      [
+        255,
+        172,
+        81
+      ]
+    ],
+    "flat_fill_checks": [
+      {
+        "name": "Complete parchment pane including curved corners",
+        "colour_name": "parchment",
+        "rgb": [
+          242,
+          226,
+          194
+        ],
+        "pixels": 748141,
+        "colour_count": 1,
+        "uniform": true,
+        "mask_bbox": [
+          88,
+          298,
+          1192,
+          991
+        ]
+      }
+    ]
+  },
+  "dark": {
+    "canvas": [
+      1280,
+      1280
+    ],
+    "bounding_box": [
+      16,
+      220,
+      1264,
+      1060
+    ],
+    "centre": [
+      640,
+      640
+    ],
+    "colour_count": 29,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "alpha_sha256": "ae2279921e23ac7e03c1575ae6f1aa675e521d7a11e9abc778155d93a9c3bc7d",
+    "opaque_rgb_sha256": "13e6ba01c9ba48146dc69112b74c9e469fa8c31d391c556d610983b4bddca783",
+    "palette_rgb": [
+      [
+        39,
+        24,
+        19
+      ],
+      [
+        42,
+        25,
+        20
+      ],
+      [
+        44,
+        27,
+        22
+      ],
+      [
+        53,
+        33,
+        25
+      ],
+      [
+        62,
+        43,
+        35
+      ],
+      [
+        74,
+        47,
+        35
+      ],
+      [
+        81,
+        52,
+        39
+      ],
+      [
+        87,
+        58,
+        44
+      ],
+      [
+        90,
+        60,
+        46
+      ],
+      [
+        101,
+        69,
+        53
+      ],
+      [
+        106,
+        109,
+        41
+      ],
+      [
+        107,
+        75,
+        57
+      ],
+      [
+        113,
+        80,
+        61
+      ],
+      [
+        116,
+        83,
+        63
+      ],
+      [
+        121,
+        88,
+        67
+      ],
+      [
+        126,
+        93,
+        71
+      ],
+      [
+        129,
+        96,
+        74
+      ],
+      [
+        133,
+        100,
+        76
+      ],
+      [
+        136,
+        103,
+        79
+      ],
+      [
+        143,
+        111,
+        85
+      ],
+      [
+        147,
+        115,
+        88
+      ],
+      [
+        152,
+        119,
+        91
+      ],
+      [
+        155,
+        123,
+        95
+      ],
+      [
+        160,
+        174,
+        85
+      ],
+      [
+        163,
+        132,
+        101
+      ],
+      [
+        163,
+        150,
+        72
+      ],
+      [
+        176,
+        145,
+        110
+      ],
+      [
+        208,
+        208,
+        112
+      ],
+      [
+        240,
+        216,
+        145
+      ]
+    ],
+    "filename": "window_frame_dark.png",
+    "alpha_identical_to_light": true,
+    "colour_map_injective": true,
+    "colour_region_boundaries_preserved": true,
+    "orange_identity_rgb": [
+      [
+        154,
+        67,
+        23
+      ],
+      [
+        211,
+        100,
+        34
+      ],
+      [
+        238,
+        135,
+        53
+      ],
+      [
+        255,
+        172,
+        81
+      ]
+    ],
+    "palette_mapping_used": [
+      {
+        "light": [
+          61,
+          39,
+          10
+        ],
+        "dark": [
+          39,
+          24,
+          19
+        ]
+      },
+      {
+        "light": [
+          78,
+          44,
+          23
+        ],
+        "dark": [
+          44,
+          27,
+          22
+        ]
+      },
+      {
+        "light": [
+          89,
+          36,
+          6
+        ],
+        "dark": [
+          42,
+          25,
+          20
+        ]
+      },
+      {
+        "light": [
+          95,
+          95,
+          30
+        ],
+        "dark": [
+          106,
+          109,
+          41
+        ]
+      },
+      {
+        "light": [
+          112,
+          56,
+          12
+        ],
+        "dark": [
+          53,
+          33,
+          25
+        ]
+      },
+      {
+        "light": [
+          145,
+          128,
+          56
+        ],
+        "dark": [
+          163,
+          150,
+          72
+        ]
+      },
+      {
+        "light": [
+          146,
+          155,
+          68
+        ],
+        "dark": [
+          160,
+          174,
+          85
+        ]
+      },
+      {
+        "light": [
+          148,
+          87,
+          32
+        ],
+        "dark": [
+          74,
+          47,
+          35
+        ]
+      },
+      {
+        "light": [
+          166,
+          97,
+          33
+        ],
+        "dark": [
+          81,
+          52,
+          39
+        ]
+      },
+      {
+        "light": [
+          170,
+          109,
+          51
+        ],
+        "dark": [
+          87,
+          58,
+          44
+        ]
+      },
+      {
+        "light": [
+          182,
+          114,
+          45
+        ],
+        "dark": [
+          90,
+          60,
+          46
+        ]
+      },
+      {
+        "light": [
+          187,
+          183,
+          92
+        ],
+        "dark": [
+          208,
+          208,
+          112
+        ]
+      },
+      {
+        "light": [
+          195,
+          131,
+          62
+        ],
+        "dark": [
+          101,
+          69,
+          53
+        ]
+      },
+      {
+        "light": [
+          202,
+          140,
+          75
+        ],
+        "dark": [
+          107,
+          75,
+          57
+        ]
+      },
+      {
+        "light": [
+          207,
+          149,
+          86
+        ],
+        "dark": [
+          113,
+          80,
+          61
+        ]
+      },
+      {
+        "light": [
+          216,
+          153,
+          80
+        ],
+        "dark": [
+          116,
+          83,
+          63
+        ]
+      },
+      {
+        "light": [
+          221,
+          162,
+          93
+        ],
+        "dark": [
+          121,
+          88,
+          67
+        ]
+      },
+      {
+        "light": [
+          222,
+          197,
+          125
+        ],
+        "dark": [
+          240,
+          216,
+          145
+        ]
+      },
+      {
+        "light": [
+          227,
+          169,
+          96
+        ],
+        "dark": [
+          126,
+          93,
+          71
+        ]
+      },
+      {
+        "light": [
+          229,
+          174,
+          109
+        ],
+        "dark": [
+          129,
+          96,
+          74
+        ]
+      },
+      {
+        "light": [
+          233,
+          179,
+          114
+        ],
+        "dark": [
+          133,
+          100,
+          76
+        ]
+      },
+      {
+        "light": [
+          239,
+          185,
+          108
+        ],
+        "dark": [
+          136,
+          103,
+          79
+        ]
+      },
+      {
+        "light": [
+          241,
+          195,
+          135
+        ],
+        "dark": [
+          143,
+          111,
+          85
+        ]
+      },
+      {
+        "light": [
+          242,
+          226,
+          194
+        ],
+        "dark": [
+          62,
+          43,
+          35
+        ]
+      },
+      {
+        "light": [
+          243,
+          201,
+          145
+        ],
+        "dark": [
+          147,
+          115,
+          88
+        ]
+      },
+      {
+        "light": [
+          248,
+          208,
+          139
+        ],
+        "dark": [
+          152,
+          119,
+          91
+        ]
+      },
+      {
+        "light": [
+          248,
+          212,
+          161
+        ],
+        "dark": [
+          155,
+          123,
+          95
+        ]
+      },
+      {
+        "light": [
+          248,
+          225,
+          166
+        ],
+        "dark": [
+          163,
+          132,
+          101
+        ]
+      },
+      {
+        "light": [
+          251,
+          239,
+          202
+        ],
+        "dark": [
+          176,
+          145,
+          110
+        ]
+      }
+    ]
+  },
+  "source_canvas": [
+    1254,
+    1254
+  ],
+  "original_corners_preserved_except_neutral_join_profiles": true,
+  "light_seam_checks": {
+    "top_tile_identical_8px_end_profiles": true,
+    "bottom_tile_identical_8px_end_profiles": true,
+    "left_tile_identical_8px_end_profiles": true,
+    "right_tile_identical_8px_end_profiles": true,
+    "top_left_horizontal_corner_join": true,
+    "bottom_left_horizontal_corner_join": true,
+    "top_right_horizontal_corner_join": true,
+    "bottom_right_horizontal_corner_join": true,
+    "top_left_vertical_corner_join": true,
+    "top_right_vertical_corner_join": true,
+    "bottom_left_vertical_corner_join": true,
+    "bottom_right_vertical_corner_join": true,
+    "top_tile_full_strip_periodic": true,
+    "bottom_tile_full_strip_periodic": true,
+    "left_tile_full_strip_periodic": true,
+    "right_tile_full_strip_periodic": true
+  },
+  "dark_seam_checks": {
+    "top_tile_identical_8px_end_profiles": true,
+    "bottom_tile_identical_8px_end_profiles": true,
+    "left_tile_identical_8px_end_profiles": true,
+    "right_tile_identical_8px_end_profiles": true,
+    "top_left_horizontal_corner_join": true,
+    "bottom_left_horizontal_corner_join": true,
+    "top_right_horizontal_corner_join": true,
+    "bottom_right_horizontal_corner_join": true,
+    "top_left_vertical_corner_join": true,
+    "top_right_vertical_corner_join": true,
+    "bottom_left_vertical_corner_join": true,
+    "bottom_right_vertical_corner_join": true,
+    "top_tile_full_strip_periodic": true,
+    "bottom_tile_full_strip_periodic": true,
+    "left_tile_full_strip_periodic": true,
+    "right_tile_full_strip_periodic": true
+  },
+  "canonical_tile_exports": [
+    {
+      "filename": "slices/window_frame/top_left.png",
+      "canvas": [
+        192,
+        192
+      ]
+    },
+    {
+      "filename": "slices/window_frame/top_right.png",
+      "canvas": [
+        192,
+        192
+      ]
+    },
+    {
+      "filename": "slices/window_frame/bottom_left.png",
+      "canvas": [
+        192,
+        192
+      ]
+    },
+    {
+      "filename": "slices/window_frame/bottom_right.png",
+      "canvas": [
+        192,
+        192
+      ]
+    },
+    {
+      "filename": "slices/window_frame/top_tile.png",
+      "canvas": [
+        216,
+        192
+      ]
+    },
+    {
+      "filename": "slices/window_frame/bottom_tile.png",
+      "canvas": [
+        216,
+        192
+      ]
+    },
+    {
+      "filename": "slices/window_frame/left_tile.png",
+      "canvas": [
+        192,
+        152
+      ]
+    },
+    {
+      "filename": "slices/window_frame/right_tile.png",
+      "canvas": [
+        192,
+        152
+      ]
+    },
+    {
+      "filename": "slices/window_frame/top_neutral_profile.png",
+      "canvas": [
+        1,
+        192
+      ]
+    },
+    {
+      "filename": "slices/window_frame/bottom_neutral_profile.png",
+      "canvas": [
+        1,
+        192
+      ]
+    },
+    {
+      "filename": "slices/window_frame/left_neutral_profile.png",
+      "canvas": [
+        192,
+        1
+      ]
+    },
+    {
+      "filename": "slices/window_frame/right_neutral_profile.png",
+      "canvas": [
+        192,
+        1
+      ]
+    },
+    {
+      "filename": "slices/window_frame_dark/top_left.png",
+      "canvas": [
+        192,
+        192
+      ]
+    },
+    {
+      "filename": "slices/window_frame_dark/top_right.png",
+      "canvas": [
+        192,
+        192
+      ]
+    },
+    {
+      "filename": "slices/window_frame_dark/bottom_left.png",
+      "canvas": [
+        192,
+        192
+      ]
+    },
+    {
+      "filename": "slices/window_frame_dark/bottom_right.png",
+      "canvas": [
+        192,
+        192
+      ]
+    },
+    {
+      "filename": "slices/window_frame_dark/top_tile.png",
+      "canvas": [
+        216,
+        192
+      ]
+    },
+    {
+      "filename": "slices/window_frame_dark/bottom_tile.png",
+      "canvas": [
+        216,
+        192
+      ]
+    },
+    {
+      "filename": "slices/window_frame_dark/left_tile.png",
+      "canvas": [
+        192,
+        152
+      ]
+    },
+    {
+      "filename": "slices/window_frame_dark/right_tile.png",
+      "canvas": [
+        192,
+        152
+      ]
+    },
+    {
+      "filename": "slices/window_frame_dark/top_neutral_profile.png",
+      "canvas": [
+        1,
+        192
+      ]
+    },
+    {
+      "filename": "slices/window_frame_dark/bottom_neutral_profile.png",
+      "canvas": [
+        1,
+        192
+      ]
+    },
+    {
+      "filename": "slices/window_frame_dark/left_neutral_profile.png",
+      "canvas": [
+        192,
+        1
+      ]
+    },
+    {
+      "filename": "slices/window_frame_dark/right_neutral_profile.png",
+      "canvas": [
+        192,
+        1
+      ]
+    }
+  ],
+  "assembly_proofs": [
+    {
+      "filename": "assembly_proofs/window_frame_1032x688_whole_tiles.png",
+      "canvas": [
+        1032,
+        688
+      ],
+      "four_corners_pixel_exact": true,
+      "eight_corner_edge_seams_exact": true,
+      "whole_motifs": true,
+      "neutral_remainder_px": [
+        0,
+        0
+      ]
+    },
+    {
+      "filename": "assembly_proofs/window_frame_1680x992_whole_tiles.png",
+      "canvas": [
+        1680,
+        992
+      ],
+      "four_corners_pixel_exact": true,
+      "eight_corner_edge_seams_exact": true,
+      "whole_motifs": true,
+      "neutral_remainder_px": [
+        0,
+        0
+      ]
+    },
+    {
+      "filename": "assembly_proofs/window_frame_1441x847_whole_tiles.png",
+      "canvas": [
+        1441,
+        847
+      ],
+      "four_corners_pixel_exact": true,
+      "eight_corner_edge_seams_exact": true,
+      "whole_motifs": true,
+      "neutral_remainder_px": [
+        193,
+        7
+      ]
+    },
+    {
+      "filename": "assembly_proofs/window_frame_dark_1032x688_whole_tiles.png",
+      "canvas": [
+        1032,
+        688
+      ],
+      "four_corners_pixel_exact": true,
+      "eight_corner_edge_seams_exact": true,
+      "whole_motifs": true,
+      "neutral_remainder_px": [
+        0,
+        0
+      ]
+    },
+    {
+      "filename": "assembly_proofs/window_frame_dark_1680x992_whole_tiles.png",
+      "canvas": [
+        1680,
+        992
+      ],
+      "four_corners_pixel_exact": true,
+      "eight_corner_edge_seams_exact": true,
+      "whole_motifs": true,
+      "neutral_remainder_px": [
+        0,
+        0
+      ]
+    },
+    {
+      "filename": "assembly_proofs/window_frame_dark_1441x847_whole_tiles.png",
+      "canvas": [
+        1441,
+        847
+      ],
+      "four_corners_pixel_exact": true,
+      "eight_corner_edge_seams_exact": true,
+      "whole_motifs": true,
+      "neutral_remainder_px": [
+        193,
+        7
+      ]
+    }
+  ]
+}
