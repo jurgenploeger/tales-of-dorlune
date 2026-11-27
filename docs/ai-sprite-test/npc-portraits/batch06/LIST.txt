@@ -1,0 +1,10 @@
+1. `portrait_nella_the_tailor`: Nella the Tailor. gives quests, in Larkspur. Says: "Mind the thread! Larkspur's finest tailor, at your service." Quests: The Wandering Flock, The Howlmaster, Soft as a Cloud.
+2. `portrait_ferrywoman_brigid`: Ferrywoman Brigid. gives quests, in Swan Lake. Says: "Mind the gap between the boat and the jetty. And the frogs. Mostly the frogs." Quests: Frogs in the Ferry.
+3. `portrait_lacemaker_linnet`: Lacemaker Linnet. gives quests, in Swan Lake. Says: "Swan Lake lace is the finest anywhere. I learned the pattern from the swans themselves." Quests: Wisp-Light Thread, A Veil for Odette.
+4. `portrait_thumbelina`: Thumbelina. gives quests, in Lotus Land. Says: "Oh! Hello, giant. Please mind the lily pads, one of them is my house." Quests: A Little Kindness.
+5. `portrait_mayor_pipkin`: Mayor Pipkin. gives quests, in Lotus Land. Says: "Welcome to Lilypad Landing! Mind your feet. We're smaller than we look. Well, we look small too." Quests: Slugs on the Lily Pads, The Lantern Float.
+6. `portrait_dew_gatherer_sorrel`: Dew-Gatherer Sorrel. gives quests, in Lotus Land. Says: "Every morning I gather the dew from the lotus petals, before the sprites drink it all." Quests: Sprites in the Dew.
+7. `portrait_hermit_orrin`: Hermit Orrin. gives quests, in Marionette Rise. Says: "The puppets on the hill used to dance for children. Now they don't stop." Quests: A Place to Belong, The Marionette King.
+8. `portrait_puppeteer_gianna`: Puppeteer Gianna. gives quests, in Marionette Rise. Says: "Every puppet on this hill was carved in Stringwood. Some of them just forgot to come home." Quests: Cut Strings, The Midsummer Show.
+9. `portrait_toymender_otto`: Toymender Otto. gives quests, in Marionette Rise. Says: "Bring me a broken toy and I'll mend it. Bring me a broken puppet and I'll mend it twice." Quests: Beetles in the Workshop.
+10. `portrait_ambrose_the_wise`: Ambrose the Wise. gives quests, in Ingothold Lake. Says: "The goddess Liora hid her treasure where only the patient look." Quests: Mystery of the Dreamstone, Treasures of Goddess Liora, Ore of Sneezle Sands.

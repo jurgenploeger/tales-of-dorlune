@@ -1,0 +1,5 @@
+1. `portrait_poppy_farmer_dell`: Poppy-Farmer Dell. gives quests, in Emerald Road. Says: "Mind the poppies. They make you sleepy. I've been yawning since I was four." Quests: Pegasi in the Poppies, The Waystone Among the Poppies.
+2. `portrait_mother_lumen`: Mother Lumen. gives quests, in Starfall Isle. Says: "Welcome to Glimmerbough, traveller. Mind your head: our doors are small, but our welcome isn't." Quests: The Lanterns of Glimmerbough, The Sleeping Moonflowers, The Fallen Star, Lanterns That Never Go Out.
+3. `portrait_dewdrop`: Dewdrop. healer (heals your party), in Starfall Isle. Says: "Rest a while under the leaves, dear. Starlight mends whatever it touches."
+4. `portrait_thistle`: Thistle. shopkeeper, in Starfall Isle. Says: "Potions, seals and feathers! Everything a traveller far from home could need."
+5. `portrait_pip_the_lamplighter`: Pip the Lamplighter. gives quests, in Starfall Isle. Says: "Psst, down here! I'm Pip. I light Glimmerbough's lanterns, when the moths leave me any light." Quests: The Crystal Garden, A Lantern for the Stargazer, Into the Glimmerdeep, A Map of the Deep.

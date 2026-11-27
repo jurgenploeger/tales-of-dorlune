@@ -1,0 +1,2 @@
+1. `portrait_elder`: Elder Oak, Old Swan Keeper. gives quests, in Meadowbrook, Swan Lake. (One look shared by all of them: draw one portrait that suits them all.) Says: "Ah, a new face! Meadowbrook could use a helping hand." Quests: Hope of Meadowbrook, Jelly Trouble, A New Friend, Wish Upon a Star.
+2. `portrait_mother_sheep`: Mother Sheep. gives quests, in Sunny Meadow. Says: "Baa! Oh, a kind face at last." Quests: Lost Little Lambs, Wool for the Lambs.
