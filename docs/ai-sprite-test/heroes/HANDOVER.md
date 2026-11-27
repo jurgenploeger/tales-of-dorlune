@@ -506,7 +506,8 @@ One doll, end to end (it was the Human Male pilot until 2026-11-24).
     it should cover the arms a little (the user): repainted with it over the inner edge of both upper arms
     (`tries/hair_long_up-right_try2*`, a). Walk up-right repainted the same way, the hair over the arms in every
     frame (`tries/hair_long_walk_up-right_try2*`; try 1 had the arms in front), `hero64_hair_long_walk_up-right.png`.
-    Attack up-right still to repaint.
+    Attack up-right the same way (`tries/hair_long_attack_up-right_try1*`, `hero64_hair_long_attack_up-right.png`):
+    **Long straight is done facing up-right and up-left.** Only up is left.
     Spiky up: ChatGPT sent its own 64-pixel files this time (`tries/hair_spiky_up_try1{a,b}{,_8x}.png`), the body
     pixel for pixel the doll's; the user picked a (`hero64_hair_spiky_up.png`), lifted untoned. **Spiky is done in all
     eight directions** (five drawn, three mirrored), on idle, walk, run and attack, human and elf.
