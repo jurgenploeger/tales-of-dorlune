@@ -9,6 +9,16 @@ pixels on a phone against the hero's 3. Drawn at the size it's shown (130 × 130
 `inn_red`, `inn_teal`, `item_shop_red`, `sleepy_cottage_lilac`, `guild_hall`) follow their base. Redrawing RD's is the
 user's call (CLAUDE.md keeps RD's art as drawn in code): their "keep going with the town buildings" after the list.
 
+**One view for all** (the user, 2026-11-27: "The adobe house tall looks from the front, while all our other
+buildings have an angle, we should update that across all the buildings as well"). Today about half face straight on
+(`adobe_house_tall`, `candy_cottage`, `puppet_theater`, `snow_cabin`, `stone_hut`, `thatched_cottage`, `tea_house`,
+`music_hall`, `toll_house`, the five landmarks...) and half are seen from a corner (`inn`, `apothecary`, `armour_shop`,
+`weapon_shop`, `timber_house`, `crystal_cottage`, `creaky_mill`, `tailor_shop`: `style_reference_corner_4x.png`). The
+corner view is the one that sits on the ground, which the game draws as diamonds, so every redraw takes it: the front
+wall with the door facing down and to the left, the right-hand side wall running back up to the right in shade, the
+roof seen a little from above. Round buildings (a yurt, an igloo, a lighthouse, a tent) stay round, seen a little from
+above, their door on the left of the front.
+
 Each new size is today's times 1.35: its canvas, width, height and foot row (its lowest pixel's row), the building
 centred as today's, so it stands where it stands and as big.
 
@@ -23,17 +33,25 @@ and add "Continue from number N." Bring the 1× PNGs back named by their id, zip
 ## The prompt
 
 > Redraw these buildings from my game bigger, one at a time, as the project's instructions say, except where this
-> message says otherwise. The first picture is our style sheet. The others are sheets of today's drawings at 4×,
-> four to a sheet, each labelled with its number, id and its new size.
+> message says otherwise. The first picture is our style sheet: eight of our buildings at 4×, all seen from the same
+> corner. The others are sheets of today's drawings at 4×, four to a sheet, each labelled with its number, id and its
+> new size.
+>
+> **Every building in the style sheet's corner view**, whichever way today's picture faces: the front wall with the
+> door facing down and to the left, the right-hand side wall running back up to the right in shade, the roof seen a
+> little from above, lit from the top left. Many of today's pictures face straight on: turn them to this view. A round
+> building (a yurt, an igloo, a tent, a tower) stays round, seen a little from above, its door on the left of its
+> front.
 >
 > **Don't measure the sizes from the pictures.** Today's are drawn at 96 pixels and shown 1.35 times bigger in the
 > game, so their pixels are bigger than the characters'. Each new one is drawn at the size it's shown: the canvas,
 > width, height and foot row in the list (the foot row is the row its lowest pixel stands on). It's the same building:
-> the same shape, colours, door, windows, signs and props in the same places, with the detail a bigger canvas holds
-> (more roof tiles, bricks, planks, trim and small touches). Never today's picture scaled up.
+> the same shape, colours, door, windows, signs and props, with the detail a bigger canvas holds (more roof tiles,
+> bricks, planks, trim and small touches), turned to the corner view where it isn't. Never today's picture scaled up.
+> Turned, its width and height may move a little (within a tenth); its canvas and foot row stay exactly as listed.
 >
 > Every one:
-> - Transparent, alpha 0 or 255 only, centred left to right as today's, its lowest pixel on the foot row.
+> - Transparent, alpha 0 or 255 only, centred left to right, its lowest pixel on the foot row.
 > - No ground, slab, base or cast shadow under it. Where today's stands on a patch of ground or a stone slab, leave it
 >   out and keep the building itself as big (a few grass tufts or a doorstep at most).
 > - Window panes in a warm bright yellow that nothing else uses (the game lights them at night). Where today's has
@@ -50,7 +68,7 @@ and add "Continue from number N." Bring the 1× PNGs back named by their id, zip
 
 ### Batch 1: Retro Diffusion's buildings (26)
 
-Attach `batch1/0_style_reference_4x.png` first, then `batch1/sheet_1.png` to `sheet_7.png` in order. The prompt, then this list:
+Attach `batch1/0_style_reference_corner_4x.png` first, then `batch1/sheet_1.png` to `sheet_7.png` in order. The prompt, then this list:
 
 > 1. `adobe_house`: canvas 130 × 130, 93 wide, 97 tall, foot row 107
 >
@@ -107,7 +125,7 @@ Attach `batch1/0_style_reference_4x.png` first, then `batch1/sheet_1.png` to `sh
 
 ### Batch 2: the five landmarks and the first 23 town buildings (28)
 
-Attach `batch2/0_style_reference_4x.png` first, then `batch2/sheet_1.png` to `sheet_7.png` in order. The prompt, then this list:
+Attach `batch2/0_style_reference_corner_4x.png` first, then `batch2/sheet_1.png` to `sheet_7.png` in order. The prompt, then this list:
 
 > 1. `emerald_spire`: canvas 259 × 259, 167 wide, 219 tall, foot row 257
 >
@@ -168,7 +186,7 @@ Attach `batch2/0_style_reference_4x.png` first, then `batch2/sheet_1.png` to `sh
 
 ### Batch 3: town buildings, part 2 (28)
 
-Attach `batch3/0_style_reference_4x.png` first, then `batch3/sheet_1.png` to `sheet_7.png` in order. The prompt, then this list:
+Attach `batch3/0_style_reference_corner_4x.png` first, then `batch3/sheet_1.png` to `sheet_7.png` in order. The prompt, then this list:
 
 > 1. `emerald_shop`: canvas 130 × 130, 97 wide, 100 tall, foot row 121
 >
@@ -229,7 +247,7 @@ Attach `batch3/0_style_reference_4x.png` first, then `batch3/sheet_1.png` to `sh
 
 ### Batch 4: town buildings, part 3 (29)
 
-Attach `batch4/0_style_reference_4x.png` first, then `batch4/sheet_1.png` to `sheet_8.png` in order. The prompt, then this list:
+Attach `batch4/0_style_reference_corner_4x.png` first, then `batch4/sheet_1.png` to `sheet_8.png` in order. The prompt, then this list:
 
 > 1. `pearl_diver_hut`: canvas 130 × 130, 95 wide, 99 tall, foot row 121
 >
