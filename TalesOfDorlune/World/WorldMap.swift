@@ -2139,7 +2139,8 @@ nonisolated final class WorldMap: @unchecked Sendable {
     private func placeOwnBuildings() {
         let npcs = Set((def.npcs ?? []).filter { $0.summit == nil }.map { offset($0.x, $0.y) })
         let fence = Set(fenceCells)
-        func fits(_ anchor: GridPoint, _ footprint: (columns: ClosedRange<Int>, rows: ClosedRange<Int>), clear: Bool) -> Bool {
+        func fits(_ anchor: GridPoint, _ footprint: (columns: ClosedRange<Int>, rows: ClosedRange<Int>), clear: Bool,
+                  moved: Bool) -> Bool {
             for dc in footprint.columns {
                 for dr in footprint.rows {
                     let cell = GridPoint(col: anchor.col + dc, row: anchor.row + dr)
@@ -2152,6 +2153,17 @@ nonisolated final class WorldMap: @unchecked Sendable {
             // there (the user, 2026-11-16: "A building shouldn't be on the roads"). It looks a little
             // farther for a plot that clears them, and only where none does stands by a street as before.
             guard clear else { return true }
+            // One moved off its spot doesn't land right against another building either, in front of or behind its
+            // picture (a stone hut moved off its blocked spot stood in front of Ingothold's dome house, the user,
+            // 2026-11-27). Those maps.json sets close together stay as set.
+            if moved {
+                for dc in (footprint.columns.lowerBound - 1)...(footprint.columns.upperBound + 1) {
+                    for dr in (footprint.rows.lowerBound - 2)...(footprint.rows.upperBound + 2)
+                    where buildingCells.contains(GridPoint(col: anchor.col + dc, row: anchor.row + dr)) {
+                        return false
+                    }
+                }
+            }
             let columns = (footprint.columns.lowerBound - 1)...(footprint.columns.upperBound + 1)
             for dc in columns {
                 for dr in (footprint.rows.lowerBound - 1)...footprint.rows.upperBound
@@ -2171,7 +2183,7 @@ nonisolated final class WorldMap: @unchecked Sendable {
                     for dr in -radius...radius {
                         for dc in -radius...radius where max(abs(dc), abs(dr)) == radius {
                             let candidate = GridPoint(col: wanted.col + dc, row: wanted.row + dr)
-                            if fits(candidate, footprint, clear: clear) {
+                            if fits(candidate, footprint, clear: clear, moved: radius > 0) {
                                 plot = candidate
                                 break search
                             }
