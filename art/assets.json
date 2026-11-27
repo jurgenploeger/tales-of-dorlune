@@ -2586,7 +2586,7 @@
     },
     {
       "id": "dairy_shop",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2601,7 +2601,7 @@
     },
     {
       "id": "aviary_shop",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2611,7 +2611,7 @@
     },
     {
       "id": "assay_office",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2631,12 +2631,12 @@
     },
     {
       "id": "beekeeper_cottage",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "chime_cottage",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2661,12 +2661,12 @@
     },
     {
       "id": "apple_cellar",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "carved_chalet",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2676,7 +2676,7 @@
     },
     {
       "id": "briar_cottage",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2711,7 +2711,7 @@
     },
     {
       "id": "dwarf_boathouse",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2761,7 +2761,7 @@
     },
     {
       "id": "crystal_lodge",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2811,7 +2811,7 @@
     },
     {
       "id": "coral_house",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2821,12 +2821,12 @@
     },
     {
       "id": "apothecary",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "creaky_mill",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2841,12 +2841,12 @@
     },
     {
       "id": "brick_house",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "cupcake_house",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2980,7 +2980,7 @@
     },
     {
       "id": "armour_shop",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -3000,7 +3000,7 @@
     },
     {
       "id": "book_shop",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -3015,7 +3015,7 @@
     },
     {
       "id": "dome_house",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -3029,22 +3029,22 @@
     },
     {
       "id": "acorn_cottage",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "bank",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "bluebell_house",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "crystal_cottage",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -3070,17 +3070,17 @@
     },
     {
       "id": "warrior_guild",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "wildfolk_lodge",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "bell_tower",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -3090,17 +3090,17 @@
     },
     {
       "id": "emerald_spire",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "star_observatory",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "moonwell",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {

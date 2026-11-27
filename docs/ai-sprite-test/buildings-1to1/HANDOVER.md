@@ -135,6 +135,13 @@ Attach `batch1/0_style_reference_corner_4x.png` first, then `batch1/sheet_1.png`
 
 ### Batch 2: the five landmarks and the first 23 town buildings (28)
 
+**Brought in 2026-11-27 (0.9.257).** All 28 at their box and foot row exactly, hard alpha, faithful to the drawings
+before (the moonwell's stone now lilac). `building_art.py` `PICKED` points them at `art-variants/buildings_1to1/`, the
+96-pixel drawings kept in `art-variants/<id>/`. Windows recut (`BOXES` for six whose stone, thatch, hives or cap lit
+up; the bell tower none), the armour shop's, book shop's and apothecary's signs and the guild's two flags re-rigged,
+the apothecary's, brick house's and coral house's chimney smoke moved, and the acorn cottage's and beekeeper's new
+chimneys given smoke.
+
 Attach `batch2/0_style_reference_corner_4x.png` first, then `batch2/sheet_1.png` to `sheet_7.png` in order. The prompt, then this list:
 
 > 1. `emerald_spire`: canvas 259 × 259, 167 wide, 219 tall, foot row 257

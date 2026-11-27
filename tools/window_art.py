@@ -28,7 +28,7 @@ SPR = ROOT / "art" / "sprites"
 BIGGEST = 64
 FEWEST = 6
 SKIP = {"fence", "town_gate", "market_tent", "market_stall", "pavilion_tent", "desert_tent", "yurt", "blacksmith",
-        "bakery", "beach_hut", "windmill", "adobe_house", "candy_cottage", "fisher_shack", "puppet_theater", "mushroom_house"}
+        "bakery", "beach_hut", "windmill", "adobe_house", "candy_cottage", "fisher_shack", "bell_tower", "puppet_theater", "mushroom_house"}
 
 
 # Where a building's windows are, as boxes (rows y0 to y1, columns x0 to x1), when bright warm pixels
@@ -41,21 +41,14 @@ BOXES = {"thatched_cottage": [(60, 96, 0, 96)],
          # window cuts its pane into specks too small to count unboxed; the balcony, ladder and lantern stay dark.
          "fairy_tree_house": FAIRY_HOUSE, "fairy_tree_house_moon": FAIRY_HOUSE, "fairy_tree_house_rose": FAIRY_HOUSE,
          "fairy_great_tree": [(52, 61, 66, 75), (61, 70, 41, 50), (61, 70, 82, 91), (69, 78, 60, 69), (84, 93, 45, 54)],
-         "book_shop": [(55, 66, 40, 52)],
          "tailor_shop": [(50, 64, 0, 96)],
-         "dome_house": [(52, 60, 32, 40), (55, 72, 52, 60)],
          "tree_house": [(40, 52, 0, 96)],
          "round_cottage": [(40, 96, 0, 96)],
-         "wildfolk_lodge": [(124, 140, 38, 92)],
-         "acorn_cottage": [(38, 48, 28, 40), (60, 72, 48, 60)],
-         "dairy_shop": [(66, 79, 15, 45)],
          "glass_lantern_shop": [(45, 56, 41, 52)],
-         "assay_office": [(58, 73, 21, 36)],
          "miners_lodge": [(58, 73, 21, 34), (56, 71, 53, 61)],
          "sandstone_house": [(39, 55, 25, 37), (66, 82, 25, 37)],
          "spice_shop": [(63, 77, 18, 29)],
          "stump_house": [(55, 70, 20, 75)],
-         "apple_cellar": [(64, 75, 23, 35), (64, 75, 55, 67)],
          "reed_boathouse": [(58, 72, 26, 38), (58, 72, 55, 67)],
          "frog_hut": [(28, 43, 20, 76)],
          "raft_teahouse": [(63, 74, 28, 70)],
@@ -63,7 +56,6 @@ BOXES = {"thatched_cottage": [(60, 96, 0, 96)],
          "well_house": [(48, 56, 35, 46), (60, 78, 22, 33)],
          "lamp_house": [(70, 80, 25, 34), (70, 80, 54, 63)],
          "lookout_hut": [(54, 63, 28, 38), (54, 63, 56, 65)],
-         "creaky_mill": [(44, 54, 50, 59), (70, 80, 37, 46), (70, 80, 61, 70)],
          "flower_shop": [(66, 80, 38, 68)],
          "pillow_cottage": [(71, 80, 27, 37), (71, 80, 58, 68)],
          "nightcap_tower": [(47, 55, 31, 37), (61, 69, 47, 53)],
@@ -71,7 +63,6 @@ BOXES = {"thatched_cottage": [(60, 96, 0, 96)],
          "emerald_shop": [(46, 55, 43, 52), (61, 70, 25, 37)],
          "flower_cup_house": [(66, 75, 30, 34), (67, 75, 60, 64)],
          "firefly_house": [(70, 78, 29, 35), (70, 78, 61, 67)],
-         "coral_house": [(66, 74, 27, 33), (67, 75, 63, 69)],
          "pearl_diver_hut": [(57, 64, 28, 35), (57, 64, 61, 68)],
          # ChatGPT's redraws of RD's buildings (2026-11-27, docs/ai-sprite-test/buildings-1to1): their roofs' warm specks
          # left out. The adobe house, candy cottage and fisher's shack have no windows (SKIP).
@@ -79,9 +70,14 @@ BOXES = {"thatched_cottage": [(60, 96, 0, 96)],
          "adobe_house_tall": [(48, 63, 40, 48), (48, 63, 64, 73)],
          "swamp_stilt_hut": [(54, 72, 33, 41)],
          "witch_hut": [(72, 81, 22, 30)],
-         "toymaker_workshop": [(63, 80, 30, 44), (64, 76, 69, 77)],   # its windows, not the clock's face
-         "warrior_guild": [(112, 124, 50, 104)],
-         "emerald_spire": [(100, 109, 80, 92), (124, 137, 74, 100), (148, 160, 50, 124)]}
+         # Batch 2's (2026-11-27): warm stone, thatch, hives and a cap's specks left out; the bell tower has none (SKIP).
+         "acorn_cottage": [(49, 63, 39, 53), (80, 94, 65, 79)],
+         "assay_office": [(80, 100, 26, 43)],
+         "beekeeper_cottage": [(80, 97, 25, 38), (80, 97, 66, 79)],
+         "book_shop": [(75, 88, 56, 68)],
+         "carved_chalet": [(58, 70, 49, 60), (88, 104, 27, 39), (88, 104, 68, 80)],
+         "dome_house": [(77, 87, 42, 51), (78, 98, 64, 75)],
+         "toymaker_workshop": [(63, 80, 30, 44), (64, 76, 69, 77)]}   # its windows, not the clock's face
 
 
 # Windows the warm rule can't find (Retro Diffusion drew their glass dim, orange or dark, and a few of ChatGPT's

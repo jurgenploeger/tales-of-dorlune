@@ -462,8 +462,8 @@ final class LandStage {
         "teapot_house": CGPoint(x: 80.0 / 96, y: 43.0 / 96),
         "smokehouse": CGPoint(x: 68.0 / 96, y: 20.0 / 96),
         "lamp_house": CGPoint(x: 84.5 / 96, y: 53.0 / 96),
-        // Chimneys with nothing coming out (the user, 2026-11-22: "make everything feel more alive"). The inn's and the
-        // snow cabin's on ChatGPT's redraws at 130 (2026-11-27).
+        // Chimneys with nothing coming out (the user, 2026-11-22: "make everything feel more alive"). Those over 130 on
+        // ChatGPT's 1:1 redraws (2026-11-27), the acorn's and beekeeper's chimneys new in them.
         "inn": CGPoint(x: 87.5 / 130, y: 16.0 / 130),
         "inn_red": CGPoint(x: 87.5 / 130, y: 16.0 / 130),
         "inn_teal": CGPoint(x: 87.5 / 130, y: 16.0 / 130),
@@ -472,14 +472,16 @@ final class LandStage {
         "woodcutter_cabin": CGPoint(x: 68.0 / 96, y: 18.0 / 96),
         "stump_house": CGPoint(x: 70.0 / 96, y: 16.0 / 96),
         "ice_fishing_hut": CGPoint(x: 63.5 / 96, y: 21.0 / 96),
-        "brick_house": CGPoint(x: 66.0 / 96, y: 16.0 / 96),
+        "brick_house": CGPoint(x: 90.0 / 130, y: 25.0 / 130),
         "toymaker_workshop": CGPoint(x: 69.0 / 96, y: 22.0 / 96),
         "stone_townhouse": CGPoint(x: 72.5 / 96, y: 15.0 / 96),
-        "coral_house": CGPoint(x: 34.5 / 96, y: 19.0 / 96),
+        "coral_house": CGPoint(x: 44.0 / 130, y: 28.0 / 130),
         "snow_cabin": CGPoint(x: 39.0 / 130, y: 31.0 / 130),
         "post_office": CGPoint(x: 27.5 / 96, y: 22.0 / 96),
         "timber_house": CGPoint(x: 73.5 / 96, y: 19.0 / 96),
-        "apothecary": CGPoint(x: 68.0 / 96, y: 12.0 / 96),
+        "apothecary": CGPoint(x: 97.0 / 130, y: 16.0 / 130),
+        "acorn_cottage": CGPoint(x: 81.0 / 130, y: 38.0 / 130),
+        "beekeeper_cottage": CGPoint(x: 40.0 / 130, y: 31.0 / 130),
         "emerald_shop": CGPoint(x: 32.5 / 96, y: 17.0 / 96),
         "glass_lantern_shop": CGPoint(x: 59.0 / 96, y: 11.0 / 96),
         // Shiverdell's cauldron, its brew steaming.
