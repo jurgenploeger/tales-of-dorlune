@@ -28,7 +28,7 @@ SPR = ROOT / "art" / "sprites"
 BIGGEST = 64
 FEWEST = 6
 SKIP = {"fence", "town_gate", "market_tent", "market_stall", "pavilion_tent", "desert_tent", "yurt", "blacksmith",
-        "bakery", "beach_hut", "adobe_house_tall", "windmill", "puppet_theater", "mushroom_house"}
+        "bakery", "beach_hut", "windmill", "adobe_house", "candy_cottage", "fisher_shack", "bell_tower", "puppet_theater", "mushroom_house"}
 
 
 # Where a building's windows are, as boxes (rows y0 to y1, columns x0 to x1), when bright warm pixels
@@ -36,65 +36,53 @@ SKIP = {"fence", "town_gate", "market_tent", "market_stall", "pavilion_tent", "d
 # cloth in the tailor's window, the dome house's sandstone along its wall top (the pictures ChatGPT drew,
 # 2026-11-21). Only pixels in a box count.
 FAIRY_HOUSE = [(39, 48, 46, 55), (51, 60, 34, 43), (59, 68, 50, 59)]
-BOXES = {"thatched_cottage": [(60, 96, 0, 96)],
+BOXES = {
          # ChatGPT's fairy tree houses (2026-11-26, docs/ai-sprite-test/big-trees): a cross through each little round
          # window cuts its pane into specks too small to count unboxed; the balcony, ladder and lantern stay dark.
          "fairy_tree_house": FAIRY_HOUSE, "fairy_tree_house_moon": FAIRY_HOUSE, "fairy_tree_house_rose": FAIRY_HOUSE,
          "fairy_great_tree": [(52, 61, 66, 75), (61, 70, 41, 50), (61, 70, 82, 91), (69, 78, 60, 69), (84, 93, 45, 54)],
-         "book_shop": [(55, 66, 40, 52)],
-         "tailor_shop": [(50, 64, 0, 96)],
-         "dome_house": [(52, 60, 32, 40), (55, 72, 52, 60)],
-         "tree_house": [(40, 52, 0, 96)],
-         "round_cottage": [(40, 96, 0, 96)],
-         "wildfolk_lodge": [(124, 140, 38, 92)],
-         "acorn_cottage": [(38, 48, 28, 40), (60, 72, 48, 60)],
-         "dairy_shop": [(66, 79, 15, 45)],
-         "glass_lantern_shop": [(45, 56, 41, 52)],
-         "assay_office": [(58, 73, 21, 36)],
-         "miners_lodge": [(58, 73, 21, 34), (56, 71, 53, 61)],
-         "sandstone_house": [(39, 55, 25, 37), (66, 82, 25, 37)],
-         "spice_shop": [(63, 77, 18, 29)],
-         "stump_house": [(55, 70, 20, 75)],
-         "apple_cellar": [(64, 75, 23, 35), (64, 75, 55, 67)],
-         "reed_boathouse": [(58, 72, 26, 38), (58, 72, 55, 67)],
-         "frog_hut": [(28, 43, 20, 76)],
-         "raft_teahouse": [(63, 74, 28, 70)],
-         "pineapple_hut": [(56, 70, 22, 33), (56, 70, 61, 72)],
-         "well_house": [(48, 56, 35, 46), (60, 78, 22, 33)],
-         "lamp_house": [(70, 80, 25, 34), (70, 80, 54, 63)],
-         "lookout_hut": [(54, 63, 28, 38), (54, 63, 56, 65)],
-         "creaky_mill": [(44, 54, 50, 59), (70, 80, 37, 46), (70, 80, 61, 70)],
-         "flower_shop": [(66, 80, 38, 68)],
-         "pillow_cottage": [(71, 80, 27, 37), (71, 80, 58, 68)],
-         "nightcap_tower": [(47, 55, 31, 37), (61, 69, 47, 53)],
-         "toll_house": [(63, 72, 23, 29), (63, 72, 52, 58)],
-         "emerald_shop": [(46, 55, 43, 52), (61, 70, 25, 37)],
-         "flower_cup_house": [(66, 75, 30, 34), (67, 75, 60, 64)],
-         "firefly_house": [(70, 78, 29, 35), (70, 78, 61, 67)],
-         "coral_house": [(66, 74, 27, 33), (67, 75, 63, 69)],
-         "pearl_diver_hut": [(57, 64, 28, 35), (57, 64, 61, 68)],
-         "sleepy_cottage": [(54, 63, 38, 47)],          # the round window in its door, not the moon on its roof
-         "toymaker_workshop": [(63, 80, 30, 44), (64, 76, 69, 77)],   # its windows, not the clock's face
-         "warrior_guild": [(112, 124, 50, 104)],
-         "emerald_spire": [(100, 109, 80, 92), (124, 137, 74, 100), (148, 160, 50, 124)]}
+         # ChatGPT's redraws of RD's buildings (2026-11-27, docs/ai-sprite-test/buildings-1to1): their roofs' warm specks
+         # left out. The adobe house, candy cottage and fisher's shack have no windows (SKIP).
+         "house": [(76, 98, 28, 42), (76, 98, 74, 92)],
+         "adobe_house_tall": [(48, 63, 40, 48), (48, 63, 64, 73)],
+         "swamp_stilt_hut": [(54, 72, 33, 41)],
+         "witch_hut": [(72, 81, 22, 30)],
+         # Batch 2's (2026-11-27): warm stone, thatch, hives and a cap's specks left out; the bell tower has none (SKIP).
+         "acorn_cottage": [(49, 63, 39, 53), (80, 94, 65, 79)],
+         "assay_office": [(80, 100, 26, 43)],
+         "beekeeper_cottage": [(80, 97, 25, 38), (80, 97, 66, 79)],
+         "book_shop": [(75, 88, 56, 68)],
+         "carved_chalet": [(58, 70, 49, 60), (88, 104, 27, 39), (88, 104, 68, 80)],
+         "dome_house": [(77, 87, 42, 51), (78, 98, 64, 75)],
+         # Batch 3's: an awning's, gold's, a deck's, rock's and a lid's warm specks left out.
+         "flower_shop": [(86, 100, 54, 83)],
+         "frog_hut": [(52, 68, 24, 38), (52, 68, 76, 90)],
+         "lamp_house": [(98, 110, 35, 45), (98, 110, 71, 81)],
+         "lookout_hut": [(67, 81, 37, 47), (67, 81, 75, 85)],
+         "miners_lodge": [(81, 100, 26, 40), (81, 94, 65, 73)],
+         "ice_fishing_hut": [(82, 96, 36, 49)],
+         "music_box_house": [(87, 101, 24, 34), (87, 101, 62, 74)],
+         # Batch 4's: thatch, straw, sticks, stone, spices and a stump's rings left out.
+         "sandstone_house": [(56, 73, 32, 46), (90, 107, 32, 46)],
+         "smokehouse": [(97, 110, 32, 43), (97, 110, 76, 87)],
+         "stump_house": [(77, 93, 28, 40), (80, 93, 79, 90)],
+         "thatched_cottage": [(88, 101, 24, 34), (88, 101, 59, 73)]}
 
 
 # Windows the warm rule can't find (Retro Diffusion drew their glass dim, orange or dark, and a few of ChatGPT's
 # panes carry mullions that split them): every pixel in each box is lit, laid on a lamplight ramp by how light it
 # is in the box (`paint`), so the frames and mullions stay darker. Rows y0 to y1, columns x0 to x1.
-PAINT = {"house": [(47, 62, 27, 37), (47, 62, 59, 70)],
-         "inn": [(43, 52, 62, 70), (55, 66, 45, 52), (55, 66, 58, 72)],
-         "dwarf_cottage": [(32, 40, 45, 51), (45, 52, 33, 38), (45, 52, 58, 63), (59, 66, 25, 30), (59, 66, 64, 69)],
-         "crooked_house": [(40, 50, 32, 40), (36, 42, 62, 66)],
-         "fisher_shack": [(41, 62, 18, 22)],
-         "stone_hut": [(62, 69, 61, 66)],
-         "sandstone_house": [(44, 56, 27, 36), (66, 78, 27, 36)],
-         "spice_shop": [(64, 76, 25, 35)]}
+PAINT = {  # Batch 4's whose panes are too dim or barred for the warm rule (2026-11-27), boxed round their yellow.
+         "reed_boathouse": [(85, 94, 39, 47), (85, 94, 80, 87)],
+         "spice_shop": [(90, 102, 34, 45)],
+         "stick_house": [(60, 69, 55, 65), (92, 103, 39, 48), (93, 103, 80, 84)],
+         "straw_house": [(94, 104, 40, 50)],
+         "well_house": [(62, 73, 48, 59), (91, 99, 29, 37)]}
 DEEP, PALE = np.array([205, 105, 40]), np.array([255, 238, 160])
 # Which pixels of a `PAINT` box are the glass (the user, 2026-11-25: lit as whole boxes, the inn's slanted
 # windows lit the plaster round them and the round house's lit its wall above them): the house's dark holes,
 # the inn's orange panes. Others light the whole box.
-GLASS = {"house": "dark", "inn": "warm"}
+GLASS = {}
 
 # Lights (the user, 2026-11-22: "fires, lanterns, street lights and anything else that could have light in the
 # evening/night should be lit up"): what glows of each, cut as a window is and laid above the night's shade with a
@@ -106,7 +94,7 @@ LIGHTS = {"street_lamp": {}, "wall_torch": TORCH, "wall_torch_2": TORCH, "wall_t
           "tiki_torch": {"boxes": [(0, 13, 8, 24)]}, "moon_lantern_post": {}, "spooky_lantern": {}, "wisp_lantern": {},
           "stone_lantern": {}, "mine_lantern_post": {"boxes": [(25, 36, 18, 28)]},
           "firefly_jar_post": {"boxes": [(20, 36, 16, 28)]}, "magic_lamp": {"boxes": [(0, 13, 0, 32)]},
-          "bubbling_cauldron": {}, "fallen_star": {}, "crystal": {}, "star_crystal": {}, "crystal_spire": {},
+          "bubbling_cauldron": {}, "fallen_star": {}, "crystal": {}, "big_ice_cluster": {}, "star_crystal": {}, "crystal_spire": {},
           "amethyst_spire": {}, "crystal_geode": {}, "glow_moss_rock": {}, "moon_flower": {"s": 0.1}, "fairy_ring": {}}
 
 
@@ -197,7 +185,7 @@ def derived():
 # Recolours that are lights, though their bases aren't (a glowing mushroom from a plain one): their base's bright
 # pixels cut as a light's would be, then recoloured.
 LIGHTS_DERIVED = {"glow_mushroom", "pink_crystal", "violet_crystal", "amber_crystal", "crystal_shard", "pink_shard",
-                  "ice_cluster", "big_ice_cluster"}
+                  "ice_cluster"}
 
 
 def cut(name):

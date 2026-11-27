@@ -2354,9 +2354,15 @@ final class ContinentScene: SKScene {
     /// How far each spot of a chunk lies from the land, in cells (under the land, how far in, as less
     /// than none): at `shallowSamples` spots a cell, from the chunk's south-west corner to its far
     /// edge, so two chunks share the spots along their seam and the bands run on across it. Each spot
-    /// as near as it is to the nearest cell of land (of sea, under the land), a square, so the bands
-    /// round its corners. Its red, from `shallowUnder` in to `shallowReach` out.
+    /// as near as it is to the coastline as drawn (under the land, how far in from it). Its red, from
+    /// `shallowUnder` in to `shallowReach` out.
     private func shallowField(of chunk: GridPoint) -> SKTexture? {
+        shallowBytes(of: chunk).flatMap { Self.fieldTexture($0, spots: World.chunkSize * Self.shallowSamples + 1) }
+    }
+
+    /// `shallowField`'s spots as bytes, RGBA, rows north to south: each its distance in red, green and
+    /// blue. Nil in a chunk all land or all sea.
+    private func shallowBytes(of chunk: GridPoint) -> [UInt8]? {
         let size = World.chunkSize, reach = Self.shallowReach, per = Self.shallowSamples
         // Which cells are land, over the chunk and `reach` round it.
         let low = GridPoint(col: chunk.col * size - reach, row: chunk.row * size - reach), side = size + 2 * reach
@@ -2380,26 +2386,42 @@ final class ContinentScene: SKScene {
         guard land.contains(true), land.contains(false) else { return nil }
         let spots = size * per + 1
         let span = Double(reach) + Self.shallowUnder
+        // The coastline as it's drawn, not round the land's square cells: a land cell beside the sea is cut
+        // where the sea cells' soft rounds add up to its threshold (`ArtLibrary.waterDepth`, `GroundTiles`'
+        // shore), so each spot of the window, `per` a cell, is water or land by that rule. Measured from the
+        // cells' squares the foam ran in steps out at sea, open water between it and the shore (the user,
+        // 2026-11-27: "the foam doesn't correctly align with the edge of the shore").
+        let fine = side * per + 1
+        var wet = [Bool](repeating: false, count: fine * fine)
+        for j in 0..<fine {
+            for i in 0..<fine {
+                let x = Double(i) / Double(per), y = Double(j) / Double(per)
+                let col = min(side - 1, Int(x)), row = min(side - 1, Int(y))
+                guard land[row * side + col] else {
+                    wet[j * fine + i] = true
+                    continue
+                }
+                var rounds = 0.0
+                for r in max(0, row - 2)...min(side - 1, row + 2) {
+                    for c in max(0, col - 2)...min(side - 1, col + 2) where !land[r * side + c] {
+                        let dx = x - (Double(c) + 0.5), dy = y - (Double(r) + 0.5)
+                        rounds += exp(-(dx * dx + dy * dy) / 0.49)
+                    }
+                }
+                wet[j * fine + i] = rounds >= Self.coastThreshold
+            }
+        }
+        // How far each spot is from the nearest of the other kind, the line between them half a spot off.
+        let toLand = Self.squaredDistances(side: fine) { !wet[$0] }
+        let toWater = Self.squaredDistances(side: fine) { wet[$0] }
+        let half = 0.5 / Double(per)
         var bytes = [UInt8](repeating: 255, count: spots * spots * 4)
         for j in 0..<spots {
             for i in 0..<spots {
-                // The spot, in cells from the margin's corner.
-                let x = Double(i) / Double(per) + Double(reach), y = Double(j) / Double(per) + Double(reach)
-                let col = min(side - 1, Int(x)), row = min(side - 1, Int(y))
-                let inside = land[row * side + col]
-                // Under the land only the first stretch in counts; out at sea, all `reach`.
-                let around = inside ? 1 : reach
-                var nearest = inside ? Self.shallowUnder : Double(reach)
-                for r in max(0, row - around)...min(side - 1, row + around) {
-                    let dy = max(0, Double(r) - y, y - Double(r + 1))
-                    guard dy < nearest else { continue }
-                    for c in max(0, col - around)...min(side - 1, col + around) where land[r * side + c] != inside {
-                        let dx = max(0, Double(c) - x, x - Double(c + 1))
-                        nearest = min(nearest, (dx * dx + dy * dy).squareRoot())
-                    }
-                }
-                let out = inside ? -nearest : nearest
-                let value = UInt8(max(0, min(255, ((out + Self.shallowUnder) / span * 255).rounded())))
+                let k = (j + reach * per) * fine + (i + reach * per)
+                let out = wet[k] ? toLand[k].squareRoot() / Double(per) - half : half - toWater[k].squareRoot() / Double(per)
+                let clamped = max(-Self.shallowUnder, min(Double(reach), out))
+                let value = UInt8(max(0, min(255, ((clamped + Self.shallowUnder) / span * 255).rounded())))
                 // Image rows run north to south; the spots count up from the south.
                 let index = ((spots - 1 - j) * spots + i) * 4
                 bytes[index] = value
@@ -2407,6 +2429,11 @@ final class ContinentScene: SKScene {
                 bytes[index + 2] = value
             }
         }
+        return bytes
+    }
+
+    /// A field's bytes (`shallowBytes`) as a texture, eased between its spots.
+    private static func fieldTexture(_ bytes: [UInt8], spots: Int) -> SKTexture? {
         guard let provider = CGDataProvider(data: Data(bytes) as CFData),
               let image = CGImage(width: spots, height: spots, bitsPerComponent: 8, bitsPerPixel: 32, bytesPerRow: spots * 4,
                                   space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue),
@@ -2417,7 +2444,57 @@ final class ContinentScene: SKScene {
         return texture
     }
 
-    /// The coast's water from its distances (`shallowField`), on the sea's own pixels (32 a cell,
+    /// Where the sea cells' soft rounds add up to the shore (`ArtLibrary.waterDepth`: its field less 0.55).
+    private static let coastThreshold = 0.55
+
+    /// The squared distance (in grid steps) from every point of a `side` by `side` grid to the nearest
+    /// point that's `feature`, exactly (Felzenszwalb and Huttenlocher's transform, down the columns and
+    /// then along the rows).
+    private static func squaredDistances(side n: Int, feature: (Int) -> Bool) -> [Double] {
+        let far = 1e10
+        var grid = [Double](repeating: far, count: n * n)
+        for k in 0..<(n * n) where feature(k) { grid[k] = 0 }
+        var f = [Double](repeating: 0, count: n), d = [Double](repeating: 0, count: n)
+        var v = [Int](repeating: 0, count: n), z = [Double](repeating: 0, count: n + 1)
+        func line() {
+            var k = 0
+            v[0] = 0
+            z[0] = -far
+            z[1] = far
+            if n > 1 {
+                for q in 1..<n {
+                    var s = ((f[q] + Double(q * q)) - (f[v[k]] + Double(v[k] * v[k]))) / Double(2 * q - 2 * v[k])
+                    while s <= z[k], k > 0 {
+                        k -= 1
+                        s = ((f[q] + Double(q * q)) - (f[v[k]] + Double(v[k] * v[k]))) / Double(2 * q - 2 * v[k])
+                    }
+                    k += 1
+                    v[k] = q
+                    z[k] = s
+                    z[k + 1] = far
+                }
+            }
+            k = 0
+            for q in 0..<n {
+                while z[k + 1] < Double(q) { k += 1 }
+                let step = Double(q - v[k])
+                d[q] = step * step + f[v[k]]
+            }
+        }
+        for x in 0..<n {
+            for y in 0..<n { f[y] = grid[y * n + x] }
+            line()
+            for y in 0..<n { grid[y * n + x] = d[y] }
+        }
+        for y in 0..<n {
+            for x in 0..<n { f[x] = grid[y * n + x] }
+            line()
+            for x in 0..<n { grid[y * n + x] = d[x] }
+        }
+        return grid
+    }
+
+    /// The coast's water from its distances (`shallowField`), on the sea's own pixels (44 a cell,
     /// `tools/water_art.py`), so its bands step as the sea's art does: a pale sea green, less of it in
     /// six steps out to 3.4 cells; and crests a pixel or two wide every 0.95 cells, rolling in at a
     /// fifth of a cell a second, broken up a different way for each wave, fading in 2.8 cells out and
@@ -2502,6 +2579,7 @@ final class ContinentScene: SKScene {
     /// a line of foam at its foot. Under the land, so it shows only where its edge faces you. Where
     /// the land slopes down to the sea (`WorldMap.shore`), only the foam, at the water's edge.
     private func drawBank(of land: Land, in drawn: Chunk, at chunk: GridPoint) {
+        addSwash(of: land, in: drawn, at: chunk)
         let size = World.chunkSize, tile = WorldMap.tileSize, steps = Self.bankSteps
         let origin = GridPoint(col: chunk.col * size, row: chunk.row * size)
         art.use(palette: land.def.theme.palette, for: land.def.id)
@@ -2537,6 +2615,143 @@ final class ContinentScene: SKScene {
             drawn.banks.append(outline)
         }
     }
+
+    /// The waves washing up a land's beach in a chunk (the user, 2026-11-27: "The sea should have
+    /// animations that it washes ashore"): over its sunk shore by the sea (`WorldMap.shore`, which lies at
+    /// the water's level there), from the chunk's distances to the coastline (`shallowBytes`, its green
+    /// the land's shore), drawn by `swashShader`. Sorted as anything lying flat on the shore is
+    /// (`LandStage.flatZ`): over the sunk ground's strip it lies on, under whoever stands there, a sprite a
+    /// strip (`HillArt.sunkenDepth`), each just round the beach in it. Kept with the banks, so it's made
+    /// again with them (`redraw`). None where the land meets the sea in a bank, not a slope.
+    private func addSwash(of land: Land, in drawn: Chunk, at chunk: GridPoint) {
+        guard land.map.shore != nil, !LandStage.isOffForDebug("water"), var bytes = shallowBytes(of: chunk) else { return }
+        let size = World.chunkSize, per = Self.shallowSamples, spots = size * per + 1, tile = WorldMap.tileSize
+        let span = Double(Self.shallowReach) + Self.shallowUnder, drop = WorldMap.seaDrop
+        let origin = GridPoint(col: chunk.col * size, row: chunk.row * size)
+        let bandHeight = HillArt.stripHeight / CGFloat(HillArt.stripDepth) * CGFloat(HillArt.sunkenDepth)
+        // By strip and by a stretch across the screen, so a long diagonal beach isn't one big box of nothing.
+        var boxes: [GridPoint: CGRect] = [:]
+        for j in 0..<spots {
+            for i in 0..<spots {
+                let index = ((spots - 1 - j) * spots + i) * 4
+                let d = Double(bytes[index]) / 255 * span - Self.shallowUnder
+                var mine = false
+                if d < 0.1, d > 0.03 - Self.shallowUnder {
+                    let cell = GridPoint(col: origin.col + min(size - 1, i / per), row: origin.row + min(size - 1, j / per))
+                    if store.land(at: cell)?.id == land.def.id {
+                        let local = store.local(cell, in: land.place)
+                        mine = land.map.contains(local) && land.map.isSunken(local)
+                    }
+                }
+                bytes[index + 1] = mine ? 255 : 0
+                guard mine else { continue }
+                let point = WorldMap.project(CGPoint(x: (CGFloat(origin.col) + CGFloat(i) / CGFloat(per)) * tile,
+                                                     y: (CGFloat(origin.row) + CGFloat(j) / CGFloat(per)) * tile))
+                let key = GridPoint(col: Int((point.x / Self.swashStretch).rounded(.down)),
+                                    row: Int(((point.y - land.shift.dy) / bandHeight).rounded(.down)))
+                let spot = CGRect(x: point.x - tile, y: point.y - drop - tile / 2, width: 2 * tile, height: tile)
+                boxes[key] = boxes[key].map { $0.union(spot) } ?? spot
+            }
+        }
+        guard !boxes.isEmpty, let field = Self.fieldTexture(bytes, spots: spots) else { return }
+        for (key, box) in boxes {
+            // The strip's own stretch of the screen, its ground lying `drop` lower.
+            let band = key.row
+            let low = CGFloat(band) * bandHeight + land.shift.dy
+            // Cut to its own stretch across (whole points, so two never overlap and draw the wave twice).
+            let frame = box.intersection(CGRect(x: CGFloat(key.col) * Self.swashStretch, y: low - drop - 2,
+                                                width: Self.swashStretch, height: bandHeight + 4)).integral
+                .intersection(CGRect(x: CGFloat(key.col) * Self.swashStretch, y: -.greatestFiniteMagnitude / 4,
+                                     width: Self.swashStretch, height: .greatestFiniteMagnitude / 2))
+            guard !frame.isEmpty else { continue }
+            let node = SKSpriteNode(texture: field, size: frame.size)
+            node.anchorPoint = .zero
+            node.position = frame.origin
+            node.zPosition = HillArt.strip(at: CGFloat(band) * bandHeight + bandHeight / 2, depth: HillArt.sunkenDepth).z + 0.1 - land.shift.dy
+            node.shader = Self.swashShader
+            // Its corner in cells from the chunk's (where the sunk ground under it lies), worked out here in
+            // full precision, so the shader only handles small numbers (`HillArt.lifting`).
+            let corner = WorldMap.unproject(CGPoint(x: frame.minX, y: frame.minY + drop))
+            // Its size and its corner in cells; the strip's stretch up it and where the chunk lies (for the
+            // waves' timing along the coast, wrapped to stay small).
+            node.setValue(SKAttributeValue(vectorFloat4: [Float(frame.width), Float(frame.height),
+                                                          Float(corner.x / tile - CGFloat(origin.col)), Float(corner.y / tile - CGFloat(origin.row))]),
+                          forAttribute: "a_frame")
+            node.setValue(SKAttributeValue(vectorFloat4: [Float(low - drop - frame.minY), Float(low + bandHeight - drop - frame.minY),
+                                                          Float(((origin.col % 256) + 256) % 256), Float(((origin.row % 256) + 256) % 256)]),
+                          forAttribute: "a_place")
+            drawn.things.addChild(node)
+            drawn.banks.append(node)
+        }
+    }
+
+    /// Every `swashPeriod` seconds a wave runs up the beach as a thin sheet of water with a broken line of
+    /// foam at its front, a little further here and less there (`swashReach` at most), in its own time
+    /// along the coast, and slides back, the sand dark and wet where it reached, drying as the next comes.
+    /// On the land's own pixels (44 a cell), so its edges step as the ground's do. Mirrored in
+    /// `tools/shore_art.py` (`swash`, `--swash`).
+    private static let swashShader: SKShader = {
+        let shader = SKShader(source: """
+        void main() {
+            vec2 p = v_tex_coord * a_frame.xy;
+            // No early return: SpriteKit's shaders end on gl_FragColor, so what's left out is multiplied away.
+            float keep = step(a_place.x, p.y) * (1.0 - step(a_place.y, p.y));
+            vec2 grid = vec2(p.x * 1.41421356 + p.y * 2.82842712, p.y * 2.82842712 - p.x * 1.41421356) * 0.5;
+            vec2 pixel = floor((a_frame.zw + grid / u_points) * u_tile);
+            vec2 cell = (pixel + 0.5) / u_tile;
+            keep *= step(0.0, cell.x) * step(0.0, cell.y) * step(cell.x, u_chunk) * step(cell.y, u_chunk);
+            vec2 at = clamp((cell * u_per + 0.5) / (u_chunk * u_per + 1.0), 0.0, 1.0);
+            vec4 f = texture2D(u_texture, at);
+            float run = u_under - f.r * u_span;
+            keep *= step(0.5, f.g) * step(0.0001, run) * step(run, u_under - 0.03);
+            vec2 world = cell + a_place.zw;
+            float along = sin(world.x * 0.21 + world.y * 0.17) + sin(world.x * 0.07 - world.y * 0.13 + 1.7);
+            float phase = u_time / u_period + along * 0.16;
+            float cyc = fract(phase);
+            float k = floor(phase);
+            float peak = u_reach * (0.78 + 0.22 * sin(world.x * 0.43 + k * 2.1) * sin(world.y * 0.37 - k * 1.3));
+            float rising = step(cyc, u_up);
+            float upward = clamp(cyc / u_up, 0.0, 1.0);
+            float back = clamp((cyc - u_up) / (1.0 - u_up), 0.0, 1.0);
+            float r = mix(peak * (1.0 - back * back * (3.0 - 2.0 * back)), peak * (1.0 - (1.0 - upward) * (1.0 - upward)), rising);
+            float speck = fract(sin(dot(floor(pixel / 3.0), vec2(12.9898, 78.233))) * 43758.5453);
+            float fine = fract(sin(dot(floor(pixel / 2.0), vec2(39.346, 11.135)) + k * 7.1) * 43758.5453);
+            float wet = step(run, r - 0.0001);
+            float sheet = wet * 0.34;
+            float fade = floor(mix(clamp(1.0 - back / 0.55, 0.0, 1.0), 1.0, rising) * 4.0) / 4.0;
+            float foam = wet * step(r - 0.07, run) * step(0.12, speck) * fade * 0.85;
+            foam = max(foam, wet * step(0.86, fine) * step(run, r - 0.1) * 0.45 * fade);
+            float dark = (1.0 - wet) * step(run, peak) * (1.0 - rising) * floor((1.0 - back) * 3.0) / 3.0 * 0.12;
+            vec3 rgb = vec3(0.52, 0.8, 0.96) * sheet * (1.0 - foam) + foam;
+            float a = sheet * (1.0 - foam) + foam;
+            a = a + dark * (1.0 - a);
+            gl_FragColor = vec4(rgb, a) * keep;
+        }
+        """)
+        shader.uniforms = [
+            SKUniform(name: "u_tile", float: Float(WorldMap.tilePixels)),
+            SKUniform(name: "u_points", float: Float(WorldMap.tileSize)),
+            SKUniform(name: "u_chunk", float: Float(World.chunkSize)),
+            SKUniform(name: "u_per", float: Float(ContinentScene.shallowSamples)),
+            SKUniform(name: "u_span", float: Float(Double(ContinentScene.shallowReach) + ContinentScene.shallowUnder)),
+            SKUniform(name: "u_under", float: Float(ContinentScene.shallowUnder)),
+            SKUniform(name: "u_period", float: Float(ContinentScene.swashPeriod)),
+            SKUniform(name: "u_reach", float: Float(ContinentScene.swashReach)),
+            SKUniform(name: "u_up", float: Float(ContinentScene.swashUp)),
+        ]
+        shader.attributes = [
+            SKAttribute(name: "a_frame", type: .vectorFloat4),
+            SKAttribute(name: "a_place", type: .vectorFloat4),
+        ]
+        return shader
+    }()
+    /// Seconds a wave takes to wash up the beach and back, how far up it runs at most (cells), and the
+    /// share of its time it runs up (`swashShader`; `tools/shore_art.py` `SWASH_*`).
+    private static let swashPeriod = 6.0
+    private static let swashReach = 0.5
+    private static let swashUp = 0.3
+    /// How wide a stretch of beach one of its sprites covers at most, in points (`addSwash`).
+    private static let swashStretch: CGFloat = 256
 
     /// A land's cells in a chunk in its own plain ground, graded as it is there, till it's laid out
     /// (`show`) with its roads, patches and all: no sea where it'll be. Its rivers and lakes are left

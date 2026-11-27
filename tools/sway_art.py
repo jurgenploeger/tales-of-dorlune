@@ -38,8 +38,10 @@ SPRITES = ROOT / "art" / "sprites"
 sys.path.insert(0, str(ROOT / "tools"))
 
 
-def swing(box, hook, reach=2, wall=False, period=1.4):
-    return dict(kind="swing", box=box, hook=hook, reach=reach, wall=wall, period=period)
+def swing(box, hook, reach=2, wall=False, period=1.4, hues=None, sat=0.0):
+    """`hues` (degrees, lo to hi, wrapping past 360) and `sat` keep to the piece's own colours inside its box, grown a
+    pixel for its outline: a lantern hung on a wall, the wall round it staying put."""
+    return dict(kind="swing", box=box, hook=hook, reach=reach, wall=wall, period=period, hues=hues, sat=sat)
 
 
 def flutter(box, pole, reach=1, wall=False):
@@ -49,28 +51,29 @@ def flutter(box, pole, reach=1, wall=False):
 # Each building's moving pieces: `box` is (x0, y0, x1, y1), inclusive, in its PNG's pixels; every opaque pixel
 # in it (below `hook`) moves.
 PIECES = {
-    "weapon_shop": [swing((75, 58, 87, 72), hook=58)],
-    "armour_shop": [swing((78, 57, 88, 67), hook=57)],
-    "tailor_shop": [swing((70, 53, 83, 66), hook=53)],
-    "book_shop": [swing((74, 56, 86, 68), hook=56)],
-    "flower_shop": [swing((76, 63, 86, 74), hook=63)],
-    "gem_workshop": [swing((76, 63, 87, 77), hook=63)],
-    "tea_house": [swing((78, 57, 86, 68), hook=57), swing((10, 59, 22, 65), hook=59, reach=1)],
-    "apothecary": [swing((10, 60, 23, 75), hook=60)],
-    "emerald_shop": [swing((76, 57, 85, 68), hook=57)],
-    "swamp_stilt_hut": [swing((68, 49, 75, 56), hook=49, reach=1)],
-    "glass_lantern_shop": [swing((24, 47, 30, 55), hook=47, reach=1, wall=True),
-                           swing((32, 48, 38, 54), hook=48, reach=1, wall=True),
-                           swing((54, 49, 59, 54), hook=49, reach=1, wall=True),
-                           swing((62, 50, 67, 54), hook=50, reach=1, wall=True)],
-    "firefly_house": [swing((17, 53, 24, 66), hook=53, reach=1, wall=True),
-                      swing((33, 53, 40, 66), hook=53, reach=1, wall=True),
-                      swing((56, 53, 63, 66), hook=53, reach=1, wall=True),
-                      swing((75, 53, 83, 66), hook=53, reach=1)],
-    "moon_pagoda": [swing((24, 33, 28, 40), hook=33, reach=1), swing((68, 33, 72, 40), hook=33, reach=1),
-                    swing((8, 56, 12, 62), hook=56, reach=1), swing((82, 56, 86, 62), hook=56, reach=1)],
-    "pavilion_tent": [flutter((50, 18, 55, 23), pole=49)],
-    "warrior_guild": [flutter((38, 64, 47, 72), pole=37), flutter((119, 64, 128, 72), pole=118)],
+    "weapon_shop": [swing((99, 85, 116, 101), hook=84, wall=True, hues=(0, 360), sat=0.2)],  # not the grey stone
+    "armour_shop": [swing((104, 77, 117, 90), hook=76)],
+    "tailor_shop": [swing((101, 76, 117, 91), hook=75, wall=True)],
+    "book_shop": [swing((104, 79, 117, 93), hook=78)],
+    "flower_shop": [swing((100, 86, 116, 103), hook=85)],
+    "gem_workshop": [swing((102, 86, 118, 104), hook=85)],
+    "tea_house": [swing((104, 85, 117, 99), hook=84, wall=True), swing((13, 87, 29, 94), hook=86, reach=1)],
+    "apothecary": [swing((19, 82, 33, 99), hook=81)],
+    "emerald_shop": [swing((100, 77, 113, 97), hook=76)],
+    # Its lanterns' own colours (red, blue, green, purple: anything but the browns of the timber and plaster).
+    "glass_lantern_shop": [swing((33, 62, 39, 76), hook=62, reach=1, wall=True, hues=(50, 15), sat=0.4),
+                           swing((43, 62, 49, 76), hook=62, reach=1, wall=True, hues=(50, 15), sat=0.4),
+                           swing((69, 62, 75, 76), hook=62, reach=1, wall=True, hues=(50, 15), sat=0.4),
+                           swing((79, 62, 85, 76), hook=62, reach=1, wall=True, hues=(50, 15), sat=0.4)],
+    # Its glass lanterns' teal, the pale stone behind them staying put.
+    "firefly_house": [swing((20, 70, 32, 88), hook=70, reach=1, wall=True, hues=(150, 225), sat=0.12),
+                      swing((41, 70, 53, 90), hook=70, reach=1, wall=True, hues=(150, 225), sat=0.12),
+                      swing((71, 70, 84, 90), hook=70, reach=1, wall=True, hues=(150, 225), sat=0.12),
+                      swing((96, 70, 109, 88), hook=70, reach=1, hues=(150, 225), sat=0.12)],
+    "moon_pagoda": [swing((26, 44, 35, 57), hook=44, reach=1), swing((97, 44, 106, 57), hook=44, reach=1),
+                    swing((15, 75, 24, 88), hook=75, reach=1), swing((107, 75, 116, 88), hook=75, reach=1)],
+    "pavilion_tent": [flutter((70, 24, 80, 33), pole=69)],
+    "warrior_guild": [flutter((51, 99, 73, 110), pole=50), flutter((171, 88, 190, 98), pole=170)],
 }
 
 
@@ -86,6 +89,18 @@ def mask_of(px, piece):
     x0, y0, x1, y1 = piece["box"]
     m = np.zeros(px.shape[:2], bool)
     m[y0:y1 + 1, x0:x1 + 1] = px[y0:y1 + 1, x0:x1 + 1, 3] > 0
+    if piece.get("hues"):
+        from scipy import ndimage
+        rgb = px[..., :3].astype(float) / 255
+        top, low = rgb.max(-1), rgb.min(-1)
+        span = np.maximum(top - low, 1e-6)
+        sat = np.where(top > 0, (top - low) / np.maximum(top, 1e-6), 0)
+        r, g, b = rgb[..., 0], rgb[..., 1], rgb[..., 2]
+        hue = np.where(top == r, ((g - b) / span) % 6, np.where(top == g, (b - r) / span + 2, (r - g) / span + 4)) * 60
+        lo, hi = piece["hues"]
+        inside = (hue >= lo) & (hue <= hi) if lo <= hi else (hue >= lo) | (hue <= hi)
+        own = inside & (sat >= piece.get("sat", 0.0)) & (top - low > 0.02)
+        m &= ndimage.binary_dilation(own & m)
     if piece["kind"] == "swing":
         m[:piece["hook"]] = False
     else:

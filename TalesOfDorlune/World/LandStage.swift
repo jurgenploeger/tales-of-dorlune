@@ -458,29 +458,32 @@ final class LandStage {
     /// cut out so it moves; the user, 2026-11-21: "the smoke needs to be animated", 2026-11-22: "Any
     /// house that has something with smoke needs to be animated"), and the top of every chimney.
     private static let smokeHoles: [String: CGPoint] = [
-        "yurt": CGPoint(x: 47.0 / 96, y: 25.0 / 96),
-        "teapot_house": CGPoint(x: 80.0 / 96, y: 43.0 / 96),
-        "smokehouse": CGPoint(x: 68.0 / 96, y: 20.0 / 96),
-        "lamp_house": CGPoint(x: 84.5 / 96, y: 53.0 / 96),
-        // Chimneys with nothing coming out (the user, 2026-11-22: "make everything feel more alive").
-        "inn": CGPoint(x: 61.5 / 96, y: 9.0 / 96),
-        "inn_red": CGPoint(x: 61.5 / 96, y: 9.0 / 96),
-        "inn_teal": CGPoint(x: 61.5 / 96, y: 9.0 / 96),
-        "thatched_cottage": CGPoint(x: 61.0 / 96, y: 27.0 / 96),
-        "painter_studio": CGPoint(x: 67.0 / 96, y: 19.0 / 96),
-        "woodcutter_cabin": CGPoint(x: 68.0 / 96, y: 18.0 / 96),
-        "stump_house": CGPoint(x: 70.0 / 96, y: 16.0 / 96),
-        "ice_fishing_hut": CGPoint(x: 63.5 / 96, y: 21.0 / 96),
-        "brick_house": CGPoint(x: 66.0 / 96, y: 16.0 / 96),
-        "toymaker_workshop": CGPoint(x: 69.0 / 96, y: 22.0 / 96),
-        "stone_townhouse": CGPoint(x: 72.5 / 96, y: 15.0 / 96),
-        "coral_house": CGPoint(x: 34.5 / 96, y: 19.0 / 96),
-        "snow_cabin": CGPoint(x: 25.5 / 96, y: 19.0 / 96),
-        "post_office": CGPoint(x: 27.5 / 96, y: 22.0 / 96),
-        "timber_house": CGPoint(x: 73.5 / 96, y: 19.0 / 96),
-        "apothecary": CGPoint(x: 68.0 / 96, y: 12.0 / 96),
-        "emerald_shop": CGPoint(x: 32.5 / 96, y: 17.0 / 96),
-        "glass_lantern_shop": CGPoint(x: 59.0 / 96, y: 11.0 / 96),
+        "yurt": CGPoint(x: 63.5 / 130, y: 35.0 / 130),
+        "teapot_house": CGPoint(x: 110.0 / 130, y: 63.0 / 130),
+        "smokehouse": CGPoint(x: 95.0 / 130, y: 28.0 / 130),
+        "lamp_house": CGPoint(x: 113.5 / 130, y: 73.0 / 130),
+        // Chimneys with nothing coming out (the user, 2026-11-22: "make everything feel more alive"). Those over 130 on
+        // ChatGPT's 1:1 redraws (2026-11-27), the acorn's and beekeeper's chimneys new in them.
+        "inn": CGPoint(x: 87.5 / 130, y: 16.0 / 130),
+        "inn_red": CGPoint(x: 87.5 / 130, y: 16.0 / 130),
+        "inn_teal": CGPoint(x: 87.5 / 130, y: 16.0 / 130),
+        "thatched_cottage": CGPoint(x: 86.0 / 130, y: 37.0 / 130),
+        "painter_studio": CGPoint(x: 91.0 / 130, y: 26.0 / 130),
+        "woodcutter_cabin": CGPoint(x: 95.0 / 130, y: 24.0 / 130),
+        "stump_house": CGPoint(x: 95.5 / 130, y: 22.0 / 130),
+        "ice_fishing_hut": CGPoint(x: 90.5 / 130, y: 29.0 / 130),
+        "brick_house": CGPoint(x: 90.0 / 130, y: 25.0 / 130),
+        "toymaker_workshop": CGPoint(x: 93.0 / 130, y: 30.0 / 130),
+        "stone_townhouse": CGPoint(x: 92.0 / 130, y: 13.0 / 130),
+        "coral_house": CGPoint(x: 44.0 / 130, y: 28.0 / 130),
+        "snow_cabin": CGPoint(x: 39.0 / 130, y: 31.0 / 130),
+        "post_office": CGPoint(x: 36.5 / 130, y: 30.0 / 130),
+        "timber_house": CGPoint(x: 95.5 / 130, y: 28.0 / 130),
+        "apothecary": CGPoint(x: 97.0 / 130, y: 16.0 / 130),
+        "acorn_cottage": CGPoint(x: 81.0 / 130, y: 38.0 / 130),
+        "beekeeper_cottage": CGPoint(x: 40.0 / 130, y: 31.0 / 130),
+        "emerald_shop": CGPoint(x: 44.0 / 130, y: 23.0 / 130),
+        "glass_lantern_shop": CGPoint(x: 86.0 / 130, y: 18.0 / 130),
         // Shiverdell's cauldron, its brew steaming.
         "bubbling_cauldron": CGPoint(x: 16.0 / 32, y: 9.0 / 32),
     ]
@@ -819,8 +822,8 @@ final class LandStage {
     /// right, gone as it turns toward you or away, out to the left and back, a turn every six
     /// seconds; above the night's shade and faded in with the dark, as lit windows are.
     private func addBeam(to node: SKSpriteNode) {
-        // The lamp room's middle, in the picture's pixels from its top left (96 across).
-        let lamp = CGPoint(x: 49.0 / 96, y: 33.5 / 96)
+        // The lamp room's middle, in the picture's pixels from its top left (130 across, ChatGPT's 1:1 redraw).
+        let lamp = CGPoint(x: 65.0 / 130, y: 46.0 / 130)
         let light = SKSpriteNode(color: .clear, size: .zero)
         light.position = CGPoint(x: (lamp.x - node.anchorPoint.x) * node.size.width,
                                  y: (1 - lamp.y - node.anchorPoint.y) * node.size.height)

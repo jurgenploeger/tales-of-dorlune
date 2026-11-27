@@ -5097,6 +5097,19 @@ struct LandPlanTests {
         return (map, planner.plan)
     }
 
+    /// Where Ingothold's buildings end up once the town is laid out, against where maps.json puts them (one hid its
+    /// dome house, the user, 2026-11-27): printed (🌳) for CI's log, nothing checked.
+    @Test func ingotholdBuildingsLog() async {
+        guard let def = content.map("goldburg") else { return }
+        let map = WorldMap(def: def)
+        let wanted = (def.buildings ?? []).map { "\($0.art)@\($0.x),\($0.y)" }
+        let placed = map.buildings.map { "\($0.art)@\($0.anchor.col - map.center.col),\($0.anchor.row - map.center.row)" }
+        let lots = map.lots.map { "\($0.art)@\($0.anchor.col - map.center.col),\($0.anchor.row - map.center.row)" }
+        print("🌳 goldburg wanted: \(wanted.joined(separator: " "))")
+        print("🌳 goldburg placed: \(placed.joined(separator: " "))")
+        print("🌳 goldburg lots: \(lots.joined(separator: " "))")
+    }
+
     /// Every prop a land's theme asks for is set down, and one that keeps near something (`near`) at
     /// least half as often as asked (SpriteCook's wave function collapse article, 2026-11-21: count
     /// what each rule places, as a rule can silently never fire). Each land's props set down less than

@@ -126,7 +126,7 @@ T = 44; C = math.sqrt(0.5)
 def project(gx, gy): return ((gx - gy) * C, (gx + gy) * C * 0.5)
 
 # ---------- ground (mirrors ArtLibrary.organicTile and WorldScene.makeGround) ----------
-_S = 32
+_S = 44   # a ground tile's pixels a cell (`WorldMap.tilePixels`; 32 till 0.9.247)
 _py, _px = np.mgrid[0:_S, 0:_S]
 _X = (_px + 0.5) / _S - 0.5; _Y = 0.5 - (_py + 0.5) / _S
 _WOBBLE = 0.045 * np.sin(2 * np.pi * (2 * _X + _Y)) + 0.03 * np.sin(2 * np.pi * (3 * _Y - _X) + 1.3)

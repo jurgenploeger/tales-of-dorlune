@@ -30,7 +30,7 @@ SPR = ROOT / "art" / "sprites"
 # Each sprite with a fire: the flame's box and the glow's box round it (x0, y0, x1, y1, inclusive), in
 # the PNG's pixels.
 FIRES = {
-    "blacksmith": {"box": (39, 51, 58, 64), "glow": (34, 45, 64, 64)},
+    "blacksmith": {"box": (42, 72, 62, 89), "glow": (44, 72, 62, 90)},   # ChatGPT's redraw at 130 (2026-11-27)
     # The camps' and lairs' brazier (the user, 2026-11-25: "The fire wasn't animating").
     "brazier": {"box": (10, 0, 22, 12), "glow": (8, 0, 24, 13)},
 }

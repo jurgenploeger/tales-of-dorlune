@@ -2056,6 +2056,14 @@ nonisolated final class WorldMap: @unchecked Sendable {
         // Shops along the streets: a 3×2 plot a cell back from a street, clear of everything else.
         let frontage = streetFrontage(&rng)
         var used: Set<GridPoint> = []
+        // The town's own buildings get room the shops keep clear of: a shop in front of one (rows below it, down the
+        // screen) hid it, a picture 130 points tall standing four rows in front of Ingothold's dome house (the user,
+        // 2026-11-27); behind and at the sides, the room the shops keep from each other.
+        for cell in buildingCells {
+            for dc in -2...2 {
+                for dr in -5...1 { used.insert(GridPoint(col: cell.col + dc, row: cell.row + dr)) }
+            }
+        }
         for art in town.lots ?? [] {
             guard let anchor = lotFrontage(frontage).first(where: { plotFits($0, used: used) }) else { continue }
             for dc in -2...2 {

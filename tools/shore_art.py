@@ -5,10 +5,11 @@ After SpriteCook's "2D water shorelines with a distance field" (2025-11): one nu
 it lies from the land, gives the shallows in bands that follow every bay and round every point (where the
 game had flat bands a whole cell at a time, stepping along the grid), and waves that roll in toward the
 shore. This mirrors `shallowField` (the distances, `SAMPLES` a cell, out from each land cell taken as a
-square) and `shallowShader` (bands and crests on the sea's own 32 pixels a cell); keep the two in step.
+square) and `shallowShader` (bands and crests on the sea's own 44 pixels a cell); keep the two in step.
 
     python3 tools/shore_art.py out.png [land] [--at X,Y]   # before and after, turned as the game shows it
     python3 tools/shore_art.py --gif out.gif [land]        # the waves rolling in
+    python3 tools/shore_art.py --swash out.gif [land]      # the waves washing up the beach (`swashShader`)
 
 Needs pillow, numpy. Reads content/world.json's shapes and art/sprites/sea.png.
 """
@@ -24,12 +25,13 @@ from PIL import Image
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "tools"))
 
-CELL = 32          # the sea's pixels a cell (tools/water_art.py)
+CELL = 44          # the sea's pixels a cell (tools/water_art.py, `WorldMap.tilePixels`; 32 till 0.9.247)
 CHUNK = 32         # cells a side of a chunk (World.chunkSize)
 SAMPLES = 4        # ContinentScene.shallowSamples
 REACH = 5          # ContinentScene.shallowReach
 UNDER = 0.75       # ContinentScene.shallowUnder
 PALE = np.array([0.8, 0.96, 0.95])
+SHEET = np.array([0.52, 0.8, 0.96])  # the swash's water, the sea's blue
 
 
 def world_land():
@@ -54,29 +56,44 @@ def world_land():
 
 def field(land, x0, y0, cols, rows):
     """`shallowField`'s distances over cells x0.. and y0.. (in `land`'s indices, row = y), SAMPLES a cell,
-    out from the land (under it, less than none), as the game stores them (one byte, eased between)."""
-    nx, ny = cols * SAMPLES + 1, rows * SAMPLES + 1
-    out = np.zeros((ny, nx))
+    out from the coastline as it's drawn (under the land, less than none), as the game stores them (one byte,
+    eased between). Each spot is water or land by the cut a land cell beside the sea is drawn with (the sea
+    cells' soft rounds, `ArtLibrary.waterDepth`: their sum past 0.55 is water), not round the cells' squares,
+    whose foam ran in steps out at sea (the user, 2026-11-27); then each spot's distance to the nearest of the
+    other kind (`ContinentScene.squaredDistances`), the line between them half a spot off."""
+    from scipy import ndimage
     h, w = land.shape
+    side_x, side_y = cols + 2 * REACH, rows + 2 * REACH
+    nx, ny = side_x * SAMPLES + 1, side_y * SAMPLES + 1
+    cx0, cy0 = x0 - REACH, y0 - REACH
+    wet = np.zeros((ny, nx), bool)
     for j in range(ny):
-        y = y0 + j / SAMPLES
+        y = j / SAMPLES
+        row = min(side_y - 1, int(y))
         for i in range(nx):
-            x = x0 + i / SAMPLES
-            col, row = min(w - 1, int(x)), min(h - 1, int(y))
-            inside = land[row, col]
-            around = 1 if inside else REACH
-            nearest = UNDER if inside else float(REACH)
-            for r in range(max(0, row - around), min(h - 1, row + around) + 1):
-                dy = max(0.0, r - y, y - (r + 1))
-                if dy >= nearest:
-                    continue
-                for c in range(max(0, col - around), min(w - 1, col + around) + 1):
-                    if land[r, c] != inside:
-                        dx = max(0.0, c - x, x - (c + 1))
-                        nearest = min(nearest, math.hypot(dx, dy))
-            d = -nearest if inside else nearest
-            out[j, i] = round(max(0, min(255, (d + UNDER) / (REACH + UNDER) * 255)))
-    return out
+            x = i / SAMPLES
+            col = min(side_x - 1, int(x))
+
+            def is_land(c, r):
+                gc, gr = cx0 + c, cy0 + r
+                return 0 <= gr < h and 0 <= gc < w and land[gr, gc]
+            if not is_land(col, row):
+                wet[j, i] = True
+                continue
+            rounds = 0.0
+            for r in range(max(0, row - 2), min(side_y - 1, row + 2) + 1):
+                for c in range(max(0, col - 2), min(side_x - 1, col + 2) + 1):
+                    if not is_land(c, r):
+                        rounds += math.exp(-((x - (c + 0.5)) ** 2 + (y - (r + 0.5)) ** 2) / 0.49)
+            wet[j, i] = rounds >= 0.55
+    half = 0.5 / SAMPLES
+    to_land = ndimage.distance_transform_edt(wet) / SAMPLES
+    to_water = ndimage.distance_transform_edt(~wet) / SAMPLES
+    d = np.where(wet, to_land - half, half - to_water)
+    d = np.clip(d, -UNDER, REACH)
+    k = REACH * SAMPLES
+    d = d[k:k + rows * SAMPLES + 1, k:k + cols * SAMPLES + 1]
+    return np.round(np.clip((d + UNDER) / (REACH + UNDER) * 255, 0, 255))
 
 
 def sample(f, px, py):
@@ -115,6 +132,64 @@ def shade(f, cols, rows, t):
     rgb = PALE[None, None, :] * pale[..., None] * (1 - wave[..., None]) + wave[..., None]
     a = pale * (1 - wave) + wave
     return np.dstack([rgb, a])
+
+
+SAND = np.array([0.86, 0.76, 0.52])
+SWASH_PERIOD = 6.0     # seconds a wave takes to wash up and back (`swashShader`)
+SWASH_REACH = 0.5      # cells it runs up the beach at most
+SWASH_UP = 0.3         # the share of it running up
+
+
+def swash(f, cols, rows, t, origin=(0, 0)):
+    """`swashShader` over the land's pixels by the water (premultiplied RGBA, y up): each wave runs up the beach
+    as a thin sheet with a broken line of foam at its front, out and back in its own time along the coast,
+    and slides back, leaving the sand dark and wet where it reached, drying as the next comes."""
+    w, h = cols * CELL, rows * CELL
+    pix_x, pix_y = np.meshgrid(np.arange(w) + 0.5, np.arange(h) + 0.5)
+    d = sample(f, pix_x / CELL * SAMPLES, pix_y / CELL * SAMPLES) / 255 * (REACH + UNDER) - UNDER
+    run = -d
+    wx, wy = pix_x / CELL + origin[0], pix_y / CELL + origin[1]
+    along = np.sin(wx * 0.21 + wy * 0.17) + np.sin(wx * 0.07 - wy * 0.13 + 1.7)
+    phase = t / SWASH_PERIOD + along * 0.16
+    cyc, k = np.mod(phase, 1), np.floor(phase)
+    strength = 0.78 + 0.22 * np.sin(wx * 0.43 + k * 2.1) * np.sin(wy * 0.37 - k * 1.3)
+    peak = SWASH_REACH * strength
+    rising = cyc < SWASH_UP
+    u = np.clip(cyc / SWASH_UP, 0, 1)
+    v = np.clip((cyc - SWASH_UP) / (1 - SWASH_UP), 0, 1)
+    r = np.where(rising, peak * (1 - (1 - u) ** 2), peak * (1 - v * v * (3 - 2 * v)))
+    speck = np.mod(np.sin(np.floor(pix_x / 3) * 12.9898 + np.floor(pix_y / 3) * 78.233) * 43758.5453, 1)
+    fine = np.mod(np.sin(np.floor(pix_x / 2) * 39.346 + np.floor(pix_y / 2) * 11.135 + k * 7.1) * 43758.5453, 1)
+    on = (run > 0) & (run < UNDER - 0.03)
+    wet = on & (run < r)
+    sheet = wet * 0.34
+    front = wet & (run >= r - 0.07) & (speck >= 0.12)
+    fade = np.where(rising, 1.0, np.clip(1 - v / 0.55, 0, 1))
+    foam = front * np.floor(fade * 4) / 4 * 0.85
+    lace = wet & (fine >= 0.86) & (run < r - 0.1)
+    foam = np.maximum(foam, lace * 0.45 * np.floor(fade * 4) / 4)
+    damp = on & ~wet & (run < peak) & ~rising
+    dark = damp * np.floor((1 - v) * 3) / 3 * 0.12
+    rgb = SHEET[None, None, :] * sheet[..., None] * (1 - foam[..., None]) + foam[..., None]
+    a = sheet * (1 - foam) + foam
+    # the wet sand: black over it
+    a = a + dark * (1 - a)
+    return np.dstack([rgb, a])
+
+
+def beach(land, x0, y0, cols, rows, f, t):
+    """The sea and its shallows, the land as sand cut along the coastline as drawn (where the distances say
+    land), and the swash over it, y down."""
+    sea = np.asarray(picture(np.zeros_like(land), x0, y0, cols, rows, shade(f, cols, rows, t))).astype(float) / 255
+    w, h = cols * CELL, rows * CELL
+    pix_x, pix_y = np.meshgrid(np.arange(w) + 0.5, np.arange(h) + 0.5)
+    d = sample(f, pix_x / CELL * SAMPLES, pix_y / CELL * SAMPLES) / 255 * (REACH + UNDER) - UNDER
+    grain = np.mod(np.sin(np.floor(pix_x / 2) * 12.9898 + np.floor(pix_y / 2) * 78.233) * 43758.5453, 1)
+    sand = SAND[None, None, :] * (0.94 + 0.08 * grain[..., None])
+    out = np.where((d < 0)[::-1][..., None], sand[::-1], sea)
+    o = swash(f, cols, rows, t, (x0, y0))[::-1]
+    out = out * (1 - o[..., 3:4]) + o[..., :3]
+    return Image.fromarray((np.clip(out, 0, 1) * 255).astype(np.uint8))
 
 
 def old_bands(land, x0, y0, cols, rows):
@@ -191,6 +266,9 @@ def main(argv):
     gif = "--gif" in argv
     if gif:
         argv = [a for a in argv if a != "--gif"]
+    washing = "--swash" in argv
+    if washing:
+        argv = [a for a in argv if a != "--swash"]
     at = None
     if "--at" in argv:
         i = argv.index("--at")
@@ -203,6 +281,19 @@ def main(argv):
     cx, cy = (at[0] - low[0], at[1] - low[1]) if at else coast_spot(land, low, land_id, cols, rows)
     x0, y0 = cx - cols // 2, cy - rows // 2
     f = field(land, x0, y0, cols, rows)
+    if washing:
+        cols, rows = 12, 8
+        if not at:
+            cx, cy = coast_spot(land, low, land_id, cols, rows)
+        x0, y0 = cx - cols // 2, cy - rows // 2
+        f = field(land, x0, y0, cols, rows)
+        frames = []
+        for k in range(48):
+            img = turned(beach(land, x0, y0, cols, rows, f, k * 0.25))
+            frames.append(img.convert("P", palette=Image.ADAPTIVE, colors=255))
+        frames[0].save(out, save_all=True, append_images=frames[1:], duration=125, loop=0)
+        print(f"gif in {out}")
+        return 0
     if gif:
         frames = []
         for k in range(40):

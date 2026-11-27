@@ -837,27 +837,13 @@
     },
     {
       "id": "house",
-      "scale": 1.35,
-      "kind": "building",
-      "request": {
-        "prompt": "cozy fairytale cottage with a red tiled roof and round wooden door",
-        "prompt_style": "rd_tile__tile_object",
-        "width": 96,
-        "height": 96,
-        "remove_bg": true
-      }
+      "scale": 1,
+      "kind": "building"
     },
     {
       "id": "guild_hall",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building",
-      "request": {
-        "prompt": "grand fairytale guild hall with a blue roof and three banners",
-        "prompt_style": "rd_tile__tile_object",
-        "width": 96,
-        "height": 96,
-        "remove_bg": true
-      },
       "derive": {
         "from": "house",
         "recolor": [
@@ -2397,63 +2383,28 @@
     },
     {
       "id": "item_shop",
-      "scale": 1.35,
-      "kind": "building",
-      "request": {
-        "prompt": "cozy fairytale item shop with a potion sign and green roof",
-        "prompt_style": "rd_tile__tile_object",
-        "width": 96,
-        "height": 96,
-        "remove_bg": true
-      }
+      "scale": 1,
+      "kind": "building"
     },
     {
       "id": "inn",
-      "scale": 1.35,
-      "kind": "building",
-      "request": {
-        "prompt": "fairytale inn with a bed sign, warm windows and a purple roof",
-        "prompt_style": "rd_tile__tile_object",
-        "width": 96,
-        "height": 96,
-        "remove_bg": true
-      }
+      "scale": 1,
+      "kind": "building"
     },
     {
       "id": "blacksmith",
-      "scale": 1.35,
-      "kind": "building",
-      "request": {
-        "prompt": "fairytale blacksmith with an anvil sign, chimney smoke and grey stone walls",
-        "prompt_style": "rd_tile__tile_object",
-        "width": 96,
-        "height": 96,
-        "remove_bg": true
-      }
+      "scale": 1,
+      "kind": "building"
     },
     {
       "id": "magic_tower",
-      "scale": 1.35,
-      "kind": "building",
-      "request": {
-        "prompt": "tall whimsical wizard tower with a pointy blue roof and stars",
-        "prompt_style": "rd_tile__tile_object",
-        "width": 96,
-        "height": 96,
-        "remove_bg": true
-      }
+      "scale": 1,
+      "kind": "building"
     },
     {
       "id": "windmill",
-      "scale": 1.35,
-      "kind": "building",
-      "request": {
-        "prompt": "cute fairytale windmill with white sails",
-        "prompt_style": "rd_tile__tile_object",
-        "width": 96,
-        "height": 96,
-        "remove_bg": true
-      }
+      "scale": 1,
+      "kind": "building"
     },
     {
       "id": "mushroom_house",
@@ -2468,15 +2419,8 @@
     },
     {
       "id": "bakery",
-      "scale": 1.35,
-      "kind": "building",
-      "request": {
-        "prompt": "fairytale bakery with a bread sign and a yellow striped awning",
-        "prompt_style": "rd_tile__tile_object",
-        "width": 96,
-        "height": 96,
-        "remove_bg": true
-      }
+      "scale": 1,
+      "kind": "building"
     },
     {
       "id": "town_gate",
@@ -2547,496 +2491,377 @@
     },
     {
       "id": "adobe_house",
-      "scale": 1.35,
-      "kind": "building",
-      "request": {
-        "prompt": "fairytale desert house of sandstone adobe with a small round dome, a blue arched door and a striped cloth awning",
-        "prompt_style": "rd_tile__tile_object",
-        "width": 96,
-        "height": 96,
-        "remove_bg": true
-      }
+      "scale": 1,
+      "kind": "building"
     },
     {
       "id": "adobe_house_tall",
-      "scale": 1.35,
-      "kind": "building",
-      "request": {
-        "prompt": "two storey fairytale desert house of pale sandstone adobe with a flat roof terrace, wooden roof beams poking out of the walls, a green wooden door, hanging clay pots with plants",
-        "prompt_style": "rd_tile__tile_object",
-        "width": 96,
-        "height": 96,
-        "remove_bg": true
-      }
+      "scale": 1,
+      "kind": "building"
     },
     {
       "id": "desert_tent",
-      "scale": 1.35,
-      "kind": "building",
-      "request": {
-        "prompt": "colorful striped nomad tent with tassels and a rug at its open flap, arabian nights",
-        "prompt_style": "rd_tile__tile_object",
-        "width": 96,
-        "height": 96,
-        "remove_bg": true
-      }
+      "scale": 1,
+      "kind": "building"
     },
     {
       "id": "beach_hut",
-      "scale": 1.35,
-      "kind": "building",
-      "request": {
-        "prompt": "cute thatched beach hut on short wooden stilts with a palm leaf roof and a little porch",
-        "prompt_style": "rd_tile__tile_object",
-        "width": 96,
-        "height": 96,
-        "remove_bg": true
-      }
+      "scale": 1,
+      "kind": "building"
     },
     {
       "id": "fisher_shack",
-      "scale": 1.35,
-      "kind": "building",
-      "request": {
-        "prompt": "small wooden fisherman's shack with a fishing net and a rowing oar leaning on it, blue door",
-        "prompt_style": "rd_tile__tile_object",
-        "width": 96,
-        "height": 96,
-        "remove_bg": true
-      }
+      "scale": 1,
+      "kind": "building"
     },
     {
       "id": "snow_cabin",
-      "scale": 1.35,
-      "kind": "building",
-      "request": {
-        "prompt": "cozy log cabin with a thick snow-covered roof, icicles, a smoking chimney and warm yellow windows",
-        "prompt_style": "rd_tile__tile_object",
-        "width": 96,
-        "height": 96,
-        "remove_bg": true
-      }
+      "scale": 1,
+      "kind": "building"
     },
     {
       "id": "dwarf_cottage",
-      "scale": 1.35,
-      "kind": "building",
-      "request": {
-        "prompt": "tiny fairytale dwarves' cottage with a steep snowy roof, seven little windows and a carved wooden door",
-        "prompt_style": "rd_tile__tile_object",
-        "width": 96,
-        "height": 96,
-        "remove_bg": true
-      }
+      "scale": 1,
+      "kind": "building"
     },
     {
       "id": "igloo",
-      "scale": 1.35,
-      "kind": "building",
-      "request": {
-        "prompt": "round snow igloo made of ice blocks with a little arched entrance tunnel",
-        "prompt_style": "rd_tile__tile_object",
-        "width": 96,
-        "height": 96,
-        "remove_bg": true
-      }
+      "scale": 1,
+      "kind": "building"
     },
     {
       "id": "swamp_stilt_hut",
-      "scale": 1.35,
-      "kind": "building",
-      "request": {
-        "prompt": "wooden swamp hut on tall stilts with a reed thatched roof, a rope ladder and a hanging lantern",
-        "prompt_style": "rd_tile__tile_object",
-        "width": 96,
-        "height": 96,
-        "remove_bg": true
-      }
+      "scale": 1,
+      "kind": "building"
     },
     {
       "id": "lily_cottage",
-      "scale": 1.35,
-      "kind": "building",
-      "request": {
-        "prompt": "whimsical cottage shaped like a pink water lily bud with a round green door, thumbelina",
-        "prompt_style": "rd_tile__tile_object",
-        "width": 96,
-        "height": 96,
-        "remove_bg": true
-      }
+      "scale": 1,
+      "kind": "building"
     },
     {
       "id": "crooked_house",
-      "scale": 1.35,
-      "kind": "building",
-      "request": {
-        "prompt": "spooky crooked fairytale cottage leaning sideways with a patched purple roof and glowing green windows",
-        "prompt_style": "rd_tile__tile_object",
-        "width": 96,
-        "height": 96,
-        "remove_bg": true
-      }
+      "scale": 1,
+      "kind": "building"
     },
     {
       "id": "witch_hut",
-      "scale": 1.35,
-      "kind": "building",
-      "request": {
-        "prompt": "creepy witch's hut with a twisted chimney, a cauldron by the door and hanging bones",
-        "prompt_style": "rd_tile__tile_object",
-        "width": 96,
-        "height": 96,
-        "remove_bg": true
-      }
+      "scale": 1,
+      "kind": "building"
     },
     {
       "id": "puppet_theater",
-      "scale": 1.35,
-      "kind": "building",
-      "request": {
-        "prompt": "small wooden puppet theater booth with red velvet curtains and a painted star sign",
-        "prompt_style": "rd_tile__tile_object",
-        "width": 96,
-        "height": 96,
-        "remove_bg": true
-      }
+      "scale": 1,
+      "kind": "building"
     },
     {
       "id": "stone_hut",
-      "scale": 1.35,
-      "kind": "building",
-      "request": {
-        "prompt": "sturdy mountain hut of grey fieldstone with a slate roof and a lantern by the door",
-        "prompt_style": "rd_tile__tile_object",
-        "width": 96,
-        "height": 96,
-        "remove_bg": true
-      }
+      "scale": 1,
+      "kind": "building"
     },
     {
       "id": "moon_pagoda",
-      "scale": 1.35,
-      "kind": "building",
-      "request": {
-        "prompt": "small two-tiered pagoda house with a curved blue roof, paper lanterns and a round moon window",
-        "prompt_style": "rd_tile__tile_object",
-        "width": 96,
-        "height": 96,
-        "remove_bg": true
-      }
+      "scale": 1,
+      "kind": "building"
     },
     {
       "id": "water_shrine",
-      "scale": 1.35,
-      "kind": "building",
-      "request": {
-        "prompt": "small white marble water shrine with blue tiled roof, pillars and a little waterfall basin",
-        "prompt_style": "rd_tile__tile_object",
-        "width": 96,
-        "height": 96,
-        "remove_bg": true
-      }
+      "scale": 1,
+      "kind": "building"
     },
     {
       "id": "candy_cottage",
-      "scale": 1.35,
-      "kind": "building",
-      "request": {
-        "prompt": "fairytale candy cottage with a gingerbread roof dripping white icing, candy cane posts and a chocolate door",
-        "prompt_style": "rd_tile__tile_object",
-        "width": 96,
-        "height": 96,
-        "remove_bg": true
-      }
+      "scale": 1,
+      "kind": "building"
     },
     {
       "id": "thatched_cottage",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "post_office",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "dairy_shop",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "glass_lantern_shop",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "painter_studio",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "aviary_shop",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "music_hall",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "assay_office",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "miners_lodge",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "sandstone_house",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "spice_shop",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "beekeeper_cottage",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "chime_cottage",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "lantern_cottage",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "owl_tower",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "woodcutter_cabin",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "stump_house",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "apple_cellar",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "carved_chalet",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "ice_fishing_hut",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "briar_cottage",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "reed_boathouse",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "lotus_pagoda",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "frog_hut",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "raft_teahouse",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "swan_boathouse",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "lake_pavilion",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "dwarf_boathouse",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "smokehouse",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "pineapple_hut",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "juice_shack",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "shell_house",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "lighthouse",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "well_house",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "flag_tower",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "lamp_house",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "horse_stable",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "crystal_lodge",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "moon_teahouse",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "star_dome",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "lookout_hut",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "pillow_cottage",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "nightcap_tower",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "toll_house",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "emerald_shop",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "flower_cup_house",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "firefly_house",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "coral_house",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "pearl_diver_hut",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "apothecary",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "creaky_mill",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "straw_house",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "stick_house",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "brick_house",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "cupcake_house",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "ice_cream_parlour",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "toymaker_workshop",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "music_box_house",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -3125,72 +2950,72 @@
     },
     {
       "id": "timber_house",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "stone_townhouse",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "round_cottage",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "teapot_house",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "garden_cottage",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "weapon_shop",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "armour_shop",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "tailor_shop",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "flower_shop",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "tea_house",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "book_shop",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "pavilion_tent",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "yurt",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "dome_house",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -3199,32 +3024,32 @@
     },
     {
       "id": "tree_house",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "acorn_cottage",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "bank",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "bluebell_house",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "crystal_cottage",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "lake_shrine",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -3245,66 +3070,52 @@
     },
     {
       "id": "warrior_guild",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "wildfolk_lodge",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "bell_tower",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "gem_workshop",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "emerald_spire",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "star_observatory",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "moonwell",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "forest_lodge",
-      "scale": 1.35,
-      "kind": "building",
-      "request": {
-        "prompt": "cozy forest log lodge with a mossy green roof, mushrooms by the steps and a carved deer sign",
-        "prompt_style": "rd_tile__tile_object",
-        "width": 96,
-        "height": 96,
-        "remove_bg": true
-      }
+      "scale": 1,
+      "kind": "building"
     },
     {
       "id": "sleepy_cottage",
-      "scale": 1.35,
-      "kind": "building",
-      "request": {
-        "prompt": "sleepy little cottage with a droopy nightcap shaped blue roof, a crescent moon sign and dim window",
-        "prompt_style": "rd_tile__tile_object",
-        "width": 96,
-        "height": 96,
-        "remove_bg": true
-      }
+      "scale": 1,
+      "kind": "building"
     },
     {
       "id": "sleepy_cottage_lilac",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building",
       "derive": {
         "from": "sleepy_cottage",
@@ -3323,7 +3134,7 @@
     },
     {
       "id": "house_green",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building",
       "derive": {
         "from": "house",
@@ -3351,7 +3162,7 @@
     },
     {
       "id": "house_purple",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building",
       "derive": {
         "from": "house",
@@ -3417,7 +3228,7 @@
     },
     {
       "id": "inn_red",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building",
       "derive": {
         "from": "inn",
@@ -3436,7 +3247,7 @@
     },
     {
       "id": "inn_teal",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building",
       "derive": {
         "from": "inn",
@@ -3456,7 +3267,7 @@
     },
     {
       "id": "item_shop_red",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building",
       "derive": {
         "from": "item_shop",
@@ -3834,11 +3645,23 @@
       "kind": "prop"
     },
     {
-      "id": "windows_firefly_jar_post",
+      "id": "windows_adobe_house_tall",
       "kind": "prop"
     },
     {
-      "id": "windows_fisher_shack",
+      "id": "windows_forest_lodge",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_magic_tower",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_witch_hut",
+      "kind": "prop"
+    },
+    {
+      "id": "windows_firefly_jar_post",
       "kind": "prop"
     },
     {
@@ -6646,12 +6469,7 @@
     },
     {
       "id": "big_tree",
-      "kind": "prop",
-      "scale": 1.7,
-      "derive": {
-        "from": "tree",
-        "recolor": []
-      }
+      "kind": "prop"
     },
     {
       "id": "big_red_maple",
@@ -6667,12 +6485,7 @@
     },
     {
       "id": "big_hollow_tree",
-      "kind": "prop",
-      "scale": 1.7,
-      "derive": {
-        "from": "hollow_tree",
-        "recolor": []
-      }
+      "kind": "prop"
     },
     {
       "id": "big_dark_tree",
@@ -6684,29 +6497,29 @@
     },
     {
       "id": "big_snow_tree",
-      "kind": "prop",
-      "scale": 1.7,
-      "derive": {
-        "from": "snow_tree",
-        "recolor": []
-      }
+      "kind": "prop"
     },
     {
       "id": "big_snow_pine",
-      "kind": "prop",
-      "scale": 1.7,
-      "derive": {
-        "from": "snow_pine",
-        "recolor": []
-      }
+      "kind": "prop"
     },
     {
       "id": "big_frost_pine",
       "kind": "prop",
-      "scale": 1.7,
       "derive": {
-        "from": "frost_pine",
-        "recolor": []
+        "from": "big_snow_pine",
+        "recolor": [
+          {
+            "hue": [
+              85,
+              170
+            ],
+            "to": 191.3,
+            "spread": 0.7,
+            "saturation": 0.55,
+            "value": 1.12
+          }
+        ]
       }
     },
     {
@@ -6719,12 +6532,7 @@
     },
     {
       "id": "big_dead_tree",
-      "kind": "prop",
-      "scale": 1.7,
-      "derive": {
-        "from": "dead_tree",
-        "recolor": []
-      }
+      "kind": "prop"
     },
     {
       "id": "frost_fern",
@@ -6781,23 +6589,7 @@
     },
     {
       "id": "big_ice_cluster",
-      "kind": "prop",
-      "scale": 1.6,
-      "derive": {
-        "from": "crystal",
-        "recolor": [
-          {
-            "hue": [
-              140,
-              215
-            ],
-            "to": 196.3,
-            "spread": 1.0,
-            "saturation": 0.5,
-            "value": 1.25
-          }
-        ]
-      }
+      "kind": "prop"
     },
     {
       "id": "ice_boulder",
@@ -10515,17 +10307,13 @@
     },
     {
       "id": "lollipop",
-      "kind": "prop",
-      "derive": {
-        "from": "beach_umbrella",
-        "recolor": []
-      }
+      "kind": "prop"
     },
     {
       "id": "lollipop_pink",
       "kind": "prop",
       "derive": {
-        "from": "beach_umbrella",
+        "from": "lollipop",
         "recolor": [
           {
             "hue": [
@@ -10543,7 +10331,7 @@
       "id": "lollipop_lemon",
       "kind": "prop",
       "derive": {
-        "from": "beach_umbrella",
+        "from": "lollipop",
         "recolor": [
           {
             "hue": [
@@ -10561,7 +10349,7 @@
       "id": "lollipop_berry",
       "kind": "prop",
       "derive": {
-        "from": "beach_umbrella",
+        "from": "lollipop",
         "recolor": [
           {
             "hue": [
@@ -10579,7 +10367,7 @@
       "id": "lollipop_sky",
       "kind": "prop",
       "derive": {
-        "from": "beach_umbrella",
+        "from": "lollipop",
         "recolor": [
           {
             "hue": [
