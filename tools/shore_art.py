@@ -9,6 +9,7 @@ square) and `shallowShader` (bands and crests on the sea's own 44 pixels a cell)
 
     python3 tools/shore_art.py out.png [land] [--at X,Y]   # before and after, turned as the game shows it
     python3 tools/shore_art.py --gif out.gif [land]        # the waves rolling in
+    python3 tools/shore_art.py --swash out.gif [land]      # the waves washing up the beach (`swashShader`)
 
 Needs pillow, numpy. Reads content/world.json's shapes and art/sprites/sea.png.
 """
@@ -132,6 +133,64 @@ def shade(f, cols, rows, t):
     return np.dstack([rgb, a])
 
 
+SAND = np.array([0.86, 0.76, 0.52])
+SWASH_PERIOD = 6.0     # seconds a wave takes to wash up and back (`swashShader`)
+SWASH_REACH = 0.5      # cells it runs up the beach at most
+SWASH_UP = 0.3         # the share of it running up
+
+
+def swash(f, cols, rows, t, origin=(0, 0)):
+    """`swashShader` over the land's pixels by the water (premultiplied RGBA, y up): each wave runs up the beach
+    as a thin sheet with a broken line of foam at its front, out and back in its own time along the coast,
+    and slides back, leaving the sand dark and wet where it reached, drying as the next comes."""
+    w, h = cols * CELL, rows * CELL
+    pix_x, pix_y = np.meshgrid(np.arange(w) + 0.5, np.arange(h) + 0.5)
+    d = sample(f, pix_x / CELL * SAMPLES, pix_y / CELL * SAMPLES) / 255 * (REACH + UNDER) - UNDER
+    run = -d
+    wx, wy = pix_x / CELL + origin[0], pix_y / CELL + origin[1]
+    along = np.sin(wx * 0.21 + wy * 0.17) + np.sin(wx * 0.07 - wy * 0.13 + 1.7)
+    phase = t / SWASH_PERIOD + along * 0.16
+    cyc, k = np.mod(phase, 1), np.floor(phase)
+    strength = 0.78 + 0.22 * np.sin(wx * 0.43 + k * 2.1) * np.sin(wy * 0.37 - k * 1.3)
+    peak = SWASH_REACH * strength
+    rising = cyc < SWASH_UP
+    u = np.clip(cyc / SWASH_UP, 0, 1)
+    v = np.clip((cyc - SWASH_UP) / (1 - SWASH_UP), 0, 1)
+    r = np.where(rising, peak * (1 - (1 - u) ** 2), peak * (1 - v * v * (3 - 2 * v)))
+    speck = np.mod(np.sin(np.floor(pix_x / 3) * 12.9898 + np.floor(pix_y / 3) * 78.233) * 43758.5453, 1)
+    fine = np.mod(np.sin(np.floor(pix_x / 2) * 39.346 + np.floor(pix_y / 2) * 11.135 + k * 7.1) * 43758.5453, 1)
+    on = (run > 0) & (run < UNDER - 0.03)
+    wet = on & (run < r)
+    sheet = wet * 0.26
+    front = wet & (run >= r - 0.07) & (speck >= 0.12)
+    fade = np.where(rising, 1.0, np.clip(1 - v / 0.55, 0, 1))
+    foam = front * np.floor(fade * 4) / 4 * 0.85
+    lace = wet & (fine >= 0.86) & (run < r - 0.1)
+    foam = np.maximum(foam, lace * 0.45 * np.floor(fade * 4) / 4)
+    damp = on & ~wet & (run < peak) & ~rising
+    dark = damp * np.floor((1 - v) * 3) / 3 * 0.18
+    rgb = PALE[None, None, :] * sheet[..., None] * (1 - foam[..., None]) + foam[..., None]
+    a = sheet * (1 - foam) + foam
+    # the wet sand: black over it
+    a = a + dark * (1 - a)
+    return np.dstack([rgb, a])
+
+
+def beach(land, x0, y0, cols, rows, f, t):
+    """The sea and its shallows, the land as sand cut along the coastline as drawn (where the distances say
+    land), and the swash over it, y down."""
+    sea = np.asarray(picture(np.zeros_like(land), x0, y0, cols, rows, shade(f, cols, rows, t))).astype(float) / 255
+    w, h = cols * CELL, rows * CELL
+    pix_x, pix_y = np.meshgrid(np.arange(w) + 0.5, np.arange(h) + 0.5)
+    d = sample(f, pix_x / CELL * SAMPLES, pix_y / CELL * SAMPLES) / 255 * (REACH + UNDER) - UNDER
+    grain = np.mod(np.sin(np.floor(pix_x / 2) * 12.9898 + np.floor(pix_y / 2) * 78.233) * 43758.5453, 1)
+    sand = SAND[None, None, :] * (0.94 + 0.08 * grain[..., None])
+    out = np.where((d < 0)[::-1][..., None], sand[::-1], sea)
+    o = swash(f, cols, rows, t, (x0, y0))[::-1]
+    out = out * (1 - o[..., 3:4]) + o[..., :3]
+    return Image.fromarray((np.clip(out, 0, 1) * 255).astype(np.uint8))
+
+
 def old_bands(land, x0, y0, cols, rows):
     """The flat bands a cell at a time the game drew before (ContinentScene.shallowTiles)."""
     alphas = [0.42, 0.3, 0.18, 0.08]
@@ -206,6 +265,9 @@ def main(argv):
     gif = "--gif" in argv
     if gif:
         argv = [a for a in argv if a != "--gif"]
+    washing = "--swash" in argv
+    if washing:
+        argv = [a for a in argv if a != "--swash"]
     at = None
     if "--at" in argv:
         i = argv.index("--at")
@@ -218,6 +280,19 @@ def main(argv):
     cx, cy = (at[0] - low[0], at[1] - low[1]) if at else coast_spot(land, low, land_id, cols, rows)
     x0, y0 = cx - cols // 2, cy - rows // 2
     f = field(land, x0, y0, cols, rows)
+    if washing:
+        cols, rows = 12, 8
+        if not at:
+            cx, cy = coast_spot(land, low, land_id, cols, rows)
+        x0, y0 = cx - cols // 2, cy - rows // 2
+        f = field(land, x0, y0, cols, rows)
+        frames = []
+        for k in range(48):
+            img = turned(beach(land, x0, y0, cols, rows, f, k * 0.25))
+            frames.append(img.convert("P", palette=Image.ADAPTIVE, colors=255))
+        frames[0].save(out, save_all=True, append_images=frames[1:], duration=125, loop=0)
+        print(f"gif in {out}")
+        return 0
     if gif:
         frames = []
         for k in range(40):
