@@ -103,3 +103,56 @@ Snap each to its grid (`tools/ai_sprite_eval.py`), copy it in as `art/sprites/<i
 houses' crowns) and `tools/window_art.py` (the houses' panes, `windows_<id>` registered in art/assets.json), then
 `python3 tools/check_content.py`, `tools/pixel_scale.py` (each now at the walkers' 1) and `scripts/sprite_check.py
 check <ids> --new`.
+
+## Batch 1's result (2026-11-26)
+
+All eleven exactly the sizes asked, in the game since 0.9.244 (wind rigs, the houses' windows lit).
+
+## Batch 2: Retro Diffusion's own, at their own size (the user's OK, 2026-11-27)
+
+The user, 2026-11-27: "then second chatgpt batch". These are RD's drawings shown bigger than drawn; the big ones are new
+drawings beside RD's small ones, which stay as they are.
+
+| id | canvas | sprite (w × h) | foot row | drawn from |
+|---|---|---|---|---|
+| `big_tree` | 108 × 108 | 75 × 95 | 100 | `tree_now_8x.png` |
+| `big_dead_tree` | 108 × 108 | 70 × 90 | 97 | `dead_tree_now_8x.png` |
+| `big_snow_pine` | 108 × 108 | 68 × 97 | 100 | `snow_pine_now_8x.png` |
+| `big_snow_tree` | 108 × 108 | 90 × 82 | 95 | `snow_tree_now_8x.png` |
+| `big_hollow_tree` | 108 × 108 | 90 × 95 | 97 | `hollow_tree_now_8x.png` |
+| `big_ice_cluster` | 52 × 52 | 40 × 38 | 43 | `crystal_now_8x.png` (shown icy) |
+| `lollipop` | 54 × 54 | 37 × 41 | 44 | `beach_umbrella_now_8x.png` (RD's lollipop, named so) |
+
+`big_frost_pine` follows `big_snow_pine` by `frost_pine`'s recolour, and `lollipop_pink`, `_lemon`, `_berry` and `_sky` the
+new `lollipop` by theirs (art/assets.json `derive`), so nothing to draw for them.
+
+### The prompt
+
+Attach `style_reference_rd_4x.png`, then the seven `_now_8x.png` in the table's order.
+
+> Draw seven more of my game's props bigger, one at a time, as the project's instructions say and as the last big
+> trees, except where this message says otherwise. The first picture is our style sheet; the others are today's
+> drawings at 8×, which the game shows stretched 1.6 to 1.7 times their size. **Don't measure the size from the
+> pictures:** each below gives its canvas, the sprite's width and height and its foot row, the trunk or stick in the
+> middle. Every pixel the same size as in today's drawings: the same thing with more room for detail, never the small
+> one blown up. Colours: 30 to 50 on a 108 canvas, 16 to 30 on the small ones.
+>
+> Every one: transparent, alpha 0 or 255 only, no ground, slab or shadow under it (a few grass tufts at a tree's foot
+> at most), no text. Natural colours (the game tints each land's art itself). A tree's leaves in clearly different
+> colours from its trunk, its crown a few big leaf clumps, each lit on its own from the top left with darker gaps
+> between them (the game moves each clump in the wind).
+>
+> 1. `big_tree` (from the round green tree): canvas 108 × 108, 75 wide, 95 tall, foot on row 100. A big old leafy
+>    oak, a round full crown of fresh green clumps, a stout brown trunk with roots.
+> 2. `big_dead_tree` (from the dead tree): canvas 108 × 108, 70 wide, 90 tall, foot on row 97. A bare dead tree,
+>    grey-brown twisting branches reaching out, no leaves, a cracked trunk with roots.
+> 3. `big_snow_pine` (from the snowy pine): canvas 108 × 108, 68 wide, 97 tall, foot on row 100. A tall green fir in
+>    tiers, snow lying thick on each tier's top, a short brown trunk.
+> 4. `big_snow_tree` (from the snowy tree): canvas 108 × 108, 90 wide, 82 tall, foot on row 95. A broad round
+>    deciduous tree heavy with snow, white clumps on its crown with green showing between, a brown trunk.
+> 5. `big_hollow_tree` (from the hollow tree): canvas 108 × 108, 90 wide, 95 tall, foot on row 97. A huge old oak
+>    with a dark hollow in its trunk, gnarled roots, a full crown of green leaf clumps.
+> 6. `big_ice_cluster` (from the crystal): canvas 52 × 52, 40 wide, 38 tall, foot on row 43. A cluster of pale icy
+>    blue crystals of different heights, faceted, lit top left, white glints.
+> 7. `lollipop` (from the swirled lollipop): canvas 54 × 54, 37 wide, 41 tall, foot on row 44. A giant round candy
+>    lollipop, a red and cream spiral swirl, a little shine top left, on a thin pale stick standing upright.
