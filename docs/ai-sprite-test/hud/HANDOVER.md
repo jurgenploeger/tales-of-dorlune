@@ -42,6 +42,13 @@ the real HUD (the artifact https://claude.ai/artifact/BbEWKRiYCnw6yJi5iCTtyK; it
    its colour. ChatGPT flagged that no outline reaches 3 : 1 on the dark pressed face (black would be
    2.62 : 1); the pictures' own colours carry them there (the bag's brown on walnut the weakest, 1.35).
 
+5. `5_menu_battle_bits_A.txt`: the menus' and battles' small pieces. **Done**: `art-variants/hud/bits/` (18 pieces
+   and their dark twins: item slot normal, selected and empty, equip slot, switch off, on and its knob, slider
+   track and knob, square icon button and pressed, progress groove, count badge, notice dot, page dots, battle
+   nameplate, turn timer ring; `geometry.json` their insets and caps). Every dark twin its light one's alpha,
+   one dark colour per light one. At game size (`bits_game_size.png`): all read; the selected item slot's gold
+   rim is faint in the light look.
+
 `follow_ups_if_it_drifts.txt` has the nudges.
 
 **Dark Mode at the same time** (the user, 2026-11-27): prompts 2 to 4 ask for a `_dark` twin of every
