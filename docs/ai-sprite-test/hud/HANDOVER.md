@@ -47,7 +47,8 @@ the real HUD (the artifact https://claude.ai/artifact/BbEWKRiYCnw6yJi5iCTtyK; it
    track and knob, square icon button and pressed, progress groove, count badge, notice dot, page dots, battle
    nameplate, turn timer ring; `geometry.json` their insets and caps). Every dark twin its light one's alpha,
    one dark colour per light one. At game size (`bits_game_size.png`): all read; the selected item slot's gold
-   rim is faint in the light look.
+   rim was faint in the light look, so `tools/hud_wood_art.py` deepens its three gold tones to a richer amber
+   (`art-variants/hud/fixed/item_slot_selected.png`, `selected_slot_fix.png`: as drawn, then fixed).
 
 `follow_ups_if_it_drifts.txt` has the nudges.
 

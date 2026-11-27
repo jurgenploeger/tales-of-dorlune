@@ -10,6 +10,10 @@ where the user asked, the originals left as drawn:
   carved left band (`SPEECH_ROW`), repeats, so the moon and star stay at the top, the leaf at the foot,
   every carving its own size (the user: "fix the speech plate").
 
+- `item_slot_selected` (light): its gold rim was the birch's own lightness (225,181,79 on 241,195,135),
+  so the selected slot barely stood out from the others: its three gold tones are deepened to a richer
+  amber, so it reads at a glance as the dark one does (the user, 2026-11-27: "Yes fix it").
+
 Writes art-variants/hud/fixed/ and its `fixed.json` (each piece's rows and caps).
   python3 tools/hud_wood_art.py            # write
   python3 tools/hud_wood_art.py --preview out.png
@@ -78,10 +82,24 @@ def taller_speech(dark):
     return out, grow
 
 
+BITS = ROOT / "art-variants/hud/bits"
+# the light selected slot's gold, as drawn -> deeper and richer
+SELECTED_GOLD = {(225, 181, 79): (206, 128, 12), (246, 212, 127): (255, 198, 64), (196, 145, 54): (138, 78, 8)}
+
+
+def bolder_selected():
+    im = np.array(Image.open(BITS / "item_slot_selected.png").convert("RGBA"))
+    for old, new in SELECTED_GOLD.items():
+        m = (im[..., :3] == old).all(-1) & (im[..., 3] > 0)
+        im[m, :3] = new
+    return Image.fromarray(im)
+
+
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     inset, fills = darker_inset()
     inset.save(OUT / "inset_panel_dark.png")
+    bolder_selected().save(OUT / "item_slot_selected.png")
     info = {"inset_panel_dark": {
         "from": "art-variants/hud/windows/inset_panel_dark.png", "darkened_colours": [list(map(int, c)) for c in fills],
         "factor": DARKEN,
@@ -90,6 +108,8 @@ def main():
         "contrast_to_pane_after": round(contrast([round(v * DARKEN) for v in (48, 31, 25)], PANE_DARK), 2),
         "light_panel_contrast_to_its_pane": round(contrast((221, 190, 140), (242, 226, 194)), 2),
         "slices": "as art-variants/hud/windows/geometry.json inset_panel (80 px corners)"}}
+    info["item_slot_selected"] = {"from": "art-variants/hud/bits/item_slot_selected.png",
+                                  "recoloured": {str(list(k)): list(v) for k, v in SELECTED_GOLD.items()}}
     for dark in (False, True):
         im, grow = taller_speech(dark)
         n = "speech_window_dark" if dark else "speech_window"
