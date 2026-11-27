@@ -78,6 +78,7 @@ BOXES = {"thatched_cottage": [(60, 96, 0, 96)],
          "house": [(76, 98, 28, 42), (76, 98, 74, 92)],
          "adobe_house_tall": [(48, 63, 40, 48), (48, 63, 64, 73)],
          "swamp_stilt_hut": [(54, 72, 33, 41)],
+         "witch_hut": [(72, 81, 22, 30)],
          "toymaker_workshop": [(63, 80, 30, 44), (64, 76, 69, 77)],   # its windows, not the clock's face
          "warrior_guild": [(112, 124, 50, 104)],
          "emerald_spire": [(100, 109, 80, 92), (124, 137, 74, 100), (148, 160, 50, 124)]}

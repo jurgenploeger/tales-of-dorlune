@@ -72,6 +72,8 @@ and add "Continue from number N." Bring the 1× PNGs back named by their id, zip
 (new `BOXES` for the house, the tall adobe house and the stilt hut; the adobe house, candy cottage and fisher's
 shack have none), the pagoda's and stilt hut's lanterns re-rigged, the forge's fire re-boxed, the inn's and snow
 cabin's chimneys moved, nothing left to deslab. Left as they are: the house's three roof recolours keep a few
+orange specks on the roof's lightest tiles. The witch hut's first try lost its character (pale stone, a black hole
+for a door); its second (`witch_hut_redo/`, 2026-11-27) is in, the first kept as `witch_hut_try1.png`. Still: the house's three roof recolours keep a few
 orange specks on the roof's lightest tiles (no hue window takes them without the door); `pixel_style.py`'s
 building bands, calibrated on RD's 96-pixel drawings, fail several of them narrowly (`form_relief` most): recalibrate
 once all four batches are in.
