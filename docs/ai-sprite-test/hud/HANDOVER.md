@@ -63,10 +63,16 @@ joystick 142 and knob 58; names and figures in Allo Dorlune, the face and map fr
 Quests with its tabs and NPC speech, light and dark, over the kit's HUD (assembled as `README.txt` says).
 - The frame, title bar, folder tab, chips (the capsule three-sliced), sunk rows and close button read
   as one with the HUD; cream text on the dark pane, ink on the parchment.
-- **The speech plate is drawn too short:** at 9 pixels a point it's 43 points tall, the speech window
-  150. Scaled up, its left cap's moon grows to 90 points. Use the window frame for the speech window
-  (one window for everything, as today), with the name plaque, arrow and speaker over it: the bottom row
-  of the check image. `speech_window.png` is then unused.
+- **The speech plate was drawn too short** (43 points at the kit's 9 pixels a point; the speech window is
+  150), and **the dark list panel barely sat below the pane** (48,31,25 on 62,43,35). Both fixed in code,
+  the originals kept (the user, 2026-11-27): `tools/hud_wood_art.py` writes `art-variants/hud/fixed/`
+  and its `fixed.json`.
+  - `inset_panel_dark.png`: its fill and inner shading darkened (×0.55), so it sits as far below the pane
+    as the light panel does (contrast 1.39 : 1 each; it was 1.18).
+  - `speech_window.png` / `_dark`: drawn at 4.5 pixels a point (at 9 its rails were a point thick and its
+    carvings 6 points, beside the windows' 5.7-point rails), and grown to 150 points by repeating one
+    plain row between the star and the leaf: moon and star stay at its top left, the leaf at its foot.
+    The name plaque sits right of the carved band, so the moon shows. `windows_in_game_fixed.png`.
 
 ## Still to do
 
