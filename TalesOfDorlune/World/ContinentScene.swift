@@ -2629,7 +2629,8 @@ final class ContinentScene: SKScene {
         let span = Double(Self.shallowReach) + Self.shallowUnder, drop = WorldMap.seaDrop
         let origin = GridPoint(col: chunk.col * size, row: chunk.row * size)
         let bandHeight = HillArt.stripHeight / CGFloat(HillArt.stripDepth) * CGFloat(HillArt.sunkenDepth)
-        var boxes: [Int: CGRect] = [:]
+        // By strip and by a stretch across the screen, so a long diagonal beach isn't one big box of nothing.
+        var boxes: [GridPoint: CGRect] = [:]
         for j in 0..<spots {
             for i in 0..<spots {
                 let index = ((spots - 1 - j) * spots + i) * 4
@@ -2646,16 +2647,22 @@ final class ContinentScene: SKScene {
                 guard mine else { continue }
                 let point = WorldMap.project(CGPoint(x: (CGFloat(origin.col) + CGFloat(i) / CGFloat(per)) * tile,
                                                      y: (CGFloat(origin.row) + CGFloat(j) / CGFloat(per)) * tile))
-                let band = Int(((point.y - land.shift.dy) / bandHeight).rounded(.down))
+                let key = GridPoint(col: Int((point.x / Self.swashStretch).rounded(.down)),
+                                    row: Int(((point.y - land.shift.dy) / bandHeight).rounded(.down)))
                 let spot = CGRect(x: point.x - tile, y: point.y - drop - tile / 2, width: 2 * tile, height: tile)
-                boxes[band] = boxes[band].map { $0.union(spot) } ?? spot
+                boxes[key] = boxes[key].map { $0.union(spot) } ?? spot
             }
         }
         guard !boxes.isEmpty, let field = Self.fieldTexture(bytes, spots: spots) else { return }
-        for (band, box) in boxes {
+        for (key, box) in boxes {
             // The strip's own stretch of the screen, its ground lying `drop` lower.
+            let band = key.row
             let low = CGFloat(band) * bandHeight + land.shift.dy
-            let frame = box.intersection(CGRect(x: box.minX, y: low - drop - 2, width: box.width, height: bandHeight + 4)).integral
+            // Cut to its own stretch across (whole points, so two never overlap and draw the wave twice).
+            let frame = box.intersection(CGRect(x: CGFloat(key.col) * Self.swashStretch, y: low - drop - 2,
+                                                width: Self.swashStretch, height: bandHeight + 4)).integral
+                .intersection(CGRect(x: CGFloat(key.col) * Self.swashStretch, y: -.greatestFiniteMagnitude / 4,
+                                     width: Self.swashStretch, height: .greatestFiniteMagnitude / 2))
             guard !frame.isEmpty else { continue }
             let node = SKSpriteNode(texture: field, size: frame.size)
             node.anchorPoint = .zero
@@ -2665,14 +2672,14 @@ final class ContinentScene: SKScene {
             // Its corner in cells from the chunk's (where the sunk ground under it lies), worked out here in
             // full precision, so the shader only handles small numbers (`HillArt.lifting`).
             let corner = WorldMap.unproject(CGPoint(x: frame.minX, y: frame.minY + drop))
-            node.setValue(SKAttributeValue(vectorFloat2: [Float(frame.width), Float(frame.height)]), forAttribute: "a_size")
-            node.setValue(SKAttributeValue(vectorFloat2: [Float(corner.x / tile - CGFloat(origin.col)), Float(corner.y / tile - CGFloat(origin.row))]),
-                          forAttribute: "a_corner")
-            node.setValue(SKAttributeValue(vectorFloat2: [Float(low - drop - frame.minY), Float(low + bandHeight - drop - frame.minY)]),
-                          forAttribute: "a_band")
-            // Where the chunk lies, for the waves' timing along the coast (wrapped, to stay small).
-            node.setValue(SKAttributeValue(vectorFloat2: [Float(((origin.col % 256) + 256) % 256), Float(((origin.row % 256) + 256) % 256)]),
-                          forAttribute: "a_world")
+            // Its size and its corner in cells; the strip's stretch up it and where the chunk lies (for the
+            // waves' timing along the coast, wrapped to stay small).
+            node.setValue(SKAttributeValue(vectorFloat4: [Float(frame.width), Float(frame.height),
+                                                          Float(corner.x / tile - CGFloat(origin.col)), Float(corner.y / tile - CGFloat(origin.row))]),
+                          forAttribute: "a_frame")
+            node.setValue(SKAttributeValue(vectorFloat4: [Float(low - drop - frame.minY), Float(low + bandHeight - drop - frame.minY),
+                                                          Float(((origin.col % 256) + 256) % 256), Float(((origin.row % 256) + 256) % 256)]),
+                          forAttribute: "a_place")
             drawn.things.addChild(node)
             drawn.banks.append(node)
         }
@@ -2686,37 +2693,39 @@ final class ContinentScene: SKScene {
     private static let swashShader: SKShader = {
         let shader = SKShader(source: """
         void main() {
-            vec2 p = v_tex_coord * a_size;
-            if (p.y < a_band.x || p.y >= a_band.y) { gl_FragColor = vec4(0.0); return; }
+            vec2 p = v_tex_coord * a_frame.xy;
+            // No early return: SpriteKit's shaders end on gl_FragColor, so what's left out is multiplied away.
+            float keep = step(a_place.x, p.y) * (1.0 - step(a_place.y, p.y));
             vec2 grid = vec2(p.x * 1.41421356 + p.y * 2.82842712, p.y * 2.82842712 - p.x * 1.41421356) * 0.5;
-            vec2 pixel = floor((a_corner + grid / u_points) * u_tile);
+            vec2 pixel = floor((a_frame.zw + grid / u_points) * u_tile);
             vec2 cell = (pixel + 0.5) / u_tile;
-            if (cell.x < 0.0 || cell.y < 0.0 || cell.x > u_chunk || cell.y > u_chunk) { gl_FragColor = vec4(0.0); return; }
-            vec4 f = texture2D(u_texture, (cell * u_per + 0.5) / (u_chunk * u_per + 1.0));
+            keep *= step(0.0, cell.x) * step(0.0, cell.y) * step(cell.x, u_chunk) * step(cell.y, u_chunk);
+            vec2 at = clamp((cell * u_per + 0.5) / (u_chunk * u_per + 1.0), 0.0, 1.0);
+            vec4 f = texture2D(u_texture, at);
             float run = u_under - f.r * u_span;
-            if (f.g < 0.5 || run <= 0.0 || run >= u_under - 0.03) { gl_FragColor = vec4(0.0); return; }
-            vec2 world = cell + a_world;
+            keep *= step(0.5, f.g) * step(0.0001, run) * step(run, u_under - 0.03);
+            vec2 world = cell + a_place.zw;
             float along = sin(world.x * 0.21 + world.y * 0.17) + sin(world.x * 0.07 - world.y * 0.13 + 1.7);
             float phase = u_time / u_period + along * 0.16;
             float cyc = fract(phase);
             float k = floor(phase);
             float peak = u_reach * (0.78 + 0.22 * sin(world.x * 0.43 + k * 2.1) * sin(world.y * 0.37 - k * 1.3));
             float rising = step(cyc, u_up);
-            float u = clamp(cyc / u_up, 0.0, 1.0);
-            float v = clamp((cyc - u_up) / (1.0 - u_up), 0.0, 1.0);
-            float r = mix(peak * (1.0 - v * v * (3.0 - 2.0 * v)), peak * (1.0 - (1.0 - u) * (1.0 - u)), rising);
+            float upward = clamp(cyc / u_up, 0.0, 1.0);
+            float back = clamp((cyc - u_up) / (1.0 - u_up), 0.0, 1.0);
+            float r = mix(peak * (1.0 - back * back * (3.0 - 2.0 * back)), peak * (1.0 - (1.0 - upward) * (1.0 - upward)), rising);
             float speck = fract(sin(dot(floor(pixel / 3.0), vec2(12.9898, 78.233))) * 43758.5453);
             float fine = fract(sin(dot(floor(pixel / 2.0), vec2(39.346, 11.135)) + k * 7.1) * 43758.5453);
             float wet = step(run, r - 0.0001);
             float sheet = wet * 0.26;
-            float fade = floor(mix(clamp(1.0 - v / 0.55, 0.0, 1.0), 1.0, rising) * 4.0) / 4.0;
+            float fade = floor(mix(clamp(1.0 - back / 0.55, 0.0, 1.0), 1.0, rising) * 4.0) / 4.0;
             float foam = wet * step(r - 0.07, run) * step(0.12, speck) * fade * 0.85;
             foam = max(foam, wet * step(0.86, fine) * step(run, r - 0.1) * 0.45 * fade);
-            float dark = (1.0 - wet) * step(run, peak) * (1.0 - rising) * floor((1.0 - v) * 3.0) / 3.0 * 0.18;
+            float dark = (1.0 - wet) * step(run, peak) * (1.0 - rising) * floor((1.0 - back) * 3.0) / 3.0 * 0.18;
             vec3 rgb = vec3(0.8, 0.96, 0.95) * sheet * (1.0 - foam) + foam;
             float a = sheet * (1.0 - foam) + foam;
             a = a + dark * (1.0 - a);
-            gl_FragColor = vec4(rgb, a);
+            gl_FragColor = vec4(rgb, a) * keep;
         }
         """)
         shader.uniforms = [
@@ -2731,10 +2740,8 @@ final class ContinentScene: SKScene {
             SKUniform(name: "u_up", float: Float(ContinentScene.swashUp)),
         ]
         shader.attributes = [
-            SKAttribute(name: "a_size", type: .vectorFloat2),
-            SKAttribute(name: "a_corner", type: .vectorFloat2),
-            SKAttribute(name: "a_band", type: .vectorFloat2),
-            SKAttribute(name: "a_world", type: .vectorFloat2),
+            SKAttribute(name: "a_frame", type: .vectorFloat4),
+            SKAttribute(name: "a_place", type: .vectorFloat4),
         ]
         return shader
     }()
@@ -2743,6 +2750,8 @@ final class ContinentScene: SKScene {
     private static let swashPeriod = 6.0
     private static let swashReach = 0.5
     private static let swashUp = 0.3
+    /// How wide a stretch of beach one of its sprites covers at most, in points (`addSwash`).
+    private static let swashStretch: CGFloat = 256
 
     /// A land's cells in a chunk in its own plain ground, graded as it is there, till it's laid out
     /// (`show`) with its roads, patches and all: no sea where it'll be. Its rivers and lakes are left
