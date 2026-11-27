@@ -74,6 +74,13 @@ Quests with its tabs and NPC speech, light and dark, over the kit's HUD (assembl
     plain row between the star and the leaf: moon and star stay at its top left, the leaf at its foot.
     The name plaque sits right of the carved band, so the moon shows. `windows_in_game_fixed.png`.
 
+## Lines over heroes' heads stay simple
+
+The user, 2026-11-27: "The chat messages from heroes in the game can still have the simplified version."
+What heroes say over their heads (yours, other adventurers', the bots': `Walker.say` →
+`Nodes.speechBubble`) keeps today's plain bubble; the carved `chat_bubble.png` isn't used for them. The
+wood is for the HUD, the windows and talking to people (the speech window).
+
 ## Still to do
 
 Wire the pieces into `WorldHUD` / `HUDStyle` once the kit is in (the game-ui skill: mock-up first,
