@@ -68,6 +68,14 @@ and add "Continue from number N." Bring the 1× PNGs back named by their id, zip
 
 ### Batch 1: Retro Diffusion's buildings (26)
 
+**Brought in 2026-11-27 (0.9.254).** All 26 came back at their box and foot row exactly, hard alpha. Windows recut
+(new `BOXES` for the house, the tall adobe house and the stilt hut; the adobe house, candy cottage and fisher's
+shack have none), the pagoda's and stilt hut's lanterns re-rigged, the forge's fire re-boxed, the inn's and snow
+cabin's chimneys moved, nothing left to deslab. Left as they are: the house's three roof recolours keep a few
+orange specks on the roof's lightest tiles (no hue window takes them without the door); `pixel_style.py`'s
+building bands, calibrated on RD's 96-pixel drawings, fail several of them narrowly (`form_relief` most): recalibrate
+once all four batches are in.
+
 Attach `batch1/0_style_reference_corner_4x.png` first, then `batch1/sheet_1.png` to `sheet_7.png` in order. The prompt, then this list:
 
 > 1. `adobe_house`: canvas 130 × 130, 93 wide, 97 tall, foot row 107

@@ -462,10 +462,11 @@ final class LandStage {
         "teapot_house": CGPoint(x: 80.0 / 96, y: 43.0 / 96),
         "smokehouse": CGPoint(x: 68.0 / 96, y: 20.0 / 96),
         "lamp_house": CGPoint(x: 84.5 / 96, y: 53.0 / 96),
-        // Chimneys with nothing coming out (the user, 2026-11-22: "make everything feel more alive").
-        "inn": CGPoint(x: 61.5 / 96, y: 9.0 / 96),
-        "inn_red": CGPoint(x: 61.5 / 96, y: 9.0 / 96),
-        "inn_teal": CGPoint(x: 61.5 / 96, y: 9.0 / 96),
+        // Chimneys with nothing coming out (the user, 2026-11-22: "make everything feel more alive"). The inn's and the
+        // snow cabin's on ChatGPT's redraws at 130 (2026-11-27).
+        "inn": CGPoint(x: 87.5 / 130, y: 16.0 / 130),
+        "inn_red": CGPoint(x: 87.5 / 130, y: 16.0 / 130),
+        "inn_teal": CGPoint(x: 87.5 / 130, y: 16.0 / 130),
         "thatched_cottage": CGPoint(x: 61.0 / 96, y: 27.0 / 96),
         "painter_studio": CGPoint(x: 67.0 / 96, y: 19.0 / 96),
         "woodcutter_cabin": CGPoint(x: 68.0 / 96, y: 18.0 / 96),
@@ -475,7 +476,7 @@ final class LandStage {
         "toymaker_workshop": CGPoint(x: 69.0 / 96, y: 22.0 / 96),
         "stone_townhouse": CGPoint(x: 72.5 / 96, y: 15.0 / 96),
         "coral_house": CGPoint(x: 34.5 / 96, y: 19.0 / 96),
-        "snow_cabin": CGPoint(x: 25.5 / 96, y: 19.0 / 96),
+        "snow_cabin": CGPoint(x: 39.0 / 130, y: 31.0 / 130),
         "post_office": CGPoint(x: 27.5 / 96, y: 22.0 / 96),
         "timber_house": CGPoint(x: 73.5 / 96, y: 19.0 / 96),
         "apothecary": CGPoint(x: 68.0 / 96, y: 12.0 / 96),

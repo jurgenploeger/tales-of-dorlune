@@ -394,6 +394,10 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   by ChatGPT is copied, not drawn (`PICKED`, kept in `art-variants/`: 29 of them since 2026-11-21, every building drawn in code (the five
   landmarks, the acorn cottage and gem workshop the user's pick over the scores); how: `docs/ai-sprite-test/`,
   `tools/ai_sprite_eval.py`). After eight blind picks all went to ChatGPT, the user dropped them (2026-11-21).
+  Since 2026-11-27 RD's own buildings are being redrawn by ChatGPT in one corner view (door wall facing down-left, the
+  right side in shade), drawn 1:1 at their size in the game (130, 216 or 259 pixels at scale 1, not 96 at 1.35;
+  docs/ai-sprite-test/buildings-1to1, `art-variants/buildings_1to1/`, RD's in `rd/` with their prompts): batch 1, RD's
+  26, is in; batches 2 to 4 (every other building) to come. A recolour follows its base at scale 1.
   Each gets Retro Diffusion's grain over its broad flat patches (`tools/grain.py`, also on ChatGPT's gates: beside
   RD's buildings they read smooth and plasticky, the user, 2026-11-22; RD's patches of one colour are about 3
   pixels with 17% single specks, ChatGPT's were 6 and 6%, now 3.1 and 17%).
@@ -568,8 +572,8 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   own size, or one fixed size (maps.json `size` [s, s]); the planner still draws the sizes it used to, so the
   rest of a land stays where it was. Flowers are planted at 0.62, their pixels smaller than their neighbours' by
   the user's choice (2026-11-19: "a flower shouldn't be just as tall as a tree").
-- `tools/deslab.py`: cuts the raised slab of ground some generated buildings came with (`inn`, `magic_tower`) out
-  of their sprites, so they stand on the map's ground; rerun it after regenerating one of them.
+- `tools/deslab.py`: cuts the raised slab of ground some generated buildings came with out of their sprites, so they
+  stand on the map's ground (none now: the inn and magic tower it was for are ChatGPT's redraws, standing on the ground).
 - `tools/rd_fixes.py`: exact pixel fixes to RD sprites for what RD got wrong and the user asked to have fixed
   (the Poison Skeleton's stray green spark, which every recolour of it inherited): each lists the pixels and
   the colours they must have first, so a rerun changes nothing and a regenerated sprite is reported, not spoiled.

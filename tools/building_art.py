@@ -2091,7 +2091,35 @@ PICKED = {"thatched_cottage": ("art-variants/thatched_cottage/chatgpt_5.png", 1.
           "flower_cup_house": ("art-variants/flower_cup_house/chatgpt_1.png", 1.0),             # Starfall Isle
           "firefly_house": ("art-variants/firefly_house/chatgpt_1.png", 1.0),                   # Starfall Isle
           "coral_house": ("art-variants/coral_house/chatgpt_1.png", 1.0),                       # Tidewater Shrine
-          "pearl_diver_hut": ("art-variants/pearl_diver_hut/chatgpt_1.png", 1.0)}               # Tidewater Shrine
+          "pearl_diver_hut": ("art-variants/pearl_diver_hut/chatgpt_1.png", 1.0),              # Tidewater Shrine
+          # Retro Diffusion's 26 buildings redrawn by ChatGPT in the corner view at their size in the game (1:1, no
+          # scale; docs/ai-sprite-test/buildings-1to1, batch 1, 2026-11-27); RD's in art-variants/buildings_1to1/rd/.
+          "adobe_house": ("art-variants/buildings_1to1/adobe_house.png", 1.0),
+          "adobe_house_tall": ("art-variants/buildings_1to1/adobe_house_tall.png", 1.0),
+          "bakery": ("art-variants/buildings_1to1/bakery.png", 1.0),
+          "beach_hut": ("art-variants/buildings_1to1/beach_hut.png", 1.0),
+          "blacksmith": ("art-variants/buildings_1to1/blacksmith.png", 1.0),
+          "candy_cottage": ("art-variants/buildings_1to1/candy_cottage.png", 1.0),
+          "crooked_house": ("art-variants/buildings_1to1/crooked_house.png", 1.0),
+          "desert_tent": ("art-variants/buildings_1to1/desert_tent.png", 1.0),
+          "dwarf_cottage": ("art-variants/buildings_1to1/dwarf_cottage.png", 1.0),
+          "fisher_shack": ("art-variants/buildings_1to1/fisher_shack.png", 1.0),
+          "forest_lodge": ("art-variants/buildings_1to1/forest_lodge.png", 1.0),
+          "house": ("art-variants/buildings_1to1/house.png", 1.0),
+          "igloo": ("art-variants/buildings_1to1/igloo.png", 1.0),
+          "inn": ("art-variants/buildings_1to1/inn.png", 1.0),
+          "item_shop": ("art-variants/buildings_1to1/item_shop.png", 1.0),
+          "lily_cottage": ("art-variants/buildings_1to1/lily_cottage.png", 1.0),
+          "magic_tower": ("art-variants/buildings_1to1/magic_tower.png", 1.0),
+          "moon_pagoda": ("art-variants/buildings_1to1/moon_pagoda.png", 1.0),
+          "puppet_theater": ("art-variants/buildings_1to1/puppet_theater.png", 1.0),
+          "sleepy_cottage": ("art-variants/buildings_1to1/sleepy_cottage.png", 1.0),
+          "snow_cabin": ("art-variants/buildings_1to1/snow_cabin.png", 1.0),
+          "stone_hut": ("art-variants/buildings_1to1/stone_hut.png", 1.0),
+          "swamp_stilt_hut": ("art-variants/buildings_1to1/swamp_stilt_hut.png", 1.0),
+          "water_shrine": ("art-variants/buildings_1to1/water_shrine.png", 1.0),
+          "windmill": ("art-variants/buildings_1to1/windmill.png", 1.0),
+          "witch_hut": ("art-variants/buildings_1to1/witch_hut.png", 1.0)}
 # Drawn smoke cut out of the teapot house, smokehouse and lamp house (`*_nosmoke.png`): the game puffs it
 # from where it rose (`LandStage.smokeHoles`, the user, 2026-11-22: "Any house that has something with smoke
 # needs to be animated"), as the yurt's.

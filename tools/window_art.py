@@ -28,7 +28,7 @@ SPR = ROOT / "art" / "sprites"
 BIGGEST = 64
 FEWEST = 6
 SKIP = {"fence", "town_gate", "market_tent", "market_stall", "pavilion_tent", "desert_tent", "yurt", "blacksmith",
-        "bakery", "beach_hut", "adobe_house_tall", "windmill", "puppet_theater", "mushroom_house"}
+        "bakery", "beach_hut", "windmill", "adobe_house", "candy_cottage", "fisher_shack", "puppet_theater", "mushroom_house"}
 
 
 # Where a building's windows are, as boxes (rows y0 to y1, columns x0 to x1), when bright warm pixels
@@ -73,7 +73,11 @@ BOXES = {"thatched_cottage": [(60, 96, 0, 96)],
          "firefly_house": [(70, 78, 29, 35), (70, 78, 61, 67)],
          "coral_house": [(66, 74, 27, 33), (67, 75, 63, 69)],
          "pearl_diver_hut": [(57, 64, 28, 35), (57, 64, 61, 68)],
-         "sleepy_cottage": [(54, 63, 38, 47)],          # the round window in its door, not the moon on its roof
+         # ChatGPT's redraws of RD's buildings (2026-11-27, docs/ai-sprite-test/buildings-1to1): their roofs' warm specks
+         # left out. The adobe house, candy cottage and fisher's shack have no windows (SKIP).
+         "house": [(76, 98, 28, 42), (76, 98, 74, 92)],
+         "adobe_house_tall": [(48, 63, 40, 48), (48, 63, 64, 73)],
+         "swamp_stilt_hut": [(54, 72, 33, 41)],
          "toymaker_workshop": [(63, 80, 30, 44), (64, 76, 69, 77)],   # its windows, not the clock's face
          "warrior_guild": [(112, 124, 50, 104)],
          "emerald_spire": [(100, 109, 80, 92), (124, 137, 74, 100), (148, 160, 50, 124)]}
@@ -82,19 +86,13 @@ BOXES = {"thatched_cottage": [(60, 96, 0, 96)],
 # Windows the warm rule can't find (Retro Diffusion drew their glass dim, orange or dark, and a few of ChatGPT's
 # panes carry mullions that split them): every pixel in each box is lit, laid on a lamplight ramp by how light it
 # is in the box (`paint`), so the frames and mullions stay darker. Rows y0 to y1, columns x0 to x1.
-PAINT = {"house": [(47, 62, 27, 37), (47, 62, 59, 70)],
-         "inn": [(43, 52, 62, 70), (55, 66, 45, 52), (55, 66, 58, 72)],
-         "dwarf_cottage": [(32, 40, 45, 51), (45, 52, 33, 38), (45, 52, 58, 63), (59, 66, 25, 30), (59, 66, 64, 69)],
-         "crooked_house": [(40, 50, 32, 40), (36, 42, 62, 66)],
-         "fisher_shack": [(41, 62, 18, 22)],
-         "stone_hut": [(62, 69, 61, 66)],
-         "sandstone_house": [(44, 56, 27, 36), (66, 78, 27, 36)],
+PAINT = {"sandstone_house": [(44, 56, 27, 36), (66, 78, 27, 36)],
          "spice_shop": [(64, 76, 25, 35)]}
 DEEP, PALE = np.array([205, 105, 40]), np.array([255, 238, 160])
 # Which pixels of a `PAINT` box are the glass (the user, 2026-11-25: lit as whole boxes, the inn's slanted
 # windows lit the plaster round them and the round house's lit its wall above them): the house's dark holes,
 # the inn's orange panes. Others light the whole box.
-GLASS = {"house": "dark", "inn": "warm"}
+GLASS = {}
 
 # Lights (the user, 2026-11-22: "fires, lanterns, street lights and anything else that could have light in the
 # evening/night should be lit up"): what glows of each, cut as a window is and laid above the night's shade with a

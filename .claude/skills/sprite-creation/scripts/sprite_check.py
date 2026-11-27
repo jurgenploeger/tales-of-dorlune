@@ -51,10 +51,12 @@ EYES = json.load(open(os.path.join(ROOT, "art", "eyes.json")))
 SIZES = {
     "monster": {(40, 40), (64, 64)},
     "walk_sheet": {(192, 192)},
-    "tile": {(32, 32)},
+    "tile": {(32, 32), (44, 44)},
     "item": {(64, 64)},
     "icon": {(128, 128)},
-    "building": {(96, 96), (160, 160), (192, 192)},
+    # 96, 160 and 192 drawn for scale 1.35; 130, 216 and 259 the same drawn 1:1, at scale 1 (ChatGPT's redraws,
+    # docs/ai-sprite-test/buildings-1to1, from 2026-11-27).
+    "building": {(96, 96), (160, 160), (192, 192), (130, 130), (216, 216), (259, 259)},
 }
 # Props come at their family's size: these are the usual ones (77 at 32×32, 33 at 64×64, 11 at 32×48 on
 # 2026-10-29); anything else (the ship, 202×328) warns, to be checked against its family by eye.

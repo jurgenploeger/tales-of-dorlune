@@ -58,7 +58,8 @@ PIECES = {
     "tea_house": [swing((78, 57, 86, 68), hook=57), swing((10, 59, 22, 65), hook=59, reach=1)],
     "apothecary": [swing((10, 60, 23, 75), hook=60)],
     "emerald_shop": [swing((76, 57, 85, 68), hook=57)],
-    "swamp_stilt_hut": [swing((68, 49, 75, 56), hook=49, reach=1)],
+    # ChatGPT's redraws at 130 (2026-11-27, docs/ai-sprite-test/buildings-1to1).
+    "swamp_stilt_hut": [swing((97, 67, 111, 81), hook=67, reach=1)],
     "glass_lantern_shop": [swing((24, 47, 30, 55), hook=47, reach=1, wall=True),
                            swing((32, 48, 38, 54), hook=48, reach=1, wall=True),
                            swing((54, 49, 59, 54), hook=49, reach=1, wall=True),
@@ -67,8 +68,8 @@ PIECES = {
                       swing((33, 53, 40, 66), hook=53, reach=1, wall=True),
                       swing((56, 53, 63, 66), hook=53, reach=1, wall=True),
                       swing((75, 53, 83, 66), hook=53, reach=1)],
-    "moon_pagoda": [swing((24, 33, 28, 40), hook=33, reach=1), swing((68, 33, 72, 40), hook=33, reach=1),
-                    swing((8, 56, 12, 62), hook=56, reach=1), swing((82, 56, 86, 62), hook=56, reach=1)],
+    "moon_pagoda": [swing((26, 44, 35, 57), hook=44, reach=1), swing((97, 44, 106, 57), hook=44, reach=1),
+                    swing((15, 75, 24, 88), hook=75, reach=1), swing((107, 75, 116, 88), hook=75, reach=1)],
     "pavilion_tent": [flutter((50, 18, 55, 23), pole=49)],
     "warrior_guild": [flutter((38, 64, 47, 72), pole=37), flutter((119, 64, 128, 72), pole=118)],
 }
