@@ -1,0 +1,61 @@
+Redraw these buildings from my game bigger, one at a time, as the project's instructions say, except where this
+message says otherwise. The first picture is our style sheet: eight of our buildings at 4×, all seen from the same
+corner. The others are sheets of today's drawings at 4×, four to a sheet, each labelled with its number, id and its
+new size.
+
+**Every building in the style sheet's corner view**, whichever way today's picture faces: the front wall with the
+door facing down and to the left, the right-hand side wall running back up to the right in shade, the roof seen a
+little from above, lit from the top left. Many of today's pictures face straight on: turn them to this view. A round
+building (a yurt, an igloo, a tent, a tower) stays round, seen a little from above, its door on the left of its
+front.
+
+**Don't measure the sizes from the pictures.** Today's are drawn at 96 pixels and shown 1.35 times bigger in the
+game, so their pixels are bigger than the characters'. Each new one is drawn at the size it's shown: the canvas,
+width, height and foot row in the list (the foot row is the row its lowest pixel stands on). It's the same building:
+the same shape, materials, colours, door, windows, signs and props, and the same character (a crooked, shabby or odd building stays so: don't tidy it up), with the detail a bigger canvas holds (more roof tiles,
+bricks, planks, trim and small touches), turned to the corner view where it isn't. Never today's picture scaled up.
+Turned, its width and height may move a little (within a tenth); its canvas and foot row stay exactly as listed.
+
+Every one:
+- Transparent, alpha 0 or 255 only, centred left to right, its lowest pixel on the foot row.
+- No ground, slab, base or cast shadow under it. Where today's stands on a patch of ground or a stone slab, leave it
+  out and keep the building itself as big (a few grass tufts or a doorstep at most).
+- Window panes in a warm bright yellow that nothing else uses (the game lights them at night). Where today's has
+  yellow thatch, cloth, an awning or gold, make it a straw, cream or orange tone clearly unlike the panes.
+- No smoke drawn from a chimney or stack (the game animates it).
+- 40 to 70 colours on a 130 canvas, 60 to 90 on the bigger ones, hue-shifted, a tinted outline, lit from the top left.
+- Natural colours (the game tints each land's art itself).
+
+For each: say its number, id, size, foot row and colour count, deliver its 1× PNG named by its id and the 4×
+preview, then wait for "next".
+
+Here's the list:
+
+1. `emerald_spire`: canvas 259 × 259, 167 wide, 219 tall, foot row 257
+2. `moonwell`: canvas 216 × 216, 167 wide, 135 tall, foot row 215
+3. `star_observatory`: canvas 216 × 216, 161 wide, 186 tall, foot row 215
+4. `warrior_guild`: canvas 216 × 216, 171 wide, 128 tall, foot row 215
+5. `wildfolk_lodge`: canvas 216 × 216, 174 wide, 124 tall, foot row 215
+6. `acorn_cottage`: canvas 130 × 130, 107 wide, 101 tall, foot row 125
+7. `apothecary`: canvas 130 × 130, 92 wide, 107 tall, foot row 121
+8. `apple_cellar`: canvas 130 × 130, 101 wide, 88 tall, foot row 121
+9. `armour_shop`: canvas 130 × 130, 107 wide, 89 tall, foot row 121
+10. `assay_office`: canvas 130 × 130, 99 wide, 97 tall, foot row 121
+11. `aviary_shop`: canvas 130 × 130, 101 wide, 103 tall, foot row 121
+12. `bank`: canvas 130 × 130, 101 wide, 93 tall, foot row 126
+13. `beekeeper_cottage`: canvas 130 × 130, 103 wide, 95 tall, foot row 121
+14. `bell_tower`: canvas 130 × 130, 78 wide, 115 tall, foot row 126
+15. `bluebell_house`: canvas 130 × 130, 81 wide, 109 tall, foot row 121
+16. `book_shop`: canvas 130 × 130, 105 wide, 90 tall, foot row 121
+17. `briar_cottage`: canvas 130 × 130, 100 wide, 101 tall, foot row 121
+18. `brick_house`: canvas 130 × 130, 90 wide, 101 tall, foot row 121
+19. `carved_chalet`: canvas 130 × 130, 103 wide, 103 tall, foot row 121
+20. `chime_cottage`: canvas 130 × 130, 86 wide, 109 tall, foot row 121
+21. `coral_house`: canvas 130 × 130, 93 wide, 97 tall, foot row 121
+22. `creaky_mill`: canvas 130 × 130, 103 wide, 99 tall, foot row 121
+23. `crystal_cottage`: canvas 130 × 130, 107 wide, 88 tall, foot row 121
+24. `crystal_lodge`: canvas 130 × 130, 100 wide, 104 tall, foot row 121
+25. `cupcake_house`: canvas 130 × 130, 89 wide, 105 tall, foot row 121
+26. `dairy_shop`: canvas 130 × 130, 100 wide, 86 tall, foot row 121
+27. `dome_house`: canvas 130 × 130, 80 wide, 109 tall, foot row 121
+28. `dwarf_boathouse`: canvas 130 × 130, 104 wide, 92 tall, foot row 121
