@@ -127,3 +127,7 @@ smoothed). Every skill keeps its own animation in battle; only the icon changes.
   `charge` came back a thin spear on a long line, barely there at 24 points (`_try2`; the first, `_try1`,
   stays meanwhile), asked again bolder.
 
+  `charge`, round 3 (`batch1_charge.png`): ChatGPT's own 64-pixel PNG (`_try3`) came out squat, a round blob
+  (its wide painting squeezed square); its square painting (`_try4_painting.png`), snapped to the grid here (54
+  pixels on a 64 canvas, each pixel the colour covering most of its block, 40 colours), reads as a broad
+  spearhead driving through the shield: picked as `skill_charge.png`. Batch 1 done.
