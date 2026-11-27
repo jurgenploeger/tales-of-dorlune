@@ -203,6 +203,12 @@ Attach `batch2/0_style_reference_corner_4x.png` first, then `batch2/sheet_1.png`
 
 ### Batch 3: town buildings, part 2 (28)
 
+**Brought in 2026-11-27 (0.9.260).** All 28 at their box and foot row exactly, hard alpha, 64 colours each. Windows
+recut (`BOXES` for seven: an awning, gold, a deck, rock and a lid lit up), the flower, gem and emerald shops' signs
+and the pavilion's flag re-rigged, the glass-lantern shop's and firefly house's lanterns rigged by their own colours
+(`sway_art.swing` `hues`/`sat`: boxed, the wall behind swung with them), five smoke points and the lighthouse's lamp
+moved.
+
 Attach `batch3/0_style_reference_corner_4x.png` first, then `batch3/sheet_1.png` to `sheet_7.png` in order. The prompt, then this list:
 
 > 1. `emerald_shop`: canvas 130 × 130, 97 wide, 100 tall, foot row 121

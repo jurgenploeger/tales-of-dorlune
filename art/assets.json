@@ -2591,12 +2591,12 @@
     },
     {
       "id": "glass_lantern_shop",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "painter_studio",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2606,7 +2606,7 @@
     },
     {
       "id": "music_hall",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2616,7 +2616,7 @@
     },
     {
       "id": "miners_lodge",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2641,12 +2641,12 @@
     },
     {
       "id": "lantern_cottage",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "owl_tower",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2671,7 +2671,7 @@
     },
     {
       "id": "ice_fishing_hut",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2686,12 +2686,12 @@
     },
     {
       "id": "lotus_pagoda",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "frog_hut",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2706,7 +2706,7 @@
     },
     {
       "id": "lake_pavilion",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2726,7 +2726,7 @@
     },
     {
       "id": "juice_shack",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2736,7 +2736,7 @@
     },
     {
       "id": "lighthouse",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2746,17 +2746,17 @@
     },
     {
       "id": "flag_tower",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "lamp_house",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "horse_stable",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2766,7 +2766,7 @@
     },
     {
       "id": "moon_teahouse",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2776,7 +2776,7 @@
     },
     {
       "id": "lookout_hut",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2786,7 +2786,7 @@
     },
     {
       "id": "nightcap_tower",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2796,17 +2796,17 @@
     },
     {
       "id": "emerald_shop",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "flower_cup_house",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
       "id": "firefly_house",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2851,7 +2851,7 @@
     },
     {
       "id": "ice_cream_parlour",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2861,7 +2861,7 @@
     },
     {
       "id": "music_box_house",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2970,7 +2970,7 @@
     },
     {
       "id": "garden_cottage",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -2990,7 +2990,7 @@
     },
     {
       "id": "flower_shop",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -3005,7 +3005,7 @@
     },
     {
       "id": "pavilion_tent",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -3049,7 +3049,7 @@
     },
     {
       "id": "lake_shrine",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
@@ -3085,7 +3085,7 @@
     },
     {
       "id": "gem_workshop",
-      "scale": 1.35,
+      "scale": 1,
       "kind": "building"
     },
     {
