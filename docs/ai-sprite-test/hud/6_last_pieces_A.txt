@@ -1,0 +1,19 @@
+Attached: the carved-wood kits I picked for my game (the HUD kit, the window kit, the coloured buttons and the small menu and battle pieces, light and dark) and screenshots of the game. Draw the last few interface pieces in exactly the same style: the same pale birch and dusky walnut, the same carving, symbols (moon phases, eight-point stars, spirals, leaf runes), inlays, outline and light.
+
+Same deliverable as before: each piece on its own transparent 1280 × 1280 PNG, hard edges (alpha 0 or 255, about 40 colours a piece), a _dark twin of each (the very same drawing pixel for pixel, only recoloured as in the kits), a contact sheet (light on mid-green, dark on deep navy), an asset_checks.json with every piece's bounds, centre, content or inset rectangle and, for anything that stretches, its caps. No text, numbers or pictures in any piece. Zip it all.
+
+1. toast_plate.png: a small low plate for the short messages that appear at the top of the screen ("Saved", "+30 gold", "Entered Sunny Meadow"), about 220 × 30 points, stretches sideways (plain middle, small carved ends, give its caps), its face plain for one line of text.
+2. banner_ribbon.png: a wide carved banner for big moments ("Victory!", "Level up!", a new land's name), about 300 × 70 points: a carved board with scrolled ends and a small star medallion at its top middle, its face plain for one big word. Stretches sideways in its plain middle.
+3. reward_card.png: a small framed card for a reward after battle (an item's picture over its name), about 90 × 110 points, the window frame's corners small, a sunk square slot in its top part (as item_slot) and a plain strip under it for the name.
+4. dropdown_menu.png: a small floating panel for a sort or filter menu that drops down under its button, 9-slice (small carved corners, plain edges that stretch, give its corner size), its face the window's plain pane, plus dropdown_row_selected.png: a plain soft-gold highlight strip with rounded ends, to mark the chosen row.
+5. text_field.png: a sunk field for typing in chat and search, about 300 × 34 points, stretches sideways (plain middle, rounded ends, give its caps), a step deeper than inset_panel, plain.
+6. scroll_thumb.png and scroll_track.png: a thin vertical scroll bar for long lists: a narrow sunk groove (stretches up and down, give its caps) and a small rounded birch thumb, about 6 points wide.
+7. party_frame.png: the small frame for one companion or party member in battle and on the map, about 140 × 44 points: a little round portrait ring (as hero_portrait_ring, smaller, its middle transparent) at its left, overlapping a small plate with two plain sunk grooves for HP and MP and room for a name above them. Stretches sideways in its middle.
+8. coach_arrow.png: a carved wooden arrow that points at a button during the tutorial, about 40 × 40 points, pointing down, with a small gold-inlaid star at its tail.
+9. map_pin.png: a small carved wooden map pin with a gold star in its round head, about 24 × 32 points, its tip at the bottom middle (give the tip's pixel), for marking places on the world map.
+
+Rules, all of them matter:
+- Match the attached kits exactly: wood colour, carving depth, symbol shapes, inlay colours, outline.
+- Front-on and flat, no perspective. Lit from the top left. A clear dark brown outline round every piece.
+- Small pieces stay simple: at 30 points or less only a rim, a lit edge and at most one tiny symbol.
+- Every transparent middle fully transparent; every plain face really plain (text goes on it).

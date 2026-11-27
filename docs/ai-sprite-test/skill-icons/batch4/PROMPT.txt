@@ -1,0 +1,32 @@
+Redraw the skill icons from my game as pixel art, one at a time. Each attached _today picture is the
+skill's icon now, drawn as soft light: keep what it shows (its subject, its colours by name, its
+sense of motion) and draw it in the look of the attached style sheet, Retro Diffusion's item icons at
+4×. That's the look to match exactly: chunky and rich, smooth broad shading lit from the top left with
+bright highlights and deep, slightly coloured shadows, a one-pixel outline in a deep shade of each
+thing's own colour (never black), no dithering or grain, no soft glow.
+
+Every icon: a 64 × 64 canvas, transparent, alpha 0 or 255 only; no tile or background behind it (the
+game puts it in a round carved socket or on a coloured tile); the subject centred and kept inside a
+circle about 56 pixels across, so it fits the round socket, filling it well; 20 to 45 colours. Magic is
+drawn as hard pixels: a few crisp sparks, streaks or rings touching the subject are fine, but no blur,
+no glow, no half-transparent pixels. Each skill's main colours as listed, so an element reads at a
+glance (fire orange and red, water blue, wood green, earth brown and ochre, metal silver and gold,
+light gold and white, dark violet, healing green, buffs sky blue and gold, curses violet). Every icon in
+the batch has its own silhouette: no two alike.
+
+1. curse (Curse, a foe hits for less): a violet skull with a downward arrow.
+2. poison (Poison, HP lost each round): a violet-green poison bottle with a skull on it, a bubble rising.
+3. poison_mist (Poison Mist, a choking cloud): a puffy violet-green cloud with drips.
+4. evil_eye (Evil Eye, a cold glare): a violet eye with a slit pupil and rays.
+5. shadow_bite (Shadow Bite, fangs of darkness): two dark violet fangs closing, a crescent of shadow.
+6. venom_bite (Venom Bite, fangs that poison): two white fangs dripping green venom.
+7. web_shot (Web Shot, sticky webs): a grey-white spider web, a small violet spider.
+8. beast_lore (Beast Lore, call out every foe's weak spots): an open book with a red target mark.
+9. nibble (Nibble): a little bite out of a round, a tiny tooth mark, cute.
+10. pine_needles (Pine Needles): three sharp green pine needles flying.
+11. bounce (Bounce): a round jelly mid-bounce over a curved arrow.
+12. golden_spin (Golden Spin, a dazzling spinning tackle): a golden spinning disc with sparkles.
+13. bridge_of_light (Bridge of Light, carry yourself to a town): a gold rainbow-like arch of light over a tiny town roof.
+
+For each: say its size and colour count, then deliver its 1× PNG named skill_<id>.png and the 8×
+preview, then the next.
