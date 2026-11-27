@@ -1,0 +1,7778 @@
+{
+  "schema_version": 1,
+  "collection": "Tales of Dorlune \u2014 Birch & Leaf HUD",
+  "primary_asset_count": 22,
+  "canvas": [
+    1280,
+    1280
+  ],
+  "notes": [
+    "inner_diameter_px is the transparent aperture only; solid faces have a separate inset diameter.",
+    "Diameters count covered native pixel columns; geometric diameters are also supplied for exact circle clipping.",
+    "The three picked light minimap files are byte-identical to the supplied originals.",
+    "Dark twins use a one-to-one RGB replacement; alpha, coordinates and all colour-region boundaries are unchanged.",
+    "Bright inlays are palette entries distinct from the wood; carved wooden star tones remain wood."
+  ],
+  "checks": {
+    "all_canvas_1280": true,
+    "all_binary_alpha": true,
+    "all_opaque_colour_counts_at_most_40": true,
+    "all_11_dark_alpha_pairs_pixel_identical": true,
+    "all_11_dark_drawings_colour_only": true,
+    "all_22_previews_exact_8x": true,
+    "all_transparent_apertures_clear": true,
+    "normal_pressed_outer_rims_pixel_identical": true,
+    "picked_light_minimap_files_byte_identical": true,
+    "portrait_level_socket_complete_and_clear_of_window": true
+  },
+  "contact_sheet": {
+    "filename": "contact_sheet.png",
+    "canvas": [
+      5632,
+      1280
+    ],
+    "light_background": "#4E7D5C",
+    "dark_background": "#121D31",
+    "column_order": [
+      "minimap_frame",
+      "compass_medallion",
+      "compass_needle",
+      "hero_portrait_ring",
+      "hero_plate",
+      "pill_plate",
+      "button_round",
+      "button_round_pressed",
+      "skill_socket",
+      "joystick_base",
+      "joystick_knob"
+    ],
+    "row_order": [
+      "light",
+      "dark"
+    ]
+  },
+  "assets": [
+    {
+      "filename": "minimap_frame.png",
+      "mode": "light",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        77,
+        77,
+        1204,
+        1257
+      ],
+      "bounding_box_convention": "left,top,right,bottom; right/bottom exclusive",
+      "object_size": [
+        1127,
+        1180
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        666.5
+      ],
+      "colour_count": 40,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "connected_silhouettes": 1,
+      "alpha_sha256": "c673045d7fd62ae1b2a8b95f4d55c33a4d7b4bd07451286e991a9c770656efbe",
+      "file_sha256": "54d45543fdfc6fb785b0e4179ec5d99a1068b0e2166c3c3824f09542e2ad6b5f",
+      "outer_diameter_px": 1127,
+      "inner_diameter_px": 899,
+      "transparent_middle": true,
+      "outer_geometric_diameter_px": 1126,
+      "inner_geometric_diameter_px": 900,
+      "transparent_middle_opaque_pixels": 0,
+      "picked_original_byte_identical": true,
+      "preview": {
+        "filename": "previews_8x/minimap_frame_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact": true
+      }
+    },
+    {
+      "filename": "minimap_frame_dark.png",
+      "mode": "dark",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        77,
+        77,
+        1204,
+        1257
+      ],
+      "bounding_box_convention": "left,top,right,bottom; right/bottom exclusive",
+      "object_size": [
+        1127,
+        1180
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        666.5
+      ],
+      "colour_count": 40,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "connected_silhouettes": 1,
+      "alpha_sha256": "c673045d7fd62ae1b2a8b95f4d55c33a4d7b4bd07451286e991a9c770656efbe",
+      "file_sha256": "d767390fe2ce83fe097413dffd1fc19625345c50f01aeef4e5a68ba36126d4a0",
+      "outer_diameter_px": 1127,
+      "inner_diameter_px": 899,
+      "transparent_middle": true,
+      "outer_geometric_diameter_px": 1126,
+      "inner_geometric_diameter_px": 900,
+      "transparent_middle_opaque_pixels": 0,
+      "light_twin": "minimap_frame.png",
+      "alpha_pixel_identical_to_light": true,
+      "drawing_region_boundaries_preserved": true,
+      "wood_display_luma_reduction_percent": 42.82,
+      "red_palette_exactly_preserved": true,
+      "colour_only_mapping": [
+        {
+          "light": [
+            61,
+            39,
+            10
+          ],
+          "dark": [
+            39,
+            24,
+            19
+          ],
+          "class": "wood",
+          "pixel_count": 12176
+        },
+        {
+          "light": [
+            78,
+            44,
+            23
+          ],
+          "dark": [
+            44,
+            27,
+            22
+          ],
+          "class": "wood",
+          "pixel_count": 16696
+        },
+        {
+          "light": [
+            89,
+            36,
+            6
+          ],
+          "dark": [
+            42,
+            25,
+            20
+          ],
+          "class": "wood",
+          "pixel_count": 10351
+        },
+        {
+          "light": [
+            95,
+            95,
+            30
+          ],
+          "dark": [
+            106,
+            109,
+            41
+          ],
+          "class": "green",
+          "pixel_count": 10387
+        },
+        {
+          "light": [
+            112,
+            56,
+            12
+          ],
+          "dark": [
+            53,
+            33,
+            25
+          ],
+          "class": "wood",
+          "pixel_count": 8656
+        },
+        {
+          "light": [
+            145,
+            128,
+            56
+          ],
+          "dark": [
+            163,
+            150,
+            72
+          ],
+          "class": "green",
+          "pixel_count": 8319
+        },
+        {
+          "light": [
+            146,
+            155,
+            68
+          ],
+          "dark": [
+            160,
+            174,
+            85
+          ],
+          "class": "green",
+          "pixel_count": 9225
+        },
+        {
+          "light": [
+            148,
+            87,
+            32
+          ],
+          "dark": [
+            74,
+            47,
+            35
+          ],
+          "class": "wood",
+          "pixel_count": 12115
+        },
+        {
+          "light": [
+            166,
+            97,
+            33
+          ],
+          "dark": [
+            81,
+            52,
+            39
+          ],
+          "class": "wood",
+          "pixel_count": 10194
+        },
+        {
+          "light": [
+            170,
+            109,
+            51
+          ],
+          "dark": [
+            87,
+            58,
+            44
+          ],
+          "class": "wood",
+          "pixel_count": 10755
+        },
+        {
+          "light": [
+            182,
+            114,
+            45
+          ],
+          "dark": [
+            90,
+            60,
+            46
+          ],
+          "class": "wood",
+          "pixel_count": 6644
+        },
+        {
+          "light": [
+            187,
+            183,
+            92
+          ],
+          "dark": [
+            208,
+            208,
+            112
+          ],
+          "class": "green",
+          "pixel_count": 6945
+        },
+        {
+          "light": [
+            195,
+            131,
+            62
+          ],
+          "dark": [
+            101,
+            69,
+            53
+          ],
+          "class": "wood",
+          "pixel_count": 11482
+        },
+        {
+          "light": [
+            202,
+            140,
+            75
+          ],
+          "dark": [
+            107,
+            75,
+            57
+          ],
+          "class": "wood",
+          "pixel_count": 8985
+        },
+        {
+          "light": [
+            207,
+            149,
+            86
+          ],
+          "dark": [
+            113,
+            80,
+            61
+          ],
+          "class": "wood",
+          "pixel_count": 9879
+        },
+        {
+          "light": [
+            216,
+            153,
+            80
+          ],
+          "dark": [
+            116,
+            83,
+            63
+          ],
+          "class": "wood",
+          "pixel_count": 7699
+        },
+        {
+          "light": [
+            221,
+            162,
+            93
+          ],
+          "dark": [
+            121,
+            88,
+            67
+          ],
+          "class": "wood",
+          "pixel_count": 14422
+        },
+        {
+          "light": [
+            222,
+            197,
+            125
+          ],
+          "dark": [
+            240,
+            216,
+            145
+          ],
+          "class": "gold",
+          "pixel_count": 2299
+        },
+        {
+          "light": [
+            225,
+            171,
+            109
+          ],
+          "dark": [
+            127,
+            94,
+            72
+          ],
+          "class": "wood",
+          "pixel_count": 11911
+        },
+        {
+          "light": [
+            227,
+            169,
+            96
+          ],
+          "dark": [
+            126,
+            93,
+            71
+          ],
+          "class": "wood",
+          "pixel_count": 6684
+        },
+        {
+          "light": [
+            229,
+            174,
+            109
+          ],
+          "dark": [
+            129,
+            96,
+            74
+          ],
+          "class": "wood",
+          "pixel_count": 15721
+        },
+        {
+          "light": [
+            230,
+            178,
+            115
+          ],
+          "dark": [
+            132,
+            99,
+            76
+          ],
+          "class": "wood",
+          "pixel_count": 6083
+        },
+        {
+          "light": [
+            233,
+            179,
+            114
+          ],
+          "dark": [
+            133,
+            100,
+            76
+          ],
+          "class": "wood",
+          "pixel_count": 13676
+        },
+        {
+          "light": [
+            234,
+            182,
+            120
+          ],
+          "dark": [
+            135,
+            102,
+            78
+          ],
+          "class": "wood",
+          "pixel_count": 15236
+        },
+        {
+          "light": [
+            234,
+            186,
+            125
+          ],
+          "dark": [
+            137,
+            104,
+            80
+          ],
+          "class": "wood",
+          "pixel_count": 12785
+        },
+        {
+          "light": [
+            235,
+            207,
+            145
+          ],
+          "dark": [
+            250,
+            223,
+            163
+          ],
+          "class": "gold",
+          "pixel_count": 1302
+        },
+        {
+          "light": [
+            237,
+            187,
+            126
+          ],
+          "dark": [
+            138,
+            105,
+            81
+          ],
+          "class": "wood",
+          "pixel_count": 6729
+        },
+        {
+          "light": [
+            237,
+            188,
+            129
+          ],
+          "dark": [
+            139,
+            106,
+            81
+          ],
+          "class": "wood",
+          "pixel_count": 11951
+        },
+        {
+          "light": [
+            237,
+            191,
+            132
+          ],
+          "dark": [
+            140,
+            108,
+            83
+          ],
+          "class": "wood",
+          "pixel_count": 12463
+        },
+        {
+          "light": [
+            239,
+            185,
+            108
+          ],
+          "dark": [
+            136,
+            103,
+            79
+          ],
+          "class": "wood",
+          "pixel_count": 3463
+        },
+        {
+          "light": [
+            239,
+            191,
+            132
+          ],
+          "dark": [
+            141,
+            108,
+            83
+          ],
+          "class": "wood",
+          "pixel_count": 313
+        },
+        {
+          "light": [
+            240,
+            192,
+            132
+          ],
+          "dark": [
+            142,
+            109,
+            83
+          ],
+          "class": "wood",
+          "pixel_count": 8338
+        },
+        {
+          "light": [
+            241,
+            195,
+            135
+          ],
+          "dark": [
+            143,
+            111,
+            85
+          ],
+          "class": "wood",
+          "pixel_count": 12400
+        },
+        {
+          "light": [
+            241,
+            197,
+            141
+          ],
+          "dark": [
+            145,
+            112,
+            86
+          ],
+          "class": "wood",
+          "pixel_count": 13801
+        },
+        {
+          "light": [
+            243,
+            201,
+            145
+          ],
+          "dark": [
+            147,
+            115,
+            88
+          ],
+          "class": "wood",
+          "pixel_count": 21117
+        },
+        {
+          "light": [
+            244,
+            197,
+            132
+          ],
+          "dark": [
+            144,
+            112,
+            86
+          ],
+          "class": "wood",
+          "pixel_count": 956
+        },
+        {
+          "light": [
+            248,
+            208,
+            139
+          ],
+          "dark": [
+            152,
+            119,
+            91
+          ],
+          "class": "wood",
+          "pixel_count": 3038
+        },
+        {
+          "light": [
+            248,
+            212,
+            161
+          ],
+          "dark": [
+            155,
+            123,
+            95
+          ],
+          "class": "wood",
+          "pixel_count": 11395
+        },
+        {
+          "light": [
+            248,
+            225,
+            166
+          ],
+          "dark": [
+            163,
+            132,
+            101
+          ],
+          "class": "wood",
+          "pixel_count": 8639
+        },
+        {
+          "light": [
+            251,
+            239,
+            202
+          ],
+          "dark": [
+            176,
+            145,
+            110
+          ],
+          "class": "wood",
+          "pixel_count": 13910
+        }
+      ],
+      "preview": {
+        "filename": "previews_8x/minimap_frame_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact": true
+      }
+    },
+    {
+      "filename": "compass_medallion.png",
+      "mode": "light",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        124,
+        124,
+        1157,
+        1157
+      ],
+      "bounding_box_convention": "left,top,right,bottom; right/bottom exclusive",
+      "object_size": [
+        1033,
+        1033
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "colour_count": 38,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "connected_silhouettes": 1,
+      "alpha_sha256": "c94a9d367207f2fc95644d13ac1cc2e7d28025e7c9e5518a80ea41e0c61ca139",
+      "file_sha256": "afe2badc0fafab75a096d140fb249f1e53f8be4e76edd2b8c42740d7532e9625",
+      "outer_diameter_px": 1033,
+      "inner_diameter_px": 0,
+      "transparent_middle": false,
+      "outer_geometric_diameter_px": 1032,
+      "solid_inset_diameter_px_approx": 740,
+      "picked_original_byte_identical": true,
+      "preview": {
+        "filename": "previews_8x/compass_medallion_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact": true
+      }
+    },
+    {
+      "filename": "compass_medallion_dark.png",
+      "mode": "dark",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        124,
+        124,
+        1157,
+        1157
+      ],
+      "bounding_box_convention": "left,top,right,bottom; right/bottom exclusive",
+      "object_size": [
+        1033,
+        1033
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "colour_count": 38,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "connected_silhouettes": 1,
+      "alpha_sha256": "c94a9d367207f2fc95644d13ac1cc2e7d28025e7c9e5518a80ea41e0c61ca139",
+      "file_sha256": "f1c4017640d831696d24ce3aeaf8981527f24277e5b0a548d5b6cdaac5726835",
+      "outer_diameter_px": 1033,
+      "inner_diameter_px": 0,
+      "transparent_middle": false,
+      "outer_geometric_diameter_px": 1032,
+      "solid_inset_diameter_px_approx": 740,
+      "light_twin": "compass_medallion.png",
+      "alpha_pixel_identical_to_light": true,
+      "drawing_region_boundaries_preserved": true,
+      "wood_display_luma_reduction_percent": 42.06,
+      "red_palette_exactly_preserved": true,
+      "colour_only_mapping": [
+        {
+          "light": [
+            116,
+            58,
+            14
+          ],
+          "dark": [
+            55,
+            34,
+            26
+          ],
+          "class": "wood",
+          "pixel_count": 21237
+        },
+        {
+          "light": [
+            175,
+            108,
+            30
+          ],
+          "dark": [
+            86,
+            57,
+            43
+          ],
+          "class": "wood",
+          "pixel_count": 24504
+        },
+        {
+          "light": [
+            186,
+            125,
+            46
+          ],
+          "dark": [
+            95,
+            65,
+            49
+          ],
+          "class": "wood",
+          "pixel_count": 28389
+        },
+        {
+          "light": [
+            199,
+            163,
+            81
+          ],
+          "dark": [
+            216,
+            180,
+            99
+          ],
+          "class": "gold",
+          "pixel_count": 18151
+        },
+        {
+          "light": [
+            206,
+            132,
+            46
+          ],
+          "dark": [
+            102,
+            71,
+            53
+          ],
+          "class": "wood",
+          "pixel_count": 26996
+        },
+        {
+          "light": [
+            206,
+            145,
+            59
+          ],
+          "dark": [
+            109,
+            77,
+            58
+          ],
+          "class": "wood",
+          "pixel_count": 24406
+        },
+        {
+          "light": [
+            232,
+            166,
+            78
+          ],
+          "dark": [
+            125,
+            91,
+            69
+          ],
+          "class": "wood",
+          "pixel_count": 24848
+        },
+        {
+          "light": [
+            238,
+            188,
+            118
+          ],
+          "dark": [
+            138,
+            106,
+            81
+          ],
+          "class": "wood",
+          "pixel_count": 12915
+        },
+        {
+          "light": [
+            239,
+            178,
+            98
+          ],
+          "dark": [
+            133,
+            99,
+            75
+          ],
+          "class": "wood",
+          "pixel_count": 33704
+        },
+        {
+          "light": [
+            240,
+            184,
+            106
+          ],
+          "dark": [
+            136,
+            103,
+            78
+          ],
+          "class": "wood",
+          "pixel_count": 43743
+        },
+        {
+          "light": [
+            245,
+            191,
+            119
+          ],
+          "dark": [
+            141,
+            108,
+            83
+          ],
+          "class": "wood",
+          "pixel_count": 36980
+        },
+        {
+          "light": [
+            245,
+            209,
+            147
+          ],
+          "dark": [
+            152,
+            120,
+            92
+          ],
+          "class": "wood",
+          "pixel_count": 3612
+        },
+        {
+          "light": [
+            247,
+            189,
+            110
+          ],
+          "dark": [
+            140,
+            107,
+            81
+          ],
+          "class": "wood",
+          "pixel_count": 23026
+        },
+        {
+          "light": [
+            247,
+            199,
+            133
+          ],
+          "dark": [
+            147,
+            114,
+            87
+          ],
+          "class": "wood",
+          "pixel_count": 13678
+        },
+        {
+          "light": [
+            247,
+            203,
+            138
+          ],
+          "dark": [
+            149,
+            116,
+            89
+          ],
+          "class": "wood",
+          "pixel_count": 18475
+        },
+        {
+          "light": [
+            248,
+            195,
+            122
+          ],
+          "dark": [
+            144,
+            111,
+            85
+          ],
+          "class": "wood",
+          "pixel_count": 9067
+        },
+        {
+          "light": [
+            248,
+            196,
+            126
+          ],
+          "dark": [
+            145,
+            112,
+            86
+          ],
+          "class": "wood",
+          "pixel_count": 36064
+        },
+        {
+          "light": [
+            248,
+            202,
+            133
+          ],
+          "dark": [
+            148,
+            116,
+            88
+          ],
+          "class": "wood",
+          "pixel_count": 6327
+        },
+        {
+          "light": [
+            248,
+            208,
+            139
+          ],
+          "dark": [
+            152,
+            119,
+            91
+          ],
+          "class": "wood",
+          "pixel_count": 2668
+        },
+        {
+          "light": [
+            249,
+            194,
+            115
+          ],
+          "dark": [
+            143,
+            110,
+            84
+          ],
+          "class": "wood",
+          "pixel_count": 11695
+        },
+        {
+          "light": [
+            249,
+            199,
+            127
+          ],
+          "dark": [
+            146,
+            114,
+            87
+          ],
+          "class": "wood",
+          "pixel_count": 28207
+        },
+        {
+          "light": [
+            249,
+            200,
+            132
+          ],
+          "dark": [
+            147,
+            115,
+            88
+          ],
+          "class": "wood",
+          "pixel_count": 48220
+        },
+        {
+          "light": [
+            250,
+            204,
+            137
+          ],
+          "dark": [
+            150,
+            117,
+            90
+          ],
+          "class": "wood",
+          "pixel_count": 61411
+        },
+        {
+          "light": [
+            251,
+            203,
+            133
+          ],
+          "dark": [
+            149,
+            117,
+            89
+          ],
+          "class": "wood",
+          "pixel_count": 4231
+        },
+        {
+          "light": [
+            251,
+            205,
+            139
+          ],
+          "dark": [
+            151,
+            118,
+            91
+          ],
+          "class": "wood",
+          "pixel_count": 16384
+        },
+        {
+          "light": [
+            251,
+            206,
+            138
+          ],
+          "dark": [
+            151,
+            119,
+            91
+          ],
+          "class": "wood",
+          "pixel_count": 1823
+        },
+        {
+          "light": [
+            252,
+            207,
+            141
+          ],
+          "dark": [
+            151,
+            120,
+            92
+          ],
+          "class": "wood",
+          "pixel_count": 1108
+        },
+        {
+          "light": [
+            253,
+            208,
+            140
+          ],
+          "dark": [
+            153,
+            120,
+            92
+          ],
+          "class": "wood",
+          "pixel_count": 47214
+        },
+        {
+          "light": [
+            253,
+            209,
+            144
+          ],
+          "dark": [
+            154,
+            121,
+            93
+          ],
+          "class": "wood",
+          "pixel_count": 53707
+        },
+        {
+          "light": [
+            253,
+            210,
+            143
+          ],
+          "dark": [
+            153,
+            121,
+            93
+          ],
+          "class": "wood",
+          "pixel_count": 724
+        },
+        {
+          "light": [
+            253,
+            211,
+            147
+          ],
+          "dark": [
+            155,
+            122,
+            94
+          ],
+          "class": "wood",
+          "pixel_count": 3138
+        },
+        {
+          "light": [
+            253,
+            212,
+            146
+          ],
+          "dark": [
+            155,
+            123,
+            94
+          ],
+          "class": "wood",
+          "pixel_count": 19621
+        },
+        {
+          "light": [
+            253,
+            213,
+            149
+          ],
+          "dark": [
+            156,
+            123,
+            95
+          ],
+          "class": "wood",
+          "pixel_count": 66299
+        },
+        {
+          "light": [
+            253,
+            214,
+            147
+          ],
+          "dark": [
+            156,
+            124,
+            95
+          ],
+          "class": "wood",
+          "pixel_count": 2710
+        },
+        {
+          "light": [
+            253,
+            217,
+            154
+          ],
+          "dark": [
+            158,
+            126,
+            97
+          ],
+          "class": "wood",
+          "pixel_count": 29725
+        },
+        {
+          "light": [
+            253,
+            231,
+            169
+          ],
+          "dark": [
+            169,
+            137,
+            104
+          ],
+          "class": "wood",
+          "pixel_count": 17778
+        },
+        {
+          "light": [
+            253,
+            244,
+            212
+          ],
+          "dark": [
+            181,
+            150,
+            113
+          ],
+          "class": "wood",
+          "pixel_count": 13426
+        },
+        {
+          "light": [
+            254,
+            215,
+            151
+          ],
+          "dark": [
+            157,
+            125,
+            96
+          ],
+          "class": "wood",
+          "pixel_count": 174
+        }
+      ],
+      "preview": {
+        "filename": "previews_8x/compass_medallion_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact": true
+      }
+    },
+    {
+      "filename": "compass_needle.png",
+      "mode": "light",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        568,
+        29,
+        713,
+        1251
+      ],
+      "bounding_box_convention": "left,top,right,bottom; right/bottom exclusive",
+      "object_size": [
+        145,
+        1222
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        639.5
+      ],
+      "colour_count": 40,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "connected_silhouettes": 1,
+      "alpha_sha256": "96971be3f46a68484feac460b2afec519a11105ce9efd0ea5c62974af8fd3bab",
+      "file_sha256": "0b428cfe2860a728e15d9117c457b3a2ad59fb76a3d3795fa411efed204e841f",
+      "outer_diameter_px": null,
+      "inner_diameter_px": null,
+      "transparent_middle": false,
+      "picked_original_byte_identical": true,
+      "preview": {
+        "filename": "previews_8x/compass_needle_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact": true
+      }
+    },
+    {
+      "filename": "compass_needle_dark.png",
+      "mode": "dark",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        568,
+        29,
+        713,
+        1251
+      ],
+      "bounding_box_convention": "left,top,right,bottom; right/bottom exclusive",
+      "object_size": [
+        145,
+        1222
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        639.5
+      ],
+      "colour_count": 40,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "connected_silhouettes": 1,
+      "alpha_sha256": "96971be3f46a68484feac460b2afec519a11105ce9efd0ea5c62974af8fd3bab",
+      "file_sha256": "12d9f0c172eca6d55a2ac62668fe5ecedb620fc95240b19fb8b9a3061728a0cf",
+      "outer_diameter_px": null,
+      "inner_diameter_px": null,
+      "transparent_middle": false,
+      "light_twin": "compass_needle.png",
+      "alpha_pixel_identical_to_light": true,
+      "drawing_region_boundaries_preserved": true,
+      "wood_display_luma_reduction_percent": 42.23,
+      "red_palette_exactly_preserved": true,
+      "colour_only_mapping": [
+        {
+          "light": [
+            82,
+            16,
+            8
+          ],
+          "dark": [
+            82,
+            16,
+            8
+          ],
+          "class": "red",
+          "pixel_count": 3133
+        },
+        {
+          "light": [
+            97,
+            40,
+            20
+          ],
+          "dark": [
+            45,
+            27,
+            22
+          ],
+          "class": "wood",
+          "pixel_count": 1594
+        },
+        {
+          "light": [
+            111,
+            17,
+            17
+          ],
+          "dark": [
+            111,
+            17,
+            17
+          ],
+          "class": "red",
+          "pixel_count": 3258
+        },
+        {
+          "light": [
+            118,
+            24,
+            20
+          ],
+          "dark": [
+            118,
+            24,
+            20
+          ],
+          "class": "red",
+          "pixel_count": 130
+        },
+        {
+          "light": [
+            118,
+            28,
+            21
+          ],
+          "dark": [
+            118,
+            28,
+            21
+          ],
+          "class": "red",
+          "pixel_count": 106
+        },
+        {
+          "light": [
+            118,
+            72,
+            44
+          ],
+          "dark": [
+            63,
+            39,
+            31
+          ],
+          "class": "wood",
+          "pixel_count": 1342
+        },
+        {
+          "light": [
+            120,
+            20,
+            20
+          ],
+          "dark": [
+            120,
+            20,
+            20
+          ],
+          "class": "red",
+          "pixel_count": 3686
+        },
+        {
+          "light": [
+            128,
+            21,
+            22
+          ],
+          "dark": [
+            128,
+            21,
+            22
+          ],
+          "class": "red",
+          "pixel_count": 2841
+        },
+        {
+          "light": [
+            134,
+            25,
+            25
+          ],
+          "dark": [
+            134,
+            25,
+            25
+          ],
+          "class": "red",
+          "pixel_count": 2739
+        },
+        {
+          "light": [
+            140,
+            25,
+            26
+          ],
+          "dark": [
+            140,
+            25,
+            26
+          ],
+          "class": "red",
+          "pixel_count": 1905
+        },
+        {
+          "light": [
+            145,
+            28,
+            28
+          ],
+          "dark": [
+            145,
+            28,
+            28
+          ],
+          "class": "red",
+          "pixel_count": 2240
+        },
+        {
+          "light": [
+            153,
+            29,
+            30
+          ],
+          "dark": [
+            153,
+            29,
+            30
+          ],
+          "class": "red",
+          "pixel_count": 2362
+        },
+        {
+          "light": [
+            157,
+            33,
+            31
+          ],
+          "dark": [
+            157,
+            33,
+            31
+          ],
+          "class": "red",
+          "pixel_count": 3219
+        },
+        {
+          "light": [
+            165,
+            34,
+            33
+          ],
+          "dark": [
+            165,
+            34,
+            33
+          ],
+          "class": "red",
+          "pixel_count": 1303
+        },
+        {
+          "light": [
+            176,
+            43,
+            39
+          ],
+          "dark": [
+            176,
+            43,
+            39
+          ],
+          "class": "red",
+          "pixel_count": 2106
+        },
+        {
+          "light": [
+            184,
+            46,
+            43
+          ],
+          "dark": [
+            184,
+            46,
+            43
+          ],
+          "class": "red",
+          "pixel_count": 1643
+        },
+        {
+          "light": [
+            184,
+            132,
+            75
+          ],
+          "dark": [
+            100,
+            69,
+            53
+          ],
+          "class": "wood",
+          "pixel_count": 2719
+        },
+        {
+          "light": [
+            191,
+            53,
+            49
+          ],
+          "dark": [
+            191,
+            53,
+            49
+          ],
+          "class": "red",
+          "pixel_count": 1681
+        },
+        {
+          "light": [
+            198,
+            147,
+            85
+          ],
+          "dark": [
+            110,
+            78,
+            60
+          ],
+          "class": "wood",
+          "pixel_count": 2645
+        },
+        {
+          "light": [
+            201,
+            57,
+            54
+          ],
+          "dark": [
+            201,
+            57,
+            54
+          ],
+          "class": "red",
+          "pixel_count": 1861
+        },
+        {
+          "light": [
+            210,
+            64,
+            62
+          ],
+          "dark": [
+            210,
+            64,
+            62
+          ],
+          "class": "red",
+          "pixel_count": 1719
+        },
+        {
+          "light": [
+            210,
+            157,
+            88
+          ],
+          "dark": [
+            117,
+            84,
+            64
+          ],
+          "class": "wood",
+          "pixel_count": 3338
+        },
+        {
+          "light": [
+            213,
+            163,
+            94
+          ],
+          "dark": [
+            121,
+            88,
+            67
+          ],
+          "class": "wood",
+          "pixel_count": 3664
+        },
+        {
+          "light": [
+            216,
+            170,
+            109
+          ],
+          "dark": [
+            125,
+            93,
+            71
+          ],
+          "class": "wood",
+          "pixel_count": 1370
+        },
+        {
+          "light": [
+            217,
+            77,
+            72
+          ],
+          "dark": [
+            217,
+            77,
+            72
+          ],
+          "class": "red",
+          "pixel_count": 2192
+        },
+        {
+          "light": [
+            232,
+            183,
+            112
+          ],
+          "dark": [
+            134,
+            102,
+            77
+          ],
+          "class": "wood",
+          "pixel_count": 2424
+        },
+        {
+          "light": [
+            237,
+            195,
+            129
+          ],
+          "dark": [
+            142,
+            110,
+            84
+          ],
+          "class": "wood",
+          "pixel_count": 334
+        },
+        {
+          "light": [
+            238,
+            192,
+            119
+          ],
+          "dark": [
+            140,
+            108,
+            82
+          ],
+          "class": "wood",
+          "pixel_count": 5673
+        },
+        {
+          "light": [
+            241,
+            197,
+            125
+          ],
+          "dark": [
+            144,
+            111,
+            85
+          ],
+          "class": "wood",
+          "pixel_count": 2263
+        },
+        {
+          "light": [
+            242,
+            210,
+            154
+          ],
+          "dark": [
+            152,
+            120,
+            93
+          ],
+          "class": "wood",
+          "pixel_count": 552
+        },
+        {
+          "light": [
+            244,
+            199,
+            128
+          ],
+          "dark": [
+            146,
+            113,
+            86
+          ],
+          "class": "wood",
+          "pixel_count": 1708
+        },
+        {
+          "light": [
+            244,
+            203,
+            134
+          ],
+          "dark": [
+            148,
+            116,
+            88
+          ],
+          "class": "wood",
+          "pixel_count": 3478
+        },
+        {
+          "light": [
+            245,
+            95,
+            94
+          ],
+          "dark": [
+            245,
+            95,
+            94
+          ],
+          "class": "red",
+          "pixel_count": 3003
+        },
+        {
+          "light": [
+            245,
+            124,
+            112
+          ],
+          "dark": [
+            245,
+            124,
+            112
+          ],
+          "class": "red",
+          "pixel_count": 1962
+        },
+        {
+          "light": [
+            247,
+            205,
+            136
+          ],
+          "dark": [
+            150,
+            117,
+            90
+          ],
+          "class": "wood",
+          "pixel_count": 1012
+        },
+        {
+          "light": [
+            248,
+            209,
+            141
+          ],
+          "dark": [
+            152,
+            120,
+            92
+          ],
+          "class": "wood",
+          "pixel_count": 2408
+        },
+        {
+          "light": [
+            250,
+            214,
+            146
+          ],
+          "dark": [
+            156,
+            123,
+            95
+          ],
+          "class": "wood",
+          "pixel_count": 2524
+        },
+        {
+          "light": [
+            250,
+            228,
+            177
+          ],
+          "dark": [
+            167,
+            135,
+            103
+          ],
+          "class": "wood",
+          "pixel_count": 1952
+        },
+        {
+          "light": [
+            254,
+            238,
+            183
+          ],
+          "dark": [
+            175,
+            143,
+            108
+          ],
+          "class": "wood",
+          "pixel_count": 1686
+        },
+        {
+          "light": [
+            254,
+            242,
+            191
+          ],
+          "dark": [
+            178,
+            147,
+            111
+          ],
+          "class": "wood",
+          "pixel_count": 1865
+        }
+      ],
+      "preview": {
+        "filename": "previews_8x/compass_needle_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact": true
+      }
+    },
+    {
+      "filename": "hero_portrait_ring.png",
+      "mode": "light",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        39,
+        116,
+        1161,
+        1199
+      ],
+      "bounding_box_convention": "left,top,right,bottom; right/bottom exclusive",
+      "object_size": [
+        1122,
+        1083
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        599.5,
+        657.0
+      ],
+      "colour_count": 40,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "connected_silhouettes": 1,
+      "alpha_sha256": "71e7bdcddf9345129d19a1e9e7dda844415b9514213bb661232f80039d2be5ef",
+      "file_sha256": "d2a83bca547c795bb19824e3eefd2003ccf5b443a5b866dbdf5a2c8d1cdecf90",
+      "outer_diameter_px": 1041,
+      "inner_diameter_px": 779,
+      "transparent_middle": true,
+      "outer_geometric_diameter_px": 1040,
+      "inner_geometric_diameter_px": 780,
+      "level_socket_centre": [
+        184,
+        1053
+      ],
+      "level_socket_inner_diameter_px": 219,
+      "level_socket_outer_diameter_px": 291,
+      "outline_width_px": 3,
+      "transparent_middle_opaque_pixels": 0,
+      "preview": {
+        "filename": "previews_8x/hero_portrait_ring_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact": true
+      }
+    },
+    {
+      "filename": "hero_portrait_ring_dark.png",
+      "mode": "dark",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        39,
+        116,
+        1161,
+        1199
+      ],
+      "bounding_box_convention": "left,top,right,bottom; right/bottom exclusive",
+      "object_size": [
+        1122,
+        1083
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        599.5,
+        657.0
+      ],
+      "colour_count": 40,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "connected_silhouettes": 1,
+      "alpha_sha256": "71e7bdcddf9345129d19a1e9e7dda844415b9514213bb661232f80039d2be5ef",
+      "file_sha256": "de766dd2d929594995497fb2286021abaf60a7167993ea69b52ad89396f76967",
+      "outer_diameter_px": 1041,
+      "inner_diameter_px": 779,
+      "transparent_middle": true,
+      "outer_geometric_diameter_px": 1040,
+      "inner_geometric_diameter_px": 780,
+      "level_socket_centre": [
+        184,
+        1053
+      ],
+      "level_socket_inner_diameter_px": 219,
+      "level_socket_outer_diameter_px": 291,
+      "outline_width_px": 3,
+      "transparent_middle_opaque_pixels": 0,
+      "light_twin": "hero_portrait_ring.png",
+      "alpha_pixel_identical_to_light": true,
+      "drawing_region_boundaries_preserved": true,
+      "wood_display_luma_reduction_percent": 43.41,
+      "red_palette_exactly_preserved": true,
+      "colour_only_mapping": [
+        {
+          "light": [
+            61,
+            39,
+            10
+          ],
+          "dark": [
+            39,
+            24,
+            19
+          ],
+          "class": "wood",
+          "pixel_count": 5096
+        },
+        {
+          "light": [
+            78,
+            44,
+            23
+          ],
+          "dark": [
+            44,
+            27,
+            22
+          ],
+          "class": "wood",
+          "pixel_count": 22101
+        },
+        {
+          "light": [
+            89,
+            36,
+            6
+          ],
+          "dark": [
+            42,
+            25,
+            20
+          ],
+          "class": "wood",
+          "pixel_count": 4673
+        },
+        {
+          "light": [
+            95,
+            95,
+            30
+          ],
+          "dark": [
+            106,
+            109,
+            41
+          ],
+          "class": "green",
+          "pixel_count": 2140
+        },
+        {
+          "light": [
+            112,
+            56,
+            12
+          ],
+          "dark": [
+            53,
+            33,
+            25
+          ],
+          "class": "wood",
+          "pixel_count": 3811
+        },
+        {
+          "light": [
+            145,
+            128,
+            56
+          ],
+          "dark": [
+            163,
+            150,
+            72
+          ],
+          "class": "green",
+          "pixel_count": 1941
+        },
+        {
+          "light": [
+            146,
+            155,
+            68
+          ],
+          "dark": [
+            160,
+            174,
+            85
+          ],
+          "class": "green",
+          "pixel_count": 1425
+        },
+        {
+          "light": [
+            148,
+            87,
+            32
+          ],
+          "dark": [
+            74,
+            47,
+            35
+          ],
+          "class": "wood",
+          "pixel_count": 3853
+        },
+        {
+          "light": [
+            166,
+            97,
+            33
+          ],
+          "dark": [
+            81,
+            52,
+            39
+          ],
+          "class": "wood",
+          "pixel_count": 3177
+        },
+        {
+          "light": [
+            170,
+            109,
+            51
+          ],
+          "dark": [
+            87,
+            58,
+            44
+          ],
+          "class": "wood",
+          "pixel_count": 5539
+        },
+        {
+          "light": [
+            181,
+            117,
+            53
+          ],
+          "dark": [
+            77,
+            51,
+            40
+          ],
+          "class": "wood",
+          "pixel_count": 624
+        },
+        {
+          "light": [
+            182,
+            114,
+            45
+          ],
+          "dark": [
+            90,
+            60,
+            46
+          ],
+          "class": "wood",
+          "pixel_count": 5727
+        },
+        {
+          "light": [
+            187,
+            183,
+            92
+          ],
+          "dark": [
+            208,
+            208,
+            112
+          ],
+          "class": "green",
+          "pixel_count": 6270
+        },
+        {
+          "light": [
+            195,
+            131,
+            62
+          ],
+          "dark": [
+            101,
+            69,
+            53
+          ],
+          "class": "wood",
+          "pixel_count": 12530
+        },
+        {
+          "light": [
+            202,
+            140,
+            75
+          ],
+          "dark": [
+            107,
+            75,
+            57
+          ],
+          "class": "wood",
+          "pixel_count": 11664
+        },
+        {
+          "light": [
+            202,
+            142,
+            78
+          ],
+          "dark": [
+            91,
+            63,
+            50
+          ],
+          "class": "wood",
+          "pixel_count": 706
+        },
+        {
+          "light": [
+            207,
+            149,
+            86
+          ],
+          "dark": [
+            113,
+            80,
+            61
+          ],
+          "class": "wood",
+          "pixel_count": 10958
+        },
+        {
+          "light": [
+            216,
+            153,
+            80
+          ],
+          "dark": [
+            116,
+            83,
+            63
+          ],
+          "class": "wood",
+          "pixel_count": 1712
+        },
+        {
+          "light": [
+            220,
+            164,
+            101
+          ],
+          "dark": [
+            103,
+            74,
+            59
+          ],
+          "class": "wood",
+          "pixel_count": 1937
+        },
+        {
+          "light": [
+            221,
+            162,
+            93
+          ],
+          "dark": [
+            121,
+            88,
+            67
+          ],
+          "class": "wood",
+          "pixel_count": 11368
+        },
+        {
+          "light": [
+            222,
+            197,
+            125
+          ],
+          "dark": [
+            240,
+            216,
+            145
+          ],
+          "class": "gold",
+          "pixel_count": 2626
+        },
+        {
+          "light": [
+            225,
+            171,
+            109
+          ],
+          "dark": [
+            127,
+            94,
+            72
+          ],
+          "class": "wood",
+          "pixel_count": 14947
+        },
+        {
+          "light": [
+            227,
+            169,
+            96
+          ],
+          "dark": [
+            126,
+            93,
+            71
+          ],
+          "class": "wood",
+          "pixel_count": 1835
+        },
+        {
+          "light": [
+            229,
+            174,
+            109
+          ],
+          "dark": [
+            129,
+            96,
+            74
+          ],
+          "class": "wood",
+          "pixel_count": 2514
+        },
+        {
+          "light": [
+            230,
+            178,
+            115
+          ],
+          "dark": [
+            132,
+            99,
+            76
+          ],
+          "class": "wood",
+          "pixel_count": 15561
+        },
+        {
+          "light": [
+            233,
+            179,
+            114
+          ],
+          "dark": [
+            133,
+            100,
+            76
+          ],
+          "class": "wood",
+          "pixel_count": 481
+        },
+        {
+          "light": [
+            233,
+            182,
+            119
+          ],
+          "dark": [
+            113,
+            84,
+            67
+          ],
+          "class": "wood",
+          "pixel_count": 34702
+        },
+        {
+          "light": [
+            234,
+            182,
+            120
+          ],
+          "dark": [
+            135,
+            102,
+            78
+          ],
+          "class": "wood",
+          "pixel_count": 14479
+        },
+        {
+          "light": [
+            234,
+            186,
+            125
+          ],
+          "dark": [
+            137,
+            104,
+            80
+          ],
+          "class": "wood",
+          "pixel_count": 19771
+        },
+        {
+          "light": [
+            237,
+            188,
+            129
+          ],
+          "dark": [
+            139,
+            106,
+            81
+          ],
+          "class": "wood",
+          "pixel_count": 19991
+        },
+        {
+          "light": [
+            237,
+            191,
+            132
+          ],
+          "dark": [
+            140,
+            108,
+            83
+          ],
+          "class": "wood",
+          "pixel_count": 38612
+        },
+        {
+          "light": [
+            239,
+            185,
+            108
+          ],
+          "dark": [
+            136,
+            103,
+            79
+          ],
+          "class": "wood",
+          "pixel_count": 1209
+        },
+        {
+          "light": [
+            240,
+            192,
+            132
+          ],
+          "dark": [
+            142,
+            109,
+            83
+          ],
+          "class": "wood",
+          "pixel_count": 7614
+        },
+        {
+          "light": [
+            241,
+            195,
+            135
+          ],
+          "dark": [
+            143,
+            111,
+            85
+          ],
+          "class": "wood",
+          "pixel_count": 13453
+        },
+        {
+          "light": [
+            241,
+            197,
+            141
+          ],
+          "dark": [
+            145,
+            112,
+            86
+          ],
+          "class": "wood",
+          "pixel_count": 69234
+        },
+        {
+          "light": [
+            243,
+            201,
+            145
+          ],
+          "dark": [
+            147,
+            115,
+            88
+          ],
+          "class": "wood",
+          "pixel_count": 37294
+        },
+        {
+          "light": [
+            248,
+            208,
+            139
+          ],
+          "dark": [
+            152,
+            119,
+            91
+          ],
+          "class": "wood",
+          "pixel_count": 2067
+        },
+        {
+          "light": [
+            248,
+            212,
+            161
+          ],
+          "dark": [
+            155,
+            123,
+            95
+          ],
+          "class": "wood",
+          "pixel_count": 13851
+        },
+        {
+          "light": [
+            248,
+            225,
+            166
+          ],
+          "dark": [
+            163,
+            132,
+            101
+          ],
+          "class": "wood",
+          "pixel_count": 8418
+        },
+        {
+          "light": [
+            251,
+            239,
+            202
+          ],
+          "dark": [
+            176,
+            145,
+            110
+          ],
+          "class": "wood",
+          "pixel_count": 15013
+        }
+      ],
+      "preview": {
+        "filename": "previews_8x/hero_portrait_ring_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact": true
+      }
+    },
+    {
+      "filename": "hero_plate.png",
+      "mode": "light",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        76,
+        452,
+        1204,
+        828
+      ],
+      "bounding_box_convention": "left,top,right,bottom; right/bottom exclusive",
+      "object_size": [
+        1128,
+        376
+      ],
+      "centre": [
+        639.5,
+        639.5
+      ],
+      "bounding_box_centre": [
+        639.5,
+        639.5
+      ],
+      "colour_count": 39,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "connected_silhouettes": 1,
+      "alpha_sha256": "bf693f858c404eac81051be0d63592368df3acb2bcbfa18a9b8e9d1d88662352",
+      "file_sha256": "2b1cc50063154516751c1ff138459b75df054f23ac1bcb2ffe0cd8d450a14db1",
+      "outer_diameter_px": null,
+      "inner_diameter_px": null,
+      "transparent_middle": false,
+      "name_content_rect": [
+        480,
+        490,
+        1035,
+        545
+      ],
+      "portrait_overlap_zone": [
+        76,
+        452,
+        452,
+        828
+      ],
+      "horizontal_cap_insets_from_bbox": {
+        "left": 420,
+        "right": 170
+      },
+      "stretch_rect": [
+        496,
+        452,
+        1034,
+        828
+      ],
+      "regions": [
+        {
+          "name": "hp_inset",
+          "outer_groove_rect": [
+            453,
+            551,
+            1074,
+            622
+          ],
+          "inset_rect": [
+            462,
+            561,
+            1066,
+            614
+          ],
+          "inset_size": [
+            604,
+            53
+          ],
+          "centre": [
+            763.5,
+            587.0
+          ],
+          "inset_colours": [
+            [
+              181,
+              117,
+              53
+            ],
+            [
+              202,
+              142,
+              78
+            ],
+            [
+              220,
+              164,
+              101
+            ]
+          ]
+        },
+        {
+          "name": "mp_inset",
+          "outer_groove_rect": [
+            453,
+            632,
+            1074,
+            704
+          ],
+          "inset_rect": [
+            462,
+            642,
+            1066,
+            694
+          ],
+          "inset_size": [
+            604,
+            52
+          ],
+          "centre": [
+            763.5,
+            667.5
+          ],
+          "inset_colours": [
+            [
+              181,
+              117,
+              53
+            ],
+            [
+              202,
+              142,
+              78
+            ],
+            [
+              220,
+              164,
+              101
+            ]
+          ]
+        },
+        {
+          "name": "xp_inset",
+          "outer_groove_rect": [
+            453,
+            712,
+            1074,
+            786
+          ],
+          "inset_rect": [
+            462,
+            721,
+            1066,
+            776
+          ],
+          "inset_size": [
+            604,
+            55
+          ],
+          "centre": [
+            763.5,
+            748.0
+          ],
+          "inset_colours": [
+            [
+              181,
+              117,
+              53
+            ],
+            [
+              202,
+              142,
+              78
+            ],
+            [
+              220,
+              164,
+              101
+            ]
+          ]
+        }
+      ],
+      "outline_width_px": 3,
+      "aspect_ratio": 3.0,
+      "preview": {
+        "filename": "previews_8x/hero_plate_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact": true
+      }
+    },
+    {
+      "filename": "hero_plate_dark.png",
+      "mode": "dark",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        76,
+        452,
+        1204,
+        828
+      ],
+      "bounding_box_convention": "left,top,right,bottom; right/bottom exclusive",
+      "object_size": [
+        1128,
+        376
+      ],
+      "centre": [
+        639.5,
+        639.5
+      ],
+      "bounding_box_centre": [
+        639.5,
+        639.5
+      ],
+      "colour_count": 39,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "connected_silhouettes": 1,
+      "alpha_sha256": "bf693f858c404eac81051be0d63592368df3acb2bcbfa18a9b8e9d1d88662352",
+      "file_sha256": "499d4ff590e640b395b2d6bfefb50bfbf19fe17e2fe25e260d86bcc8a73bce9e",
+      "outer_diameter_px": null,
+      "inner_diameter_px": null,
+      "transparent_middle": false,
+      "name_content_rect": [
+        480,
+        490,
+        1035,
+        545
+      ],
+      "portrait_overlap_zone": [
+        76,
+        452,
+        452,
+        828
+      ],
+      "horizontal_cap_insets_from_bbox": {
+        "left": 420,
+        "right": 170
+      },
+      "stretch_rect": [
+        496,
+        452,
+        1034,
+        828
+      ],
+      "regions": [
+        {
+          "name": "hp_inset",
+          "outer_groove_rect": [
+            453,
+            551,
+            1074,
+            622
+          ],
+          "inset_rect": [
+            462,
+            561,
+            1066,
+            614
+          ],
+          "inset_size": [
+            604,
+            53
+          ],
+          "centre": [
+            763.5,
+            587.0
+          ],
+          "inset_colours": [
+            [
+              181,
+              117,
+              53
+            ],
+            [
+              202,
+              142,
+              78
+            ],
+            [
+              220,
+              164,
+              101
+            ]
+          ]
+        },
+        {
+          "name": "mp_inset",
+          "outer_groove_rect": [
+            453,
+            632,
+            1074,
+            704
+          ],
+          "inset_rect": [
+            462,
+            642,
+            1066,
+            694
+          ],
+          "inset_size": [
+            604,
+            52
+          ],
+          "centre": [
+            763.5,
+            667.5
+          ],
+          "inset_colours": [
+            [
+              181,
+              117,
+              53
+            ],
+            [
+              202,
+              142,
+              78
+            ],
+            [
+              220,
+              164,
+              101
+            ]
+          ]
+        },
+        {
+          "name": "xp_inset",
+          "outer_groove_rect": [
+            453,
+            712,
+            1074,
+            786
+          ],
+          "inset_rect": [
+            462,
+            721,
+            1066,
+            776
+          ],
+          "inset_size": [
+            604,
+            55
+          ],
+          "centre": [
+            763.5,
+            748.0
+          ],
+          "inset_colours": [
+            [
+              181,
+              117,
+              53
+            ],
+            [
+              202,
+              142,
+              78
+            ],
+            [
+              220,
+              164,
+              101
+            ]
+          ]
+        }
+      ],
+      "outline_width_px": 3,
+      "aspect_ratio": 3.0,
+      "light_twin": "hero_plate.png",
+      "alpha_pixel_identical_to_light": true,
+      "drawing_region_boundaries_preserved": true,
+      "wood_display_luma_reduction_percent": 45.07,
+      "red_palette_exactly_preserved": true,
+      "colour_only_mapping": [
+        {
+          "light": [
+            61,
+            39,
+            10
+          ],
+          "dark": [
+            39,
+            24,
+            19
+          ],
+          "class": "wood",
+          "pixel_count": 1849
+        },
+        {
+          "light": [
+            78,
+            44,
+            23
+          ],
+          "dark": [
+            44,
+            27,
+            22
+          ],
+          "class": "wood",
+          "pixel_count": 4434
+        },
+        {
+          "light": [
+            89,
+            36,
+            6
+          ],
+          "dark": [
+            42,
+            25,
+            20
+          ],
+          "class": "wood",
+          "pixel_count": 1923
+        },
+        {
+          "light": [
+            95,
+            95,
+            30
+          ],
+          "dark": [
+            106,
+            109,
+            41
+          ],
+          "class": "green",
+          "pixel_count": 2422
+        },
+        {
+          "light": [
+            112,
+            56,
+            12
+          ],
+          "dark": [
+            53,
+            33,
+            25
+          ],
+          "class": "wood",
+          "pixel_count": 8992
+        },
+        {
+          "light": [
+            145,
+            128,
+            56
+          ],
+          "dark": [
+            163,
+            150,
+            72
+          ],
+          "class": "green",
+          "pixel_count": 4482
+        },
+        {
+          "light": [
+            146,
+            155,
+            68
+          ],
+          "dark": [
+            160,
+            174,
+            85
+          ],
+          "class": "green",
+          "pixel_count": 903
+        },
+        {
+          "light": [
+            148,
+            87,
+            32
+          ],
+          "dark": [
+            74,
+            47,
+            35
+          ],
+          "class": "wood",
+          "pixel_count": 8747
+        },
+        {
+          "light": [
+            166,
+            97,
+            33
+          ],
+          "dark": [
+            81,
+            52,
+            39
+          ],
+          "class": "wood",
+          "pixel_count": 11607
+        },
+        {
+          "light": [
+            170,
+            109,
+            51
+          ],
+          "dark": [
+            87,
+            58,
+            44
+          ],
+          "class": "wood",
+          "pixel_count": 9439
+        },
+        {
+          "light": [
+            181,
+            117,
+            53
+          ],
+          "dark": [
+            77,
+            51,
+            40
+          ],
+          "class": "wood",
+          "pixel_count": 2036
+        },
+        {
+          "light": [
+            182,
+            114,
+            45
+          ],
+          "dark": [
+            90,
+            60,
+            46
+          ],
+          "class": "wood",
+          "pixel_count": 6258
+        },
+        {
+          "light": [
+            187,
+            183,
+            92
+          ],
+          "dark": [
+            208,
+            208,
+            112
+          ],
+          "class": "green",
+          "pixel_count": 180
+        },
+        {
+          "light": [
+            195,
+            131,
+            62
+          ],
+          "dark": [
+            101,
+            69,
+            53
+          ],
+          "class": "wood",
+          "pixel_count": 7397
+        },
+        {
+          "light": [
+            202,
+            140,
+            75
+          ],
+          "dark": [
+            107,
+            75,
+            57
+          ],
+          "class": "wood",
+          "pixel_count": 7553
+        },
+        {
+          "light": [
+            202,
+            142,
+            78
+          ],
+          "dark": [
+            91,
+            63,
+            50
+          ],
+          "class": "wood",
+          "pixel_count": 13422
+        },
+        {
+          "light": [
+            207,
+            149,
+            86
+          ],
+          "dark": [
+            113,
+            80,
+            61
+          ],
+          "class": "wood",
+          "pixel_count": 4398
+        },
+        {
+          "light": [
+            216,
+            153,
+            80
+          ],
+          "dark": [
+            116,
+            83,
+            63
+          ],
+          "class": "wood",
+          "pixel_count": 1525
+        },
+        {
+          "light": [
+            220,
+            164,
+            101
+          ],
+          "dark": [
+            103,
+            74,
+            59
+          ],
+          "class": "wood",
+          "pixel_count": 79061
+        },
+        {
+          "light": [
+            221,
+            162,
+            93
+          ],
+          "dark": [
+            121,
+            88,
+            67
+          ],
+          "class": "wood",
+          "pixel_count": 4538
+        },
+        {
+          "light": [
+            222,
+            197,
+            125
+          ],
+          "dark": [
+            240,
+            216,
+            145
+          ],
+          "class": "gold",
+          "pixel_count": 195
+        },
+        {
+          "light": [
+            225,
+            171,
+            109
+          ],
+          "dark": [
+            127,
+            94,
+            72
+          ],
+          "class": "wood",
+          "pixel_count": 3997
+        },
+        {
+          "light": [
+            227,
+            169,
+            96
+          ],
+          "dark": [
+            126,
+            93,
+            71
+          ],
+          "class": "wood",
+          "pixel_count": 1092
+        },
+        {
+          "light": [
+            229,
+            174,
+            109
+          ],
+          "dark": [
+            129,
+            96,
+            74
+          ],
+          "class": "wood",
+          "pixel_count": 1410
+        },
+        {
+          "light": [
+            230,
+            178,
+            115
+          ],
+          "dark": [
+            132,
+            99,
+            76
+          ],
+          "class": "wood",
+          "pixel_count": 1803
+        },
+        {
+          "light": [
+            233,
+            179,
+            114
+          ],
+          "dark": [
+            133,
+            100,
+            76
+          ],
+          "class": "wood",
+          "pixel_count": 750
+        },
+        {
+          "light": [
+            234,
+            182,
+            120
+          ],
+          "dark": [
+            135,
+            102,
+            78
+          ],
+          "class": "wood",
+          "pixel_count": 2846
+        },
+        {
+          "light": [
+            234,
+            186,
+            125
+          ],
+          "dark": [
+            137,
+            104,
+            80
+          ],
+          "class": "wood",
+          "pixel_count": 5719
+        },
+        {
+          "light": [
+            237,
+            188,
+            129
+          ],
+          "dark": [
+            139,
+            106,
+            81
+          ],
+          "class": "wood",
+          "pixel_count": 8233
+        },
+        {
+          "light": [
+            237,
+            191,
+            132
+          ],
+          "dark": [
+            140,
+            108,
+            83
+          ],
+          "class": "wood",
+          "pixel_count": 14914
+        },
+        {
+          "light": [
+            239,
+            185,
+            108
+          ],
+          "dark": [
+            136,
+            103,
+            79
+          ],
+          "class": "wood",
+          "pixel_count": 97
+        },
+        {
+          "light": [
+            240,
+            192,
+            132
+          ],
+          "dark": [
+            142,
+            109,
+            83
+          ],
+          "class": "wood",
+          "pixel_count": 7068
+        },
+        {
+          "light": [
+            241,
+            195,
+            135
+          ],
+          "dark": [
+            143,
+            111,
+            85
+          ],
+          "class": "wood",
+          "pixel_count": 18398
+        },
+        {
+          "light": [
+            241,
+            197,
+            141
+          ],
+          "dark": [
+            145,
+            112,
+            86
+          ],
+          "class": "wood",
+          "pixel_count": 49662
+        },
+        {
+          "light": [
+            243,
+            201,
+            145
+          ],
+          "dark": [
+            147,
+            115,
+            88
+          ],
+          "class": "wood",
+          "pixel_count": 73949
+        },
+        {
+          "light": [
+            248,
+            208,
+            139
+          ],
+          "dark": [
+            152,
+            119,
+            91
+          ],
+          "class": "wood",
+          "pixel_count": 121
+        },
+        {
+          "light": [
+            248,
+            212,
+            161
+          ],
+          "dark": [
+            155,
+            123,
+            95
+          ],
+          "class": "wood",
+          "pixel_count": 8405
+        },
+        {
+          "light": [
+            248,
+            225,
+            166
+          ],
+          "dark": [
+            163,
+            132,
+            101
+          ],
+          "class": "wood",
+          "pixel_count": 6232
+        },
+        {
+          "light": [
+            251,
+            239,
+            202
+          ],
+          "dark": [
+            176,
+            145,
+            110
+          ],
+          "class": "wood",
+          "pixel_count": 10476
+        }
+      ],
+      "preview": {
+        "filename": "previews_8x/hero_plate_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact": true
+      }
+    },
+    {
+      "filename": "pill_plate.png",
+      "mode": "light",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        76,
+        452,
+        1204,
+        828
+      ],
+      "bounding_box_convention": "left,top,right,bottom; right/bottom exclusive",
+      "object_size": [
+        1128,
+        376
+      ],
+      "centre": [
+        639.5,
+        639.5
+      ],
+      "bounding_box_centre": [
+        639.5,
+        639.5
+      ],
+      "colour_count": 40,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "connected_silhouettes": 1,
+      "alpha_sha256": "4a4e72191f3640988741aa81b4fc8fbc0d187a5ab1ae4627df12874509aec2bc",
+      "file_sha256": "5b30fee46bc46d895ea6e2f730701d245c3bf317cc2eeaa4dd74bfb5549a1b2d",
+      "outer_diameter_px": null,
+      "inner_diameter_px": null,
+      "transparent_middle": false,
+      "horizontal_cap_insets_from_bbox": {
+        "left": 416,
+        "right": 216
+      },
+      "stretch_rect": [
+        492,
+        452,
+        988,
+        828
+      ],
+      "socket_outer_diameter_px_approx": 376,
+      "socket_inner_diameter_px_approx": 280,
+      "socket_centre": [
+        262.0,
+        639.5
+      ],
+      "regions": [
+        {
+          "name": "icon_socket_face",
+          "outer_groove_rect": [
+            119,
+            495,
+            407,
+            786
+          ],
+          "inset_rect": [
+            123,
+            500,
+            402,
+            780
+          ],
+          "inset_size": [
+            279,
+            280
+          ],
+          "centre": [
+            262.0,
+            639.5
+          ],
+          "inset_colours": [
+            [
+              181,
+              117,
+              53
+            ],
+            [
+              202,
+              142,
+              78
+            ],
+            [
+              220,
+              164,
+              101
+            ],
+            [
+              233,
+              182,
+              119
+            ]
+          ]
+        },
+        {
+          "name": "number_inset",
+          "outer_groove_rect": [
+            410,
+            524,
+            1114,
+            759
+          ],
+          "inset_rect": [
+            442,
+            547,
+            1092,
+            743
+          ],
+          "inset_size": [
+            650,
+            196
+          ],
+          "centre": [
+            766.5,
+            644.5
+          ],
+          "inset_colours": [
+            [
+              181,
+              117,
+              53
+            ],
+            [
+              202,
+              142,
+              78
+            ],
+            [
+              220,
+              164,
+              101
+            ],
+            [
+              233,
+              182,
+              119
+            ]
+          ]
+        }
+      ],
+      "outline_width_px": 3,
+      "aspect_ratio": 3.0,
+      "preview": {
+        "filename": "previews_8x/pill_plate_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact": true
+      }
+    },
+    {
+      "filename": "pill_plate_dark.png",
+      "mode": "dark",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        76,
+        452,
+        1204,
+        828
+      ],
+      "bounding_box_convention": "left,top,right,bottom; right/bottom exclusive",
+      "object_size": [
+        1128,
+        376
+      ],
+      "centre": [
+        639.5,
+        639.5
+      ],
+      "bounding_box_centre": [
+        639.5,
+        639.5
+      ],
+      "colour_count": 40,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "connected_silhouettes": 1,
+      "alpha_sha256": "4a4e72191f3640988741aa81b4fc8fbc0d187a5ab1ae4627df12874509aec2bc",
+      "file_sha256": "92574e4027d7cee32b31edebb640f1f2eebc5b07f1afc196058c84dba63d0fcd",
+      "outer_diameter_px": null,
+      "inner_diameter_px": null,
+      "transparent_middle": false,
+      "horizontal_cap_insets_from_bbox": {
+        "left": 416,
+        "right": 216
+      },
+      "stretch_rect": [
+        492,
+        452,
+        988,
+        828
+      ],
+      "socket_outer_diameter_px_approx": 376,
+      "socket_inner_diameter_px_approx": 280,
+      "socket_centre": [
+        262.0,
+        639.5
+      ],
+      "regions": [
+        {
+          "name": "icon_socket_face",
+          "outer_groove_rect": [
+            119,
+            495,
+            407,
+            786
+          ],
+          "inset_rect": [
+            123,
+            500,
+            402,
+            780
+          ],
+          "inset_size": [
+            279,
+            280
+          ],
+          "centre": [
+            262.0,
+            639.5
+          ],
+          "inset_colours": [
+            [
+              181,
+              117,
+              53
+            ],
+            [
+              202,
+              142,
+              78
+            ],
+            [
+              220,
+              164,
+              101
+            ],
+            [
+              233,
+              182,
+              119
+            ]
+          ]
+        },
+        {
+          "name": "number_inset",
+          "outer_groove_rect": [
+            410,
+            524,
+            1114,
+            759
+          ],
+          "inset_rect": [
+            442,
+            547,
+            1092,
+            743
+          ],
+          "inset_size": [
+            650,
+            196
+          ],
+          "centre": [
+            766.5,
+            644.5
+          ],
+          "inset_colours": [
+            [
+              181,
+              117,
+              53
+            ],
+            [
+              202,
+              142,
+              78
+            ],
+            [
+              220,
+              164,
+              101
+            ],
+            [
+              233,
+              182,
+              119
+            ]
+          ]
+        }
+      ],
+      "outline_width_px": 3,
+      "aspect_ratio": 3.0,
+      "light_twin": "pill_plate.png",
+      "alpha_pixel_identical_to_light": true,
+      "drawing_region_boundaries_preserved": true,
+      "wood_display_luma_reduction_percent": 48.24,
+      "red_palette_exactly_preserved": true,
+      "colour_only_mapping": [
+        {
+          "light": [
+            61,
+            39,
+            10
+          ],
+          "dark": [
+            39,
+            24,
+            19
+          ],
+          "class": "wood",
+          "pixel_count": 27
+        },
+        {
+          "light": [
+            78,
+            44,
+            23
+          ],
+          "dark": [
+            44,
+            27,
+            22
+          ],
+          "class": "wood",
+          "pixel_count": 7755
+        },
+        {
+          "light": [
+            89,
+            36,
+            6
+          ],
+          "dark": [
+            42,
+            25,
+            20
+          ],
+          "class": "wood",
+          "pixel_count": 3934
+        },
+        {
+          "light": [
+            95,
+            95,
+            30
+          ],
+          "dark": [
+            106,
+            109,
+            41
+          ],
+          "class": "green",
+          "pixel_count": 941
+        },
+        {
+          "light": [
+            112,
+            56,
+            12
+          ],
+          "dark": [
+            53,
+            33,
+            25
+          ],
+          "class": "wood",
+          "pixel_count": 1498
+        },
+        {
+          "light": [
+            145,
+            128,
+            56
+          ],
+          "dark": [
+            163,
+            150,
+            72
+          ],
+          "class": "green",
+          "pixel_count": 916
+        },
+        {
+          "light": [
+            146,
+            155,
+            68
+          ],
+          "dark": [
+            160,
+            174,
+            85
+          ],
+          "class": "green",
+          "pixel_count": 1364
+        },
+        {
+          "light": [
+            148,
+            87,
+            32
+          ],
+          "dark": [
+            74,
+            47,
+            35
+          ],
+          "class": "wood",
+          "pixel_count": 2519
+        },
+        {
+          "light": [
+            166,
+            97,
+            33
+          ],
+          "dark": [
+            81,
+            52,
+            39
+          ],
+          "class": "wood",
+          "pixel_count": 1750
+        },
+        {
+          "light": [
+            170,
+            109,
+            51
+          ],
+          "dark": [
+            87,
+            58,
+            44
+          ],
+          "class": "wood",
+          "pixel_count": 223
+        },
+        {
+          "light": [
+            181,
+            117,
+            53
+          ],
+          "dark": [
+            77,
+            51,
+            40
+          ],
+          "class": "wood",
+          "pixel_count": 256
+        },
+        {
+          "light": [
+            182,
+            114,
+            45
+          ],
+          "dark": [
+            90,
+            60,
+            46
+          ],
+          "class": "wood",
+          "pixel_count": 9530
+        },
+        {
+          "light": [
+            187,
+            183,
+            92
+          ],
+          "dark": [
+            208,
+            208,
+            112
+          ],
+          "class": "green",
+          "pixel_count": 449
+        },
+        {
+          "light": [
+            195,
+            131,
+            62
+          ],
+          "dark": [
+            101,
+            69,
+            53
+          ],
+          "class": "wood",
+          "pixel_count": 13922
+        },
+        {
+          "light": [
+            202,
+            140,
+            75
+          ],
+          "dark": [
+            107,
+            75,
+            57
+          ],
+          "class": "wood",
+          "pixel_count": 4697
+        },
+        {
+          "light": [
+            202,
+            142,
+            78
+          ],
+          "dark": [
+            91,
+            63,
+            50
+          ],
+          "class": "wood",
+          "pixel_count": 610
+        },
+        {
+          "light": [
+            207,
+            149,
+            86
+          ],
+          "dark": [
+            113,
+            80,
+            61
+          ],
+          "class": "wood",
+          "pixel_count": 144
+        },
+        {
+          "light": [
+            216,
+            153,
+            80
+          ],
+          "dark": [
+            116,
+            83,
+            63
+          ],
+          "class": "wood",
+          "pixel_count": 7535
+        },
+        {
+          "light": [
+            220,
+            164,
+            101
+          ],
+          "dark": [
+            103,
+            74,
+            59
+          ],
+          "class": "wood",
+          "pixel_count": 2285
+        },
+        {
+          "light": [
+            221,
+            162,
+            93
+          ],
+          "dark": [
+            121,
+            88,
+            67
+          ],
+          "class": "wood",
+          "pixel_count": 2900
+        },
+        {
+          "light": [
+            222,
+            197,
+            125
+          ],
+          "dark": [
+            240,
+            216,
+            145
+          ],
+          "class": "gold",
+          "pixel_count": 30
+        },
+        {
+          "light": [
+            225,
+            171,
+            109
+          ],
+          "dark": [
+            127,
+            94,
+            72
+          ],
+          "class": "wood",
+          "pixel_count": 87
+        },
+        {
+          "light": [
+            227,
+            169,
+            96
+          ],
+          "dark": [
+            126,
+            93,
+            71
+          ],
+          "class": "wood",
+          "pixel_count": 4552
+        },
+        {
+          "light": [
+            229,
+            174,
+            109
+          ],
+          "dark": [
+            129,
+            96,
+            74
+          ],
+          "class": "wood",
+          "pixel_count": 3263
+        },
+        {
+          "light": [
+            230,
+            178,
+            115
+          ],
+          "dark": [
+            132,
+            99,
+            76
+          ],
+          "class": "wood",
+          "pixel_count": 139
+        },
+        {
+          "light": [
+            233,
+            179,
+            114
+          ],
+          "dark": [
+            133,
+            100,
+            76
+          ],
+          "class": "wood",
+          "pixel_count": 2358
+        },
+        {
+          "light": [
+            233,
+            182,
+            119
+          ],
+          "dark": [
+            113,
+            84,
+            67
+          ],
+          "class": "wood",
+          "pixel_count": 177350
+        },
+        {
+          "light": [
+            234,
+            182,
+            120
+          ],
+          "dark": [
+            135,
+            102,
+            78
+          ],
+          "class": "wood",
+          "pixel_count": 3012
+        },
+        {
+          "light": [
+            234,
+            186,
+            125
+          ],
+          "dark": [
+            137,
+            104,
+            80
+          ],
+          "class": "wood",
+          "pixel_count": 2684
+        },
+        {
+          "light": [
+            237,
+            188,
+            129
+          ],
+          "dark": [
+            139,
+            106,
+            81
+          ],
+          "class": "wood",
+          "pixel_count": 6619
+        },
+        {
+          "light": [
+            237,
+            191,
+            132
+          ],
+          "dark": [
+            140,
+            108,
+            83
+          ],
+          "class": "wood",
+          "pixel_count": 25
+        },
+        {
+          "light": [
+            239,
+            185,
+            108
+          ],
+          "dark": [
+            136,
+            103,
+            79
+          ],
+          "class": "wood",
+          "pixel_count": 6962
+        },
+        {
+          "light": [
+            240,
+            192,
+            132
+          ],
+          "dark": [
+            142,
+            109,
+            83
+          ],
+          "class": "wood",
+          "pixel_count": 15554
+        },
+        {
+          "light": [
+            241,
+            195,
+            135
+          ],
+          "dark": [
+            143,
+            111,
+            85
+          ],
+          "class": "wood",
+          "pixel_count": 12068
+        },
+        {
+          "light": [
+            241,
+            197,
+            141
+          ],
+          "dark": [
+            145,
+            112,
+            86
+          ],
+          "class": "wood",
+          "pixel_count": 578
+        },
+        {
+          "light": [
+            243,
+            201,
+            145
+          ],
+          "dark": [
+            147,
+            115,
+            88
+          ],
+          "class": "wood",
+          "pixel_count": 1447
+        },
+        {
+          "light": [
+            248,
+            208,
+            139
+          ],
+          "dark": [
+            152,
+            119,
+            91
+          ],
+          "class": "wood",
+          "pixel_count": 9980
+        },
+        {
+          "light": [
+            248,
+            212,
+            161
+          ],
+          "dark": [
+            155,
+            123,
+            95
+          ],
+          "class": "wood",
+          "pixel_count": 6370
+        },
+        {
+          "light": [
+            248,
+            225,
+            166
+          ],
+          "dark": [
+            163,
+            132,
+            101
+          ],
+          "class": "wood",
+          "pixel_count": 11109
+        },
+        {
+          "light": [
+            251,
+            239,
+            202
+          ],
+          "dark": [
+            176,
+            145,
+            110
+          ],
+          "class": "wood",
+          "pixel_count": 10282
+        }
+      ],
+      "preview": {
+        "filename": "previews_8x/pill_plate_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact": true
+      }
+    },
+    {
+      "filename": "button_round.png",
+      "mode": "light",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bounding_box_convention": "left,top,right,bottom; right/bottom exclusive",
+      "object_size": [
+        1041,
+        1041
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "colour_count": 40,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "connected_silhouettes": 1,
+      "alpha_sha256": "5469ea93149d11bd2b70c292f0cdc958164c385678556ef20ae797abb68a6f7b",
+      "file_sha256": "1ae1f44505e0b0d8bc57b2aedef2f5b76d980d32d81163a8f70c50ec22724f4e",
+      "outer_diameter_px": 1041,
+      "inner_diameter_px": 0,
+      "transparent_middle": false,
+      "outer_geometric_diameter_px": 1040,
+      "inner_geometric_diameter_px": 0,
+      "solid_inset_diameter_px": 756,
+      "outline_width_px": 3,
+      "preview": {
+        "filename": "previews_8x/button_round_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact": true
+      }
+    },
+    {
+      "filename": "button_round_dark.png",
+      "mode": "dark",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bounding_box_convention": "left,top,right,bottom; right/bottom exclusive",
+      "object_size": [
+        1041,
+        1041
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "colour_count": 40,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "connected_silhouettes": 1,
+      "alpha_sha256": "5469ea93149d11bd2b70c292f0cdc958164c385678556ef20ae797abb68a6f7b",
+      "file_sha256": "07fe5537415baaf5ed35fe58410f4e689c0639a9f0f12e312e776db66fae14e3",
+      "outer_diameter_px": 1041,
+      "inner_diameter_px": 0,
+      "transparent_middle": false,
+      "outer_geometric_diameter_px": 1040,
+      "inner_geometric_diameter_px": 0,
+      "solid_inset_diameter_px": 756,
+      "outline_width_px": 3,
+      "light_twin": "button_round.png",
+      "alpha_pixel_identical_to_light": true,
+      "drawing_region_boundaries_preserved": true,
+      "wood_display_luma_reduction_percent": 48.16,
+      "red_palette_exactly_preserved": true,
+      "colour_only_mapping": [
+        {
+          "light": [
+            61,
+            39,
+            10
+          ],
+          "dark": [
+            39,
+            24,
+            19
+          ],
+          "class": "wood",
+          "pixel_count": 34
+        },
+        {
+          "light": [
+            78,
+            44,
+            23
+          ],
+          "dark": [
+            44,
+            27,
+            22
+          ],
+          "class": "wood",
+          "pixel_count": 9739
+        },
+        {
+          "light": [
+            89,
+            36,
+            6
+          ],
+          "dark": [
+            42,
+            25,
+            20
+          ],
+          "class": "wood",
+          "pixel_count": 448
+        },
+        {
+          "light": [
+            95,
+            95,
+            30
+          ],
+          "dark": [
+            106,
+            109,
+            41
+          ],
+          "class": "green",
+          "pixel_count": 5119
+        },
+        {
+          "light": [
+            112,
+            56,
+            12
+          ],
+          "dark": [
+            53,
+            33,
+            25
+          ],
+          "class": "wood",
+          "pixel_count": 16345
+        },
+        {
+          "light": [
+            145,
+            128,
+            56
+          ],
+          "dark": [
+            163,
+            150,
+            72
+          ],
+          "class": "green",
+          "pixel_count": 7325
+        },
+        {
+          "light": [
+            146,
+            155,
+            68
+          ],
+          "dark": [
+            160,
+            174,
+            85
+          ],
+          "class": "green",
+          "pixel_count": 5360
+        },
+        {
+          "light": [
+            148,
+            87,
+            32
+          ],
+          "dark": [
+            74,
+            47,
+            35
+          ],
+          "class": "wood",
+          "pixel_count": 5024
+        },
+        {
+          "light": [
+            166,
+            97,
+            33
+          ],
+          "dark": [
+            81,
+            52,
+            39
+          ],
+          "class": "wood",
+          "pixel_count": 2852
+        },
+        {
+          "light": [
+            170,
+            109,
+            51
+          ],
+          "dark": [
+            87,
+            58,
+            44
+          ],
+          "class": "wood",
+          "pixel_count": 1749
+        },
+        {
+          "light": [
+            181,
+            117,
+            53
+          ],
+          "dark": [
+            77,
+            51,
+            40
+          ],
+          "class": "wood",
+          "pixel_count": 755
+        },
+        {
+          "light": [
+            182,
+            114,
+            45
+          ],
+          "dark": [
+            90,
+            60,
+            46
+          ],
+          "class": "wood",
+          "pixel_count": 8897
+        },
+        {
+          "light": [
+            187,
+            183,
+            92
+          ],
+          "dark": [
+            208,
+            208,
+            112
+          ],
+          "class": "green",
+          "pixel_count": 5322
+        },
+        {
+          "light": [
+            195,
+            131,
+            62
+          ],
+          "dark": [
+            101,
+            69,
+            53
+          ],
+          "class": "wood",
+          "pixel_count": 28239
+        },
+        {
+          "light": [
+            202,
+            140,
+            75
+          ],
+          "dark": [
+            107,
+            75,
+            57
+          ],
+          "class": "wood",
+          "pixel_count": 11367
+        },
+        {
+          "light": [
+            202,
+            142,
+            78
+          ],
+          "dark": [
+            91,
+            63,
+            50
+          ],
+          "class": "wood",
+          "pixel_count": 1882
+        },
+        {
+          "light": [
+            207,
+            149,
+            86
+          ],
+          "dark": [
+            113,
+            80,
+            61
+          ],
+          "class": "wood",
+          "pixel_count": 1462
+        },
+        {
+          "light": [
+            216,
+            153,
+            80
+          ],
+          "dark": [
+            116,
+            83,
+            63
+          ],
+          "class": "wood",
+          "pixel_count": 11377
+        },
+        {
+          "light": [
+            220,
+            164,
+            101
+          ],
+          "dark": [
+            103,
+            74,
+            59
+          ],
+          "class": "wood",
+          "pixel_count": 4768
+        },
+        {
+          "light": [
+            221,
+            162,
+            93
+          ],
+          "dark": [
+            121,
+            88,
+            67
+          ],
+          "class": "wood",
+          "pixel_count": 7019
+        },
+        {
+          "light": [
+            222,
+            197,
+            125
+          ],
+          "dark": [
+            240,
+            216,
+            145
+          ],
+          "class": "gold",
+          "pixel_count": 77
+        },
+        {
+          "light": [
+            225,
+            171,
+            109
+          ],
+          "dark": [
+            127,
+            94,
+            72
+          ],
+          "class": "wood",
+          "pixel_count": 514
+        },
+        {
+          "light": [
+            227,
+            169,
+            96
+          ],
+          "dark": [
+            126,
+            93,
+            71
+          ],
+          "class": "wood",
+          "pixel_count": 7321
+        },
+        {
+          "light": [
+            229,
+            174,
+            109
+          ],
+          "dark": [
+            129,
+            96,
+            74
+          ],
+          "class": "wood",
+          "pixel_count": 4245
+        },
+        {
+          "light": [
+            230,
+            178,
+            115
+          ],
+          "dark": [
+            132,
+            99,
+            76
+          ],
+          "class": "wood",
+          "pixel_count": 176
+        },
+        {
+          "light": [
+            233,
+            179,
+            114
+          ],
+          "dark": [
+            133,
+            100,
+            76
+          ],
+          "class": "wood",
+          "pixel_count": 4267
+        },
+        {
+          "light": [
+            233,
+            182,
+            119
+          ],
+          "dark": [
+            113,
+            84,
+            67
+          ],
+          "class": "wood",
+          "pixel_count": 441428
+        },
+        {
+          "light": [
+            234,
+            182,
+            120
+          ],
+          "dark": [
+            135,
+            102,
+            78
+          ],
+          "class": "wood",
+          "pixel_count": 10671
+        },
+        {
+          "light": [
+            234,
+            186,
+            125
+          ],
+          "dark": [
+            137,
+            104,
+            80
+          ],
+          "class": "wood",
+          "pixel_count": 8407
+        },
+        {
+          "light": [
+            237,
+            188,
+            129
+          ],
+          "dark": [
+            139,
+            106,
+            81
+          ],
+          "class": "wood",
+          "pixel_count": 30065
+        },
+        {
+          "light": [
+            237,
+            191,
+            132
+          ],
+          "dark": [
+            140,
+            108,
+            83
+          ],
+          "class": "wood",
+          "pixel_count": 108
+        },
+        {
+          "light": [
+            239,
+            185,
+            108
+          ],
+          "dark": [
+            136,
+            103,
+            79
+          ],
+          "class": "wood",
+          "pixel_count": 3178
+        },
+        {
+          "light": [
+            240,
+            192,
+            132
+          ],
+          "dark": [
+            142,
+            109,
+            83
+          ],
+          "class": "wood",
+          "pixel_count": 59962
+        },
+        {
+          "light": [
+            241,
+            195,
+            135
+          ],
+          "dark": [
+            143,
+            111,
+            85
+          ],
+          "class": "wood",
+          "pixel_count": 48575
+        },
+        {
+          "light": [
+            241,
+            197,
+            141
+          ],
+          "dark": [
+            145,
+            112,
+            86
+          ],
+          "class": "wood",
+          "pixel_count": 14957
+        },
+        {
+          "light": [
+            243,
+            201,
+            145
+          ],
+          "dark": [
+            147,
+            115,
+            88
+          ],
+          "class": "wood",
+          "pixel_count": 23812
+        },
+        {
+          "light": [
+            248,
+            208,
+            139
+          ],
+          "dark": [
+            152,
+            119,
+            91
+          ],
+          "class": "wood",
+          "pixel_count": 6041
+        },
+        {
+          "light": [
+            248,
+            212,
+            161
+          ],
+          "dark": [
+            155,
+            123,
+            95
+          ],
+          "class": "wood",
+          "pixel_count": 15782
+        },
+        {
+          "light": [
+            248,
+            225,
+            166
+          ],
+          "dark": [
+            163,
+            132,
+            101
+          ],
+          "class": "wood",
+          "pixel_count": 14937
+        },
+        {
+          "light": [
+            251,
+            239,
+            202
+          ],
+          "dark": [
+            176,
+            145,
+            110
+          ],
+          "class": "wood",
+          "pixel_count": 19847
+        }
+      ],
+      "preview": {
+        "filename": "previews_8x/button_round_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact": true
+      }
+    },
+    {
+      "filename": "button_round_pressed.png",
+      "mode": "light",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bounding_box_convention": "left,top,right,bottom; right/bottom exclusive",
+      "object_size": [
+        1041,
+        1041
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "colour_count": 40,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "connected_silhouettes": 1,
+      "alpha_sha256": "5469ea93149d11bd2b70c292f0cdc958164c385678556ef20ae797abb68a6f7b",
+      "file_sha256": "15eb0a039557c47124c137f1d6fd8fdbc0373814f3f6faae99b33b71e92bb97b",
+      "outer_diameter_px": 1041,
+      "inner_diameter_px": 0,
+      "transparent_middle": false,
+      "outer_geometric_diameter_px": 1040,
+      "inner_geometric_diameter_px": 0,
+      "solid_inset_diameter_px": 756,
+      "outline_width_px": 3,
+      "preview": {
+        "filename": "previews_8x/button_round_pressed_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact": true
+      }
+    },
+    {
+      "filename": "button_round_pressed_dark.png",
+      "mode": "dark",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bounding_box_convention": "left,top,right,bottom; right/bottom exclusive",
+      "object_size": [
+        1041,
+        1041
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "colour_count": 40,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "connected_silhouettes": 1,
+      "alpha_sha256": "5469ea93149d11bd2b70c292f0cdc958164c385678556ef20ae797abb68a6f7b",
+      "file_sha256": "7d4aa8ce17d256d930d8af074af92e136aeb4bed69d5ccac3fa19c186cde5c27",
+      "outer_diameter_px": 1041,
+      "inner_diameter_px": 0,
+      "transparent_middle": false,
+      "outer_geometric_diameter_px": 1040,
+      "inner_geometric_diameter_px": 0,
+      "solid_inset_diameter_px": 756,
+      "outline_width_px": 3,
+      "light_twin": "button_round_pressed.png",
+      "alpha_pixel_identical_to_light": true,
+      "drawing_region_boundaries_preserved": true,
+      "wood_display_luma_reduction_percent": 48.48,
+      "red_palette_exactly_preserved": true,
+      "colour_only_mapping": [
+        {
+          "light": [
+            61,
+            39,
+            10
+          ],
+          "dark": [
+            39,
+            24,
+            19
+          ],
+          "class": "wood",
+          "pixel_count": 185
+        },
+        {
+          "light": [
+            78,
+            44,
+            23
+          ],
+          "dark": [
+            44,
+            27,
+            22
+          ],
+          "class": "wood",
+          "pixel_count": 9814
+        },
+        {
+          "light": [
+            89,
+            36,
+            6
+          ],
+          "dark": [
+            42,
+            25,
+            20
+          ],
+          "class": "wood",
+          "pixel_count": 1135
+        },
+        {
+          "light": [
+            95,
+            95,
+            30
+          ],
+          "dark": [
+            106,
+            109,
+            41
+          ],
+          "class": "green",
+          "pixel_count": 5204
+        },
+        {
+          "light": [
+            112,
+            56,
+            12
+          ],
+          "dark": [
+            53,
+            33,
+            25
+          ],
+          "class": "wood",
+          "pixel_count": 16517
+        },
+        {
+          "light": [
+            145,
+            128,
+            56
+          ],
+          "dark": [
+            163,
+            150,
+            72
+          ],
+          "class": "green",
+          "pixel_count": 7308
+        },
+        {
+          "light": [
+            146,
+            155,
+            68
+          ],
+          "dark": [
+            160,
+            174,
+            85
+          ],
+          "class": "green",
+          "pixel_count": 5386
+        },
+        {
+          "light": [
+            148,
+            87,
+            32
+          ],
+          "dark": [
+            74,
+            47,
+            35
+          ],
+          "class": "wood",
+          "pixel_count": 7336
+        },
+        {
+          "light": [
+            166,
+            97,
+            33
+          ],
+          "dark": [
+            81,
+            52,
+            39
+          ],
+          "class": "wood",
+          "pixel_count": 5111
+        },
+        {
+          "light": [
+            170,
+            109,
+            51
+          ],
+          "dark": [
+            87,
+            58,
+            44
+          ],
+          "class": "wood",
+          "pixel_count": 7331
+        },
+        {
+          "light": [
+            181,
+            117,
+            53
+          ],
+          "dark": [
+            77,
+            51,
+            40
+          ],
+          "class": "wood",
+          "pixel_count": 37086
+        },
+        {
+          "light": [
+            182,
+            114,
+            45
+          ],
+          "dark": [
+            90,
+            60,
+            46
+          ],
+          "class": "wood",
+          "pixel_count": 6503
+        },
+        {
+          "light": [
+            187,
+            183,
+            92
+          ],
+          "dark": [
+            208,
+            208,
+            112
+          ],
+          "class": "green",
+          "pixel_count": 5296
+        },
+        {
+          "light": [
+            195,
+            131,
+            62
+          ],
+          "dark": [
+            101,
+            69,
+            53
+          ],
+          "class": "wood",
+          "pixel_count": 22621
+        },
+        {
+          "light": [
+            202,
+            140,
+            75
+          ],
+          "dark": [
+            107,
+            75,
+            57
+          ],
+          "class": "wood",
+          "pixel_count": 10105
+        },
+        {
+          "light": [
+            202,
+            142,
+            78
+          ],
+          "dark": [
+            91,
+            63,
+            50
+          ],
+          "class": "wood",
+          "pixel_count": 39154
+        },
+        {
+          "light": [
+            207,
+            149,
+            86
+          ],
+          "dark": [
+            113,
+            80,
+            61
+          ],
+          "class": "wood",
+          "pixel_count": 3184
+        },
+        {
+          "light": [
+            216,
+            153,
+            80
+          ],
+          "dark": [
+            116,
+            83,
+            63
+          ],
+          "class": "wood",
+          "pixel_count": 8969
+        },
+        {
+          "light": [
+            220,
+            164,
+            101
+          ],
+          "dark": [
+            103,
+            74,
+            59
+          ],
+          "class": "wood",
+          "pixel_count": 365879
+        },
+        {
+          "light": [
+            221,
+            162,
+            93
+          ],
+          "dark": [
+            121,
+            88,
+            67
+          ],
+          "class": "wood",
+          "pixel_count": 6760
+        },
+        {
+          "light": [
+            222,
+            197,
+            125
+          ],
+          "dark": [
+            240,
+            216,
+            145
+          ],
+          "class": "gold",
+          "pixel_count": 78
+        },
+        {
+          "light": [
+            225,
+            171,
+            109
+          ],
+          "dark": [
+            127,
+            94,
+            72
+          ],
+          "class": "wood",
+          "pixel_count": 967
+        },
+        {
+          "light": [
+            227,
+            169,
+            96
+          ],
+          "dark": [
+            126,
+            93,
+            71
+          ],
+          "class": "wood",
+          "pixel_count": 5838
+        },
+        {
+          "light": [
+            229,
+            174,
+            109
+          ],
+          "dark": [
+            129,
+            96,
+            74
+          ],
+          "class": "wood",
+          "pixel_count": 3839
+        },
+        {
+          "light": [
+            230,
+            178,
+            115
+          ],
+          "dark": [
+            132,
+            99,
+            76
+          ],
+          "class": "wood",
+          "pixel_count": 342
+        },
+        {
+          "light": [
+            233,
+            179,
+            114
+          ],
+          "dark": [
+            133,
+            100,
+            76
+          ],
+          "class": "wood",
+          "pixel_count": 4255
+        },
+        {
+          "light": [
+            233,
+            182,
+            119
+          ],
+          "dark": [
+            113,
+            84,
+            67
+          ],
+          "class": "wood",
+          "pixel_count": 6714
+        },
+        {
+          "light": [
+            234,
+            182,
+            120
+          ],
+          "dark": [
+            135,
+            102,
+            78
+          ],
+          "class": "wood",
+          "pixel_count": 10567
+        },
+        {
+          "light": [
+            234,
+            186,
+            125
+          ],
+          "dark": [
+            137,
+            104,
+            80
+          ],
+          "class": "wood",
+          "pixel_count": 8376
+        },
+        {
+          "light": [
+            237,
+            188,
+            129
+          ],
+          "dark": [
+            139,
+            106,
+            81
+          ],
+          "class": "wood",
+          "pixel_count": 29012
+        },
+        {
+          "light": [
+            237,
+            191,
+            132
+          ],
+          "dark": [
+            140,
+            108,
+            83
+          ],
+          "class": "wood",
+          "pixel_count": 151
+        },
+        {
+          "light": [
+            239,
+            185,
+            108
+          ],
+          "dark": [
+            136,
+            103,
+            79
+          ],
+          "class": "wood",
+          "pixel_count": 2028
+        },
+        {
+          "light": [
+            240,
+            192,
+            132
+          ],
+          "dark": [
+            142,
+            109,
+            83
+          ],
+          "class": "wood",
+          "pixel_count": 58412
+        },
+        {
+          "light": [
+            241,
+            195,
+            135
+          ],
+          "dark": [
+            143,
+            111,
+            85
+          ],
+          "class": "wood",
+          "pixel_count": 47983
+        },
+        {
+          "light": [
+            241,
+            197,
+            141
+          ],
+          "dark": [
+            145,
+            112,
+            86
+          ],
+          "class": "wood",
+          "pixel_count": 18471
+        },
+        {
+          "light": [
+            243,
+            201,
+            145
+          ],
+          "dark": [
+            147,
+            115,
+            88
+          ],
+          "class": "wood",
+          "pixel_count": 26538
+        },
+        {
+          "light": [
+            248,
+            208,
+            139
+          ],
+          "dark": [
+            152,
+            119,
+            91
+          ],
+          "class": "wood",
+          "pixel_count": 4591
+        },
+        {
+          "light": [
+            248,
+            212,
+            161
+          ],
+          "dark": [
+            155,
+            123,
+            95
+          ],
+          "class": "wood",
+          "pixel_count": 15587
+        },
+        {
+          "light": [
+            248,
+            225,
+            166
+          ],
+          "dark": [
+            163,
+            132,
+            101
+          ],
+          "class": "wood",
+          "pixel_count": 11774
+        },
+        {
+          "light": [
+            251,
+            239,
+            202
+          ],
+          "dark": [
+            176,
+            145,
+            110
+          ],
+          "class": "wood",
+          "pixel_count": 23046
+        }
+      ],
+      "preview": {
+        "filename": "previews_8x/button_round_pressed_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact": true
+      }
+    },
+    {
+      "filename": "skill_socket.png",
+      "mode": "light",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bounding_box_convention": "left,top,right,bottom; right/bottom exclusive",
+      "object_size": [
+        1041,
+        1041
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "colour_count": 36,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "connected_silhouettes": 1,
+      "alpha_sha256": "cf40c93d4680e650b8b8e9ba3717b603326eda95fcd813a60b744b571693134f",
+      "file_sha256": "365896a446e5dad4d24257914c23d5df5f2f635b64241dc3a58d0f844d6739da",
+      "outer_diameter_px": 1041,
+      "inner_diameter_px": 769,
+      "transparent_middle": true,
+      "outer_geometric_diameter_px": 1040,
+      "inner_geometric_diameter_px": 770,
+      "outline_width_px": 3,
+      "transparent_middle_opaque_pixels": 0,
+      "preview": {
+        "filename": "previews_8x/skill_socket_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact": true
+      }
+    },
+    {
+      "filename": "skill_socket_dark.png",
+      "mode": "dark",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bounding_box_convention": "left,top,right,bottom; right/bottom exclusive",
+      "object_size": [
+        1041,
+        1041
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "colour_count": 36,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "connected_silhouettes": 1,
+      "alpha_sha256": "cf40c93d4680e650b8b8e9ba3717b603326eda95fcd813a60b744b571693134f",
+      "file_sha256": "f139fef820553a27518fda7a18c53b3ed03f0a8a53227d3bc26278583e68abc7",
+      "outer_diameter_px": 1041,
+      "inner_diameter_px": 769,
+      "transparent_middle": true,
+      "outer_geometric_diameter_px": 1040,
+      "inner_geometric_diameter_px": 770,
+      "outline_width_px": 3,
+      "transparent_middle_opaque_pixels": 0,
+      "light_twin": "skill_socket.png",
+      "alpha_pixel_identical_to_light": true,
+      "drawing_region_boundaries_preserved": true,
+      "wood_display_luma_reduction_percent": 42.28,
+      "red_palette_exactly_preserved": true,
+      "colour_only_mapping": [
+        {
+          "light": [
+            61,
+            39,
+            10
+          ],
+          "dark": [
+            39,
+            24,
+            19
+          ],
+          "class": "wood",
+          "pixel_count": 17646
+        },
+        {
+          "light": [
+            78,
+            44,
+            23
+          ],
+          "dark": [
+            44,
+            27,
+            22
+          ],
+          "class": "wood",
+          "pixel_count": 20308
+        },
+        {
+          "light": [
+            89,
+            36,
+            6
+          ],
+          "dark": [
+            42,
+            25,
+            20
+          ],
+          "class": "wood",
+          "pixel_count": 5369
+        },
+        {
+          "light": [
+            95,
+            95,
+            30
+          ],
+          "dark": [
+            106,
+            109,
+            41
+          ],
+          "class": "green",
+          "pixel_count": 7978
+        },
+        {
+          "light": [
+            112,
+            56,
+            12
+          ],
+          "dark": [
+            53,
+            33,
+            25
+          ],
+          "class": "wood",
+          "pixel_count": 7080
+        },
+        {
+          "light": [
+            145,
+            128,
+            56
+          ],
+          "dark": [
+            163,
+            150,
+            72
+          ],
+          "class": "green",
+          "pixel_count": 10538
+        },
+        {
+          "light": [
+            146,
+            155,
+            68
+          ],
+          "dark": [
+            160,
+            174,
+            85
+          ],
+          "class": "green",
+          "pixel_count": 7661
+        },
+        {
+          "light": [
+            148,
+            87,
+            32
+          ],
+          "dark": [
+            74,
+            47,
+            35
+          ],
+          "class": "wood",
+          "pixel_count": 11991
+        },
+        {
+          "light": [
+            166,
+            97,
+            33
+          ],
+          "dark": [
+            81,
+            52,
+            39
+          ],
+          "class": "wood",
+          "pixel_count": 4648
+        },
+        {
+          "light": [
+            170,
+            109,
+            51
+          ],
+          "dark": [
+            87,
+            58,
+            44
+          ],
+          "class": "wood",
+          "pixel_count": 12281
+        },
+        {
+          "light": [
+            182,
+            114,
+            45
+          ],
+          "dark": [
+            90,
+            60,
+            46
+          ],
+          "class": "wood",
+          "pixel_count": 3156
+        },
+        {
+          "light": [
+            187,
+            183,
+            92
+          ],
+          "dark": [
+            208,
+            208,
+            112
+          ],
+          "class": "green",
+          "pixel_count": 704
+        },
+        {
+          "light": [
+            195,
+            131,
+            62
+          ],
+          "dark": [
+            101,
+            69,
+            53
+          ],
+          "class": "wood",
+          "pixel_count": 11280
+        },
+        {
+          "light": [
+            202,
+            140,
+            75
+          ],
+          "dark": [
+            107,
+            75,
+            57
+          ],
+          "class": "wood",
+          "pixel_count": 9424
+        },
+        {
+          "light": [
+            207,
+            149,
+            86
+          ],
+          "dark": [
+            113,
+            80,
+            61
+          ],
+          "class": "wood",
+          "pixel_count": 10100
+        },
+        {
+          "light": [
+            216,
+            153,
+            80
+          ],
+          "dark": [
+            116,
+            83,
+            63
+          ],
+          "class": "wood",
+          "pixel_count": 1410
+        },
+        {
+          "light": [
+            221,
+            162,
+            93
+          ],
+          "dark": [
+            121,
+            88,
+            67
+          ],
+          "class": "wood",
+          "pixel_count": 7374
+        },
+        {
+          "light": [
+            222,
+            197,
+            125
+          ],
+          "dark": [
+            240,
+            216,
+            145
+          ],
+          "class": "gold",
+          "pixel_count": 795
+        },
+        {
+          "light": [
+            225,
+            171,
+            109
+          ],
+          "dark": [
+            127,
+            94,
+            72
+          ],
+          "class": "wood",
+          "pixel_count": 7759
+        },
+        {
+          "light": [
+            227,
+            169,
+            96
+          ],
+          "dark": [
+            126,
+            93,
+            71
+          ],
+          "class": "wood",
+          "pixel_count": 1853
+        },
+        {
+          "light": [
+            229,
+            174,
+            109
+          ],
+          "dark": [
+            129,
+            96,
+            74
+          ],
+          "class": "wood",
+          "pixel_count": 1123
+        },
+        {
+          "light": [
+            230,
+            178,
+            115
+          ],
+          "dark": [
+            132,
+            99,
+            76
+          ],
+          "class": "wood",
+          "pixel_count": 6366
+        },
+        {
+          "light": [
+            233,
+            179,
+            114
+          ],
+          "dark": [
+            133,
+            100,
+            76
+          ],
+          "class": "wood",
+          "pixel_count": 767
+        },
+        {
+          "light": [
+            234,
+            182,
+            120
+          ],
+          "dark": [
+            135,
+            102,
+            78
+          ],
+          "class": "wood",
+          "pixel_count": 12178
+        },
+        {
+          "light": [
+            234,
+            186,
+            125
+          ],
+          "dark": [
+            137,
+            104,
+            80
+          ],
+          "class": "wood",
+          "pixel_count": 13157
+        },
+        {
+          "light": [
+            237,
+            188,
+            129
+          ],
+          "dark": [
+            139,
+            106,
+            81
+          ],
+          "class": "wood",
+          "pixel_count": 19201
+        },
+        {
+          "light": [
+            237,
+            191,
+            132
+          ],
+          "dark": [
+            140,
+            108,
+            83
+          ],
+          "class": "wood",
+          "pixel_count": 19338
+        },
+        {
+          "light": [
+            239,
+            185,
+            108
+          ],
+          "dark": [
+            136,
+            103,
+            79
+          ],
+          "class": "wood",
+          "pixel_count": 2443
+        },
+        {
+          "light": [
+            240,
+            192,
+            132
+          ],
+          "dark": [
+            142,
+            109,
+            83
+          ],
+          "class": "wood",
+          "pixel_count": 9214
+        },
+        {
+          "light": [
+            241,
+            195,
+            135
+          ],
+          "dark": [
+            143,
+            111,
+            85
+          ],
+          "class": "wood",
+          "pixel_count": 18324
+        },
+        {
+          "light": [
+            241,
+            197,
+            141
+          ],
+          "dark": [
+            145,
+            112,
+            86
+          ],
+          "class": "wood",
+          "pixel_count": 46732
+        },
+        {
+          "light": [
+            243,
+            201,
+            145
+          ],
+          "dark": [
+            147,
+            115,
+            88
+          ],
+          "class": "wood",
+          "pixel_count": 34680
+        },
+        {
+          "light": [
+            248,
+            208,
+            139
+          ],
+          "dark": [
+            152,
+            119,
+            91
+          ],
+          "class": "wood",
+          "pixel_count": 2007
+        },
+        {
+          "light": [
+            248,
+            212,
+            161
+          ],
+          "dark": [
+            155,
+            123,
+            95
+          ],
+          "class": "wood",
+          "pixel_count": 9109
+        },
+        {
+          "light": [
+            248,
+            225,
+            166
+          ],
+          "dark": [
+            163,
+            132,
+            101
+          ],
+          "class": "wood",
+          "pixel_count": 9627
+        },
+        {
+          "light": [
+            251,
+            239,
+            202
+          ],
+          "dark": [
+            176,
+            145,
+            110
+          ],
+          "class": "wood",
+          "pixel_count": 20231
+        }
+      ],
+      "preview": {
+        "filename": "previews_8x/skill_socket_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact": true
+      }
+    },
+    {
+      "filename": "joystick_base.png",
+      "mode": "light",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bounding_box_convention": "left,top,right,bottom; right/bottom exclusive",
+      "object_size": [
+        1041,
+        1041
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "colour_count": 40,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "connected_silhouettes": 1,
+      "alpha_sha256": "5469ea93149d11bd2b70c292f0cdc958164c385678556ef20ae797abb68a6f7b",
+      "file_sha256": "8e61af4207a3de26d2c91b3fb4df3c388282a8531fd6cf10e994ead6003032bc",
+      "outer_diameter_px": 1041,
+      "inner_diameter_px": 0,
+      "transparent_middle": false,
+      "outer_geometric_diameter_px": 1040,
+      "inner_geometric_diameter_px": 0,
+      "solid_inset_diameter_px": 676,
+      "moon_phases_clockwise_from_top": [
+        "new",
+        "waxing_crescent",
+        "first_quarter",
+        "waxing_gibbous",
+        "full",
+        "waning_gibbous",
+        "last_quarter",
+        "waning_crescent"
+      ],
+      "arrowheads": [
+        "north",
+        "east",
+        "south",
+        "west"
+      ],
+      "outline_width_px": 3,
+      "preview": {
+        "filename": "previews_8x/joystick_base_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact": true
+      }
+    },
+    {
+      "filename": "joystick_base_dark.png",
+      "mode": "dark",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bounding_box_convention": "left,top,right,bottom; right/bottom exclusive",
+      "object_size": [
+        1041,
+        1041
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "colour_count": 40,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "connected_silhouettes": 1,
+      "alpha_sha256": "5469ea93149d11bd2b70c292f0cdc958164c385678556ef20ae797abb68a6f7b",
+      "file_sha256": "58b27bd1fb1adf4a56f06fdb2d7df4b1d4a58212286309c988e7f8cf162136dd",
+      "outer_diameter_px": 1041,
+      "inner_diameter_px": 0,
+      "transparent_middle": false,
+      "outer_geometric_diameter_px": 1040,
+      "inner_geometric_diameter_px": 0,
+      "solid_inset_diameter_px": 676,
+      "moon_phases_clockwise_from_top": [
+        "new",
+        "waxing_crescent",
+        "first_quarter",
+        "waxing_gibbous",
+        "full",
+        "waning_gibbous",
+        "last_quarter",
+        "waning_crescent"
+      ],
+      "arrowheads": [
+        "north",
+        "east",
+        "south",
+        "west"
+      ],
+      "outline_width_px": 3,
+      "light_twin": "joystick_base.png",
+      "alpha_pixel_identical_to_light": true,
+      "drawing_region_boundaries_preserved": true,
+      "wood_display_luma_reduction_percent": 47.29,
+      "red_palette_exactly_preserved": true,
+      "colour_only_mapping": [
+        {
+          "light": [
+            61,
+            39,
+            10
+          ],
+          "dark": [
+            39,
+            24,
+            19
+          ],
+          "class": "wood",
+          "pixel_count": 80
+        },
+        {
+          "light": [
+            78,
+            44,
+            23
+          ],
+          "dark": [
+            44,
+            27,
+            22
+          ],
+          "class": "wood",
+          "pixel_count": 9276
+        },
+        {
+          "light": [
+            89,
+            36,
+            6
+          ],
+          "dark": [
+            42,
+            25,
+            20
+          ],
+          "class": "wood",
+          "pixel_count": 5577
+        },
+        {
+          "light": [
+            95,
+            95,
+            30
+          ],
+          "dark": [
+            106,
+            109,
+            41
+          ],
+          "class": "green",
+          "pixel_count": 963
+        },
+        {
+          "light": [
+            112,
+            56,
+            12
+          ],
+          "dark": [
+            53,
+            33,
+            25
+          ],
+          "class": "wood",
+          "pixel_count": 19820
+        },
+        {
+          "light": [
+            145,
+            128,
+            56
+          ],
+          "dark": [
+            163,
+            150,
+            72
+          ],
+          "class": "green",
+          "pixel_count": 5424
+        },
+        {
+          "light": [
+            146,
+            155,
+            68
+          ],
+          "dark": [
+            160,
+            174,
+            85
+          ],
+          "class": "green",
+          "pixel_count": 3788
+        },
+        {
+          "light": [
+            148,
+            87,
+            32
+          ],
+          "dark": [
+            74,
+            47,
+            35
+          ],
+          "class": "wood",
+          "pixel_count": 23034
+        },
+        {
+          "light": [
+            166,
+            97,
+            33
+          ],
+          "dark": [
+            81,
+            52,
+            39
+          ],
+          "class": "wood",
+          "pixel_count": 5282
+        },
+        {
+          "light": [
+            170,
+            109,
+            51
+          ],
+          "dark": [
+            87,
+            58,
+            44
+          ],
+          "class": "wood",
+          "pixel_count": 2078
+        },
+        {
+          "light": [
+            181,
+            117,
+            53
+          ],
+          "dark": [
+            77,
+            51,
+            40
+          ],
+          "class": "wood",
+          "pixel_count": 544
+        },
+        {
+          "light": [
+            182,
+            114,
+            45
+          ],
+          "dark": [
+            90,
+            60,
+            46
+          ],
+          "class": "wood",
+          "pixel_count": 15845
+        },
+        {
+          "light": [
+            187,
+            183,
+            92
+          ],
+          "dark": [
+            208,
+            208,
+            112
+          ],
+          "class": "green",
+          "pixel_count": 9140
+        },
+        {
+          "light": [
+            195,
+            131,
+            62
+          ],
+          "dark": [
+            101,
+            69,
+            53
+          ],
+          "class": "wood",
+          "pixel_count": 23762
+        },
+        {
+          "light": [
+            202,
+            140,
+            75
+          ],
+          "dark": [
+            107,
+            75,
+            57
+          ],
+          "class": "wood",
+          "pixel_count": 11612
+        },
+        {
+          "light": [
+            202,
+            142,
+            78
+          ],
+          "dark": [
+            91,
+            63,
+            50
+          ],
+          "class": "wood",
+          "pixel_count": 2539
+        },
+        {
+          "light": [
+            207,
+            149,
+            86
+          ],
+          "dark": [
+            113,
+            80,
+            61
+          ],
+          "class": "wood",
+          "pixel_count": 595
+        },
+        {
+          "light": [
+            216,
+            153,
+            80
+          ],
+          "dark": [
+            116,
+            83,
+            63
+          ],
+          "class": "wood",
+          "pixel_count": 21661
+        },
+        {
+          "light": [
+            220,
+            164,
+            101
+          ],
+          "dark": [
+            103,
+            74,
+            59
+          ],
+          "class": "wood",
+          "pixel_count": 8652
+        },
+        {
+          "light": [
+            221,
+            162,
+            93
+          ],
+          "dark": [
+            121,
+            88,
+            67
+          ],
+          "class": "wood",
+          "pixel_count": 7272
+        },
+        {
+          "light": [
+            222,
+            197,
+            125
+          ],
+          "dark": [
+            240,
+            216,
+            145
+          ],
+          "class": "gold",
+          "pixel_count": 86
+        },
+        {
+          "light": [
+            225,
+            171,
+            109
+          ],
+          "dark": [
+            127,
+            94,
+            72
+          ],
+          "class": "wood",
+          "pixel_count": 232
+        },
+        {
+          "light": [
+            227,
+            169,
+            96
+          ],
+          "dark": [
+            126,
+            93,
+            71
+          ],
+          "class": "wood",
+          "pixel_count": 16504
+        },
+        {
+          "light": [
+            229,
+            174,
+            109
+          ],
+          "dark": [
+            129,
+            96,
+            74
+          ],
+          "class": "wood",
+          "pixel_count": 3933
+        },
+        {
+          "light": [
+            230,
+            178,
+            115
+          ],
+          "dark": [
+            132,
+            99,
+            76
+          ],
+          "class": "wood",
+          "pixel_count": 70
+        },
+        {
+          "light": [
+            233,
+            179,
+            114
+          ],
+          "dark": [
+            133,
+            100,
+            76
+          ],
+          "class": "wood",
+          "pixel_count": 2189
+        },
+        {
+          "light": [
+            233,
+            182,
+            119
+          ],
+          "dark": [
+            113,
+            84,
+            67
+          ],
+          "class": "wood",
+          "pixel_count": 347050
+        },
+        {
+          "light": [
+            234,
+            182,
+            120
+          ],
+          "dark": [
+            135,
+            102,
+            78
+          ],
+          "class": "wood",
+          "pixel_count": 10520
+        },
+        {
+          "light": [
+            234,
+            186,
+            125
+          ],
+          "dark": [
+            137,
+            104,
+            80
+          ],
+          "class": "wood",
+          "pixel_count": 3961
+        },
+        {
+          "light": [
+            237,
+            188,
+            129
+          ],
+          "dark": [
+            139,
+            106,
+            81
+          ],
+          "class": "wood",
+          "pixel_count": 28304
+        },
+        {
+          "light": [
+            237,
+            191,
+            132
+          ],
+          "dark": [
+            140,
+            108,
+            83
+          ],
+          "class": "wood",
+          "pixel_count": 58
+        },
+        {
+          "light": [
+            239,
+            185,
+            108
+          ],
+          "dark": [
+            136,
+            103,
+            79
+          ],
+          "class": "wood",
+          "pixel_count": 85130
+        },
+        {
+          "light": [
+            240,
+            192,
+            132
+          ],
+          "dark": [
+            142,
+            109,
+            83
+          ],
+          "class": "wood",
+          "pixel_count": 54842
+        },
+        {
+          "light": [
+            241,
+            195,
+            135
+          ],
+          "dark": [
+            143,
+            111,
+            85
+          ],
+          "class": "wood",
+          "pixel_count": 31912
+        },
+        {
+          "light": [
+            241,
+            197,
+            141
+          ],
+          "dark": [
+            145,
+            112,
+            86
+          ],
+          "class": "wood",
+          "pixel_count": 596
+        },
+        {
+          "light": [
+            243,
+            201,
+            145
+          ],
+          "dark": [
+            147,
+            115,
+            88
+          ],
+          "class": "wood",
+          "pixel_count": 2024
+        },
+        {
+          "light": [
+            248,
+            208,
+            139
+          ],
+          "dark": [
+            152,
+            119,
+            91
+          ],
+          "class": "wood",
+          "pixel_count": 38883
+        },
+        {
+          "light": [
+            248,
+            212,
+            161
+          ],
+          "dark": [
+            155,
+            123,
+            95
+          ],
+          "class": "wood",
+          "pixel_count": 13491
+        },
+        {
+          "light": [
+            248,
+            225,
+            166
+          ],
+          "dark": [
+            163,
+            132,
+            101
+          ],
+          "class": "wood",
+          "pixel_count": 16376
+        },
+        {
+          "light": [
+            251,
+            239,
+            202
+          ],
+          "dark": [
+            176,
+            145,
+            110
+          ],
+          "class": "wood",
+          "pixel_count": 16348
+        }
+      ],
+      "preview": {
+        "filename": "previews_8x/joystick_base_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact": true
+      }
+    },
+    {
+      "filename": "joystick_knob.png",
+      "mode": "light",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bounding_box_convention": "left,top,right,bottom; right/bottom exclusive",
+      "object_size": [
+        1041,
+        1041
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "colour_count": 35,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "connected_silhouettes": 1,
+      "alpha_sha256": "5469ea93149d11bd2b70c292f0cdc958164c385678556ef20ae797abb68a6f7b",
+      "file_sha256": "ef2712cd00362316641fe93c277a98bf06f7abe21c3068668f32eb4d36cceeb5",
+      "outer_diameter_px": 1041,
+      "inner_diameter_px": 0,
+      "transparent_middle": false,
+      "outer_geometric_diameter_px": 1040,
+      "inner_geometric_diameter_px": 0,
+      "solid_inset_diameter_px": 0,
+      "central_motif": "one_eight_point_star",
+      "outline_width_px": 3,
+      "preview": {
+        "filename": "previews_8x/joystick_knob_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact": true
+      }
+    },
+    {
+      "filename": "joystick_knob_dark.png",
+      "mode": "dark",
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounding_box": [
+        120,
+        120,
+        1161,
+        1161
+      ],
+      "bounding_box_convention": "left,top,right,bottom; right/bottom exclusive",
+      "object_size": [
+        1041,
+        1041
+      ],
+      "centre": [
+        640,
+        640
+      ],
+      "bounding_box_centre": [
+        640.0,
+        640.0
+      ],
+      "colour_count": 35,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "connected_silhouettes": 1,
+      "alpha_sha256": "5469ea93149d11bd2b70c292f0cdc958164c385678556ef20ae797abb68a6f7b",
+      "file_sha256": "1016c0a7493ff62032d0a1d0cee15cfad0c26ca77780d9afda95173d6d1cbff8",
+      "outer_diameter_px": 1041,
+      "inner_diameter_px": 0,
+      "transparent_middle": false,
+      "outer_geometric_diameter_px": 1040,
+      "inner_geometric_diameter_px": 0,
+      "solid_inset_diameter_px": 0,
+      "central_motif": "one_eight_point_star",
+      "outline_width_px": 3,
+      "light_twin": "joystick_knob.png",
+      "alpha_pixel_identical_to_light": true,
+      "drawing_region_boundaries_preserved": true,
+      "wood_display_luma_reduction_percent": 42.27,
+      "red_palette_exactly_preserved": true,
+      "colour_only_mapping": [
+        {
+          "light": [
+            78,
+            44,
+            23
+          ],
+          "dark": [
+            44,
+            27,
+            22
+          ],
+          "class": "wood",
+          "pixel_count": 9277
+        },
+        {
+          "light": [
+            89,
+            36,
+            6
+          ],
+          "dark": [
+            42,
+            25,
+            20
+          ],
+          "class": "wood",
+          "pixel_count": 1864
+        },
+        {
+          "light": [
+            95,
+            95,
+            30
+          ],
+          "dark": [
+            106,
+            109,
+            41
+          ],
+          "class": "green",
+          "pixel_count": 2
+        },
+        {
+          "light": [
+            112,
+            56,
+            12
+          ],
+          "dark": [
+            53,
+            33,
+            25
+          ],
+          "class": "wood",
+          "pixel_count": 9042
+        },
+        {
+          "light": [
+            145,
+            128,
+            56
+          ],
+          "dark": [
+            163,
+            150,
+            72
+          ],
+          "class": "green",
+          "pixel_count": 171
+        },
+        {
+          "light": [
+            146,
+            155,
+            68
+          ],
+          "dark": [
+            160,
+            174,
+            85
+          ],
+          "class": "green",
+          "pixel_count": 5
+        },
+        {
+          "light": [
+            148,
+            87,
+            32
+          ],
+          "dark": [
+            74,
+            47,
+            35
+          ],
+          "class": "wood",
+          "pixel_count": 5600
+        },
+        {
+          "light": [
+            166,
+            97,
+            33
+          ],
+          "dark": [
+            81,
+            52,
+            39
+          ],
+          "class": "wood",
+          "pixel_count": 1248
+        },
+        {
+          "light": [
+            170,
+            109,
+            51
+          ],
+          "dark": [
+            87,
+            58,
+            44
+          ],
+          "class": "wood",
+          "pixel_count": 2187
+        },
+        {
+          "light": [
+            182,
+            114,
+            45
+          ],
+          "dark": [
+            90,
+            60,
+            46
+          ],
+          "class": "wood",
+          "pixel_count": 6218
+        },
+        {
+          "light": [
+            187,
+            183,
+            92
+          ],
+          "dark": [
+            208,
+            208,
+            112
+          ],
+          "class": "green",
+          "pixel_count": 4
+        },
+        {
+          "light": [
+            195,
+            131,
+            62
+          ],
+          "dark": [
+            101,
+            69,
+            53
+          ],
+          "class": "wood",
+          "pixel_count": 31619
+        },
+        {
+          "light": [
+            202,
+            140,
+            75
+          ],
+          "dark": [
+            107,
+            75,
+            57
+          ],
+          "class": "wood",
+          "pixel_count": 20125
+        },
+        {
+          "light": [
+            207,
+            149,
+            86
+          ],
+          "dark": [
+            113,
+            80,
+            61
+          ],
+          "class": "wood",
+          "pixel_count": 406
+        },
+        {
+          "light": [
+            216,
+            153,
+            80
+          ],
+          "dark": [
+            116,
+            83,
+            63
+          ],
+          "class": "wood",
+          "pixel_count": 32317
+        },
+        {
+          "light": [
+            221,
+            162,
+            93
+          ],
+          "dark": [
+            121,
+            88,
+            67
+          ],
+          "class": "wood",
+          "pixel_count": 29700
+        },
+        {
+          "light": [
+            222,
+            197,
+            125
+          ],
+          "dark": [
+            240,
+            216,
+            145
+          ],
+          "class": "gold",
+          "pixel_count": 52
+        },
+        {
+          "light": [
+            225,
+            171,
+            109
+          ],
+          "dark": [
+            127,
+            94,
+            72
+          ],
+          "class": "wood",
+          "pixel_count": 171
+        },
+        {
+          "light": [
+            227,
+            169,
+            96
+          ],
+          "dark": [
+            126,
+            93,
+            71
+          ],
+          "class": "wood",
+          "pixel_count": 42833
+        },
+        {
+          "light": [
+            229,
+            174,
+            109
+          ],
+          "dark": [
+            129,
+            96,
+            74
+          ],
+          "class": "wood",
+          "pixel_count": 27383
+        },
+        {
+          "light": [
+            230,
+            178,
+            115
+          ],
+          "dark": [
+            132,
+            99,
+            76
+          ],
+          "class": "wood",
+          "pixel_count": 52
+        },
+        {
+          "light": [
+            233,
+            179,
+            114
+          ],
+          "dark": [
+            133,
+            100,
+            76
+          ],
+          "class": "wood",
+          "pixel_count": 36738
+        },
+        {
+          "light": [
+            234,
+            182,
+            120
+          ],
+          "dark": [
+            135,
+            102,
+            78
+          ],
+          "class": "wood",
+          "pixel_count": 40310
+        },
+        {
+          "light": [
+            234,
+            186,
+            125
+          ],
+          "dark": [
+            137,
+            104,
+            80
+          ],
+          "class": "wood",
+          "pixel_count": 24725
+        },
+        {
+          "light": [
+            237,
+            188,
+            129
+          ],
+          "dark": [
+            139,
+            106,
+            81
+          ],
+          "class": "wood",
+          "pixel_count": 34337
+        },
+        {
+          "light": [
+            237,
+            191,
+            132
+          ],
+          "dark": [
+            140,
+            108,
+            83
+          ],
+          "class": "wood",
+          "pixel_count": 53
+        },
+        {
+          "light": [
+            239,
+            185,
+            108
+          ],
+          "dark": [
+            136,
+            103,
+            79
+          ],
+          "class": "wood",
+          "pixel_count": 11990
+        },
+        {
+          "light": [
+            240,
+            192,
+            132
+          ],
+          "dark": [
+            142,
+            109,
+            83
+          ],
+          "class": "wood",
+          "pixel_count": 60424
+        },
+        {
+          "light": [
+            241,
+            195,
+            135
+          ],
+          "dark": [
+            143,
+            111,
+            85
+          ],
+          "class": "wood",
+          "pixel_count": 89231
+        },
+        {
+          "light": [
+            241,
+            197,
+            141
+          ],
+          "dark": [
+            145,
+            112,
+            86
+          ],
+          "class": "wood",
+          "pixel_count": 15039
+        },
+        {
+          "light": [
+            243,
+            201,
+            145
+          ],
+          "dark": [
+            147,
+            115,
+            88
+          ],
+          "class": "wood",
+          "pixel_count": 7623
+        },
+        {
+          "light": [
+            248,
+            208,
+            139
+          ],
+          "dark": [
+            152,
+            119,
+            91
+          ],
+          "class": "wood",
+          "pixel_count": 149995
+        },
+        {
+          "light": [
+            248,
+            212,
+            161
+          ],
+          "dark": [
+            155,
+            123,
+            95
+          ],
+          "class": "wood",
+          "pixel_count": 96493
+        },
+        {
+          "light": [
+            248,
+            225,
+            166
+          ],
+          "dark": [
+            163,
+            132,
+            101
+          ],
+          "class": "wood",
+          "pixel_count": 42768
+        },
+        {
+          "light": [
+            251,
+            239,
+            202
+          ],
+          "dark": [
+            176,
+            145,
+            110
+          ],
+          "class": "wood",
+          "pixel_count": 19451
+        }
+      ],
+      "preview": {
+        "filename": "previews_8x/joystick_knob_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "scale": 8,
+        "nearest_neighbour_exact": true
+      }
+    }
+  ]
+}
