@@ -2056,11 +2056,12 @@ nonisolated final class WorldMap: @unchecked Sendable {
         // Shops along the streets: a 3×2 plot a cell back from a street, clear of everything else.
         let frontage = streetFrontage(&rng)
         var used: Set<GridPoint> = []
-        // The town's own buildings get the room the shops keep from each other: a shop set down right in front of
-        // one hid it (Ingothold's dome house behind a townhouse, the user, 2026-11-27).
+        // The town's own buildings get room the shops keep clear of: a shop in front of one (rows below it, down the
+        // screen) hid it, a picture 130 points tall standing four rows in front of Ingothold's dome house (the user,
+        // 2026-11-27); behind and at the sides, the room the shops keep from each other.
         for cell in buildingCells {
             for dc in -2...2 {
-                for dr in -2...1 { used.insert(GridPoint(col: cell.col + dc, row: cell.row + dr)) }
+                for dr in -5...1 { used.insert(GridPoint(col: cell.col + dc, row: cell.row + dr)) }
             }
         }
         for art in town.lots ?? [] {
@@ -2139,8 +2140,7 @@ nonisolated final class WorldMap: @unchecked Sendable {
     private func placeOwnBuildings() {
         let npcs = Set((def.npcs ?? []).filter { $0.summit == nil }.map { offset($0.x, $0.y) })
         let fence = Set(fenceCells)
-        func fits(_ anchor: GridPoint, _ footprint: (columns: ClosedRange<Int>, rows: ClosedRange<Int>), clear: Bool,
-                  moved: Bool) -> Bool {
+        func fits(_ anchor: GridPoint, _ footprint: (columns: ClosedRange<Int>, rows: ClosedRange<Int>), clear: Bool) -> Bool {
             for dc in footprint.columns {
                 for dr in footprint.rows {
                     let cell = GridPoint(col: anchor.col + dc, row: anchor.row + dr)
@@ -2153,17 +2153,6 @@ nonisolated final class WorldMap: @unchecked Sendable {
             // there (the user, 2026-11-16: "A building shouldn't be on the roads"). It looks a little
             // farther for a plot that clears them, and only where none does stands by a street as before.
             guard clear else { return true }
-            // One moved off its spot doesn't land right against another building either, in front of or behind its
-            // picture (a stone hut moved off its blocked spot stood in front of Ingothold's dome house, the user,
-            // 2026-11-27). Those maps.json sets close together stay as set.
-            if moved {
-                for dc in (footprint.columns.lowerBound - 1)...(footprint.columns.upperBound + 1) {
-                    for dr in (footprint.rows.lowerBound - 2)...(footprint.rows.upperBound + 2)
-                    where buildingCells.contains(GridPoint(col: anchor.col + dc, row: anchor.row + dr)) {
-                        return false
-                    }
-                }
-            }
             let columns = (footprint.columns.lowerBound - 1)...(footprint.columns.upperBound + 1)
             for dc in columns {
                 for dr in (footprint.rows.lowerBound - 1)...footprint.rows.upperBound
@@ -2183,7 +2172,7 @@ nonisolated final class WorldMap: @unchecked Sendable {
                     for dr in -radius...radius {
                         for dc in -radius...radius where max(abs(dc), abs(dr)) == radius {
                             let candidate = GridPoint(col: wanted.col + dc, row: wanted.row + dr)
-                            if fits(candidate, footprint, clear: clear, moved: radius > 0) {
+                            if fits(candidate, footprint, clear: clear) {
                                 plot = candidate
                                 break search
                             }
