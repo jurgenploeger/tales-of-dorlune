@@ -29,3 +29,6 @@ Checked: hard alpha, no empty frame, every frame's feet within 2 pixels of its s
 Issues: (1) monsters drawn sitting (flame wolf, earth wolf, earth lion, werewolf, red bull) stay sitting in their walk
 frames, shuffling, not walking (results_right_rows.png); (2) frames that touch their cell's edge, so the monster is
 cut: puppet_king 72, red_bull 62, mud_eagle 13, a few in wisp, treefrog, flame_sheep, jelly, golden_hamster.
+Fixed (2026-11-28): the twelve sheets redrawn (results_fixes.png: each one's right-facing and down-facing rows). The
+five sitting monsters now stand and walk on four legs (idle still sitting, attack lunging up); no frame touches its
+cell's edge in any of the twelve; feet on row 37 throughout. The first tries are kept in monster_sheets/try1/.
