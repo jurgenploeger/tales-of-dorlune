@@ -855,8 +855,8 @@ private struct MoreMenu: View {
                         Image(uiImage: picture)
                             .interpolation(picture.size.width > 64 ? .high : .none)
                             .resizable()
-                            .scaledToFill()
-                            .clipShape(Circle())
+                            .scaledToFit()
+                            .padding(2)
                     } else {
                         IconImage(skill.icon.flatMap(GameIcon.init) ?? .sparkles, size: 14)
                             .foregroundStyle(.white)
@@ -1328,9 +1328,8 @@ struct SkillCommandButton: View {
                 Image(uiImage: picture)
                     .interpolation(picture.size.width > 64 ? .high : .none)
                     .resizable()
-                    .scaledToFill()
-                    .frame(width: size - 6, height: size - 6)
-                    .clipShape(Circle())
+                    .scaledToFit()
+                    .frame(width: size * 0.78, height: size * 0.78)
             } else {
                 IconImage(skill.icon.flatMap(GameIcon.init) ?? .sparkles, size: size * 0.56)
                     .foregroundStyle(.white)
