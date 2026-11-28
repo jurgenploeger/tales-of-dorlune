@@ -1,0 +1,9 @@
+1. mend_beast (Mend Beast, heal, healing, on one ally): A strong heal, perfect for companions.
+2. full_heal (Full Heal, heal, healing, on one ally): Mend an ally completely, back to full HP.
+3. bless (Bless, buff, buff, on one ally): Raise an ally's ATK and DEF by 25% for 3 rounds.
+4. protection (Protection, buff, buff, on one ally): Shield an ally: DEF +40% for 3 rounds.
+5. holy_glow (Holy Glow, buff, buff, on one ally): Fill an ally with light: MAG +30% for 3 rounds, for stronger spells and heals.
+6. guardianship (Guardianship, buff, buff, on the whole party): A ward over the whole party: DEF +20% for 3 rounds.
+7. animal_training (Animal Training, buff, buff, on one ally): Spur an ally on: ATK +20% and SPD +30% for 3 rounds.
+8. boost (Boost, buff, buff, on one ally): Powers up: ATK +20% for 3 rounds, more as it grows stronger.
+9. berserk (Berserk, buff, buff, on one ally): A wild rage: ATK +30% for 3 rounds (more as it grows stronger), but DEF −25%.

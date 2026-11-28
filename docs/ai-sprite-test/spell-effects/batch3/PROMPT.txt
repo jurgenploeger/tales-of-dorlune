@@ -1,0 +1,31 @@
+Draw the battle effects of the skills and spells in my game, Tales of Dorlune: a cute top-down fantasy RPG for iPhone (pixel-art world, chibi heroes and monsters, bright and cosy). Today they're drawn by code as soft glows, which doesn't fit the pixel art. Redraw them as pixel-art animation, frame by frame, so they sit in the battles beside the monsters and heroes.
+
+Each attached picture is the skill's icon (the new pixel-art ones where they exist): its effect in battle should clearly be the same skill, in the same colours.
+
+The effects are drawn on their own, with no character in them, so the game can play them on anyone: a 48-pixel hero, a 40-pixel monster or a 64-pixel boss. The game places them: the cast effect on the one who uses the skill, the projectile flying from them to the target, the impact on each target.
+
+Style rules, all of them matter:
+- Real pixel art: hard square pixels, transparent, alpha 0 or 255 only, no blur, no soft glow, no anti-aliasing, no dithering. Light and magic are drawn with hard pixels: a bright white or pale core, then two or three bands of the colour getting deeper outward, in hard steps; sparks are single pixels and tiny crosses.
+- Chunky and readable at small size: bold shapes, clear motion between frames, a strong first frame (the moment it hits) and a clean fade at the end (it breaks into a few sparks and pixels and is gone; the last frame almost empty).
+- Each element in its colours, so it reads at a glance: fire orange, red and yellow; water blue and pale cyan; wood green and leaf; earth brown and ochre; metal silver and gold; light gold and white; dark violet and deep purple; healing soft green and white; buffs sky blue and gold; curses violet and sickly green; blows white-hot orange and white.
+- Every skill looks different from every other: its own shapes and motion, not the same burst in another colour.
+- Original drawings only.
+
+Each skill is one sprite sheet: frames of 64 × 64 pixels in a grid of 8 columns, one row per part, the parts it needs:
+- Row 1, cast (6 frames): what happens at the user as they use it (a spell circle under their feet, a gathering of light, a weapon flash). Centred; anything on the ground on the frame's bottom quarter.
+- Row 2, projectile flying right (4 frames, a loop): what flies to the target, pointing right, centred in the frame. Only for skills that send something (a fireball, a needle, a bubble, a lance); leave the row empty otherwise.
+- Row 3, the same projectile flying up (4 frames), drawn pointing up, not just turned (the light still from the top left). Empty if row 2 is.
+- Row 4, impact (8 frames): what happens on the target, centred on the frame's middle (the middle of whoever is hit): the slash, the explosion, the splash, the healing sparkles rising, the shield closing round them, the curse sinking in. Heals and buffs rise upward from the frame's bottom quarter (their feet).
+So a sheet is 512 pixels wide and 256 tall, empty cells transparent.
+
+1. dodge_whip (Dodge Whip, physical, none, on one foe): Lash a foe and skip clear: your SPD +30% for 3 rounds.
+2. beast_impact (God of Beast Impact, physical, none, on one foe): You and your companion strike as one: its ATK joins yours.
+3. fire_bolt (Fire Bolt, magic, fire, on one foe): Fire magic. Melts metal.
+4. stone_spike (Stone Spike, magic, earth, on one foe): Earth magic. Dams water.
+5. leaf_storm (Leaf Storm, magic, wood, on every foe): Wood magic on every foe. Breaks earth.
+6. jelly_splash (Jelly Splash, magic, water, on one foe): Jelly Splash
+7. flash (Flash, magic, light, on one foe): A burst of blinding light.
+8. shadow_bite (Shadow Bite, magic, dark, on one foe): Fangs made of darkness.
+9. ember (Ember, magic, fire, on one foe): A little ball of fire.
+
+Go one skill at a time. For each: say which rows it uses and its colour count, then deliver its sheet as a 1× PNG named effect_<id>.png and an exact 8× nearest-neighbour preview effect_<id>_8x.png, then the next. At the end: a contact sheet showing each skill's impact frames 1, 3, 5 and 7 in a row on a dark battle-blue background, an asset_checks.json (each sheet's size, colour count, alpha values, which rows are used), and a zip of it all.

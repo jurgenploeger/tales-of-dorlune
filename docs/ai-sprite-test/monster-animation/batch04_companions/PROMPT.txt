@@ -1,0 +1,26 @@
+Redraw the monsters of my game, Tales of Dorlune, as full animation sheets: a cute top-down fantasy RPG for iPhone (pixel-art world, chibi characters, bright and cosy). Every monster can be caught and walks behind you as a companion, so it needs to walk and run in every direction, stand idle and attack. Each attached _today_8x picture is the monster as it is now (one picture, at 8×): keep exactly who it is, its shape, colours, face, markings and charm, and bring it to life.
+
+Style: match the attached pictures' pixel art exactly: hard square pixels, a dark outline, lit from the top left, rich hue-shifted shading, big expressive eyes. Original drawings only.
+
+For each monster, one sprite sheet, a grid of frames, each frame the monster's frame size (listed: 40 × 40 or 64 × 64 pixels), transparent, alpha 0 or 255 only, no anti-aliasing:
+- Rows, top to bottom: facing down (toward the viewer), facing right, facing up (away). (The game mirrors the right row for left.) Seen from slightly above, as the game's world is.
+- Columns, left to right:
+  1-2 idle: standing, breathing or bobbing (2 frames).
+  3-6 walk: a full walk or hop cycle (4 frames; the game plays the same frames faster to run).
+  7-9 attack: wind-up, strike, recover (3 frames), the monster lunging, biting, swiping or slamming in its own way toward the direction it faces. Only the monster: no slash marks, sparks or effects (the game adds those).
+- So a sheet is 9 columns × 3 rows: 360 × 120 pixels for a 40-pixel monster, 576 × 192 for a 64-pixel one.
+- In every frame the monster stands with its feet (or its base, for a jelly or a ghost) on the same row, about 2 pixels above the frame's bottom, centred left to right, so the game can play the frames in place without it jumping. Same size and proportions in every frame and every direction; a leg, ear, tail or wing moves, the body doesn't grow or shrink.
+- Draw only the monster listed, not its colour variants (the game recolours those).
+
+1. poison_skeleton (Poison Skeleton, dark element, frame 40 × 40 pixels): Old bones held together by a nasty magic. It throws webs and bites with a poisonous grin. (Its colour variants, Sunny Poison Skeleton, Frost Skeleton, Ember Skeleton, Grave Skeleton, Crimson Skeleton, are recoloured from it in the game: draw only this one.)
+2. black_kong (Shadow Ape, dark element, frame 40 × 40 pixels): A huge dark ape that guards the paths near Moonwhisper. It throws boulders like pebbles. (Its colour variants, Mint Shadow Ape, are recoloured from it in the game: draw only this one.)
+3. golden_slime (Golden Slime, metal element, frame 40 × 40 pixels): A slime made of molten gold. Adventurers hunt it for riches; it doesn't appreciate that.
+4. candy_puff (Candy Puff, light element, frame 40 × 40 pixels): A Jelly Puff made of sugar. It tastes as sweet as it looks, but don't try.
+5. temple_jelly (Temple Jelly, water element, frame 40 × 40 pixels): Sacred jellies that guard the Tidewater Shrine, blessed by its ancient springs.
+6. earth_wolf (Earth Wolf, earth element, frame 40 × 40 pixels): A sandy-brown wolf that hunts in packs on the mountain trails.
+7. flame_wolf (Flame Wolf, fire element, frame 40 × 40 pixels): A wolf with a burning mane, part of the pack in Big Bad Wolf's Lair.
+8. wooden_puppet (Wooden Puppet, wood element, frame 40 × 40 pixels): A carved puppet brought to life by a strange magic on Marionette Rise. It still dances when nobody's looking.
+9. lotus_sprite (Lotus Sprite, wood element, frame 40 × 40 pixels): A tiny spirit born from a lotus flower. It blesses the ponds of Lotus Land.
+10. dream_phantom (Dream Phantom, dark element, frame 40 × 40 pixels): A phantom that lives in the dreams of Dozywick's residents, and won't let them wake.
+
+Go one monster at a time. For each: say its frame size, then deliver its sheet as a 1× PNG named <id>_sheet.png and an exact 8× nearest-neighbour preview <id>_sheet_8x.png, then the next. At the end of the batch: a contact sheet of every monster's down-facing idle and attack frames on mid-grey, an asset_checks.json (each sheet's size, colour count, alpha values, and for each frame the bottom row its feet stand on), and a zip of it all.

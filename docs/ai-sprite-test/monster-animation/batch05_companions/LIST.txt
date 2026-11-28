@@ -1,0 +1,10 @@
+1. ore_golem (Dreamstone Golem, metal element, frame 40 × 40 pixels): A golem made of dreamstone, built to guard the riches of Ingothold. It never stops working.
+2. crystal_widow (Crystal Widow, light element, frame 40 × 40 pixels): A spider made of living crystal, spinning glittering webs in the Whispering Hollow.
+3. emerald_pegasus (Emerald Pegasus, wood element, frame 40 × 40 pixels): A green-winged Pegasus that guards the Emerald Road, shining like a jewel.
+4. star_moth (Starmoth, light element, frame 40 × 40 pixels): Moths drawn to the fallen star's light. Their wings carry its dust, and they drink the glow from any lantern left out at night. (Its colour variants, Dawn Starmoth, are recoloured from it in the game: draw only this one.)
+5. nebula_puff (Nebula Puff, dark element, frame 40 × 40 pixels): A puff of the night sky that drifted down with the fallen star. It settles on moonflowers and lulls them to sleep.
+6. crystal_quill (Crystal Quill, earth element, frame 40 × 40 pixels): A hedgehog whose quills turned to crystal where the starlight landed. It digs up crystal gardens for a crunchy snack.
+7. prism_crab (Prism Crab, water element, frame 40 × 40 pixels): A crab whose shell grew into amethyst in the Glimmerdeep's pools. It snips crystals off the walls and wears the prettiest ones.
+8. floating_geode (Floating Geode, earth element, frame 40 × 40 pixels): A hollow stone that drifts through the dark with a heart of glimmering crystal. Crack one open and it glows for a hundred years.
+9. crystal_serpent (Crystal Serpent, light element, frame 40 × 40 pixels): A serpent of living glass that swims through the crystals as if they were water. You only see it by the light it bends.
+10. comet_hare (Comet Hare, light element, frame 40 × 40 pixels): A hare that hops so fast across the isle's meadows that it leaves a tail of starlight behind it. The fairies say a fallen star taught it to run. (Its colour variants, Dusk Comet Hare, are recoloured from it in the game: draw only this one.)

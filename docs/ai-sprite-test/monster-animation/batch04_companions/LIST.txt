@@ -1,0 +1,10 @@
+1. poison_skeleton (Poison Skeleton, dark element, frame 40 × 40 pixels): Old bones held together by a nasty magic. It throws webs and bites with a poisonous grin. (Its colour variants, Sunny Poison Skeleton, Frost Skeleton, Ember Skeleton, Grave Skeleton, Crimson Skeleton, are recoloured from it in the game: draw only this one.)
+2. black_kong (Shadow Ape, dark element, frame 40 × 40 pixels): A huge dark ape that guards the paths near Moonwhisper. It throws boulders like pebbles. (Its colour variants, Mint Shadow Ape, are recoloured from it in the game: draw only this one.)
+3. golden_slime (Golden Slime, metal element, frame 40 × 40 pixels): A slime made of molten gold. Adventurers hunt it for riches; it doesn't appreciate that.
+4. candy_puff (Candy Puff, light element, frame 40 × 40 pixels): A Jelly Puff made of sugar. It tastes as sweet as it looks, but don't try.
+5. temple_jelly (Temple Jelly, water element, frame 40 × 40 pixels): Sacred jellies that guard the Tidewater Shrine, blessed by its ancient springs.
+6. earth_wolf (Earth Wolf, earth element, frame 40 × 40 pixels): A sandy-brown wolf that hunts in packs on the mountain trails.
+7. flame_wolf (Flame Wolf, fire element, frame 40 × 40 pixels): A wolf with a burning mane, part of the pack in Big Bad Wolf's Lair.
+8. wooden_puppet (Wooden Puppet, wood element, frame 40 × 40 pixels): A carved puppet brought to life by a strange magic on Marionette Rise. It still dances when nobody's looking.
+9. lotus_sprite (Lotus Sprite, wood element, frame 40 × 40 pixels): A tiny spirit born from a lotus flower. It blesses the ponds of Lotus Land.
+10. dream_phantom (Dream Phantom, dark element, frame 40 × 40 pixels): A phantom that lives in the dreams of Dozywick's residents, and won't let them wake.

@@ -1,0 +1,26 @@
+Redraw the monsters of my game, Tales of Dorlune, as full animation sheets: a cute top-down fantasy RPG for iPhone (pixel-art world, chibi characters, bright and cosy). Every monster can be caught and walks behind you as a companion, so it needs to walk and run in every direction, stand idle and attack. Each attached _today_8x picture is the monster as it is now (one picture, at 8×): keep exactly who it is, its shape, colours, face, markings and charm, and bring it to life.
+
+Style: match the attached pictures' pixel art exactly: hard square pixels, a dark outline, lit from the top left, rich hue-shifted shading, big expressive eyes. Original drawings only.
+
+For each monster, one sprite sheet, a grid of frames, each frame the monster's frame size (listed: 40 × 40 or 64 × 64 pixels), transparent, alpha 0 or 255 only, no anti-aliasing:
+- Rows, top to bottom: facing down (toward the viewer), facing right, facing up (away). (The game mirrors the right row for left.) Seen from slightly above, as the game's world is.
+- Columns, left to right:
+  1-2 idle: standing, breathing or bobbing (2 frames).
+  3-6 walk: a full walk or hop cycle (4 frames; the game plays the same frames faster to run).
+  7-9 attack: wind-up, strike, recover (3 frames), the monster lunging, biting, swiping or slamming in its own way toward the direction it faces. Only the monster: no slash marks, sparks or effects (the game adds those).
+- So a sheet is 9 columns × 3 rows: 360 × 120 pixels for a 40-pixel monster, 576 × 192 for a 64-pixel one.
+- In every frame the monster stands with its feet (or its base, for a jelly or a ghost) on the same row, about 2 pixels above the frame's bottom, centred left to right, so the game can play the frames in place without it jumping. Same size and proportions in every frame and every direction; a leg, ear, tail or wing moves, the body doesn't grow or shrink.
+- Draw only the monster listed, not its colour variants (the game recolours those).
+
+1. tree_snake (Tree Snake, wood element, frame 40 × 40 pixels): Hangs from branches pretending to be a vine until something walks underneath. (Its colour variants, Sunny Tree Snake, Earth Snake, Light Snake, are recoloured from it in the game: draw only this one.)
+2. flame_sheep (Flame Sheep, fire element, frame 40 × 40 pixels): Its wool is always smouldering. Shearing one is a job for the brave, or the fireproof. (Its colour variants, Mint Flame Sheep, are recoloured from it in the game: draw only this one.)
+3. wood_hog (Wood Hog, wood element, frame 40 × 40 pixels): A tusked boar that roots through the forest floor. Its roar can be heard across the Smiling Forest. (Its colour variants, Violet Wood Hog, are recoloured from it in the game: draw only this one.)
+4. werewolf (Werewolf, dark element, frame 40 × 40 pixels): Prowls Twilight Woods when the moon is up. Its bite carries a shadow that saps your strength. (Its colour variants, Amber Werewolf, are recoloured from it in the game: draw only this one.)
+5. dark_beetle (Dark Beetle, dark element, frame 40 × 40 pixels): A shiny black beetle that thrives in caves and dark places. Its jaws are sharper than its manners. (Its colour variants, Azure Dark Beetle, are recoloured from it in the game: draw only this one.)
+6. treefrog (Treefrog, wood element, frame 40 × 40 pixels): The croakers of Frog Swamp. They sing all night long and keep the whole region awake. (Its colour variants, Crimson Treefrog, Blue Treefrog, Golden Treefrog, Snow Treefrog, Shadow Treefrog, are recoloured from it in the game: draw only this one.)
+7. water_slug (Water Slug, water element, frame 40 × 40 pixels): A slow, friendly slug that leaves a trail of fresh water. Calm until you poke it. (Its colour variants, Starry Water Slug, are recoloured from it in the game: draw only this one.)
+8. wisp (Wisp, light element, frame 40 × 40 pixels): Floating lights that drift through Shiverdell. Some say they're lost souls; others say they're just shy. (Its colour variants, Rosy Wisp, are recoloured from it in the game: draw only this one.)
+9. earth_lion (Earth Lion, earth element, frame 40 × 40 pixels): King of the open plains, with a mane caked in dust. Its roar shakes the ground. (Its colour variants, Frosted Earth Lion, are recoloured from it in the game: draw only this one.)
+10. red_bull (Blaze Bull, fire element, frame 40 × 40 pixels): Charges at anything red, and everything else too. Its horns are hot to the touch. (Its colour variants, Shadow Blaze Bull, Black Bull, are recoloured from it in the game: draw only this one.)
+
+Go one monster at a time. For each: say its frame size, then deliver its sheet as a 1× PNG named <id>_sheet.png and an exact 8× nearest-neighbour preview <id>_sheet_8x.png, then the next. At the end of the batch: a contact sheet of every monster's down-facing idle and attack frames on mid-grey, an asset_checks.json (each sheet's size, colour count, alpha values, and for each frame the bottom row its feet stand on), and a zip of it all.
