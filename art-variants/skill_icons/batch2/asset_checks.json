@@ -1,0 +1,444 @@
+[
+  {
+    "id": "fire_bolt",
+    "batch": 2,
+    "number": 1,
+    "label": "Fire Bolt",
+    "file": "skill_fire_bolt.png",
+    "preview": "skill_fire_bolt_8x.png",
+    "canvas": [
+      64,
+      64
+    ],
+    "bounds_xyxy_exclusive": [
+      13,
+      12,
+      51,
+      52
+    ],
+    "subject_size": [
+      38,
+      40
+    ],
+    "opaque_pixels": 782,
+    "color_count": 39,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "max_pixel_centre_radius": 26.2011,
+    "max_pixel_corner_radius": 26.9072,
+    "socket_diameter": 56,
+    "preview_exact_nearest_8x": true,
+    "file_sha256": "e292efc31cb84e4bc9dfff9c7a4cd7fd05fc0bb7bca6851ca5f6cfa2a27cb13f",
+    "preview_sha256": "b2bf98527d48b456aeb0083e8010d2acf2b96c4a0b27116c49ba63176a680fcd"
+  },
+  {
+    "id": "ember",
+    "batch": 2,
+    "number": 2,
+    "label": "Ember, a little ball of fire",
+    "file": "skill_ember.png",
+    "preview": "skill_ember_8x.png",
+    "canvas": [
+      64,
+      64
+    ],
+    "bounds_xyxy_exclusive": [
+      10,
+      8,
+      54,
+      56
+    ],
+    "subject_size": [
+      44,
+      48
+    ],
+    "opaque_pixels": 1290,
+    "color_count": 40,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "max_pixel_centre_radius": 26.163,
+    "max_pixel_corner_radius": 26.8328,
+    "socket_diameter": 56,
+    "preview_exact_nearest_8x": true,
+    "file_sha256": "04b0f876687425a344cfe90eee7b644d1d2461be431ac16c537749c55c300dfd",
+    "preview_sha256": "19ca14a2640d61919e2aa47abf76a12447c3e30d52c4cc51c1f4bfd086cb4e73"
+  },
+  {
+    "id": "meteor_blast",
+    "batch": 2,
+    "number": 3,
+    "label": "Meteor Blast, meteors rain on every foe",
+    "file": "skill_meteor_blast.png",
+    "preview": "skill_meteor_blast_8x.png",
+    "canvas": [
+      64,
+      64
+    ],
+    "bounds_xyxy_exclusive": [
+      14,
+      10,
+      50,
+      54
+    ],
+    "subject_size": [
+      36,
+      44
+    ],
+    "opaque_pixels": 773,
+    "color_count": 39,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "max_pixel_centre_radius": 26.5047,
+    "max_pixel_corner_radius": 27.2029,
+    "socket_diameter": 56,
+    "preview_exact_nearest_8x": true,
+    "file_sha256": "145d79c63e8f319443d38a48fc6a3893e56d4b4c0aa40ba92cc054276537fdcd",
+    "preview_sha256": "cc610ad1c7f7fe8d582e3a54551553580f7ec40ba3f7ddac5c9322ae1489c09b"
+  },
+  {
+    "id": "stone_spike",
+    "batch": 2,
+    "number": 4,
+    "label": "Stone Spike, earth magic",
+    "file": "skill_stone_spike.png",
+    "preview": "skill_stone_spike_8x.png",
+    "canvas": [
+      64,
+      64
+    ],
+    "bounds_xyxy_exclusive": [
+      13,
+      9,
+      51,
+      55
+    ],
+    "subject_size": [
+      38,
+      46
+    ],
+    "opaque_pixels": 973,
+    "color_count": 40,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "max_pixel_centre_radius": 26.5047,
+    "max_pixel_corner_radius": 27.2029,
+    "socket_diameter": 56,
+    "preview_exact_nearest_8x": true,
+    "file_sha256": "334257bd70d634899b643fefcc3e7447231f4bcee1ebb7c7db31e9669bd97a4e",
+    "preview_sha256": "adcae1f343cbfd26cce50396287cbda50fc703609e3adb3c535ec752d0251e7f"
+  },
+  {
+    "id": "mud_shot",
+    "batch": 2,
+    "number": 5,
+    "label": "Mud Shot, a splat of heavy mud",
+    "file": "skill_mud_shot.png",
+    "preview": "skill_mud_shot_8x.png",
+    "canvas": [
+      64,
+      64
+    ],
+    "bounds_xyxy_exclusive": [
+      12,
+      11,
+      52,
+      53
+    ],
+    "subject_size": [
+      40,
+      42
+    ],
+    "opaque_pixels": 865,
+    "color_count": 40,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "max_pixel_centre_radius": 26.2011,
+    "max_pixel_corner_radius": 26.9072,
+    "socket_diameter": 56,
+    "preview_exact_nearest_8x": true,
+    "file_sha256": "3d0ae080d5509b7708570ed1f949a28e70ccae39dba82bffaba5af3e4cc6843b",
+    "preview_sha256": "a375749d3bc6fc51b3bef653e5fb95d9cfa0707211a966924e3afbdc537f4e5c"
+  },
+  {
+    "id": "leaf_storm",
+    "batch": 2,
+    "number": 6,
+    "label": "Leaf Storm, wood magic on every foe",
+    "file": "skill_leaf_storm.png",
+    "preview": "skill_leaf_storm_8x.png",
+    "canvas": [
+      64,
+      64
+    ],
+    "bounds_xyxy_exclusive": [
+      12,
+      12,
+      52,
+      52
+    ],
+    "subject_size": [
+      40,
+      40
+    ],
+    "opaque_pixels": 829,
+    "color_count": 40,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "max_pixel_centre_radius": 26.2011,
+    "max_pixel_corner_radius": 26.9072,
+    "socket_diameter": 56,
+    "preview_exact_nearest_8x": true,
+    "file_sha256": "32fbcf188b850d0f239b88a436e13f3dc7d932c5b54d9d5dc9fa2817c3f9ec5e",
+    "preview_sha256": "5c3a79b9870ccffdb1c8809ee60cd9d98559bfc1d2862189b1f05da67a450329"
+  },
+  {
+    "id": "vine_whip",
+    "batch": 2,
+    "number": 7,
+    "label": "Vine Whip",
+    "file": "skill_vine_whip.png",
+    "preview": "skill_vine_whip_8x.png",
+    "canvas": [
+      64,
+      64
+    ],
+    "bounds_xyxy_exclusive": [
+      13,
+      9,
+      51,
+      55
+    ],
+    "subject_size": [
+      38,
+      46
+    ],
+    "opaque_pixels": 626,
+    "color_count": 40,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "max_pixel_centre_radius": 26.5047,
+    "max_pixel_corner_radius": 27.2029,
+    "socket_diameter": 56,
+    "preview_exact_nearest_8x": true,
+    "file_sha256": "97bcd9339809ef6ac4c3a1d721d0306a5368c5d01355fbaabdc9fc39a98f1e70",
+    "preview_sha256": "f2fc79012748b652a131e7f2f550eea6f65858c32b8e453a77c3b3fb1e1a483d"
+  },
+  {
+    "id": "bubble",
+    "batch": 2,
+    "number": 8,
+    "label": "Bubble",
+    "file": "skill_bubble.png",
+    "preview": "skill_bubble_8x.png",
+    "canvas": [
+      64,
+      64
+    ],
+    "bounds_xyxy_exclusive": [
+      11,
+      11,
+      53,
+      53
+    ],
+    "subject_size": [
+      42,
+      42
+    ],
+    "opaque_pixels": 1101,
+    "color_count": 38,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "max_pixel_centre_radius": 26.3154,
+    "max_pixel_corner_radius": 27.0185,
+    "socket_diameter": 56,
+    "preview_exact_nearest_8x": true,
+    "file_sha256": "2f3521b1217cdde4347ab24141333d66315c214943cdca3ea2df91043f119b76",
+    "preview_sha256": "4152b31800032e3fe855a4a516dcc4fe197b649613a09e12171679bfb8803194"
+  },
+  {
+    "id": "jelly_splash",
+    "batch": 2,
+    "number": 9,
+    "label": "Jelly Splash",
+    "file": "skill_jelly_splash.png",
+    "preview": "skill_jelly_splash_8x.png",
+    "canvas": [
+      64,
+      64
+    ],
+    "bounds_xyxy_exclusive": [
+      9,
+      5,
+      55,
+      59
+    ],
+    "subject_size": [
+      46,
+      54
+    ],
+    "opaque_pixels": 1328,
+    "color_count": 40,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "max_pixel_centre_radius": 26.8794,
+    "max_pixel_corner_radius": 27.4591,
+    "socket_diameter": 56,
+    "preview_exact_nearest_8x": true,
+    "file_sha256": "83b722adf5869deaa7381ca9dfbdf5b89c4325d97f979f5ee78ae9573b6570d8",
+    "preview_sha256": "4bf87bf8fdc71b36568e5c02225657fa2f4d1f8bc968589fb8d1ecc4e70c72c3"
+  },
+  {
+    "id": "frost_breath",
+    "batch": 2,
+    "number": 10,
+    "label": "Frost Breath, an icy gust that freezes",
+    "file": "skill_frost_breath.png",
+    "preview": "skill_frost_breath_8x.png",
+    "canvas": [
+      64,
+      64
+    ],
+    "bounds_xyxy_exclusive": [
+      12,
+      12,
+      52,
+      52
+    ],
+    "subject_size": [
+      40,
+      40
+    ],
+    "opaque_pixels": 895,
+    "color_count": 40,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "max_pixel_centre_radius": 26.8794,
+    "max_pixel_corner_radius": 27.5862,
+    "socket_diameter": 56,
+    "preview_exact_nearest_8x": true,
+    "file_sha256": "ac8097283b79acc525541e5f9acfbf8fce3a06a77032cc11df25dae108132813",
+    "preview_sha256": "106d22b13e3f6dee7d35a78a620e7969b62ed664178b77f7adbef220a7bfcdb7"
+  },
+  {
+    "id": "dancing_fountain",
+    "batch": 2,
+    "number": 11,
+    "label": "Dancing Fountain, jets of water rain on foes",
+    "file": "skill_dancing_fountain.png",
+    "preview": "skill_dancing_fountain_8x.png",
+    "canvas": [
+      64,
+      64
+    ],
+    "bounds_xyxy_exclusive": [
+      10,
+      10,
+      54,
+      54
+    ],
+    "subject_size": [
+      44,
+      44
+    ],
+    "opaque_pixels": 861,
+    "color_count": 40,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "max_pixel_centre_radius": 26.3154,
+    "max_pixel_corner_radius": 27.0185,
+    "socket_diameter": 56,
+    "preview_exact_nearest_8x": true,
+    "file_sha256": "95ad02b9349c3c0fd0066f404b63d00cd8f27db27203a5f1f7da65b2134a5e47",
+    "preview_sha256": "f305125b476e5c2e2711d88d49abbd3eff49c86208bbace0a4a082741e1969ca"
+  },
+  {
+    "id": "flash",
+    "batch": 2,
+    "number": 12,
+    "label": "Flash, a burst of blinding light",
+    "file": "skill_flash.png",
+    "preview": "skill_flash_8x.png",
+    "canvas": [
+      64,
+      64
+    ],
+    "bounds_xyxy_exclusive": [
+      5,
+      5,
+      59,
+      59
+    ],
+    "subject_size": [
+      54,
+      54
+    ],
+    "opaque_pixels": 1125,
+    "color_count": 40,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "max_pixel_centre_radius": 26.5424,
+    "max_pixel_corner_radius": 27.074,
+    "socket_diameter": 56,
+    "preview_exact_nearest_8x": true,
+    "file_sha256": "6fe3b447cf74306b005ee96c3b99bd8932ec95dbeff4ef34a1cd48fef95f1ca5",
+    "preview_sha256": "d9dcd16db4138ade9fe43c913906b79e67d1d232232f3a059820cb1a51b5c76b"
+  },
+  {
+    "id": "spiritual_lance",
+    "batch": 2,
+    "number": 13,
+    "label": "Spiritual Lance, a lance of spirit light",
+    "file": "skill_spiritual_lance.png",
+    "preview": "skill_spiritual_lance_8x.png",
+    "canvas": [
+      64,
+      64
+    ],
+    "bounds_xyxy_exclusive": [
+      13,
+      11,
+      51,
+      53
+    ],
+    "subject_size": [
+      38,
+      42
+    ],
+    "opaque_pixels": 771,
+    "color_count": 36,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "max_pixel_centre_radius": 26.3154,
+    "max_pixel_corner_radius": 27.0185,
+    "socket_diameter": 56,
+    "preview_exact_nearest_8x": true,
+    "file_sha256": "1e1d5a6b64214f1d1ded56b5b403d4215b4716dc419f99927b52a71d2dd78026",
+    "preview_sha256": "48c3de8a38ceebdb7977bdeea841ea3205ce23a5f39ad67e7e1beb4107a59b1c"
+  }
+]

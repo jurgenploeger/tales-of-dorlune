@@ -1,0 +1,478 @@
+[
+  {
+    "id": "first_aid",
+    "batch": 3,
+    "number": 1,
+    "label": "First Aid, patch up one ally",
+    "file": "skill_first_aid.png",
+    "preview": "skill_first_aid_8x.png",
+    "canvas": [
+      64,
+      64
+    ],
+    "bounds_xyxy_exclusive": [
+      9,
+      11,
+      55,
+      53
+    ],
+    "subject_size": [
+      46,
+      42
+    ],
+    "opaque_pixels": 1344,
+    "color_count": 39,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "max_pixel_centre_radius": 26.2393,
+    "max_pixel_corner_radius": 26.9258,
+    "socket_diameter": 56,
+    "preview_exact_nearest_8x": true,
+    "file_sha256": "234d517d500f958f1dbb1a1c77698ad3b866696478cea679b6885c817042daf9",
+    "preview_sha256": "b762b7dd99b56cab8e0f35e7faa8394165dbf9a901f79a15154d3347237317c5"
+  },
+  {
+    "id": "blessing",
+    "batch": 3,
+    "number": 2,
+    "label": "Healing Spring, water washes over the party",
+    "file": "skill_blessing.png",
+    "preview": "skill_blessing_8x.png",
+    "canvas": [
+      64,
+      64
+    ],
+    "bounds_xyxy_exclusive": [
+      8,
+      9,
+      56,
+      55
+    ],
+    "subject_size": [
+      48,
+      46
+    ],
+    "opaque_pixels": 1293,
+    "color_count": 39,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "max_pixel_centre_radius": 26.5047,
+    "max_pixel_corner_radius": 27.2029,
+    "socket_diameter": 56,
+    "preview_exact_nearest_8x": true,
+    "file_sha256": "6ab69706187c23b21193d51946dbb494337e05d0bead217b89ae14ce37d77b26",
+    "preview_sha256": "0ab95ccae0d20d208b45788dfdcde743802fdcf77160fd9de6d71f253dd4f6c5"
+  },
+  {
+    "id": "recovery",
+    "batch": 3,
+    "number": 3,
+    "label": "Recovery, light mends one ally",
+    "file": "skill_recovery.png",
+    "preview": "skill_recovery_8x.png",
+    "canvas": [
+      64,
+      64
+    ],
+    "bounds_xyxy_exclusive": [
+      10,
+      10,
+      54,
+      54
+    ],
+    "subject_size": [
+      44,
+      44
+    ],
+    "opaque_pixels": 1211,
+    "color_count": 38,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "max_pixel_centre_radius": 26.5047,
+    "max_pixel_corner_radius": 27.2029,
+    "socket_diameter": 56,
+    "preview_exact_nearest_8x": true,
+    "file_sha256": "61c738016c8227cc23c1d996e3cb0a51ae2b132a3dd28f44f4ee44550ec1cb32",
+    "preview_sha256": "a504660732f09d2fb605533ed1dc28cdc5ee4ba74a65443c6064ecbfa7b01f61"
+  },
+  {
+    "id": "revive",
+    "batch": 3,
+    "number": 4,
+    "label": "Revive, wake a fainted ally",
+    "file": "skill_revive.png",
+    "preview": "skill_revive_8x.png",
+    "canvas": [
+      64,
+      64
+    ],
+    "bounds_xyxy_exclusive": [
+      16,
+      8,
+      48,
+      56
+    ],
+    "subject_size": [
+      32,
+      48
+    ],
+    "opaque_pixels": 798,
+    "color_count": 39,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "max_pixel_centre_radius": 26.6177,
+    "max_pixel_corner_radius": 27.2947,
+    "socket_diameter": 56,
+    "preview_exact_nearest_8x": true,
+    "file_sha256": "1b5489f60f401050b9700e791723542c5845dbab3af99de7b6d1ade550ce4bad",
+    "preview_sha256": "d1abb3ffd3d286aede6417219195f6f88cfd11ca5c040b58dc1afeacad0eb4af"
+  },
+  {
+    "id": "full_heal",
+    "batch": 3,
+    "number": 5,
+    "label": "Full Heal, back to full HP",
+    "file": "skill_full_heal.png",
+    "preview": "skill_full_heal_8x.png",
+    "canvas": [
+      64,
+      64
+    ],
+    "bounds_xyxy_exclusive": [
+      8,
+      6,
+      56,
+      58
+    ],
+    "subject_size": [
+      48,
+      52
+    ],
+    "opaque_pixels": 1560,
+    "color_count": 40,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "max_pixel_centre_radius": 26.7675,
+    "max_pixel_corner_radius": 27.4591,
+    "socket_diameter": 56,
+    "preview_exact_nearest_8x": true,
+    "file_sha256": "5860bff3c133f89a2c71c35ca654f47e2cacb4ffadee6819be855a7d770c1842",
+    "preview_sha256": "02d8876923c0619a1f6141448fcd9143c7e6789b33c25d38da5112d9d7839ace"
+  },
+  {
+    "id": "mend_beast",
+    "batch": 3,
+    "number": 6,
+    "label": "Mend Beast, a strong heal for companions",
+    "file": "skill_mend_beast.png",
+    "preview": "skill_mend_beast_8x.png",
+    "canvas": [
+      64,
+      64
+    ],
+    "bounds_xyxy_exclusive": [
+      9,
+      7,
+      55,
+      57
+    ],
+    "subject_size": [
+      46,
+      50
+    ],
+    "opaque_pixels": 1429,
+    "color_count": 40,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "max_pixel_centre_radius": 26.6552,
+    "max_pixel_corner_radius": 27.313,
+    "socket_diameter": 56,
+    "preview_exact_nearest_8x": true,
+    "file_sha256": "39e693762d29d3a3759840c9efb535a5fc8da0b96d1adf8fdeee70bd0f5f74c9",
+    "preview_sha256": "2aa273692b16d39f7cfaaca9dde110c2a05b84093bcdddbe9965c541fc0242e8"
+  },
+  {
+    "id": "bless",
+    "batch": 3,
+    "number": 7,
+    "label": "Bless, ATK and DEF up",
+    "file": "skill_bless.png",
+    "preview": "skill_bless_8x.png",
+    "canvas": [
+      64,
+      64
+    ],
+    "bounds_xyxy_exclusive": [
+      15,
+      9,
+      49,
+      55
+    ],
+    "subject_size": [
+      34,
+      46
+    ],
+    "opaque_pixels": 897,
+    "color_count": 39,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "max_pixel_centre_radius": 26.5047,
+    "max_pixel_corner_radius": 27.2029,
+    "socket_diameter": 56,
+    "preview_exact_nearest_8x": true,
+    "file_sha256": "e540b3c6b1ec90fc557eadbedbc24bc49645de197999f12c9a7df597ef7a0ac2",
+    "preview_sha256": "11153a83929fdd3b5934aaea15cd8c8f634f668f70534a8e1ee3288ccb50e7b5"
+  },
+  {
+    "id": "protection",
+    "batch": 3,
+    "number": 8,
+    "label": "Protection, DEF up",
+    "file": "skill_protection.png",
+    "preview": "skill_protection_8x.png",
+    "canvas": [
+      64,
+      64
+    ],
+    "bounds_xyxy_exclusive": [
+      6,
+      5,
+      58,
+      59
+    ],
+    "subject_size": [
+      52,
+      54
+    ],
+    "opaque_pixels": 2064,
+    "color_count": 39,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "max_pixel_centre_radius": 26.6177,
+    "max_pixel_corner_radius": 27.1662,
+    "socket_diameter": 56,
+    "preview_exact_nearest_8x": true,
+    "file_sha256": "610369f873b3e02b8e98597fcb7d21d2361fb757fc5cc3aca736fd5bcb31360c",
+    "preview_sha256": "f5c335b4f6342167c8e0b8717fcd6508e6164ba23cd19f78637e93c6a1bdce7a"
+  },
+  {
+    "id": "holy_glow",
+    "batch": 3,
+    "number": 9,
+    "label": "Holy Glow, MAG up",
+    "file": "skill_holy_glow.png",
+    "preview": "skill_holy_glow_8x.png",
+    "canvas": [
+      64,
+      64
+    ],
+    "bounds_xyxy_exclusive": [
+      9,
+      8,
+      55,
+      56
+    ],
+    "subject_size": [
+      46,
+      48
+    ],
+    "opaque_pixels": 975,
+    "color_count": 37,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "max_pixel_centre_radius": 26.2393,
+    "max_pixel_corner_radius": 26.9258,
+    "socket_diameter": 56,
+    "preview_exact_nearest_8x": true,
+    "file_sha256": "d5757969c1a1246ad165ff8bb0ce7cd4ebfc0b24cf680565d52f93403359b90c",
+    "preview_sha256": "c084eb6a4e5766498be0d037bfd5d9acf0d55df695e545043474bf3888f7db44"
+  },
+  {
+    "id": "guardianship",
+    "batch": 3,
+    "number": 10,
+    "label": "Guardianship, a ward over the whole party",
+    "file": "skill_guardianship.png",
+    "preview": "skill_guardianship_8x.png",
+    "canvas": [
+      64,
+      64
+    ],
+    "bounds_xyxy_exclusive": [
+      7,
+      11,
+      57,
+      53
+    ],
+    "subject_size": [
+      50,
+      42
+    ],
+    "opaque_pixels": 1474,
+    "color_count": 37,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "max_pixel_centre_radius": 26.6552,
+    "max_pixel_corner_radius": 27.313,
+    "socket_diameter": 56,
+    "preview_exact_nearest_8x": true,
+    "file_sha256": "02a5ecb4935f1c7e990dcb1ca71fe19ba9bbf9334405b60c5d10353eda03770b",
+    "preview_sha256": "b26989ace338230833290a7c62f091b23460dad43cdee969e8b5b20bab4862f6"
+  },
+  {
+    "id": "animal_training",
+    "batch": 3,
+    "number": 11,
+    "label": "Animal Training, ATK and SPD up",
+    "file": "skill_animal_training.png",
+    "preview": "skill_animal_training_8x.png",
+    "canvas": [
+      64,
+      64
+    ],
+    "bounds_xyxy_exclusive": [
+      9,
+      13,
+      55,
+      51
+    ],
+    "subject_size": [
+      46,
+      38
+    ],
+    "opaque_pixels": 1007,
+    "color_count": 38,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "max_pixel_centre_radius": 26.2393,
+    "max_pixel_corner_radius": 26.9258,
+    "socket_diameter": 56,
+    "preview_exact_nearest_8x": true,
+    "file_sha256": "065cb4ad478cb5b75e2c6cdebc750cdaecd10286914158c59c5de3375d421ba3",
+    "preview_sha256": "49b3bb60a32b4a3483e1e1098e94c1a7d1b74b7972c4fdcc0e054bd59dcc2a0e"
+  },
+  {
+    "id": "boost",
+    "batch": 3,
+    "number": 12,
+    "label": "Boost, ATK up",
+    "file": "skill_boost.png",
+    "preview": "skill_boost_8x.png",
+    "canvas": [
+      64,
+      64
+    ],
+    "bounds_xyxy_exclusive": [
+      14,
+      8,
+      50,
+      56
+    ],
+    "subject_size": [
+      36,
+      48
+    ],
+    "opaque_pixels": 1093,
+    "color_count": 40,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "max_pixel_centre_radius": 26.5047,
+    "max_pixel_corner_radius": 27.2029,
+    "socket_diameter": 56,
+    "preview_exact_nearest_8x": true,
+    "file_sha256": "d2eee88efbfb5aadda7cf9e4b10e3c71d4e3e33994c099d88923d832f9c838af",
+    "preview_sha256": "c7b0bfd87d0dbc15ae6e5f6b7af1cdd46c338ff089e8cbc7ba7e2edd07216fdc"
+  },
+  {
+    "id": "super_boost",
+    "batch": 3,
+    "number": 13,
+    "label": "Super Boost, ATK way up",
+    "file": "skill_super_boost.png",
+    "preview": "skill_super_boost_8x.png",
+    "canvas": [
+      64,
+      64
+    ],
+    "bounds_xyxy_exclusive": [
+      9,
+      8,
+      55,
+      56
+    ],
+    "subject_size": [
+      46,
+      48
+    ],
+    "opaque_pixels": 1185,
+    "color_count": 40,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "max_pixel_centre_radius": 26.6177,
+    "max_pixel_corner_radius": 27.2947,
+    "socket_diameter": 56,
+    "preview_exact_nearest_8x": true,
+    "file_sha256": "62c74578ce201f5fbabc37fd7d8107d5c5c98abe747882575f32f3cf4b1c3473",
+    "preview_sha256": "c8ab159485b3cdd8b9277c195d8ae2bee46104d28e9c8c847fae6cd34a5b3cf4"
+  },
+  {
+    "id": "berserk",
+    "batch": 3,
+    "number": 14,
+    "label": "Berserk, a wild rage, DEF down",
+    "file": "skill_berserk.png",
+    "preview": "skill_berserk_8x.png",
+    "canvas": [
+      64,
+      64
+    ],
+    "bounds_xyxy_exclusive": [
+      12,
+      7,
+      52,
+      57
+    ],
+    "subject_size": [
+      40,
+      50
+    ],
+    "opaque_pixels": 1309,
+    "color_count": 38,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "max_pixel_centre_radius": 26.6177,
+    "max_pixel_corner_radius": 27.2947,
+    "socket_diameter": 56,
+    "preview_exact_nearest_8x": true,
+    "file_sha256": "bf5ba49c0bc0ecfd4d980e69eb1f18d5681e3811d9fd732e7fc8da75dda67a54",
+    "preview_sha256": "810921e013b04df8218b07c4a47a9ed2332f22551a385844b5e9c543191a2bb7"
+  }
+]
