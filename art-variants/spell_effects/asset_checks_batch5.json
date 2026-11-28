@@ -1,0 +1,1563 @@
+{
+  "batch": 5,
+  "total_skills": 9,
+  "total_nonempty_frames": 126,
+  "grid_columns": 8,
+  "grid_rows": 4,
+  "row_numbers_start_at": 1,
+  "colour_count_definition": "Distinct opaque RGB colours, excluding transparent pixels.",
+  "frame_bounds_definition": "Native pixels within a 64 x 64 cell, [left, top, right, bottom], right and bottom exclusive.",
+  "white_balance_kelvin": 6000,
+  "checks": {
+    "sheet_dimensions": true,
+    "row_occupancy": true,
+    "empty_cells_fully_transparent": true,
+    "binary_alpha": true,
+    "palette_within_limit": true,
+    "all_frames_unique_within_each_used_row": true,
+    "art_inside_frame_margin": true,
+    "preview_pixel_exact": true,
+    "flight_directions_separately_drawn": true
+  },
+  "assets": [
+    {
+      "id": "mend_beast",
+      "file": "effect_mend_beast.png",
+      "preview": "effect_mend_beast_8x.png",
+      "sheet_size_px": [
+        512,
+        256
+      ],
+      "frame_size_px": [
+        64,
+        64
+      ],
+      "preview_size_px": [
+        4096,
+        2048
+      ],
+      "colour_count": 24,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "used_rows": [
+        1,
+        4
+      ],
+      "frames_per_row": {
+        "cast": 6,
+        "projectile_right": 0,
+        "projectile_up": 0,
+        "impact": 8
+      },
+      "frame_bounds_xyxy_exclusive": {
+        "cast": [
+          [
+            22,
+            42,
+            46,
+            55
+          ],
+          [
+            21,
+            39,
+            46,
+            54
+          ],
+          [
+            21,
+            35,
+            45,
+            57
+          ],
+          [
+            20,
+            33,
+            45,
+            57
+          ],
+          [
+            20,
+            31,
+            45,
+            57
+          ],
+          [
+            18,
+            29,
+            45,
+            57
+          ]
+        ],
+        "projectile_right": [],
+        "projectile_up": [],
+        "impact": [
+          [
+            14,
+            28,
+            50,
+            57
+          ],
+          [
+            14,
+            25,
+            50,
+            55
+          ],
+          [
+            14,
+            22,
+            50,
+            53
+          ],
+          [
+            13,
+            18,
+            50,
+            52
+          ],
+          [
+            13,
+            16,
+            51,
+            51
+          ],
+          [
+            14,
+            12,
+            51,
+            33
+          ],
+          [
+            14,
+            18,
+            51,
+            25
+          ],
+          [
+            14,
+            14,
+            51,
+            19
+          ]
+        ]
+      },
+      "opaque_pixels_per_frame": {
+        "cast": [
+          54,
+          86,
+          170,
+          222,
+          273,
+          333,
+          0,
+          0
+        ],
+        "projectile_right": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "projectile_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "impact": [
+          584,
+          558,
+          518,
+          428,
+          257,
+          75,
+          18,
+          2
+        ]
+      },
+      "exact_8x_nearest_neighbour": true,
+      "name": "Mend Beast",
+      "kind": "heal",
+      "element": "healing",
+      "target": "on one ally"
+    },
+    {
+      "id": "full_heal",
+      "file": "effect_full_heal.png",
+      "preview": "effect_full_heal_8x.png",
+      "sheet_size_px": [
+        512,
+        256
+      ],
+      "frame_size_px": [
+        64,
+        64
+      ],
+      "preview_size_px": [
+        4096,
+        2048
+      ],
+      "colour_count": 28,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "used_rows": [
+        1,
+        4
+      ],
+      "frames_per_row": {
+        "cast": 6,
+        "projectile_right": 0,
+        "projectile_up": 0,
+        "impact": 8
+      },
+      "frame_bounds_xyxy_exclusive": {
+        "cast": [
+          [
+            28,
+            47,
+            36,
+            55
+          ],
+          [
+            26,
+            43,
+            38,
+            54
+          ],
+          [
+            24,
+            38,
+            40,
+            53
+          ],
+          [
+            22,
+            33,
+            42,
+            53
+          ],
+          [
+            20,
+            29,
+            44,
+            52
+          ],
+          [
+            18,
+            25,
+            46,
+            50
+          ]
+        ],
+        "projectile_right": [],
+        "projectile_up": [],
+        "impact": [
+          [
+            11,
+            21,
+            54,
+            60
+          ],
+          [
+            10,
+            16,
+            54,
+            60
+          ],
+          [
+            10,
+            12,
+            54,
+            56
+          ],
+          [
+            11,
+            11,
+            54,
+            51
+          ],
+          [
+            10,
+            9,
+            54,
+            45
+          ],
+          [
+            10,
+            8,
+            54,
+            38
+          ],
+          [
+            10,
+            7,
+            54,
+            28
+          ],
+          [
+            11,
+            13,
+            46,
+            19
+          ]
+        ]
+      },
+      "opaque_pixels_per_frame": {
+        "cast": [
+          43,
+          66,
+          106,
+          170,
+          224,
+          264,
+          0,
+          0
+        ],
+        "projectile_right": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "projectile_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "impact": [
+          678,
+          628,
+          602,
+          509,
+          321,
+          166,
+          20,
+          2
+        ]
+      },
+      "exact_8x_nearest_neighbour": true,
+      "name": "Full Heal",
+      "kind": "heal",
+      "element": "healing",
+      "target": "on one ally"
+    },
+    {
+      "id": "bless",
+      "file": "effect_bless.png",
+      "preview": "effect_bless_8x.png",
+      "sheet_size_px": [
+        512,
+        256
+      ],
+      "frame_size_px": [
+        64,
+        64
+      ],
+      "preview_size_px": [
+        4096,
+        2048
+      ],
+      "colour_count": 26,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "used_rows": [
+        1,
+        4
+      ],
+      "frames_per_row": {
+        "cast": 6,
+        "projectile_right": 0,
+        "projectile_up": 0,
+        "impact": 8
+      },
+      "frame_bounds_xyxy_exclusive": {
+        "cast": [
+          [
+            27,
+            37,
+            44,
+            55
+          ],
+          [
+            26,
+            36,
+            45,
+            55
+          ],
+          [
+            25,
+            35,
+            46,
+            54
+          ],
+          [
+            24,
+            34,
+            46,
+            54
+          ],
+          [
+            23,
+            32,
+            46,
+            53
+          ],
+          [
+            23,
+            29,
+            47,
+            52
+          ]
+        ],
+        "projectile_right": [],
+        "projectile_up": [],
+        "impact": [
+          [
+            14,
+            30,
+            50,
+            62
+          ],
+          [
+            14,
+            24,
+            50,
+            58
+          ],
+          [
+            15,
+            21,
+            50,
+            51
+          ],
+          [
+            15,
+            17,
+            50,
+            44
+          ],
+          [
+            16,
+            11,
+            50,
+            36
+          ],
+          [
+            16,
+            9,
+            50,
+            30
+          ],
+          [
+            15,
+            21,
+            51,
+            25
+          ],
+          [
+            16,
+            17,
+            50,
+            19
+          ]
+        ]
+      },
+      "opaque_pixels_per_frame": {
+        "cast": [
+          90,
+          131,
+          172,
+          207,
+          267,
+          324,
+          0,
+          0
+        ],
+        "projectile_right": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "projectile_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "impact": [
+          699,
+          705,
+          570,
+          408,
+          245,
+          103,
+          10,
+          2
+        ]
+      },
+      "exact_8x_nearest_neighbour": true,
+      "name": "Bless",
+      "kind": "buff",
+      "element": "buff",
+      "target": "on one ally"
+    },
+    {
+      "id": "protection",
+      "file": "effect_protection.png",
+      "preview": "effect_protection_8x.png",
+      "sheet_size_px": [
+        512,
+        256
+      ],
+      "frame_size_px": [
+        64,
+        64
+      ],
+      "preview_size_px": [
+        4096,
+        2048
+      ],
+      "colour_count": 23,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "used_rows": [
+        1,
+        4
+      ],
+      "frames_per_row": {
+        "cast": 6,
+        "projectile_right": 0,
+        "projectile_up": 0,
+        "impact": 8
+      },
+      "frame_bounds_xyxy_exclusive": {
+        "cast": [
+          [
+            23,
+            45,
+            39,
+            57
+          ],
+          [
+            22,
+            42,
+            41,
+            57
+          ],
+          [
+            20,
+            39,
+            43,
+            57
+          ],
+          [
+            18,
+            36,
+            44,
+            58
+          ],
+          [
+            17,
+            32,
+            46,
+            58
+          ],
+          [
+            15,
+            29,
+            48,
+            59
+          ]
+        ],
+        "projectile_right": [],
+        "projectile_up": [],
+        "impact": [
+          [
+            10,
+            29,
+            53,
+            60
+          ],
+          [
+            11,
+            23,
+            53,
+            58
+          ],
+          [
+            11,
+            16,
+            53,
+            56
+          ],
+          [
+            9,
+            12,
+            54,
+            52
+          ],
+          [
+            8,
+            9,
+            56,
+            47
+          ],
+          [
+            7,
+            9,
+            56,
+            39
+          ],
+          [
+            11,
+            18,
+            54,
+            23
+          ],
+          [
+            11,
+            15,
+            54,
+            17
+          ]
+        ]
+      },
+      "opaque_pixels_per_frame": {
+        "cast": [
+          116,
+          172,
+          229,
+          302,
+          376,
+          473,
+          0,
+          0
+        ],
+        "projectile_right": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "projectile_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "impact": [
+          797,
+          906,
+          973,
+          748,
+          483,
+          221,
+          12,
+          2
+        ]
+      },
+      "exact_8x_nearest_neighbour": true,
+      "name": "Protection",
+      "kind": "buff",
+      "element": "buff",
+      "target": "on one ally"
+    },
+    {
+      "id": "holy_glow",
+      "file": "effect_holy_glow.png",
+      "preview": "effect_holy_glow_8x.png",
+      "sheet_size_px": [
+        512,
+        256
+      ],
+      "frame_size_px": [
+        64,
+        64
+      ],
+      "preview_size_px": [
+        4096,
+        2048
+      ],
+      "colour_count": 20,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "used_rows": [
+        1,
+        4
+      ],
+      "frames_per_row": {
+        "cast": 6,
+        "projectile_right": 0,
+        "projectile_up": 0,
+        "impact": 8
+      },
+      "frame_bounds_xyxy_exclusive": {
+        "cast": [
+          [
+            23,
+            44,
+            40,
+            57
+          ],
+          [
+            21,
+            42,
+            42,
+            57
+          ],
+          [
+            19,
+            39,
+            44,
+            57
+          ],
+          [
+            17,
+            36,
+            45,
+            57
+          ],
+          [
+            16,
+            34,
+            47,
+            57
+          ],
+          [
+            14,
+            32,
+            49,
+            58
+          ]
+        ],
+        "projectile_right": [],
+        "projectile_up": [],
+        "impact": [
+          [
+            13,
+            16,
+            52,
+            58
+          ],
+          [
+            13,
+            17,
+            51,
+            57
+          ],
+          [
+            13,
+            17,
+            51,
+            57
+          ],
+          [
+            13,
+            18,
+            50,
+            56
+          ],
+          [
+            13,
+            18,
+            51,
+            55
+          ],
+          [
+            13,
+            16,
+            51,
+            54
+          ],
+          [
+            13,
+            16,
+            52,
+            20
+          ],
+          [
+            14,
+            13,
+            51,
+            14
+          ]
+        ]
+      },
+      "opaque_pixels_per_frame": {
+        "cast": [
+          103,
+          135,
+          182,
+          232,
+          276,
+          312,
+          0,
+          0
+        ],
+        "projectile_right": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "projectile_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "impact": [
+          750,
+          710,
+          656,
+          562,
+          431,
+          294,
+          11,
+          2
+        ]
+      },
+      "exact_8x_nearest_neighbour": true,
+      "name": "Holy Glow",
+      "kind": "buff",
+      "element": "buff",
+      "target": "on one ally"
+    },
+    {
+      "id": "guardianship",
+      "file": "effect_guardianship.png",
+      "preview": "effect_guardianship_8x.png",
+      "sheet_size_px": [
+        512,
+        256
+      ],
+      "frame_size_px": [
+        64,
+        64
+      ],
+      "preview_size_px": [
+        4096,
+        2048
+      ],
+      "colour_count": 27,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "used_rows": [
+        1,
+        4
+      ],
+      "frames_per_row": {
+        "cast": 6,
+        "projectile_right": 0,
+        "projectile_up": 0,
+        "impact": 8
+      },
+      "frame_bounds_xyxy_exclusive": {
+        "cast": [
+          [
+            18,
+            45,
+            46,
+            56
+          ],
+          [
+            17,
+            42,
+            47,
+            55
+          ],
+          [
+            16,
+            39,
+            48,
+            55
+          ],
+          [
+            15,
+            36,
+            49,
+            55
+          ],
+          [
+            14,
+            32,
+            50,
+            55
+          ],
+          [
+            13,
+            29,
+            51,
+            54
+          ]
+        ],
+        "projectile_right": [],
+        "projectile_up": [],
+        "impact": [
+          [
+            6,
+            27,
+            57,
+            61
+          ],
+          [
+            6,
+            24,
+            58,
+            60
+          ],
+          [
+            6,
+            21,
+            58,
+            57
+          ],
+          [
+            5,
+            18,
+            59,
+            53
+          ],
+          [
+            5,
+            15,
+            59,
+            47
+          ],
+          [
+            4,
+            11,
+            59,
+            41
+          ],
+          [
+            4,
+            7,
+            60,
+            35
+          ],
+          [
+            11,
+            17,
+            54,
+            18
+          ]
+        ]
+      },
+      "opaque_pixels_per_frame": {
+        "cast": [
+          138,
+          184,
+          246,
+          304,
+          372,
+          437,
+          0,
+          0
+        ],
+        "projectile_right": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "projectile_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "impact": [
+          943,
+          905,
+          787,
+          647,
+          388,
+          176,
+          63,
+          2
+        ]
+      },
+      "exact_8x_nearest_neighbour": true,
+      "name": "Guardianship",
+      "kind": "buff",
+      "element": "buff",
+      "target": "on the whole party"
+    },
+    {
+      "id": "animal_training",
+      "file": "effect_animal_training.png",
+      "preview": "effect_animal_training_8x.png",
+      "sheet_size_px": [
+        512,
+        256
+      ],
+      "frame_size_px": [
+        64,
+        64
+      ],
+      "preview_size_px": [
+        4096,
+        2048
+      ],
+      "colour_count": 27,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "used_rows": [
+        1,
+        4
+      ],
+      "frames_per_row": {
+        "cast": 6,
+        "projectile_right": 0,
+        "projectile_up": 0,
+        "impact": 8
+      },
+      "frame_bounds_xyxy_exclusive": {
+        "cast": [
+          [
+            24,
+            43,
+            46,
+            54
+          ],
+          [
+            23,
+            40,
+            46,
+            52
+          ],
+          [
+            16,
+            37,
+            46,
+            52
+          ],
+          [
+            16,
+            34,
+            46,
+            52
+          ],
+          [
+            16,
+            31,
+            46,
+            52
+          ],
+          [
+            16,
+            28,
+            46,
+            52
+          ]
+        ],
+        "projectile_right": [],
+        "projectile_up": [],
+        "impact": [
+          [
+            12,
+            30,
+            50,
+            57
+          ],
+          [
+            11,
+            27,
+            50,
+            52
+          ],
+          [
+            11,
+            23,
+            49,
+            48
+          ],
+          [
+            12,
+            19,
+            49,
+            43
+          ],
+          [
+            12,
+            15,
+            49,
+            38
+          ],
+          [
+            12,
+            18,
+            49,
+            32
+          ],
+          [
+            12,
+            17,
+            49,
+            28
+          ],
+          [
+            13,
+            17,
+            50,
+            23
+          ]
+        ]
+      },
+      "opaque_pixels_per_frame": {
+        "cast": [
+          67,
+          90,
+          149,
+          186,
+          232,
+          278,
+          0,
+          0
+        ],
+        "projectile_right": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "projectile_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "impact": [
+          559,
+          539,
+          473,
+          361,
+          224,
+          98,
+          42,
+          2
+        ]
+      },
+      "exact_8x_nearest_neighbour": true,
+      "name": "Animal Training",
+      "kind": "buff",
+      "element": "buff",
+      "target": "on one ally"
+    },
+    {
+      "id": "boost",
+      "file": "effect_boost.png",
+      "preview": "effect_boost_8x.png",
+      "sheet_size_px": [
+        512,
+        256
+      ],
+      "frame_size_px": [
+        64,
+        64
+      ],
+      "preview_size_px": [
+        4096,
+        2048
+      ],
+      "colour_count": 21,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "used_rows": [
+        1,
+        4
+      ],
+      "frames_per_row": {
+        "cast": 6,
+        "projectile_right": 0,
+        "projectile_up": 0,
+        "impact": 8
+      },
+      "frame_bounds_xyxy_exclusive": {
+        "cast": [
+          [
+            28,
+            48,
+            36,
+            56
+          ],
+          [
+            20,
+            44,
+            44,
+            56
+          ],
+          [
+            20,
+            41,
+            44,
+            55
+          ],
+          [
+            20,
+            38,
+            44,
+            54
+          ],
+          [
+            19,
+            35,
+            44,
+            54
+          ],
+          [
+            19,
+            32,
+            45,
+            53
+          ]
+        ],
+        "projectile_right": [],
+        "projectile_up": [],
+        "impact": [
+          [
+            15,
+            30,
+            50,
+            60
+          ],
+          [
+            15,
+            26,
+            50,
+            56
+          ],
+          [
+            15,
+            22,
+            50,
+            50
+          ],
+          [
+            14,
+            18,
+            50,
+            46
+          ],
+          [
+            15,
+            16,
+            50,
+            43
+          ],
+          [
+            15,
+            14,
+            50,
+            40
+          ],
+          [
+            15,
+            13,
+            50,
+            22
+          ],
+          [
+            15,
+            14,
+            49,
+            16
+          ]
+        ]
+      },
+      "opaque_pixels_per_frame": {
+        "cast": [
+          36,
+          82,
+          120,
+          150,
+          206,
+          261,
+          0,
+          0
+        ],
+        "projectile_right": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "projectile_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "impact": [
+          488,
+          482,
+          408,
+          331,
+          205,
+          102,
+          24,
+          2
+        ]
+      },
+      "exact_8x_nearest_neighbour": true,
+      "name": "Boost",
+      "kind": "buff",
+      "element": "buff",
+      "target": "on one ally"
+    },
+    {
+      "id": "berserk",
+      "file": "effect_berserk.png",
+      "preview": "effect_berserk_8x.png",
+      "sheet_size_px": [
+        512,
+        256
+      ],
+      "frame_size_px": [
+        64,
+        64
+      ],
+      "preview_size_px": [
+        4096,
+        2048
+      ],
+      "colour_count": 30,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "used_rows": [
+        1,
+        4
+      ],
+      "frames_per_row": {
+        "cast": 6,
+        "projectile_right": 0,
+        "projectile_up": 0,
+        "impact": 8
+      },
+      "frame_bounds_xyxy_exclusive": {
+        "cast": [
+          [
+            26,
+            46,
+            38,
+            53
+          ],
+          [
+            25,
+            43,
+            39,
+            54
+          ],
+          [
+            24,
+            41,
+            40,
+            54
+          ],
+          [
+            23,
+            39,
+            41,
+            54
+          ],
+          [
+            21,
+            33,
+            43,
+            54
+          ],
+          [
+            20,
+            32,
+            44,
+            54
+          ]
+        ],
+        "projectile_right": [],
+        "projectile_up": [],
+        "impact": [
+          [
+            12,
+            18,
+            51,
+            54
+          ],
+          [
+            12,
+            19,
+            52,
+            51
+          ],
+          [
+            12,
+            14,
+            51,
+            47
+          ],
+          [
+            14,
+            16,
+            50,
+            43
+          ],
+          [
+            14,
+            17,
+            50,
+            39
+          ],
+          [
+            14,
+            15,
+            50,
+            34
+          ],
+          [
+            13,
+            11,
+            51,
+            30
+          ],
+          [
+            14,
+            10,
+            51,
+            14
+          ]
+        ]
+      },
+      "opaque_pixels_per_frame": {
+        "cast": [
+          49,
+          80,
+          120,
+          156,
+          213,
+          260,
+          0,
+          0
+        ],
+        "projectile_right": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "projectile_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "impact": [
+          771,
+          730,
+          669,
+          505,
+          354,
+          167,
+          54,
+          2
+        ]
+      },
+      "exact_8x_nearest_neighbour": true,
+      "name": "Berserk",
+      "kind": "buff",
+      "element": "buff",
+      "target": "on one ally"
+    }
+  ]
+}

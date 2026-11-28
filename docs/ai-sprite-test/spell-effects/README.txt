@@ -12,3 +12,8 @@ else today's) in order; paste its PROMPT.txt as it is.
 Run batch1 first and look at a few in the game before the rest: whether 64 x 64 and 6/4/8 frames are enough is
 something to see moving. Back in the repo the game learns to play them in place of the glows, skill by skill, keeping
 each skill's timing, its sound and its hit moment (the white flash and knockback when a blow lands).
+
+Results (2026-11-28): all 53 in, art-variants/spell_effects/effect_<id>.png (512 x 256, 64-pixel frames, hard alpha,
+20 to 39 colours; 14 with a projectile, 39 cast and impact only). results_sample.png; ChatGPT's own motion preview
+of batch 1 as batch1_motion_preview.gif. Real pixel art, each its own, a clean fade. Small in their frames (an impact
+about 30 pixels across): right beside a 40-pixel monster, on the small side on a 64-pixel boss.

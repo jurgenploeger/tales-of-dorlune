@@ -1,0 +1,6930 @@
+{
+  "base_monsters": 7,
+  "variant_sheets": 7,
+  "total_frames": 504,
+  "frame_grid": {
+    "columns": 9,
+    "rows": 8
+  },
+  "white_balance_kelvin": 6000,
+  "foot_row_zero_based": 37,
+  "notes": "Use the variant sheets directly. Colours are baked into each PNG.",
+  "variants": [
+    {
+      "id": "dragonfruit_sprout",
+      "base_id": "pineapple",
+      "frame_size": [
+        40,
+        40
+      ],
+      "sheet_size": [
+        360,
+        320
+      ],
+      "reference_idle_size": [
+        20,
+        35
+      ],
+      "colour_count": 24,
+      "alpha": [
+        0,
+        255
+      ],
+      "preview_size": [
+        2880,
+        2560
+      ],
+      "exact_8x": true,
+      "rows": [
+        "down",
+        "right",
+        "up",
+        "left",
+        "down_right",
+        "down_left",
+        "up_right",
+        "up_left"
+      ],
+      "columns": [
+        "idle_1",
+        "idle_2",
+        "walk_1",
+        "walk_2",
+        "walk_3",
+        "walk_4",
+        "wind_up",
+        "strike",
+        "recover"
+      ],
+      "art": "Original directional idle and strike artwork with animated intermediate poses.",
+      "frames": [
+        {
+          "direction": "down",
+          "action": "idle_1",
+          "width": 20,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            3,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "idle_2",
+          "width": 20,
+          "height": 34,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            4,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "walk_1",
+          "width": 20,
+          "height": 34,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            4,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "walk_2",
+          "width": 20,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            2,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "walk_3",
+          "width": 21,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            2,
+            30,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "walk_4",
+          "width": 21,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            2,
+            30,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "wind_up",
+          "width": 19,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            11,
+            3,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "strike",
+          "width": 21,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            3,
+            30,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "recover",
+          "width": 21,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            3,
+            30,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "idle_1",
+          "width": 20,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            3,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "idle_2",
+          "width": 20,
+          "height": 34,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            4,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "walk_1",
+          "width": 21,
+          "height": 34,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            4,
+            30,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "walk_2",
+          "width": 21,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            2,
+            30,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "walk_3",
+          "width": 20,
+          "height": 34,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            4,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "walk_4",
+          "width": 20,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            2,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "wind_up",
+          "width": 19,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            11,
+            3,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "strike",
+          "width": 21,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            3,
+            30,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "recover",
+          "width": 21,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            3,
+            30,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "idle_1",
+          "width": 20,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            3,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "idle_2",
+          "width": 20,
+          "height": 34,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            4,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "walk_1",
+          "width": 20,
+          "height": 34,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            4,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "walk_2",
+          "width": 20,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            2,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "walk_3",
+          "width": 21,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            2,
+            30,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "walk_4",
+          "width": 21,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            2,
+            30,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "wind_up",
+          "width": 19,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            11,
+            3,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "strike",
+          "width": 21,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            3,
+            30,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "recover",
+          "width": 21,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            3,
+            30,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "idle_1",
+          "width": 20,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            3,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "idle_2",
+          "width": 20,
+          "height": 34,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            4,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "walk_1",
+          "width": 21,
+          "height": 34,
+          "foot_row": 37,
+          "bounds": [
+            9,
+            4,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "walk_2",
+          "width": 21,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            9,
+            2,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "walk_3",
+          "width": 20,
+          "height": 34,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            4,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "walk_4",
+          "width": 20,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            2,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "wind_up",
+          "width": 19,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            3,
+            28,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "strike",
+          "width": 21,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            9,
+            3,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "recover",
+          "width": 21,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            9,
+            3,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "idle_1",
+          "width": 20,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            3,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "idle_2",
+          "width": 20,
+          "height": 34,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            4,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "walk_1",
+          "width": 21,
+          "height": 34,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            4,
+            30,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "walk_2",
+          "width": 21,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            2,
+            30,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "walk_3",
+          "width": 19,
+          "height": 34,
+          "foot_row": 37,
+          "bounds": [
+            11,
+            4,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "walk_4",
+          "width": 20,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            2,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "wind_up",
+          "width": 19,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            11,
+            3,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "strike",
+          "width": 21,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            3,
+            30,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "recover",
+          "width": 21,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            3,
+            30,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "idle_1",
+          "width": 20,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            3,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "idle_2",
+          "width": 20,
+          "height": 34,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            4,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "walk_1",
+          "width": 21,
+          "height": 34,
+          "foot_row": 37,
+          "bounds": [
+            9,
+            4,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "walk_2",
+          "width": 21,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            9,
+            2,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "walk_3",
+          "width": 19,
+          "height": 34,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            4,
+            28,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "walk_4",
+          "width": 20,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            2,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "wind_up",
+          "width": 19,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            3,
+            28,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "strike",
+          "width": 21,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            9,
+            3,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "recover",
+          "width": 21,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            9,
+            3,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "idle_1",
+          "width": 20,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            3,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "idle_2",
+          "width": 20,
+          "height": 34,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            4,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "walk_1",
+          "width": 21,
+          "height": 34,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            4,
+            30,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "walk_2",
+          "width": 21,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            2,
+            30,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "walk_3",
+          "width": 19,
+          "height": 34,
+          "foot_row": 37,
+          "bounds": [
+            11,
+            4,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "walk_4",
+          "width": 20,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            2,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "wind_up",
+          "width": 19,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            11,
+            3,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "strike",
+          "width": 21,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            3,
+            30,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "recover",
+          "width": 21,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            3,
+            30,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "idle_1",
+          "width": 20,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            3,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "idle_2",
+          "width": 20,
+          "height": 34,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            4,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "walk_1",
+          "width": 21,
+          "height": 34,
+          "foot_row": 37,
+          "bounds": [
+            9,
+            4,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "walk_2",
+          "width": 21,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            9,
+            2,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "walk_3",
+          "width": 19,
+          "height": 34,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            4,
+            28,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "walk_4",
+          "width": 20,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            2,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "wind_up",
+          "width": 19,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            10,
+            3,
+            28,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "strike",
+          "width": 21,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            9,
+            3,
+            29,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "recover",
+          "width": 21,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            9,
+            3,
+            29,
+            37
+          ]
+        }
+      ],
+      "all_frames_single_connected_sprite": true,
+      "nine_distinct_frames_in_each_direction": true
+    },
+    {
+      "id": "light_mouse",
+      "base_id": "golden_hamster",
+      "frame_size": [
+        40,
+        40
+      ],
+      "sheet_size": [
+        360,
+        320
+      ],
+      "reference_idle_size": [
+        34,
+        31
+      ],
+      "colour_count": 24,
+      "alpha": [
+        0,
+        255
+      ],
+      "preview_size": [
+        2880,
+        2560
+      ],
+      "exact_8x": true,
+      "rows": [
+        "down",
+        "right",
+        "up",
+        "left",
+        "down_right",
+        "down_left",
+        "up_right",
+        "up_left"
+      ],
+      "columns": [
+        "idle_1",
+        "idle_2",
+        "walk_1",
+        "walk_2",
+        "walk_3",
+        "walk_4",
+        "wind_up",
+        "strike",
+        "recover"
+      ],
+      "art": "Original directional idle and strike artwork with animated intermediate poses.",
+      "frames": [
+        {
+          "direction": "down",
+          "action": "idle_1",
+          "width": 34,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            7,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "idle_2",
+          "width": 34,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            7,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "walk_1",
+          "width": 33,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            7,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "walk_2",
+          "width": 35,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            6,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "walk_3",
+          "width": 34,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            7,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "walk_4",
+          "width": 34,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            6,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "wind_up",
+          "width": 35,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            8,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "strike",
+          "width": 34,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            8,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "recover",
+          "width": 35,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            7,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "idle_1",
+          "width": 34,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            7,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "idle_2",
+          "width": 34,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            7,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "walk_1",
+          "width": 35,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            8,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "walk_2",
+          "width": 35,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            6,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "walk_3",
+          "width": 33,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            8,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "walk_4",
+          "width": 33,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            6,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "wind_up",
+          "width": 33,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            8,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "strike",
+          "width": 34,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            8,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "recover",
+          "width": 34,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            7,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "idle_1",
+          "width": 34,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            7,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "idle_2",
+          "width": 34,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            7,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "walk_1",
+          "width": 33,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            7,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "walk_2",
+          "width": 35,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            6,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "walk_3",
+          "width": 34,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            7,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "walk_4",
+          "width": 35,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            6,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "wind_up",
+          "width": 35,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            8,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "strike",
+          "width": 34,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            8,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "recover",
+          "width": 35,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            7,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "idle_1",
+          "width": 34,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            7,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "idle_2",
+          "width": 34,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            7,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "walk_1",
+          "width": 35,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            8,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "walk_2",
+          "width": 35,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            6,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "walk_3",
+          "width": 33,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            8,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "walk_4",
+          "width": 33,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            6,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "wind_up",
+          "width": 33,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            8,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "strike",
+          "width": 34,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            8,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "recover",
+          "width": 34,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            7,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "idle_1",
+          "width": 34,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            7,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "idle_2",
+          "width": 34,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            7,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "walk_1",
+          "width": 35,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            8,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "walk_2",
+          "width": 35,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            6,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "walk_3",
+          "width": 33,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            8,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "walk_4",
+          "width": 33,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            6,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "wind_up",
+          "width": 33,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            8,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "strike",
+          "width": 34,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            8,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "recover",
+          "width": 34,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            7,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "idle_1",
+          "width": 34,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            7,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "idle_2",
+          "width": 34,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            7,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "walk_1",
+          "width": 35,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            8,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "walk_2",
+          "width": 35,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            6,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "walk_3",
+          "width": 33,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            8,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "walk_4",
+          "width": 33,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            6,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "wind_up",
+          "width": 33,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            8,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "strike",
+          "width": 34,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            8,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "recover",
+          "width": 34,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            7,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "idle_1",
+          "width": 34,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            7,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "idle_2",
+          "width": 34,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            7,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "walk_1",
+          "width": 35,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            8,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "walk_2",
+          "width": 35,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            6,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "walk_3",
+          "width": 33,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            8,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "walk_4",
+          "width": 33,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            6,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "wind_up",
+          "width": 33,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            8,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "strike",
+          "width": 34,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            8,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "recover",
+          "width": 34,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            7,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "idle_1",
+          "width": 34,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            7,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "idle_2",
+          "width": 34,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            7,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "walk_1",
+          "width": 35,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            8,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "walk_2",
+          "width": 35,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            6,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "walk_3",
+          "width": 33,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            8,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "walk_4",
+          "width": 33,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            6,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "wind_up",
+          "width": 33,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            8,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "strike",
+          "width": 34,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            8,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "recover",
+          "width": 34,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            7,
+            36,
+            37
+          ]
+        }
+      ],
+      "all_frames_single_connected_sprite": true,
+      "nine_distinct_frames_in_each_direction": true
+    },
+    {
+      "id": "fire_crab",
+      "base_id": "wood_crab",
+      "frame_size": [
+        40,
+        40
+      ],
+      "sheet_size": [
+        360,
+        320
+      ],
+      "reference_idle_size": [
+        32,
+        26
+      ],
+      "colour_count": 24,
+      "alpha": [
+        0,
+        255
+      ],
+      "preview_size": [
+        2880,
+        2560
+      ],
+      "exact_8x": true,
+      "rows": [
+        "down",
+        "right",
+        "up",
+        "left",
+        "down_right",
+        "down_left",
+        "up_right",
+        "up_left"
+      ],
+      "columns": [
+        "idle_1",
+        "idle_2",
+        "walk_1",
+        "walk_2",
+        "walk_3",
+        "walk_4",
+        "wind_up",
+        "strike",
+        "recover"
+      ],
+      "art": "Original directional idle and strike artwork with animated intermediate poses.",
+      "frames": [
+        {
+          "direction": "down",
+          "action": "idle_1",
+          "width": 32,
+          "height": 26,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            12,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "idle_2",
+          "width": 33,
+          "height": 26,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            12,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "walk_1",
+          "width": 32,
+          "height": 27,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            11,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "walk_2",
+          "width": 33,
+          "height": 27,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            11,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "walk_3",
+          "width": 32,
+          "height": 27,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            11,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "walk_4",
+          "width": 33,
+          "height": 27,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            11,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "wind_up",
+          "width": 33,
+          "height": 27,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            11,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "strike",
+          "width": 33,
+          "height": 26,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            12,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "recover",
+          "width": 33,
+          "height": 26,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            12,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "idle_1",
+          "width": 32,
+          "height": 26,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            12,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "idle_2",
+          "width": 32,
+          "height": 26,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            12,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "walk_1",
+          "width": 33,
+          "height": 26,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            12,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "walk_2",
+          "width": 33,
+          "height": 27,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            11,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "walk_3",
+          "width": 32,
+          "height": 26,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            12,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "walk_4",
+          "width": 32,
+          "height": 27,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            11,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "wind_up",
+          "width": 33,
+          "height": 27,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            11,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "strike",
+          "width": 33,
+          "height": 26,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            12,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "recover",
+          "width": 33,
+          "height": 26,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            12,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "idle_1",
+          "width": 32,
+          "height": 26,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            12,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "idle_2",
+          "width": 33,
+          "height": 26,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            12,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "walk_1",
+          "width": 32,
+          "height": 27,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            11,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "walk_2",
+          "width": 33,
+          "height": 27,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            11,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "walk_3",
+          "width": 32,
+          "height": 27,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            11,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "walk_4",
+          "width": 33,
+          "height": 27,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            11,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "wind_up",
+          "width": 33,
+          "height": 27,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            11,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "strike",
+          "width": 33,
+          "height": 26,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            12,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "recover",
+          "width": 33,
+          "height": 26,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            12,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "idle_1",
+          "width": 32,
+          "height": 26,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            12,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "idle_2",
+          "width": 32,
+          "height": 26,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            12,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "walk_1",
+          "width": 33,
+          "height": 26,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            12,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "walk_2",
+          "width": 33,
+          "height": 27,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            11,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "walk_3",
+          "width": 32,
+          "height": 26,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            12,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "walk_4",
+          "width": 32,
+          "height": 27,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            11,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "wind_up",
+          "width": 33,
+          "height": 27,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            11,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "strike",
+          "width": 33,
+          "height": 26,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            12,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "recover",
+          "width": 33,
+          "height": 26,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            12,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "idle_1",
+          "width": 32,
+          "height": 26,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            12,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "idle_2",
+          "width": 33,
+          "height": 26,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            12,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "walk_1",
+          "width": 33,
+          "height": 27,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            11,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "walk_2",
+          "width": 33,
+          "height": 27,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            11,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "walk_3",
+          "width": 33,
+          "height": 27,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            11,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "walk_4",
+          "width": 33,
+          "height": 27,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            11,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "wind_up",
+          "width": 33,
+          "height": 27,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            11,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "strike",
+          "width": 33,
+          "height": 26,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            12,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "recover",
+          "width": 33,
+          "height": 26,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            12,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "idle_1",
+          "width": 32,
+          "height": 26,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            12,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "idle_2",
+          "width": 33,
+          "height": 26,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            12,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "walk_1",
+          "width": 33,
+          "height": 27,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            11,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "walk_2",
+          "width": 33,
+          "height": 27,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            11,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "walk_3",
+          "width": 33,
+          "height": 27,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            11,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "walk_4",
+          "width": 33,
+          "height": 27,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            11,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "wind_up",
+          "width": 33,
+          "height": 27,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            11,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "strike",
+          "width": 33,
+          "height": 26,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            12,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "recover",
+          "width": 33,
+          "height": 26,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            12,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "idle_1",
+          "width": 32,
+          "height": 26,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            12,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "idle_2",
+          "width": 32,
+          "height": 26,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            12,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "walk_1",
+          "width": 33,
+          "height": 27,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            11,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "walk_2",
+          "width": 33,
+          "height": 27,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            11,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "walk_3",
+          "width": 33,
+          "height": 26,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            12,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "walk_4",
+          "width": 32,
+          "height": 27,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            11,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "wind_up",
+          "width": 33,
+          "height": 27,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            11,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "strike",
+          "width": 33,
+          "height": 26,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            12,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "recover",
+          "width": 33,
+          "height": 26,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            12,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "idle_1",
+          "width": 32,
+          "height": 26,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            12,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "idle_2",
+          "width": 32,
+          "height": 26,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            12,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "walk_1",
+          "width": 33,
+          "height": 27,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            11,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "walk_2",
+          "width": 33,
+          "height": 27,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            11,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "walk_3",
+          "width": 33,
+          "height": 26,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            12,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "walk_4",
+          "width": 32,
+          "height": 27,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            11,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "wind_up",
+          "width": 33,
+          "height": 27,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            11,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "strike",
+          "width": 33,
+          "height": 26,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            12,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "recover",
+          "width": 33,
+          "height": 26,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            12,
+            35,
+            37
+          ]
+        }
+      ],
+      "all_frames_single_connected_sprite": true,
+      "nine_distinct_frames_in_each_direction": true
+    },
+    {
+      "id": "mud_slime",
+      "base_id": "jelly",
+      "frame_size": [
+        40,
+        40
+      ],
+      "sheet_size": [
+        360,
+        320
+      ],
+      "reference_idle_size": [
+        35,
+        30
+      ],
+      "colour_count": 23,
+      "alpha": [
+        0,
+        255
+      ],
+      "preview_size": [
+        2880,
+        2560
+      ],
+      "exact_8x": true,
+      "rows": [
+        "down",
+        "right",
+        "up",
+        "left",
+        "down_right",
+        "down_left",
+        "up_right",
+        "up_left"
+      ],
+      "columns": [
+        "idle_1",
+        "idle_2",
+        "walk_1",
+        "walk_2",
+        "walk_3",
+        "walk_4",
+        "wind_up",
+        "strike",
+        "recover"
+      ],
+      "art": "Original directional idle and strike artwork with animated intermediate poses.",
+      "frames": [
+        {
+          "direction": "down",
+          "action": "idle_1",
+          "width": 35,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            8,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "idle_2",
+          "width": 36,
+          "height": 29,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            9,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "walk_1",
+          "width": 34,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            8,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "walk_2",
+          "width": 36,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            7,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "walk_3",
+          "width": 36,
+          "height": 29,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            9,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "walk_4",
+          "width": 34,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            7,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "wind_up",
+          "width": 34,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            8,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "strike",
+          "width": 36,
+          "height": 29,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            9,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "recover",
+          "width": 36,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            8,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "idle_1",
+          "width": 35,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            8,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "idle_2",
+          "width": 35,
+          "height": 29,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            9,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "walk_1",
+          "width": 36,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            8,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "walk_2",
+          "width": 34,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            7,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "walk_3",
+          "width": 34,
+          "height": 29,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            9,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "walk_4",
+          "width": 36,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            7,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "wind_up",
+          "width": 34,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            8,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "strike",
+          "width": 36,
+          "height": 29,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            9,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "recover",
+          "width": 36,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            8,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "idle_1",
+          "width": 35,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            8,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "idle_2",
+          "width": 36,
+          "height": 29,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            9,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "walk_1",
+          "width": 34,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            8,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "walk_2",
+          "width": 36,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            7,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "walk_3",
+          "width": 36,
+          "height": 29,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            9,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "walk_4",
+          "width": 34,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            7,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "wind_up",
+          "width": 34,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            8,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "strike",
+          "width": 36,
+          "height": 29,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            9,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "recover",
+          "width": 36,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            8,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "idle_1",
+          "width": 35,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            8,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "idle_2",
+          "width": 35,
+          "height": 29,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            9,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "walk_1",
+          "width": 36,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            8,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "walk_2",
+          "width": 34,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            7,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "walk_3",
+          "width": 34,
+          "height": 29,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            9,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "walk_4",
+          "width": 36,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            7,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "wind_up",
+          "width": 34,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            8,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "strike",
+          "width": 36,
+          "height": 29,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            9,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "recover",
+          "width": 36,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            8,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "idle_1",
+          "width": 35,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            8,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "idle_2",
+          "width": 35,
+          "height": 29,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            9,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "walk_1",
+          "width": 36,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            8,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "walk_2",
+          "width": 34,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            7,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "walk_3",
+          "width": 34,
+          "height": 29,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            9,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "walk_4",
+          "width": 36,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            7,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "wind_up",
+          "width": 34,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            8,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "strike",
+          "width": 36,
+          "height": 29,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            9,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "recover",
+          "width": 36,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            8,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "idle_1",
+          "width": 35,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            8,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "idle_2",
+          "width": 35,
+          "height": 29,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            9,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "walk_1",
+          "width": 36,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            8,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "walk_2",
+          "width": 34,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            7,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "walk_3",
+          "width": 34,
+          "height": 29,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            9,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "walk_4",
+          "width": 36,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            7,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "wind_up",
+          "width": 34,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            8,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "strike",
+          "width": 36,
+          "height": 29,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            9,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "recover",
+          "width": 36,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            8,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "idle_1",
+          "width": 35,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            8,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "idle_2",
+          "width": 35,
+          "height": 29,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            9,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "walk_1",
+          "width": 36,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            8,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "walk_2",
+          "width": 34,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            7,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "walk_3",
+          "width": 34,
+          "height": 29,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            9,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "walk_4",
+          "width": 36,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            7,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "wind_up",
+          "width": 34,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            8,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "strike",
+          "width": 36,
+          "height": 29,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            9,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "recover",
+          "width": 36,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            8,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "idle_1",
+          "width": 35,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            8,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "idle_2",
+          "width": 35,
+          "height": 29,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            9,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "walk_1",
+          "width": 36,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            8,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "walk_2",
+          "width": 34,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            7,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "walk_3",
+          "width": 34,
+          "height": 29,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            9,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "walk_4",
+          "width": 36,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            7,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "wind_up",
+          "width": 34,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            8,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "strike",
+          "width": 36,
+          "height": 29,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            9,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "recover",
+          "width": 36,
+          "height": 30,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            8,
+            37,
+            37
+          ]
+        }
+      ],
+      "all_frames_single_connected_sprite": true,
+      "nine_distinct_frames_in_each_direction": true
+    },
+    {
+      "id": "mining_lizard",
+      "base_id": "black_lizard",
+      "frame_size": [
+        40,
+        40
+      ],
+      "sheet_size": [
+        360,
+        320
+      ],
+      "reference_idle_size": [
+        35,
+        35
+      ],
+      "colour_count": 28,
+      "alpha": [
+        0,
+        255
+      ],
+      "preview_size": [
+        2880,
+        2560
+      ],
+      "exact_8x": true,
+      "rows": [
+        "down",
+        "right",
+        "up",
+        "left",
+        "down_right",
+        "down_left",
+        "up_right",
+        "up_left"
+      ],
+      "columns": [
+        "idle_1",
+        "idle_2",
+        "walk_1",
+        "walk_2",
+        "walk_3",
+        "walk_4",
+        "wind_up",
+        "strike",
+        "recover"
+      ],
+      "art": "Original directional idle and strike artwork with animated intermediate poses.",
+      "frames": [
+        {
+          "direction": "down",
+          "action": "idle_1",
+          "width": 35,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            3,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "idle_2",
+          "width": 36,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            3,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "walk_1",
+          "width": 34,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            2,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "walk_2",
+          "width": 35,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            3,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "walk_3",
+          "width": 36,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "walk_4",
+          "width": 35,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            3,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "wind_up",
+          "width": 35,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            3,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "strike",
+          "width": 36,
+          "height": 34,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            4,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "recover",
+          "width": 36,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            3,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "idle_1",
+          "width": 35,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            3,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "idle_2",
+          "width": 34,
+          "height": 34,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            4,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "walk_1",
+          "width": 36,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            3,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "walk_2",
+          "width": 36,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "walk_3",
+          "width": 34,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            3,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "walk_4",
+          "width": 34,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            2,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "wind_up",
+          "width": 34,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            3,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "strike",
+          "width": 36,
+          "height": 34,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            4,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "recover",
+          "width": 35,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            3,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "idle_1",
+          "width": 35,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            3,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "idle_2",
+          "width": 36,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            3,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "walk_1",
+          "width": 34,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            2,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "walk_2",
+          "width": 35,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            3,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "walk_3",
+          "width": 36,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "walk_4",
+          "width": 35,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            3,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "wind_up",
+          "width": 35,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            3,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "strike",
+          "width": 36,
+          "height": 34,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            4,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "recover",
+          "width": 36,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "idle_1",
+          "width": 35,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            3,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "idle_2",
+          "width": 34,
+          "height": 34,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            4,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "walk_1",
+          "width": 36,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            3,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "walk_2",
+          "width": 36,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "walk_3",
+          "width": 34,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            3,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "walk_4",
+          "width": 34,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            2,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "wind_up",
+          "width": 34,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            3,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "strike",
+          "width": 36,
+          "height": 34,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            4,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "recover",
+          "width": 35,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            3,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "idle_1",
+          "width": 35,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            3,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "idle_2",
+          "width": 35,
+          "height": 34,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            4,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "walk_1",
+          "width": 36,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            3,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "walk_2",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "walk_3",
+          "width": 35,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            3,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "walk_4",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "wind_up",
+          "width": 34,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            3,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "strike",
+          "width": 36,
+          "height": 34,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            4,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "recover",
+          "width": 36,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            3,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "idle_1",
+          "width": 35,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            3,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "idle_2",
+          "width": 35,
+          "height": 34,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            4,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "walk_1",
+          "width": 36,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            3,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "walk_2",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            2,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "walk_3",
+          "width": 35,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            3,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "walk_4",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            2,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "wind_up",
+          "width": 34,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            3,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "strike",
+          "width": 36,
+          "height": 34,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            4,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "recover",
+          "width": 36,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            3,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "idle_1",
+          "width": 35,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            3,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "idle_2",
+          "width": 34,
+          "height": 34,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            4,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "walk_1",
+          "width": 36,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            3,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "walk_2",
+          "width": 36,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "walk_3",
+          "width": 34,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            3,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "walk_4",
+          "width": 34,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            2,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "wind_up",
+          "width": 34,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            3,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "strike",
+          "width": 36,
+          "height": 34,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            4,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "recover",
+          "width": 35,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            3,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "idle_1",
+          "width": 35,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            3,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "idle_2",
+          "width": 34,
+          "height": 34,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            4,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "walk_1",
+          "width": 36,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            3,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "walk_2",
+          "width": 36,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "walk_3",
+          "width": 34,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            3,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "walk_4",
+          "width": 34,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            2,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "wind_up",
+          "width": 34,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            3,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "strike",
+          "width": 36,
+          "height": 34,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            4,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "recover",
+          "width": 35,
+          "height": 35,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            3,
+            36,
+            37
+          ]
+        }
+      ],
+      "all_frames_single_connected_sprite": true,
+      "nine_distinct_frames_in_each_direction": true
+    },
+    {
+      "id": "sakura_bunny",
+      "base_id": "bunny",
+      "frame_size": [
+        40,
+        40
+      ],
+      "sheet_size": [
+        360,
+        320
+      ],
+      "reference_idle_size": [
+        30,
+        32
+      ],
+      "colour_count": 38,
+      "alpha": [
+        0,
+        255
+      ],
+      "preview_size": [
+        2880,
+        2560
+      ],
+      "exact_8x": true,
+      "rows": [
+        "down",
+        "right",
+        "up",
+        "left",
+        "down_right",
+        "down_left",
+        "up_right",
+        "up_left"
+      ],
+      "columns": [
+        "idle_1",
+        "idle_2",
+        "walk_1",
+        "walk_2",
+        "walk_3",
+        "walk_4",
+        "wind_up",
+        "strike",
+        "recover"
+      ],
+      "art": "Original Fluffy Bunny animation retained. Five-petal blossom tracked on the same ear; the far-side blossom is foreshortened in left-facing views.",
+      "frames": [
+        {
+          "direction": "down",
+          "action": "idle_1",
+          "width": 30,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            5,
+            6,
+            34,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "idle_2",
+          "width": 30,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            5,
+            7,
+            34,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "walk_1",
+          "width": 30,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            5,
+            6,
+            34,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "walk_2",
+          "width": 32,
+          "height": 33,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            5,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "walk_3",
+          "width": 30,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            5,
+            6,
+            34,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "walk_4",
+          "width": 32,
+          "height": 33,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            5,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "wind_up",
+          "width": 26,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            7,
+            7,
+            32,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "strike",
+          "width": 35,
+          "height": 33,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            5,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "recover",
+          "width": 32,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            6,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "idle_1",
+          "width": 26,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            7,
+            6,
+            32,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "idle_2",
+          "width": 26,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            7,
+            7,
+            32,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "walk_1",
+          "width": 26,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            7,
+            6,
+            32,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "walk_2",
+          "width": 27,
+          "height": 33,
+          "foot_row": 37,
+          "bounds": [
+            6,
+            5,
+            32,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "walk_3",
+          "width": 26,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            7,
+            7,
+            32,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "walk_4",
+          "width": 27,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            6,
+            6,
+            32,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "wind_up",
+          "width": 26,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            6,
+            7,
+            31,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "strike",
+          "width": 31,
+          "height": 33,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            5,
+            34,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "recover",
+          "width": 28,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            6,
+            6,
+            33,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "idle_1",
+          "width": 30,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            5,
+            6,
+            34,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "idle_2",
+          "width": 30,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            5,
+            7,
+            34,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "walk_1",
+          "width": 30,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            5,
+            6,
+            34,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "walk_2",
+          "width": 32,
+          "height": 33,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            5,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "walk_3",
+          "width": 30,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            5,
+            6,
+            34,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "walk_4",
+          "width": 32,
+          "height": 33,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            5,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "wind_up",
+          "width": 26,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            7,
+            7,
+            32,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "strike",
+          "width": 35,
+          "height": 33,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            5,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "recover",
+          "width": 32,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            6,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "idle_1",
+          "width": 26,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            7,
+            6,
+            32,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "idle_2",
+          "width": 26,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            7,
+            7,
+            32,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "walk_1",
+          "width": 26,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            7,
+            6,
+            32,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "walk_2",
+          "width": 27,
+          "height": 33,
+          "foot_row": 37,
+          "bounds": [
+            7,
+            5,
+            33,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "walk_3",
+          "width": 26,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            7,
+            7,
+            32,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "walk_4",
+          "width": 27,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            7,
+            6,
+            33,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "wind_up",
+          "width": 26,
+          "height": 31,
+          "foot_row": 37,
+          "bounds": [
+            8,
+            7,
+            33,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "strike",
+          "width": 31,
+          "height": 33,
+          "foot_row": 37,
+          "bounds": [
+            5,
+            5,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "recover",
+          "width": 28,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            6,
+            6,
+            33,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "idle_1",
+          "width": 30,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            5,
+            6,
+            34,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "idle_2",
+          "width": 30,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            5,
+            6,
+            34,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "walk_1",
+          "width": 30,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            5,
+            6,
+            34,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "walk_2",
+          "width": 30,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            6,
+            6,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "walk_3",
+          "width": 30,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            5,
+            6,
+            34,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "walk_4",
+          "width": 30,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            6,
+            33,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "wind_up",
+          "width": 30,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            5,
+            6,
+            34,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "strike",
+          "width": 30,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            5,
+            6,
+            34,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "recover",
+          "width": 30,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            5,
+            6,
+            34,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "idle_1",
+          "width": 30,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            5,
+            6,
+            34,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "idle_2",
+          "width": 30,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            5,
+            6,
+            34,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "walk_1",
+          "width": 30,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            5,
+            6,
+            34,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "walk_2",
+          "width": 30,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            6,
+            6,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "walk_3",
+          "width": 30,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            5,
+            6,
+            34,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "walk_4",
+          "width": 30,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            6,
+            33,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "wind_up",
+          "width": 30,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            5,
+            6,
+            34,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "strike",
+          "width": 30,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            5,
+            6,
+            34,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "recover",
+          "width": 30,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            5,
+            6,
+            34,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "idle_1",
+          "width": 30,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            5,
+            6,
+            34,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "idle_2",
+          "width": 30,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            5,
+            6,
+            34,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "walk_1",
+          "width": 30,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            5,
+            6,
+            34,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "walk_2",
+          "width": 30,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            5,
+            6,
+            34,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "walk_3",
+          "width": 30,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            5,
+            6,
+            34,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "walk_4",
+          "width": 30,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            6,
+            6,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "wind_up",
+          "width": 30,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            5,
+            6,
+            34,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "strike",
+          "width": 30,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            5,
+            6,
+            34,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "recover",
+          "width": 30,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            5,
+            6,
+            34,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "idle_1",
+          "width": 30,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            5,
+            6,
+            34,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "idle_2",
+          "width": 30,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            5,
+            6,
+            34,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "walk_1",
+          "width": 30,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            5,
+            6,
+            34,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "walk_2",
+          "width": 30,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            5,
+            6,
+            34,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "walk_3",
+          "width": 30,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            5,
+            6,
+            34,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "walk_4",
+          "width": 30,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            6,
+            6,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "wind_up",
+          "width": 30,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            5,
+            6,
+            34,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "strike",
+          "width": 30,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            5,
+            6,
+            34,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "recover",
+          "width": 30,
+          "height": 32,
+          "foot_row": 37,
+          "bounds": [
+            5,
+            6,
+            34,
+            37
+          ]
+        }
+      ],
+      "all_frames_single_connected_sprite": true,
+      "nine_distinct_frames_in_each_direction": true
+    },
+    {
+      "id": "moonlamp_sprite",
+      "base_id": "lantern_sprite",
+      "frame_size": [
+        40,
+        40
+      ],
+      "sheet_size": [
+        360,
+        320
+      ],
+      "reference_idle_size": [
+        35,
+        36
+      ],
+      "colour_count": 37,
+      "alpha": [
+        0,
+        255
+      ],
+      "preview_size": [
+        2880,
+        2560
+      ],
+      "exact_8x": true,
+      "rows": [
+        "down",
+        "right",
+        "up",
+        "left",
+        "down_right",
+        "down_left",
+        "up_right",
+        "up_left"
+      ],
+      "columns": [
+        "idle_1",
+        "idle_2",
+        "walk_1",
+        "walk_2",
+        "walk_3",
+        "walk_4",
+        "wind_up",
+        "strike",
+        "recover"
+      ],
+      "art": "Original Lantern Sprite animation retained. Replaced the golden lamp head with a crescent on its existing collar, preserving the pole, hand, body and wings.",
+      "frames": [
+        {
+          "direction": "down",
+          "action": "idle_1",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "idle_2",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "walk_1",
+          "width": 34,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "walk_2",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "walk_3",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "walk_4",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "wind_up",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "strike",
+          "width": 34,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down",
+          "action": "recover",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            2,
+            38,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "idle_1",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "idle_2",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "walk_1",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "walk_2",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "walk_3",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "walk_4",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "wind_up",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "strike",
+          "width": 34,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "right",
+          "action": "recover",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "idle_1",
+          "width": 34,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            2,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "idle_2",
+          "width": 34,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            2,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "walk_1",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "walk_2",
+          "width": 34,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            2,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "walk_3",
+          "width": 34,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            2,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "walk_4",
+          "width": 34,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            2,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "wind_up",
+          "width": 34,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            2,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "strike",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up",
+          "action": "recover",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            2,
+            38,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "idle_1",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            2,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "idle_2",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            2,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "walk_1",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            2,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "walk_2",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            2,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "walk_3",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            2,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "walk_4",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            2,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "wind_up",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            2,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "strike",
+          "width": 34,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            2,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "left",
+          "action": "recover",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            2,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "idle_1",
+          "width": 34,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "idle_2",
+          "width": 34,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "walk_1",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "walk_2",
+          "width": 34,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "walk_3",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "walk_4",
+          "width": 34,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "wind_up",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "strike",
+          "width": 34,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            4,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down_right",
+          "action": "recover",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "idle_1",
+          "width": 34,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            2,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "idle_2",
+          "width": 34,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            2,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "walk_1",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            2,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "walk_2",
+          "width": 34,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            2,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "walk_3",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            2,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "walk_4",
+          "width": 34,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            2,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "wind_up",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            2,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "strike",
+          "width": 34,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            2,
+            35,
+            37
+          ]
+        },
+        {
+          "direction": "down_left",
+          "action": "recover",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            2,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "idle_1",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "idle_2",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "walk_1",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "walk_2",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "walk_3",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "walk_4",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "wind_up",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "strike",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up_right",
+          "action": "recover",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            3,
+            2,
+            37,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "idle_1",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            2,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "idle_2",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            2,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "walk_1",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            2,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "walk_2",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            2,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "walk_3",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            2,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "walk_4",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            2,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "wind_up",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            2,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "strike",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            2,
+            36,
+            37
+          ]
+        },
+        {
+          "direction": "up_left",
+          "action": "recover",
+          "width": 35,
+          "height": 36,
+          "foot_row": 37,
+          "bounds": [
+            2,
+            2,
+            36,
+            37
+          ]
+        }
+      ],
+      "all_frames_single_connected_sprite": true,
+      "nine_distinct_frames_in_each_direction": true
+    }
+  ]
+}

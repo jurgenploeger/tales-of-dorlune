@@ -1,0 +1,1579 @@
+{
+  "batch": 1,
+  "total_skills": 9,
+  "total_nonempty_frames": 134,
+  "grid_columns": 8,
+  "grid_rows": 4,
+  "row_numbers_start_at": 1,
+  "colour_count_definition": "Distinct opaque RGB colours, excluding transparent pixels.",
+  "frame_bounds_definition": "Native pixels within a 64 x 64 cell, [left, top, right, bottom], right and bottom exclusive.",
+  "white_balance_kelvin": 6000,
+  "checks": {
+    "sheet_dimensions": true,
+    "row_occupancy": true,
+    "empty_cells_fully_transparent": true,
+    "binary_alpha": true,
+    "palette_within_limit": true,
+    "all_frames_unique_within_each_used_row": true,
+    "art_inside_frame_margin": true,
+    "preview_pixel_exact": true,
+    "pine_needles_up_drawn_separately": true
+  },
+  "assets": [
+    {
+      "id": "bash",
+      "file": "effect_bash.png",
+      "preview": "effect_bash_8x.png",
+      "sheet_size_px": [
+        512,
+        256
+      ],
+      "frame_size_px": [
+        64,
+        64
+      ],
+      "preview_size_px": [
+        4096,
+        2048
+      ],
+      "colour_count": 20,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "used_rows": [
+        1,
+        4
+      ],
+      "frames_per_row": {
+        "cast": 6,
+        "projectile_right": 0,
+        "projectile_up": 0,
+        "impact": 8
+      },
+      "frame_bounds_xyxy_exclusive": {
+        "cast": [
+          [
+            12,
+            20,
+            33,
+            41
+          ],
+          [
+            8,
+            23,
+            34,
+            41
+          ],
+          [
+            5,
+            18,
+            34,
+            42
+          ],
+          [
+            5,
+            11,
+            37,
+            44
+          ],
+          [
+            5,
+            12,
+            48,
+            43
+          ],
+          [
+            10,
+            12,
+            53,
+            40
+          ]
+        ],
+        "projectile_right": [],
+        "projectile_up": [],
+        "impact": [
+          [
+            6,
+            8,
+            51,
+            50
+          ],
+          [
+            8,
+            11,
+            52,
+            48
+          ],
+          [
+            10,
+            10,
+            53,
+            48
+          ],
+          [
+            12,
+            10,
+            55,
+            50
+          ],
+          [
+            14,
+            11,
+            56,
+            53
+          ],
+          [
+            18,
+            13,
+            59,
+            47
+          ],
+          [
+            17,
+            14,
+            60,
+            26
+          ],
+          [
+            18,
+            16,
+            62,
+            48
+          ]
+        ]
+      },
+      "opaque_pixels_per_frame": {
+        "cast": [
+          223,
+          243,
+          314,
+          456,
+          591,
+          491,
+          0,
+          0
+        ],
+        "projectile_right": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "projectile_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "impact": [
+          705,
+          548,
+          306,
+          181,
+          41,
+          27,
+          12,
+          2
+        ]
+      },
+      "exact_8x_nearest_neighbour": true
+    },
+    {
+      "id": "power_strike",
+      "file": "effect_power_strike.png",
+      "preview": "effect_power_strike_8x.png",
+      "sheet_size_px": [
+        512,
+        256
+      ],
+      "frame_size_px": [
+        64,
+        64
+      ],
+      "preview_size_px": [
+        4096,
+        2048
+      ],
+      "colour_count": 27,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "used_rows": [
+        1,
+        4
+      ],
+      "frames_per_row": {
+        "cast": 6,
+        "projectile_right": 0,
+        "projectile_up": 0,
+        "impact": 8
+      },
+      "frame_bounds_xyxy_exclusive": {
+        "cast": [
+          [
+            13,
+            23,
+            39,
+            43
+          ],
+          [
+            13,
+            15,
+            32,
+            44
+          ],
+          [
+            15,
+            11,
+            29,
+            43
+          ],
+          [
+            13,
+            7,
+            40,
+            43
+          ],
+          [
+            8,
+            6,
+            48,
+            39
+          ],
+          [
+            14,
+            6,
+            49,
+            44
+          ]
+        ],
+        "projectile_right": [],
+        "projectile_up": [],
+        "impact": [
+          [
+            7,
+            8,
+            58,
+            47
+          ],
+          [
+            9,
+            10,
+            58,
+            52
+          ],
+          [
+            9,
+            18,
+            56,
+            54
+          ],
+          [
+            8,
+            23,
+            56,
+            56
+          ],
+          [
+            7,
+            22,
+            57,
+            57
+          ],
+          [
+            6,
+            38,
+            58,
+            58
+          ],
+          [
+            4,
+            44,
+            52,
+            62
+          ],
+          [
+            3,
+            47,
+            19,
+            55
+          ]
+        ]
+      },
+      "opaque_pixels_per_frame": {
+        "cast": [
+          195,
+          209,
+          213,
+          323,
+          504,
+          608,
+          0,
+          0
+        ],
+        "projectile_right": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "projectile_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "impact": [
+          779,
+          752,
+          536,
+          285,
+          132,
+          14,
+          22,
+          2
+        ]
+      },
+      "exact_8x_nearest_neighbour": true
+    },
+    {
+      "id": "whirlwind",
+      "file": "effect_whirlwind.png",
+      "preview": "effect_whirlwind_8x.png",
+      "sheet_size_px": [
+        512,
+        256
+      ],
+      "frame_size_px": [
+        64,
+        64
+      ],
+      "preview_size_px": [
+        4096,
+        2048
+      ],
+      "colour_count": 20,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "used_rows": [
+        1,
+        4
+      ],
+      "frames_per_row": {
+        "cast": 6,
+        "projectile_right": 0,
+        "projectile_up": 0,
+        "impact": 8
+      },
+      "frame_bounds_xyxy_exclusive": {
+        "cast": [
+          [
+            19,
+            30,
+            43,
+            39
+          ],
+          [
+            19,
+            25,
+            48,
+            43
+          ],
+          [
+            10,
+            25,
+            54,
+            43
+          ],
+          [
+            8,
+            23,
+            56,
+            49
+          ],
+          [
+            4,
+            24,
+            58,
+            50
+          ],
+          [
+            5,
+            20,
+            59,
+            47
+          ]
+        ],
+        "projectile_right": [],
+        "projectile_up": [],
+        "impact": [
+          [
+            6,
+            13,
+            59,
+            46
+          ],
+          [
+            5,
+            15,
+            60,
+            48
+          ],
+          [
+            4,
+            17,
+            58,
+            48
+          ],
+          [
+            6,
+            16,
+            59,
+            44
+          ],
+          [
+            9,
+            18,
+            60,
+            46
+          ],
+          [
+            6,
+            28,
+            56,
+            38
+          ],
+          [
+            12,
+            16,
+            51,
+            49
+          ],
+          [
+            12,
+            18,
+            52,
+            48
+          ]
+        ]
+      },
+      "opaque_pixels_per_frame": {
+        "cast": [
+          68,
+          169,
+          201,
+          438,
+          531,
+          562,
+          0,
+          0
+        ],
+        "projectile_right": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "projectile_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "impact": [
+          826,
+          738,
+          584,
+          481,
+          214,
+          50,
+          35,
+          2
+        ]
+      },
+      "exact_8x_nearest_neighbour": true
+    },
+    {
+      "id": "wild_call",
+      "file": "effect_wild_call.png",
+      "preview": "effect_wild_call_8x.png",
+      "sheet_size_px": [
+        512,
+        256
+      ],
+      "frame_size_px": [
+        64,
+        64
+      ],
+      "preview_size_px": [
+        4096,
+        2048
+      ],
+      "colour_count": 21,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "used_rows": [
+        1,
+        4
+      ],
+      "frames_per_row": {
+        "cast": 6,
+        "projectile_right": 0,
+        "projectile_up": 0,
+        "impact": 8
+      },
+      "frame_bounds_xyxy_exclusive": {
+        "cast": [
+          [
+            7,
+            22,
+            53,
+            45
+          ],
+          [
+            7,
+            23,
+            53,
+            46
+          ],
+          [
+            8,
+            22,
+            52,
+            45
+          ],
+          [
+            9,
+            20,
+            51,
+            45
+          ],
+          [
+            15,
+            14,
+            46,
+            46
+          ],
+          [
+            17,
+            11,
+            52,
+            44
+          ]
+        ],
+        "projectile_right": [],
+        "projectile_up": [],
+        "impact": [
+          [
+            9,
+            9,
+            56,
+            54
+          ],
+          [
+            9,
+            9,
+            56,
+            51
+          ],
+          [
+            9,
+            8,
+            56,
+            48
+          ],
+          [
+            9,
+            8,
+            57,
+            32
+          ],
+          [
+            23,
+            8,
+            57,
+            23
+          ],
+          [
+            30,
+            7,
+            58,
+            21
+          ],
+          [
+            39,
+            6,
+            59,
+            16
+          ],
+          [
+            44,
+            7,
+            57,
+            11
+          ]
+        ]
+      },
+      "opaque_pixels_per_frame": {
+        "cast": [
+          129,
+          214,
+          319,
+          389,
+          449,
+          431,
+          0,
+          0
+        ],
+        "projectile_right": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "projectile_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "impact": [
+          944,
+          765,
+          517,
+          269,
+          118,
+          44,
+          21,
+          2
+        ]
+      },
+      "exact_8x_nearest_neighbour": true
+    },
+    {
+      "id": "nibble",
+      "file": "effect_nibble.png",
+      "preview": "effect_nibble_8x.png",
+      "sheet_size_px": [
+        512,
+        256
+      ],
+      "frame_size_px": [
+        64,
+        64
+      ],
+      "preview_size_px": [
+        4096,
+        2048
+      ],
+      "colour_count": 20,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "used_rows": [
+        1,
+        4
+      ],
+      "frames_per_row": {
+        "cast": 6,
+        "projectile_right": 0,
+        "projectile_up": 0,
+        "impact": 8
+      },
+      "frame_bounds_xyxy_exclusive": {
+        "cast": [
+          [
+            24,
+            26,
+            40,
+            38
+          ],
+          [
+            22,
+            24,
+            42,
+            40
+          ],
+          [
+            20,
+            20,
+            44,
+            43
+          ],
+          [
+            10,
+            16,
+            54,
+            48
+          ],
+          [
+            8,
+            12,
+            54,
+            51
+          ],
+          [
+            16,
+            14,
+            48,
+            50
+          ]
+        ],
+        "projectile_right": [],
+        "projectile_up": [],
+        "impact": [
+          [
+            6,
+            15,
+            56,
+            48
+          ],
+          [
+            5,
+            17,
+            57,
+            46
+          ],
+          [
+            5,
+            15,
+            57,
+            49
+          ],
+          [
+            5,
+            14,
+            58,
+            50
+          ],
+          [
+            4,
+            17,
+            59,
+            47
+          ],
+          [
+            16,
+            15,
+            51,
+            48
+          ],
+          [
+            15,
+            18,
+            52,
+            46
+          ],
+          [
+            15,
+            17,
+            53,
+            48
+          ]
+        ]
+      },
+      "opaque_pixels_per_frame": {
+        "cast": [
+          108,
+          178,
+          256,
+          373,
+          505,
+          453,
+          0,
+          0
+        ],
+        "projectile_right": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "projectile_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "impact": [
+          877,
+          726,
+          620,
+          458,
+          81,
+          24,
+          10,
+          2
+        ]
+      },
+      "exact_8x_nearest_neighbour": true
+    },
+    {
+      "id": "pine_needles",
+      "file": "effect_pine_needles.png",
+      "preview": "effect_pine_needles_8x.png",
+      "sheet_size_px": [
+        512,
+        256
+      ],
+      "frame_size_px": [
+        64,
+        64
+      ],
+      "preview_size_px": [
+        4096,
+        2048
+      ],
+      "colour_count": 20,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "used_rows": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "frames_per_row": {
+        "cast": 6,
+        "projectile_right": 4,
+        "projectile_up": 4,
+        "impact": 8
+      },
+      "frame_bounds_xyxy_exclusive": {
+        "cast": [
+          [
+            25,
+            28,
+            37,
+            44
+          ],
+          [
+            24,
+            25,
+            40,
+            45
+          ],
+          [
+            24,
+            23,
+            41,
+            46
+          ],
+          [
+            22,
+            23,
+            43,
+            47
+          ],
+          [
+            20,
+            20,
+            46,
+            46
+          ],
+          [
+            11,
+            20,
+            49,
+            46
+          ]
+        ],
+        "projectile_right": [
+          [
+            8,
+            20,
+            49,
+            47
+          ],
+          [
+            10,
+            19,
+            50,
+            48
+          ],
+          [
+            11,
+            20,
+            49,
+            47
+          ],
+          [
+            8,
+            21,
+            49,
+            46
+          ]
+        ],
+        "projectile_up": [
+          [
+            18,
+            13,
+            47,
+            54
+          ],
+          [
+            17,
+            12,
+            48,
+            56
+          ],
+          [
+            18,
+            13,
+            47,
+            54
+          ],
+          [
+            19,
+            14,
+            46,
+            53
+          ]
+        ],
+        "impact": [
+          [
+            2,
+            10,
+            53,
+            52
+          ],
+          [
+            7,
+            13,
+            55,
+            50
+          ],
+          [
+            11,
+            14,
+            57,
+            49
+          ],
+          [
+            20,
+            14,
+            58,
+            50
+          ],
+          [
+            23,
+            14,
+            59,
+            51
+          ],
+          [
+            31,
+            14,
+            59,
+            48
+          ],
+          [
+            52,
+            14,
+            61,
+            31
+          ],
+          [
+            45,
+            15,
+            56,
+            50
+          ]
+        ]
+      },
+      "opaque_pixels_per_frame": {
+        "cast": [
+          76,
+          124,
+          160,
+          202,
+          248,
+          275,
+          0,
+          0
+        ],
+        "projectile_right": [
+          380,
+          375,
+          367,
+          376,
+          0,
+          0,
+          0,
+          0
+        ],
+        "projectile_up": [
+          377,
+          371,
+          361,
+          369,
+          0,
+          0,
+          0,
+          0
+        ],
+        "impact": [
+          548,
+          456,
+          358,
+          222,
+          112,
+          46,
+          11,
+          2
+        ]
+      },
+      "exact_8x_nearest_neighbour": true
+    },
+    {
+      "id": "bounce",
+      "file": "effect_bounce.png",
+      "preview": "effect_bounce_8x.png",
+      "sheet_size_px": [
+        512,
+        256
+      ],
+      "frame_size_px": [
+        64,
+        64
+      ],
+      "preview_size_px": [
+        4096,
+        2048
+      ],
+      "colour_count": 20,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "used_rows": [
+        1,
+        4
+      ],
+      "frames_per_row": {
+        "cast": 6,
+        "projectile_right": 0,
+        "projectile_up": 0,
+        "impact": 8
+      },
+      "frame_bounds_xyxy_exclusive": {
+        "cast": [
+          [
+            13,
+            39,
+            29,
+            58
+          ],
+          [
+            10,
+            45,
+            30,
+            58
+          ],
+          [
+            8,
+            33,
+            31,
+            58
+          ],
+          [
+            7,
+            22,
+            32,
+            57
+          ],
+          [
+            7,
+            14,
+            42,
+            57
+          ],
+          [
+            19,
+            17,
+            55,
+            52
+          ]
+        ],
+        "projectile_right": [],
+        "projectile_up": [],
+        "impact": [
+          [
+            7,
+            9,
+            57,
+            44
+          ],
+          [
+            7,
+            10,
+            58,
+            45
+          ],
+          [
+            6,
+            17,
+            59,
+            46
+          ],
+          [
+            5,
+            14,
+            59,
+            45
+          ],
+          [
+            5,
+            11,
+            59,
+            44
+          ],
+          [
+            7,
+            10,
+            57,
+            43
+          ],
+          [
+            50,
+            10,
+            56,
+            39
+          ],
+          [
+            52,
+            10,
+            57,
+            39
+          ]
+        ]
+      },
+      "opaque_pixels_per_frame": {
+        "cast": [
+          209,
+          190,
+          270,
+          275,
+          293,
+          253,
+          0,
+          0
+        ],
+        "projectile_right": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "projectile_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "impact": [
+          662,
+          584,
+          473,
+          376,
+          236,
+          130,
+          10,
+          2
+        ]
+      },
+      "exact_8x_nearest_neighbour": true
+    },
+    {
+      "id": "golden_spin",
+      "file": "effect_golden_spin.png",
+      "preview": "effect_golden_spin_8x.png",
+      "sheet_size_px": [
+        512,
+        256
+      ],
+      "frame_size_px": [
+        64,
+        64
+      ],
+      "preview_size_px": [
+        4096,
+        2048
+      ],
+      "colour_count": 24,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "used_rows": [
+        1,
+        4
+      ],
+      "frames_per_row": {
+        "cast": 6,
+        "projectile_right": 0,
+        "projectile_up": 0,
+        "impact": 8
+      },
+      "frame_bounds_xyxy_exclusive": {
+        "cast": [
+          [
+            23,
+            28,
+            40,
+            38
+          ],
+          [
+            22,
+            22,
+            43,
+            44
+          ],
+          [
+            19,
+            20,
+            46,
+            48
+          ],
+          [
+            16,
+            19,
+            48,
+            47
+          ],
+          [
+            14,
+            15,
+            51,
+            52
+          ],
+          [
+            13,
+            13,
+            53,
+            55
+          ]
+        ],
+        "projectile_right": [],
+        "projectile_up": [],
+        "impact": [
+          [
+            13,
+            11,
+            55,
+            55
+          ],
+          [
+            10,
+            11,
+            56,
+            56
+          ],
+          [
+            10,
+            9,
+            57,
+            55
+          ],
+          [
+            12,
+            9,
+            57,
+            55
+          ],
+          [
+            12,
+            13,
+            54,
+            55
+          ],
+          [
+            11,
+            13,
+            55,
+            55
+          ],
+          [
+            12,
+            13,
+            55,
+            56
+          ],
+          [
+            12,
+            14,
+            55,
+            39
+          ]
+        ]
+      },
+      "opaque_pixels_per_frame": {
+        "cast": [
+          85,
+          166,
+          312,
+          407,
+          500,
+          777,
+          0,
+          0
+        ],
+        "projectile_right": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "projectile_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "impact": [
+          1039,
+          827,
+          755,
+          391,
+          186,
+          55,
+          15,
+          2
+        ]
+      },
+      "exact_8x_nearest_neighbour": true
+    },
+    {
+      "id": "vine_whip",
+      "file": "effect_vine_whip.png",
+      "preview": "effect_vine_whip_8x.png",
+      "sheet_size_px": [
+        512,
+        256
+      ],
+      "frame_size_px": [
+        64,
+        64
+      ],
+      "preview_size_px": [
+        4096,
+        2048
+      ],
+      "colour_count": 22,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "used_rows": [
+        1,
+        4
+      ],
+      "frames_per_row": {
+        "cast": 6,
+        "projectile_right": 0,
+        "projectile_up": 0,
+        "impact": 8
+      },
+      "frame_bounds_xyxy_exclusive": {
+        "cast": [
+          [
+            21,
+            28,
+            38,
+            45
+          ],
+          [
+            18,
+            24,
+            41,
+            46
+          ],
+          [
+            15,
+            17,
+            46,
+            48
+          ],
+          [
+            13,
+            10,
+            49,
+            49
+          ],
+          [
+            11,
+            10,
+            53,
+            49
+          ],
+          [
+            8,
+            11,
+            56,
+            51
+          ]
+        ],
+        "projectile_right": [],
+        "projectile_up": [],
+        "impact": [
+          [
+            6,
+            10,
+            57,
+            53
+          ],
+          [
+            6,
+            10,
+            58,
+            51
+          ],
+          [
+            11,
+            17,
+            57,
+            45
+          ],
+          [
+            13,
+            17,
+            57,
+            43
+          ],
+          [
+            12,
+            21,
+            52,
+            44
+          ],
+          [
+            11,
+            20,
+            51,
+            44
+          ],
+          [
+            13,
+            19,
+            50,
+            44
+          ],
+          [
+            13,
+            20,
+            53,
+            48
+          ]
+        ]
+      },
+      "opaque_pixels_per_frame": {
+        "cast": [
+          157,
+          209,
+          277,
+          317,
+          369,
+          347,
+          0,
+          0
+        ],
+        "projectile_right": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "projectile_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "impact": [
+          505,
+          479,
+          344,
+          264,
+          100,
+          27,
+          8,
+          2
+        ]
+      },
+      "exact_8x_nearest_neighbour": true
+    }
+  ]
+}
