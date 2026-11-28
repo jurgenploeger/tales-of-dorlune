@@ -166,7 +166,7 @@ struct NPCDialogView: View {
         .clipShape(window)
         // The frame all the way round, like every window's (`gameWindow`), the close button over its corner.
         .background(window.fill(HUDStyle.glass).shadow(color: .black.opacity(0.35), radius: 3, x: 0, y: 2))
-        .overlay(HUDStyle.frame(window))
+        .overlay(WoodFrame())
         // The close button over its corner; none while a boss has you cornered.
         .overlay(alignment: .topTrailing) {
             if !cornered {

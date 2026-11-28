@@ -272,3 +272,15 @@ Add what each UI change teaches, dated, with the case and what to do instead.
 - 2026-11-10: fresh shots (0.9.73) showed a first mock-up's "now" was wrong: Friends and Settings rows
   were already on cards. Six real findings came from the shots instead (rows not alike, a grey price with
   no reason, a window showing under another, empty glass, the speech window a strip, the bar). Shoot first.
+
+## The carved wood (0.9.266)
+
+Since 2026-11-28 the HUD and windows are carved birch (walnut in Dark Mode), ChatGPT's art at game size in
+`Assets.xcassets/Wood/` (`tools/hud_game_art.py`), each piece's dark twin the catalog's dark appearance:
+`WoodFrame` (the window frame, a nine-slice tiling whole motifs) over `gameWindow`, `HUDStyle.panel` and the speech
+window; `WoodButtonFace`/`WoodRoundButtonStyle` for `FLIconButton` and the battle's `RoundCommandButton` (a picture
+per icon, `WoodArt.button`, else the plain round with the pixel icon); `OrangeCloseButton` is the carved close button.
+The windows' pane stays dark (a warm walnut in both looks, `HUDStyle.glass`), so their cream text keeps its contrast:
+the art's own light parchment pane would need dark text throughout. Not wired yet: the hero plate, pills, tabs,
+capsule buttons, inset panels and the menu and battle bits (`art-variants/hud/bits`, `last`).
+

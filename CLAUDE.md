@@ -229,6 +229,17 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   made the icon at its own size, its outline a deep shade of what it rounds (`icon`; `pixel_style.py --kind
   rd_item`), and shrunk to the held sprite at the drawn weapons' size; `item_art.py` leaves those
   alone. `tools/gear_preview.py --weapons out.png <ids>` shows weapons in hand on every body, direction and armour.
+- ChatGPT's art in the game since 0.9.266 (2026-11-28; docs/ai-sprite-test/, copied as drawn from `art-variants/`):
+  the carved-wood HUD (`tools/hud_game_art.py` cuts ChatGPT's 1280-pixel pieces to 3 pixels a point into
+  `Assets.xcassets/Wood/`, each with its Dark Mode twin as the catalog's dark appearance; `TalesOfDorlune/UI/WoodArt.swift`:
+  `WoodFrame` over every window, `WoodButtonFace` for the round buttons with their enamel pictures, the close button,
+  minimap ring and compass, joystick and portrait ring; the windows' pane a walnut in both looks for their cream text);
+  the skills' icons at 64 pixels (`skill_art.py`'s `PICKED_DIR`) and their battle effects (`tools/spell_effect_art.py`:
+  cast, bolt and impact strips, `PixelSpell`, played by `BattleScene.castPixel` in place of the glows, the blow landing
+  on the impact's third frame; a revive keeps its pillar); monsters' 9 by 8 sheets of idle, walk and attack
+  (`tools/monster_motion_art.py` → `motion_<art>.png`, `ArtLibrary.motionCycle`: `WalkCycle.idle` and `.attack`, a
+  variant recolouring its base's sheet, `motionImage`); the townsfolk's portraits in four moods (`tools/portrait_art.py`,
+  `NPCPortrait`, the speech window's bust; neutral for now); the critters (`critter_art.py`'s `PICKED_DIR`).
 - `tools/skill_art.py`: every skill's icon (`art/sprites/skill_<id>.png`), drawn as light, not pixel art: the
   glows, flares, sparks and trails of its battle animation in its colours (`LIGHTS`, `ElementLight`'s), on a dark
   backdrop of its tile's colour, at 128 pixels. The game shows art over 64 pixels smoothed (`IconTile`,
