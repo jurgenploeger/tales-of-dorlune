@@ -916,6 +916,19 @@ final class BattleScene: SKScene {
         if level >= 3, fighter?.isHero == true || isBoss {
             SoundEffects.shared.play(.surge, volume: 0.4 + 0.2 * Float(level - 2))
         }
+        // ChatGPT's pixel art in place of the glows (tools/spell_effect_art.py), where the skill has it;
+        // a revive keeps its pillar of light, as the fallen rise in it.
+        if skill.kind != .revive, let pixel = PixelSpell.of(skill.id) {
+            await castPixel(pixel, style: style, from: actorID, targets: targets, hits: hits, heal: heal,
+                            lands: skill.kind.isAttack || heal)
+            if mastered {
+                await pause(0.2)
+                SkillEffects.ultimateFinale(on: targets, style: skill.kind.isAttack ? SkillEffects.finale(for: style) : "holy",
+                                            color: color, size: size, rank: rank, in: stage)
+                await pause(rank >= 4 ? 0.75 : 0.35)
+            }
+            return
+        }
         if let caster = actors[actorID] {
             let hold = SkillEffects.charge(on: caster, color: color, level: level, in: stage)
             if hold > 0 { await pause(hold) }
@@ -1216,6 +1229,52 @@ final class BattleScene: SKScene {
             if !heal { shake(strength: 14 + 4 * CGFloat(rank - 1)) }
             await pause(0.6)
         }
+    }
+
+    /// The styles that dash at the foe (`lunge`): a pixel impact plays as they arrive.
+    private static let dashing: Set<String> = ["slash", "bite", "shadow_bite", "venom_bite", "smash", "charge", "impact",
+                                                "rush", "combo", "beast_impact"]
+
+    /// How big a pixel effect is drawn on `actor`: twice its pixels, as the fighters are, a boss's half again.
+    private func spellScale(_ actor: BattleActor) -> CGFloat {
+        2 * actor.fieldScale * (actor.isBoss ? 1.5 : 1)
+    }
+
+    /// A skill in pixel art (`PixelSpell`, in place of the glows): cast, bolt and impact, the blow or the
+    /// healing landing on the impact's third frame (`lands`; a buff or a curse shows what it did in the
+    /// events after).
+    private func castPixel(_ pixel: PixelSpell, style: String, from actorID: Int, targets: [BattleActor], hits: [Hit],
+                           heal: Bool, lands: Bool) async {
+        let caster = actors[actorID]
+        if Self.dashing.contains(style) || style == "bounce" {
+            let target = hits.first?.target ?? actorID
+            func contact() {
+                for foe in targets { PixelSpell.play(pixel.impact, at: foe.center, scale: spellScale(foe), in: stage) }
+                if lands { impactAll(hits, heal: heal) }
+            }
+            if style == "bounce" {
+                await leap(actorID, onto: target, atContact: contact)
+            } else {
+                await lunge(actorID, toward: target, atContact: contact)
+            }
+            await pause(PixelSpell.frameTime * Double(max(0, pixel.impact.count - 3)))
+            return
+        }
+        if let caster {
+            await pause(PixelSpell.play(pixel.cast, at: caster.center, scale: spellScale(caster), in: stage) * 0.8)
+        }
+        if pixel.fly != nil || pixel.flyUp != nil, let caster {
+            var longest: TimeInterval = 0
+            for target in targets where target !== caster {
+                longest = max(longest, pixel.fly(from: caster.center, to: target.center, scale: spellScale(caster), in: stage))
+            }
+            await pause(longest)
+        }
+        for target in targets { PixelSpell.play(pixel.impact, at: target.center, scale: spellScale(target), in: stage) }
+        let hitFrame = min(3, pixel.impact.count)
+        await pause(PixelSpell.frameTime * Double(hitFrame))
+        if lands { impactAll(hits, heal: heal) }
+        await pause(PixelSpell.frameTime * Double(pixel.impact.count - hitFrame))
     }
 
     // MARK: - Moves
