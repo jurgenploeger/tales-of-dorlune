@@ -1,0 +1,9 @@
+1. bash (Bash, physical, none, on one foe): A heavy swing.
+2. power_strike (Power Strike, physical, none, on one foe): A crushing blow.
+3. whirlwind (Whirlwind, physical, none, on every foe): Spin and hit every foe.
+4. wild_call (Wild Call, physical, none, on every foe): Call the wild to strike every foe.
+5. nibble (Nibble, physical, none, on one foe): Nibble
+6. pine_needles (Pine Needles, physical, none, on every foe): Pine Needles
+7. bounce (Bounce, physical, none, on one foe): Bounce
+8. golden_spin (Golden Spin, physical, metal, on one foe): A dazzling spinning tackle.
+9. vine_whip (Vine Whip, physical, wood, on one foe): Lashes with a leafy vine.

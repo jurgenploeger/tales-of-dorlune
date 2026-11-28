@@ -1,0 +1,12 @@
+1. critter_songbird_robin: a robin: brown back, orange breast. Canvas 13 × 12 pixels. Frames: fly, hop, peck, sit.
+2. critter_songbird_bluebird: a bluebird: blue back, warm orange breast. Canvas 13 × 12 pixels. Frames: fly, hop, peck, sit.
+3. critter_songbird_finch: a finch: yellow and olive. Canvas 13 × 12 pixels. Frames: fly, hop, peck, sit.
+4. critter_crow: a glossy black crow, a bit bigger than the songbirds. Canvas 13 × 12 pixels. Frames: fly, hop, peck, sit.
+5. critter_butterfly_pink: a pink butterfly, seen from above. Canvas 15 × 12 pixels. Frames: closed, half, open (wingbeat).
+6. critter_butterfly_yellow: the same butterfly in yellow. Canvas 15 × 12 pixels. Frames: closed, half, open.
+7. critter_butterfly_blue: the same in sky blue. Canvas 15 × 12 pixels. Frames: closed, half, open.
+8. critter_butterfly_lilac: the same in lilac. Canvas 15 × 12 pixels. Frames: closed, half, open.
+9. critter_butterfly_orange: the same in orange. Canvas 15 × 12 pixels. Frames: closed, half, open.
+10. critter_flock_songbirds: a tiny far-off bird crossing the sky, a silhouette with a little colour. Canvas 11 × 7 pixels. Frames: down, up (wingbeat).
+11. critter_flock_gulls: a far-off white seagull. Canvas 17 × 8 pixels. Frames: down, up.
+12. critter_flock_bats: a far-off dark purple bat. Canvas 15 × 8 pixels. Frames: down, up.

@@ -1,0 +1,9 @@
+1. dodge_whip (Dodge Whip, physical, none, on one foe): Lash a foe and skip clear: your SPD +30% for 3 rounds.
+2. beast_impact (God of Beast Impact, physical, none, on one foe): You and your companion strike as one: its ATK joins yours.
+3. fire_bolt (Fire Bolt, magic, fire, on one foe): Fire magic. Melts metal.
+4. stone_spike (Stone Spike, magic, earth, on one foe): Earth magic. Dams water.
+5. leaf_storm (Leaf Storm, magic, wood, on every foe): Wood magic on every foe. Breaks earth.
+6. jelly_splash (Jelly Splash, magic, water, on one foe): Jelly Splash
+7. flash (Flash, magic, light, on one foe): A burst of blinding light.
+8. shadow_bite (Shadow Bite, magic, dark, on one foe): Fangs made of darkness.
+9. ember (Ember, magic, fire, on one foe): A little ball of fire.

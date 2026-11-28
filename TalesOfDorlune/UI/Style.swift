@@ -25,19 +25,20 @@ enum HUDStyle {
     static let mp = Color(red: 0.24, green: 0.52, blue: 0.95)
     static let exp = Color(red: 0.55, green: 0.88, blue: 0.3)
     static let green = Color(red: 0.6, green: 0.97, blue: 0.62)
-    static let dim = Color(red: 0.86, green: 0.92, blue: 1).opacity(0.7)
-    /// Deep navy: window glass and dark text on light buttons.
-    static let ink = Color(red: 0.06, green: 0.15, blue: 0.3)
+    static let dim = Color(red: 1, green: 0.93, blue: 0.82).opacity(0.72)
+    /// Deep brown, the carved wood's darkest: dark text on light buttons, outlines.
+    static let ink = Color(red: 0.24, green: 0.14, blue: 0.05)
     static let orange = Color(red: 0.98, green: 0.52, blue: 0.16)
     /// The close button's lit top and shaded foot, either side of `orange`.
     static let closeLight = Color(red: 1, green: 0.75, blue: 0.4)
     static let closeDeep = Color(red: 0.75, green: 0.3, blue: 0.05)
     /// The dark track under a bar's fill (at 85%).
-    static let barTrack = Color(red: 0.05, green: 0.1, blue: 0.2)
+    static let barTrack = Color(red: 0.12, green: 0.07, blue: 0.04)
 
-    static let frameLight = Color.adaptive(light: Color(red: 0.86, green: 0.96, blue: 1), dark: Color(red: 0.42, green: 0.56, blue: 0.72))
-    static let frameMid = Color.adaptive(light: Color(red: 0.5, green: 0.77, blue: 0.95), dark: Color(red: 0.24, green: 0.4, blue: 0.6))
-    static let frameDark = Color.adaptive(light: Color(red: 0.15, green: 0.35, blue: 0.62), dark: Color(red: 0.08, green: 0.18, blue: 0.36))
+    // The carved birch (Dark Mode: walnut) of the HUD's wood (tools/hud_game_art.py, the user's pick, 2026-11-27).
+    static let frameLight = Color.adaptive(light: Color(red: 0.97, green: 0.9, blue: 0.76), dark: Color(red: 0.62, green: 0.5, blue: 0.4))
+    static let frameMid = Color.adaptive(light: Color(red: 0.86, green: 0.68, blue: 0.45), dark: Color(red: 0.45, green: 0.34, blue: 0.26))
+    static let frameDark = Color.adaptive(light: Color(red: 0.44, green: 0.26, blue: 0.1), dark: Color(red: 0.2, green: 0.13, blue: 0.09))
     static let plate = Color.adaptive(light: Color(red: 0.97, green: 0.88, blue: 0.64), dark: Color(red: 0.78, green: 0.68, blue: 0.48))
     static let plateDark = Color.adaptive(light: Color(red: 0.55, green: 0.41, blue: 0.18), dark: Color(red: 0.34, green: 0.24, blue: 0.09))
     /// A plate's lit top edge and its shaded foot.
@@ -52,13 +53,13 @@ enum HUDStyle {
     /// Behind a face in a portrait circle: cream, fading to sky blue at the rim. Dimmer in Dark
     /// Mode, still light enough for the face's dark outline.
     static let portrait = Color.adaptive(light: Color(red: 0.98, green: 0.95, blue: 0.85), dark: Color(red: 0.76, green: 0.73, blue: 0.66))
-    static let portraitRim = Color.adaptive(light: Color(red: 0.75, green: 0.88, blue: 0.98), dark: Color(red: 0.5, green: 0.6, blue: 0.72))
+    static let portraitRim = Color.adaptive(light: Color(red: 0.92, green: 0.8, blue: 0.6), dark: Color(red: 0.62, green: 0.52, blue: 0.42))
 
     /// The toolbar buttons' glossy blue, top to bottom (`FLIconButton`).
     static let tile = [
-        Color.adaptive(light: Color(red: 0.6, green: 0.85, blue: 1), dark: Color(red: 0.3, green: 0.46, blue: 0.66)),
-        Color.adaptive(light: Color(red: 0.25, green: 0.55, blue: 0.9), dark: Color(red: 0.14, green: 0.3, blue: 0.54)),
-        Color.adaptive(light: Color(red: 0.12, green: 0.33, blue: 0.66), dark: Color(red: 0.07, green: 0.17, blue: 0.36)),
+        Color.adaptive(light: Color(red: 0.62, green: 0.44, blue: 0.29), dark: Color(red: 0.42, green: 0.3, blue: 0.22)),
+        Color.adaptive(light: Color(red: 0.46, green: 0.31, blue: 0.2), dark: Color(red: 0.3, green: 0.21, blue: 0.15)),
+        Color.adaptive(light: Color(red: 0.33, green: 0.21, blue: 0.13), dark: Color(red: 0.2, green: 0.13, blue: 0.09)),
     ]
 
     /// Headlines and titles only, in SF Pro Rounded Heavy: a window's title, a section's title, the
@@ -128,10 +129,12 @@ enum HUDStyle {
     /// The glass at a window's foot, solid: what lies over the foot of a window is its own blue
     /// (the chat's bar, `ChatView`).
     static let glassFoot = Color.adaptive(light: glassFootLight, dark: glassFootDark)
-    private static let glassTopLight = Color(red: 0.13, green: 0.32, blue: 0.56)
-    private static let glassTopDark = Color(red: 0.07, green: 0.15, blue: 0.28)
-    private static let glassFootLight = Color(red: 0.05, green: 0.17, blue: 0.35)
-    private static let glassFootDark = Color(red: 0.03, green: 0.07, blue: 0.16)
+    // A deep walnut pane in both looks, under the carved frame (`WoodFrame`): the windows' cream text
+    // keeps its contrast (the art's own pane, parchment in the light look, would need dark text).
+    private static let glassTopLight = Color(red: 0.34, green: 0.23, blue: 0.16)
+    private static let glassTopDark = Color(red: 0.24, green: 0.17, blue: 0.14)
+    private static let glassFootLight = Color(red: 0.24, green: 0.16, blue: 0.11)
+    private static let glassFootDark = Color(red: 0.14, green: 0.09, blue: 0.07)
 
     /// Every window's corners: round and smooth (continuous, as iOS draws its own), 22 points
     /// (playtesting 2026-10-26: at 10 everything felt too sharp).
@@ -155,7 +158,7 @@ enum HUDStyle {
     static func panel(shape: some InsettableShape) -> some View {
         shape
             .fill(glass)
-            .overlay(frame(shape))
+            .overlay(WoodFrame())
             .shadow(color: .black.opacity(0.35), radius: 3, x: 0, y: 2)
     }
 
@@ -569,15 +572,12 @@ struct OrangeCloseButton: View {
 
     var body: some View {
         Button(action: action) {
-            IconImage(.close, size: 13)
-                .foregroundStyle(.white)
-                .frame(width: 24, height: 24)
-                .background(
-                    Circle()
-                        .fill(RadialGradient(colors: [HUDStyle.closeLight, HUDStyle.orange, HUDStyle.closeDeep], center: UnitPoint(x: 0.35, y: 0.3), startRadius: 1, endRadius: 16))
-                        .overlay(Circle().strokeBorder(.white.opacity(0.8), lineWidth: 1.5))
-                )
+            // The carved close button (tools/hud_game_art.py), its orange enamel cross.
+            Image("WoodClose")
+                .resizable()
+                .frame(width: 30, height: 30)
         }
+        .buttonStyle(WoodPressStyle(pressed: "WoodClosePressed", size: 30))
         .frame(width: 34, height: 34)
         .contentShape(Rectangle())
         .accessibilityLabel(L("Close"))
@@ -646,27 +646,13 @@ struct FLIconButton: View {
                 }
             }
         }
-        .buttonStyle(PressScaleStyle())
+        .buttonStyle(WoodRoundButtonStyle(icon: icon, size: size))
         .accessibilityLabel(label)
     }
 
     private var tile: some View {
-        // Three fifths of the button (half before): the pixel icons are drawn with room round them,
-        // and at half looked small beside the menu button's bars (the user, 2026-11-17).
-        IconImage(icon, size: (size * 0.6).rounded())
-            .foregroundStyle(.white)
-            .shadow(color: HUDStyle.frameDark, radius: 0, x: 1, y: 1)
-            .frame(width: size, height: size)
-            // Round (playtesting 2026-10-25), like the minimap and the menu button beside it, on the
-            // map and in battle alike; the gloss an oval across its top.
-            .background(
-                Circle()
-                    .fill(LinearGradient(colors: HUDStyle.tile, startPoint: .top, endPoint: .bottom))
-                    .overlay(Circle().strokeBorder(HUDStyle.bevel, lineWidth: 2.5))
-                    .overlay(alignment: .top) {
-                        Ellipse().fill(.white.opacity(0.35)).frame(width: size * 0.62, height: size * 0.28).padding(.top, 4)
-                    }
-            )
+        // The carved round with its enamel picture (`WoodButtonFace`, the user's pick, 2026-11-27).
+        WoodButtonFace(icon: icon, size: size)
             .overlay(alignment: .topTrailing) {
                 // On the rim, where the round's corner would be.
                 if badge {
@@ -1019,7 +1005,7 @@ extension View {
     func gameWindow(_ shape: some InsettableShape) -> some View {
         clipShape(shape)
             .background(shape.fill(HUDStyle.glass).shadow(color: .black.opacity(0.35), radius: 3, x: 0, y: 2))
-            .overlay(HUDStyle.frame(shape))
+            .overlay(WoodFrame())
             // Its title's close button, over the corner; the window's own, not passed on to one
             // it sits in.
             .overlayPreferenceValue(WindowCloseKey.self, alignment: .topTrailing) { close in

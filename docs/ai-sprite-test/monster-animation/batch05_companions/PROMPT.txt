@@ -1,0 +1,26 @@
+Redraw the monsters of my game, Tales of Dorlune, as full animation sheets: a cute top-down fantasy RPG for iPhone (pixel-art world, chibi characters, bright and cosy). Every monster can be caught and walks behind you as a companion, so it needs to walk and run in every direction, stand idle and attack. Each attached _today_8x picture is the monster as it is now (one picture, at 8×): keep exactly who it is, its shape, colours, face, markings and charm, and bring it to life.
+
+Style: match the attached pictures' pixel art exactly: hard square pixels, a dark outline, lit from the top left, rich hue-shifted shading, big expressive eyes. Original drawings only.
+
+For each monster, one sprite sheet, a grid of frames, each frame the monster's frame size (listed: 40 × 40 or 64 × 64 pixels), transparent, alpha 0 or 255 only, no anti-aliasing:
+- Rows, top to bottom: facing down (toward the viewer), facing right, facing up (away). (The game mirrors the right row for left.) Seen from slightly above, as the game's world is.
+- Columns, left to right:
+  1-2 idle: standing, breathing or bobbing (2 frames).
+  3-6 walk: a full walk or hop cycle (4 frames; the game plays the same frames faster to run).
+  7-9 attack: wind-up, strike, recover (3 frames), the monster lunging, biting, swiping or slamming in its own way toward the direction it faces. Only the monster: no slash marks, sparks or effects (the game adds those).
+- So a sheet is 9 columns × 3 rows: 360 × 120 pixels for a 40-pixel monster, 576 × 192 for a 64-pixel one.
+- In every frame the monster stands with its feet (or its base, for a jelly or a ghost) on the same row, about 2 pixels above the frame's bottom, centred left to right, so the game can play the frames in place without it jumping. Same size and proportions in every frame and every direction; a leg, ear, tail or wing moves, the body doesn't grow or shrink.
+- Draw only the monster listed, not its colour variants (the game recolours those).
+
+1. ore_golem (Dreamstone Golem, metal element, frame 40 × 40 pixels): A golem made of dreamstone, built to guard the riches of Ingothold. It never stops working.
+2. crystal_widow (Crystal Widow, light element, frame 40 × 40 pixels): A spider made of living crystal, spinning glittering webs in the Whispering Hollow.
+3. emerald_pegasus (Emerald Pegasus, wood element, frame 40 × 40 pixels): A green-winged Pegasus that guards the Emerald Road, shining like a jewel.
+4. star_moth (Starmoth, light element, frame 40 × 40 pixels): Moths drawn to the fallen star's light. Their wings carry its dust, and they drink the glow from any lantern left out at night. (Its colour variants, Dawn Starmoth, are recoloured from it in the game: draw only this one.)
+5. nebula_puff (Nebula Puff, dark element, frame 40 × 40 pixels): A puff of the night sky that drifted down with the fallen star. It settles on moonflowers and lulls them to sleep.
+6. crystal_quill (Crystal Quill, earth element, frame 40 × 40 pixels): A hedgehog whose quills turned to crystal where the starlight landed. It digs up crystal gardens for a crunchy snack.
+7. prism_crab (Prism Crab, water element, frame 40 × 40 pixels): A crab whose shell grew into amethyst in the Glimmerdeep's pools. It snips crystals off the walls and wears the prettiest ones.
+8. floating_geode (Floating Geode, earth element, frame 40 × 40 pixels): A hollow stone that drifts through the dark with a heart of glimmering crystal. Crack one open and it glows for a hundred years.
+9. crystal_serpent (Crystal Serpent, light element, frame 40 × 40 pixels): A serpent of living glass that swims through the crystals as if they were water. You only see it by the light it bends.
+10. comet_hare (Comet Hare, light element, frame 40 × 40 pixels): A hare that hops so fast across the isle's meadows that it leaves a tail of starlight behind it. The fairies say a fallen star taught it to run. (Its colour variants, Dusk Comet Hare, are recoloured from it in the game: draw only this one.)
+
+Go one monster at a time. For each: say its frame size, then deliver its sheet as a 1× PNG named <id>_sheet.png and an exact 8× nearest-neighbour preview <id>_sheet_8x.png, then the next. At the end of the batch: a contact sheet of every monster's down-facing idle and attack frames on mid-grey, an asset_checks.json (each sheet's size, colour count, alpha values, and for each frame the bottom row its feet stand on), and a zip of it all.

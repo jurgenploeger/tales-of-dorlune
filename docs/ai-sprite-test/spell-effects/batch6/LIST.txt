@@ -1,0 +1,8 @@
+1. super_boost (Super Boost, buff, buff, on one ally): Fire an ally right up: ATK +40% for 3 rounds.
+2. curse (Curse, curse, dark, on one foe): Dark magic: a foe hits for less for 3 rounds.
+3. poison (Poison, curse, dark, on one foe): Dark magic: a foe loses HP at the end of every round for 3 rounds.
+4. poison_mist (Poison Mist, curse, dark, on every foe): A choking cloud that can poison everyone it reaches.
+5. evil_eye (Evil Eye, curse, dark, on one foe): A cold glare that saps a foe's strength for 3 rounds.
+6. beast_lore (Beast Lore, curse, curse, on every foe): Call out every foe's weak spots: their DEF −15% for 3 rounds.
+7. revive (Revive, revive, none, on a fainted ally): Wake a fainted ally with some of their HP.
+8. bridge_of_light (Bridge of Light, field, none, on one ally): Outside battle: carry yourself to a town you've been to.

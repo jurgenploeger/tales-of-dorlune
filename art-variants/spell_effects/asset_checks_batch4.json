@@ -1,0 +1,1828 @@
+{
+  "batch": 4,
+  "total_skills": 9,
+  "total_nonempty_frames": 166,
+  "grid_columns": 8,
+  "grid_rows": 4,
+  "row_numbers_start_at": 1,
+  "colour_count_definition": "Distinct opaque RGB colours, excluding transparent pixels.",
+  "frame_bounds_definition": "Native pixels within a 64 x 64 cell, [left, top, right, bottom], right and bottom exclusive.",
+  "white_balance_kelvin": 6000,
+  "checks": {
+    "sheet_dimensions": true,
+    "row_occupancy": true,
+    "empty_cells_fully_transparent": true,
+    "binary_alpha": true,
+    "palette_within_limit": true,
+    "all_frames_unique_within_each_used_row": true,
+    "art_inside_frame_margin": true,
+    "preview_pixel_exact": true,
+    "flight_directions_separately_drawn": true
+  },
+  "assets": [
+    {
+      "id": "mud_shot",
+      "file": "effect_mud_shot.png",
+      "preview": "effect_mud_shot_8x.png",
+      "sheet_size_px": [
+        512,
+        256
+      ],
+      "frame_size_px": [
+        64,
+        64
+      ],
+      "preview_size_px": [
+        4096,
+        2048
+      ],
+      "colour_count": 20,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "used_rows": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "frames_per_row": {
+        "cast": 6,
+        "projectile_right": 4,
+        "projectile_up": 4,
+        "impact": 8
+      },
+      "frame_bounds_xyxy_exclusive": {
+        "cast": [
+          [
+            16,
+            41,
+            46,
+            51
+          ],
+          [
+            17,
+            38,
+            45,
+            51
+          ],
+          [
+            18,
+            34,
+            45,
+            50
+          ],
+          [
+            18,
+            31,
+            44,
+            49
+          ],
+          [
+            19,
+            28,
+            43,
+            48
+          ],
+          [
+            20,
+            25,
+            43,
+            47
+          ]
+        ],
+        "projectile_right": [
+          [
+            9,
+            22,
+            50,
+            46
+          ],
+          [
+            9,
+            23,
+            49,
+            45
+          ],
+          [
+            9,
+            22,
+            48,
+            44
+          ],
+          [
+            9,
+            21,
+            49,
+            45
+          ]
+        ],
+        "projectile_up": [
+          [
+            22,
+            17,
+            43,
+            53
+          ],
+          [
+            22,
+            16,
+            44,
+            53
+          ],
+          [
+            21,
+            15,
+            43,
+            53
+          ],
+          [
+            21,
+            16,
+            42,
+            53
+          ]
+        ],
+        "impact": [
+          [
+            10,
+            15,
+            53,
+            49
+          ],
+          [
+            9,
+            14,
+            53,
+            49
+          ],
+          [
+            9,
+            14,
+            54,
+            49
+          ],
+          [
+            8,
+            15,
+            54,
+            49
+          ],
+          [
+            7,
+            16,
+            55,
+            50
+          ],
+          [
+            6,
+            17,
+            56,
+            51
+          ],
+          [
+            6,
+            21,
+            57,
+            52
+          ],
+          [
+            7,
+            26,
+            57,
+            53
+          ]
+        ]
+      },
+      "opaque_pixels_per_frame": {
+        "cast": [
+          87,
+          120,
+          157,
+          201,
+          250,
+          311,
+          0,
+          0
+        ],
+        "projectile_right": [
+          470,
+          464,
+          460,
+          461,
+          0,
+          0,
+          0,
+          0
+        ],
+        "projectile_up": [
+          454,
+          464,
+          463,
+          460,
+          0,
+          0,
+          0,
+          0
+        ],
+        "impact": [
+          813,
+          737,
+          639,
+          482,
+          292,
+          124,
+          29,
+          2
+        ]
+      },
+      "exact_8x_nearest_neighbour": true,
+      "name": "Mud Shot",
+      "kind": "magic",
+      "element": "earth",
+      "target": "on one foe",
+      "up_flight_separately_drawn": true
+    },
+    {
+      "id": "bubble",
+      "file": "effect_bubble.png",
+      "preview": "effect_bubble_8x.png",
+      "sheet_size_px": [
+        512,
+        256
+      ],
+      "frame_size_px": [
+        64,
+        64
+      ],
+      "preview_size_px": [
+        4096,
+        2048
+      ],
+      "colour_count": 22,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "used_rows": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "frames_per_row": {
+        "cast": 6,
+        "projectile_right": 4,
+        "projectile_up": 4,
+        "impact": 8
+      },
+      "frame_bounds_xyxy_exclusive": {
+        "cast": [
+          [
+            15,
+            34,
+            48,
+            53
+          ],
+          [
+            15,
+            30,
+            47,
+            51
+          ],
+          [
+            16,
+            27,
+            47,
+            50
+          ],
+          [
+            17,
+            23,
+            47,
+            49
+          ],
+          [
+            17,
+            20,
+            47,
+            48
+          ],
+          [
+            18,
+            18,
+            46,
+            47
+          ]
+        ],
+        "projectile_right": [
+          [
+            13,
+            19,
+            53,
+            45
+          ],
+          [
+            13,
+            19,
+            52,
+            46
+          ],
+          [
+            13,
+            19,
+            50,
+            45
+          ],
+          [
+            13,
+            18,
+            51,
+            45
+          ]
+        ],
+        "projectile_up": [
+          [
+            19,
+            13,
+            45,
+            53
+          ],
+          [
+            19,
+            12,
+            45,
+            53
+          ],
+          [
+            19,
+            11,
+            44,
+            53
+          ],
+          [
+            19,
+            11,
+            44,
+            53
+          ]
+        ],
+        "impact": [
+          [
+            8,
+            11,
+            54,
+            54
+          ],
+          [
+            8,
+            9,
+            54,
+            56
+          ],
+          [
+            7,
+            8,
+            55,
+            56
+          ],
+          [
+            8,
+            8,
+            55,
+            57
+          ],
+          [
+            15,
+            7,
+            55,
+            57
+          ],
+          [
+            14,
+            10,
+            55,
+            58
+          ],
+          [
+            14,
+            19,
+            56,
+            51
+          ],
+          [
+            14,
+            19,
+            57,
+            53
+          ]
+        ]
+      },
+      "opaque_pixels_per_frame": {
+        "cast": [
+          119,
+          147,
+          183,
+          243,
+          292,
+          303,
+          0,
+          0
+        ],
+        "projectile_right": [
+          345,
+          327,
+          324,
+          334,
+          0,
+          0,
+          0,
+          0
+        ],
+        "projectile_up": [
+          326,
+          311,
+          314,
+          338,
+          0,
+          0,
+          0,
+          0
+        ],
+        "impact": [
+          750,
+          537,
+          467,
+          271,
+          96,
+          23,
+          2,
+          2
+        ]
+      },
+      "exact_8x_nearest_neighbour": true,
+      "name": "Bubble",
+      "kind": "magic",
+      "element": "water",
+      "target": "on one foe",
+      "up_flight_separately_drawn": true
+    },
+    {
+      "id": "frost_breath",
+      "file": "effect_frost_breath.png",
+      "preview": "effect_frost_breath_8x.png",
+      "sheet_size_px": [
+        512,
+        256
+      ],
+      "frame_size_px": [
+        64,
+        64
+      ],
+      "preview_size_px": [
+        4096,
+        2048
+      ],
+      "colour_count": 20,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "used_rows": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "frames_per_row": {
+        "cast": 6,
+        "projectile_right": 4,
+        "projectile_up": 4,
+        "impact": 8
+      },
+      "frame_bounds_xyxy_exclusive": {
+        "cast": [
+          [
+            13,
+            25,
+            51,
+            43
+          ],
+          [
+            16,
+            24,
+            48,
+            44
+          ],
+          [
+            20,
+            23,
+            45,
+            45
+          ],
+          [
+            18,
+            22,
+            46,
+            46
+          ],
+          [
+            17,
+            22,
+            47,
+            46
+          ],
+          [
+            16,
+            21,
+            48,
+            47
+          ]
+        ],
+        "projectile_right": [
+          [
+            10,
+            15,
+            57,
+            48
+          ],
+          [
+            10,
+            15,
+            57,
+            48
+          ],
+          [
+            10,
+            15,
+            57,
+            48
+          ],
+          [
+            10,
+            15,
+            57,
+            48
+          ]
+        ],
+        "projectile_up": [
+          [
+            16,
+            8,
+            50,
+            51
+          ],
+          [
+            16,
+            9,
+            50,
+            51
+          ],
+          [
+            16,
+            8,
+            50,
+            51
+          ],
+          [
+            15,
+            8,
+            50,
+            51
+          ]
+        ],
+        "impact": [
+          [
+            11,
+            9,
+            53,
+            50
+          ],
+          [
+            10,
+            9,
+            54,
+            50
+          ],
+          [
+            10,
+            10,
+            54,
+            50
+          ],
+          [
+            10,
+            12,
+            54,
+            51
+          ],
+          [
+            10,
+            15,
+            54,
+            51
+          ],
+          [
+            9,
+            16,
+            55,
+            53
+          ],
+          [
+            9,
+            17,
+            56,
+            55
+          ],
+          [
+            9,
+            18,
+            18,
+            56
+          ]
+        ]
+      },
+      "opaque_pixels_per_frame": {
+        "cast": [
+          131,
+          165,
+          191,
+          224,
+          239,
+          261,
+          0,
+          0
+        ],
+        "projectile_right": [
+          611,
+          620,
+          614,
+          607,
+          0,
+          0,
+          0,
+          0
+        ],
+        "projectile_up": [
+          590,
+          576,
+          587,
+          587,
+          0,
+          0,
+          0,
+          0
+        ],
+        "impact": [
+          849,
+          810,
+          715,
+          562,
+          320,
+          132,
+          12,
+          2
+        ]
+      },
+      "exact_8x_nearest_neighbour": true,
+      "name": "Frost Breath",
+      "kind": "magic",
+      "element": "water",
+      "target": "on every foe",
+      "up_flight_separately_drawn": true
+    },
+    {
+      "id": "dancing_fountain",
+      "file": "effect_dancing_fountain.png",
+      "preview": "effect_dancing_fountain_8x.png",
+      "sheet_size_px": [
+        512,
+        256
+      ],
+      "frame_size_px": [
+        64,
+        64
+      ],
+      "preview_size_px": [
+        4096,
+        2048
+      ],
+      "colour_count": 25,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "used_rows": [
+        1,
+        4
+      ],
+      "frames_per_row": {
+        "cast": 6,
+        "projectile_right": 0,
+        "projectile_up": 0,
+        "impact": 8
+      },
+      "frame_bounds_xyxy_exclusive": {
+        "cast": [
+          [
+            28,
+            44,
+            37,
+            55
+          ],
+          [
+            25,
+            39,
+            38,
+            55
+          ],
+          [
+            23,
+            35,
+            41,
+            55
+          ],
+          [
+            20,
+            30,
+            44,
+            56
+          ],
+          [
+            17,
+            25,
+            47,
+            56
+          ],
+          [
+            15,
+            20,
+            49,
+            57
+          ]
+        ],
+        "projectile_right": [],
+        "projectile_up": [],
+        "impact": [
+          [
+            7,
+            7,
+            57,
+            59
+          ],
+          [
+            7,
+            8,
+            57,
+            59
+          ],
+          [
+            6,
+            11,
+            58,
+            58
+          ],
+          [
+            6,
+            13,
+            58,
+            58
+          ],
+          [
+            6,
+            15,
+            59,
+            57
+          ],
+          [
+            10,
+            33,
+            55,
+            56
+          ],
+          [
+            10,
+            37,
+            55,
+            46
+          ],
+          [
+            9,
+            46,
+            56,
+            48
+          ]
+        ]
+      },
+      "opaque_pixels_per_frame": {
+        "cast": [
+          42,
+          83,
+          120,
+          199,
+          320,
+          406,
+          0,
+          0
+        ],
+        "projectile_right": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "projectile_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "impact": [
+          898,
+          884,
+          771,
+          588,
+          358,
+          123,
+          9,
+          2
+        ]
+      },
+      "exact_8x_nearest_neighbour": true,
+      "name": "Dancing Fountain",
+      "kind": "magic",
+      "element": "water",
+      "target": "on one foe"
+    },
+    {
+      "id": "spiritual_lance",
+      "file": "effect_spiritual_lance.png",
+      "preview": "effect_spiritual_lance_8x.png",
+      "sheet_size_px": [
+        512,
+        256
+      ],
+      "frame_size_px": [
+        64,
+        64
+      ],
+      "preview_size_px": [
+        4096,
+        2048
+      ],
+      "colour_count": 30,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "used_rows": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "frames_per_row": {
+        "cast": 6,
+        "projectile_right": 4,
+        "projectile_up": 4,
+        "impact": 8
+      },
+      "frame_bounds_xyxy_exclusive": {
+        "cast": [
+          [
+            23,
+            26,
+            42,
+            44
+          ],
+          [
+            21,
+            25,
+            43,
+            45
+          ],
+          [
+            20,
+            22,
+            44,
+            46
+          ],
+          [
+            18,
+            21,
+            47,
+            47
+          ],
+          [
+            17,
+            20,
+            50,
+            47
+          ],
+          [
+            14,
+            19,
+            52,
+            48
+          ]
+        ],
+        "projectile_right": [
+          [
+            5,
+            27,
+            57,
+            39
+          ],
+          [
+            5,
+            26,
+            58,
+            39
+          ],
+          [
+            5,
+            25,
+            55,
+            39
+          ],
+          [
+            6,
+            26,
+            57,
+            39
+          ]
+        ],
+        "projectile_up": [
+          [
+            25,
+            9,
+            39,
+            56
+          ],
+          [
+            26,
+            6,
+            38,
+            55
+          ],
+          [
+            25,
+            7,
+            39,
+            56
+          ],
+          [
+            24,
+            7,
+            40,
+            56
+          ]
+        ],
+        "impact": [
+          [
+            5,
+            17,
+            56,
+            47
+          ],
+          [
+            9,
+            16,
+            55,
+            46
+          ],
+          [
+            13,
+            16,
+            53,
+            47
+          ],
+          [
+            14,
+            15,
+            53,
+            46
+          ],
+          [
+            13,
+            15,
+            53,
+            47
+          ],
+          [
+            13,
+            15,
+            54,
+            49
+          ],
+          [
+            13,
+            15,
+            55,
+            49
+          ],
+          [
+            12,
+            15,
+            55,
+            50
+          ]
+        ]
+      },
+      "opaque_pixels_per_frame": {
+        "cast": [
+          99,
+          124,
+          151,
+          181,
+          230,
+          277,
+          0,
+          0
+        ],
+        "projectile_right": [
+          278,
+          295,
+          287,
+          277,
+          0,
+          0,
+          0,
+          0
+        ],
+        "projectile_up": [
+          257,
+          264,
+          261,
+          278,
+          0,
+          0,
+          0,
+          0
+        ],
+        "impact": [
+          431,
+          379,
+          314,
+          209,
+          148,
+          65,
+          4,
+          2
+        ]
+      },
+      "exact_8x_nearest_neighbour": true,
+      "name": "Spiritual Lance",
+      "kind": "magic",
+      "element": "metal",
+      "target": "on one foe",
+      "up_flight_separately_drawn": true
+    },
+    {
+      "id": "meteor_blast",
+      "file": "effect_meteor_blast.png",
+      "preview": "effect_meteor_blast_8x.png",
+      "sheet_size_px": [
+        512,
+        256
+      ],
+      "frame_size_px": [
+        64,
+        64
+      ],
+      "preview_size_px": [
+        4096,
+        2048
+      ],
+      "colour_count": 32,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "used_rows": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "frames_per_row": {
+        "cast": 6,
+        "projectile_right": 4,
+        "projectile_up": 4,
+        "impact": 8
+      },
+      "frame_bounds_xyxy_exclusive": {
+        "cast": [
+          [
+            21,
+            23,
+            47,
+            45
+          ],
+          [
+            21,
+            22,
+            47,
+            45
+          ],
+          [
+            20,
+            21,
+            47,
+            45
+          ],
+          [
+            20,
+            18,
+            47,
+            45
+          ],
+          [
+            20,
+            16,
+            48,
+            44
+          ],
+          [
+            20,
+            13,
+            49,
+            44
+          ]
+        ],
+        "projectile_right": [
+          [
+            9,
+            18,
+            51,
+            42
+          ],
+          [
+            9,
+            17,
+            50,
+            43
+          ],
+          [
+            9,
+            16,
+            49,
+            42
+          ],
+          [
+            9,
+            17,
+            50,
+            41
+          ]
+        ],
+        "projectile_up": [
+          [
+            19,
+            16,
+            40,
+            54
+          ],
+          [
+            18,
+            15,
+            42,
+            53
+          ],
+          [
+            17,
+            14,
+            41,
+            54
+          ],
+          [
+            18,
+            15,
+            40,
+            55
+          ]
+        ],
+        "impact": [
+          [
+            11,
+            12,
+            54,
+            52
+          ],
+          [
+            10,
+            15,
+            54,
+            51
+          ],
+          [
+            9,
+            15,
+            53,
+            49
+          ],
+          [
+            9,
+            14,
+            53,
+            47
+          ],
+          [
+            8,
+            13,
+            54,
+            42
+          ],
+          [
+            8,
+            14,
+            55,
+            37
+          ],
+          [
+            7,
+            29,
+            56,
+            37
+          ],
+          [
+            7,
+            31,
+            57,
+            38
+          ]
+        ]
+      },
+      "opaque_pixels_per_frame": {
+        "cast": [
+          75,
+          107,
+          155,
+          205,
+          264,
+          323,
+          0,
+          0
+        ],
+        "projectile_right": [
+          562,
+          564,
+          569,
+          561,
+          0,
+          0,
+          0,
+          0
+        ],
+        "projectile_up": [
+          508,
+          521,
+          529,
+          511,
+          0,
+          0,
+          0,
+          0
+        ],
+        "impact": [
+          868,
+          756,
+          568,
+          333,
+          126,
+          34,
+          11,
+          2
+        ]
+      },
+      "exact_8x_nearest_neighbour": true,
+      "name": "Meteor Blast",
+      "kind": "magic",
+      "element": "fire",
+      "target": "on every foe",
+      "up_flight_separately_drawn": true
+    },
+    {
+      "id": "first_aid",
+      "file": "effect_first_aid.png",
+      "preview": "effect_first_aid_8x.png",
+      "sheet_size_px": [
+        512,
+        256
+      ],
+      "frame_size_px": [
+        64,
+        64
+      ],
+      "preview_size_px": [
+        4096,
+        2048
+      ],
+      "colour_count": 20,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "used_rows": [
+        1,
+        4
+      ],
+      "frames_per_row": {
+        "cast": 6,
+        "projectile_right": 0,
+        "projectile_up": 0,
+        "impact": 8
+      },
+      "frame_bounds_xyxy_exclusive": {
+        "cast": [
+          [
+            21,
+            46,
+            37,
+            55
+          ],
+          [
+            20,
+            43,
+            38,
+            53
+          ],
+          [
+            21,
+            41,
+            39,
+            52
+          ],
+          [
+            20,
+            39,
+            40,
+            51
+          ],
+          [
+            21,
+            37,
+            40,
+            49
+          ],
+          [
+            21,
+            35,
+            41,
+            48
+          ]
+        ],
+        "projectile_right": [],
+        "projectile_up": [],
+        "impact": [
+          [
+            16,
+            37,
+            49,
+            59
+          ],
+          [
+            16,
+            34,
+            49,
+            56
+          ],
+          [
+            16,
+            29,
+            50,
+            56
+          ],
+          [
+            15,
+            26,
+            50,
+            56
+          ],
+          [
+            15,
+            23,
+            50,
+            38
+          ],
+          [
+            15,
+            20,
+            51,
+            34
+          ],
+          [
+            16,
+            22,
+            50,
+            28
+          ],
+          [
+            16,
+            18,
+            27,
+            24
+          ]
+        ]
+      },
+      "opaque_pixels_per_frame": {
+        "cast": [
+          66,
+          86,
+          108,
+          136,
+          162,
+          189,
+          0,
+          0
+        ],
+        "projectile_right": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "projectile_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "impact": [
+          498,
+          501,
+          441,
+          334,
+          172,
+          73,
+          7,
+          2
+        ]
+      },
+      "exact_8x_nearest_neighbour": true,
+      "name": "First Aid",
+      "kind": "heal",
+      "element": "healing",
+      "target": "on one ally"
+    },
+    {
+      "id": "blessing",
+      "file": "effect_blessing.png",
+      "preview": "effect_blessing_8x.png",
+      "sheet_size_px": [
+        512,
+        256
+      ],
+      "frame_size_px": [
+        64,
+        64
+      ],
+      "preview_size_px": [
+        4096,
+        2048
+      ],
+      "colour_count": 21,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "used_rows": [
+        1,
+        4
+      ],
+      "frames_per_row": {
+        "cast": 6,
+        "projectile_right": 0,
+        "projectile_up": 0,
+        "impact": 8
+      },
+      "frame_bounds_xyxy_exclusive": {
+        "cast": [
+          [
+            20,
+            42,
+            45,
+            58
+          ],
+          [
+            19,
+            40,
+            45,
+            58
+          ],
+          [
+            17,
+            37,
+            46,
+            58
+          ],
+          [
+            15,
+            34,
+            48,
+            59
+          ],
+          [
+            13,
+            31,
+            50,
+            59
+          ],
+          [
+            12,
+            28,
+            52,
+            59
+          ]
+        ],
+        "projectile_right": [],
+        "projectile_up": [],
+        "impact": [
+          [
+            12,
+            34,
+            52,
+            59
+          ],
+          [
+            11,
+            32,
+            52,
+            58
+          ],
+          [
+            11,
+            29,
+            53,
+            58
+          ],
+          [
+            10,
+            26,
+            53,
+            58
+          ],
+          [
+            9,
+            23,
+            54,
+            58
+          ],
+          [
+            9,
+            21,
+            55,
+            58
+          ],
+          [
+            15,
+            19,
+            50,
+            26
+          ],
+          [
+            16,
+            16,
+            50,
+            22
+          ]
+        ]
+      },
+      "opaque_pixels_per_frame": {
+        "cast": [
+          137,
+          163,
+          184,
+          195,
+          224,
+          229,
+          0,
+          0
+        ],
+        "projectile_right": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "projectile_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "impact": [
+          418,
+          400,
+          407,
+          360,
+          287,
+          200,
+          14,
+          2
+        ]
+      },
+      "exact_8x_nearest_neighbour": true,
+      "name": "Healing Spring",
+      "kind": "heal",
+      "element": "healing",
+      "target": "on the whole party"
+    },
+    {
+      "id": "recovery",
+      "file": "effect_recovery.png",
+      "preview": "effect_recovery_8x.png",
+      "sheet_size_px": [
+        512,
+        256
+      ],
+      "frame_size_px": [
+        64,
+        64
+      ],
+      "preview_size_px": [
+        4096,
+        2048
+      ],
+      "colour_count": 20,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "used_rows": [
+        1,
+        4
+      ],
+      "frames_per_row": {
+        "cast": 6,
+        "projectile_right": 0,
+        "projectile_up": 0,
+        "impact": 8
+      },
+      "frame_bounds_xyxy_exclusive": {
+        "cast": [
+          [
+            19,
+            42,
+            42,
+            55
+          ],
+          [
+            20,
+            39,
+            43,
+            53
+          ],
+          [
+            20,
+            36,
+            44,
+            52
+          ],
+          [
+            20,
+            34,
+            44,
+            51
+          ],
+          [
+            20,
+            31,
+            45,
+            50
+          ],
+          [
+            21,
+            28,
+            46,
+            47
+          ]
+        ],
+        "projectile_right": [],
+        "projectile_up": [],
+        "impact": [
+          [
+            15,
+            34,
+            50,
+            61
+          ],
+          [
+            15,
+            32,
+            49,
+            57
+          ],
+          [
+            15,
+            27,
+            49,
+            54
+          ],
+          [
+            14,
+            21,
+            50,
+            46
+          ],
+          [
+            14,
+            18,
+            50,
+            43
+          ],
+          [
+            15,
+            15,
+            50,
+            31
+          ],
+          [
+            15,
+            18,
+            50,
+            26
+          ],
+          [
+            15,
+            16,
+            50,
+            17
+          ]
+        ]
+      },
+      "opaque_pixels_per_frame": {
+        "cast": [
+          65,
+          84,
+          141,
+          202,
+          258,
+          278,
+          0,
+          0
+        ],
+        "projectile_right": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "projectile_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "impact": [
+          596,
+          484,
+          588,
+          401,
+          226,
+          67,
+          24,
+          2
+        ]
+      },
+      "exact_8x_nearest_neighbour": true,
+      "name": "Recovery",
+      "kind": "heal",
+      "element": "healing",
+      "target": "on one ally"
+    }
+  ]
+}

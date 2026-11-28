@@ -1,0 +1,7 @@
+1. lantern_sprite (Lantern Sprite, fire element, frame 40 × 40 pixels): A moth-winged sprite that carries a lantern lit from the fallen star. It leads lost travellers home, or deeper into the woods if it's feeling cheeky. (Its colour variants, Moonlamp Sprite, are recoloured from it in the game: draw only this one.)
+2. shardwing_bat (Shardwing Bat, dark element, frame 40 × 40 pixels): A bat whose wings grew crystal in the Glimmerdeep's dark. It hangs from the ceiling in rows, chiming softly when it shivers.
+3. rosequartz_bat (Rosequartz Bat, dark element, frame 40 × 40 pixels): Shardwing Bats from the Depths, where the crystal blushes pink. They're bigger and bolder than their cousins up top.
+4. gloomwing_bat (Gloomwing Bat, dark element, frame 40 × 40 pixels): Down by the Glimmerdeep's heart, where no light has ever reached, the bats' crystal wings have gone as dark as the night sky.
+5. geode_golem (Geode Golem, earth element, frame 40 × 40 pixels): A little golem made of cave rock, with amethyst growing out of its back. It collects pretty stones and gets very upset if you take one.
+6. sapphire_golem (Sapphire Golem, earth element, frame 40 × 40 pixels): A Geode Golem from the Depths, its crystals blue as deep water. It sits so still that miners have built shelves on it.
+7. heartstone_golem (Heartstone Golem, earth element, frame 40 × 40 pixels): The oldest golems keep watch at the Glimmerdeep's heart, their crystals glowing red as embers. They say the Prism Drake raised them.

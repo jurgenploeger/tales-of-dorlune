@@ -187,7 +187,7 @@ struct WorldHUD: View {
                 // 2026-10-24: a row of four buttons, Chat and Settings up by the minimap), each a window
                 // of its own (2026-10-25), Friends too.
                 HStack(alignment: .bottom, spacing: 7) {
-                    FLIconButton(icon: .talk, label: L("Chat"), badge: session.unreadChat > 0) {
+                    FLIconButton(icon: .talk, label: L("Chat"), size: 56, badge: session.unreadChat > 0) {
                         menuOpen = false
                         coordinator.open(.chat)
                     }
@@ -196,7 +196,7 @@ struct WorldHUD: View {
                     // The Bag a tap away beside Chat (playtesting 2026-10-26: "Put an inventory button
                     // on the left of chat, so it's easier accessable"; 2026-10-30: right of it, by the
                     // menu): its window opens as from the menu.
-                    FLIconButton(icon: MenuTab.bag.icon, label: MenuTab.bag.menuTitle, badge: badge(for: .bag)) {
+                    FLIconButton(icon: MenuTab.bag.icon, label: MenuTab.bag.menuTitle, size: 56, badge: badge(for: .bag)) {
                         menuOpen = false
                         coordinator.open(.menu(.bag))
                     }
@@ -553,8 +553,29 @@ private struct Portrait: View {
             .background(Circle().fill(RadialGradient(colors: [HUDStyle.portrait, HUDStyle.portraitRim],
                                                      center: UnitPoint(x: 0.4, y: 0.35), startRadius: 1, endRadius: size * 0.7)))
             .clipShape(Circle())
-            .overlay(Circle().strokeBorder(HUDStyle.bevel, lineWidth: size > 40 ? 3 : 2))
+            .overlay {
+                if size > 40 {
+                    // Your face in the carved ring (`WoodPortraitRing`, its window 779 of its 1041 pixels),
+                    // your level in the socket carved on its lower left.
+                    let canvas = size * 1280 / 779
+                    Image("WoodPortraitRing")
+                        .resizable()
+                        .frame(width: canvas, height: canvas)
+                        .overlay {
+                            Text("\(level)")
+                                .font(HUDStyle.mono(11))
+                                .foregroundStyle(HUDStyle.ink)
+                                .lineLimit(1)
+                                .fixedSize()
+                                .offset(x: -456.0 / 1280 * canvas, y: 413.0 / 1280 * canvas)
+                        }
+                        .allowsHitTesting(false)
+                } else {
+                    Circle().strokeBorder(HUDStyle.bevel, lineWidth: 2)
+                }
+            }
             .overlay(alignment: .bottomLeading) {
+                if size <= 40 {
                 Text("\(level)")
                     .font(HUDStyle.mono(size > 40 ? 10 : 8))
                     .foregroundStyle(.white)
@@ -564,6 +585,7 @@ private struct Portrait: View {
                     .frame(minWidth: size * 0.34, minHeight: size * 0.34)
                     .background(Capsule().fill(HUDStyle.frameDark).overlay(Capsule().strokeBorder(HUDStyle.bevel, lineWidth: 1.5)))
                     .offset(x: -2, y: 2)
+                }
             }
             .shadow(color: glowing ? HUDStyle.gold.opacity(pulse ? 1 : 0.3) : .black.opacity(0.35), radius: glowing ? 8 : 2, y: glowing ? 0 : 2)
             .onAppear {
@@ -751,7 +773,7 @@ private struct GameMenu: View {
     let badge: (MenuTab) -> Bool
     let onPick: (MenuTab) -> Void
 
-    private static let button: CGFloat = 46
+    private static let button: CGFloat = 56
     private static let spring = Animation.spring(response: 0.34, dampingFraction: 0.78)
 
     var body: some View {
@@ -762,16 +784,10 @@ private struct GameMenu: View {
             SoundEffects.shared.play(.tap, volume: 0.7)
             open.toggle()
         } label: {
-            MenuGlyph()
+            // The carved menu button (tools/hud_game_art.py); open, pressed in.
+            Image(open ? "WoodButtonMenuPressed" : "WoodButtonMenu")
+                .resizable()
                 .frame(width: Self.button, height: Self.button)
-                .background(Self.surface(Circle()))
-                .overlay(alignment: .top) {
-                    // The button's gloss, an oval across its top.
-                    Ellipse().fill(.white.opacity(0.35))
-                        .frame(width: Self.button * 0.62, height: Self.button * 0.28)
-                        .padding(.top, 3)
-                        .allowsHitTesting(false)
-                }
                 .overlay(alignment: .topTrailing) {
                     if !open, items.contains(where: badge) {
                         Circle().fill(HUDStyle.gold).frame(width: 12, height: 12)
@@ -899,7 +915,11 @@ private struct MinimapWindow: View {
     var tint = GameSession.SkyTint.day
     let onOpen: () -> Void
 
-    private let size: CGFloat = 128
+    /// The map's round, just under the carved ring's inner edge (its window 0.8 of it: 114 points).
+    private let size: CGFloat = 118
+    /// The carved ring round it (`WoodMinimapRing`), and the picture it's drawn on, its pendant and all.
+    private let ring: CGFloat = 143
+    private var ringCanvas: CGFloat { ring * 1280 / 1127 }
     private let zoom: CGFloat = 5
     /// The rotated map layer must be big enough to cover the window's corners.
     private let layer: CGFloat = 420
@@ -948,13 +968,18 @@ private struct MinimapWindow: View {
         }
         .frame(width: size, height: size)
         .clipShape(Circle())
-        .overlay(Circle().strokeBorder(HUDStyle.bevel, lineWidth: 3))
+        .overlay {
+            Image("WoodMinimapRing")
+                .resizable()
+                .frame(width: ringCanvas, height: ringCanvas)
+                .allowsHitTesting(false)
+        }
+        .frame(width: ring, height: ring)
         .shadow(color: .black.opacity(0.35), radius: 3, x: 0, y: 2)
         // Which way north lies as you see the land (playtesting 2026-11-01): up and to the left, as
-        // the map under it is turned.
-        // Top right (playtesting 2026-11-01), over the minimap's rim.
+        // the map under it is turned. Top right (playtesting 2026-11-01), over the minimap's rim.
         .overlay(alignment: .topTrailing) {
-            MapCompass(size: 42, compact: true, isometric: true)
+            WoodCompass(size: 42)
                 .offset(x: 2, y: -2)
                 .allowsHitTesting(false)
                 .accessibilityHidden(true)
@@ -985,6 +1010,22 @@ private struct MinimapWindow: View {
         case .adventurer: Color(uiColor: Crowd.adventurerColor)
         case .folk: Color(red: 1, green: 0.88, blue: 0.3)
         }
+    }
+}
+
+/// The minimap's carved compass (`WoodCompass`, `WoodNeedle`): the needle's red half points north as the
+/// turned, squashed map under it lies (as `MapCompass`'s isometric needle does).
+private struct WoodCompass: View {
+    let size: CGFloat
+
+    var body: some View {
+        let canvas = size * 1280 / 1033
+        ZStack {
+            Image("WoodCompass").resizable().frame(width: canvas, height: canvas)
+            Image("WoodNeedle").resizable().frame(width: canvas, height: canvas)
+                .rotationEffect(.degrees(atan2(-1.0, 0.5) * 180 / Double.pi))
+        }
+        .frame(width: size, height: size)
     }
 }
 

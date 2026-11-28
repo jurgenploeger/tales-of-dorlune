@@ -1,0 +1,33 @@
+Redraw the skill icons from my game as pixel art, one at a time. Each attached _today picture is the
+skill's icon now, drawn as soft light: keep what it shows (its subject, its colours by name, its
+sense of motion) and draw it in the look of the attached style sheet, Retro Diffusion's item icons at
+4×. That's the look to match exactly: chunky and rich, smooth broad shading lit from the top left with
+bright highlights and deep, slightly coloured shadows, a one-pixel outline in a deep shade of each
+thing's own colour (never black), no dithering or grain, no soft glow.
+
+Every icon: a 64 × 64 canvas, transparent, alpha 0 or 255 only; no tile or background behind it (the
+game puts it in a round carved socket or on a coloured tile); the subject centred and kept inside a
+circle about 56 pixels across, so it fits the round socket, filling it well; 20 to 45 colours. Magic is
+drawn as hard pixels: a few crisp sparks, streaks or rings touching the subject are fine, but no blur,
+no glow, no half-transparent pixels. Each skill's main colours as listed, so an element reads at a
+glance (fire orange and red, water blue, wood green, earth brown and ochre, metal silver and gold,
+light gold and white, dark violet, healing green, buffs sky blue and gold, curses violet). Every icon in
+the batch has its own silhouette: no two alike.
+
+1. first_aid (First Aid, patch up one ally): a white bandage roll with a green cross.
+2. blessing (Healing Spring, water washes over the party): a small spring of green-blue healing water in a stone ring.
+3. recovery (Recovery, light mends one ally): a green heart with a gold glint.
+4. revive (Revive, wake a fainted ally): a white feather rising with a small gold ring of light.
+5. full_heal (Full Heal, back to full HP): a big bright green heart with a plus on it.
+6. mend_beast (Mend Beast, a strong heal for companions): a green paw print with a small heart.
+7. bless (Bless, ATK and DEF up): a sword and a shield crossed under a small gold star.
+8. protection (Protection, DEF up): a sky-blue round shield with a gold rim.
+9. holy_glow (Holy Glow, MAG up): a gold halo ring over a small white star.
+10. guardianship (Guardianship, a ward over the whole party): a sky-blue dome over three small figures' heads.
+11. animal_training (Animal Training, ATK and SPD up): a trainer's whistle with a paw print and a speed streak.
+12. boost (Boost, ATK up): a red upward arrow with a small flame.
+13. super_boost (Super Boost, ATK way up): two stacked gold upward arrows, bigger and brighter than Boost.
+14. berserk (Berserk, a wild rage, DEF down): an angry red face mark, a fierce red flame, a cracked shield edge.
+
+For each: say its size and colour count, then deliver its 1× PNG named skill_<id>.png and the 8×
+preview, then the next.

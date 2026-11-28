@@ -131,3 +131,6 @@ smoothed). Every skill keeps its own animation in battle; only the icon changes.
   (its wide painting squeezed square); its square painting (`_try4_painting.png`), snapped to the grid here (54
   pixels on a 64 canvas, each pixel the colour covering most of its block, 40 colours), reads as a broad
   spearhead driving through the shield: picked as `skill_charge.png`. Batch 1 done.
+- **Batches 2 to 4** (2026-11-28): all 40 delivered clean (64 × 64, hard alpha, 36 to 40 colours), kept in
+  `art-variants/skill_icons/batch2` to `4`; `batchN_results.png` (today's above, new in the middle, at 32 and 24 points
+  on the birch below). Every one reads and every one differs. With batch 1, all 53 skills have a pixel icon.

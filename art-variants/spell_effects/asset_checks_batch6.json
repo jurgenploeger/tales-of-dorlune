@@ -1,0 +1,1445 @@
+{
+  "batch": 6,
+  "total_skills": 8,
+  "total_nonempty_frames": 120,
+  "grid_columns": 8,
+  "grid_rows": 4,
+  "row_numbers_start_at": 1,
+  "colour_count_definition": "Distinct opaque RGB colours, excluding transparent pixels.",
+  "frame_bounds_definition": "Native pixels within a 64 x 64 cell, [left, top, right, bottom], right and bottom exclusive.",
+  "white_balance_kelvin": 6000,
+  "checks": {
+    "sheet_dimensions": true,
+    "row_occupancy": true,
+    "empty_cells_fully_transparent": true,
+    "binary_alpha": true,
+    "palette_within_limit": true,
+    "all_frames_unique_within_each_used_row": true,
+    "art_inside_frame_margin": true,
+    "preview_pixel_exact": true,
+    "flight_directions_separately_drawn": true
+  },
+  "assets": [
+    {
+      "id": "super_boost",
+      "file": "effect_super_boost.png",
+      "preview": "effect_super_boost_8x.png",
+      "sheet_size_px": [
+        512,
+        256
+      ],
+      "frame_size_px": [
+        64,
+        64
+      ],
+      "preview_size_px": [
+        4096,
+        2048
+      ],
+      "colour_count": 26,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "used_rows": [
+        1,
+        4
+      ],
+      "frames_per_row": {
+        "cast": 6,
+        "projectile_right": 0,
+        "projectile_up": 0,
+        "impact": 8
+      },
+      "frame_bounds_xyxy_exclusive": {
+        "cast": [
+          [
+            21,
+            49,
+            44,
+            55
+          ],
+          [
+            21,
+            42,
+            44,
+            54
+          ],
+          [
+            20,
+            39,
+            45,
+            53
+          ],
+          [
+            20,
+            32,
+            45,
+            52
+          ],
+          [
+            20,
+            29,
+            45,
+            51
+          ],
+          [
+            19,
+            26,
+            46,
+            50
+          ]
+        ],
+        "projectile_right": [],
+        "projectile_up": [],
+        "impact": [
+          [
+            13,
+            26,
+            52,
+            60
+          ],
+          [
+            13,
+            21,
+            52,
+            57
+          ],
+          [
+            13,
+            16,
+            52,
+            51
+          ],
+          [
+            13,
+            14,
+            52,
+            47
+          ],
+          [
+            13,
+            13,
+            52,
+            44
+          ],
+          [
+            13,
+            13,
+            50,
+            29
+          ],
+          [
+            13,
+            13,
+            50,
+            22
+          ],
+          [
+            14,
+            14,
+            50,
+            15
+          ]
+        ]
+      },
+      "opaque_pixels_per_frame": {
+        "cast": [
+          38,
+          80,
+          105,
+          151,
+          195,
+          266,
+          0,
+          0
+        ],
+        "projectile_right": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "projectile_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "impact": [
+          613,
+          545,
+          505,
+          373,
+          242,
+          108,
+          37,
+          2
+        ]
+      },
+      "exact_8x_nearest_neighbour": true,
+      "name": "Super Boost",
+      "kind": "buff",
+      "element": "buff",
+      "target": "on one ally"
+    },
+    {
+      "id": "curse",
+      "file": "effect_curse.png",
+      "preview": "effect_curse_8x.png",
+      "sheet_size_px": [
+        512,
+        256
+      ],
+      "frame_size_px": [
+        64,
+        64
+      ],
+      "preview_size_px": [
+        4096,
+        2048
+      ],
+      "colour_count": 21,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "used_rows": [
+        1,
+        4
+      ],
+      "frames_per_row": {
+        "cast": 6,
+        "projectile_right": 0,
+        "projectile_up": 0,
+        "impact": 8
+      },
+      "frame_bounds_xyxy_exclusive": {
+        "cast": [
+          [
+            19,
+            17,
+            47,
+            41
+          ],
+          [
+            21,
+            17,
+            48,
+            42
+          ],
+          [
+            19,
+            17,
+            50,
+            44
+          ],
+          [
+            18,
+            17,
+            51,
+            45
+          ],
+          [
+            17,
+            17,
+            52,
+            46
+          ],
+          [
+            16,
+            18,
+            53,
+            49
+          ]
+        ],
+        "projectile_right": [],
+        "projectile_up": [],
+        "impact": [
+          [
+            7,
+            10,
+            51,
+            46
+          ],
+          [
+            9,
+            16,
+            50,
+            48
+          ],
+          [
+            12,
+            20,
+            51,
+            52
+          ],
+          [
+            15,
+            25,
+            50,
+            55
+          ],
+          [
+            15,
+            32,
+            49,
+            55
+          ],
+          [
+            15,
+            34,
+            48,
+            55
+          ],
+          [
+            15,
+            37,
+            48,
+            58
+          ],
+          [
+            15,
+            50,
+            49,
+            54
+          ]
+        ]
+      },
+      "opaque_pixels_per_frame": {
+        "cast": [
+          126,
+          163,
+          220,
+          275,
+          339,
+          410,
+          0,
+          0
+        ],
+        "projectile_right": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "projectile_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "impact": [
+          765,
+          680,
+          543,
+          395,
+          222,
+          97,
+          32,
+          2
+        ]
+      },
+      "exact_8x_nearest_neighbour": true,
+      "name": "Curse",
+      "kind": "curse",
+      "element": "dark",
+      "target": "on one foe"
+    },
+    {
+      "id": "poison",
+      "file": "effect_poison.png",
+      "preview": "effect_poison_8x.png",
+      "sheet_size_px": [
+        512,
+        256
+      ],
+      "frame_size_px": [
+        64,
+        64
+      ],
+      "preview_size_px": [
+        4096,
+        2048
+      ],
+      "colour_count": 22,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "used_rows": [
+        1,
+        4
+      ],
+      "frames_per_row": {
+        "cast": 6,
+        "projectile_right": 0,
+        "projectile_up": 0,
+        "impact": 8
+      },
+      "frame_bounds_xyxy_exclusive": {
+        "cast": [
+          [
+            19,
+            18,
+            45,
+            41
+          ],
+          [
+            17,
+            17,
+            45,
+            43
+          ],
+          [
+            16,
+            16,
+            44,
+            45
+          ],
+          [
+            16,
+            16,
+            43,
+            47
+          ],
+          [
+            15,
+            15,
+            42,
+            48
+          ],
+          [
+            15,
+            15,
+            41,
+            50
+          ]
+        ],
+        "projectile_right": [],
+        "projectile_up": [],
+        "impact": [
+          [
+            12,
+            15,
+            52,
+            43
+          ],
+          [
+            11,
+            19,
+            52,
+            45
+          ],
+          [
+            11,
+            24,
+            53,
+            49
+          ],
+          [
+            11,
+            30,
+            53,
+            53
+          ],
+          [
+            10,
+            35,
+            53,
+            56
+          ],
+          [
+            14,
+            41,
+            49,
+            51
+          ],
+          [
+            13,
+            46,
+            50,
+            54
+          ],
+          [
+            14,
+            51,
+            49,
+            54
+          ]
+        ]
+      },
+      "opaque_pixels_per_frame": {
+        "cast": [
+          52,
+          70,
+          88,
+          106,
+          136,
+          161,
+          0,
+          0
+        ],
+        "projectile_right": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "projectile_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "impact": [
+          406,
+          368,
+          370,
+          300,
+          226,
+          96,
+          34,
+          2
+        ]
+      },
+      "exact_8x_nearest_neighbour": true,
+      "name": "Poison",
+      "kind": "curse",
+      "element": "dark",
+      "target": "on one foe"
+    },
+    {
+      "id": "poison_mist",
+      "file": "effect_poison_mist.png",
+      "preview": "effect_poison_mist_8x.png",
+      "sheet_size_px": [
+        512,
+        256
+      ],
+      "frame_size_px": [
+        64,
+        64
+      ],
+      "preview_size_px": [
+        4096,
+        2048
+      ],
+      "colour_count": 28,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "used_rows": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "frames_per_row": {
+        "cast": 6,
+        "projectile_right": 4,
+        "projectile_up": 4,
+        "impact": 8
+      },
+      "frame_bounds_xyxy_exclusive": {
+        "cast": [
+          [
+            21,
+            20,
+            40,
+            43
+          ],
+          [
+            20,
+            20,
+            41,
+            43
+          ],
+          [
+            20,
+            19,
+            42,
+            43
+          ],
+          [
+            19,
+            18,
+            44,
+            43
+          ],
+          [
+            18,
+            17,
+            46,
+            43
+          ],
+          [
+            18,
+            17,
+            47,
+            44
+          ]
+        ],
+        "projectile_right": [
+          [
+            7,
+            19,
+            56,
+            41
+          ],
+          [
+            7,
+            20,
+            55,
+            42
+          ],
+          [
+            7,
+            19,
+            54,
+            42
+          ],
+          [
+            6,
+            18,
+            55,
+            41
+          ]
+        ],
+        "projectile_up": [
+          [
+            16,
+            15,
+            48,
+            53
+          ],
+          [
+            17,
+            14,
+            49,
+            53
+          ],
+          [
+            17,
+            13,
+            48,
+            53
+          ],
+          [
+            16,
+            13,
+            47,
+            53
+          ]
+        ],
+        "impact": [
+          [
+            8,
+            12,
+            57,
+            43
+          ],
+          [
+            8,
+            14,
+            57,
+            44
+          ],
+          [
+            9,
+            16,
+            58,
+            46
+          ],
+          [
+            9,
+            18,
+            58,
+            48
+          ],
+          [
+            10,
+            20,
+            58,
+            49
+          ],
+          [
+            14,
+            30,
+            48,
+            51
+          ],
+          [
+            14,
+            42,
+            49,
+            53
+          ],
+          [
+            14,
+            53,
+            49,
+            55
+          ]
+        ]
+      },
+      "opaque_pixels_per_frame": {
+        "cast": [
+          119,
+          170,
+          221,
+          285,
+          356,
+          440,
+          0,
+          0
+        ],
+        "projectile_right": [
+          650,
+          645,
+          659,
+          667,
+          0,
+          0,
+          0,
+          0
+        ],
+        "projectile_up": [
+          633,
+          642,
+          647,
+          634,
+          0,
+          0,
+          0,
+          0
+        ],
+        "impact": [
+          1041,
+          998,
+          933,
+          771,
+          547,
+          152,
+          36,
+          2
+        ]
+      },
+      "exact_8x_nearest_neighbour": true,
+      "name": "Poison Mist",
+      "kind": "curse",
+      "element": "dark",
+      "target": "on every foe",
+      "up_flight_separately_drawn": true
+    },
+    {
+      "id": "evil_eye",
+      "file": "effect_evil_eye.png",
+      "preview": "effect_evil_eye_8x.png",
+      "sheet_size_px": [
+        512,
+        256
+      ],
+      "frame_size_px": [
+        64,
+        64
+      ],
+      "preview_size_px": [
+        4096,
+        2048
+      ],
+      "colour_count": 33,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "used_rows": [
+        1,
+        4
+      ],
+      "frames_per_row": {
+        "cast": 6,
+        "projectile_right": 0,
+        "projectile_up": 0,
+        "impact": 8
+      },
+      "frame_bounds_xyxy_exclusive": {
+        "cast": [
+          [
+            26,
+            31,
+            38,
+            33
+          ],
+          [
+            23,
+            30,
+            41,
+            34
+          ],
+          [
+            20,
+            18,
+            44,
+            46
+          ],
+          [
+            18,
+            17,
+            46,
+            47
+          ],
+          [
+            16,
+            16,
+            48,
+            48
+          ],
+          [
+            14,
+            15,
+            50,
+            49
+          ]
+        ],
+        "projectile_right": [],
+        "projectile_up": [],
+        "impact": [
+          [
+            8,
+            8,
+            56,
+            50
+          ],
+          [
+            10,
+            11,
+            54,
+            49
+          ],
+          [
+            11,
+            14,
+            53,
+            50
+          ],
+          [
+            13,
+            17,
+            52,
+            51
+          ],
+          [
+            13,
+            22,
+            52,
+            52
+          ],
+          [
+            13,
+            33,
+            52,
+            44
+          ],
+          [
+            13,
+            41,
+            51,
+            47
+          ],
+          [
+            13,
+            49,
+            52,
+            50
+          ]
+        ]
+      },
+      "opaque_pixels_per_frame": {
+        "cast": [
+          22,
+          49,
+          154,
+          261,
+          399,
+          488,
+          0,
+          0
+        ],
+        "projectile_right": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "projectile_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "impact": [
+          890,
+          716,
+          591,
+          401,
+          205,
+          77,
+          49,
+          2
+        ]
+      },
+      "exact_8x_nearest_neighbour": true,
+      "name": "Evil Eye",
+      "kind": "curse",
+      "element": "dark",
+      "target": "on one foe"
+    },
+    {
+      "id": "beast_lore",
+      "file": "effect_beast_lore.png",
+      "preview": "effect_beast_lore_8x.png",
+      "sheet_size_px": [
+        512,
+        256
+      ],
+      "frame_size_px": [
+        64,
+        64
+      ],
+      "preview_size_px": [
+        4096,
+        2048
+      ],
+      "colour_count": 25,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "used_rows": [
+        1,
+        4
+      ],
+      "frames_per_row": {
+        "cast": 6,
+        "projectile_right": 0,
+        "projectile_up": 0,
+        "impact": 8
+      },
+      "frame_bounds_xyxy_exclusive": {
+        "cast": [
+          [
+            16,
+            16,
+            49,
+            49
+          ],
+          [
+            16,
+            16,
+            49,
+            49
+          ],
+          [
+            15,
+            15,
+            50,
+            50
+          ],
+          [
+            15,
+            15,
+            50,
+            50
+          ],
+          [
+            14,
+            14,
+            51,
+            51
+          ],
+          [
+            13,
+            13,
+            52,
+            52
+          ]
+        ],
+        "projectile_right": [],
+        "projectile_up": [],
+        "impact": [
+          [
+            7,
+            5,
+            57,
+            55
+          ],
+          [
+            10,
+            9,
+            54,
+            53
+          ],
+          [
+            13,
+            13,
+            51,
+            51
+          ],
+          [
+            13,
+            19,
+            49,
+            50
+          ],
+          [
+            13,
+            23,
+            50,
+            49
+          ],
+          [
+            13,
+            26,
+            50,
+            49
+          ],
+          [
+            13,
+            32,
+            51,
+            49
+          ],
+          [
+            13,
+            43,
+            50,
+            46
+          ]
+        ]
+      },
+      "opaque_pixels_per_frame": {
+        "cast": [
+          146,
+          170,
+          200,
+          239,
+          282,
+          340,
+          0,
+          0
+        ],
+        "projectile_right": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "projectile_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "impact": [
+          584,
+          503,
+          400,
+          288,
+          172,
+          119,
+          69,
+          2
+        ]
+      },
+      "exact_8x_nearest_neighbour": true,
+      "name": "Beast Lore",
+      "kind": "curse",
+      "element": "curse",
+      "target": "on every foe"
+    },
+    {
+      "id": "revive",
+      "file": "effect_revive.png",
+      "preview": "effect_revive_8x.png",
+      "sheet_size_px": [
+        512,
+        256
+      ],
+      "frame_size_px": [
+        64,
+        64
+      ],
+      "preview_size_px": [
+        4096,
+        2048
+      ],
+      "colour_count": 20,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "used_rows": [
+        1,
+        4
+      ],
+      "frames_per_row": {
+        "cast": 6,
+        "projectile_right": 0,
+        "projectile_up": 0,
+        "impact": 8
+      },
+      "frame_bounds_xyxy_exclusive": {
+        "cast": [
+          [
+            25,
+            46,
+            39,
+            56
+          ],
+          [
+            22,
+            42,
+            41,
+            56
+          ],
+          [
+            20,
+            38,
+            44,
+            57
+          ],
+          [
+            17,
+            35,
+            46,
+            57
+          ],
+          [
+            15,
+            31,
+            49,
+            57
+          ],
+          [
+            13,
+            28,
+            51,
+            57
+          ]
+        ],
+        "projectile_right": [],
+        "projectile_up": [],
+        "impact": [
+          [
+            15,
+            29,
+            49,
+            62
+          ],
+          [
+            15,
+            25,
+            49,
+            58
+          ],
+          [
+            14,
+            22,
+            50,
+            57
+          ],
+          [
+            13,
+            19,
+            51,
+            57
+          ],
+          [
+            13,
+            17,
+            51,
+            56
+          ],
+          [
+            12,
+            16,
+            52,
+            56
+          ],
+          [
+            15,
+            16,
+            51,
+            22
+          ],
+          [
+            15,
+            14,
+            50,
+            15
+          ]
+        ]
+      },
+      "opaque_pixels_per_frame": {
+        "cast": [
+          75,
+          110,
+          142,
+          185,
+          217,
+          262,
+          0,
+          0
+        ],
+        "projectile_right": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "projectile_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "impact": [
+          502,
+          511,
+          496,
+          417,
+          298,
+          204,
+          27,
+          2
+        ]
+      },
+      "exact_8x_nearest_neighbour": true,
+      "name": "Revive",
+      "kind": "revive",
+      "element": "none",
+      "target": "on a fainted ally"
+    },
+    {
+      "id": "bridge_of_light",
+      "file": "effect_bridge_of_light.png",
+      "preview": "effect_bridge_of_light_8x.png",
+      "sheet_size_px": [
+        512,
+        256
+      ],
+      "frame_size_px": [
+        64,
+        64
+      ],
+      "preview_size_px": [
+        4096,
+        2048
+      ],
+      "colour_count": 39,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "used_rows": [
+        1,
+        4
+      ],
+      "frames_per_row": {
+        "cast": 6,
+        "projectile_right": 0,
+        "projectile_up": 0,
+        "impact": 8
+      },
+      "frame_bounds_xyxy_exclusive": {
+        "cast": [
+          [
+            19,
+            48,
+            45,
+            54
+          ],
+          [
+            16,
+            43,
+            48,
+            55
+          ],
+          [
+            14,
+            36,
+            50,
+            54
+          ],
+          [
+            12,
+            28,
+            52,
+            54
+          ],
+          [
+            10,
+            21,
+            54,
+            54
+          ],
+          [
+            7,
+            14,
+            57,
+            55
+          ]
+        ],
+        "projectile_right": [],
+        "projectile_up": [],
+        "impact": [
+          [
+            4,
+            13,
+            60,
+            56
+          ],
+          [
+            4,
+            13,
+            60,
+            55
+          ],
+          [
+            6,
+            13,
+            58,
+            54
+          ],
+          [
+            9,
+            14,
+            55,
+            53
+          ],
+          [
+            11,
+            13,
+            53,
+            33
+          ],
+          [
+            13,
+            13,
+            52,
+            29
+          ],
+          [
+            12,
+            21,
+            53,
+            27
+          ],
+          [
+            12,
+            11,
+            53,
+            23
+          ]
+        ]
+      },
+      "opaque_pixels_per_frame": {
+        "cast": [
+          33,
+          106,
+          228,
+          374,
+          558,
+          737,
+          0,
+          0
+        ],
+        "projectile_right": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "projectile_up": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "impact": [
+          801,
+          724,
+          588,
+          399,
+          152,
+          60,
+          10,
+          3
+        ]
+      },
+      "exact_8x_nearest_neighbour": true,
+      "name": "Bridge of Light",
+      "kind": "field",
+      "element": "none",
+      "target": "on one ally"
+    }
+  ]
+}

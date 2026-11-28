@@ -916,6 +916,19 @@ final class BattleScene: SKScene {
         if level >= 3, fighter?.isHero == true || isBoss {
             SoundEffects.shared.play(.surge, volume: 0.4 + 0.2 * Float(level - 2))
         }
+        // ChatGPT's pixel art in place of the glows (tools/spell_effect_art.py), where the skill has it;
+        // a revive keeps its pillar of light, as the fallen rise in it.
+        if skill.kind != .revive, let pixel = PixelSpell.of(skill.id) {
+            await castPixel(pixel, style: style, from: actorID, targets: targets, hits: hits, heal: heal,
+                            lands: skill.kind.isAttack || heal)
+            if mastered {
+                await pause(0.2)
+                SkillEffects.ultimateFinale(on: targets, style: skill.kind.isAttack ? SkillEffects.finale(for: style) : "holy",
+                                            color: color, size: size, rank: rank, in: stage)
+                await pause(rank >= 4 ? 0.75 : 0.35)
+            }
+            return
+        }
         if let caster = actors[actorID] {
             let hold = SkillEffects.charge(on: caster, color: color, level: level, in: stage)
             if hold > 0 { await pause(hold) }
@@ -1218,6 +1231,52 @@ final class BattleScene: SKScene {
         }
     }
 
+    /// The styles that dash at the foe (`lunge`): a pixel impact plays as they arrive.
+    private static let dashing: Set<String> = ["slash", "bite", "shadow_bite", "venom_bite", "smash", "charge", "impact",
+                                                "rush", "combo", "beast_impact"]
+
+    /// How big a pixel effect is drawn on `actor`: twice its pixels, as the fighters are, a boss's half again.
+    private func spellScale(_ actor: BattleActor) -> CGFloat {
+        2 * actor.fieldScale * (actor.isBoss ? 1.5 : 1)
+    }
+
+    /// A skill in pixel art (`PixelSpell`, in place of the glows): cast, bolt and impact, the blow or the
+    /// healing landing on the impact's third frame (`lands`; a buff or a curse shows what it did in the
+    /// events after).
+    private func castPixel(_ pixel: PixelSpell, style: String, from actorID: Int, targets: [BattleActor], hits: [Hit],
+                           heal: Bool, lands: Bool) async {
+        let caster = actors[actorID]
+        if Self.dashing.contains(style) || style == "bounce" {
+            let target = hits.first?.target ?? actorID
+            func contact() {
+                for foe in targets { PixelSpell.play(pixel.impact, at: foe.center, scale: spellScale(foe), in: stage) }
+                if lands { impactAll(hits, heal: heal) }
+            }
+            if style == "bounce" {
+                await leap(actorID, onto: target, atContact: contact)
+            } else {
+                await lunge(actorID, toward: target, atContact: contact)
+            }
+            await pause(PixelSpell.frameTime * Double(max(0, pixel.impact.count - 3)))
+            return
+        }
+        if let caster {
+            await pause(PixelSpell.play(pixel.cast, at: caster.center, scale: spellScale(caster), in: stage) * 0.8)
+        }
+        if pixel.fly != nil || pixel.flyUp != nil, let caster {
+            var longest: TimeInterval = 0
+            for target in targets where target !== caster {
+                longest = max(longest, pixel.fly(from: caster.center, to: target.center, scale: spellScale(caster), in: stage))
+            }
+            await pause(longest)
+        }
+        for target in targets { PixelSpell.play(pixel.impact, at: target.center, scale: spellScale(target), in: stage) }
+        let hitFrame = min(3, pixel.impact.count)
+        await pause(PixelSpell.frameTime * Double(hitFrame))
+        if lands { impactAll(hits, heal: heal) }
+        await pause(PixelSpell.frameTime * Double(pixel.impact.count - hitFrame))
+    }
+
     // MARK: - Moves
 
     /// Dash toward the target, run `atContact`, dash back.
@@ -1230,6 +1289,7 @@ final class BattleScene: SKScene {
         let step = offset.normalized * min(offset.length * 0.6, 150)
         // The weapon drawn back as they set off, brought down as they arrive.
         actor.swing(windUp: 0.09 * speed, strike: 0.07 * speed)
+        actor.attackFrames(windUp: 0.09 * speed, strike: 0.07 * speed)
         let out = SKAction.move(to: actor.home + step, duration: 0.16 * speed)
         out.timingMode = .easeIn
         await actor.run(out)
@@ -1744,7 +1804,8 @@ final class BattleActor: SKNode {
         nameTag.position = CGPoint(x: 0, y: bar.position.y + 2)
         nameTag.alpha = 0
         addChild(nameTag)
-        sprite.run(IdleMotion.of(art: fighter.art).action(height: size.height, delay: .random(in: 0..<0.8)), withKey: "idle")
+        idleMotion = IdleMotion.of(art: fighter.art)
+        startIdle()
         // It blinks now and then, if it has eyes to shut: on the sprite, so the actor's own
         // actions (`hasActions`) still say whether it's moving.
         if cycle.poses.values.contains(where: { $0.shut != nil }) {
@@ -1871,13 +1932,41 @@ final class BattleActor: SKNode {
         if !hasActions() { position = point }
         zPosition = -point.y
         sprite.texture = cycle.frames(direction).first
+        let turned = facing != direction
         facing = direction
+        if turned, cycle.idle != nil { startIdle() }
         if let weapon = sprite.childNode(withName: "weapon") as? SKSpriteNode {
             GearArt.pose(weapon, facing: direction, height: sprite.size.height)
         }
     }
 
     private var facing: Direction = .down
+    private var idleMotion: IdleMotion?
+    private var idleDelay = TimeInterval.random(in: 0..<0.8)
+
+    /// Stands idle facing the way it was placed: a monster's drawn idle (`WalkCycle.idle`), else its `motion`.
+    private func startIdle() {
+        sprite.removeAction(forKey: "idle")
+        if let idle = cycle.idle?[facing], idle.count > 1 {
+            sprite.run(.sequence([.wait(forDuration: idleDelay), .repeatForever(.animate(with: idle, timePerFrame: 0.45))]), withKey: "idle")
+        } else if let idleMotion {
+            sprite.run(idleMotion.action(height: sprite.size.height, delay: idleDelay), withKey: "idle")
+        }
+    }
+
+    /// A monster's drawn attack (wind-up, strike, recover: `WalkCycle.attack`) over `windUp` and
+    /// `strike`, the blow landing as the strike frame shows; then its idle again. Nothing without one.
+    func attackFrames(windUp: TimeInterval, strike: TimeInterval) {
+        guard let frames = cycle.attack?[facing], frames.count == 3 else { return }
+        sprite.removeAction(forKey: "idle")
+        sprite.run(.sequence([
+            .setTexture(frames[0]), .wait(forDuration: windUp),
+            .setTexture(frames[1]), .wait(forDuration: strike + 0.12),
+            .setTexture(frames[2]), .wait(forDuration: 0.14),
+            .setTexture(cycle.frames(facing).first ?? frames[2]),
+            .run { [weak self] in self?.startIdle() },
+        ]), withKey: "attack")
+    }
 
     /// Whirlwind's pirouette: the fighter turns on the spot through each way its sheet faces (front,
     /// side, back, other side), `turns` times round, quickest halfway, and ends facing as it started.

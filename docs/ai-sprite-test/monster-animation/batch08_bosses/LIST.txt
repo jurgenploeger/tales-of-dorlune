@@ -1,0 +1,8 @@
+1. tide_dragon (Wavecrest Dragon, water element, frame 64 × 64 pixels): The ancient guardian of the Tidewater Shrine, with scales like ocean waves.
+2. silver_lieutenant (Silverfang Warden, metal element, frame 64 × 64 pixels): A lieutenant of the Silver Wraith, guarding the Whispering Hollow with cold steel.
+3. emerald_dragon (Emerald Dragon, wood element, frame 64 × 64 pixels): The legendary dragon at the end of the Emerald Road, the greatest challenge in Dorlune.
+4. grumpy_oak (Grumpy Old Oak, wood element, frame 64 × 64 pixels): An old oak tree that's been grumpy for a thousand years. It hates having its branches climbed.
+5. great_wisp (Great Wisp, light element, frame 64 × 64 pixels): The mother of all Wisps, a huge glowing light at the heart of Shiverdell.
+6. moon_rabbit_queen (Moon Rabbit Queen, light element, frame 64 × 64 pixels): The queen of the moon rabbits, who descends on Moonwhisper when the moon is full.
+7. fallen_star (Fallen Star, light element, frame 64 × 64 pixels): The star that fell on Starfall Isle long ago. Awake on its hill, lonely and far from home, it blazes at anyone who comes near.
+8. prism_drake (Prism Drake, light element, frame 64 × 64 pixels): A drake that crept into the Glimmerdeep long ago and fed on the starlight in its crystals until its scales turned to living prism. It sleeps curled round the brightest shard of all.

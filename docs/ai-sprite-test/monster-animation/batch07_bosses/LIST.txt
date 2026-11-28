@@ -1,0 +1,8 @@
+1. rat_king (Rat King, fire element, frame 64 × 64 pixels): The boss of Rat Cavern: a fat, crowned rat that rules its tunnels with fire and fury.
+2. drunk_dragon (Drunk Dragon, fire element, frame 64 × 64 pixels): A dragon who drank too much at the desert oasis. Wobbly, loud, and still very much a dragon.
+3. big_bad_wolf (Big Bad Wolf, dark element, frame 64 × 64 pixels): The wolf of the old stories. It prowls Snow White Forest looking for anyone in a red hood.
+4. golden_grunt (Gilded Brute, metal element, frame 64 × 64 pixels): A servant of the Gilded King, guarding the depths of Gooey Grotto with fire and roars.
+5. wolf_leader (Howlmaster, dark element, frame 64 × 64 pixels): The leader of the wolf pack, scarred and wise. Every wolf in the lair answers to it.
+6. puppet_king (Marionette King, wood element, frame 40 × 40 pixels): The master of Marionette Rise, who pulls the strings of every puppet there.
+7. rock_monster (Craghulk, earth element, frame 64 × 64 pixels): A mountain of rock that snores in the cave by Dozywick. Its snoring has kept the whole town dreaming for a year.
+8. idreus (Morvane, dark element, frame 64 × 64 pixels): A dark lord of legend who waits on the Hidden Steppe. Few who face it come back to tell the tale.

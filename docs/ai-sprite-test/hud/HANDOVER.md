@@ -50,6 +50,12 @@ the real HUD (the artifact https://claude.ai/artifact/BbEWKRiYCnw6yJi5iCTtyK; it
    rim was faint in the light look, so `tools/hud_wood_art.py` deepens its three gold tones to a richer amber
    (`art-variants/hud/fixed/item_slot_selected.png`, `selected_slot_fix.png`: as drawn, then fixed).
 
+6. `6_last_pieces_A.txt`: the last pieces. **Done**: `art-variants/hud/last/` (11 pieces and their dark twins: toast
+   plate, banner, reward card, dropdown menu and its selected row, text field, scroll track and thumb, party frame,
+   tutorial arrow, map pin). Every dark twin its light one's alpha, one dark colour per light one. At game size
+   (`last_pieces_in_game.png`, light and dark over the HUD kit) all read and match the kit. With it the carved-wood
+   art is complete.
+
 `follow_ups_if_it_drifts.txt` has the nudges.
 
 **Dark Mode at the same time** (the user, 2026-11-27): prompts 2 to 4 ask for a `_dark` twin of every

@@ -1,0 +1,444 @@
+[
+  {
+    "id": "curse",
+    "batch": 4,
+    "number": 1,
+    "label": "Curse, a foe hits for less",
+    "file": "skill_curse.png",
+    "preview": "skill_curse_8x.png",
+    "canvas": [
+      64,
+      64
+    ],
+    "bounds_xyxy_exclusive": [
+      10,
+      9,
+      54,
+      55
+    ],
+    "subject_size": [
+      44,
+      46
+    ],
+    "opaque_pixels": 1296,
+    "color_count": 40,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "max_pixel_centre_radius": 26.2393,
+    "max_pixel_corner_radius": 26.9258,
+    "socket_diameter": 56,
+    "preview_exact_nearest_8x": true,
+    "file_sha256": "11cdb4f7df29c821ace2e0302849439e04f189e4fa17aa37e326a653128f1054",
+    "preview_sha256": "279382e9c6bd1100f54b064586525f5229e234baf5f8739b39f2a7fef656327b"
+  },
+  {
+    "id": "poison",
+    "batch": 4,
+    "number": 2,
+    "label": "Poison, HP lost each round",
+    "file": "skill_poison.png",
+    "preview": "skill_poison_8x.png",
+    "canvas": [
+      64,
+      64
+    ],
+    "bounds_xyxy_exclusive": [
+      14,
+      6,
+      50,
+      58
+    ],
+    "subject_size": [
+      36,
+      52
+    ],
+    "opaque_pixels": 1171,
+    "color_count": 40,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "max_pixel_centre_radius": 26.5801,
+    "max_pixel_corner_radius": 27.2029,
+    "socket_diameter": 56,
+    "preview_exact_nearest_8x": true,
+    "file_sha256": "034ddb38f9aa86bab4d7c79e21d03008473cf37a26bf11d7675f32084c66c91f",
+    "preview_sha256": "60883bbdb1fe36b0b6d306a8cd05c9ec3c2f85afab262e9a4234257fcebcd755"
+  },
+  {
+    "id": "poison_mist",
+    "batch": 4,
+    "number": 3,
+    "label": "Poison Mist, a choking cloud",
+    "file": "skill_poison_mist.png",
+    "preview": "skill_poison_mist_8x.png",
+    "canvas": [
+      64,
+      64
+    ],
+    "bounds_xyxy_exclusive": [
+      9,
+      11,
+      55,
+      53
+    ],
+    "subject_size": [
+      46,
+      42
+    ],
+    "opaque_pixels": 1205,
+    "color_count": 38,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "max_pixel_centre_radius": 26.3154,
+    "max_pixel_corner_radius": 27.0185,
+    "socket_diameter": 56,
+    "preview_exact_nearest_8x": true,
+    "file_sha256": "d5b11f9850076ffa30164b5c4fc928c0309de00008e6c6eb6067fbbe858bc67d",
+    "preview_sha256": "809759b3b77a137237647479fa967c660073c20514e571faf57a56916048e668"
+  },
+  {
+    "id": "evil_eye",
+    "batch": 4,
+    "number": 4,
+    "label": "Evil Eye, a cold glare",
+    "file": "skill_evil_eye.png",
+    "preview": "skill_evil_eye_8x.png",
+    "canvas": [
+      64,
+      64
+    ],
+    "bounds_xyxy_exclusive": [
+      6,
+      6,
+      58,
+      58
+    ],
+    "subject_size": [
+      52,
+      52
+    ],
+    "opaque_pixels": 1290,
+    "color_count": 40,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "max_pixel_centre_radius": 26.3154,
+    "max_pixel_corner_radius": 27.0185,
+    "socket_diameter": 56,
+    "preview_exact_nearest_8x": true,
+    "file_sha256": "1e88d438151c4d33cbeecbccd9513037d678516d56f43aa6d17db1e2e69297a8",
+    "preview_sha256": "e4e480c9ea727fe628e4897c4d507b725ccb0db3b151e73ce5b8b16226e8b710"
+  },
+  {
+    "id": "shadow_bite",
+    "batch": 4,
+    "number": 5,
+    "label": "Shadow Bite, fangs of darkness",
+    "file": "skill_shadow_bite.png",
+    "preview": "skill_shadow_bite_8x.png",
+    "canvas": [
+      64,
+      64
+    ],
+    "bounds_xyxy_exclusive": [
+      15,
+      8,
+      49,
+      56
+    ],
+    "subject_size": [
+      34,
+      48
+    ],
+    "opaque_pixels": 1040,
+    "color_count": 40,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "max_pixel_centre_radius": 26.2393,
+    "max_pixel_corner_radius": 26.9258,
+    "socket_diameter": 56,
+    "preview_exact_nearest_8x": true,
+    "file_sha256": "2f38e15f4ab76390273ab69cbab929711a3c1bedd8da0f688a4ed8005d4af4f1",
+    "preview_sha256": "87cc403f0c8ff1662f5f1e1ce660b63301eadacc993e52bcada437d45e7ae9aa"
+  },
+  {
+    "id": "venom_bite",
+    "batch": 4,
+    "number": 6,
+    "label": "Venom Bite, fangs that poison",
+    "file": "skill_venom_bite.png",
+    "preview": "skill_venom_bite_8x.png",
+    "canvas": [
+      64,
+      64
+    ],
+    "bounds_xyxy_exclusive": [
+      12,
+      8,
+      52,
+      56
+    ],
+    "subject_size": [
+      40,
+      48
+    ],
+    "opaque_pixels": 910,
+    "color_count": 37,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "max_pixel_centre_radius": 26.6177,
+    "max_pixel_corner_radius": 27.2947,
+    "socket_diameter": 56,
+    "preview_exact_nearest_8x": true,
+    "file_sha256": "e595b36522b3c7f1cbbdd375dcf76a20640ed76f6e28aef57c4f59737e310ad8",
+    "preview_sha256": "54c6ac331cc867725098cdb2cd0b9fe1c6e4d1ad583ed9f24a179622d0f63d73"
+  },
+  {
+    "id": "web_shot",
+    "batch": 4,
+    "number": 7,
+    "label": "Web Shot, sticky webs",
+    "file": "skill_web_shot.png",
+    "preview": "skill_web_shot_8x.png",
+    "canvas": [
+      64,
+      64
+    ],
+    "bounds_xyxy_exclusive": [
+      8,
+      8,
+      56,
+      56
+    ],
+    "subject_size": [
+      48,
+      48
+    ],
+    "opaque_pixels": 1161,
+    "color_count": 38,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "max_pixel_centre_radius": 26.5047,
+    "max_pixel_corner_radius": 27.2029,
+    "socket_diameter": 56,
+    "preview_exact_nearest_8x": true,
+    "file_sha256": "1fb7ad327d49541e706ca36ac1843c473f1a768941d1393bb099d975f02ab65e",
+    "preview_sha256": "5fb6132831922773852d3a940e0175ab2b7721a75b7327b9a4662be647fdcb17"
+  },
+  {
+    "id": "beast_lore",
+    "batch": 4,
+    "number": 8,
+    "label": "Beast Lore, call out every foe's weak spots",
+    "file": "skill_beast_lore.png",
+    "preview": "skill_beast_lore_8x.png",
+    "canvas": [
+      64,
+      64
+    ],
+    "bounds_xyxy_exclusive": [
+      8,
+      16,
+      56,
+      48
+    ],
+    "subject_size": [
+      48,
+      32
+    ],
+    "opaque_pixels": 1314,
+    "color_count": 39,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "max_pixel_centre_radius": 26.2393,
+    "max_pixel_corner_radius": 26.9258,
+    "socket_diameter": 56,
+    "preview_exact_nearest_8x": true,
+    "file_sha256": "b933860ff7cdbed87bbfdcc4ed849af21660a139f15419036e6ebd880a5f4108",
+    "preview_sha256": "3963273c017e4a6ac7a5d46ca8e13f63cd1b92a1fc1d9232421e5b4764f8b314"
+  },
+  {
+    "id": "nibble",
+    "batch": 4,
+    "number": 9,
+    "label": "Nibble",
+    "file": "skill_nibble.png",
+    "preview": "skill_nibble_8x.png",
+    "canvas": [
+      64,
+      64
+    ],
+    "bounds_xyxy_exclusive": [
+      6,
+      6,
+      58,
+      58
+    ],
+    "subject_size": [
+      52,
+      52
+    ],
+    "opaque_pixels": 1987,
+    "color_count": 40,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "max_pixel_centre_radius": 26.5801,
+    "max_pixel_corner_radius": 27.2029,
+    "socket_diameter": 56,
+    "preview_exact_nearest_8x": true,
+    "file_sha256": "8ad2da9792dad112b00fb3d7a5cbea3c80dd44e36c369595e9f61dc26573dd91",
+    "preview_sha256": "fc77a109b9fd3728fdc3dd77cc35b66105d3fd9e7399a55fae4bc045393682a1"
+  },
+  {
+    "id": "pine_needles",
+    "batch": 4,
+    "number": 10,
+    "label": "Pine Needles",
+    "file": "skill_pine_needles.png",
+    "preview": "skill_pine_needles_8x.png",
+    "canvas": [
+      64,
+      64
+    ],
+    "bounds_xyxy_exclusive": [
+      12,
+      12,
+      52,
+      52
+    ],
+    "subject_size": [
+      40,
+      40
+    ],
+    "opaque_pixels": 515,
+    "color_count": 38,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "max_pixel_centre_radius": 26.2011,
+    "max_pixel_corner_radius": 26.9072,
+    "socket_diameter": 56,
+    "preview_exact_nearest_8x": true,
+    "file_sha256": "e052fcbee5619c5e92dd3fc2398b6ab4827a63ac9a22937e5ef7c2b3bd395b56",
+    "preview_sha256": "424b22f4d0b1a7dc9c49505487945c4a4d3847d3ee5c6ec4afa3bb80a1680a67"
+  },
+  {
+    "id": "bounce",
+    "batch": 4,
+    "number": 11,
+    "label": "Bounce",
+    "file": "skill_bounce.png",
+    "preview": "skill_bounce_8x.png",
+    "canvas": [
+      64,
+      64
+    ],
+    "bounds_xyxy_exclusive": [
+      12,
+      8,
+      52,
+      56
+    ],
+    "subject_size": [
+      40,
+      48
+    ],
+    "opaque_pixels": 1025,
+    "color_count": 39,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "max_pixel_centre_radius": 26.3154,
+    "max_pixel_corner_radius": 27.0185,
+    "socket_diameter": 56,
+    "preview_exact_nearest_8x": true,
+    "file_sha256": "f4f063917d0fcc95e4873fb917b07db2e79b79f50d9247f618ccbc4e9d0a128d",
+    "preview_sha256": "95fba2068574bb036ca67efb0ee88e47c9c4a32938710e0c9a10aeb00588616d"
+  },
+  {
+    "id": "golden_spin",
+    "batch": 4,
+    "number": 12,
+    "label": "Golden Spin, a dazzling spinning tackle",
+    "file": "skill_golden_spin.png",
+    "preview": "skill_golden_spin_8x.png",
+    "canvas": [
+      64,
+      64
+    ],
+    "bounds_xyxy_exclusive": [
+      6,
+      6,
+      58,
+      58
+    ],
+    "subject_size": [
+      52,
+      52
+    ],
+    "opaque_pixels": 1616,
+    "color_count": 40,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "max_pixel_centre_radius": 26.3154,
+    "max_pixel_corner_radius": 27.0185,
+    "socket_diameter": 56,
+    "preview_exact_nearest_8x": true,
+    "file_sha256": "6741a8e73e8aa2153388ecc08f1fad31e7560fedc6c2f64a863f83c022350632",
+    "preview_sha256": "4bdf053786b0a40438cf9334c7c25668616d602bede584371cbaff721867d13d"
+  },
+  {
+    "id": "bridge_of_light",
+    "batch": 4,
+    "number": 13,
+    "label": "Bridge of Light, carry yourself to a town",
+    "file": "skill_bridge_of_light.png",
+    "preview": "skill_bridge_of_light_8x.png",
+    "canvas": [
+      64,
+      64
+    ],
+    "bounds_xyxy_exclusive": [
+      8,
+      11,
+      56,
+      53
+    ],
+    "subject_size": [
+      48,
+      42
+    ],
+    "opaque_pixels": 1085,
+    "color_count": 39,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "max_pixel_centre_radius": 26.6177,
+    "max_pixel_corner_radius": 27.2947,
+    "socket_diameter": 56,
+    "preview_exact_nearest_8x": true,
+    "file_sha256": "7cb450487ae87a9411d931966e500e09f800a9227341c290c9afbd1a6dbffb55",
+    "preview_sha256": "1974ff8e71057bf8ee85609e540a4407576715124c096dae000ecd245af6a02a"
+  }
+]

@@ -1,0 +1,22 @@
+Redraw the bosses of my game, Tales of Dorlune, with animation: a cute top-down fantasy RPG for iPhone (pixel-art world, chibi characters, bright and cosy). A boss is fought in battle only, so it needs one direction and two moves. Each attached _today_8x picture is the boss as it is now (one picture, at 8×): keep exactly who it is, its shape, colours, face, crown or armour and personality, and bring it to life.
+
+Style: match the attached pictures' pixel art exactly: hard square pixels, a dark outline, lit from the top left, rich hue-shifted shading, big expressive eyes, imposing but still cute. Original drawings only.
+
+For each boss, one sprite sheet, a row of frames, each frame the boss's frame size (listed), transparent, alpha 0 or 255 only, no anti-aliasing:
+- One direction: facing the viewer and a little to the right, three-quarter, seen from slightly above, as in its picture today.
+- Frames, left to right:
+  1-4 idle: a menacing loop, breathing, swaying, a tail or flame moving (4 frames).
+  5-9 attack: wind-up, lunge, strike, hold, recover (5 frames), a big move of its own (a slam, a bite, a breath, a swipe of its weapon). Only the boss: no slash marks, sparks or effects (the game adds those).
+- So a sheet is 9 frames in one row: 576 × 64 pixels for a 64-pixel boss (the 40 × 40 ones 360 × 40).
+- In every frame the boss stands with its feet or base on the same row, about 2 pixels above the frame's bottom, centred, the same size in every frame.
+
+1. rat_king (Rat King, fire element, frame 64 × 64 pixels): The boss of Rat Cavern: a fat, crowned rat that rules its tunnels with fire and fury.
+2. drunk_dragon (Drunk Dragon, fire element, frame 64 × 64 pixels): A dragon who drank too much at the desert oasis. Wobbly, loud, and still very much a dragon.
+3. big_bad_wolf (Big Bad Wolf, dark element, frame 64 × 64 pixels): The wolf of the old stories. It prowls Snow White Forest looking for anyone in a red hood.
+4. golden_grunt (Gilded Brute, metal element, frame 64 × 64 pixels): A servant of the Gilded King, guarding the depths of Gooey Grotto with fire and roars.
+5. wolf_leader (Howlmaster, dark element, frame 64 × 64 pixels): The leader of the wolf pack, scarred and wise. Every wolf in the lair answers to it.
+6. puppet_king (Marionette King, wood element, frame 40 × 40 pixels): The master of Marionette Rise, who pulls the strings of every puppet there.
+7. rock_monster (Craghulk, earth element, frame 64 × 64 pixels): A mountain of rock that snores in the cave by Dozywick. Its snoring has kept the whole town dreaming for a year.
+8. idreus (Morvane, dark element, frame 64 × 64 pixels): A dark lord of legend who waits on the Hidden Steppe. Few who face it come back to tell the tale.
+
+Go one boss at a time. For each: say its frame size, then deliver its sheet as a 1× PNG named <id>_sheet.png and an exact 8× nearest-neighbour preview <id>_sheet_8x.png, then the next. At the end: a contact sheet of every boss's first idle frame and its strike frame on mid-grey, an asset_checks.json (each sheet's size, colour count, alpha values, each frame's foot row), and a zip of it all.

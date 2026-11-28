@@ -43,6 +43,12 @@ struct NPCDialogView: View {
             // Big, as Fairyland Online's were (0.9.75: at 42% of the width they stood small by a strip).
             let portrait = min(proxy.size.width * 0.48, proxy.size.height * 0.55, 280)
             let bottom = max(16, proxy.safeAreaInsets.bottom)
+            // Their portrait (tools/portrait_art.py, ChatGPT's busts, 2026-11-28) stands on the screen's foot
+            // in the corner, 4 wide by 5 high; one with none stands as their sprite, as before.
+            let bust = NPCPortrait.image(for: npc.art)
+            let bustHeight = portrait * 0.8
+            let room = bust == nil ? portrait * 0.5 : bustHeight * 0.8 - HUDMargins.side + 4
+            let rise = bust == nil ? portrait * 0.84 - bottom + 6 : bustHeight - bottom
             ZStack(alignment: .bottomTrailing) {
                 Color.black.opacity(cornered ? 0.5 : 0.35)
                     .onTapGesture { if !cornered { onClose() } }
@@ -53,16 +59,26 @@ struct NPCDialogView: View {
                     // picture's own clear margin, is where what's beside them has to give them room.
                     // As wide as a menu window (`menuWindowMargins`): inside the safe area, 8 points in from
                     // it (the user, 2026-11-25: on a phone on its side it ran into the notch's side).
-                    bubble(maxHeight: proxy.size.height * 0.5, speakerRoom: portrait * 0.5, speakerRise: portrait * 0.84 - bottom + 6)
+                    bubble(maxHeight: proxy.size.height * 0.5, speakerRoom: room, speakerRise: rise)
                         .padding(.leading, screen.safeAreaInsets.leading + HUDMargins.side)
                         .padding(.trailing, screen.safeAreaInsets.trailing + HUDMargins.side)
                         .padding(.bottom, bottom)
 
                     // Standing where the window's corner is, past it to the screen's edge.
-                    SpriteImage(art: npc.art, size: portrait)
-                        .offset(x: portrait * 0.22 - screen.safeAreaInsets.trailing, y: portrait * 0.16)
-                        .allowsHitTesting(false)
-                        .accessibilityHidden(true)
+                    Group {
+                        if let bust {
+                            Image(uiImage: bust)
+                                .interpolation(.none)
+                                .resizable()
+                                .frame(width: bustHeight * 0.8, height: bustHeight)
+                                .offset(x: -screen.safeAreaInsets.trailing)
+                        } else {
+                            SpriteImage(art: npc.art, size: portrait)
+                                .offset(x: portrait * 0.22 - screen.safeAreaInsets.trailing, y: portrait * 0.16)
+                        }
+                    }
+                    .allowsHitTesting(false)
+                    .accessibilityHidden(true)
                 }
                 // Nor under the dyeing window: the speech window's close button and its Dye gear button
                 // showed round it.
@@ -150,7 +166,7 @@ struct NPCDialogView: View {
         .clipShape(window)
         // The frame all the way round, like every window's (`gameWindow`), the close button over its corner.
         .background(window.fill(HUDStyle.glass).shadow(color: .black.opacity(0.35), radius: 3, x: 0, y: 2))
-        .overlay(HUDStyle.frame(window))
+        .overlay(WoodFrame())
         // The close button over its corner; none while a boss has you cornered.
         .overlay(alignment: .topTrailing) {
             if !cornered {
@@ -1339,5 +1355,16 @@ private struct QuestCompleteCard: View {
                 .background(GlassCard(radius: 12))
             }
         }
+    }
+}
+
+/// A townsperson's portrait for the speech window (`art/sprites/portrait_<art>_<mood>.png`,
+/// tools/portrait_art.py): a bust in one of four moods, neutral when the mood has none.
+enum NPCPortrait {
+    enum Mood: String { case neutral, happy, worried, surprised }
+
+    static func image(for art: String, mood: Mood = .neutral) -> UIImage? {
+        ArtLibrary.shared.artImage("portrait_\(art)_\(mood.rawValue)")
+            ?? ArtLibrary.shared.artImage("portrait_\(art)_neutral")
     }
 }

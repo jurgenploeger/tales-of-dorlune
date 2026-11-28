@@ -1,0 +1,971 @@
+{
+  "coordinate_convention": "Rectangles [x0,y0,x1,y1], right/bottom exclusive. Pixel indices zero-based; centres use pixel-boundary coordinates. Caps are measured after trimming to bounds.",
+  "assets": {
+    "toast_plate": {
+      "name": "toast_plate",
+      "source_canvas": [
+        1402,
+        1122
+      ],
+      "source_alpha_threshold_bounds": [
+        59,
+        486,
+        1343,
+        636
+      ],
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounds": [
+        80,
+        564,
+        1200,
+        716
+      ],
+      "centre": [
+        640.0,
+        640.0
+      ],
+      "nominal_phone_points": [
+        220,
+        30
+      ],
+      "content_rect": [
+        212,
+        593,
+        1117,
+        687
+      ],
+      "insets": {
+        "text": {
+          "rect": [
+            212,
+            593,
+            1117,
+            687
+          ],
+          "bounds": [
+            137,
+            590,
+            1170,
+            706
+          ],
+          "pixels": 107643,
+          "flat_colour_index": 29,
+          "light_colour": [
+            241,
+            195,
+            135
+          ],
+          "dark_colour": [
+            143,
+            111,
+            85
+          ]
+        }
+      },
+      "caps": {
+        "left": 190,
+        "right": 100,
+        "top": 0,
+        "bottom": 0
+      },
+      "stretch": {
+        "mode": "horizontal_3_slice",
+        "trimmed_stretch_rect": [
+          190,
+          0,
+          1020,
+          152
+        ],
+        "canvas_stretch_rect": [
+          270,
+          564,
+          1100,
+          716
+        ],
+        "centre_columns_identical": true
+      }
+    },
+    "banner_ribbon": {
+      "name": "banner_ribbon",
+      "source_canvas": [
+        1402,
+        1122
+      ],
+      "source_alpha_threshold_bounds": [
+        32,
+        433,
+        1370,
+        722
+      ],
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounds": [
+        80,
+        509,
+        1200,
+        771
+      ],
+      "centre": [
+        640.0,
+        640.0
+      ],
+      "nominal_phone_points": [
+        300,
+        70
+      ],
+      "content_rect": [
+        218,
+        620,
+        1062,
+        737
+      ],
+      "insets": {
+        "text": {
+          "rect": [
+            218,
+            620,
+            1062,
+            737
+          ],
+          "bounds": [
+            171,
+            595,
+            1111,
+            742
+          ],
+          "pixels": 131113,
+          "flat_colour_index": 29,
+          "light_colour": [
+            241,
+            195,
+            135
+          ],
+          "dark_colour": [
+            143,
+            111,
+            85
+          ]
+        }
+      },
+      "caps": {
+        "left": 170,
+        "right": 170,
+        "top": 0,
+        "bottom": 0,
+        "fixed_centre_width": 140
+      },
+      "stretch": {
+        "mode": "horizontal_5_slice",
+        "trimmed_x_cuts": [
+          0,
+          170,
+          490,
+          630,
+          950,
+          1120
+        ],
+        "canvas_x_cuts": [
+          80,
+          250,
+          570,
+          710,
+          1030,
+          1200
+        ],
+        "stretch_segments": [
+          1,
+          3
+        ],
+        "fixed_segments": [
+          0,
+          2,
+          4
+        ],
+        "keep_centre_medallion_centred": true,
+        "centre_spans_columns_identical": true
+      }
+    },
+    "reward_card": {
+      "name": "reward_card",
+      "source_canvas": [
+        1122,
+        1402
+      ],
+      "source_alpha_threshold_bounds": [
+        89,
+        95,
+        1032,
+        1314
+      ],
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounds": [
+        190,
+        90,
+        1090,
+        1190
+      ],
+      "centre": [
+        640.0,
+        640.0
+      ],
+      "nominal_phone_points": [
+        90,
+        110
+      ],
+      "content_rect": [
+        304,
+        223,
+        960,
+        879
+      ],
+      "insets": {
+        "item": {
+          "rect": [
+            304,
+            223,
+            960,
+            879
+          ],
+          "bounds": [
+            271,
+            183,
+            998,
+            910
+          ],
+          "pixels": 517080,
+          "flat_colour_index": 20,
+          "light_colour": [
+            220,
+            164,
+            101
+          ],
+          "dark_colour": [
+            103,
+            74,
+            59
+          ]
+        },
+        "name": {
+          "rect": [
+            271,
+            951,
+            1009,
+            1068
+          ],
+          "bounds": [
+            241,
+            948,
+            1040,
+            1071
+          ],
+          "pixels": 97537,
+          "flat_colour_index": 35,
+          "light_colour": [
+            242,
+            226,
+            194
+          ],
+          "dark_colour": [
+            62,
+            43,
+            35
+          ]
+        }
+      },
+      "caps": null,
+      "stretch": null
+    },
+    "dropdown_menu": {
+      "name": "dropdown_menu",
+      "source_canvas": [
+        1254,
+        1254
+      ],
+      "source_alpha_threshold_bounds": [
+        75,
+        239,
+        1178,
+        1005
+      ],
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounds": [
+        140,
+        293,
+        1140,
+        987
+      ],
+      "centre": [
+        640.0,
+        640.0
+      ],
+      "nominal_phone_points": [
+        180,
+        125
+      ],
+      "content_rect": [
+        181,
+        374,
+        1099,
+        915
+      ],
+      "insets": {
+        "menu": {
+          "rect": [
+            181,
+            374,
+            1099,
+            915
+          ],
+          "bounds": [
+            172,
+            336,
+            1108,
+            953
+          ],
+          "pixels": 571623,
+          "flat_colour_index": 35,
+          "light_colour": [
+            242,
+            226,
+            194
+          ],
+          "dark_colour": [
+            62,
+            43,
+            35
+          ]
+        }
+      },
+      "caps": {
+        "left": 96,
+        "right": 96,
+        "top": 96,
+        "bottom": 96
+      },
+      "stretch": {
+        "mode": "nine_slice",
+        "trimmed_centre_rect": [
+          96,
+          96,
+          904,
+          598
+        ],
+        "canvas_centre_rect": [
+          236,
+          389,
+          1044,
+          891
+        ]
+      },
+      "corner_size_px": 96
+    },
+    "dropdown_row_selected": {
+      "name": "dropdown_row_selected",
+      "source_canvas": [
+        1402,
+        1122
+      ],
+      "source_alpha_threshold_bounds": [
+        73,
+        506,
+        1329,
+        616
+      ],
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounds": [
+        80,
+        588,
+        1200,
+        692
+      ],
+      "centre": [
+        640.0,
+        640.0
+      ],
+      "nominal_phone_points": [
+        160,
+        16
+      ],
+      "content_rect": [
+        126,
+        600,
+        1154,
+        684
+      ],
+      "insets": {
+        "highlight": {
+          "rect": [
+            126,
+            600,
+            1154,
+            684
+          ],
+          "bounds": [
+            85,
+            597,
+            1195,
+            687
+          ],
+          "pixels": 98377,
+          "flat_colour_index": 39,
+          "light_colour": [
+            225,
+            181,
+            79
+          ],
+          "dark_colour": [
+            240,
+            199,
+            103
+          ]
+        }
+      },
+      "caps": {
+        "left": 65,
+        "right": 65,
+        "top": 0,
+        "bottom": 0
+      },
+      "stretch": {
+        "mode": "horizontal_3_slice",
+        "trimmed_stretch_rect": [
+          65,
+          0,
+          1055,
+          104
+        ],
+        "canvas_stretch_rect": [
+          145,
+          588,
+          1135,
+          692
+        ],
+        "centre_columns_identical": true
+      }
+    },
+    "text_field": {
+      "name": "text_field",
+      "source_canvas": [
+        1402,
+        1122
+      ],
+      "source_alpha_threshold_bounds": [
+        85,
+        503,
+        1317,
+        618
+      ],
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounds": [
+        80,
+        577,
+        1200,
+        704
+      ],
+      "centre": [
+        640.0,
+        640.5
+      ],
+      "nominal_phone_points": [
+        300,
+        34
+      ],
+      "content_rect": [
+        139,
+        607,
+        1141,
+        685
+      ],
+      "insets": {
+        "text": {
+          "rect": [
+            139,
+            607,
+            1141,
+            685
+          ],
+          "bounds": [
+            101,
+            602,
+            1182,
+            688
+          ],
+          "pixels": 91179,
+          "flat_colour_index": 15,
+          "light_colour": [
+            202,
+            142,
+            78
+          ],
+          "dark_colour": [
+            91,
+            63,
+            50
+          ]
+        }
+      },
+      "caps": {
+        "left": 90,
+        "right": 90,
+        "top": 0,
+        "bottom": 0
+      },
+      "stretch": {
+        "mode": "horizontal_3_slice",
+        "trimmed_stretch_rect": [
+          90,
+          0,
+          1030,
+          127
+        ],
+        "canvas_stretch_rect": [
+          170,
+          577,
+          1110,
+          704
+        ],
+        "centre_columns_identical": true
+      }
+    },
+    "scroll_thumb": {
+      "name": "scroll_thumb",
+      "source_canvas": [
+        1254,
+        1254
+      ],
+      "source_alpha_threshold_bounds": [
+        498,
+        91,
+        754,
+        1189
+      ],
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounds": [
+        519,
+        120,
+        761,
+        1160
+      ],
+      "centre": [
+        640.0,
+        640.0
+      ],
+      "nominal_phone_points": [
+        6,
+        24
+      ],
+      "content_rect": [
+        554,
+        226,
+        724,
+        1051
+      ],
+      "insets": {
+        "thumb": {
+          "rect": [
+            554,
+            226,
+            724,
+            1051
+          ],
+          "bounds": [
+            549,
+            151,
+            729,
+            1128
+          ],
+          "pixels": 168010,
+          "flat_colour_index": 29,
+          "light_colour": [
+            241,
+            195,
+            135
+          ],
+          "dark_colour": [
+            143,
+            111,
+            85
+          ]
+        }
+      },
+      "caps": null,
+      "stretch": null
+    },
+    "scroll_track": {
+      "name": "scroll_track",
+      "source_canvas": [
+        1254,
+        1254
+      ],
+      "source_alpha_threshold_bounds": [
+        582,
+        33,
+        672,
+        1223
+      ],
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounds": [
+        608,
+        120,
+        672,
+        1160
+      ],
+      "centre": [
+        640.0,
+        640.0
+      ],
+      "nominal_phone_points": [
+        6,
+        104
+      ],
+      "content_rect": [
+        626,
+        164,
+        655,
+        1119
+      ],
+      "insets": {
+        "track": {
+          "rect": [
+            626,
+            164,
+            655,
+            1119
+          ],
+          "bounds": [
+            622,
+            144,
+            659,
+            1144
+          ],
+          "pixels": 34702,
+          "flat_colour_index": 15,
+          "light_colour": [
+            202,
+            142,
+            78
+          ],
+          "dark_colour": [
+            91,
+            63,
+            50
+          ]
+        }
+      },
+      "caps": {
+        "left": 0,
+        "right": 0,
+        "top": 64,
+        "bottom": 64
+      },
+      "stretch": {
+        "mode": "vertical_3_slice",
+        "trimmed_stretch_rect": [
+          0,
+          64,
+          64,
+          976
+        ],
+        "canvas_stretch_rect": [
+          608,
+          184,
+          672,
+          1096
+        ],
+        "centre_rows_identical": true
+      }
+    },
+    "party_frame": {
+      "name": "party_frame",
+      "source_canvas": [
+        2172,
+        724
+      ],
+      "source_alpha_threshold_bounds": [
+        135,
+        78,
+        2030,
+        652
+      ],
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounds": [
+        80,
+        464,
+        1200,
+        816
+      ],
+      "centre": [
+        640.0,
+        640.0
+      ],
+      "nominal_phone_points": [
+        140,
+        44
+      ],
+      "content_rect": [
+        439,
+        536,
+        1093,
+        622
+      ],
+      "insets": {
+        "name": {
+          "rect": [
+            439,
+            536,
+            1093,
+            622
+          ],
+          "bounds": [
+            399,
+            533,
+            1159,
+            625
+          ],
+          "pixels": 66527,
+          "flat_colour_index": 29,
+          "light_colour": [
+            241,
+            195,
+            135
+          ],
+          "dark_colour": [
+            143,
+            111,
+            85
+          ]
+        },
+        "hp": {
+          "rect": [
+            463,
+            649,
+            1070,
+            677
+          ],
+          "bounds": [
+            447,
+            644,
+            1086,
+            682
+          ],
+          "pixels": 23341,
+          "flat_colour_index": 20,
+          "light_colour": [
+            220,
+            164,
+            101
+          ],
+          "dark_colour": [
+            103,
+            74,
+            59
+          ]
+        },
+        "mp": {
+          "rect": [
+            460,
+            706,
+            1065,
+            735
+          ],
+          "bounds": [
+            441,
+            703,
+            1087,
+            739
+          ],
+          "pixels": 22293,
+          "flat_colour_index": 20,
+          "light_colour": [
+            220,
+            164,
+            101
+          ],
+          "dark_colour": [
+            103,
+            74,
+            59
+          ]
+        }
+      },
+      "caps": {
+        "left": 420,
+        "right": 140,
+        "top": 0,
+        "bottom": 0
+      },
+      "stretch": {
+        "mode": "horizontal_3_slice",
+        "trimmed_stretch_rect": [
+          420,
+          0,
+          980,
+          352
+        ],
+        "canvas_stretch_rect": [
+          500,
+          464,
+          1060,
+          816
+        ],
+        "centre_columns_identical": true
+      },
+      "portrait_aperture": {
+        "bounds": [
+          130,
+          513,
+          385,
+          768
+        ],
+        "centre": [
+          257.5,
+          640.5
+        ],
+        "diameters_xy": [
+          255,
+          255
+        ],
+        "alpha_values": [
+          0
+        ],
+        "pixels": 50842
+      }
+    },
+    "coach_arrow": {
+      "name": "coach_arrow",
+      "source_canvas": [
+        1202,
+        1309
+      ],
+      "source_alpha_threshold_bounds": [
+        59,
+        11,
+        1141,
+        1303
+      ],
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounds": [
+        255,
+        180,
+        1025,
+        1100
+      ],
+      "centre": [
+        640.0,
+        640.0
+      ],
+      "nominal_phone_points": [
+        40,
+        40
+      ],
+      "content_rect": [
+        563,
+        250,
+        718,
+        399
+      ],
+      "insets": {
+        "star": {
+          "rect": [
+            563,
+            250,
+            718,
+            399
+          ],
+          "runtime_content": false
+        }
+      },
+      "caps": null,
+      "stretch": null,
+      "tip_pixel": [
+        639,
+        1099
+      ],
+      "content_role": "existing_gold_star_inlay"
+    },
+    "map_pin": {
+      "name": "map_pin",
+      "source_canvas": [
+        1254,
+        1254
+      ],
+      "source_alpha_threshold_bounds": [
+        250,
+        111,
+        989,
+        1157
+      ],
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounds": [
+        272,
+        120,
+        1007,
+        1160
+      ],
+      "centre": [
+        639.5,
+        640.0
+      ],
+      "nominal_phone_points": [
+        24,
+        32
+      ],
+      "content_rect": [
+        421,
+        282,
+        860,
+        716
+      ],
+      "insets": {
+        "star": {
+          "rect": [
+            421,
+            282,
+            860,
+            716
+          ],
+          "runtime_content": false
+        }
+      },
+      "caps": null,
+      "stretch": null,
+      "tip_pixel": [
+        639,
+        1159
+      ],
+      "content_role": "existing_gold_star_inlay"
+    }
+  }
+}

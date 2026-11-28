@@ -1,0 +1,9 @@
+1. web_shot (Web Shot, physical, dark, on every foe): Sprays sticky webs everywhere.
+2. roar (Roar, physical, none, on every foe): A mighty roar that shakes everyone.
+3. gust (Gust, physical, none, on every foe): Wings whip up a gale.
+4. rock_throw (Rock Throw, physical, earth, on one foe): Hurls a boulder.
+5. venom_bite (Venom Bite, physical, none, on one foe): Fangs that can leave poison behind.
+6. charge (Charge, physical, none, on one foe): Dash in and strike through a foe's guard, ignoring 40% of its DEF.
+7. rush (Rush, physical, none, on one foe): Three quick blows, each at a foe picked at random.
+8. impact (Impact, physical, none, on one foe): A shattering blow that cracks the foe's armour: DEF −20% for 3 rounds.
+9. double_combo (Double Combo, physical, none, on one foe): Two heavy blows on the same foe, one after the other.

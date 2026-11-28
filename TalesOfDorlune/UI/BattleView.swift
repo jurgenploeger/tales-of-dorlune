@@ -855,8 +855,8 @@ private struct MoreMenu: View {
                         Image(uiImage: picture)
                             .interpolation(picture.size.width > 64 ? .high : .none)
                             .resizable()
-                            .scaledToFill()
-                            .clipShape(Circle())
+                            .scaledToFit()
+                            .padding(2)
                     } else {
                         IconImage(skill.icon.flatMap(GameIcon.init) ?? .sparkles, size: 14)
                             .foregroundStyle(.white)
@@ -1328,9 +1328,8 @@ struct SkillCommandButton: View {
                 Image(uiImage: picture)
                     .interpolation(picture.size.width > 64 ? .high : .none)
                     .resizable()
-                    .scaledToFill()
-                    .frame(width: size - 6, height: size - 6)
-                    .clipShape(Circle())
+                    .scaledToFit()
+                    .frame(width: size * 0.78, height: size * 0.78)
             } else {
                 IconImage(skill.icon.flatMap(GameIcon.init) ?? .sparkles, size: size * 0.56)
                     .foregroundStyle(.white)
@@ -1564,10 +1563,17 @@ struct RoundCommandButton: View {
         return (.clear, 0)
     }
 
+    /// The carved button with its picture (Attack, Items, Run: `WoodArt.button`), for an everyday command.
+    private var wood: String? {
+        text == nil && !isLight ? WoodArt.button(for: icon, inBattle: true) : nil
+    }
+
     var body: some View {
         PressButton(action: action, onHold: onHold) {
             VStack(spacing: 1) {
-                if let text {
+                if wood != nil {
+                    EmptyView()
+                } else if let text {
                     Text(text)
                         .font(HUDStyle.font(size * 0.27))
                         .lineLimit(1)
@@ -1579,29 +1585,33 @@ struct RoundCommandButton: View {
                     IconImage(icon, size: size * 0.56)
                         .shadow(color: iconShadow.color, radius: iconShadow.radius, x: isBlue ? 1 : 0, y: 1)
                 }
-                if size >= 80 {
+                if size >= 80, wood == nil {
                     Text(title).font(HUDStyle.font(12))
                 }
             }
             .foregroundStyle(foreground)
             .frame(width: size, height: size)
-            .background(
-                Circle()
-                    .fill(isBlue ? AnyShapeStyle(LinearGradient(colors: colors, startPoint: .top, endPoint: .bottom))
-                                 : AnyShapeStyle(RadialGradient(colors: colors, center: UnitPoint(x: 0.35, y: 0.3), startRadius: 1, endRadius: size * 0.75)))
-                    .overlay(Circle().strokeBorder(isBlue ? AnyShapeStyle(HUDStyle.bevel) : AnyShapeStyle(Color.white.opacity(0.75)),
-                                                   lineWidth: isBlue ? 2.5 : 2))
-                    .overlay(
-                        Ellipse().fill(.white.opacity(0.35))
-                            .frame(width: size * 0.5, height: size * 0.2)
-                            .offset(y: -size * 0.3)
-                    )
-            )
+            .background {
+                if let wood {
+                    Image(wood).resizable()
+                } else {
+                    Circle()
+                        .fill(isBlue ? AnyShapeStyle(LinearGradient(colors: colors, startPoint: .top, endPoint: .bottom))
+                                     : AnyShapeStyle(RadialGradient(colors: colors, center: UnitPoint(x: 0.35, y: 0.3), startRadius: 1, endRadius: size * 0.75)))
+                        .overlay(Circle().strokeBorder(isBlue ? AnyShapeStyle(HUDStyle.bevel) : AnyShapeStyle(Color.white.opacity(0.75)),
+                                                       lineWidth: isBlue ? 2.5 : 2))
+                        .overlay(
+                            Ellipse().fill(.white.opacity(0.35))
+                                .frame(width: size * 0.5, height: size * 0.2)
+                                .offset(y: -size * 0.3)
+                        )
+                }
+            }
             .shadow(color: glow?.opacity(pulse ? 0.9 : 0.3) ?? .black.opacity(0.4),
                     radius: glow == nil ? 4 : (pulse ? 12 : 5), x: 0, y: glow == nil ? 4 : 0)
         }
         .overlay(alignment: .bottom) {
-            if size < 80 {
+            if size < 80 || wood != nil {
                 Text(title)
                     .font(HUDStyle.font(10))
                     .foregroundStyle(HUDStyle.cream)

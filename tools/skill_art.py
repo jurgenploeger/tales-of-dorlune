@@ -1104,6 +1104,9 @@ def rgb_light(*hexes):
 SKILLS = {name[5:]: fn for name, fn in dict(globals()).items() if name.startswith("draw_")}
 
 
+PICKED_DIR = pathlib.Path(__file__).resolve().parent.parent / "art-variants" / "skill_icons"
+
+
 def skill_defs():
     import json
     return {s["id"]: s for s in json.loads((ROOT / "content" / "skills.json").read_text())["skills"]}
@@ -1132,7 +1135,10 @@ def main(argv):
         print("no drawing for: " + ", ".join(missing))
     out = {}
     for skill_id in ids:
-        img = render(skill_id)
+        # ChatGPT's pixel-art icon, 64 pixels, copied as drawn (docs/ai-sprite-test/skill-icons, 2026-11-28);
+        # the light drawing only for a skill it hasn't drawn.
+        picked = sorted(PICKED_DIR.glob(f"batch*/skill_{skill_id}.png"))
+        img = Image.open(picked[0]).convert("RGBA") if picked else render(skill_id)
         img.save(SPRITES / f"skill_{skill_id}.png")
         out[skill_id] = img
     print(f"wrote {len(ids)} skill icons to art/sprites/")

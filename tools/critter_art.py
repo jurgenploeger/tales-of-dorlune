@@ -579,6 +579,9 @@ PLUMES = {"robin": (0x8A6248, 0xE8834A, 0x6B4A36), "bluebird": (0x4F7FC8, 0xE8A0
 POSES = ("sit", "hop", "peck", "fly")
 
 
+PICKED_DIR = pathlib.Path(__file__).resolve().parent.parent / "art-variants" / "critters"
+
+
 def drawings():
     out = {}
     for name, (fur, light, dark) in COATS.items():
@@ -620,7 +623,9 @@ def main(argv):
     ids = argv or list(all_)
     out = {}
     for name in ids:
-        img = all_[name]().render()
+        picked = PICKED_DIR / f"critter_{name}.png"
+        # ChatGPT's redraw, copied as drawn (docs/ai-sprite-test/critters, 2026-11-28); the code's drawing otherwise.
+        img = Image.open(picked).convert("RGBA") if picked.exists() else all_[name]().render()
         img.save(SPRITES / f"critter_{name}.png")
         out[name] = img
     print(f"wrote {len(out)} critters to art/sprites/")

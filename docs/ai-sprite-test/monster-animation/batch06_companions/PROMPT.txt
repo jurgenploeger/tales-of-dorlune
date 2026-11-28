@@ -1,0 +1,23 @@
+Redraw the monsters of my game, Tales of Dorlune, as full animation sheets: a cute top-down fantasy RPG for iPhone (pixel-art world, chibi characters, bright and cosy). Every monster can be caught and walks behind you as a companion, so it needs to walk and run in every direction, stand idle and attack. Each attached _today_8x picture is the monster as it is now (one picture, at 8×): keep exactly who it is, its shape, colours, face, markings and charm, and bring it to life.
+
+Style: match the attached pictures' pixel art exactly: hard square pixels, a dark outline, lit from the top left, rich hue-shifted shading, big expressive eyes. Original drawings only.
+
+For each monster, one sprite sheet, a grid of frames, each frame the monster's frame size (listed: 40 × 40 or 64 × 64 pixels), transparent, alpha 0 or 255 only, no anti-aliasing:
+- Rows, top to bottom: facing down (toward the viewer), facing right, facing up (away). (The game mirrors the right row for left.) Seen from slightly above, as the game's world is.
+- Columns, left to right:
+  1-2 idle: standing, breathing or bobbing (2 frames).
+  3-6 walk: a full walk or hop cycle (4 frames; the game plays the same frames faster to run).
+  7-9 attack: wind-up, strike, recover (3 frames), the monster lunging, biting, swiping or slamming in its own way toward the direction it faces. Only the monster: no slash marks, sparks or effects (the game adds those).
+- So a sheet is 9 columns × 3 rows: 360 × 120 pixels for a 40-pixel monster, 576 × 192 for a 64-pixel one.
+- In every frame the monster stands with its feet (or its base, for a jelly or a ghost) on the same row, about 2 pixels above the frame's bottom, centred left to right, so the game can play the frames in place without it jumping. Same size and proportions in every frame and every direction; a leg, ear, tail or wing moves, the body doesn't grow or shrink.
+- Draw only the monster listed, not its colour variants (the game recolours those).
+
+1. lantern_sprite (Lantern Sprite, fire element, frame 40 × 40 pixels): A moth-winged sprite that carries a lantern lit from the fallen star. It leads lost travellers home, or deeper into the woods if it's feeling cheeky. (Its colour variants, Moonlamp Sprite, are recoloured from it in the game: draw only this one.)
+2. shardwing_bat (Shardwing Bat, dark element, frame 40 × 40 pixels): A bat whose wings grew crystal in the Glimmerdeep's dark. It hangs from the ceiling in rows, chiming softly when it shivers.
+3. rosequartz_bat (Rosequartz Bat, dark element, frame 40 × 40 pixels): Shardwing Bats from the Depths, where the crystal blushes pink. They're bigger and bolder than their cousins up top.
+4. gloomwing_bat (Gloomwing Bat, dark element, frame 40 × 40 pixels): Down by the Glimmerdeep's heart, where no light has ever reached, the bats' crystal wings have gone as dark as the night sky.
+5. geode_golem (Geode Golem, earth element, frame 40 × 40 pixels): A little golem made of cave rock, with amethyst growing out of its back. It collects pretty stones and gets very upset if you take one.
+6. sapphire_golem (Sapphire Golem, earth element, frame 40 × 40 pixels): A Geode Golem from the Depths, its crystals blue as deep water. It sits so still that miners have built shelves on it.
+7. heartstone_golem (Heartstone Golem, earth element, frame 40 × 40 pixels): The oldest golems keep watch at the Glimmerdeep's heart, their crystals glowing red as embers. They say the Prism Drake raised them.
+
+Go one monster at a time. For each: say its frame size, then deliver its sheet as a 1× PNG named <id>_sheet.png and an exact 8× nearest-neighbour preview <id>_sheet_8x.png, then the next. At the end of the batch: a contact sheet of every monster's down-facing idle and attack frames on mid-grey, an asset_checks.json (each sheet's size, colour count, alpha values, and for each frame the bottom row its feet stand on), and a zip of it all.

@@ -32,3 +32,13 @@ Each is checked at the speech window's size (the speaker about 130 points across
 light and dark, beside its walking sprite; then wired in: a portrait per NPC art, and a mood per speech line
 (neutral by default) so a line can switch the face. That's a small content and Swift change, made once the
 portraits are in.
+
+## Results (2026-11-28)
+
+All 87 in, four emotions each: `art-variants/npc_portraits/` (348 PNGs, 128 × 160, hard alpha, 32 to 38 colours;
+ChatGPT's `asset_checks.json`). Checked: every portrait id is one of ours, none missing; each character's happy,
+worried and surprised differ from its neutral only round the face (about 600 pixels, the mouth and eyes; the
+ox's and Stardust's lower snouts reach row 113). `results_all_87.png`: each sprite over its neutral portrait;
+`results_emotions_sample.png`: ten with all four faces. They keep who each is (hair, ears, beard, clothes,
+species). Not in the game yet: the speech window shows the walking sprite big; wiring a portrait per NPC art and a
+mood per line is the next step.

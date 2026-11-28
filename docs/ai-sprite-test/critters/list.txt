@@ -1,0 +1,29 @@
+bunny_brown: 17 x 15 px; frames: hop, sit
+bunny_cream: 17 x 15 px; frames: hop, sit
+bunny_grey: 17 x 15 px; frames: hop, sit
+bunny_white: 17 x 15 px; frames: hop, sit
+butterfly_blue: 15 x 12 px; frames: closed, half, open
+butterfly_lilac: 15 x 12 px; frames: closed, half, open
+butterfly_orange: 15 x 12 px; frames: closed, half, open
+butterfly_pink: 15 x 12 px; frames: closed, half, open
+butterfly_yellow: 15 x 12 px; frames: closed, half, open
+chick: 11 x 11 px; frames: hop, peck, sit
+cow_brown: 31 x 23 px; frames: graze, stand, step
+cow: 31 x 23 px; frames: graze, stand, step
+crab: 17 x 12 px; frames: down, up
+crow: 13 x 12 px; frames: fly, hop, peck, sit
+flock_bats: 15 x 8 px; frames: down, up
+flock_gulls: 17 x 8 px; frames: down, up
+flock_songbirds: 11 x 7 px; frames: down, up
+frog: 15 x 12 px; frames: hop, sit
+lizard: 19 x 11 px; frames: a, b
+mouse: 14 x 9 px; frames: a, b
+rat: 19 x 10 px; frames: a, b
+scorpion: 18 x 13 px; frames: a, b
+sheep: 24 x 18 px; frames: graze, stand, step
+songbird_bluebird: 13 x 12 px; frames: fly, hop, peck, sit
+songbird_finch: 13 x 12 px; frames: fly, hop, peck, sit
+songbird_robin: 13 x 12 px; frames: fly, hop, peck, sit
+spider: 18 x 14 px; frames: a, b
+squirrel: 17 x 15 px; frames: hop, sit
+wisp: 13 x 15 px; frames: a, b

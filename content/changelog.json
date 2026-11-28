@@ -2,6 +2,18 @@
   "_note": "Newest first, one entry per big update with at most five lines that sum it up. The top version must match MARKETING_VERSION in project.yml (tools/check_content.py checks): a small change moves the top entry's version and date along and adds a line only if it's big enough to tell players. 1.0.0 is the App Store release.",
   "releases": [
     {
+      "version": "0.9.266",
+      "date": "2026-11-28",
+      "title": "Carved wood",
+      "notes": [
+        "The windows, buttons, minimap and joystick are carved from pale birch, walnut in Dark Mode.",
+        "Monsters walk, idle and strike in every direction, in battle and at your side.",
+        "Every skill has new pixel-art icons and battle effects.",
+        "Townsfolk show their portrait when you talk to them.",
+        "The birds, bunnies and other critters are redrawn."
+      ]
+    },
+    {
       "version": "0.9.265",
       "date": "2026-11-27",
       "title": "Tall grass",

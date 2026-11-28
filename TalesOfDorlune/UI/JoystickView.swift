@@ -113,22 +113,10 @@ private struct JoystickBase: View {
 
     var body: some View {
         ZStack {
-            // Glossy light-blue rim, lit from above.
-            Circle()
-                .fill(LinearGradient(colors: [HUDStyle.frameLight, HUDStyle.frameMid], startPoint: .top, endPoint: .bottom))
-            Circle()
-                .strokeBorder(HUDStyle.frameDark.opacity(0.85), lineWidth: 1.5)
-
-            // Recessed well, with a soft shadow just under its top edge.
-            Circle()
-                .inset(by: 9)
-                .fill(RadialGradient(
-                    colors: [Color(red: 0.17, green: 0.34, blue: 0.57), Color(red: 0.08, green: 0.18, blue: 0.35)],
-                    center: .center, startRadius: 2, endRadius: radius - 9
-                ))
-            Circle()
-                .inset(by: 9)
-                .strokeBorder(LinearGradient(colors: [.black.opacity(0.4), .clear], startPoint: .top, endPoint: .center), lineWidth: 5)
+            // The carved birch base (tools/hud_game_art.py, the user's pick, 2026-11-27).
+            Image("WoodJoystickBase")
+                .resizable()
+                .frame(width: radius * 2, height: radius * 2)
             Circle()
                 .inset(by: 9)
                 .strokeBorder(HUDStyle.orange.opacity(isPressed ? 0.75 : 0), lineWidth: 1.5)
@@ -136,7 +124,7 @@ private struct JoystickBase: View {
             // Direction chevrons; the one you're pushing toward lights up.
             ForEach(Direction.allCases, id: \.self) { mark in
                 IconImage(.chevronUp, size: 15)
-                    .foregroundStyle(mark == direction ? HUDStyle.orange : HUDStyle.frameLight.opacity(0.4))
+                    .foregroundStyle(mark == direction ? HUDStyle.orange : .clear)
                     .shadow(color: mark == direction ? HUDStyle.orange.opacity(0.9) : .clear, radius: 4)
                     .offset(y: -radius * 0.74)
                     .rotationEffect(.degrees(mark.angle))
@@ -162,7 +150,7 @@ private struct JoystickShaft: View {
             var path = Path()
             path.move(to: center)
             path.addLine(to: tip)
-            context.stroke(path, with: .color(Color(red: 0.03, green: 0.08, blue: 0.18)), style: StrokeStyle(lineWidth: width, lineCap: .round))
+            context.stroke(path, with: .color(Color(red: 0.2, green: 0.12, blue: 0.06)), style: StrokeStyle(lineWidth: width, lineCap: .round))
             context.stroke(path, with: .color(.white.opacity(0.08)), style: StrokeStyle(lineWidth: width * 0.35, lineCap: .round))
         }
         .allowsHitTesting(false)
@@ -178,39 +166,10 @@ private struct JoystickCap: View {
     var body: some View {
         let size = radius * 2
         ZStack {
-            // Body: warm cream dome, lit from the top-left.
-            Circle()
-                .fill(RadialGradient(
-                    colors: [Color(red: 1, green: 0.98, blue: 0.9), HUDStyle.cream, Color(red: 0.72, green: 0.62, blue: 0.5)],
-                    center: UnitPoint(x: 0.35, y: 0.3), startRadius: 1, endRadius: radius * 1.35
-                ))
-            // Rim thickness.
-            Circle()
-                .strokeBorder(LinearGradient(colors: [.white.opacity(0.9), Color(red: 0.5, green: 0.4, blue: 0.32)], startPoint: .top, endPoint: .bottom), lineWidth: 2.5)
-            // Concave thumb rest.
-            Circle()
-                .inset(by: radius * 0.28)
-                .fill(RadialGradient(
-                    colors: [Color(red: 0.78, green: 0.68, blue: 0.56), Color(red: 0.98, green: 0.93, blue: 0.82)],
-                    center: UnitPoint(x: 0.4, y: 0.35), startRadius: 1, endRadius: radius * 0.75
-                ))
-            // Grip ridges.
-            ForEach(0..<3, id: \.self) { ring in
-                Circle()
-                    .inset(by: radius * 0.34 + CGFloat(ring) * radius * 0.13)
-                    .stroke(Color(red: 0.45, green: 0.36, blue: 0.28).opacity(0.22), lineWidth: 1)
-            }
-            // Gold accent dot, like a game-console stick.
-            Circle()
-                .fill(HUDStyle.gold)
-                .frame(width: radius * 0.22, height: radius * 0.22)
-                .overlay(Circle().stroke(Color(red: 0.6, green: 0.45, blue: 0.1), lineWidth: 1))
-            // Specular highlight.
-            Ellipse()
-                .fill(.white.opacity(0.6))
-                .frame(width: size * 0.42, height: size * 0.2)
-                .offset(x: -radius * 0.22, y: -radius * 0.5)
-                .blur(radius: 1.5)
+            // The carved knob (tools/hud_game_art.py).
+            Image("WoodJoystickKnob")
+                .resizable()
+                .frame(width: size, height: size)
         }
         .frame(width: size, height: size)
         .rotation3DEffect(

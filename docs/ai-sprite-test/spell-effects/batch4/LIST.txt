@@ -1,0 +1,9 @@
+1. mud_shot (Mud Shot, magic, earth, on one foe): A splat of heavy mud.
+2. bubble (Bubble, magic, water, on one foe): Pops a bubble in your face.
+3. frost_breath (Frost Breath, magic, water, on every foe): An icy gust that can freeze its targets solid: a frozen one loses its next turn.
+4. dancing_fountain (Dancing Fountain, magic, water, on one foe): Jets of water dance up under a foe and rain on those beside it.
+5. spiritual_lance (Spiritual Lance, magic, metal, on one foe): A lance of spirit light runs one foe through.
+6. meteor_blast (Meteor Blast, magic, fire, on every foe): Burning meteors rain down on every foe.
+7. first_aid (First Aid, heal, healing, on one ally): Patch up one ally.
+8. blessing (Healing Spring, heal, healing, on the whole party): Healing water washes over the whole party.
+9. recovery (Recovery, heal, healing, on one ally): Light mends one ally's wounds.

@@ -824,6 +824,11 @@ final class Walker: SKNode {
     /// breathes in whole pixels (`IdlePose.out`), where stretching the sprite smeared them.
     private func breathe() {
         guard idles else { return }
+        // A monster with a drawn idle plays it (its ChatGPT sheet, `WalkCycle.idle`).
+        if let idle = cycle.idle?[facing], idle.count > 1 {
+            sprite.run(.sequence([.wait(forDuration: breathOffset), .repeatForever(.animate(with: idle, timePerFrame: 0.45))]), withKey: "idle")
+            return
+        }
         if eyesShut { showPose() }
         guard motion == .breathe, cycle.poses[facing]?.out != nil else {
             sprite.run(motion.action(height: sprite.size.height, delay: breathOffset), withKey: "idle")

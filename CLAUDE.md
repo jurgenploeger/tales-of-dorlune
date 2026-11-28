@@ -204,7 +204,7 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   each light, dark (its night, lit by the season's lights, `at_night`) and tinted, as the app icon is.
   The game switches to Halloween's all October, Christmas's all December and Easter's while its season runs (`SeasonalIcon.icon`; rewards.json `seasons` for Easter; never in tests or debug launches).
 - `tools/logo_art.py`: the logo (`Logo.png`): the user's own drawing (`PICKED`, `art-variants/logo/picked.png`):
-  since 0.9.265 (2026-11-27) "Tales of" over DORLUNE carved in pale birch, a brown outline, green leaves and two carved
+  since 0.9.265 (2026-11-27) "Tales of" over DORLUNE carved in pale birch, a brown outline (thick and dark since 0.9.266; the thinner one `picked_2026-11-27.png`), green leaves and two carved
   stars, as the carved-wood HUD; before it TALES OF over DORLUNE in gold with a dark plum outline (`picked_2026-11-23.png`). Copied as drawn: its
   faint halo cleared, the small letter holes its background removal left half see-through filled with its ink,
   cropped and scaled to 1904 pixels wide. `--drawn` writes the one before it (Luckiest Guy capitals, styled on
@@ -229,6 +229,17 @@ people, bosses, quests) in player-facing text: `docs/fairyland-online.md` → Na
   made the icon at its own size, its outline a deep shade of what it rounds (`icon`; `pixel_style.py --kind
   rd_item`), and shrunk to the held sprite at the drawn weapons' size; `item_art.py` leaves those
   alone. `tools/gear_preview.py --weapons out.png <ids>` shows weapons in hand on every body, direction and armour.
+- ChatGPT's art in the game since 0.9.266 (2026-11-28; docs/ai-sprite-test/, copied as drawn from `art-variants/`):
+  the carved-wood HUD (`tools/hud_game_art.py` cuts ChatGPT's 1280-pixel pieces to 3 pixels a point into
+  `Assets.xcassets/Wood/`, each with its Dark Mode twin as the catalog's dark appearance; `TalesOfDorlune/UI/WoodArt.swift`:
+  `WoodFrame` over every window, `WoodButtonFace` for the round buttons with their enamel pictures, the close button,
+  minimap ring and compass, joystick and portrait ring; the windows' pane a walnut in both looks for their cream text);
+  the skills' icons at 64 pixels (`skill_art.py`'s `PICKED_DIR`) and their battle effects (`tools/spell_effect_art.py`:
+  cast, bolt and impact strips, `PixelSpell`, played by `BattleScene.castPixel` in place of the glows, the blow landing
+  on the impact's third frame; a revive keeps its pillar); monsters' 9 by 8 sheets of idle, walk and attack
+  (`tools/monster_motion_art.py` → `motion_<art>.png`, `ArtLibrary.motionCycle`: `WalkCycle.idle` and `.attack`, a
+  variant recolouring its base's sheet, `motionImage`); the townsfolk's portraits in four moods (`tools/portrait_art.py`,
+  `NPCPortrait`, the speech window's bust; neutral for now); the critters (`critter_art.py`'s `PICKED_DIR`).
 - `tools/skill_art.py`: every skill's icon (`art/sprites/skill_<id>.png`), drawn as light, not pixel art: the
   glows, flares, sparks and trails of its battle animation in its colours (`LIGHTS`, `ElementLight`'s), on a dark
   backdrop of its tile's colour, at 128 pixels. The game shows art over 64 pixels smoothed (`IconTile`,

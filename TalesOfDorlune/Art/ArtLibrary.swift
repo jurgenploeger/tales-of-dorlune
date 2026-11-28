@@ -45,6 +45,10 @@ struct WalkCycle {
     /// Each direction's standing pose breathing out, and with its eyes shut for a blink: none for a
     /// sprite with no eyes (art/eyes.json) and no walk sheet.
     var poses: [Direction: IdlePose] = [:]
+    /// A monster's drawn idle (two frames) and attack (wind-up, strike, recover) in each direction, from
+    /// its ChatGPT sheet (`motion_<art>`, tools/monster_motion_art.py); nil for everything else.
+    var idle: [Direction: [SKTexture]]? = nil
+    var attack: [Direction: [SKTexture]]? = nil
 
     func frames(_ direction: Direction) -> [SKTexture] {
         frames[direction] ?? frames[.down] ?? []
@@ -1909,6 +1913,7 @@ final class ArtLibrary {
         let asset = asset(id)
         let kind = kind(of: id)
         let scale = CGFloat(asset?.scale ?? 1)
+        if let drawn = motionCycle(id, scale: scale) { return drawn }
 
         guard kind == "walk_sheet" else {
             let art = sprite(id)
@@ -1952,6 +1957,45 @@ final class ArtLibrary {
         var cycle = WalkCycle(frames: frames, size: CGSize(width: frameSize, height: frameSize) * scale)
         cycle.poses = idlePoses(id, sheet: picture(of: sheet), layout: layout, frame: Int(frameSize))
         return cycle
+    }
+
+    /// A monster's ChatGPT sheet (`art/sprites/motion_<id>.png`, or a recolour of its base's in
+    /// art/assets.json; tools/monster_motion_art.py): square frames, 9 columns (idle 2, walk 4, attack 3)
+    /// by 8 rows (down, right, up, left, then the four diagonals, not used yet). Nil when it has none.
+    private func motionCycle(_ id: String, scale: CGFloat) -> WalkCycle? {
+        guard let image = motionImage(id) else { return nil }
+        let frame = image.width / 9
+        guard frame > 0, image.height >= frame * 4 else { return nil }
+        let sheet = SKTexture(cgImage: image)
+        sheet.filteringMode = .nearest
+        let width = CGFloat(image.width), height = CGFloat(image.height), side = CGFloat(frame)
+        func cell(_ column: Int, _ row: Int) -> SKTexture {
+            // SpriteKit texture rects are normalised with the origin at the bottom-left.
+            let rect = CGRect(x: CGFloat(column) * side / width, y: 1 - CGFloat(row + 1) * side / height,
+                              width: side / width, height: side / height)
+            let texture = SKTexture(rect: rect, in: sheet)
+            texture.filteringMode = .nearest
+            return texture
+        }
+        let rows: [Direction: Int] = [.down: 0, .right: 1, .up: 2, .left: 3]
+        var walk: [Direction: [SKTexture]] = [:], idle: [Direction: [SKTexture]] = [:], attack: [Direction: [SKTexture]] = [:]
+        for (direction, row) in rows {
+            idle[direction] = (0..<2).map { cell($0, row) }
+            walk[direction] = (2..<6).map { cell($0, row) }
+            attack[direction] = (6..<9).map { cell($0, row) }
+        }
+        var cycle = WalkCycle(frames: walk, size: CGSize(width: side, height: side) * scale)
+        cycle.idle = idle
+        cycle.attack = attack
+        return cycle
+    }
+
+    /// Its own motion sheet, else its base's recoloured as it is (a variant, a recoloured companion).
+    private func motionImage(_ id: String, depth: Int = 0) -> CGImage? {
+        if let own = sourceImage("motion_" + id) { return own }
+        guard depth < 3, layerSets[id] == nil, let derive = asset(id)?.derive, derive.layers == nil,
+              let base = motionImage(derive.from, depth: depth + 1) else { return nil }
+        return Recolor.apply(derive.recolor, to: base)
     }
 
     /// Where a sheet's frames lie, to find each direction's first.
