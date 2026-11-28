@@ -1,0 +1,2680 @@
+{
+  "schema_version": 2,
+  "title": "Tales of Dorlune \u2014 final interface pieces",
+  "coordinate_convention": "Rectangles [x0,y0,x1,y1], right/bottom exclusive. Pixel indices zero-based; centres use pixel-boundary coordinates. Caps are measured after trimming to bounds.",
+  "palette_provenance": "40 light/dark colour pairs measured from the approved supplied assets and contact sheet. No invented dark-mode colour mappings.",
+  "colour_count_definition": "Distinct RGB values among fully opaque pixels; transparent pixels excluded.",
+  "assets": {
+    "toast_plate.png": {
+      "name": "toast_plate",
+      "source_canvas": [
+        1402,
+        1122
+      ],
+      "source_alpha_threshold_bounds": [
+        59,
+        486,
+        1343,
+        636
+      ],
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounds": [
+        80,
+        564,
+        1200,
+        716
+      ],
+      "centre": [
+        640.0,
+        640.0
+      ],
+      "nominal_phone_points": [
+        220,
+        30
+      ],
+      "content_rect": [
+        212,
+        593,
+        1117,
+        687
+      ],
+      "insets": {
+        "text": {
+          "rect": [
+            212,
+            593,
+            1117,
+            687
+          ],
+          "bounds": [
+            137,
+            590,
+            1170,
+            706
+          ],
+          "pixels": 107643,
+          "flat_colour_index": 29,
+          "light_colour": [
+            241,
+            195,
+            135
+          ],
+          "dark_colour": [
+            143,
+            111,
+            85
+          ],
+          "verified_fully_opaque": true,
+          "verified_single_colour": true
+        }
+      },
+      "caps": {
+        "left": 190,
+        "right": 100,
+        "top": 0,
+        "bottom": 0
+      },
+      "stretch": {
+        "mode": "horizontal_3_slice",
+        "trimmed_stretch_rect": [
+          190,
+          0,
+          1020,
+          152
+        ],
+        "canvas_stretch_rect": [
+          270,
+          564,
+          1100,
+          716
+        ],
+        "centre_columns_identical": true
+      },
+      "file": "light/toast_plate.png",
+      "colour_count": 35,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "opaque_pixel_count": 164717,
+      "transparent_aperture_count": 0,
+      "preview_8x": {
+        "file": "previews_8x/light/toast_plate_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "nearest_neighbour_exact": true
+      },
+      "sha256": "c336a185798cbbfb8183635fe16591b16b3df93ba1fa660adf9113d81194c645",
+      "byte_size": 11150,
+      "checks": {
+        "canvas_1280": true,
+        "bounds_match_metadata": true,
+        "binary_alpha": true,
+        "at_most_40_visible_colours": true,
+        "expected_aperture_count": true,
+        "correct_centre": true
+      }
+    },
+    "toast_plate_dark.png": {
+      "name": "toast_plate",
+      "source_canvas": [
+        1402,
+        1122
+      ],
+      "source_alpha_threshold_bounds": [
+        59,
+        486,
+        1343,
+        636
+      ],
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounds": [
+        80,
+        564,
+        1200,
+        716
+      ],
+      "centre": [
+        640.0,
+        640.0
+      ],
+      "nominal_phone_points": [
+        220,
+        30
+      ],
+      "content_rect": [
+        212,
+        593,
+        1117,
+        687
+      ],
+      "insets": {
+        "text": {
+          "rect": [
+            212,
+            593,
+            1117,
+            687
+          ],
+          "bounds": [
+            137,
+            590,
+            1170,
+            706
+          ],
+          "pixels": 107643,
+          "flat_colour_index": 29,
+          "light_colour": [
+            241,
+            195,
+            135
+          ],
+          "dark_colour": [
+            143,
+            111,
+            85
+          ],
+          "verified_fully_opaque": true,
+          "verified_single_colour": true
+        }
+      },
+      "caps": {
+        "left": 190,
+        "right": 100,
+        "top": 0,
+        "bottom": 0
+      },
+      "stretch": {
+        "mode": "horizontal_3_slice",
+        "trimmed_stretch_rect": [
+          190,
+          0,
+          1020,
+          152
+        ],
+        "canvas_stretch_rect": [
+          270,
+          564,
+          1100,
+          716
+        ],
+        "centre_columns_identical": true
+      },
+      "file": "dark/toast_plate_dark.png",
+      "colour_count": 35,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "opaque_pixel_count": 164717,
+      "transparent_aperture_count": 0,
+      "preview_8x": {
+        "file": "previews_8x/dark/toast_plate_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "nearest_neighbour_exact": true
+      },
+      "sha256": "e986aa50da9f2c25295802a677ff7d0e4cff9935f55cc9bdc23276618fd8aafa",
+      "byte_size": 11150,
+      "checks": {
+        "canvas_1280": true,
+        "bounds_match_metadata": true,
+        "binary_alpha": true,
+        "at_most_40_visible_colours": true,
+        "expected_aperture_count": true,
+        "correct_centre": true
+      }
+    },
+    "banner_ribbon.png": {
+      "name": "banner_ribbon",
+      "source_canvas": [
+        1402,
+        1122
+      ],
+      "source_alpha_threshold_bounds": [
+        32,
+        433,
+        1370,
+        722
+      ],
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounds": [
+        80,
+        509,
+        1200,
+        771
+      ],
+      "centre": [
+        640.0,
+        640.0
+      ],
+      "nominal_phone_points": [
+        300,
+        70
+      ],
+      "content_rect": [
+        218,
+        620,
+        1062,
+        737
+      ],
+      "insets": {
+        "text": {
+          "rect": [
+            218,
+            620,
+            1062,
+            737
+          ],
+          "bounds": [
+            171,
+            595,
+            1111,
+            742
+          ],
+          "pixels": 131113,
+          "flat_colour_index": 29,
+          "light_colour": [
+            241,
+            195,
+            135
+          ],
+          "dark_colour": [
+            143,
+            111,
+            85
+          ],
+          "verified_fully_opaque": true,
+          "verified_single_colour": true
+        }
+      },
+      "caps": {
+        "left": 170,
+        "right": 170,
+        "top": 0,
+        "bottom": 0,
+        "fixed_centre_width": 140
+      },
+      "stretch": {
+        "mode": "horizontal_5_slice",
+        "trimmed_x_cuts": [
+          0,
+          170,
+          490,
+          630,
+          950,
+          1120
+        ],
+        "canvas_x_cuts": [
+          80,
+          250,
+          570,
+          710,
+          1030,
+          1200
+        ],
+        "stretch_segments": [
+          1,
+          3
+        ],
+        "fixed_segments": [
+          0,
+          2,
+          4
+        ],
+        "keep_centre_medallion_centred": true,
+        "centre_spans_columns_identical": true
+      },
+      "file": "light/banner_ribbon.png",
+      "colour_count": 35,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "opaque_pixel_count": 218137,
+      "transparent_aperture_count": 0,
+      "preview_8x": {
+        "file": "previews_8x/light/banner_ribbon_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "nearest_neighbour_exact": true
+      },
+      "sha256": "0e86e96316d3feadd0248f6d6977360f8537ebf3b79fb7c727743d07c1860f8e",
+      "byte_size": 28781,
+      "checks": {
+        "canvas_1280": true,
+        "bounds_match_metadata": true,
+        "binary_alpha": true,
+        "at_most_40_visible_colours": true,
+        "expected_aperture_count": true,
+        "correct_centre": true
+      }
+    },
+    "banner_ribbon_dark.png": {
+      "name": "banner_ribbon",
+      "source_canvas": [
+        1402,
+        1122
+      ],
+      "source_alpha_threshold_bounds": [
+        32,
+        433,
+        1370,
+        722
+      ],
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounds": [
+        80,
+        509,
+        1200,
+        771
+      ],
+      "centre": [
+        640.0,
+        640.0
+      ],
+      "nominal_phone_points": [
+        300,
+        70
+      ],
+      "content_rect": [
+        218,
+        620,
+        1062,
+        737
+      ],
+      "insets": {
+        "text": {
+          "rect": [
+            218,
+            620,
+            1062,
+            737
+          ],
+          "bounds": [
+            171,
+            595,
+            1111,
+            742
+          ],
+          "pixels": 131113,
+          "flat_colour_index": 29,
+          "light_colour": [
+            241,
+            195,
+            135
+          ],
+          "dark_colour": [
+            143,
+            111,
+            85
+          ],
+          "verified_fully_opaque": true,
+          "verified_single_colour": true
+        }
+      },
+      "caps": {
+        "left": 170,
+        "right": 170,
+        "top": 0,
+        "bottom": 0,
+        "fixed_centre_width": 140
+      },
+      "stretch": {
+        "mode": "horizontal_5_slice",
+        "trimmed_x_cuts": [
+          0,
+          170,
+          490,
+          630,
+          950,
+          1120
+        ],
+        "canvas_x_cuts": [
+          80,
+          250,
+          570,
+          710,
+          1030,
+          1200
+        ],
+        "stretch_segments": [
+          1,
+          3
+        ],
+        "fixed_segments": [
+          0,
+          2,
+          4
+        ],
+        "keep_centre_medallion_centred": true,
+        "centre_spans_columns_identical": true
+      },
+      "file": "dark/banner_ribbon_dark.png",
+      "colour_count": 35,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "opaque_pixel_count": 218137,
+      "transparent_aperture_count": 0,
+      "preview_8x": {
+        "file": "previews_8x/dark/banner_ribbon_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "nearest_neighbour_exact": true
+      },
+      "sha256": "78331a370151ec8151fd7d6ab9377e740ccdfb11a33fe2d7d6b687138e06de36",
+      "byte_size": 28781,
+      "checks": {
+        "canvas_1280": true,
+        "bounds_match_metadata": true,
+        "binary_alpha": true,
+        "at_most_40_visible_colours": true,
+        "expected_aperture_count": true,
+        "correct_centre": true
+      }
+    },
+    "reward_card.png": {
+      "name": "reward_card",
+      "source_canvas": [
+        1122,
+        1402
+      ],
+      "source_alpha_threshold_bounds": [
+        89,
+        95,
+        1032,
+        1314
+      ],
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounds": [
+        190,
+        90,
+        1090,
+        1190
+      ],
+      "centre": [
+        640.0,
+        640.0
+      ],
+      "nominal_phone_points": [
+        90,
+        110
+      ],
+      "content_rect": [
+        304,
+        223,
+        960,
+        879
+      ],
+      "insets": {
+        "item": {
+          "rect": [
+            304,
+            223,
+            960,
+            879
+          ],
+          "bounds": [
+            271,
+            183,
+            998,
+            910
+          ],
+          "pixels": 517080,
+          "flat_colour_index": 20,
+          "light_colour": [
+            220,
+            164,
+            101
+          ],
+          "dark_colour": [
+            103,
+            74,
+            59
+          ],
+          "verified_fully_opaque": true,
+          "verified_single_colour": true
+        },
+        "name": {
+          "rect": [
+            271,
+            951,
+            1009,
+            1068
+          ],
+          "bounds": [
+            241,
+            948,
+            1040,
+            1071
+          ],
+          "pixels": 97537,
+          "flat_colour_index": 35,
+          "light_colour": [
+            242,
+            226,
+            194
+          ],
+          "dark_colour": [
+            62,
+            43,
+            35
+          ],
+          "verified_fully_opaque": true,
+          "verified_single_colour": true
+        }
+      },
+      "caps": null,
+      "stretch": null,
+      "file": "light/reward_card.png",
+      "colour_count": 36,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "opaque_pixel_count": 947562,
+      "transparent_aperture_count": 0,
+      "preview_8x": {
+        "file": "previews_8x/light/reward_card_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "nearest_neighbour_exact": true
+      },
+      "sha256": "5f560e5c77bc98ab493de1ead94f7d48d40c02cee8b74dfc5c37e9ba4bbd7f66",
+      "byte_size": 89394,
+      "checks": {
+        "canvas_1280": true,
+        "bounds_match_metadata": true,
+        "binary_alpha": true,
+        "at_most_40_visible_colours": true,
+        "expected_aperture_count": true,
+        "correct_centre": true
+      }
+    },
+    "reward_card_dark.png": {
+      "name": "reward_card",
+      "source_canvas": [
+        1122,
+        1402
+      ],
+      "source_alpha_threshold_bounds": [
+        89,
+        95,
+        1032,
+        1314
+      ],
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounds": [
+        190,
+        90,
+        1090,
+        1190
+      ],
+      "centre": [
+        640.0,
+        640.0
+      ],
+      "nominal_phone_points": [
+        90,
+        110
+      ],
+      "content_rect": [
+        304,
+        223,
+        960,
+        879
+      ],
+      "insets": {
+        "item": {
+          "rect": [
+            304,
+            223,
+            960,
+            879
+          ],
+          "bounds": [
+            271,
+            183,
+            998,
+            910
+          ],
+          "pixels": 517080,
+          "flat_colour_index": 20,
+          "light_colour": [
+            220,
+            164,
+            101
+          ],
+          "dark_colour": [
+            103,
+            74,
+            59
+          ],
+          "verified_fully_opaque": true,
+          "verified_single_colour": true
+        },
+        "name": {
+          "rect": [
+            271,
+            951,
+            1009,
+            1068
+          ],
+          "bounds": [
+            241,
+            948,
+            1040,
+            1071
+          ],
+          "pixels": 97537,
+          "flat_colour_index": 35,
+          "light_colour": [
+            242,
+            226,
+            194
+          ],
+          "dark_colour": [
+            62,
+            43,
+            35
+          ],
+          "verified_fully_opaque": true,
+          "verified_single_colour": true
+        }
+      },
+      "caps": null,
+      "stretch": null,
+      "file": "dark/reward_card_dark.png",
+      "colour_count": 36,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "opaque_pixel_count": 947562,
+      "transparent_aperture_count": 0,
+      "preview_8x": {
+        "file": "previews_8x/dark/reward_card_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "nearest_neighbour_exact": true
+      },
+      "sha256": "9adc2fcb0f5d1bc6db5cf2ddde6385099cf3e18ba35d60821d5954cc2240c736",
+      "byte_size": 89394,
+      "checks": {
+        "canvas_1280": true,
+        "bounds_match_metadata": true,
+        "binary_alpha": true,
+        "at_most_40_visible_colours": true,
+        "expected_aperture_count": true,
+        "correct_centre": true
+      }
+    },
+    "dropdown_menu.png": {
+      "name": "dropdown_menu",
+      "source_canvas": [
+        1254,
+        1254
+      ],
+      "source_alpha_threshold_bounds": [
+        75,
+        239,
+        1178,
+        1005
+      ],
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounds": [
+        140,
+        293,
+        1140,
+        987
+      ],
+      "centre": [
+        640.0,
+        640.0
+      ],
+      "nominal_phone_points": [
+        180,
+        125
+      ],
+      "content_rect": [
+        181,
+        374,
+        1099,
+        915
+      ],
+      "insets": {
+        "menu": {
+          "rect": [
+            181,
+            374,
+            1099,
+            915
+          ],
+          "bounds": [
+            172,
+            336,
+            1108,
+            953
+          ],
+          "pixels": 571623,
+          "flat_colour_index": 35,
+          "light_colour": [
+            242,
+            226,
+            194
+          ],
+          "dark_colour": [
+            62,
+            43,
+            35
+          ],
+          "verified_fully_opaque": true,
+          "verified_single_colour": true
+        }
+      },
+      "caps": {
+        "left": 96,
+        "right": 96,
+        "top": 96,
+        "bottom": 96
+      },
+      "stretch": {
+        "mode": "nine_slice",
+        "trimmed_centre_rect": [
+          96,
+          96,
+          904,
+          598
+        ],
+        "canvas_centre_rect": [
+          236,
+          389,
+          1044,
+          891
+        ]
+      },
+      "corner_size_px": 96,
+      "file": "light/dropdown_menu.png",
+      "colour_count": 36,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "opaque_pixel_count": 651795,
+      "transparent_aperture_count": 0,
+      "preview_8x": {
+        "file": "previews_8x/light/dropdown_menu_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "nearest_neighbour_exact": true
+      },
+      "sha256": "9584f8f17707add3769720208600367361b8e4ad9f00189e9bb6d40830dad993",
+      "byte_size": 14309,
+      "checks": {
+        "canvas_1280": true,
+        "bounds_match_metadata": true,
+        "binary_alpha": true,
+        "at_most_40_visible_colours": true,
+        "expected_aperture_count": true,
+        "correct_centre": true
+      }
+    },
+    "dropdown_menu_dark.png": {
+      "name": "dropdown_menu",
+      "source_canvas": [
+        1254,
+        1254
+      ],
+      "source_alpha_threshold_bounds": [
+        75,
+        239,
+        1178,
+        1005
+      ],
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounds": [
+        140,
+        293,
+        1140,
+        987
+      ],
+      "centre": [
+        640.0,
+        640.0
+      ],
+      "nominal_phone_points": [
+        180,
+        125
+      ],
+      "content_rect": [
+        181,
+        374,
+        1099,
+        915
+      ],
+      "insets": {
+        "menu": {
+          "rect": [
+            181,
+            374,
+            1099,
+            915
+          ],
+          "bounds": [
+            172,
+            336,
+            1108,
+            953
+          ],
+          "pixels": 571623,
+          "flat_colour_index": 35,
+          "light_colour": [
+            242,
+            226,
+            194
+          ],
+          "dark_colour": [
+            62,
+            43,
+            35
+          ],
+          "verified_fully_opaque": true,
+          "verified_single_colour": true
+        }
+      },
+      "caps": {
+        "left": 96,
+        "right": 96,
+        "top": 96,
+        "bottom": 96
+      },
+      "stretch": {
+        "mode": "nine_slice",
+        "trimmed_centre_rect": [
+          96,
+          96,
+          904,
+          598
+        ],
+        "canvas_centre_rect": [
+          236,
+          389,
+          1044,
+          891
+        ]
+      },
+      "corner_size_px": 96,
+      "file": "dark/dropdown_menu_dark.png",
+      "colour_count": 36,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "opaque_pixel_count": 651795,
+      "transparent_aperture_count": 0,
+      "preview_8x": {
+        "file": "previews_8x/dark/dropdown_menu_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "nearest_neighbour_exact": true
+      },
+      "sha256": "d663f290be57fea0aa9884237b2c4352587d808501dfbeb80aae17124a465bb6",
+      "byte_size": 14309,
+      "checks": {
+        "canvas_1280": true,
+        "bounds_match_metadata": true,
+        "binary_alpha": true,
+        "at_most_40_visible_colours": true,
+        "expected_aperture_count": true,
+        "correct_centre": true
+      }
+    },
+    "dropdown_row_selected.png": {
+      "name": "dropdown_row_selected",
+      "source_canvas": [
+        1402,
+        1122
+      ],
+      "source_alpha_threshold_bounds": [
+        73,
+        506,
+        1329,
+        616
+      ],
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounds": [
+        80,
+        588,
+        1200,
+        692
+      ],
+      "centre": [
+        640.0,
+        640.0
+      ],
+      "nominal_phone_points": [
+        160,
+        16
+      ],
+      "content_rect": [
+        126,
+        600,
+        1154,
+        684
+      ],
+      "insets": {
+        "highlight": {
+          "rect": [
+            126,
+            600,
+            1154,
+            684
+          ],
+          "bounds": [
+            85,
+            597,
+            1195,
+            687
+          ],
+          "pixels": 98377,
+          "flat_colour_index": 39,
+          "light_colour": [
+            225,
+            181,
+            79
+          ],
+          "dark_colour": [
+            240,
+            199,
+            103
+          ],
+          "verified_fully_opaque": true,
+          "verified_single_colour": true
+        }
+      },
+      "caps": {
+        "left": 65,
+        "right": 65,
+        "top": 0,
+        "bottom": 0
+      },
+      "stretch": {
+        "mode": "horizontal_3_slice",
+        "trimmed_stretch_rect": [
+          65,
+          0,
+          1055,
+          104
+        ],
+        "canvas_stretch_rect": [
+          145,
+          588,
+          1135,
+          692
+        ],
+        "centre_columns_identical": true
+      },
+      "file": "light/dropdown_row_selected.png",
+      "colour_count": 5,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "opaque_pixel_count": 114356,
+      "transparent_aperture_count": 0,
+      "preview_8x": {
+        "file": "previews_8x/light/dropdown_row_selected_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "nearest_neighbour_exact": true
+      },
+      "sha256": "6bc815ef96bf2dcd72969ab91f5f3e9eb598fa7489f575cc0f51792ab6149bac",
+      "byte_size": 3045,
+      "checks": {
+        "canvas_1280": true,
+        "bounds_match_metadata": true,
+        "binary_alpha": true,
+        "at_most_40_visible_colours": true,
+        "expected_aperture_count": true,
+        "correct_centre": true
+      }
+    },
+    "dropdown_row_selected_dark.png": {
+      "name": "dropdown_row_selected",
+      "source_canvas": [
+        1402,
+        1122
+      ],
+      "source_alpha_threshold_bounds": [
+        73,
+        506,
+        1329,
+        616
+      ],
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounds": [
+        80,
+        588,
+        1200,
+        692
+      ],
+      "centre": [
+        640.0,
+        640.0
+      ],
+      "nominal_phone_points": [
+        160,
+        16
+      ],
+      "content_rect": [
+        126,
+        600,
+        1154,
+        684
+      ],
+      "insets": {
+        "highlight": {
+          "rect": [
+            126,
+            600,
+            1154,
+            684
+          ],
+          "bounds": [
+            85,
+            597,
+            1195,
+            687
+          ],
+          "pixels": 98377,
+          "flat_colour_index": 39,
+          "light_colour": [
+            225,
+            181,
+            79
+          ],
+          "dark_colour": [
+            240,
+            199,
+            103
+          ],
+          "verified_fully_opaque": true,
+          "verified_single_colour": true
+        }
+      },
+      "caps": {
+        "left": 65,
+        "right": 65,
+        "top": 0,
+        "bottom": 0
+      },
+      "stretch": {
+        "mode": "horizontal_3_slice",
+        "trimmed_stretch_rect": [
+          65,
+          0,
+          1055,
+          104
+        ],
+        "canvas_stretch_rect": [
+          145,
+          588,
+          1135,
+          692
+        ],
+        "centre_columns_identical": true
+      },
+      "file": "dark/dropdown_row_selected_dark.png",
+      "colour_count": 5,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "opaque_pixel_count": 114356,
+      "transparent_aperture_count": 0,
+      "preview_8x": {
+        "file": "previews_8x/dark/dropdown_row_selected_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "nearest_neighbour_exact": true
+      },
+      "sha256": "9d7894aa933e70641de5a1ccfbb6fc37cc8fe4dd722238f1bac7a18db90e1883",
+      "byte_size": 3045,
+      "checks": {
+        "canvas_1280": true,
+        "bounds_match_metadata": true,
+        "binary_alpha": true,
+        "at_most_40_visible_colours": true,
+        "expected_aperture_count": true,
+        "correct_centre": true
+      }
+    },
+    "text_field.png": {
+      "name": "text_field",
+      "source_canvas": [
+        1402,
+        1122
+      ],
+      "source_alpha_threshold_bounds": [
+        85,
+        503,
+        1317,
+        618
+      ],
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounds": [
+        80,
+        577,
+        1200,
+        704
+      ],
+      "centre": [
+        640.0,
+        640.5
+      ],
+      "nominal_phone_points": [
+        300,
+        34
+      ],
+      "content_rect": [
+        139,
+        607,
+        1141,
+        685
+      ],
+      "insets": {
+        "text": {
+          "rect": [
+            139,
+            607,
+            1141,
+            685
+          ],
+          "bounds": [
+            101,
+            602,
+            1182,
+            688
+          ],
+          "pixels": 91179,
+          "flat_colour_index": 15,
+          "light_colour": [
+            202,
+            142,
+            78
+          ],
+          "dark_colour": [
+            91,
+            63,
+            50
+          ],
+          "verified_fully_opaque": true,
+          "verified_single_colour": true
+        }
+      },
+      "caps": {
+        "left": 90,
+        "right": 90,
+        "top": 0,
+        "bottom": 0
+      },
+      "stretch": {
+        "mode": "horizontal_3_slice",
+        "trimmed_stretch_rect": [
+          90,
+          0,
+          1030,
+          127
+        ],
+        "canvas_stretch_rect": [
+          170,
+          577,
+          1110,
+          704
+        ],
+        "centre_columns_identical": true
+      },
+      "file": "light/text_field.png",
+      "colour_count": 28,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "opaque_pixel_count": 138759,
+      "transparent_aperture_count": 0,
+      "preview_8x": {
+        "file": "previews_8x/light/text_field_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "nearest_neighbour_exact": true
+      },
+      "sha256": "3499bf766ac56d09bdb1cf4bfeb0fb8ae872dc53cfcb18884f191443fde2e6e2",
+      "byte_size": 5782,
+      "checks": {
+        "canvas_1280": true,
+        "bounds_match_metadata": true,
+        "binary_alpha": true,
+        "at_most_40_visible_colours": true,
+        "expected_aperture_count": true,
+        "correct_centre": true
+      }
+    },
+    "text_field_dark.png": {
+      "name": "text_field",
+      "source_canvas": [
+        1402,
+        1122
+      ],
+      "source_alpha_threshold_bounds": [
+        85,
+        503,
+        1317,
+        618
+      ],
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounds": [
+        80,
+        577,
+        1200,
+        704
+      ],
+      "centre": [
+        640.0,
+        640.5
+      ],
+      "nominal_phone_points": [
+        300,
+        34
+      ],
+      "content_rect": [
+        139,
+        607,
+        1141,
+        685
+      ],
+      "insets": {
+        "text": {
+          "rect": [
+            139,
+            607,
+            1141,
+            685
+          ],
+          "bounds": [
+            101,
+            602,
+            1182,
+            688
+          ],
+          "pixels": 91179,
+          "flat_colour_index": 15,
+          "light_colour": [
+            202,
+            142,
+            78
+          ],
+          "dark_colour": [
+            91,
+            63,
+            50
+          ],
+          "verified_fully_opaque": true,
+          "verified_single_colour": true
+        }
+      },
+      "caps": {
+        "left": 90,
+        "right": 90,
+        "top": 0,
+        "bottom": 0
+      },
+      "stretch": {
+        "mode": "horizontal_3_slice",
+        "trimmed_stretch_rect": [
+          90,
+          0,
+          1030,
+          127
+        ],
+        "canvas_stretch_rect": [
+          170,
+          577,
+          1110,
+          704
+        ],
+        "centre_columns_identical": true
+      },
+      "file": "dark/text_field_dark.png",
+      "colour_count": 28,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "opaque_pixel_count": 138759,
+      "transparent_aperture_count": 0,
+      "preview_8x": {
+        "file": "previews_8x/dark/text_field_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "nearest_neighbour_exact": true
+      },
+      "sha256": "6d73e3e547fab86dc23081c6d44ae1a4e305dcdacd0834eef1be02e7996d2358",
+      "byte_size": 5782,
+      "checks": {
+        "canvas_1280": true,
+        "bounds_match_metadata": true,
+        "binary_alpha": true,
+        "at_most_40_visible_colours": true,
+        "expected_aperture_count": true,
+        "correct_centre": true
+      }
+    },
+    "scroll_thumb.png": {
+      "name": "scroll_thumb",
+      "source_canvas": [
+        1254,
+        1254
+      ],
+      "source_alpha_threshold_bounds": [
+        498,
+        91,
+        754,
+        1189
+      ],
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounds": [
+        519,
+        120,
+        761,
+        1160
+      ],
+      "centre": [
+        640.0,
+        640.0
+      ],
+      "nominal_phone_points": [
+        6,
+        24
+      ],
+      "content_rect": [
+        554,
+        226,
+        724,
+        1051
+      ],
+      "insets": {
+        "thumb": {
+          "rect": [
+            554,
+            226,
+            724,
+            1051
+          ],
+          "bounds": [
+            549,
+            151,
+            729,
+            1128
+          ],
+          "pixels": 168010,
+          "flat_colour_index": 29,
+          "light_colour": [
+            241,
+            195,
+            135
+          ],
+          "dark_colour": [
+            143,
+            111,
+            85
+          ],
+          "verified_fully_opaque": true,
+          "verified_single_colour": true
+        }
+      },
+      "caps": null,
+      "stretch": null,
+      "file": "light/scroll_thumb.png",
+      "colour_count": 26,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "opaque_pixel_count": 238984,
+      "transparent_aperture_count": 0,
+      "preview_8x": {
+        "file": "previews_8x/light/scroll_thumb_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "nearest_neighbour_exact": true
+      },
+      "sha256": "9301d6c1bf37076d491734beb18139e358383b7dda8bc2ce47765337c35cd017",
+      "byte_size": 18600,
+      "checks": {
+        "canvas_1280": true,
+        "bounds_match_metadata": true,
+        "binary_alpha": true,
+        "at_most_40_visible_colours": true,
+        "expected_aperture_count": true,
+        "correct_centre": true
+      }
+    },
+    "scroll_thumb_dark.png": {
+      "name": "scroll_thumb",
+      "source_canvas": [
+        1254,
+        1254
+      ],
+      "source_alpha_threshold_bounds": [
+        498,
+        91,
+        754,
+        1189
+      ],
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounds": [
+        519,
+        120,
+        761,
+        1160
+      ],
+      "centre": [
+        640.0,
+        640.0
+      ],
+      "nominal_phone_points": [
+        6,
+        24
+      ],
+      "content_rect": [
+        554,
+        226,
+        724,
+        1051
+      ],
+      "insets": {
+        "thumb": {
+          "rect": [
+            554,
+            226,
+            724,
+            1051
+          ],
+          "bounds": [
+            549,
+            151,
+            729,
+            1128
+          ],
+          "pixels": 168010,
+          "flat_colour_index": 29,
+          "light_colour": [
+            241,
+            195,
+            135
+          ],
+          "dark_colour": [
+            143,
+            111,
+            85
+          ],
+          "verified_fully_opaque": true,
+          "verified_single_colour": true
+        }
+      },
+      "caps": null,
+      "stretch": null,
+      "file": "dark/scroll_thumb_dark.png",
+      "colour_count": 26,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "opaque_pixel_count": 238984,
+      "transparent_aperture_count": 0,
+      "preview_8x": {
+        "file": "previews_8x/dark/scroll_thumb_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "nearest_neighbour_exact": true
+      },
+      "sha256": "d0a87696a85594bb47f9fd58033e00e6c5524036ccdcc4fb53dc690855f967d1",
+      "byte_size": 18600,
+      "checks": {
+        "canvas_1280": true,
+        "bounds_match_metadata": true,
+        "binary_alpha": true,
+        "at_most_40_visible_colours": true,
+        "expected_aperture_count": true,
+        "correct_centre": true
+      }
+    },
+    "scroll_track.png": {
+      "name": "scroll_track",
+      "source_canvas": [
+        1254,
+        1254
+      ],
+      "source_alpha_threshold_bounds": [
+        582,
+        33,
+        672,
+        1223
+      ],
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounds": [
+        608,
+        120,
+        672,
+        1160
+      ],
+      "centre": [
+        640.0,
+        640.0
+      ],
+      "nominal_phone_points": [
+        6,
+        104
+      ],
+      "content_rect": [
+        626,
+        164,
+        655,
+        1119
+      ],
+      "insets": {
+        "track": {
+          "rect": [
+            626,
+            164,
+            655,
+            1119
+          ],
+          "bounds": [
+            622,
+            144,
+            659,
+            1144
+          ],
+          "pixels": 34702,
+          "flat_colour_index": 15,
+          "light_colour": [
+            202,
+            142,
+            78
+          ],
+          "dark_colour": [
+            91,
+            63,
+            50
+          ],
+          "verified_fully_opaque": true,
+          "verified_single_colour": true
+        }
+      },
+      "caps": {
+        "left": 0,
+        "right": 0,
+        "top": 64,
+        "bottom": 64
+      },
+      "stretch": {
+        "mode": "vertical_3_slice",
+        "trimmed_stretch_rect": [
+          0,
+          64,
+          64,
+          976
+        ],
+        "canvas_stretch_rect": [
+          608,
+          184,
+          672,
+          1096
+        ],
+        "centre_rows_identical": true
+      },
+      "file": "light/scroll_track.png",
+      "colour_count": 26,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "opaque_pixel_count": 65456,
+      "transparent_aperture_count": 0,
+      "preview_8x": {
+        "file": "previews_8x/light/scroll_track_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "nearest_neighbour_exact": true
+      },
+      "sha256": "1c436bf4716c0771b532ee84af3564dc38071ccdc23fbb53c320d061a283ee32",
+      "byte_size": 5869,
+      "checks": {
+        "canvas_1280": true,
+        "bounds_match_metadata": true,
+        "binary_alpha": true,
+        "at_most_40_visible_colours": true,
+        "expected_aperture_count": true,
+        "correct_centre": true
+      }
+    },
+    "scroll_track_dark.png": {
+      "name": "scroll_track",
+      "source_canvas": [
+        1254,
+        1254
+      ],
+      "source_alpha_threshold_bounds": [
+        582,
+        33,
+        672,
+        1223
+      ],
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounds": [
+        608,
+        120,
+        672,
+        1160
+      ],
+      "centre": [
+        640.0,
+        640.0
+      ],
+      "nominal_phone_points": [
+        6,
+        104
+      ],
+      "content_rect": [
+        626,
+        164,
+        655,
+        1119
+      ],
+      "insets": {
+        "track": {
+          "rect": [
+            626,
+            164,
+            655,
+            1119
+          ],
+          "bounds": [
+            622,
+            144,
+            659,
+            1144
+          ],
+          "pixels": 34702,
+          "flat_colour_index": 15,
+          "light_colour": [
+            202,
+            142,
+            78
+          ],
+          "dark_colour": [
+            91,
+            63,
+            50
+          ],
+          "verified_fully_opaque": true,
+          "verified_single_colour": true
+        }
+      },
+      "caps": {
+        "left": 0,
+        "right": 0,
+        "top": 64,
+        "bottom": 64
+      },
+      "stretch": {
+        "mode": "vertical_3_slice",
+        "trimmed_stretch_rect": [
+          0,
+          64,
+          64,
+          976
+        ],
+        "canvas_stretch_rect": [
+          608,
+          184,
+          672,
+          1096
+        ],
+        "centre_rows_identical": true
+      },
+      "file": "dark/scroll_track_dark.png",
+      "colour_count": 26,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "opaque_pixel_count": 65456,
+      "transparent_aperture_count": 0,
+      "preview_8x": {
+        "file": "previews_8x/dark/scroll_track_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "nearest_neighbour_exact": true
+      },
+      "sha256": "e6b8a6acef1bba54273503ec5e8f791d76766110efe806c2f0c38506468b39e1",
+      "byte_size": 5869,
+      "checks": {
+        "canvas_1280": true,
+        "bounds_match_metadata": true,
+        "binary_alpha": true,
+        "at_most_40_visible_colours": true,
+        "expected_aperture_count": true,
+        "correct_centre": true
+      }
+    },
+    "party_frame.png": {
+      "name": "party_frame",
+      "source_canvas": [
+        2172,
+        724
+      ],
+      "source_alpha_threshold_bounds": [
+        135,
+        78,
+        2030,
+        652
+      ],
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounds": [
+        80,
+        464,
+        1200,
+        816
+      ],
+      "centre": [
+        640.0,
+        640.0
+      ],
+      "nominal_phone_points": [
+        140,
+        44
+      ],
+      "content_rect": [
+        439,
+        536,
+        1093,
+        622
+      ],
+      "insets": {
+        "name": {
+          "rect": [
+            439,
+            536,
+            1093,
+            622
+          ],
+          "bounds": [
+            399,
+            533,
+            1159,
+            625
+          ],
+          "pixels": 66527,
+          "flat_colour_index": 29,
+          "light_colour": [
+            241,
+            195,
+            135
+          ],
+          "dark_colour": [
+            143,
+            111,
+            85
+          ],
+          "verified_fully_opaque": true,
+          "verified_single_colour": true
+        },
+        "hp": {
+          "rect": [
+            463,
+            649,
+            1070,
+            677
+          ],
+          "bounds": [
+            447,
+            644,
+            1086,
+            682
+          ],
+          "pixels": 23341,
+          "flat_colour_index": 20,
+          "light_colour": [
+            220,
+            164,
+            101
+          ],
+          "dark_colour": [
+            103,
+            74,
+            59
+          ],
+          "verified_fully_opaque": true,
+          "verified_single_colour": true
+        },
+        "mp": {
+          "rect": [
+            460,
+            706,
+            1065,
+            735
+          ],
+          "bounds": [
+            441,
+            703,
+            1087,
+            739
+          ],
+          "pixels": 22293,
+          "flat_colour_index": 20,
+          "light_colour": [
+            220,
+            164,
+            101
+          ],
+          "dark_colour": [
+            103,
+            74,
+            59
+          ],
+          "verified_fully_opaque": true,
+          "verified_single_colour": true
+        }
+      },
+      "caps": {
+        "left": 420,
+        "right": 140,
+        "top": 0,
+        "bottom": 0
+      },
+      "stretch": {
+        "mode": "horizontal_3_slice",
+        "trimmed_stretch_rect": [
+          420,
+          0,
+          980,
+          352
+        ],
+        "canvas_stretch_rect": [
+          500,
+          464,
+          1060,
+          816
+        ],
+        "centre_columns_identical": true
+      },
+      "portrait_aperture": {
+        "bounds": [
+          130,
+          513,
+          385,
+          768
+        ],
+        "centre": [
+          257.5,
+          640.5
+        ],
+        "diameters_xy": [
+          255,
+          255
+        ],
+        "alpha_values": [
+          0
+        ],
+        "pixels": 50842
+      },
+      "file": "light/party_frame.png",
+      "colour_count": 35,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "opaque_pixel_count": 245786,
+      "transparent_aperture_count": 1,
+      "preview_8x": {
+        "file": "previews_8x/light/party_frame_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "nearest_neighbour_exact": true
+      },
+      "sha256": "a5b2a853ce288ca3c092bf8b7bed573f5c0f0f4a08a0e93ad134131b9b2618a4",
+      "byte_size": 33625,
+      "checks": {
+        "canvas_1280": true,
+        "bounds_match_metadata": true,
+        "binary_alpha": true,
+        "at_most_40_visible_colours": true,
+        "expected_aperture_count": true,
+        "correct_centre": true
+      }
+    },
+    "party_frame_dark.png": {
+      "name": "party_frame",
+      "source_canvas": [
+        2172,
+        724
+      ],
+      "source_alpha_threshold_bounds": [
+        135,
+        78,
+        2030,
+        652
+      ],
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounds": [
+        80,
+        464,
+        1200,
+        816
+      ],
+      "centre": [
+        640.0,
+        640.0
+      ],
+      "nominal_phone_points": [
+        140,
+        44
+      ],
+      "content_rect": [
+        439,
+        536,
+        1093,
+        622
+      ],
+      "insets": {
+        "name": {
+          "rect": [
+            439,
+            536,
+            1093,
+            622
+          ],
+          "bounds": [
+            399,
+            533,
+            1159,
+            625
+          ],
+          "pixels": 66527,
+          "flat_colour_index": 29,
+          "light_colour": [
+            241,
+            195,
+            135
+          ],
+          "dark_colour": [
+            143,
+            111,
+            85
+          ],
+          "verified_fully_opaque": true,
+          "verified_single_colour": true
+        },
+        "hp": {
+          "rect": [
+            463,
+            649,
+            1070,
+            677
+          ],
+          "bounds": [
+            447,
+            644,
+            1086,
+            682
+          ],
+          "pixels": 23341,
+          "flat_colour_index": 20,
+          "light_colour": [
+            220,
+            164,
+            101
+          ],
+          "dark_colour": [
+            103,
+            74,
+            59
+          ],
+          "verified_fully_opaque": true,
+          "verified_single_colour": true
+        },
+        "mp": {
+          "rect": [
+            460,
+            706,
+            1065,
+            735
+          ],
+          "bounds": [
+            441,
+            703,
+            1087,
+            739
+          ],
+          "pixels": 22293,
+          "flat_colour_index": 20,
+          "light_colour": [
+            220,
+            164,
+            101
+          ],
+          "dark_colour": [
+            103,
+            74,
+            59
+          ],
+          "verified_fully_opaque": true,
+          "verified_single_colour": true
+        }
+      },
+      "caps": {
+        "left": 420,
+        "right": 140,
+        "top": 0,
+        "bottom": 0
+      },
+      "stretch": {
+        "mode": "horizontal_3_slice",
+        "trimmed_stretch_rect": [
+          420,
+          0,
+          980,
+          352
+        ],
+        "canvas_stretch_rect": [
+          500,
+          464,
+          1060,
+          816
+        ],
+        "centre_columns_identical": true
+      },
+      "portrait_aperture": {
+        "bounds": [
+          130,
+          513,
+          385,
+          768
+        ],
+        "centre": [
+          257.5,
+          640.5
+        ],
+        "diameters_xy": [
+          255,
+          255
+        ],
+        "alpha_values": [
+          0
+        ],
+        "pixels": 50842
+      },
+      "file": "dark/party_frame_dark.png",
+      "colour_count": 35,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "opaque_pixel_count": 245786,
+      "transparent_aperture_count": 1,
+      "preview_8x": {
+        "file": "previews_8x/dark/party_frame_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "nearest_neighbour_exact": true
+      },
+      "sha256": "fe011906f981498df945c35c1c739f78b2b59a5bd28359340a7bd1f659fc1b31",
+      "byte_size": 33625,
+      "checks": {
+        "canvas_1280": true,
+        "bounds_match_metadata": true,
+        "binary_alpha": true,
+        "at_most_40_visible_colours": true,
+        "expected_aperture_count": true,
+        "correct_centre": true
+      }
+    },
+    "coach_arrow.png": {
+      "name": "coach_arrow",
+      "source_canvas": [
+        1202,
+        1309
+      ],
+      "source_alpha_threshold_bounds": [
+        59,
+        11,
+        1141,
+        1303
+      ],
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounds": [
+        255,
+        180,
+        1025,
+        1100
+      ],
+      "centre": [
+        640.0,
+        640.0
+      ],
+      "nominal_phone_points": [
+        40,
+        40
+      ],
+      "content_rect": [
+        563,
+        250,
+        718,
+        399
+      ],
+      "insets": {
+        "star": {
+          "rect": [
+            563,
+            250,
+            718,
+            399
+          ],
+          "runtime_content": false
+        }
+      },
+      "caps": null,
+      "stretch": null,
+      "tip_pixel": [
+        639,
+        1099
+      ],
+      "content_role": "existing_gold_star_inlay",
+      "file": "light/coach_arrow.png",
+      "colour_count": 32,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "opaque_pixel_count": 366307,
+      "transparent_aperture_count": 0,
+      "preview_8x": {
+        "file": "previews_8x/light/coach_arrow_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "nearest_neighbour_exact": true
+      },
+      "sha256": "afc199d14f6241ec99bc9bd6d0e6a944d9120aae548901c9a43989cd7773e076",
+      "byte_size": 69150,
+      "checks": {
+        "canvas_1280": true,
+        "bounds_match_metadata": true,
+        "binary_alpha": true,
+        "at_most_40_visible_colours": true,
+        "expected_aperture_count": true,
+        "correct_centre": true
+      },
+      "tip_pixel_is_opaque": true,
+      "tip_is_on_last_opaque_row": true
+    },
+    "coach_arrow_dark.png": {
+      "name": "coach_arrow",
+      "source_canvas": [
+        1202,
+        1309
+      ],
+      "source_alpha_threshold_bounds": [
+        59,
+        11,
+        1141,
+        1303
+      ],
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounds": [
+        255,
+        180,
+        1025,
+        1100
+      ],
+      "centre": [
+        640.0,
+        640.0
+      ],
+      "nominal_phone_points": [
+        40,
+        40
+      ],
+      "content_rect": [
+        563,
+        250,
+        718,
+        399
+      ],
+      "insets": {
+        "star": {
+          "rect": [
+            563,
+            250,
+            718,
+            399
+          ],
+          "runtime_content": false
+        }
+      },
+      "caps": null,
+      "stretch": null,
+      "tip_pixel": [
+        639,
+        1099
+      ],
+      "content_role": "existing_gold_star_inlay",
+      "file": "dark/coach_arrow_dark.png",
+      "colour_count": 32,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "opaque_pixel_count": 366307,
+      "transparent_aperture_count": 0,
+      "preview_8x": {
+        "file": "previews_8x/dark/coach_arrow_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "nearest_neighbour_exact": true
+      },
+      "sha256": "aed36109c90cbfe0cb8ccd4829824b8a65bcf5eae9874b9425eb805b274e6093",
+      "byte_size": 69150,
+      "checks": {
+        "canvas_1280": true,
+        "bounds_match_metadata": true,
+        "binary_alpha": true,
+        "at_most_40_visible_colours": true,
+        "expected_aperture_count": true,
+        "correct_centre": true
+      },
+      "tip_pixel_is_opaque": true,
+      "tip_is_on_last_opaque_row": true
+    },
+    "map_pin.png": {
+      "name": "map_pin",
+      "source_canvas": [
+        1254,
+        1254
+      ],
+      "source_alpha_threshold_bounds": [
+        250,
+        111,
+        989,
+        1157
+      ],
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounds": [
+        272,
+        120,
+        1007,
+        1160
+      ],
+      "centre": [
+        639.5,
+        640.0
+      ],
+      "nominal_phone_points": [
+        24,
+        32
+      ],
+      "content_rect": [
+        421,
+        282,
+        860,
+        716
+      ],
+      "insets": {
+        "star": {
+          "rect": [
+            421,
+            282,
+            860,
+            716
+          ],
+          "runtime_content": false
+        }
+      },
+      "caps": null,
+      "stretch": null,
+      "tip_pixel": [
+        639,
+        1159
+      ],
+      "content_role": "existing_gold_star_inlay",
+      "file": "light/map_pin.png",
+      "colour_count": 34,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "opaque_pixel_count": 486635,
+      "transparent_aperture_count": 0,
+      "preview_8x": {
+        "file": "previews_8x/light/map_pin_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "nearest_neighbour_exact": true
+      },
+      "sha256": "64f49d9810d2acd3d1c952941351808d34de92efee0f0a759d415ce721bb59ee",
+      "byte_size": 85826,
+      "checks": {
+        "canvas_1280": true,
+        "bounds_match_metadata": true,
+        "binary_alpha": true,
+        "at_most_40_visible_colours": true,
+        "expected_aperture_count": true,
+        "correct_centre": true
+      },
+      "tip_pixel_is_opaque": true,
+      "tip_is_on_last_opaque_row": true
+    },
+    "map_pin_dark.png": {
+      "name": "map_pin",
+      "source_canvas": [
+        1254,
+        1254
+      ],
+      "source_alpha_threshold_bounds": [
+        250,
+        111,
+        989,
+        1157
+      ],
+      "canvas": [
+        1280,
+        1280
+      ],
+      "bounds": [
+        272,
+        120,
+        1007,
+        1160
+      ],
+      "centre": [
+        639.5,
+        640.0
+      ],
+      "nominal_phone_points": [
+        24,
+        32
+      ],
+      "content_rect": [
+        421,
+        282,
+        860,
+        716
+      ],
+      "insets": {
+        "star": {
+          "rect": [
+            421,
+            282,
+            860,
+            716
+          ],
+          "runtime_content": false
+        }
+      },
+      "caps": null,
+      "stretch": null,
+      "tip_pixel": [
+        639,
+        1159
+      ],
+      "content_role": "existing_gold_star_inlay",
+      "file": "dark/map_pin_dark.png",
+      "colour_count": 34,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "opaque_pixel_count": 486635,
+      "transparent_aperture_count": 0,
+      "preview_8x": {
+        "file": "previews_8x/dark/map_pin_dark_8x.png",
+        "canvas": [
+          10240,
+          10240
+        ],
+        "nearest_neighbour_exact": true
+      },
+      "sha256": "b464c7e831fa985e39fd31980e0c147f73d044c8edac13390571b02faeae7d06",
+      "byte_size": 85826,
+      "checks": {
+        "canvas_1280": true,
+        "bounds_match_metadata": true,
+        "binary_alpha": true,
+        "at_most_40_visible_colours": true,
+        "expected_aperture_count": true,
+        "correct_centre": true
+      },
+      "tip_pixel_is_opaque": true,
+      "tip_is_on_last_opaque_row": true
+    }
+  },
+  "dark_twins": {
+    "toast_plate": {
+      "light": "toast_plate.png",
+      "dark": "toast_plate_dark.png",
+      "alpha_identical_pixel_for_pixel": true,
+      "palette_index_raster_identical_pixel_for_pixel": true
+    },
+    "banner_ribbon": {
+      "light": "banner_ribbon.png",
+      "dark": "banner_ribbon_dark.png",
+      "alpha_identical_pixel_for_pixel": true,
+      "palette_index_raster_identical_pixel_for_pixel": true
+    },
+    "reward_card": {
+      "light": "reward_card.png",
+      "dark": "reward_card_dark.png",
+      "alpha_identical_pixel_for_pixel": true,
+      "palette_index_raster_identical_pixel_for_pixel": true
+    },
+    "dropdown_menu": {
+      "light": "dropdown_menu.png",
+      "dark": "dropdown_menu_dark.png",
+      "alpha_identical_pixel_for_pixel": true,
+      "palette_index_raster_identical_pixel_for_pixel": true
+    },
+    "dropdown_row_selected": {
+      "light": "dropdown_row_selected.png",
+      "dark": "dropdown_row_selected_dark.png",
+      "alpha_identical_pixel_for_pixel": true,
+      "palette_index_raster_identical_pixel_for_pixel": true
+    },
+    "text_field": {
+      "light": "text_field.png",
+      "dark": "text_field_dark.png",
+      "alpha_identical_pixel_for_pixel": true,
+      "palette_index_raster_identical_pixel_for_pixel": true
+    },
+    "scroll_thumb": {
+      "light": "scroll_thumb.png",
+      "dark": "scroll_thumb_dark.png",
+      "alpha_identical_pixel_for_pixel": true,
+      "palette_index_raster_identical_pixel_for_pixel": true
+    },
+    "scroll_track": {
+      "light": "scroll_track.png",
+      "dark": "scroll_track_dark.png",
+      "alpha_identical_pixel_for_pixel": true,
+      "palette_index_raster_identical_pixel_for_pixel": true
+    },
+    "party_frame": {
+      "light": "party_frame.png",
+      "dark": "party_frame_dark.png",
+      "alpha_identical_pixel_for_pixel": true,
+      "palette_index_raster_identical_pixel_for_pixel": true
+    },
+    "coach_arrow": {
+      "light": "coach_arrow.png",
+      "dark": "coach_arrow_dark.png",
+      "alpha_identical_pixel_for_pixel": true,
+      "palette_index_raster_identical_pixel_for_pixel": true
+    },
+    "map_pin": {
+      "light": "map_pin.png",
+      "dark": "map_pin_dark.png",
+      "alpha_identical_pixel_for_pixel": true,
+      "palette_index_raster_identical_pixel_for_pixel": true
+    }
+  },
+  "summary": {
+    "design_count": 11,
+    "asset_png_count": 22,
+    "preview_png_count": 22,
+    "all_canvases": [
+      1280,
+      1280
+    ],
+    "colour_count_range": [
+      5,
+      36
+    ],
+    "all_alpha_values": [
+      0,
+      255
+    ],
+    "all_dark_twins_identical_geometry": true,
+    "all_8x_previews_exact": true,
+    "failures": [],
+    "passed": true,
+    "all_declared_runtime_rectangles_opaque_and_plain": true,
+    "verified_stretch_recipes": 7,
+    "party_aperture_diameter_px": 255,
+    "reward_well_size_px": [
+      727,
+      727
+    ],
+    "reward_safe_item_size_px": [
+      656,
+      656
+    ],
+    "map_pin_tip_pixel": [
+      639,
+      1159
+    ]
+  },
+  "proofs": {
+    "contact_sheet": "contact_sheet.png",
+    "phone_scale": "phone_scale_proof.png",
+    "stretch": "stretch_proof.png",
+    "phone_scale_display": "Nominal point size at1point=1pixel; exact3xnearest-neighbour alongside.",
+    "stretch_variants": "0.7xand1.5xlengths; allfixedsegments verifiedpixel-exactbeforepreviewreduction."
+  }
+}

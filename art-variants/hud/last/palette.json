@@ -1,0 +1,522 @@
+[
+  {
+    "light": [
+      61,
+      39,
+      10
+    ],
+    "dark": [
+      39,
+      24,
+      19
+    ],
+    "role": "deep_carved_cut_and_leaf_outline"
+  },
+  {
+    "light": [
+      89,
+      36,
+      6
+    ],
+    "dark": [
+      42,
+      25,
+      20
+    ],
+    "role": "deep_warm_cut"
+  },
+  {
+    "light": [
+      78,
+      44,
+      23
+    ],
+    "dark": [
+      44,
+      27,
+      22
+    ],
+    "role": "outer_outline"
+  },
+  {
+    "light": [
+      112,
+      56,
+      12
+    ],
+    "dark": [
+      53,
+      33,
+      25
+    ],
+    "role": "carving_shadow"
+  },
+  {
+    "light": [
+      95,
+      95,
+      30
+    ],
+    "dark": [
+      106,
+      109,
+      41
+    ],
+    "role": "sage_shadow"
+  },
+  {
+    "light": [
+      148,
+      87,
+      32
+    ],
+    "dark": [
+      74,
+      47,
+      35
+    ],
+    "role": "groove_shadow"
+  },
+  {
+    "light": [
+      166,
+      97,
+      33
+    ],
+    "dark": [
+      81,
+      52,
+      39
+    ],
+    "role": "bevel_shadow"
+  },
+  {
+    "light": [
+      145,
+      128,
+      56
+    ],
+    "dark": [
+      163,
+      150,
+      72
+    ],
+    "role": "sage_olive_mid"
+  },
+  {
+    "light": [
+      170,
+      109,
+      51
+    ],
+    "dark": [
+      87,
+      58,
+      44
+    ],
+    "role": "wood_shadow"
+  },
+  {
+    "light": [
+      182,
+      114,
+      45
+    ],
+    "dark": [
+      90,
+      60,
+      46
+    ],
+    "role": "wood_shadow_lit"
+  },
+  {
+    "light": [
+      181,
+      117,
+      53
+    ],
+    "dark": [
+      77,
+      51,
+      40
+    ],
+    "role": "inset_shadow"
+  },
+  {
+    "light": [
+      146,
+      155,
+      68
+    ],
+    "dark": [
+      160,
+      174,
+      85
+    ],
+    "role": "sage_face"
+  },
+  {
+    "light": [
+      195,
+      131,
+      62
+    ],
+    "dark": [
+      101,
+      69,
+      53
+    ],
+    "role": "wood_shaded_mid"
+  },
+  {
+    "light": [
+      202,
+      140,
+      75
+    ],
+    "dark": [
+      107,
+      75,
+      57
+    ],
+    "role": "wood_mid"
+  },
+  {
+    "light": [
+      202,
+      142,
+      78
+    ],
+    "dark": [
+      91,
+      63,
+      50
+    ],
+    "role": "deep_inset_face"
+  },
+  {
+    "light": [
+      207,
+      149,
+      86
+    ],
+    "dark": [
+      113,
+      80,
+      61
+    ],
+    "role": "wood_mid_lit"
+  },
+  {
+    "light": [
+      216,
+      153,
+      80
+    ],
+    "dark": [
+      116,
+      83,
+      63
+    ],
+    "role": "warm_mid"
+  },
+  {
+    "light": [
+      187,
+      183,
+      92
+    ],
+    "dark": [
+      208,
+      208,
+      112
+    ],
+    "role": "sage_highlight"
+  },
+  {
+    "light": [
+      221,
+      162,
+      93
+    ],
+    "dark": [
+      121,
+      88,
+      67
+    ],
+    "role": "lower_bevel"
+  },
+  {
+    "light": [
+      220,
+      164,
+      101
+    ],
+    "dark": [
+      103,
+      74,
+      59
+    ],
+    "role": "inset_face"
+  },
+  {
+    "light": [
+      227,
+      169,
+      96
+    ],
+    "dark": [
+      126,
+      93,
+      71
+    ],
+    "role": "honey_mid"
+  },
+  {
+    "light": [
+      230,
+      178,
+      115
+    ],
+    "dark": [
+      132,
+      99,
+      76
+    ],
+    "role": "pale_wood_shade"
+  },
+  {
+    "light": [
+      233,
+      179,
+      114
+    ],
+    "dark": [
+      133,
+      100,
+      76
+    ],
+    "role": "pale_wood_mid"
+  },
+  {
+    "light": [
+      239,
+      185,
+      108
+    ],
+    "dark": [
+      136,
+      103,
+      79
+    ],
+    "role": "window_frame_face"
+  },
+  {
+    "light": [
+      233,
+      182,
+      119
+    ],
+    "dark": [
+      113,
+      84,
+      67
+    ],
+    "role": "plain_button_face"
+  },
+  {
+    "light": [
+      222,
+      197,
+      125
+    ],
+    "dark": [
+      240,
+      216,
+      145
+    ],
+    "role": "sage_warm_cut_highlight"
+  },
+  {
+    "light": [
+      234,
+      186,
+      125
+    ],
+    "dark": [
+      137,
+      104,
+      80
+    ],
+    "role": "pale_wood_mid_lit"
+  },
+  {
+    "light": [
+      237,
+      191,
+      132
+    ],
+    "dark": [
+      140,
+      108,
+      83
+    ],
+    "role": "wood_face_shade"
+  },
+  {
+    "light": [
+      241,
+      195,
+      135
+    ],
+    "dark": [
+      143,
+      111,
+      85
+    ],
+    "role": "main_wood_face"
+  },
+  {
+    "light": [
+      241,
+      197,
+      141
+    ],
+    "dark": [
+      145,
+      112,
+      86
+    ],
+    "role": "main_wood_face_lit"
+  },
+  {
+    "light": [
+      243,
+      201,
+      145
+    ],
+    "dark": [
+      147,
+      115,
+      88
+    ],
+    "role": "wood_light_mid"
+  },
+  {
+    "light": [
+      248,
+      208,
+      139
+    ],
+    "dark": [
+      152,
+      119,
+      91
+    ],
+    "role": "warm_edge_light"
+  },
+  {
+    "light": [
+      248,
+      212,
+      161
+    ],
+    "dark": [
+      155,
+      123,
+      95
+    ],
+    "role": "pale_edge_light"
+  },
+  {
+    "light": [
+      248,
+      225,
+      166
+    ],
+    "dark": [
+      163,
+      132,
+      101
+    ],
+    "role": "warm_highlight"
+  },
+  {
+    "light": [
+      242,
+      226,
+      194
+    ],
+    "dark": [
+      62,
+      43,
+      35
+    ],
+    "role": "parchment_pane"
+  },
+  {
+    "light": [
+      251,
+      239,
+      202
+    ],
+    "dark": [
+      176,
+      145,
+      110
+    ],
+    "role": "strongest_wood_highlight"
+  },
+  {
+    "light": [
+      153,
+      106,
+      35
+    ],
+    "dark": [
+      173,
+      126,
+      52
+    ],
+    "role": "gold_shadow"
+  },
+  {
+    "light": [
+      196,
+      145,
+      54
+    ],
+    "dark": [
+      214,
+      166,
+      75
+    ],
+    "role": "gold_mid"
+  },
+  {
+    "light": [
+      225,
+      181,
+      79
+    ],
+    "dark": [
+      240,
+      199,
+      103
+    ],
+    "role": "gold_face"
+  },
+  {
+    "light": [
+      246,
+      212,
+      127
+    ],
+    "dark": [
+      255,
+      226,
+      151
+    ],
+    "role": "gold_highlight"
+  }
+]

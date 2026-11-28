@@ -1,0 +1,657 @@
+{
+  "review_stage": "final_export",
+  "coordinate_convention": "Rectangles [x0,y0,x1,y1], right/bottom exclusive. Pixel indices zero-based; centres use pixel-boundary coordinates. Caps are measured after trimming to bounds.",
+  "assets": {
+    "toast_plate": {
+      "light_canvas": [
+        1280,
+        1280
+      ],
+      "dark_canvas": [
+        1280,
+        1280
+      ],
+      "light_colours": 35,
+      "dark_colours": 35,
+      "alpha_values_light": [
+        0,
+        255
+      ],
+      "alpha_values_dark": [
+        0,
+        255
+      ],
+      "alpha_identical": true,
+      "one_to_one_colour_mapping": true,
+      "bounds": [
+        80,
+        564,
+        1200,
+        716
+      ],
+      "bounds_match_geometry": true,
+      "opaque_components": 1,
+      "internal_transparent_components": 0,
+      "internal_transparent_sizes": [],
+      "content_checks": {
+        "text": {
+          "rect": [
+            212,
+            593,
+            1117,
+            687
+          ],
+          "opaque_light": true,
+          "opaque_dark": true,
+          "light_is_declared_flat_colour": true,
+          "dark_is_declared_flat_colour": true,
+          "width": 905,
+          "height": 94
+        }
+      },
+      "stretch_checks": {
+        "centre_columns_identical": true
+      },
+      "indexed_mode": true,
+      "palette_indices_identical": true
+    },
+    "banner_ribbon": {
+      "light_canvas": [
+        1280,
+        1280
+      ],
+      "dark_canvas": [
+        1280,
+        1280
+      ],
+      "light_colours": 35,
+      "dark_colours": 35,
+      "alpha_values_light": [
+        0,
+        255
+      ],
+      "alpha_values_dark": [
+        0,
+        255
+      ],
+      "alpha_identical": true,
+      "one_to_one_colour_mapping": true,
+      "bounds": [
+        80,
+        509,
+        1200,
+        771
+      ],
+      "bounds_match_geometry": true,
+      "opaque_components": 1,
+      "internal_transparent_components": 0,
+      "internal_transparent_sizes": [],
+      "content_checks": {
+        "text": {
+          "rect": [
+            218,
+            620,
+            1062,
+            737
+          ],
+          "opaque_light": true,
+          "opaque_dark": true,
+          "light_is_declared_flat_colour": true,
+          "dark_is_declared_flat_colour": true,
+          "width": 844,
+          "height": 117
+        }
+      },
+      "stretch_checks": {
+        "stretch_spans_columns_identical": true,
+        "fixed_centre_width": 140,
+        "fixed_centre_is_centred": true
+      },
+      "indexed_mode": true,
+      "palette_indices_identical": true
+    },
+    "reward_card": {
+      "light_canvas": [
+        1280,
+        1280
+      ],
+      "dark_canvas": [
+        1280,
+        1280
+      ],
+      "light_colours": 36,
+      "dark_colours": 36,
+      "alpha_values_light": [
+        0,
+        255
+      ],
+      "alpha_values_dark": [
+        0,
+        255
+      ],
+      "alpha_identical": true,
+      "one_to_one_colour_mapping": true,
+      "bounds": [
+        190,
+        90,
+        1090,
+        1190
+      ],
+      "bounds_match_geometry": true,
+      "opaque_components": 1,
+      "internal_transparent_components": 0,
+      "internal_transparent_sizes": [],
+      "content_checks": {
+        "item": {
+          "rect": [
+            304,
+            223,
+            960,
+            879
+          ],
+          "opaque_light": true,
+          "opaque_dark": true,
+          "light_is_declared_flat_colour": true,
+          "dark_is_declared_flat_colour": true,
+          "width": 656,
+          "height": 656
+        },
+        "name": {
+          "rect": [
+            271,
+            951,
+            1009,
+            1068
+          ],
+          "opaque_light": true,
+          "opaque_dark": true,
+          "light_is_declared_flat_colour": true,
+          "dark_is_declared_flat_colour": true,
+          "width": 738,
+          "height": 117
+        }
+      },
+      "indexed_mode": true,
+      "palette_indices_identical": true
+    },
+    "dropdown_menu": {
+      "light_canvas": [
+        1280,
+        1280
+      ],
+      "dark_canvas": [
+        1280,
+        1280
+      ],
+      "light_colours": 36,
+      "dark_colours": 36,
+      "alpha_values_light": [
+        0,
+        255
+      ],
+      "alpha_values_dark": [
+        0,
+        255
+      ],
+      "alpha_identical": true,
+      "one_to_one_colour_mapping": true,
+      "bounds": [
+        140,
+        293,
+        1140,
+        987
+      ],
+      "bounds_match_geometry": true,
+      "opaque_components": 1,
+      "internal_transparent_components": 0,
+      "internal_transparent_sizes": [],
+      "content_checks": {
+        "menu": {
+          "rect": [
+            181,
+            374,
+            1099,
+            915
+          ],
+          "opaque_light": true,
+          "opaque_dark": true,
+          "light_is_declared_flat_colour": true,
+          "dark_is_declared_flat_colour": true,
+          "width": 918,
+          "height": 541
+        }
+      },
+      "stretch_checks": {
+        "top_stretch_columns_identical": true,
+        "bottom_stretch_columns_identical": true,
+        "left_stretch_rows_identical": true,
+        "right_stretch_rows_identical": true,
+        "centre_flat": true
+      },
+      "indexed_mode": true,
+      "palette_indices_identical": true
+    },
+    "dropdown_row_selected": {
+      "light_canvas": [
+        1280,
+        1280
+      ],
+      "dark_canvas": [
+        1280,
+        1280
+      ],
+      "light_colours": 5,
+      "dark_colours": 5,
+      "alpha_values_light": [
+        0,
+        255
+      ],
+      "alpha_values_dark": [
+        0,
+        255
+      ],
+      "alpha_identical": true,
+      "one_to_one_colour_mapping": true,
+      "bounds": [
+        80,
+        588,
+        1200,
+        692
+      ],
+      "bounds_match_geometry": true,
+      "opaque_components": 1,
+      "internal_transparent_components": 0,
+      "internal_transparent_sizes": [],
+      "content_checks": {
+        "highlight": {
+          "rect": [
+            126,
+            600,
+            1154,
+            684
+          ],
+          "opaque_light": true,
+          "opaque_dark": true,
+          "light_is_declared_flat_colour": true,
+          "dark_is_declared_flat_colour": true,
+          "width": 1028,
+          "height": 84
+        }
+      },
+      "stretch_checks": {
+        "centre_columns_identical": true
+      },
+      "indexed_mode": true,
+      "palette_indices_identical": true
+    },
+    "text_field": {
+      "light_canvas": [
+        1280,
+        1280
+      ],
+      "dark_canvas": [
+        1280,
+        1280
+      ],
+      "light_colours": 28,
+      "dark_colours": 28,
+      "alpha_values_light": [
+        0,
+        255
+      ],
+      "alpha_values_dark": [
+        0,
+        255
+      ],
+      "alpha_identical": true,
+      "one_to_one_colour_mapping": true,
+      "bounds": [
+        80,
+        577,
+        1200,
+        704
+      ],
+      "bounds_match_geometry": true,
+      "opaque_components": 1,
+      "internal_transparent_components": 0,
+      "internal_transparent_sizes": [],
+      "content_checks": {
+        "text": {
+          "rect": [
+            139,
+            607,
+            1141,
+            685
+          ],
+          "opaque_light": true,
+          "opaque_dark": true,
+          "light_is_declared_flat_colour": true,
+          "dark_is_declared_flat_colour": true,
+          "width": 1002,
+          "height": 78
+        }
+      },
+      "stretch_checks": {
+        "centre_columns_identical": true,
+        "trimmed_height_matches_bounds": true,
+        "canvas_y_matches_bounds": true
+      },
+      "indexed_mode": true,
+      "palette_indices_identical": true,
+      "centre_matches_geometry": true
+    },
+    "scroll_thumb": {
+      "light_canvas": [
+        1280,
+        1280
+      ],
+      "dark_canvas": [
+        1280,
+        1280
+      ],
+      "light_colours": 26,
+      "dark_colours": 26,
+      "alpha_values_light": [
+        0,
+        255
+      ],
+      "alpha_values_dark": [
+        0,
+        255
+      ],
+      "alpha_identical": true,
+      "one_to_one_colour_mapping": true,
+      "bounds": [
+        519,
+        120,
+        761,
+        1160
+      ],
+      "bounds_match_geometry": true,
+      "opaque_components": 1,
+      "internal_transparent_components": 0,
+      "internal_transparent_sizes": [],
+      "content_checks": {
+        "thumb": {
+          "rect": [
+            554,
+            226,
+            724,
+            1051
+          ],
+          "opaque_light": true,
+          "opaque_dark": true,
+          "light_is_declared_flat_colour": true,
+          "dark_is_declared_flat_colour": true,
+          "width": 170,
+          "height": 825
+        }
+      },
+      "indexed_mode": true,
+      "palette_indices_identical": true
+    },
+    "scroll_track": {
+      "light_canvas": [
+        1280,
+        1280
+      ],
+      "dark_canvas": [
+        1280,
+        1280
+      ],
+      "light_colours": 26,
+      "dark_colours": 26,
+      "alpha_values_light": [
+        0,
+        255
+      ],
+      "alpha_values_dark": [
+        0,
+        255
+      ],
+      "alpha_identical": true,
+      "one_to_one_colour_mapping": true,
+      "bounds": [
+        608,
+        120,
+        672,
+        1160
+      ],
+      "bounds_match_geometry": true,
+      "opaque_components": 1,
+      "internal_transparent_components": 0,
+      "internal_transparent_sizes": [],
+      "content_checks": {
+        "track": {
+          "rect": [
+            626,
+            164,
+            655,
+            1119
+          ],
+          "opaque_light": true,
+          "opaque_dark": true,
+          "light_is_declared_flat_colour": true,
+          "dark_is_declared_flat_colour": true,
+          "width": 29,
+          "height": 955
+        }
+      },
+      "stretch_checks": {
+        "centre_rows_identical": true
+      },
+      "indexed_mode": true,
+      "palette_indices_identical": true
+    },
+    "party_frame": {
+      "light_canvas": [
+        1280,
+        1280
+      ],
+      "dark_canvas": [
+        1280,
+        1280
+      ],
+      "light_colours": 35,
+      "dark_colours": 35,
+      "alpha_values_light": [
+        0,
+        255
+      ],
+      "alpha_values_dark": [
+        0,
+        255
+      ],
+      "alpha_identical": true,
+      "one_to_one_colour_mapping": true,
+      "bounds": [
+        80,
+        464,
+        1200,
+        816
+      ],
+      "bounds_match_geometry": true,
+      "opaque_components": 1,
+      "internal_transparent_components": 1,
+      "internal_transparent_sizes": [
+        50842
+      ],
+      "content_checks": {
+        "name": {
+          "rect": [
+            439,
+            536,
+            1093,
+            622
+          ],
+          "opaque_light": true,
+          "opaque_dark": true,
+          "light_is_declared_flat_colour": true,
+          "dark_is_declared_flat_colour": true,
+          "width": 654,
+          "height": 86
+        },
+        "hp": {
+          "rect": [
+            463,
+            649,
+            1070,
+            677
+          ],
+          "opaque_light": true,
+          "opaque_dark": true,
+          "light_is_declared_flat_colour": true,
+          "dark_is_declared_flat_colour": true,
+          "width": 607,
+          "height": 28
+        },
+        "mp": {
+          "rect": [
+            460,
+            706,
+            1065,
+            735
+          ],
+          "opaque_light": true,
+          "opaque_dark": true,
+          "light_is_declared_flat_colour": true,
+          "dark_is_declared_flat_colour": true,
+          "width": 605,
+          "height": 29
+        }
+      },
+      "stretch_checks": {
+        "centre_columns_identical": true
+      },
+      "indexed_mode": true,
+      "palette_indices_identical": true,
+      "portrait_aperture_bounds": [
+        130,
+        513,
+        385,
+        768
+      ],
+      "portrait_aperture_diameters": [
+        255,
+        255
+      ],
+      "portrait_aperture_matches_metadata": true,
+      "portrait_aperture_fully_clear": true
+    },
+    "coach_arrow": {
+      "light_canvas": [
+        1280,
+        1280
+      ],
+      "dark_canvas": [
+        1280,
+        1280
+      ],
+      "light_colours": 32,
+      "dark_colours": 32,
+      "alpha_values_light": [
+        0,
+        255
+      ],
+      "alpha_values_dark": [
+        0,
+        255
+      ],
+      "alpha_identical": true,
+      "one_to_one_colour_mapping": true,
+      "bounds": [
+        255,
+        180,
+        1025,
+        1100
+      ],
+      "bounds_match_geometry": true,
+      "opaque_components": 1,
+      "internal_transparent_components": 0,
+      "internal_transparent_sizes": [],
+      "content_checks": {},
+      "tip_is_opaque": true,
+      "tip_on_lowest_row": true,
+      "indexed_mode": true,
+      "palette_indices_identical": true
+    },
+    "map_pin": {
+      "light_canvas": [
+        1280,
+        1280
+      ],
+      "dark_canvas": [
+        1280,
+        1280
+      ],
+      "light_colours": 34,
+      "dark_colours": 34,
+      "alpha_values_light": [
+        0,
+        255
+      ],
+      "alpha_values_dark": [
+        0,
+        255
+      ],
+      "alpha_identical": true,
+      "one_to_one_colour_mapping": true,
+      "bounds": [
+        272,
+        120,
+        1007,
+        1160
+      ],
+      "bounds_match_geometry": true,
+      "opaque_components": 1,
+      "internal_transparent_components": 0,
+      "internal_transparent_sizes": [],
+      "content_checks": {},
+      "tip_is_opaque": true,
+      "tip_on_lowest_row": true,
+      "indexed_mode": true,
+      "palette_indices_identical": true
+    }
+  },
+  "visual_review": {
+    "contact_sheet_reviewed": "/workspace/scratch/e15630456ffa/last_pieces_work/final/contact_sheet_preview.png",
+    "style_matches_supplied_palette": true,
+    "content_blank_except_requested_star_inlays": true,
+    "tiny_scroll_parts_ornament_free": true,
+    "banner_medallion_preserved": true,
+    "reward_source_ghost_removed": true
+  },
+  "pending": [],
+  "summary": {
+    "png_count": 22,
+    "all_1280_square": true,
+    "colour_min": 5,
+    "colour_max": 36,
+    "all_binary_alpha": true,
+    "all_pairs_same_alpha": true,
+    "all_pairs_exact_colour_mapping": true,
+    "all_blank_rects_plain_opaque": true,
+    "all_bounds_match_geometry": true,
+    "only_party_has_internal_transparency": true,
+    "party_aperture_diameter_xy": [
+      255,
+      255
+    ],
+    "reward_well_diameter_xy": [
+      727,
+      727
+    ],
+    "reward_safe_content_xy": [
+      656,
+      656
+    ],
+    "map_tip_pixel": [
+      639,
+      1159
+    ],
+    "all_pairs_same_palette_indices": true,
+    "all_checks_pass": true
+  },
+  "material_issues": [],
+  "result": "PASS"
+}
