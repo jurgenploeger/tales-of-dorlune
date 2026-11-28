@@ -1230,6 +1230,7 @@ final class BattleScene: SKScene {
         let step = offset.normalized * min(offset.length * 0.6, 150)
         // The weapon drawn back as they set off, brought down as they arrive.
         actor.swing(windUp: 0.09 * speed, strike: 0.07 * speed)
+        actor.attackFrames(windUp: 0.09 * speed, strike: 0.07 * speed)
         let out = SKAction.move(to: actor.home + step, duration: 0.16 * speed)
         out.timingMode = .easeIn
         await actor.run(out)
@@ -1744,7 +1745,8 @@ final class BattleActor: SKNode {
         nameTag.position = CGPoint(x: 0, y: bar.position.y + 2)
         nameTag.alpha = 0
         addChild(nameTag)
-        sprite.run(IdleMotion.of(art: fighter.art).action(height: size.height, delay: .random(in: 0..<0.8)), withKey: "idle")
+        idleMotion = IdleMotion.of(art: fighter.art)
+        startIdle()
         // It blinks now and then, if it has eyes to shut: on the sprite, so the actor's own
         // actions (`hasActions`) still say whether it's moving.
         if cycle.poses.values.contains(where: { $0.shut != nil }) {
@@ -1871,13 +1873,41 @@ final class BattleActor: SKNode {
         if !hasActions() { position = point }
         zPosition = -point.y
         sprite.texture = cycle.frames(direction).first
+        let turned = facing != direction
         facing = direction
+        if turned, cycle.idle != nil { startIdle() }
         if let weapon = sprite.childNode(withName: "weapon") as? SKSpriteNode {
             GearArt.pose(weapon, facing: direction, height: sprite.size.height)
         }
     }
 
     private var facing: Direction = .down
+    private var idleMotion: IdleMotion?
+    private var idleDelay = TimeInterval.random(in: 0..<0.8)
+
+    /// Stands idle facing the way it was placed: a monster's drawn idle (`WalkCycle.idle`), else its `motion`.
+    private func startIdle() {
+        sprite.removeAction(forKey: "idle")
+        if let idle = cycle.idle?[facing], idle.count > 1 {
+            sprite.run(.sequence([.wait(forDuration: idleDelay), .repeatForever(.animate(with: idle, timePerFrame: 0.45))]), withKey: "idle")
+        } else if let idleMotion {
+            sprite.run(idleMotion.action(height: sprite.size.height, delay: idleDelay), withKey: "idle")
+        }
+    }
+
+    /// A monster's drawn attack (wind-up, strike, recover: `WalkCycle.attack`) over `windUp` and
+    /// `strike`, the blow landing as the strike frame shows; then its idle again. Nothing without one.
+    func attackFrames(windUp: TimeInterval, strike: TimeInterval) {
+        guard let frames = cycle.attack?[facing], frames.count == 3 else { return }
+        sprite.removeAction(forKey: "idle")
+        sprite.run(.sequence([
+            .setTexture(frames[0]), .wait(forDuration: windUp),
+            .setTexture(frames[1]), .wait(forDuration: strike + 0.12),
+            .setTexture(frames[2]), .wait(forDuration: 0.14),
+            .setTexture(cycle.frames(facing).first ?? frames[2]),
+            .run { [weak self] in self?.startIdle() },
+        ]), withKey: "attack")
+    }
 
     /// Whirlwind's pirouette: the fighter turns on the spot through each way its sheet faces (front,
     /// side, back, other side), `turns` times round, quickest halfway, and ends facing as it started.
